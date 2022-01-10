@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_multiview:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_multiview] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_KHR_multiview extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -60,7 +60,7 @@
 -- This extension has the same goal as the OpenGL ES @GL_OVR_multiview@
 -- extension. Multiview is a rendering technique originally designed for VR
 -- where it is more efficient to record a single set of commands to be
--- executed with slightly different behavior for each \"view\".
+-- executed with slightly different behavior for each “view”.
 --
 -- It includes a concise way to declare a render pass with multiple views,
 -- and gives implementations freedom to render the views in the most
@@ -73,9 +73,9 @@
 --
 -- This extension enables the use of the
 -- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_multiview.html SPV_KHR_multiview>
--- shader extension which adds a new @ViewIndex@ built-in type to shaders
--- that allow shaders to control what to do for each view. If using GLSL
--- there is also a
+-- shader extension, which adds a new @ViewIndex@ built-in type that allows
+-- shaders to control what to do for each view. If using GLSL there is also
+-- the
 -- <https://raw.githubusercontent.com/KhronosGroup/GLSL/master/extensions/ext/GL_EXT_multiview.txt GL_EXT_multiview>
 -- extension that introduces a @highp int gl_ViewIndex;@ built-in variable
 -- for vertex, tessellation, geometry, and fragment shaders.
@@ -136,13 +136,13 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceMultiviewFeaturesKHR',
 -- 'PhysicalDeviceMultiviewPropertiesKHR',
 -- 'RenderPassMultiviewCreateInfoKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_multiview Vulkan Specification>

@@ -3,7 +3,7 @@
 , safeVulkanFFI ? false, safeOpenXrFFI ? false, buildProfiling ? false
 , buildInstrumented ? false, openxrNoVulkan ? false }:
 
-with pkgs.haskell.lib;
+with pkgs.haskell.lib.compose;
 
 let
   gitignore = pkgs.nix-gitignore.gitignoreSourcePure ../.gitignore;
@@ -15,6 +15,7 @@ let
     ]) || pkgs.lib.any (i: pkgs.lib.hasInfix i path) [
       "/src"
       "/src-manual"
+      "/test"
       "/vk"
       "/xr"
       "/khronos-spec"
@@ -49,22 +50,21 @@ let
       vulkan-utils = self.developPackage {
         name = "vulkan-utils";
         root = gitignore ../utils;
-        modifier = drv: addExtraLibrary (mod drv) pkgs.vulkan-headers;
+        modifier = drv: addExtraLibrary pkgs.vulkan-headers (mod drv);
         returnShellEnv = false;
       };
       VulkanMemoryAllocator = self.developPackage {
         name = "VukanMemoryAllocator";
         root = gitignore ../VulkanMemoryAllocator;
-        modifier = drv: addExtraLibrary (mod drv) pkgs.vulkan-headers;
+        modifier = drv: addExtraLibrary pkgs.vulkan-headers (mod drv);
         returnShellEnv = false;
       };
       vulkan-examples = self.developPackage {
         name = "vulkan-examples";
         root = gitignore ../examples;
         modifier = drv:
-          addExtraLibrary
-          (addBuildTools (mod drv) [ pkgs.glslang pkgs.shaderc ])
-          pkgs.renderdoc;
+          addExtraLibrary pkgs.renderdoc
+          (addBuildTools [ pkgs.glslang pkgs.shaderc ] (mod drv));
         returnShellEnv = false;
         cabal2nixOptions = "--flag=renderdoc";
       };
@@ -90,61 +90,32 @@ let
       #
       # Overrides for examples
       #
-      nothunks = markUnbroken (doJailbreak super.nothunks);
-      derive-storable-plugin = markUnbroken super.derive-storable-plugin;
       # profiling
-      eventlog2html = markUnbroken (doJailbreak (appendPatch
-        (overrideSrc super.eventlog2html {
-          src = pkgs.fetchFromGitHub {
-            owner = "BinderDavid";
-            repo = "eventlog2html";
-            rev =
-              "9abc05ed94fef094b3ac54d57e00664c793b5923"; # switch-to-ghc-events-0.13
-            sha256 = "0h1527zxdmail35526nn47zawsaafvsby7p50qg54wq023zazxlj";
-          };
-        }) (pkgs.fetchpatch {
-          url = "https://github.com/mpickering/eventlog2html/pull/129.patch";
-          name = "vega.patch";
-          sha256 = "1lnbdscngb5g5b6ys0xhp7izdfkz6j3llnpirbfxck3sy3ssxph5";
-        })));
-      hs-speedscope = doJailbreak (markUnbroken
-        (overrideSrc super.hs-speedscope {
-          src = pkgs.fetchFromGitHub {
-            owner = "mpickering";
-            repo = "hs-speedscope";
-            rev = "9e28b303993b79f3d943ccb89b148cb9a4fb6ca5";
-            sha256 = "105zk9w5lpn0m866m8y0lhrw2x6kym2f2ryjc56zxqzfr9b76jdn";
-          };
-        }));
-      hvega = doJailbreak (self.callHackageDirect {
-        pkg = "hvega";
-        ver = "0.6.0.0";
-        sha256 = "1bkwp8zlb1248w95ksw71iksgd3xfw1pnb9klv8xxsqay542970a";
-      } { });
+      eventlog2html = markUnbroken (overrideSrc {
+        src = pkgs.fetchFromGitHub {
+          owner = "expipiplus1";
+          repo = "eventlog2html";
+          rev = "3612e7000cfbb1498349c331b5adaa2d17f02206"; # ellie-size
+          sha256 = "0s2wxqwmaldqyz9yz52wxy0dla9pahqlpq6cx4pm4c744ggmpswd";
+        };
+      } super.eventlog2html);
+      hs-speedscope = markUnbroken (addBuildDepend self.machines (overrideSrc {
+        src = pkgs.fetchFromGitHub {
+          owner = "mpickering";
+          repo = "hs-speedscope";
+          rev = "5a77aeb163e07dc63769d4e0a659e5821cdee527";
+          sha256 = "0q9kdlxhm37f260v4ydmznwmmsaa4w9mq3fh2iivj792y6ybmp5j";
+        };
+      } super.hs-speedscope));
 
       #
       # Overrides for generate
       #
-      pandoc = appendPatch super.pandoc
-        ../generate-new/patches/pandoc-haddock-tables.patch;
-      language-c = self.language-c_0_9_0_1;
-      unification-fd = overrideSrc super.unification-fd {
-        src = pkgs.fetchFromGitHub {
-          owner = "Bodigrim";
-          repo = "unification-fd";
-          rev = "daf74abc85ce0b86d7688d92402ac446f1496cdf";
-          sha256 = "1k6kx4s3za6p837sb1qhva9axn1j49r0fng9c5c7pfsg28brdpgy";
-        };
-      };
+      pandoc = appendPatch ../generate-new/patches/pandoc-haddock-tables.patch
+        super.pandoc;
     } // pkgs.lib.optionalAttrs hoogle {
       ghc = super.ghc // { withPackages = super.ghc.withHoogle; };
       ghcWithPackages = self.ghc.withPackages;
-    } // pkgs.lib.optionalAttrs (super.ghc.version == "9.0.1") {
-      mkDerivation = drv:
-        super.mkDerivation (drv // {
-          jailbreak = true;
-          doHaddock = false;
-        });
     };
 
 in baseHaskellPackages.override { inherit overrides; }

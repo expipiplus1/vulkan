@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_driver_properties:%20&body=@drakos-amd%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_driver_properties] @drakos-amd%0A<<Here describe the issue or question you have about the VK_KHR_driver_properties extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -132,14 +132,14 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'Vulkan.Core10.APIConstants.MAX_DRIVER_INFO_SIZE_KHR',
 -- 'Vulkan.Core10.APIConstants.MAX_DRIVER_NAME_SIZE_KHR',
 -- 'ConformanceVersionKHR', 'DriverIdKHR',
 -- 'PhysicalDeviceDriverPropertiesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_driver_properties Vulkan Specification>

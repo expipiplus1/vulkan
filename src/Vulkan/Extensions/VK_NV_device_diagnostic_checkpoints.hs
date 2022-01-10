@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Nuno Subtil
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_device_diagnostic_checkpoints:%20&body=@nsubtil%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_device_diagnostic_checkpoints] @nsubtil%0A<<Here describe the issue or question you have about the VK_NV_device_diagnostic_checkpoints extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -92,12 +92,12 @@
 --
 --     -   ???
 --
--- = See Also
+-- == See Also
 --
 -- 'CheckpointDataNV', 'QueueFamilyCheckpointPropertiesNV',
 -- 'cmdSetCheckpointNV', 'getQueueCheckpointDataNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_diagnostic_checkpoints Vulkan Specification>
@@ -118,7 +118,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.IO (throwIO)
@@ -153,6 +153,7 @@ import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetCheckpointNV))
 import Vulkan.Dynamic (DeviceCmds(pVkGetQueueCheckpointDataNV))
@@ -160,6 +161,7 @@ import Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlagBits)
 import Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlags)
 import Vulkan.Core10.Handles (Queue)
 import Vulkan.Core10.Handles (Queue(..))
+import Vulkan.Core10.Handles (Queue(Queue))
 import Vulkan.Core10.Handles (Queue_T)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_CHECKPOINT_DATA_NV))
@@ -171,7 +173,7 @@ foreign import ccall
   "dynamic" mkVkCmdSetCheckpointNV
   :: FunPtr (Ptr CommandBuffer_T -> Ptr () -> IO ()) -> Ptr CommandBuffer_T -> Ptr () -> IO ()
 
--- | vkCmdSetCheckpointNV - insert diagnostic checkpoint in command stream
+-- | vkCmdSetCheckpointNV - Insert diagnostic checkpoint in command stream
 --
 -- == Valid Usage (Implicit)
 --
@@ -198,16 +200,17 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- |                                                                                                                            |                                                                                                                        | Transfer                                                                                                              |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- |                                                                                                                            |                                                                                                                        | Transfer                                                                                                              |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_diagnostic_checkpoints VK_NV_device_diagnostic_checkpoints>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetCheckpointNV :: forall io
                     . (MonadIO io)
@@ -218,7 +221,7 @@ cmdSetCheckpointNV :: forall io
                       ("checkpointMarker" ::: Ptr ())
                    -> io ()
 cmdSetCheckpointNV commandBuffer checkpointMarker = liftIO $ do
-  let vkCmdSetCheckpointNVPtr = pVkCmdSetCheckpointNV (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetCheckpointNVPtr = pVkCmdSetCheckpointNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetCheckpointNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetCheckpointNV is null" Nothing Nothing
   let vkCmdSetCheckpointNV' = mkVkCmdSetCheckpointNV vkCmdSetCheckpointNVPtr
@@ -233,7 +236,7 @@ foreign import ccall
   "dynamic" mkVkGetQueueCheckpointDataNV
   :: FunPtr (Ptr Queue_T -> Ptr Word32 -> Ptr CheckpointDataNV -> IO ()) -> Ptr Queue_T -> Ptr Word32 -> Ptr CheckpointDataNV -> IO ()
 
--- | vkGetQueueCheckpointDataNV - retrieve diagnostic checkpoint data
+-- | vkGetQueueCheckpointDataNV - Retrieve diagnostic checkpoint data
 --
 -- = Description
 --
@@ -270,6 +273,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_diagnostic_checkpoints VK_NV_device_diagnostic_checkpoints>,
 -- 'CheckpointDataNV', 'Vulkan.Core10.Handles.Queue'
 getQueueCheckpointDataNV :: forall io
                           . (MonadIO io)
@@ -278,7 +282,7 @@ getQueueCheckpointDataNV :: forall io
                             Queue
                          -> io (("checkpointData" ::: Vector CheckpointDataNV))
 getQueueCheckpointDataNV queue = liftIO . evalContT $ do
-  let vkGetQueueCheckpointDataNVPtr = pVkGetQueueCheckpointDataNV (deviceCmds (queue :: Queue))
+  let vkGetQueueCheckpointDataNVPtr = pVkGetQueueCheckpointDataNV (case queue of Queue{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetQueueCheckpointDataNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetQueueCheckpointDataNV is null" Nothing Nothing
   let vkGetQueueCheckpointDataNV' = mkVkGetQueueCheckpointDataNV vkGetQueueCheckpointDataNVPtr
@@ -294,8 +298,8 @@ getQueueCheckpointDataNV queue = liftIO . evalContT $ do
   pure $ (pCheckpointData')
 
 
--- | VkQueueFamilyCheckpointPropertiesNV - return structure for queue family
--- checkpoint info query
+-- | VkQueueFamilyCheckpointPropertiesNV - Return structure for queue family
+-- checkpoint information query
 --
 -- = Description
 --
@@ -307,6 +311,7 @@ getQueueCheckpointDataNV queue = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_diagnostic_checkpoints VK_NV_device_diagnostic_checkpoints>,
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data QueueFamilyCheckpointPropertiesNV = QueueFamilyCheckpointPropertiesNV
@@ -320,7 +325,7 @@ deriving instance Generic (QueueFamilyCheckpointPropertiesNV)
 deriving instance Show QueueFamilyCheckpointPropertiesNV
 
 instance ToCStruct QueueFamilyCheckpointPropertiesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p QueueFamilyCheckpointPropertiesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -351,7 +356,7 @@ instance Zero QueueFamilyCheckpointPropertiesNV where
            zero
 
 
--- | VkCheckpointDataNV - return structure for command buffer checkpoint data
+-- | VkCheckpointDataNV - Return structure for command buffer checkpoint data
 --
 -- = Description
 --
@@ -363,12 +368,14 @@ instance Zero QueueFamilyCheckpointPropertiesNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_diagnostic_checkpoints VK_NV_device_diagnostic_checkpoints>,
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getQueueCheckpointDataNV'
 data CheckpointDataNV = CheckpointDataNV
-  { -- | @stage@ indicates which pipeline stage the checkpoint marker data refers
-    -- to.
+  { -- | @stage@ is a
+    -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits' value
+    -- specifying which pipeline stage the checkpoint marker data refers to.
     stage :: PipelineStageFlagBits
   , -- | @pCheckpointMarker@ contains the value of the last checkpoint marker
     -- executed in the stage that @stage@ refers to.
@@ -381,7 +388,7 @@ deriving instance Generic (CheckpointDataNV)
 deriving instance Show CheckpointDataNV
 
 instance ToCStruct CheckpointDataNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CheckpointDataNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CHECKPOINT_DATA_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

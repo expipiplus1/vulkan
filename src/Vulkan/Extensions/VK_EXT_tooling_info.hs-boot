@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Tobias Hector
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_tooling_info:%20&body=@tobski%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_tooling_info] @tobski%0A<<Here describe the issue or question you have about the VK_EXT_tooling_info extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -146,8 +146,8 @@
 -- 1) Why is this information separate from the layer mechanism?
 --
 -- Some tooling may be built into a driver, or be part of the Vulkan loader
--- etc. - and so tying this information directly to layers would’ve been
--- awkward at best.
+-- etc. Tying this information directly to layers would have been awkward
+-- at best.
 --
 -- == Version History
 --
@@ -155,12 +155,12 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceToolPropertiesEXT', 'ToolPurposeFlagBitsEXT',
 -- 'ToolPurposeFlagsEXT', 'getPhysicalDeviceToolPropertiesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_tooling_info Vulkan Specification>

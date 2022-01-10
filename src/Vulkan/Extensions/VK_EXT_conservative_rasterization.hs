@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_conservative_rasterization:%20&body=@pdaniell-nv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_conservative_rasterization] @pdaniell-nv%0A<<Here describe the issue or question you have about the VK_EXT_conservative_rasterization extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -137,14 +137,14 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'ConservativeRasterizationModeEXT',
 -- 'PhysicalDeviceConservativeRasterizationPropertiesEXT',
 -- 'PipelineRasterizationConservativeStateCreateFlagsEXT',
 -- 'PipelineRasterizationConservativeStateCreateInfoEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conservative_rasterization Vulkan Specification>
@@ -167,7 +167,7 @@ module Vulkan.Extensions.VK_EXT_conservative_rasterization  ( PhysicalDeviceCons
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showString)
@@ -208,23 +208,21 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 -- describing conservative raster properties that can be supported by an
 -- implementation
 --
--- = Members
---
--- The members of the
--- 'PhysicalDeviceConservativeRasterizationPropertiesEXT' structure
--- describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceConservativeRasterizationPropertiesEXT' structure
--- is included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits and properties.
+-- is included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conservative_rasterization VK_EXT_conservative_rasterization>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceConservativeRasterizationPropertiesEXT = PhysicalDeviceConservativeRasterizationPropertiesEXT
@@ -253,8 +251,8 @@ data PhysicalDeviceConservativeRasterizationPropertiesEXT = PhysicalDeviceConser
     -- means the implementation can use the smallest representable non-zero
     -- value in the screen space pixel fixed-point grid.
     extraPrimitiveOverestimationSizeGranularity :: Float
-  , -- | #limits-primitiveUnderestimation# @primitiveUnderestimation@ is true if
-    -- the implementation supports the
+  , -- | #limits-primitiveUnderestimation# @primitiveUnderestimation@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the implementation supports the
     -- 'CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT' conservative
     -- rasterization mode in addition to
     -- 'CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT'. Otherwise the
@@ -262,47 +260,44 @@ data PhysicalDeviceConservativeRasterizationPropertiesEXT = PhysicalDeviceConser
     -- 'CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT'.
     primitiveUnderestimation :: Bool
   , -- | #limits-conservativePointAndLineRasterization#
-    -- @conservativePointAndLineRasterization@ is true if the implementation
-    -- supports conservative rasterization of point and line primitives as well
-    -- as triangle primitives. Otherwise the implementation only supports
-    -- triangle primitives.
+    -- @conservativePointAndLineRasterization@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the implementation supports
+    -- conservative rasterization of point and line primitives as well as
+    -- triangle primitives. Otherwise the implementation only supports triangle
+    -- primitives.
     conservativePointAndLineRasterization :: Bool
   , -- | #limits-degenerateTrianglesRasterized# @degenerateTrianglesRasterized@
-    -- is false if the implementation culls primitives generated from triangles
-    -- that become zero area after they are quantized to the fixed-point
-    -- rasterization pixel grid. @degenerateTrianglesRasterized@ is true if
-    -- these primitives are not culled and the provoking vertex attributes and
-    -- depth value are used for the fragments. The primitive area calculation
-    -- is done on the primitive generated from the clipped triangle if
-    -- applicable. Zero area primitives are backfacing and the application
+    -- is 'Vulkan.Core10.FundamentalTypes.FALSE' if the implementation culls
+    -- primitives generated from triangles that become zero area after they are
+    -- quantized to the fixed-point rasterization pixel grid.
+    -- @degenerateTrianglesRasterized@ is 'Vulkan.Core10.FundamentalTypes.TRUE'
+    -- if these primitives are not culled and the provoking vertex attributes
+    -- and depth value are used for the fragments. The primitive area
+    -- calculation is done on the primitive generated from the clipped triangle
+    -- if applicable. Zero area primitives are backfacing and the application
     -- /can/ enable backface culling if desired.
     degenerateTrianglesRasterized :: Bool
-  , -- | #limits-degenerateLinesRasterized# @degenerateLinesRasterized@ is false
-    -- if the implementation culls lines that become zero length after they are
-    -- quantized to the fixed-point rasterization pixel grid.
-    -- @degenerateLinesRasterized@ is true if zero length lines are not culled
-    -- and the provoking vertex attributes and depth value are used for the
-    -- fragments.
+  , -- | #limits-degenerateLinesRasterized# @degenerateLinesRasterized@ is
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE' if the implementation culls lines
+    -- that become zero length after they are quantized to the fixed-point
+    -- rasterization pixel grid. @degenerateLinesRasterized@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if zero length lines are not
+    -- culled and the provoking vertex attributes and depth value are used for
+    -- the fragments.
     degenerateLinesRasterized :: Bool
   , -- | #limits-fullyCoveredFragmentShaderInputVariable#
-    -- @fullyCoveredFragmentShaderInputVariable@ is true if the implementation
-    -- supports the SPIR-V builtin fragment shader input variable
-    -- @FullyCoveredEXT@ which specifies that conservative rasterization is
-    -- enabled and the fragment area is fully covered by the generating
-    -- primitive.
+    -- @fullyCoveredFragmentShaderInputVariable@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the implementation supports the
+    -- SPIR-V builtin fragment shader input variable @FullyCoveredEXT@
+    -- specifying that conservative rasterization is enabled and the fragment
+    -- area is fully covered by the generating primitive.
     fullyCoveredFragmentShaderInputVariable :: Bool
   , -- | #limits-conservativeRasterizationPostDepthCoverage#
-    -- @conservativeRasterizationPostDepthCoverage@ is true if the
-    -- implementation supports conservative rasterization with the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-fragment-earlytest-postdepthcoverage PostDepthCoverage>
-    -- execution mode enabled. When supported the
-    -- 'Vulkan.Core10.FundamentalTypes.SampleMask' built-in input variable will
-    -- reflect the coverage after the early per-fragment depth and stencil
-    -- tests are applied even when conservative rasterization is enabled.
-    -- Otherwise
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-fragment-earlytest-postdepthcoverage PostDepthCoverage>
-    -- execution mode /must/ not be used when conservative rasterization is
-    -- enabled.
+    -- @conservativeRasterizationPostDepthCoverage@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the implementation supports
+    -- conservative rasterization with the @PostDepthCoverage@ execution mode
+    -- enabled. Otherwise the @PostDepthCoverage@ execution mode /must/ not be
+    -- used when conservative rasterization is enabled.
     conservativeRasterizationPostDepthCoverage :: Bool
   }
   deriving (Typeable, Eq)
@@ -312,7 +307,7 @@ deriving instance Generic (PhysicalDeviceConservativeRasterizationPropertiesEXT)
 deriving instance Show PhysicalDeviceConservativeRasterizationPropertiesEXT
 
 instance ToCStruct PhysicalDeviceConservativeRasterizationPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceConservativeRasterizationPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -382,6 +377,7 @@ instance Zero PhysicalDeviceConservativeRasterizationPropertiesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conservative_rasterization VK_EXT_conservative_rasterization>,
 -- 'ConservativeRasterizationModeEXT',
 -- 'PipelineRasterizationConservativeStateCreateFlagsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -417,7 +413,7 @@ deriving instance Generic (PipelineRasterizationConservativeStateCreateInfoEXT)
 deriving instance Show PipelineRasterizationConservativeStateCreateInfoEXT
 
 instance ToCStruct PipelineRasterizationConservativeStateCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineRasterizationConservativeStateCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -465,6 +461,7 @@ instance Zero PipelineRasterizationConservativeStateCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conservative_rasterization VK_EXT_conservative_rasterization>,
 -- 'PipelineRasterizationConservativeStateCreateInfoEXT'
 newtype PipelineRasterizationConservativeStateCreateFlagsEXT = PipelineRasterizationConservativeStateCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -500,6 +497,7 @@ instance Read PipelineRasterizationConservativeStateCreateFlagsEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conservative_rasterization VK_EXT_conservative_rasterization>,
 -- 'PipelineRasterizationConservativeStateCreateInfoEXT'
 newtype ConservativeRasterizationModeEXT = ConservativeRasterizationModeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)

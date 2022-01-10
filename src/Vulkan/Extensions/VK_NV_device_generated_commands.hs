@@ -21,10 +21,12 @@
 --
 --     -   Requires Vulkan 1.1
 --
+--     -   Requires @VK_KHR_buffer_device_address@
+--
 -- [__Contact__]
 --
 --     -   Christoph Kubisch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_device_generated_commands:%20&body=@pixeljetstream%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_device_generated_commands] @pixeljetstream%0A<<Here describe the issue or question you have about the VK_NV_device_generated_commands extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -304,11 +306,11 @@
 -- the command buffer reservation process, however as the memory
 -- requirements can be substantial, we want to give developers the ability
 -- to budget the memory themselves. By lowering the @maxSequencesCount@ the
--- memory consumption can be reduced. Furthermore re-use of the memory is
+-- memory consumption can be reduced. Furthermore reuse of the memory is
 -- possible, for example for doing explicit preprocessing and execution in
 -- a ping-pong fashion.
 --
--- The actual buffer size is implementation dependent and may be zero, i.e.
+-- The actual buffer size is implementation-dependent and may be zero, i.e.
 -- not always required.
 --
 -- When making use of Graphics Shader Groups, the programs should behave
@@ -334,7 +336,7 @@
 --
 -- 8) How do we allow re-using already “generated” @indirectCommands@?
 --
--- Expose a @preprocessBuffer@ to re-use implementation-dependencyFlags
+-- Expose a @preprocessBuffer@ to reuse implementation-dependencyFlags
 -- data. Set the @isPreprocessed@ to true in
 -- 'cmdExecuteGeneratedCommandsNV'.
 --
@@ -506,7 +508,16 @@
 --
 --     -   Initial version
 --
--- = See Also
+-- -   Revision 2, 2020-03-09 (Christoph Kubisch)
+--
+--     -   Remove VK_EXT_debug_report interactions
+--
+-- -   Revision 3, 2020-03-09 (Christoph Kubisch)
+--
+--     -   Fix naming VkPhysicalDeviceGenerated to
+--         VkPhysicalDeviceDeviceGenerated
+--
+-- == See Also
 --
 -- 'BindIndexBufferIndirectCommandNV', 'BindShaderGroupIndirectCommandNV',
 -- 'BindVertexBufferIndirectCommandNV', 'GeneratedCommandsInfoNV',
@@ -526,7 +537,7 @@
 -- 'createIndirectCommandsLayoutNV', 'destroyIndirectCommandsLayoutNV',
 -- 'getGeneratedCommandsMemoryRequirementsNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands Vulkan Specification>
@@ -586,7 +597,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (maybePeek)
@@ -645,9 +656,11 @@ import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Core10.FundamentalTypes (DeviceAddress)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBindPipelineShaderGroupNV))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdExecuteGeneratedCommandsNV))
@@ -696,8 +709,8 @@ foreign import ccall
   "dynamic" mkVkCmdExecuteGeneratedCommandsNV
   :: FunPtr (Ptr CommandBuffer_T -> Bool32 -> Ptr GeneratedCommandsInfoNV -> IO ()) -> Ptr CommandBuffer_T -> Bool32 -> Ptr GeneratedCommandsInfoNV -> IO ()
 
--- | vkCmdExecuteGeneratedCommandsNV - Performs the generation and execution
--- of commands on the device
+-- | vkCmdExecuteGeneratedCommandsNV - Generate and execute commands on the
+-- device
 --
 -- == Valid Usage
 --
@@ -710,6 +723,24 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-mipmapMode-04770# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-06479# If a
+--     'Vulkan.Core10.Handles.ImageView' is sampled with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-depth-compare-operation depth comparison>,
+--     the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR'
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02691# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
@@ -759,6 +790,22 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-OpTypeImage-06423# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being written as a storage image
+--     or storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-OpTypeImage-06424# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
+--     storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02697# For each set /n/
 --     that is statically used by the 'Vulkan.Core10.Handles.Pipeline'
 --     bound to the pipeline bind point used by this command, a descriptor
@@ -768,11 +815,12 @@ foreign import ccall
 --     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02698# For each push
---     constant that is statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command, a push constant value /must/ have been set for
---     the same pipeline bind point, with a
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-maintenance4-06425# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
+--     feature is not enabled, then for each push constant that is
+--     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
+--     pipeline bind point used by this command, a push constant value
+--     /must/ have been set for the same pipeline bind point, with a
 --     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for push
 --     constants, with the 'Vulkan.Core10.Handles.PipelineLayout' used to
 --     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
@@ -791,9 +839,10 @@ foreign import ccall
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set for @commandBuffer@, and done so after any
---     previously bound pipeline with the corresponding state not specified
---     as dynamic
+--     /must/ have been set or inherited (if the
+--     @VK_NV_inherited_viewport_scissor@ extension is enabled) for
+--     @commandBuffer@, and done so after any previously bound pipeline
+--     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02859# There /must/ not
 --     have been any calls to dynamic state setting commands for any state
@@ -848,50 +897,51 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-commandBuffer-02707# If
---     @commandBuffer@ is an unprotected command buffer, any resource
---     accessed by the 'Vulkan.Core10.Handles.Pipeline' object bound to the
---     pipeline bind point used by this command /must/ not be a protected
---     resource
+--     @commandBuffer@ is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command /must/ not be a protected resource
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04115# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     image view’s format
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-OpImageWrite-04469# If a
 --     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     buffer view’s format
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-SampledType-04471# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-SampledType-04472# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-SampledType-04473# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-sparseImageInt64Atomics-04474#
 --     If the
@@ -901,7 +951,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-sparseImageInt64Atomics-04475#
 --     If the
@@ -911,7 +961,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-renderPass-02684# The current
 --     render pass /must/ be
@@ -963,7 +1013,7 @@ foreign import ccall
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@scissorCount@
@@ -977,7 +1027,7 @@ foreign import ccall
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @scissorCount@ parameter of
+--     drawing command, and the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@viewportCount@
@@ -993,7 +1043,7 @@ foreign import ccall
 --     and
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ match the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
@@ -1049,10 +1099,10 @@ foreign import ccall
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-VkPipelineVieportCreateInfo-04141#
 --     If the bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
---     dynamic state enabled and an instance of
+--     dynamic state enabled and a
 --     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'
---     chained from @VkPipelineVieportCreateInfo@, then the bound graphics
---     pipeline /must/ have been created with
+--     structure chained from @VkPipelineVieportCreateInfo@, then the bound
+--     graphics pipeline /must/ have been created with
 --     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'::@viewportCount@
 --     greater or equal to the @viewportCount@ parameter in the last call
 --     to
@@ -1061,28 +1111,39 @@ foreign import ccall
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-VkPipelineVieportCreateInfo-04142#
 --     If the bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
---     dynamic state enabled and an instance of
+--     dynamic state enabled and a
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'
---     chained from @VkPipelineVieportCreateInfo@, then the bound graphics
---     pipeline /must/ have been created with
+--     structure chained from @VkPipelineVieportCreateInfo@, then the bound
+--     graphics pipeline /must/ have been created with
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'::@exclusiveScissorCount@
 --     greater or equal to the @viewportCount@ parameter in the last call
 --     to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-primitiveTopology-03420# If
---     the bound graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04876# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT'
 --     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @primitiveTopology@ parameter of
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
---     /must/ be of the same
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
---     as the pipeline
---     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
---     state
+--     drawing command
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04877# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-logicOp-04878# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command and the @logicOp@ /must/ be a valid
+--     'Vulkan.Core10.Enums.LogicOp.LogicOp' value
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-primitiveFragmentShadingRateWithMultipleViewports-04552#
 --     If the
@@ -1095,7 +1156,7 @@ foreign import ccall
 --     then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ be @1@
 --
@@ -1109,6 +1170,250 @@ foreign import ccall
 --     then the @blendEnable@ member of the corresponding element of the
 --     @pAttachments@ member of @pColorBlendState@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-rasterizationSamples-04740# If
+--     rasterization is not disabled in the bound graphics pipeline, and
+--     neither the @VK_AMD_mixed_attachment_samples@ nor the
+--     @VK_NV_framebuffer_mixed_samples@ extensions are enabled, then
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     /must/ be the same as the current subpass color and\/or
+--     depth\/stencil attachments
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-imageView-06172# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pDepthAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pDepthAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the depth attachment
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-imageView-06173# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pStencilAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pStencilAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the stencil attachment
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-imageView-06174# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pDepthAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pDepthAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL',
+--     this command /must/ not write any values to the depth attachment
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-imageView-06175# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pStencilAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pStencilAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the stencil attachment
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-imageView-06176# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pDepthAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pDepthAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the depth attachment
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-imageView-06177# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pStencilAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pStencilAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the stencil attachment
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-viewMask-06178# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound graphics pipeline /must/ have been created with
+--     a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@viewMask@
+--     equal to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@viewMask@
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-colorAttachmentCount-06179# If
+--     the current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound graphics pipeline /must/ have been created with
+--     a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@colorAttachmentCount@
+--     equal to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-colorAttachmentCount-06180# If
+--     the current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     greater than @0@, then each element of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     array with a @imageView@ not equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
+--     with a 'Vulkan.Core10.Enums.Format.Format' equal to the
+--     corresponding element of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@pColorAttachmentFormats@
+--     used to create the currently bound graphics pipeline
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-pDepthAttachment-06181# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@depthAttachmentFormat@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the 'Vulkan.Core10.Enums.Format.Format' used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-pStencilAttachment-06182# If
+--     the current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@stencilAttachmentFormat@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the 'Vulkan.Core10.Enums.Format.Format' used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-imageView-06183# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'::@imageView@
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
+--     bound graphics pipeline /must/ have been created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-imageView-06184# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'::@imageView@
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
+--     bound graphics pipeline /must/ have been created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-colorAttachmentCount-06185# If
+--     the currently bound pipeline was created with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and the current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     parameter greater than @0@, then each element of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     array with a @imageView@ not equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
+--     with a sample count equal to the corresponding element of the
+--     @pColorAttachmentSamples@ member of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     used to create the currently bound graphics pipeline
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-pDepthAttachment-06186# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
+--     @depthStencilAttachmentSamples@ member of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-pStencilAttachment-06187# If
+--     the current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
+--     @depthStencilAttachmentSamples@ member of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-colorAttachmentCount-06188# If
+--     the currently bound pipeline was created without a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and the current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     parameter greater than @0@, then each element of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     array with a @imageView@ not equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
+--     with a sample count equal to the value of
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     used to create the currently bound graphics pipeline
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-pDepthAttachment-06189# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created without a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-pStencilAttachment-06190# If
+--     the current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created without a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-renderPass-06198# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline /must/ have been created with a
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@renderPass@
+--     equal to 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04007# All vertex input
 --     bindings accessed via vertex input variables declared in the vertex
@@ -1126,6 +1431,76 @@ foreign import ccall
 --     contained within the corresponding vertex buffer binding, as
 --     described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input ???>
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-primitiveTopology-03420# If
+--     the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @primitiveTopology@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     /must/ be of the same
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
+--     as the pipeline
+--     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
+--     state
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04912# If the bound
+--     graphics pipeline was created with both the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--     dynamic states enabled, then
+--     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-pStrides-04913# If the bound
+--     graphics pipeline was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--     dynamic state enabled, but not the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     dynamic state enabled, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command, and the @pStrides@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+--     /must/ not be @NULL@
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04914# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     dynamic state enabled, then
+--     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04875# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPatchControlPointsEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04879# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-stage-06481# The bound
+--     graphics pipeline /must/ not have been created with the
+--     'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo'::@stage@
+--     member of an element of
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pStages@ set
+--     to
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_NV'
+--     or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_NV'
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-commandBuffer-02970#
 --     @commandBuffer@ /must/ not be a protected command buffer
@@ -1184,15 +1559,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'GeneratedCommandsInfoNV'
 cmdExecuteGeneratedCommandsNV :: forall io
@@ -1205,13 +1581,12 @@ cmdExecuteGeneratedCommandsNV :: forall io
                                  -- 'Vulkan.Core10.FundamentalTypes.FALSE' this command will implicitly
                                  -- trigger the preprocessing step, otherwise not.
                                  ("isPreprocessed" ::: Bool)
-                              -> -- | @pGeneratedCommandsInfo@ is a pointer to an instance of the
-                                 -- 'GeneratedCommandsInfoNV' structure containing parameters affecting the
-                                 -- generation of commands.
+                              -> -- | @pGeneratedCommandsInfo@ is a pointer to a 'GeneratedCommandsInfoNV'
+                                 -- structure containing parameters affecting the generation of commands.
                                  GeneratedCommandsInfoNV
                               -> io ()
 cmdExecuteGeneratedCommandsNV commandBuffer isPreprocessed generatedCommandsInfo = liftIO . evalContT $ do
-  let vkCmdExecuteGeneratedCommandsNVPtr = pVkCmdExecuteGeneratedCommandsNV (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdExecuteGeneratedCommandsNVPtr = pVkCmdExecuteGeneratedCommandsNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdExecuteGeneratedCommandsNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdExecuteGeneratedCommandsNV is null" Nothing Nothing
   let vkCmdExecuteGeneratedCommandsNV' = mkVkCmdExecuteGeneratedCommandsNV vkCmdExecuteGeneratedCommandsNVPtr
@@ -1277,27 +1652,27 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'GeneratedCommandsInfoNV'
 cmdPreprocessGeneratedCommandsNV :: forall io
                                   . (MonadIO io)
                                  => -- | @commandBuffer@ is the command buffer which does the preprocessing.
                                     CommandBuffer
-                                 -> -- | @pGeneratedCommandsInfo@ is a pointer to an instance of the
-                                    -- 'GeneratedCommandsInfoNV' structure containing parameters affecting the
-                                    -- preprocessing step.
+                                 -> -- | @pGeneratedCommandsInfo@ is a pointer to a 'GeneratedCommandsInfoNV'
+                                    -- structure containing parameters affecting the preprocessing step.
                                     GeneratedCommandsInfoNV
                                  -> io ()
 cmdPreprocessGeneratedCommandsNV commandBuffer generatedCommandsInfo = liftIO . evalContT $ do
-  let vkCmdPreprocessGeneratedCommandsNVPtr = pVkCmdPreprocessGeneratedCommandsNV (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdPreprocessGeneratedCommandsNVPtr = pVkCmdPreprocessGeneratedCommandsNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdPreprocessGeneratedCommandsNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPreprocessGeneratedCommandsNV is null" Nothing Nothing
   let vkCmdPreprocessGeneratedCommandsNV' = mkVkCmdPreprocessGeneratedCommandsNV vkCmdPreprocessGeneratedCommandsNVPtr
@@ -1373,15 +1748,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Pipeline',
 -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
 cmdBindPipelineShaderGroupNV :: forall io
@@ -1399,7 +1775,7 @@ cmdBindPipelineShaderGroupNV :: forall io
                                 ("groupIndex" ::: Word32)
                              -> io ()
 cmdBindPipelineShaderGroupNV commandBuffer pipelineBindPoint pipeline groupIndex = liftIO $ do
-  let vkCmdBindPipelineShaderGroupNVPtr = pVkCmdBindPipelineShaderGroupNV (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBindPipelineShaderGroupNVPtr = pVkCmdBindPipelineShaderGroupNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdBindPipelineShaderGroupNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindPipelineShaderGroupNV is null" Nothing Nothing
   let vkCmdBindPipelineShaderGroupNV' = mkVkCmdBindPipelineShaderGroupNV vkCmdBindPipelineShaderGroupNVPtr
@@ -1440,6 +1816,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'GeneratedCommandsMemoryRequirementsInfoNV',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'
@@ -1447,13 +1824,13 @@ getGeneratedCommandsMemoryRequirementsNV :: forall a io
                                           . (Extendss MemoryRequirements2 a, PokeChain a, PeekChain a, MonadIO io)
                                          => -- | @device@ is the logical device that owns the buffer.
                                             Device
-                                         -> -- | @pInfo@ is a pointer to an instance of the
-                                            -- 'GeneratedCommandsMemoryRequirementsInfoNV' structure containing
-                                            -- parameters required for the memory requirements query.
+                                         -> -- | @pInfo@ is a pointer to a 'GeneratedCommandsMemoryRequirementsInfoNV'
+                                            -- structure containing parameters required for the memory requirements
+                                            -- query.
                                             GeneratedCommandsMemoryRequirementsInfoNV
                                          -> io (MemoryRequirements2 a)
 getGeneratedCommandsMemoryRequirementsNV device info = liftIO . evalContT $ do
-  let vkGetGeneratedCommandsMemoryRequirementsNVPtr = pVkGetGeneratedCommandsMemoryRequirementsNV (deviceCmds (device :: Device))
+  let vkGetGeneratedCommandsMemoryRequirementsNVPtr = pVkGetGeneratedCommandsMemoryRequirementsNV (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetGeneratedCommandsMemoryRequirementsNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetGeneratedCommandsMemoryRequirementsNV is null" Nothing Nothing
   let vkGetGeneratedCommandsMemoryRequirementsNV' = mkVkGetGeneratedCommandsMemoryRequirementsNV vkGetGeneratedCommandsMemoryRequirementsNVPtr
@@ -1513,6 +1890,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'IndirectCommandsLayoutCreateInfoNV',
 -- 'Vulkan.Extensions.Handles.IndirectCommandsLayoutNV'
@@ -1520,9 +1898,9 @@ createIndirectCommandsLayoutNV :: forall io
                                 . (MonadIO io)
                                => -- | @device@ is the logical device that creates the indirect command layout.
                                   Device
-                               -> -- | @pCreateInfo@ is a pointer to an instance of the
-                                  -- 'IndirectCommandsLayoutCreateInfoNV' structure containing parameters
-                                  -- affecting creation of the indirect command layout.
+                               -> -- | @pCreateInfo@ is a pointer to a 'IndirectCommandsLayoutCreateInfoNV'
+                                  -- structure containing parameters affecting creation of the indirect
+                                  -- command layout.
                                   IndirectCommandsLayoutCreateInfoNV
                                -> -- | @pAllocator@ controls host memory allocation as described in the
                                   -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
@@ -1530,7 +1908,7 @@ createIndirectCommandsLayoutNV :: forall io
                                   ("allocator" ::: Maybe AllocationCallbacks)
                                -> io (IndirectCommandsLayoutNV)
 createIndirectCommandsLayoutNV device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateIndirectCommandsLayoutNVPtr = pVkCreateIndirectCommandsLayoutNV (deviceCmds (device :: Device))
+  let vkCreateIndirectCommandsLayoutNVPtr = pVkCreateIndirectCommandsLayoutNV (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateIndirectCommandsLayoutNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateIndirectCommandsLayoutNV is null" Nothing Nothing
   let vkCreateIndirectCommandsLayoutNV' = mkVkCreateIndirectCommandsLayoutNV vkCreateIndirectCommandsLayoutNVPtr
@@ -1615,6 +1993,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.Handles.IndirectCommandsLayoutNV'
@@ -1630,7 +2009,7 @@ destroyIndirectCommandsLayoutNV :: forall io
                                    ("allocator" ::: Maybe AllocationCallbacks)
                                 -> io ()
 destroyIndirectCommandsLayoutNV device indirectCommandsLayout allocator = liftIO . evalContT $ do
-  let vkDestroyIndirectCommandsLayoutNVPtr = pVkDestroyIndirectCommandsLayoutNV (deviceCmds (device :: Device))
+  let vkDestroyIndirectCommandsLayoutNVPtr = pVkDestroyIndirectCommandsLayoutNV (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyIndirectCommandsLayoutNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyIndirectCommandsLayoutNV is null" Nothing Nothing
   let vkDestroyIndirectCommandsLayoutNV' = mkVkDestroyIndirectCommandsLayoutNV vkDestroyIndirectCommandsLayoutNVPtr
@@ -1647,23 +2026,25 @@ destroyIndirectCommandsLayoutNV device indirectCommandsLayout allocator = liftIO
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceDeviceGeneratedCommandsFeaturesNV'
--- structure describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceDeviceGeneratedCommandsFeaturesNV' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceDeviceGeneratedCommandsFeaturesNV' /can/ also be used in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- the features.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceDeviceGeneratedCommandsFeaturesNV' /can/ also
+-- be used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
+-- to selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDeviceGeneratedCommandsFeaturesNV = PhysicalDeviceDeviceGeneratedCommandsFeaturesNV
@@ -1679,7 +2060,7 @@ deriving instance Generic (PhysicalDeviceDeviceGeneratedCommandsFeaturesNV)
 deriving instance Show PhysicalDeviceDeviceGeneratedCommandsFeaturesNV
 
 instance ToCStruct PhysicalDeviceDeviceGeneratedCommandsFeaturesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceDeviceGeneratedCommandsFeaturesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1714,10 +2095,21 @@ instance Zero PhysicalDeviceDeviceGeneratedCommandsFeaturesNV where
 -- describing push descriptor limits that can be supported by an
 -- implementation
 --
+-- = Description
+--
+-- If the 'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV' structure is
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
+--
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDeviceGeneratedCommandsPropertiesNV = PhysicalDeviceDeviceGeneratedCommandsPropertiesNV
   { -- | @maxGraphicsShaderGroupCount@ is the maximum number of shader groups in
@@ -1743,7 +2135,7 @@ data PhysicalDeviceDeviceGeneratedCommandsPropertiesNV = PhysicalDeviceDeviceGen
   , -- No documentation found for Nested "VkPhysicalDeviceDeviceGeneratedCommandsPropertiesNV" "minSequencesIndexBufferOffsetAlignment"
     minSequencesIndexBufferOffsetAlignment :: Word32
   , -- | @minIndirectCommandsBufferOffsetAlignment@ is the minimum alignment for
-    -- memory addresses used in 'IndirectCommandsStreamNV' and as preprocess
+    -- memory addresses used in 'IndirectCommandsStreamNV', and as preprocess
     -- buffer in 'GeneratedCommandsInfoNV'.
     minIndirectCommandsBufferOffsetAlignment :: Word32
   }
@@ -1754,7 +2146,7 @@ deriving instance Generic (PhysicalDeviceDeviceGeneratedCommandsPropertiesNV)
 deriving instance Show PhysicalDeviceDeviceGeneratedCommandsPropertiesNV
 
 instance ToCStruct PhysicalDeviceDeviceGeneratedCommandsPropertiesNV where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceDeviceGeneratedCommandsPropertiesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1859,20 +2251,22 @@ instance Zero PhysicalDeviceDeviceGeneratedCommandsPropertiesNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>,
 -- 'GraphicsPipelineShaderGroupsCreateInfoNV',
 -- 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo',
 -- 'Vulkan.Core10.Pipeline.PipelineTessellationStateCreateInfo',
 -- 'Vulkan.Core10.Pipeline.PipelineVertexInputStateCreateInfo',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data GraphicsShaderGroupCreateInfoNV = GraphicsShaderGroupCreateInfoNV
-  { -- | @pStages@ is an array of size @stageCount@ structures of type
-    -- 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo' describing the
-    -- set of the shader stages to be included in this shader group.
+  { -- | @pStages@ is a pointer to an array
+    -- 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo' structures
+    -- specifying the set of the shader stages to be included in this shader
+    -- group.
     stages :: Vector (SomeStruct PipelineShaderStageCreateInfo)
-  , -- | @pVertexInputState@ is a pointer to an instance of the
+  , -- | @pVertexInputState@ is a pointer to a
     -- 'Vulkan.Core10.Pipeline.PipelineVertexInputStateCreateInfo' structure.
     vertexInputState :: Maybe (SomeStruct PipelineVertexInputStateCreateInfo)
-  , -- | @pTessellationState@ is a pointer to an instance of the
+  , -- | @pTessellationState@ is a pointer to a
     -- 'Vulkan.Core10.Pipeline.PipelineTessellationStateCreateInfo' structure,
     -- and is ignored if the shader group does not include a tessellation
     -- control shader stage and tessellation evaluation shader stage.
@@ -1885,12 +2279,12 @@ deriving instance Generic (GraphicsShaderGroupCreateInfoNV)
 deriving instance Show GraphicsShaderGroupCreateInfoNV
 
 instance ToCStruct GraphicsShaderGroupCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsShaderGroupCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GRAPHICS_SHADER_GROUP_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (stages)) :: Word32))
-    pPStages' <- ContT $ allocaBytesAligned @(PipelineShaderStageCreateInfo _) ((Data.Vector.length (stages)) * 48) 8
+    pPStages' <- ContT $ allocaBytes @(PipelineShaderStageCreateInfo _) ((Data.Vector.length (stages)) * 48)
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPStages' `plusPtr` (48 * (i)) :: Ptr (PipelineShaderStageCreateInfo _))) (e) . ($ ())) (stages)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr (PipelineShaderStageCreateInfo _)))) (pPStages')
     pVertexInputState'' <- case (vertexInputState) of
@@ -2001,17 +2395,18 @@ instance Zero GraphicsShaderGroupCreateInfoNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>,
 -- 'GraphicsShaderGroupCreateInfoNV', 'Vulkan.Core10.Handles.Pipeline',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data GraphicsPipelineShaderGroupsCreateInfoNV = GraphicsPipelineShaderGroupsCreateInfoNV
-  { -- | @pGroups@ is an array of 'GraphicsShaderGroupCreateInfoNV' values
-    -- specifying which state of the original
+  { -- | @pGroups@ is a pointer to an array of 'GraphicsShaderGroupCreateInfoNV'
+    -- structures specifying which state of the original
     -- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' each shader group
     -- overrides.
     groups :: Vector GraphicsShaderGroupCreateInfoNV
-  , -- | @pPipelines@ is an array of graphics 'Vulkan.Core10.Handles.Pipeline',
-    -- which are referenced within the created pipeline, including all their
-    -- shader groups.
+  , -- | @pPipelines@ is a pointer to an array of graphics
+    -- 'Vulkan.Core10.Handles.Pipeline' structures which are referenced within
+    -- the created pipeline, including all their shader groups.
     pipelines :: Vector Pipeline
   }
   deriving (Typeable)
@@ -2021,16 +2416,16 @@ deriving instance Generic (GraphicsPipelineShaderGroupsCreateInfoNV)
 deriving instance Show GraphicsPipelineShaderGroupsCreateInfoNV
 
 instance ToCStruct GraphicsPipelineShaderGroupsCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsPipelineShaderGroupsCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GRAPHICS_PIPELINE_SHADER_GROUPS_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (groups)) :: Word32))
-    pPGroups' <- ContT $ allocaBytesAligned @GraphicsShaderGroupCreateInfoNV ((Data.Vector.length (groups)) * 48) 8
+    pPGroups' <- ContT $ allocaBytes @GraphicsShaderGroupCreateInfoNV ((Data.Vector.length (groups)) * 48)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPGroups' `plusPtr` (48 * (i)) :: Ptr GraphicsShaderGroupCreateInfoNV) (e) . ($ ())) (groups)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr GraphicsShaderGroupCreateInfoNV))) (pPGroups')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (pipelines)) :: Word32))
-    pPPipelines' <- ContT $ allocaBytesAligned @Pipeline ((Data.Vector.length (pipelines)) * 8) 8
+    pPPipelines' <- ContT $ allocaBytes @Pipeline ((Data.Vector.length (pipelines)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPPipelines' `plusPtr` (8 * (i)) :: Ptr Pipeline) (e)) (pipelines)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr Pipeline))) (pPPipelines')
     lift $ f
@@ -2075,7 +2470,7 @@ instance Zero GraphicsPipelineShaderGroupsCreateInfoNV where
 --
 -- = See Also
 --
--- No cross-references are available
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>
 data BindShaderGroupIndirectCommandNV = BindShaderGroupIndirectCommandNV
   { -- No documentation found for Nested "VkBindShaderGroupIndirectCommandNV" "groupIndex"
     groupIndex :: Word32 }
@@ -2086,7 +2481,7 @@ deriving instance Generic (BindShaderGroupIndirectCommandNV)
 deriving instance Show BindShaderGroupIndirectCommandNV
 
 instance ToCStruct BindShaderGroupIndirectCommandNV where
-  withCStruct x f = allocaBytesAligned 4 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 4 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindShaderGroupIndirectCommandNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (groupIndex)
     f
@@ -2139,6 +2534,7 @@ instance Zero BindShaderGroupIndirectCommandNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceAddress',
 -- 'Vulkan.Core10.Enums.IndexType.IndexType'
 data BindIndexBufferIndirectCommandNV = BindIndexBufferIndirectCommandNV
@@ -2163,7 +2559,7 @@ deriving instance Generic (BindIndexBufferIndirectCommandNV)
 deriving instance Show BindIndexBufferIndirectCommandNV
 
 instance ToCStruct BindIndexBufferIndirectCommandNV where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindIndexBufferIndirectCommandNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceAddress)) (bufferAddress)
     poke ((p `plusPtr` 8 :: Ptr Word32)) (size)
@@ -2215,6 +2611,7 @@ instance Zero BindIndexBufferIndirectCommandNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceAddress'
 data BindVertexBufferIndirectCommandNV = BindVertexBufferIndirectCommandNV
   { -- | @bufferAddress@ specifies a physical address of the
@@ -2237,7 +2634,7 @@ deriving instance Generic (BindVertexBufferIndirectCommandNV)
 deriving instance Show BindVertexBufferIndirectCommandNV
 
 instance ToCStruct BindVertexBufferIndirectCommandNV where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindVertexBufferIndirectCommandNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceAddress)) (bufferAddress)
     poke ((p `plusPtr` 8 :: Ptr Word32)) (size)
@@ -2277,7 +2674,7 @@ instance Zero BindVertexBufferIndirectCommandNV where
 --
 -- = See Also
 --
--- No cross-references are available
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>
 data SetStateFlagsIndirectCommandNV = SetStateFlagsIndirectCommandNV
   { -- | @data@ encodes packed state that this command alters.
     --
@@ -2292,7 +2689,7 @@ deriving instance Generic (SetStateFlagsIndirectCommandNV)
 deriving instance Show SetStateFlagsIndirectCommandNV
 
 instance ToCStruct SetStateFlagsIndirectCommandNV where
-  withCStruct x f = allocaBytesAligned 4 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 4 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SetStateFlagsIndirectCommandNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (data')
     f
@@ -2344,6 +2741,7 @@ instance Zero SetStateFlagsIndirectCommandNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>,
 -- 'Vulkan.Core10.Handles.Buffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize', 'GeneratedCommandsInfoNV'
 data IndirectCommandsStreamNV = IndirectCommandsStreamNV
@@ -2361,7 +2759,7 @@ deriving instance Generic (IndirectCommandsStreamNV)
 deriving instance Show IndirectCommandsStreamNV
 
 instance ToCStruct IndirectCommandsStreamNV where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p IndirectCommandsStreamNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Buffer)) (buffer)
     poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (offset)
@@ -2446,11 +2844,11 @@ instance Zero IndirectCommandsStreamNV where
 --     @pushconstantSize@ and for each push constant range that overlaps
 --     that byte, @pushconstantShaderStageFlags@ /must/ include all stages
 --     in that push constant range’s
---     'Vulkan.Core10.PipelineLayout.PushConstantRange'::@pushconstantShaderStageFlags@
+--     'Vulkan.Core10.PipelineLayout.PushConstantRange'::@stageFlags@
 --
 -- -   #VUID-VkIndirectCommandsLayoutTokenNV-tokenType-02984# If
 --     @tokenType@ is 'INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV',
---     @indirectStateFlags@ /must/ not be ´0´
+--     @indirectStateFlags@ /must/ not be @0@
 --
 -- == Valid Usage (Implicit)
 --
@@ -2488,6 +2886,7 @@ instance Zero IndirectCommandsStreamNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.IndexType.IndexType',
 -- 'IndirectCommandsLayoutCreateInfoNV', 'IndirectCommandsTokenTypeNV',
@@ -2497,8 +2896,8 @@ instance Zero IndirectCommandsStreamNV where
 data IndirectCommandsLayoutTokenNV = IndirectCommandsLayoutTokenNV
   { -- | @tokenType@ specifies the token command type.
     tokenType :: IndirectCommandsTokenTypeNV
-  , -- | @stream@ is the index of the input stream that contains the token
-    -- argument data.
+  , -- | @stream@ is the index of the input stream containing the token argument
+    -- data.
     stream :: Word32
   , -- | @offset@ is a relative starting offset within the input stream memory
     -- for the token argument data.
@@ -2535,7 +2934,7 @@ deriving instance Generic (IndirectCommandsLayoutTokenNV)
 deriving instance Show IndirectCommandsLayoutTokenNV
 
 instance ToCStruct IndirectCommandsLayoutTokenNV where
-  withCStruct x f = allocaBytesAligned 88 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 88 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p IndirectCommandsLayoutTokenNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_TOKEN_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -2553,10 +2952,10 @@ instance ToCStruct IndirectCommandsLayoutTokenNV where
     lift $ unless ((Data.Vector.length $ (indexTypeValues)) == pIndexTypesLength) $
       throwIO $ IOError Nothing InvalidArgument "" "pIndexTypeValues and pIndexTypes must have the same length" Nothing Nothing
     lift $ poke ((p `plusPtr` 64 :: Ptr Word32)) ((fromIntegral pIndexTypesLength :: Word32))
-    pPIndexTypes' <- ContT $ allocaBytesAligned @IndexType ((Data.Vector.length (indexTypes)) * 4) 4
+    pPIndexTypes' <- ContT $ allocaBytes @IndexType ((Data.Vector.length (indexTypes)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPIndexTypes' `plusPtr` (4 * (i)) :: Ptr IndexType) (e)) (indexTypes)
     lift $ poke ((p `plusPtr` 72 :: Ptr (Ptr IndexType))) (pPIndexTypes')
-    pPIndexTypeValues' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (indexTypeValues)) * 4) 4
+    pPIndexTypeValues' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (indexTypeValues)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPIndexTypeValues' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (indexTypeValues)
     lift $ poke ((p `plusPtr` 80 :: Ptr (Ptr Word32))) (pPIndexTypeValues')
     lift $ f
@@ -2689,9 +3088,6 @@ instance Zero IndirectCommandsLayoutTokenNV where
 --     /must/ be a valid combination of
 --     'IndirectCommandsLayoutUsageFlagBitsNV' values
 --
--- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-flags-requiredbitmask#
---     @flags@ /must/ not be @0@
---
 -- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-pipelineBindPoint-parameter#
 --     @pipelineBindPoint@ /must/ be a valid
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' value
@@ -2712,6 +3108,7 @@ instance Zero IndirectCommandsLayoutTokenNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>,
 -- 'IndirectCommandsLayoutTokenNV', 'IndirectCommandsLayoutUsageFlagsNV',
 -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -2739,18 +3136,18 @@ deriving instance Generic (IndirectCommandsLayoutCreateInfoNV)
 deriving instance Show IndirectCommandsLayoutCreateInfoNV
 
 instance ToCStruct IndirectCommandsLayoutCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p IndirectCommandsLayoutCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr IndirectCommandsLayoutUsageFlagsNV)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr PipelineBindPoint)) (pipelineBindPoint)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (tokens)) :: Word32))
-    pPTokens' <- ContT $ allocaBytesAligned @IndirectCommandsLayoutTokenNV ((Data.Vector.length (tokens)) * 88) 8
+    pPTokens' <- ContT $ allocaBytes @IndirectCommandsLayoutTokenNV ((Data.Vector.length (tokens)) * 88)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPTokens' `plusPtr` (88 * (i)) :: Ptr IndirectCommandsLayoutTokenNV) (e) . ($ ())) (tokens)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr IndirectCommandsLayoutTokenNV))) (pPTokens')
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (streamStrides)) :: Word32))
-    pPStreamStrides' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (streamStrides)) * 4) 4
+    pPStreamStrides' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (streamStrides)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPStreamStrides' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (streamStrides)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr Word32))) (pPStreamStrides')
     lift $ f
@@ -2759,7 +3156,6 @@ instance ToCStruct IndirectCommandsLayoutCreateInfoNV where
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr IndirectCommandsLayoutUsageFlagsNV)) (zero)
     poke ((p `plusPtr` 20 :: Ptr PipelineBindPoint)) (zero)
     f
 
@@ -2936,6 +3332,7 @@ instance Zero IndirectCommandsLayoutCreateInfoNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>,
 -- 'Vulkan.Core10.Handles.Buffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Extensions.Handles.IndirectCommandsLayoutNV',
@@ -2955,8 +3352,9 @@ data GeneratedCommandsInfoNV = GeneratedCommandsInfoNV
     -- 'Vulkan.Extensions.Handles.IndirectCommandsLayoutNV' that provides the
     -- command sequence to generate.
     indirectCommandsLayout :: IndirectCommandsLayoutNV
-  , -- | @pStreams@ provides an array of 'IndirectCommandsStreamNV' that provide
-    -- the input data for the tokens used in @indirectCommandsLayout@.
+  , -- | @pStreams@ is a pointer to an array of @streamCount@
+    -- 'IndirectCommandsStreamNV' structures providing the input data for the
+    -- tokens used in @indirectCommandsLayout@.
     streams :: Vector IndirectCommandsStreamNV
   , -- | @sequencesCount@ is the maximum number of sequences to reserve. If
     -- @sequencesCountBuffer@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', this
@@ -2994,7 +3392,7 @@ deriving instance Generic (GeneratedCommandsInfoNV)
 deriving instance Show GeneratedCommandsInfoNV
 
 instance ToCStruct GeneratedCommandsInfoNV where
-  withCStruct x f = allocaBytesAligned 120 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 120 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GeneratedCommandsInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GENERATED_COMMANDS_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3002,7 +3400,7 @@ instance ToCStruct GeneratedCommandsInfoNV where
     lift $ poke ((p `plusPtr` 24 :: Ptr Pipeline)) (pipeline)
     lift $ poke ((p `plusPtr` 32 :: Ptr IndirectCommandsLayoutNV)) (indirectCommandsLayout)
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (streams)) :: Word32))
-    pPStreams' <- ContT $ allocaBytesAligned @IndirectCommandsStreamNV ((Data.Vector.length (streams)) * 16) 8
+    pPStreams' <- ContT $ allocaBytes @IndirectCommandsStreamNV ((Data.Vector.length (streams)) * 16)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPStreams' `plusPtr` (16 * (i)) :: Ptr IndirectCommandsStreamNV) (e)) (streams)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr IndirectCommandsStreamNV))) (pPStreams')
     lift $ poke ((p `plusPtr` 56 :: Ptr Word32)) (sequencesCount)
@@ -3101,6 +3499,7 @@ instance Zero GeneratedCommandsInfoNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>,
 -- 'Vulkan.Extensions.Handles.IndirectCommandsLayoutNV',
 -- 'Vulkan.Core10.Handles.Pipeline',
 -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint',
@@ -3130,7 +3529,7 @@ deriving instance Generic (GeneratedCommandsMemoryRequirementsInfoNV)
 deriving instance Show GeneratedCommandsMemoryRequirementsInfoNV
 
 instance ToCStruct GeneratedCommandsMemoryRequirementsInfoNV where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GeneratedCommandsMemoryRequirementsInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GENERATED_COMMANDS_MEMORY_REQUIREMENTS_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3180,6 +3579,7 @@ type IndirectCommandsLayoutUsageFlagsNV = IndirectCommandsLayoutUsageFlagBitsNV
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>,
 -- 'IndirectCommandsLayoutUsageFlagsNV'
 newtype IndirectCommandsLayoutUsageFlagBitsNV = IndirectCommandsLayoutUsageFlagBitsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -3235,6 +3635,7 @@ type IndirectStateFlagsNV = IndirectStateFlagBitsNV
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>,
 -- 'IndirectStateFlagsNV'
 newtype IndirectStateFlagBitsNV = IndirectStateFlagBitsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -3297,6 +3698,7 @@ instance Read IndirectStateFlagBitsNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>,
 -- 'IndirectCommandsLayoutTokenNV'
 newtype IndirectCommandsTokenTypeNV = IndirectCommandsTokenTypeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)

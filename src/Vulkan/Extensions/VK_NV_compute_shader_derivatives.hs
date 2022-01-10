@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Pat Brown
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_compute_shader_derivatives:%20&body=@nvpbrown%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_compute_shader_derivatives] @nvpbrown%0A<<Here describe the issue or question you have about the VK_NV_compute_shader_derivatives extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -106,11 +106,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceComputeShaderDerivativesFeaturesNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_compute_shader_derivatives Vulkan Specification>
@@ -124,7 +124,7 @@ module Vulkan.Extensions.VK_NV_compute_shader_derivatives  ( PhysicalDeviceCompu
                                                            , pattern NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME
                                                            ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -152,27 +152,30 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceComputeShaderDerivativesFeaturesNV'
--- structure describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- See
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-quad>
--- chapter for more information.
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-quad Quad shader scope>
+-- for more information.
 --
--- If the 'PhysicalDeviceComputeShaderDerivativesFeaturesNV' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceComputeShaderDerivativesFeaturesNV' /can/ also be
--- included in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to enable features.
+-- If the @VkPhysicalDeviceComputeShaderDerivativesFeaturesNVfeatures@.
+-- structure is included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. @VkPhysicalDeviceComputeShaderDerivativesFeaturesNVfeatures@.
+-- /can/ also be used in the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
+-- features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_compute_shader_derivatives VK_NV_compute_shader_derivatives>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceComputeShaderDerivativesFeaturesNV = PhysicalDeviceComputeShaderDerivativesFeaturesNV
@@ -192,7 +195,7 @@ deriving instance Generic (PhysicalDeviceComputeShaderDerivativesFeaturesNV)
 deriving instance Show PhysicalDeviceComputeShaderDerivativesFeaturesNV
 
 instance ToCStruct PhysicalDeviceComputeShaderDerivativesFeaturesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceComputeShaderDerivativesFeaturesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

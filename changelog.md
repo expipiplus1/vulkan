@@ -2,6 +2,80 @@
 
 ## WIP
 
+## [3.14.2] - 2021-12-07
+- Bump API version to v1.2.202
+
+## [3.14.1] - 2021-12-01
+- Bump API version to v1.2.201
+
+## [3.14] - 2021-11-25
+- Bump API version to v1.2.200
+
+## [3.13.4] - 2021-11-17
+- Support ghc-9.3.20211111
+- No more warnings under 9.2
+
+## [3.13.3] - 2021-11-17
+- Bump API version to v1.2.199
+
+## [3.13.2] - 2021-11-09
+- Bump API version to v1.2.198
+
+## [3.13.1] - 2021-11-03
+- Bump API version to v1.2.197
+
+## [3.13] - 2021-10-14
+- Bump API version to v1.2.196
+
+## [3.12.2] - 2021-08-18
+- Bump API version to v1.2.189
+
+## [3.12.1] - 2021-08-12
+- Bump API version to v1.2.188
+
+## [3.12] - 2021-08-12
+- Bump API version to v1.2.188
+
+## [3.11.5] - 2021-08-03
+- Bump API version to v1.2.187
+
+## [3.11.4.1] - 2021-07-30
+- Documentation fixes
+
+## [3.11.4] - 2021-07-27
+- Bump API version to v1.2.186
+
+## [3.11.3] - 2021-07-21
+- Bump API version to v1.2.185
+
+## [3.11.2] - 2021-07-07
+- Bump API version to v1.2.184
+
+## [3.11.1] - 2021-06-28
+- Bump API version to v1.2.183
+
+## [3.11.0.2] - 2021-06-26
+- Tweak cabal file to please `cabal check`
+
+## [3.11.0.1] - 2021-06-26
+- Use allocaBytes over allocaBytesAligned where possible
+
+## [3.11] - 2021-06-21
+- Bump API version to v1.2.182
+
+## [3.10.4] - 2021-06-14
+- Bump API version to v1.2.181
+
+## [3.10.3] - 2021-06-07
+- Bump API version to v1.2.180
+
+## [3.10.2] - 2021-06-05
+- Bump API version to v1.2.179
+
+## [3.10.1] - 2021-03-31
+- Bump API version to v1.2.174
+- Fix https://github.com/expipiplus1/vulkan/issues/266
+
 ## [3.10] - 2021-02-18
 - Bump API version to v1.2.170
 

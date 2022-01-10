@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Tobias Hector
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_tooling_info:%20&body=@tobski%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_tooling_info] @tobski%0A<<Here describe the issue or question you have about the VK_EXT_tooling_info extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -146,8 +146,8 @@
 -- 1) Why is this information separate from the layer mechanism?
 --
 -- Some tooling may be built into a driver, or be part of the Vulkan loader
--- etc. - and so tying this information directly to layers would’ve been
--- awkward at best.
+-- etc. Tying this information directly to layers would have been awkward
+-- at best.
 --
 -- == Version History
 --
@@ -155,12 +155,12 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceToolPropertiesEXT', 'ToolPurposeFlagBitsEXT',
 -- 'ToolPurposeFlagsEXT', 'getPhysicalDeviceToolPropertiesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_tooling_info Vulkan Specification>
@@ -192,7 +192,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -244,6 +244,7 @@ import Vulkan.Core10.APIConstants (MAX_DESCRIPTION_SIZE)
 import Vulkan.Core10.APIConstants (MAX_EXTENSION_NAME_SIZE)
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -304,6 +305,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_tooling_info VK_EXT_tooling_info>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceToolPropertiesEXT'
 getPhysicalDeviceToolPropertiesEXT :: forall io
@@ -313,7 +315,7 @@ getPhysicalDeviceToolPropertiesEXT :: forall io
                                       PhysicalDevice
                                    -> io (Result, ("toolProperties" ::: Vector PhysicalDeviceToolPropertiesEXT))
 getPhysicalDeviceToolPropertiesEXT physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceToolPropertiesEXTPtr = pVkGetPhysicalDeviceToolPropertiesEXT (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceToolPropertiesEXTPtr = pVkGetPhysicalDeviceToolPropertiesEXT (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceToolPropertiesEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceToolPropertiesEXT is null" Nothing Nothing
   let vkGetPhysicalDeviceToolPropertiesEXT' = mkVkGetPhysicalDeviceToolPropertiesEXT vkGetPhysicalDeviceToolPropertiesEXTPtr
@@ -338,6 +340,7 @@ getPhysicalDeviceToolPropertiesEXT physicalDevice = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_tooling_info VK_EXT_tooling_info>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'ToolPurposeFlagsEXT', 'getPhysicalDeviceToolPropertiesEXT'
 data PhysicalDeviceToolPropertiesEXT = PhysicalDeviceToolPropertiesEXT
@@ -353,7 +356,7 @@ data PhysicalDeviceToolPropertiesEXT = PhysicalDeviceToolPropertiesEXT
   , -- | @description@ is a null-terminated UTF-8 string containing a description
     -- of the tool.
     description :: ByteString
-  , -- | @layer@ is a null-terminated UTF-8 string that contains the name of the
+  , -- | @layer@ is a null-terminated UTF-8 string containing the name of the
     -- layer implementing the tool, if the tool is implemented in a layer -
     -- otherwise it /may/ be an empty string.
     layer :: ByteString
@@ -365,7 +368,7 @@ deriving instance Generic (PhysicalDeviceToolPropertiesEXT)
 deriving instance Show PhysicalDeviceToolPropertiesEXT
 
 instance ToCStruct PhysicalDeviceToolPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 1048 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 1048 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceToolPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -419,6 +422,7 @@ type ToolPurposeFlagsEXT = ToolPurposeFlagBitsEXT
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_tooling_info VK_EXT_tooling_info>,
 -- 'ToolPurposeFlagsEXT'
 newtype ToolPurposeFlagBitsEXT = ToolPurposeFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

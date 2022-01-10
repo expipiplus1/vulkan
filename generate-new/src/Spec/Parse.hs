@@ -8,6 +8,7 @@ module Spec.Parse
 import           Control.Monad.Extra            ( mapMaybeM )
 import           Data.Bits
 import qualified Data.ByteString.Char8         as BS
+import qualified Data.ByteString.Extra         as BS
 import           Data.Char
 import           Data.List                      ( dropWhileEnd
                                                 , lookup
@@ -72,17 +73,41 @@ parseSpec bs = do
         specAtoms         <- case sSpecFlavor @t of
           SSpecVk -> pure mempty
           SSpecXr -> parseAtoms types
-        specHandles      <- parseHandles @t types
+        specFeatures   <- parseFeatures (contents n)
+        specExtensions <-
+          parseExtensions NotDisabled . contents =<< oneChild "extensions" n
+        specDisabledExtensions <-
+          parseExtensions OnlyDisabled . contents =<< oneChild "extensions" n
+        let disabledTypeNames = V.fromList
+              [ n
+              | Extension {..} <- toList specDisabledExtensions
+              , Require {..}   <- toList exRequires
+              , n              <- toList rTypeNames
+              ]
+            disabledCommandNames = V.fromList
+              [ n
+              | Extension {..} <- toList specDisabledExtensions
+              , Require {..}   <- toList exRequires
+              , n              <- toList rCommandNames
+              ]
+        specHandles <- V.filter ((`V.notElem` disabledTypeNames) . hName)
+          <$> parseHandles @t types
         specFuncPointers <- parseFuncPointers types
-        unsizedStructs   <- parseStructs types
-        unsizedUnions    <- parseUnions types
-        specCommands     <- parseCommands . contents =<< oneChild "commands" n
-        emptyBitmasks    <- parseEmptyBitmasks types
-        nonEmptyEnums    <- parseEnums types . contents $ n
-        requires         <- allRequires NotDisabled . contents $ n
-        enumExtensions   <- parseEnumExtensions requires
-        constantAliases  <- parseConstantAliases (contents n)
-        typeAliases      <- parseTypeAliases
+        unsizedStructs   <- V.filter ((`V.notElem` disabledTypeNames) . sName)
+          <$> parseStructs types
+        unsizedUnions <- V.filter ((`V.notElem` disabledTypeNames) . sName)
+          <$> parseUnions types
+        specCommands <-
+          fmap (V.filter ((`V.notElem` disabledCommandNames) . cName))
+          .   parseCommands
+          .   contents
+          =<< oneChild "commands" n
+        emptyBitmasks   <- parseEmptyBitmasks types
+        nonEmptyEnums   <- parseEnums types . contents $ n
+        requires        <- allRequires NotDisabled . contents $ n
+        enumExtensions  <- parseEnumExtensions requires
+        constantAliases <- parseConstantAliases (contents n)
+        typeAliases     <- parseTypeAliases
           ["handle", "enum", "bitmask", "struct"]
           types
         enumAliases <-
@@ -90,9 +115,11 @@ parseSpec bs = do
             (V.fromList $ [ c | Element c <- contents n, "enums" == name c ])
         commandAliases <-
           parseCommandAliases . contents =<< oneChild "commands" n
-        let specEnums = appendEnumExtensions
-              enumExtensions
-              (extraEnums @t <> emptyBitmasks <> nonEmptyEnums)
+        let specEnums =
+              V.filter ((`V.notElem` disabledTypeNames) . eName)
+                $ appendEnumExtensions
+                    enumExtensions
+                    (extraEnums @t <> emptyBitmasks <> nonEmptyEnums)
             -- The spec can contain duplicate aliases (duplicated in different
             -- extensions), remove them here.
             specAliases =
@@ -101,11 +128,6 @@ parseSpec bs = do
                 <> enumAliases
                 <> commandAliases
                 <> constantAliases
-        specFeatures   <- parseFeatures (contents n)
-        specExtensions <-
-          parseExtensions NotDisabled . contents =<< oneChild "extensions" n
-        specDisabledExtensions <-
-          parseExtensions OnlyDisabled . contents =<< oneChild "extensions" n
         specAPIConstants <- case specFlavor @t of
           SpecVk -> parseAPIConstants (contents n)
           SpecXr -> liftA2 (<>)
@@ -133,7 +155,12 @@ parseSpec bs = do
                   $  bespokeSizes (specFlavor @t)
                   <> [ (eName, (4, 4)) | Enum {..} <- V.toList specEnums ]
                   <> [ (n, (4, 4))
-                     | Enum { eType = ABitmask n } <- V.toList specEnums
+                     | Enum { eType = ABitmask n Bitmask32 } <- V.toList
+                       specEnums
+                     ]
+                  <> [ (n, (8, 8))
+                     | Enum { eType = ABitmask n Bitmask64 } <- V.toList
+                       specEnums
                      ]
                   <> [ (atName, (8, 8)) | Atom {..} <- V.toList specAtoms ]
                   <> [ (hName, (8, 8)) | Handle {..} <- V.toList specHandles ]
@@ -282,6 +309,110 @@ structSizeOverrides = \case
       , sAlignment = 8
       , sMembers   = V.zipWith (\o m -> m { smOffset = o })
                                (V.fromList [0, 48, 48, 52, 52, 56])
+                               ms
+      }
+  s@(Struct "VkAccelerationStructureSRTMotionInstanceNV" ms () () _ _ _ _)
+    | ms == V.fromList
+      [ StructMember "transformT0"
+                     (TypeName "VkSRTDataNV")
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "transformT1"
+                     (TypeName "VkSRTDataNV")
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "instanceCustomIndex"
+                     (Bitfield (TypeName "uint32_t") 24)
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "mask"
+                     (Bitfield (TypeName "uint32_t") 8)
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "instanceShaderBindingTableRecordOffset"
+                     (Bitfield (TypeName "uint32_t") 24)
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "flags"
+                     (Bitfield (TypeName "VkGeometryInstanceFlagsKHR") 8)
+                     mempty
+                     mempty
+                     (V.singleton True)
+                     ()
+      , StructMember "accelerationStructureReference"
+                     (TypeName "uint64_t")
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      ]
+    -> Just s
+      { sSize      = 144
+      , sAlignment = 8
+      , sMembers   = V.zipWith (\o m -> m { smOffset = o })
+                               (V.fromList [0, 64, 128, 128, 132, 132, 136])
+                               ms
+      }
+  s@(Struct "VkAccelerationStructureMatrixMotionInstanceNV" ms () () _ _ _ _)
+    | ms == V.fromList
+      [ StructMember "transformT0"
+                     (TypeName "VkTransformMatrixKHR")
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "transformT1"
+                     (TypeName "VkTransformMatrixKHR")
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "instanceCustomIndex"
+                     (Bitfield (TypeName "uint32_t") 24)
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "mask"
+                     (Bitfield (TypeName "uint32_t") 8)
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "instanceShaderBindingTableRecordOffset"
+                     (Bitfield (TypeName "uint32_t") 24)
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      , StructMember "flags"
+                     (Bitfield (TypeName "VkGeometryInstanceFlagsKHR") 8)
+                     mempty
+                     mempty
+                     (V.singleton True)
+                     ()
+      , StructMember "accelerationStructureReference"
+                     (TypeName "uint64_t")
+                     mempty
+                     mempty
+                     mempty
+                     ()
+      ]
+    -> Just s
+      { sSize      = 112
+      , sAlignment = 8
+      , sMembers   = V.zipWith (\o m -> m { smOffset = o })
+                               (V.fromList [0, 48, 96, 96, 100, 100, 104])
                                ms
       }
   _ -> Nothing
@@ -624,19 +755,20 @@ parseHandles = onTypes "handle" parseHandle
         "VkDevice"   -> pure Device
         "XrInstance" -> pure Instance
         _            -> case getAttr "parent" n of
-          Nothing                 -> pure NoHandleLevel
+          Nothing                  -> pure NoHandleLevel
           -- TODO: derive this from the spec
-          Just "VkInstance"       -> pure Instance
-          Just "VkPhysicalDevice" -> pure Instance
-          Just "VkDevice"         -> pure Device
-          Just "VkCommandPool"    -> pure Device
-          Just "VkDescriptorPool" -> pure Device
-          Just "VkDisplayKHR"     -> pure Instance
-          Just "VkSurfaceKHR"     -> pure Instance
-          Just "XrInstance"       -> pure Instance
-          Just "XrSession"        -> pure Instance
-          Just "XrActionSet"      -> pure Instance
-          _                       -> throw "Unknown handle level"
+          Just "VkInstance"        -> pure Instance
+          Just "VkPhysicalDevice"  -> pure Instance
+          Just "VkDevice"          -> pure Device
+          Just "VkCommandPool"     -> pure Device
+          Just "VkDescriptorPool"  -> pure Device
+          Just "VkDisplayKHR"      -> pure Instance
+          Just "VkSurfaceKHR"      -> pure Instance
+          Just "VkVideoSessionKHR" -> pure Device
+          Just "XrInstance"        -> pure Instance
+          Just "XrSession"         -> pure Instance
+          Just "XrActionSet"       -> pure Instance
+          _                        -> throw "Unknown handle level"
       pure Handle { .. }
 
 parseFuncPointers :: [Content] -> P (Vector FuncPointer)
@@ -661,27 +793,44 @@ parseEmptyBitmasks es = fromList <$> traverseV
   | Element n <- es
   , "type" == name n
   , not (isAlias n)
-  , Nothing        <- pure $ getAttr "requires" n
+  , Nothing        <- pure $ getAttr "requires" n <|> getAttr "bitvalues" n
   , Just "bitmask" <- pure $ getAttr "category" n
   ]
  where
   parseEmptyBitmask :: Node -> P Enum'
   parseEmptyBitmask n = do
     eName <- nameElem "bitmask" n
-    pure Enum { eValues = mempty, eType = ABitmask eName, .. }
+    -- TODO: Are these always 32bit?
+    pure Enum { eValues = mempty, eType = ABitmask eName Bitmask32, .. }
 
 parseEnums :: [Content] -> [Content] -> P (Vector Enum')
 parseEnums types es = do
   flagNameMap <- Map.fromList <$> sequence
-    [ liftA2 (,) (decodeName bits) (nameElem "bitmask" n)
+    [ do
+        f        <- decodeName bits
+        b        <- nameElem "bitmask" n
+        typeElem <- traverse decode (elemText "type" n)
+        w        <- case typeElem of
+          Nothing          -> throw ("No type found for bitmask: " <> show bits)
+          Just "VkFlags"   -> pure Bitmask32
+          Just "VkFlags64" -> pure Bitmask64
+          Just "XrFlags32" -> pure Bitmask32
+          Just "XrFlags64" -> pure Bitmask64
+          Just _ -> throw ("Unexpected type for bitmask: " <> show bits)
+        pure (f, (b, w))
     | Element n <- types
     , "type" == name n
     , not (isAlias n)
-    , Just bits      <- pure $ getAttr "requires" n
+    , Just bits      <- pure $ getAttr "requires" n <|> getAttr "bitvalues" n
     , Just "bitmask" <- pure $ getAttr "category" n
     ]
-  fromList <$> traverseV
-    (uncurry (parseEnum (`Map.lookup` flagNameMap) False))
+  fromList . catMaybes <$> traverseV
+    (uncurry
+      (parseEnum (fmap snd . (`Map.lookup` flagNameMap))
+                 (fmap fst . (`Map.lookup` flagNameMap))
+                 False
+      )
+    )
     [ (isBitmask, n)
     | Element n <- es
     , name n == "enums"
@@ -692,17 +841,29 @@ parseEnums types es = do
     ]
 
  where
-  parseEnum :: (CName -> Maybe CName) -> Bool -> Bool -> Node -> P Enum'
-  parseEnum getFlagsName evIsExtension isBitmask n = do
-    eName   <- nameAttr "enum" n
-    eValues <- fromList <$> traverseV
-      (context (unCName eName) . parseValue)
-      [ e | Element e <- contents n, name e == "enum", not (isAlias e) ]
-    let eType = if isBitmask
-          then -- If we can't find the flags name, use the bits name
-               ABitmask (fromMaybe eName (getFlagsName eName))
-          else AnEnum
-    pure Enum { .. }
+  parseEnum
+    :: (CName -> Maybe BitmaskWidth)
+    -> (CName -> Maybe CName)
+    -> Bool
+    -> Bool
+    -> Node
+    -> P (Maybe Enum')
+  parseEnum getBitmaskWidth getFlagsName evIsExtension isBitmask n = do
+    eName <- nameAttr "enum" n
+    if isForbidden eName
+      then pure Nothing
+      else Just <$> do
+        eValues <- fromList <$> traverseV
+          (context (unCName eName) . parseValue)
+          [ e | Element e <- contents n, name e == "enum", not (isAlias e) ]
+        eType <- if isBitmask
+          -- If we can't find the flags name, use the bits name
+          then do
+            width <- note ("No width found for bitmask: " <> unCName eName)
+                          (getBitmaskWidth eName)
+            pure $ ABitmask (fromMaybe eName (getFlagsName eName)) width
+          else pure AnEnum
+        pure Enum { .. }
    where
     parseValue :: Node -> P EnumValue
     parseValue v = do
@@ -892,8 +1053,11 @@ parseSPIRVThings
   -> (Text -> Vector SPIRVRequirement -> a)
   -> [Content]
   -> P (Vector a)
-parseSPIRVThings thingType mkThing es = V.fromList
-  <$> sequenceV [ parseExtension e | Element e <- es, thingType == name e ]
+parseSPIRVThings thingType mkThing es = V.fromList <$> sequenceV
+  [ parseExtension e
+  | Element e <- es
+  , thingType == name e
+  ]
  where
   parseExtension n = do
     name <- decode =<< note ("spirv " <> show thingType <> " has no name")
@@ -950,7 +1114,11 @@ allTypeNames es = do
     ]
   requiresTypeNames <- traverseV
     nameText
-    [ n | Element n <- es, name n == "type", hasAttr "requires" n ]
+    [ n
+    | Element n <- es
+    , name n == "type"
+    , hasAttr "requires" n || hasAttr "bitvalues" n
+    ]
   fromList <$> traverseV
     ( fromEither
     . first fromList
@@ -1029,6 +1197,12 @@ isForbidden n =
     , "VK_DEFINE_HANDLE"
     , "VK_DEFINE_NON_DISPATCHABLE_HANDLE"
     , "VK_MAKE_VERSION"
+    , "VK_MAKE_API_VERSION"
+    , "VK_USE_64_BIT_PTR_DEFINES"
+    , "VkPipelineLayoutCreateFlagBits" -- https://github.com/KhronosGroup/Vulkan-Docs/pull/1556
+    , "VkSemaphoreCreateFlagBits"
+    , "VkShaderModuleCreateFlagBits"
+    , "VkImageFormatConstraintsFlagBitsFUCHSIA"
     ]
   xrForbidden =
     [ "openxr_platform_defines"
@@ -1085,10 +1259,12 @@ disabled p e =
 
 -- >>> parseAPIVersion "VK_API_VERSION_1_2"
 -- Just (Version {versionBranch = [1,2], versionTags = []})
+--
+-- >>> parseAPIVersion "VK_VERSION_1_2"
+-- Just (Version {versionBranch = [1,2], versionTags = []})
 parseAPIVersion :: ByteString -> Maybe Version
 parseAPIVersion b = do
-  let p = "VK_API_VERSION_"
-  v <- if p `BS.isPrefixOf` b then pure $ BS.drop (BS.length p) b else empty
+  v <- BS.dropPrefix "VK_VERSION_" b <|> BS.dropPrefix "VK_API_VERSION_" b
   let cs = BS.split '_' v
   is <- traverse (readMaybe . BS.unpack) cs
   pure $ makeVersion is

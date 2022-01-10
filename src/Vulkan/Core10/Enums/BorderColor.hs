@@ -29,6 +29,7 @@ import GHC.Show (Show(showsPrec))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Sampler.SamplerCreateInfo'
 newtype BorderColor = BorderColor Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -53,15 +54,15 @@ pattern BORDER_COLOR_FLOAT_OPAQUE_WHITE      = BorderColor 4
 pattern BORDER_COLOR_INT_OPAQUE_WHITE        = BorderColor 5
 -- | 'BORDER_COLOR_INT_CUSTOM_EXT' indicates that a
 -- 'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT'
--- structure is present in the
--- 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@pNext@ chain which contains
--- the color data in integer format.
+-- structure is included in the
+-- 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@pNext@ chain containing the
+-- color data in integer format.
 pattern BORDER_COLOR_INT_CUSTOM_EXT          = BorderColor 1000287004
 -- | 'BORDER_COLOR_FLOAT_CUSTOM_EXT' indicates that a
 -- 'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT'
--- structure is present in the
--- 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@pNext@ chain which contains
--- the color data in floating-point format.
+-- structure is included in the
+-- 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@pNext@ chain containing the
+-- color data in floating-point format.
 pattern BORDER_COLOR_FLOAT_CUSTOM_EXT        = BorderColor 1000287003
 {-# complete BORDER_COLOR_FLOAT_TRANSPARENT_BLACK,
              BORDER_COLOR_INT_TRANSPARENT_BLACK,

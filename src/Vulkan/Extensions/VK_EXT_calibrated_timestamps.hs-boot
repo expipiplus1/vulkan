@@ -15,16 +15,18 @@
 --     185
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
 --     -   Requires Vulkan 1.0
 --
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
 -- [__Contact__]
 --
 --     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_calibrated_timestamps:%20&body=@drakos-amd%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_calibrated_timestamps] @drakos-amd%0A<<Here describe the issue or question you have about the VK_EXT_calibrated_timestamps extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -100,7 +102,7 @@
 -- type. The proposed API chooses the general approach for the sake of
 -- extensibility.
 --
--- 4) Shouldn’t we use CLOCK_MONOTONIC_RAW instead of CLOCK_MONOTONIC?
+-- 4) Should we use CLOCK_MONOTONIC_RAW instead of CLOCK_MONOTONIC?
 --
 -- __RESOLVED__: CLOCK_MONOTONIC is usable in a wider set of situations,
 -- however, it is subject to NTP adjustments so some use cases may prefer
@@ -113,6 +115,12 @@
 -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@timestampPeriod@
 -- makes it possible to calculate future device timestamps as follows:
 --
+-- 6) In what queue are timestamp values in time domain
+-- 'TIME_DOMAIN_DEVICE_EXT' captured by 'getCalibratedTimestampsEXT'?
+--
+-- __RESOLVED__: An implementation supporting this extension will have all
+-- its VkQueue share the same time domain.
+--
 -- > futureTimestamp = calibratedTimestamp + deltaNanoseconds / timestampPeriod
 --
 -- 6) Can the host and device timestamp values drift apart over longer
@@ -120,13 +128,13 @@
 --
 -- __RESOLVED__: Yes, especially as some time domains by definition allow
 -- for that to happen (e.g. CLOCK_MONOTONIC is subject to NTP adjustments).
--- Thus it’s recommended that applications re-calibrate from time to time.
+-- Thus it is recommended that applications re-calibrate from time to time.
 --
 -- 7) Should we add a query for reporting the maximum deviation of the
 -- timestamp values returned by calibrated timestamp queries?
 --
 -- __RESOLVED__: A global query seems inappropriate and difficult to
--- enforce. However, it’s possible to return the maximum deviation any
+-- enforce. However, it is possible to return the maximum deviation any
 -- single calibrated timestamp query can have by sampling one of the time
 -- domains twice as follows:
 --
@@ -140,24 +148,28 @@
 --
 -- __RESOLVED__: Unless the tick of each clock corresponding to the set of
 -- time domains coincides and all clocks can literally be sampled
--- simutaneously, there isn’t really a possibility for the maximum
+-- simutaneously, there is not really a possibility for the maximum
 -- deviation to be zero, so by convention the maximum deviation is always
 -- at least the maximum of the length of the ticks of the set of time
 -- domains calibrated and thus can never be zero.
 --
 -- == Version History
 --
+-- -   Revision 2, 2021-03-16 (Lionel Landwerlin)
+--
+--     -   Specify requirement on device timestamps
+--
 -- -   Revision 1, 2018-10-04 (Daniel Rakos)
 --
 --     -   Internal revisions.
 --
--- = See Also
+-- == See Also
 --
 -- 'CalibratedTimestampInfoEXT', 'TimeDomainEXT',
 -- 'getCalibratedTimestampsEXT',
 -- 'getPhysicalDeviceCalibrateableTimeDomainsEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_calibrated_timestamps Vulkan Specification>

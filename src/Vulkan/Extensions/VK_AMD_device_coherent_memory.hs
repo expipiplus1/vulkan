@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Tobias Hector
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_device_coherent_memory:%20&body=@tobski%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_device_coherent_memory] @tobski%0A<<Here describe the issue or question you have about the VK_AMD_device_coherent_memory extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -82,11 +82,11 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceCoherentMemoryFeaturesAMD'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_device_coherent_memory Vulkan Specification>
@@ -100,7 +100,7 @@ module Vulkan.Extensions.VK_AMD_device_coherent_memory  ( PhysicalDeviceCoherent
                                                         , pattern AMD_DEVICE_COHERENT_MEMORY_EXTENSION_NAME
                                                         ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -127,13 +127,25 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceCoherentMemoryFeaturesAMD' structure
--- describe the following features:
+-- This structure describes the following feature:
+--
+-- = Description
+--
+-- If the 'PhysicalDeviceCoherentMemoryFeaturesAMD' structure is included
+-- in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceCoherentMemoryFeaturesAMD' /can/ also be used
+-- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_device_coherent_memory VK_AMD_device_coherent_memory>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCoherentMemoryFeaturesAMD = PhysicalDeviceCoherentMemoryFeaturesAMD
@@ -148,7 +160,7 @@ deriving instance Generic (PhysicalDeviceCoherentMemoryFeaturesAMD)
 deriving instance Show PhysicalDeviceCoherentMemoryFeaturesAMD
 
 instance ToCStruct PhysicalDeviceCoherentMemoryFeaturesAMD where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceCoherentMemoryFeaturesAMD{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_COHERENT_MEMORY_FEATURES_AMD)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

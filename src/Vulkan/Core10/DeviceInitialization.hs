@@ -34,7 +34,6 @@ module Vulkan.Core10.DeviceInitialization  ( createInstance
                                            , SystemAllocationScope(..)
                                            , PhysicalDeviceType(..)
                                            , Format(..)
-                                           , StructureType(..)
                                            , QueueFlagBits(..)
                                            , QueueFlags
                                            , MemoryPropertyFlagBits(..)
@@ -69,7 +68,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (maybePeek)
@@ -140,6 +139,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_debug_report (DebugReportCallback
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_debug_utils (DebugUtilsMessengerCreateInfoEXT)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetDeviceProcAddr))
 import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
@@ -237,7 +237,6 @@ import Vulkan.Core10.Enums.QueueFlagBits (QueueFlagBits(..))
 import Vulkan.Core10.Enums.QueueFlagBits (QueueFlags)
 import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits(..))
 import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlags)
-import Vulkan.Core10.Enums.StructureType (StructureType(..))
 import Vulkan.Core10.Enums.SystemAllocationScope (SystemAllocationScope(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -305,6 +304,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance', 'InstanceCreateInfo'
 createInstance :: forall a io
@@ -390,6 +390,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance'
 destroyInstance :: forall io
@@ -402,7 +403,7 @@ destroyInstance :: forall io
                    ("allocator" ::: Maybe AllocationCallbacks)
                 -> io ()
 destroyInstance instance' allocator = liftIO . evalContT $ do
-  let vkDestroyInstancePtr = pVkDestroyInstance (instanceCmds (instance' :: Instance))
+  let vkDestroyInstancePtr = pVkDestroyInstance (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkDestroyInstancePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyInstance is null" Nothing Nothing
   let vkDestroyInstance' = mkVkDestroyInstance vkDestroyInstancePtr
@@ -432,9 +433,8 @@ foreign import ccall
 -- variable is overwritten with the number of handles actually written to
 -- @pPhysicalDevices@. If @pPhysicalDeviceCount@ is less than the number of
 -- physical devices available, at most @pPhysicalDeviceCount@ structures
--- will be written. If @pPhysicalDeviceCount@ is smaller than the number of
--- physical devices available, 'Vulkan.Core10.Enums.Result.INCOMPLETE' will
--- be returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate
+-- will be written, and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be
+-- returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate
 -- that not all the available physical devices were returned.
 --
 -- == Valid Usage (Implicit)
@@ -470,6 +470,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Instance', 'Vulkan.Core10.Handles.PhysicalDevice'
 enumeratePhysicalDevices :: forall io
                           . (MonadIO io)
@@ -478,7 +479,7 @@ enumeratePhysicalDevices :: forall io
                             Instance
                          -> io (Result, ("physicalDevices" ::: Vector PhysicalDevice))
 enumeratePhysicalDevices instance' = liftIO . evalContT $ do
-  let cmds = instanceCmds (instance' :: Instance)
+  let cmds = case instance' of Instance{instanceCmds} -> instanceCmds
   let vkEnumeratePhysicalDevicesPtr = pVkEnumeratePhysicalDevices cmds
   lift $ unless (vkEnumeratePhysicalDevicesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkEnumeratePhysicalDevices is null" Nothing Nothing
@@ -510,7 +511,8 @@ foreign import ccall
 -- = Parameters
 --
 -- The table below defines the various use cases for 'getDeviceProcAddr'
--- and expected return value for each case.
+-- and expected return value (“fp” is “function pointer”) for each case. A
+-- valid returned function pointer (“fp”) /must/ not be @NULL@.
 --
 -- = Description
 --
@@ -531,12 +533,14 @@ foreign import ccall
 -- +------------------+------------------+------------------+
 -- | device           | core             | fp3              |
 -- |                  | device-level     |                  |
--- |                  | Vulkan command2  |                  |
+-- |                  | dispatchable     |                  |
+-- |                  | command2         |                  |
 -- +------------------+------------------+------------------+
 -- | device           | enabled          | fp3              |
 -- |                  | extension        |                  |
 -- |                  | device-level     |                  |
--- |                  | commands2        |                  |
+-- |                  | dispatchable     |                  |
+-- |                  | command2         |                  |
 -- +------------------+------------------+------------------+
 -- | any other case,  |                  | @NULL@           |
 -- | not covered      |                  |                  |
@@ -565,6 +569,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.FuncPointers.PFN_vkVoidFunction',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device'
 getDeviceProcAddr :: forall io
                    . (MonadIO io)
@@ -576,7 +581,7 @@ getDeviceProcAddr :: forall io
                      ("name" ::: ByteString)
                   -> io (PFN_vkVoidFunction)
 getDeviceProcAddr device name = liftIO . evalContT $ do
-  let vkGetDeviceProcAddrPtr = pVkGetDeviceProcAddr (deviceCmds (device :: Device))
+  let vkGetDeviceProcAddrPtr = pVkGetDeviceProcAddr (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDeviceProcAddrPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceProcAddr is null" Nothing Nothing
   let vkGetDeviceProcAddr' = mkVkGetDeviceProcAddr vkGetDeviceProcAddrPtr
@@ -603,41 +608,43 @@ foreign import ccall
 -- platform-specific APIs.
 --
 -- The table below defines the various use cases for 'getInstanceProcAddr'
--- and expected return value (“fp” is “function pointer”) for each case.
+-- and expected return value (“fp” is “function pointer”) for each case. A
+-- valid returned function pointer (“fp”) /must/ not be @NULL@.
 --
 -- The returned function pointer is of type
 -- 'Vulkan.Core10.FuncPointers.PFN_vkVoidFunction', and /must/ be cast to
 -- the type of the command being queried before use.
 --
--- +------------------+-------------------------------------------------------------------------+------------------+
--- | @instance@       | @pName@                                                                 | return value     |
--- +==================+=========================================================================+==================+
--- | *1               | @NULL@                                                                  | undefined        |
--- +------------------+-------------------------------------------------------------------------+------------------+
--- | invalid          | *1                                                                      | undefined        |
--- | non-@NULL@       |                                                                         |                  |
--- | instance         |                                                                         |                  |
--- +------------------+-------------------------------------------------------------------------+------------------+
--- | @NULL@           | 'getInstanceProcAddr'                                                   | fp4              |
--- +------------------+-------------------------------------------------------------------------+------------------+
--- | @NULL@           | 'Vulkan.Core11.DeviceInitialization.enumerateInstanceVersion'           | fp               |
--- +------------------+-------------------------------------------------------------------------+------------------+
--- | @NULL@           | 'Vulkan.Core10.ExtensionDiscovery.enumerateInstanceExtensionProperties' | fp               |
--- +------------------+-------------------------------------------------------------------------+------------------+
--- | @NULL@           | 'Vulkan.Core10.LayerDiscovery.enumerateInstanceLayerProperties'         | fp               |
--- +------------------+-------------------------------------------------------------------------+------------------+
--- | @NULL@           | 'createInstance'                                                        | fp               |
--- +------------------+-------------------------------------------------------------------------+------------------+
--- | instance         | core Vulkan command                                                     | fp2              |
--- +------------------+-------------------------------------------------------------------------+------------------+
--- | instance         | enabled instance extension commands for @instance@                      | fp2              |
--- +------------------+-------------------------------------------------------------------------+------------------+
--- | instance         | available device extension3 commands for @instance@                     | fp2              |
--- +------------------+-------------------------------------------------------------------------+------------------+
--- | any other case,  |                                                                         | @NULL@           |
--- | not covered      |                                                                         |                  |
--- | above            |                                                                         |                  |
--- +------------------+-------------------------------------------------------------------------+------------------+
+-- +------------------+-----------------------+------------------+
+-- | @instance@       | @pName@               | return value     |
+-- +==================+=======================+==================+
+-- | *1               | @NULL@                | undefined        |
+-- +------------------+-----------------------+------------------+
+-- | invalid          | *1                    | undefined        |
+-- | non-@NULL@       |                       |                  |
+-- | instance         |                       |                  |
+-- +------------------+-----------------------+------------------+
+-- | @NULL@           | 'getInstanceProcAddr' | fp5              |
+-- +------------------+-----------------------+------------------+
+-- | @NULL@           | /global command/2     | fp               |
+-- +------------------+-----------------------+------------------+
+-- | instance         | core /dispatchable    | fp3              |
+-- |                  | command/              |                  |
+-- +------------------+-----------------------+------------------+
+-- | instance         | enabled instance      | fp3              |
+-- |                  | extension             |                  |
+-- |                  | dispatchable command  |                  |
+-- |                  | for @instance@        |                  |
+-- +------------------+-----------------------+------------------+
+-- | instance         | available device      | fp3              |
+-- |                  | extension4            |                  |
+-- |                  | dispatchable command  |                  |
+-- |                  | for @instance@        |                  |
+-- +------------------+-----------------------+------------------+
+-- | any other case,  |                       | @NULL@           |
+-- | not covered      |                       |                  |
+-- | above            |                       |                  |
+-- +------------------+-----------------------+------------------+
 --
 -- 'getInstanceProcAddr' behavior
 --
@@ -646,6 +653,14 @@ foreign import ccall
 --     valid values, invalid values, and @NULL@).
 --
 -- [2]
+--     The global commands are:
+--     'Vulkan.Core11.DeviceInitialization.enumerateInstanceVersion',
+--     'Vulkan.Core10.ExtensionDiscovery.enumerateInstanceExtensionProperties',
+--     'Vulkan.Core10.LayerDiscovery.enumerateInstanceLayerProperties', and
+--     'createInstance'. Dispatchable commands are all other commands which
+--     are not global.
+--
+-- [3]
 --     The returned function pointer /must/ only be called with a
 --     dispatchable object (the first parameter) that is @instance@ or a
 --     child of @instance@, e.g. 'Vulkan.Core10.Handles.Instance',
@@ -653,11 +668,11 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Queue', or
 --     'Vulkan.Core10.Handles.CommandBuffer'.
 --
--- [3]
+-- [4]
 --     An “available device extension” is a device extension supported by
 --     any physical device enumerated by @instance@.
 --
--- [4]
+-- [5]
 --     Starting with Vulkan 1.2, 'getInstanceProcAddr' can resolve itself
 --     with a @NULL@ instance pointer.
 --
@@ -673,6 +688,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'Vulkan.Core10.FuncPointers.PFN_vkVoidFunction',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Instance'
 getInstanceProcAddr :: forall io
                      . (MonadIO io)
@@ -683,7 +699,7 @@ getInstanceProcAddr :: forall io
                        ("name" ::: ByteString)
                     -> io (PFN_vkVoidFunction)
 getInstanceProcAddr instance' name = liftIO . evalContT $ do
-  let vkGetInstanceProcAddrPtr = pVkGetInstanceProcAddr (instanceCmds (instance' :: Instance))
+  let vkGetInstanceProcAddrPtr = pVkGetInstanceProcAddr (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetInstanceProcAddrPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetInstanceProcAddr is null" Nothing Nothing
   let vkGetInstanceProcAddr' = mkVkGetInstanceProcAddr vkGetInstanceProcAddrPtr
@@ -705,6 +721,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceProperties'
 getPhysicalDeviceProperties :: forall io
                              . (MonadIO io)
@@ -717,7 +734,7 @@ getPhysicalDeviceProperties :: forall io
                                PhysicalDevice
                             -> io (PhysicalDeviceProperties)
 getPhysicalDeviceProperties physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDevicePropertiesPtr = pVkGetPhysicalDeviceProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDevicePropertiesPtr = pVkGetPhysicalDeviceProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDevicePropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceProperties' = mkVkGetPhysicalDeviceProperties vkGetPhysicalDevicePropertiesPtr
@@ -768,6 +785,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'QueueFamilyProperties'
 getPhysicalDeviceQueueFamilyProperties :: forall io
                                         . (MonadIO io)
@@ -776,7 +794,7 @@ getPhysicalDeviceQueueFamilyProperties :: forall io
                                           PhysicalDevice
                                        -> io (("queueFamilyProperties" ::: Vector QueueFamilyProperties))
 getPhysicalDeviceQueueFamilyProperties physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceQueueFamilyPropertiesPtr = pVkGetPhysicalDeviceQueueFamilyProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceQueueFamilyPropertiesPtr = pVkGetPhysicalDeviceQueueFamilyProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceQueueFamilyPropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceQueueFamilyProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceQueueFamilyProperties' = mkVkGetPhysicalDeviceQueueFamilyProperties vkGetPhysicalDeviceQueueFamilyPropertiesPtr
@@ -806,6 +824,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceMemoryProperties'
 getPhysicalDeviceMemoryProperties :: forall io
                                    . (MonadIO io)
@@ -817,7 +836,7 @@ getPhysicalDeviceMemoryProperties :: forall io
                                      PhysicalDevice
                                   -> io (PhysicalDeviceMemoryProperties)
 getPhysicalDeviceMemoryProperties physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceMemoryPropertiesPtr = pVkGetPhysicalDeviceMemoryProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceMemoryPropertiesPtr = pVkGetPhysicalDeviceMemoryProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceMemoryPropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceMemoryProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceMemoryProperties' = mkVkGetPhysicalDeviceMemoryProperties vkGetPhysicalDeviceMemoryPropertiesPtr
@@ -840,6 +859,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceFeatures'
 getPhysicalDeviceFeatures :: forall io
                            . (MonadIO io)
@@ -852,7 +872,7 @@ getPhysicalDeviceFeatures :: forall io
                              PhysicalDevice
                           -> io (PhysicalDeviceFeatures)
 getPhysicalDeviceFeatures physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceFeaturesPtr = pVkGetPhysicalDeviceFeatures (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceFeaturesPtr = pVkGetPhysicalDeviceFeatures (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceFeaturesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceFeatures is null" Nothing Nothing
   let vkGetPhysicalDeviceFeatures' = mkVkGetPhysicalDeviceFeatures vkGetPhysicalDeviceFeaturesPtr
@@ -876,6 +896,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.Format.Format', 'FormatProperties',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceFormatProperties :: forall io
@@ -894,7 +915,7 @@ getPhysicalDeviceFormatProperties :: forall io
                                      Format
                                   -> io (FormatProperties)
 getPhysicalDeviceFormatProperties physicalDevice format = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceFormatPropertiesPtr = pVkGetPhysicalDeviceFormatProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceFormatPropertiesPtr = pVkGetPhysicalDeviceFormatProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceFormatPropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceFormatProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceFormatProperties' = mkVkGetPhysicalDeviceFormatProperties vkGetPhysicalDeviceFormatPropertiesPtr
@@ -954,6 +975,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlags',
 -- 'ImageFormatProperties', 'Vulkan.Core10.Enums.ImageTiling.ImageTiling',
@@ -1021,7 +1043,7 @@ getPhysicalDeviceImageFormatProperties :: forall io
                                           ImageCreateFlags
                                        -> io (ImageFormatProperties)
 getPhysicalDeviceImageFormatProperties physicalDevice format type' tiling usage flags = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceImageFormatPropertiesPtr = pVkGetPhysicalDeviceImageFormatProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceImageFormatPropertiesPtr = pVkGetPhysicalDeviceImageFormatProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceImageFormatPropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceImageFormatProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceImageFormatProperties' = mkVkGetPhysicalDeviceImageFormatProperties vkGetPhysicalDeviceImageFormatPropertiesPtr
@@ -1050,6 +1072,13 @@ getPhysicalDeviceImageFormatProperties physicalDevice format type' tiling usage 
 -- children. 'PhysicalDeviceProperties'::@apiVersion@ is the version
 -- associated with a 'Vulkan.Core10.Handles.PhysicalDevice' and its
 -- children.
+--
+-- Note
+--
+-- The encoding of @driverVersion@ is implementation-defined. It /may/ not
+-- use the same encoding as @apiVersion@. Applications should follow
+-- information from the /vendor/ on how to extract the version information
+-- from @driverVersion@.
 --
 -- The @vendorID@ and @deviceID@ fields are provided to allow applications
 -- to adapt to device characteristics that are not adequately exposed by
@@ -1101,6 +1130,7 @@ getPhysicalDeviceImageFormatProperties physicalDevice format type' tiling usage 
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'PhysicalDeviceLimits',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
 -- 'PhysicalDeviceSparseProperties',
@@ -1150,7 +1180,7 @@ deriving instance Generic (PhysicalDeviceProperties)
 deriving instance Show PhysicalDeviceProperties
 
 instance ToCStruct PhysicalDeviceProperties where
-  withCStruct x f = allocaBytesAligned 824 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 824 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (apiVersion)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (driverVersion)
@@ -1209,7 +1239,7 @@ instance Zero PhysicalDeviceProperties where
            zero
 
 
--- | VkApplicationInfo - Structure specifying application info
+-- | VkApplicationInfo - Structure specifying application information
 --
 -- = Description
 --
@@ -1263,19 +1293,19 @@ instance Zero PhysicalDeviceProperties where
 --
 -- Implicit layers /must/ be disabled if they do not support a version at
 -- least as high as @apiVersion@. See the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#LoaderAndLayerInterface Vulkan Loader Specification and Architecture Overview>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#LoaderInterfaceArchitecture “Architecture of the Vulkan Loader Interfaces”>
 -- document for additional information.
 --
 -- Note
 --
 -- Providing a @NULL@ 'InstanceCreateInfo'::@pApplicationInfo@ or providing
 -- an @apiVersion@ of 0 is equivalent to providing an @apiVersion@ of
--- @VK_MAKE_VERSION(1,0,0)@.
+-- @VK_MAKE_API_VERSION(0,1,0,0)@.
 --
 -- == Valid Usage
 --
 -- -   #VUID-VkApplicationInfo-apiVersion-04010# If @apiVersion@ is not
---     @0@, then it /must/ be greater or equal to
+--     @0@, then it /must/ be greater than or equal to
 --     'Vulkan.Core10.API_VERSION_1_0'
 --
 -- == Valid Usage (Implicit)
@@ -1294,6 +1324,7 @@ instance Zero PhysicalDeviceProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'InstanceCreateInfo', 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ApplicationInfo = ApplicationInfo
   { -- | @pApplicationName@ is @NULL@ or is a pointer to a null-terminated UTF-8
@@ -1325,7 +1356,7 @@ deriving instance Generic (ApplicationInfo)
 deriving instance Show ApplicationInfo
 
 instance ToCStruct ApplicationInfo where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ApplicationInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_APPLICATION_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1375,6 +1406,36 @@ instance Zero ApplicationInfo where
 -- | VkInstanceCreateInfo - Structure specifying parameters of a newly
 -- created instance
 --
+-- = Description
+--
+-- To capture events that occur while creating or destroying an instance,
+-- an application can link a
+-- 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportCallbackCreateInfoEXT'
+-- structure or a
+-- 'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsMessengerCreateInfoEXT'
+-- structure to the @pNext@ element of the 'InstanceCreateInfo' structure
+-- given to 'createInstance'. This callback is only valid for the duration
+-- of the 'createInstance' and the 'destroyInstance' call. Use
+-- 'Vulkan.Extensions.VK_EXT_debug_report.createDebugReportCallbackEXT' or
+-- 'Vulkan.Extensions.VK_EXT_debug_utils.createDebugUtilsMessengerEXT' to
+-- create persistent callback objects.
+--
+-- == Valid Usage
+--
+-- -   #VUID-VkInstanceCreateInfo-pNext-04925# If the @pNext@ chain of
+--     'InstanceCreateInfo' includes a
+--     'Vulkan.Extensions.VK_EXT_debug_report.DebugReportCallbackCreateInfoEXT'
+--     structure, the list of enabled extensions in
+--     @ppEnabledExtensionNames@ /must/ contain
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>
+--
+-- -   #VUID-VkInstanceCreateInfo-pNext-04926# If the @pNext@ chain of
+--     'InstanceCreateInfo' includes a
+--     'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsMessengerCreateInfoEXT'
+--     structure, the list of enabled extensions in
+--     @ppEnabledExtensionNames@ /must/ contain
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkInstanceCreateInfo-sType-sType# @sType@ /must/ be
@@ -1411,6 +1472,7 @@ instance Zero ApplicationInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'ApplicationInfo',
 -- 'Vulkan.Core10.Enums.InstanceCreateFlags.InstanceCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createInstance'
@@ -1446,7 +1508,7 @@ deriving instance Show (Chain es) => Show (InstanceCreateInfo es)
 
 instance Extensible InstanceCreateInfo where
   extensibleTypeName = "InstanceCreateInfo"
-  setNext x next = x{next = next}
+  setNext InstanceCreateInfo{..} next' = InstanceCreateInfo{next = next', ..}
   getNext InstanceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends InstanceCreateInfo e => b) -> Maybe b
   extends _ f
@@ -1457,7 +1519,7 @@ instance Extensible InstanceCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss InstanceCreateInfo es, PokeChain es) => ToCStruct (InstanceCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p InstanceCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_INSTANCE_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1468,13 +1530,13 @@ instance (Extendss InstanceCreateInfo es, PokeChain es) => ToCStruct (InstanceCr
       Just j -> ContT $ withCStruct (j)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ApplicationInfo))) pApplicationInfo''
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (enabledLayerNames)) :: Word32))
-    pPpEnabledLayerNames' <- ContT $ allocaBytesAligned @(Ptr CChar) ((Data.Vector.length (enabledLayerNames)) * 8) 8
+    pPpEnabledLayerNames' <- ContT $ allocaBytes @(Ptr CChar) ((Data.Vector.length (enabledLayerNames)) * 8)
     Data.Vector.imapM_ (\i e -> do
       ppEnabledLayerNames'' <- ContT $ useAsCString (e)
       lift $ poke (pPpEnabledLayerNames' `plusPtr` (8 * (i)) :: Ptr (Ptr CChar)) ppEnabledLayerNames'') (enabledLayerNames)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr (Ptr CChar)))) (pPpEnabledLayerNames')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (enabledExtensionNames)) :: Word32))
-    pPpEnabledExtensionNames' <- ContT $ allocaBytesAligned @(Ptr CChar) ((Data.Vector.length (enabledExtensionNames)) * 8) 8
+    pPpEnabledExtensionNames' <- ContT $ allocaBytes @(Ptr CChar) ((Data.Vector.length (enabledExtensionNames)) * 8)
     Data.Vector.imapM_ (\i e -> do
       ppEnabledExtensionNames'' <- ContT $ useAsCString (e)
       lift $ poke (pPpEnabledExtensionNames' `plusPtr` (8 * (i)) :: Ptr (Ptr CChar)) ppEnabledExtensionNames'') (enabledExtensionNames)
@@ -1524,10 +1586,10 @@ instance es ~ '[] => Zero (InstanceCreateInfo es) where
 --
 -- Possible values of @minImageTransferGranularity@ are:
 --
--- -   (0,0,0) which indicates that only whole mip levels /must/ be
---     transferred using the image transfer operations on the corresponding
---     queues. In this case, the following restrictions apply to all offset
---     and extent parameters of image transfer operations:
+-- -   (0,0,0) specifies that only whole mip levels /must/ be transferred
+--     using the image transfer operations on the corresponding queues. In
+--     this case, the following restrictions apply to all offset and extent
+--     parameters of image transfer operations:
 --
 --     -   The @x@, @y@, and @z@ members of a
 --         'Vulkan.Core10.FundamentalTypes.Offset3D' parameter /must/
@@ -1584,6 +1646,7 @@ instance es ~ '[] => Zero (InstanceCreateInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.Extent3D',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.QueueFamilyProperties2',
 -- 'Vulkan.Core10.Enums.QueueFlagBits.QueueFlags',
@@ -1614,7 +1677,7 @@ deriving instance Generic (QueueFamilyProperties)
 deriving instance Show QueueFamilyProperties
 
 instance ToCStruct QueueFamilyProperties where
-  withCStruct x f = allocaBytesAligned 24 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p QueueFamilyProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr QueueFlags)) (queueFlags)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (queueCount)
@@ -1821,6 +1884,10 @@ instance Zero QueueFamilyProperties where
 --     |
 --     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_DEVICE_UNCACHED_BIT_AMD'
 --
+-- -   'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_DEVICE_LOCAL_BIT'
+--     |
+--     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_RDMA_CAPABLE_BIT_NV'
+--
 -- There /must/ be at least one memory type with both the
 -- 'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_HOST_VISIBLE_BIT'
 -- and
@@ -1912,6 +1979,7 @@ instance Zero QueueFamilyProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'MemoryHeap', 'MemoryType',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceMemoryProperties2',
 -- 'getPhysicalDeviceMemoryProperties'
@@ -1939,7 +2007,7 @@ deriving instance Generic (PhysicalDeviceMemoryProperties)
 deriving instance Show PhysicalDeviceMemoryProperties
 
 instance ToCStruct PhysicalDeviceMemoryProperties where
-  withCStruct x f = allocaBytesAligned 520 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 520 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceMemoryProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (memoryTypeCount)
     unless ((Data.Vector.length $ (memoryTypes)) <= MAX_MEMORY_TYPES) $
@@ -1984,6 +2052,7 @@ instance Zero PhysicalDeviceMemoryProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MemoryPropertyFlags',
 -- 'PhysicalDeviceMemoryProperties'
 data MemoryType = MemoryType
@@ -2003,7 +2072,7 @@ deriving instance Generic (MemoryType)
 deriving instance Show MemoryType
 
 instance ToCStruct MemoryType where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryType{..} f = do
     poke ((p `plusPtr` 0 :: Ptr MemoryPropertyFlags)) (propertyFlags)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (heapIndex)
@@ -2037,6 +2106,7 @@ instance Zero MemoryType where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.MemoryHeapFlagBits.MemoryHeapFlags',
 -- 'PhysicalDeviceMemoryProperties'
@@ -2055,7 +2125,7 @@ deriving instance Generic (MemoryHeap)
 deriving instance Show MemoryHeap
 
 instance ToCStruct MemoryHeap where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryHeap{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (size)
     poke ((p `plusPtr` 8 :: Ptr MemoryHeapFlags)) (flags)
@@ -2103,6 +2173,7 @@ instance Zero MemoryHeap where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlags',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.FormatProperties2',
 -- 'getPhysicalDeviceFormatProperties'
@@ -2129,7 +2200,7 @@ deriving instance Generic (FormatProperties)
 deriving instance Show FormatProperties
 
 instance ToCStruct FormatProperties where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FormatProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr FormatFeatureFlags)) (linearTilingFeatures)
     poke ((p `plusPtr` 4 :: Ptr FormatFeatureFlags)) (optimalTilingFeatures)
@@ -2189,8 +2260,8 @@ instance Zero FormatProperties where
 --         structure with a handle type included in the @handleTypes@
 --         member for which mipmap image support is not required
 --
---     -   image @format@ is one of those listed in
---         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>
+--     -   image @format@ is one of the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>
 --
 --     -   @flags@ contains
 --         'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
@@ -2208,8 +2279,8 @@ instance Zero FormatProperties where
 --         'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL' and
 --         @type@ is 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D'
 --
---     -   @format@ is one of those listed in
---         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>
+--     -   @format@ is one of the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>
 --
 -- -   If @tiling@ is
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
@@ -2254,6 +2325,7 @@ instance Zero FormatProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.FundamentalTypes.Extent3D',
 -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalImageFormatPropertiesNV',
@@ -2279,7 +2351,7 @@ deriving instance Generic (ImageFormatProperties)
 deriving instance Show ImageFormatProperties
 
 instance ToCStruct ImageFormatProperties where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageFormatProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Extent3D)) (maxExtent)
     poke ((p `plusPtr` 12 :: Ptr Word32)) (maxMipLevels)
@@ -2326,11 +2398,11 @@ instance Zero ImageFormatProperties where
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceFeatures' structure describe the
--- following features:
+-- This structure describes the following features:
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Device.DeviceCreateInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -2594,7 +2666,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxDrawIndirectCount maxDrawIndirectCount>.
     multiDrawIndirect :: Bool
   , -- | #features-drawIndirectFirstInstance# @drawIndirectFirstInstance@
-    -- specifies whether indirect draw calls support the @firstInstance@
+    -- specifies whether indirect drawing calls support the @firstInstance@
     -- parameter. If this feature is not enabled, the @firstInstance@ member of
     -- all 'Vulkan.Core10.OtherTypes.DrawIndirectCommand' and
     -- 'Vulkan.Core10.OtherTypes.DrawIndexedIndirectCommand' structures that
@@ -2882,14 +2954,14 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- @vertexPipelineStoresAndAtomics@ specifies whether storage buffers and
     -- images support stores and atomic operations in the vertex, tessellation,
     -- and geometry shader stages. If this feature is not enabled, all storage
-    -- image, storage texel buffers, and storage buffer variables used by these
+    -- image, storage texel buffer, and storage buffer variables used by these
     -- stages in shader modules /must/ be decorated with the @NonWritable@
     -- decoration (or the @readonly@ memory qualifier in GLSL).
     vertexPipelineStoresAndAtomics :: Bool
   , -- | #features-fragmentStoresAndAtomics# @fragmentStoresAndAtomics@ specifies
     -- whether storage buffers and images support stores and atomic operations
     -- in the fragment shader stage. If this feature is not enabled, all
-    -- storage image, storage texel buffers, and storage buffer variables used
+    -- storage image, storage texel buffer, and storage buffer variables used
     -- by the fragment stage in shader modules /must/ be decorated with the
     -- @NonWritable@ decoration (or the @readonly@ memory qualifier in GLSL).
     fragmentStoresAndAtomics :: Bool
@@ -2913,7 +2985,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
   , -- | #features-shaderImageGatherExtended# @shaderImageGatherExtended@
     -- specifies whether the extended set of image gather instructions are
     -- available in shader code. If this feature is not enabled, the
-    -- @OpImage@*@Gather@ instructions do not support the @Offset@ and
+    -- @OpImage*Gather@ instructions do not support the @Offset@ and
     -- @ConstOffsets@ operands. This also specifies whether shader modules
     -- /can/ declare the @ImageGatherExtended@ capability.
     shaderImageGatherExtended :: Bool
@@ -3002,19 +3074,19 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     shaderStorageImageMultisample :: Bool
   , -- | #features-shaderStorageImageReadWithoutFormat#
     -- @shaderStorageImageReadWithoutFormat@ specifies whether storage images
-    -- require a format qualifier to be specified when reading from storage
-    -- images. If this feature is not enabled, the @OpImageRead@ instruction
-    -- /must/ not have an @OpTypeImage@ of @Unknown@. This also specifies
-    -- whether shader modules /can/ declare the @StorageImageReadWithoutFormat@
-    -- capability.
+    -- require a format qualifier to be specified when reading.
+    -- @shaderStorageImageReadWithoutFormat@ applies only to formats listed in
+    -- the
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-without-shader-storage-format storage without format>
+    -- list.
     shaderStorageImageReadWithoutFormat :: Bool
   , -- | #features-shaderStorageImageWriteWithoutFormat#
     -- @shaderStorageImageWriteWithoutFormat@ specifies whether storage images
-    -- require a format qualifier to be specified when writing to storage
-    -- images. If this feature is not enabled, the @OpImageWrite@ instruction
-    -- /must/ not have an @OpTypeImage@ of @Unknown@. This also specifies
-    -- whether shader modules /can/ declare the
-    -- @StorageImageWriteWithoutFormat@ capability.
+    -- require a format qualifier to be specified when writing.
+    -- @shaderStorageImageWriteWithoutFormat@ applies only to formats listed in
+    -- the
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-without-shader-storage-format storage without format>
+    -- list.
     shaderStorageImageWriteWithoutFormat :: Bool
   , -- | #features-shaderUniformBufferArrayDynamicIndexing#
     -- @shaderUniformBufferArrayDynamicIndexing@ specifies whether arrays of
@@ -3103,7 +3175,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
   , -- | #features-shaderResourceResidency# @shaderResourceResidency@ specifies
     -- whether image operations that return resource residency information are
     -- supported in shader code. If this feature is not enabled, the
-    -- @OpImageSparse@* instructions /must/ not be used in shader code. This
+    -- @OpImageSparse*@ instructions /must/ not be used in shader code. This
     -- also specifies whether shader modules /can/ declare the
     -- @SparseResidency@ capability. The feature requires at least one of the
     -- @sparseResidency*@ features to be supported.
@@ -3231,7 +3303,7 @@ deriving instance Generic (PhysicalDeviceFeatures)
 deriving instance Show PhysicalDeviceFeatures
 
 instance ToCStruct PhysicalDeviceFeatures where
-  withCStruct x f = allocaBytesAligned 220 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 220 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Bool32)) (boolToBool32 (robustBufferAccess))
     poke ((p `plusPtr` 4 :: Ptr Bool32)) (boolToBool32 (fullDrawIndexUint32))
@@ -3479,6 +3551,7 @@ instance Zero PhysicalDeviceFeatures where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32', 'PhysicalDeviceProperties'
 data PhysicalDeviceSparseProperties = PhysicalDeviceSparseProperties
   { -- | @residencyStandard2DBlockShape@ is 'Vulkan.Core10.FundamentalTypes.TRUE'
@@ -3532,7 +3605,7 @@ data PhysicalDeviceSparseProperties = PhysicalDeviceSparseProperties
   , -- | @residencyNonResidentStrict@ specifies whether the physical device /can/
     -- consistently access non-resident regions of a resource. If this property
     -- is 'Vulkan.Core10.FundamentalTypes.TRUE', access to non-resident regions
-    -- of resources will be guaranteed to return values as if the resource were
+    -- of resources will be guaranteed to return values as if the resource was
     -- populated with 0; writes to non-resident regions will be discarded.
     residencyNonResidentStrict :: Bool
   }
@@ -3543,7 +3616,7 @@ deriving instance Generic (PhysicalDeviceSparseProperties)
 deriving instance Show PhysicalDeviceSparseProperties
 
 instance ToCStruct PhysicalDeviceSparseProperties where
-  withCStruct x f = allocaBytesAligned 20 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 20 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceSparseProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Bool32)) (boolToBool32 (residencyStandard2DBlockShape))
     poke ((p `plusPtr` 4 :: Ptr Bool32)) (boolToBool32 (residencyStandard2DMultisampleBlockShape))
@@ -3595,19 +3668,9 @@ instance Zero PhysicalDeviceSparseProperties where
 -- are available in the @limits@ member of the 'PhysicalDeviceProperties'
 -- structure which is returned from 'getPhysicalDeviceProperties'.
 --
--- = Description
---
--- [1]
---     For all bitmasks of
---     'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits', the
---     sample count limits defined above represent the minimum supported
---     sample counts for each image type. Individual images /may/ support
---     additional sample counts, which are queried using
---     'getPhysicalDeviceImageFormatProperties' as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-supported-sample-counts Supported Sample Counts>.
---
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize', 'PhysicalDeviceProperties',
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlags'
@@ -3659,19 +3722,19 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- structure.
     maxTexelBufferElements :: Word32
   , -- | #limits-maxUniformBufferRange# @maxUniformBufferRange@ is the maximum
-    -- value that /can/ be specified in the @range@ member of any
-    -- 'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo' structures passed to
-    -- a call to 'Vulkan.Core10.DescriptorSet.updateDescriptorSets' for
-    -- descriptors of type
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER' or
+    -- value that /can/ be specified in the @range@ member of a
+    -- 'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo' structure passed to
+    -- 'Vulkan.Core10.DescriptorSet.updateDescriptorSets' for descriptors of
+    -- type 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
+    -- or
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'.
     maxUniformBufferRange :: Word32
   , -- | #limits-maxStorageBufferRange# @maxStorageBufferRange@ is the maximum
-    -- value that /can/ be specified in the @range@ member of any
-    -- 'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo' structures passed to
-    -- a call to 'Vulkan.Core10.DescriptorSet.updateDescriptorSets' for
-    -- descriptors of type
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER' or
+    -- value that /can/ be specified in the @range@ member of a
+    -- 'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo' structure passed to
+    -- 'Vulkan.Core10.DescriptorSet.updateDescriptorSets' for descriptors of
+    -- type 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
+    -- or
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'.
     maxStorageBufferRange :: Word32
   , -- | #limits-maxPushConstantsSize# @maxPushConstantsSize@ is the maximum
@@ -3698,7 +3761,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     bufferImageGranularity :: DeviceSize
   , -- | #limits-sparseAddressSpaceSize# @sparseAddressSpaceSize@ is the total
     -- amount of address space available, in bytes, for sparse memory
-    -- resources. This is an upper bound on the sum of the size of all sparse
+    -- resources. This is an upper bound on the sum of the sizes of all sparse
     -- resources, regardless of whether any memory is bound to them.
     sparseAddressSpaceSize :: DeviceSize
   , -- | #limits-maxBoundDescriptorSets# @maxBoundDescriptorSets@ is the maximum
@@ -4036,8 +4099,8 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     maxGeometryOutputVertices :: Word32
   , -- | #limits-maxGeometryTotalOutputComponents#
     -- @maxGeometryTotalOutputComponents@ is the maximum total number of
-    -- components of output, across all emitted vertices, which /can/ be output
-    -- from the geometry shader stage.
+    -- components of output variables, across all emitted vertices, which /can/
+    -- be output from the geometry shader stage.
     maxGeometryTotalOutputComponents :: Word32
   , -- | #limits-maxFragmentInputComponents# @maxFragmentInputComponents@ is the
     -- maximum number of components of input variables which /can/ be provided
@@ -4081,26 +4144,26 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     maxComputeSharedMemorySize :: Word32
   , -- | #limits-maxComputeWorkGroupCount# @maxComputeWorkGroupCount@[3] is the
     -- maximum number of local workgroups that /can/ be dispatched by a single
-    -- dispatch command. These three values represent the maximum number of
+    -- dispatching command. These three values represent the maximum number of
     -- local workgroups for the X, Y, and Z dimensions, respectively. The
-    -- workgroup count parameters to the dispatch commands /must/ be less than
-    -- or equal to the corresponding limit. See
+    -- workgroup count parameters to the dispatching commands /must/ be less
+    -- than or equal to the corresponding limit. See
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#dispatch>.
     maxComputeWorkGroupCount :: (Word32, Word32, Word32)
   , -- | #limits-maxComputeWorkGroupInvocations# @maxComputeWorkGroupInvocations@
     -- is the maximum total number of compute shader invocations in a single
     -- local workgroup. The product of the X, Y, and Z sizes, as specified by
-    -- the @LocalSize@ execution mode in shader modules or by the object
-    -- decorated by the @WorkgroupSize@ decoration, /must/ be less than or
-    -- equal to this limit.
+    -- the @LocalSize@ or @LocalSizeId@ execution mode in shader modules or by
+    -- the object decorated by the @WorkgroupSize@ decoration, /must/ be less
+    -- than or equal to this limit.
     maxComputeWorkGroupInvocations :: Word32
   , -- | #limits-maxComputeWorkGroupSize# @maxComputeWorkGroupSize@[3] is the
     -- maximum size of a local compute workgroup, per dimension. These three
     -- values represent the maximum local workgroup size in the X, Y, and Z
     -- dimensions, respectively. The @x@, @y@, and @z@ sizes, as specified by
-    -- the @LocalSize@ execution mode or by the object decorated by the
-    -- @WorkgroupSize@ decoration in shader modules, /must/ be less than or
-    -- equal to the corresponding limit.
+    -- the @LocalSize@ or @LocalSizeId@ execution mode or by the object
+    -- decorated by the @WorkgroupSize@ decoration in shader modules, /must/ be
+    -- less than or equal to the corresponding limit.
     maxComputeWorkGroupSize :: (Word32, Word32, Word32)
   , -- | #limits-subPixelPrecisionBits# @subPixelPrecisionBits@ is the number of
     -- bits of subpixel precision in framebuffer coordinates xf and yf. See
@@ -4126,7 +4189,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fullDrawIndexUint32 fullDrawIndexUint32>.
     maxDrawIndexedIndexValue :: Word32
   , -- | #limits-maxDrawIndirectCount# @maxDrawIndirectCount@ is the maximum draw
-    -- count that is supported for indirect draw calls. See
+    -- count that is supported for indirect drawing calls. See
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiDrawIndirect multiDrawIndirect>.
     maxDrawIndirectCount :: Word32
   , -- | #limits-maxSamplerLodBias# @maxSamplerLodBias@ is the maximum absolute
@@ -4187,11 +4250,12 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- returned pointer will always produce an integer multiple of this limit.
     -- See
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-device-hostaccess>.
+    -- The value /must/ be a power of two.
     minMemoryMapAlignment :: Word64
   , -- | #limits-minTexelBufferOffsetAlignment# @minTexelBufferOffsetAlignment@
     -- is the minimum /required/ alignment, in bytes, for the @offset@ member
     -- of the 'Vulkan.Core10.BufferView.BufferViewCreateInfo' structure for
-    -- texel buffers. If
+    -- texel buffers. The value /must/ be a power of two. If
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-texelBufferAlignment texelBufferAlignment>
     -- is enabled, this limit is equivalent to the maximum of the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-uniformTexelBufferOffsetAlignmentBytes uniformTexelBufferOffsetAlignmentBytes>
@@ -4199,7 +4263,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-storageTexelBufferOffsetAlignmentBytes storageTexelBufferOffsetAlignmentBytes>
     -- members of
     -- 'Vulkan.Extensions.VK_EXT_texel_buffer_alignment.PhysicalDeviceTexelBufferAlignmentPropertiesEXT',
-    -- but smaller alignment is optionally: allowed by
+    -- but smaller alignment is /optionally/ allowed by
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-storageTexelBufferOffsetSingleTexelAlignment storageTexelBufferOffsetSingleTexelAlignment>
     -- and
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-uniformTexelBufferOffsetSingleTexelAlignment uniformTexelBufferOffsetSingleTexelAlignment>.
@@ -4218,7 +4282,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
     -- is updated, the @offset@ /must/ be an integer multiple of this limit.
     -- Similarly, dynamic offsets for uniform buffers /must/ be multiples of
-    -- this limit.
+    -- this limit. The value /must/ be a power of two.
     minUniformBufferOffsetAlignment :: DeviceSize
   , -- | #limits-minStorageBufferOffsetAlignment#
     -- @minStorageBufferOffsetAlignment@ is the minimum /required/ alignment,
@@ -4229,23 +4293,23 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
     -- is updated, the @offset@ /must/ be an integer multiple of this limit.
     -- Similarly, dynamic offsets for storage buffers /must/ be multiples of
-    -- this limit.
+    -- this limit. The value /must/ be a power of two.
     minStorageBufferOffsetAlignment :: DeviceSize
   , -- | #limits-minTexelOffset# @minTexelOffset@ is the minimum offset value for
-    -- the @ConstOffset@ image operand of any of the @OpImageSample@* or
-    -- @OpImageFetch@* image instructions.
+    -- the @ConstOffset@ image operand of any of the @OpImageSample*@ or
+    -- @OpImageFetch*@ image instructions.
     minTexelOffset :: Int32
   , -- | #limits-maxTexelOffset# @maxTexelOffset@ is the maximum offset value for
-    -- the @ConstOffset@ image operand of any of the @OpImageSample@* or
-    -- @OpImageFetch@* image instructions.
+    -- the @ConstOffset@ image operand of any of the @OpImageSample*@ or
+    -- @OpImageFetch*@ image instructions.
     maxTexelOffset :: Word32
   , -- | #limits-minTexelGatherOffset# @minTexelGatherOffset@ is the minimum
     -- offset value for the @Offset@, @ConstOffset@, or @ConstOffsets@ image
-    -- operands of any of the @OpImage@*@Gather@ image instructions.
+    -- operands of any of the @OpImage*Gather@ image instructions.
     minTexelGatherOffset :: Int32
   , -- | #limits-maxTexelGatherOffset# @maxTexelGatherOffset@ is the maximum
     -- offset value for the @Offset@, @ConstOffset@, or @ConstOffsets@ image
-    -- operands of any of the @OpImage@*@Gather@ image instructions.
+    -- operands of any of the @OpImage*Gather@ image instructions.
     maxTexelGatherOffset :: Word32
   , -- | #limits-minInterpolationOffset# @minInterpolationOffset@ is the base
     -- minimum (inclusive) negative offset value for the @Offset@ operand of
@@ -4338,7 +4402,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
   , -- | #limits-sampledImageStencilSampleCounts#
     -- @sampledImageStencilSampleCounts@ is a bitmask1 of
     -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' indicating
-    -- the sample supported for all 2D images created with
+    -- the sample counts supported for all 2D images created with
     -- 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', @usage@
     -- containing
     -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT', and a
@@ -4442,7 +4506,8 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdCopyImageToBuffer2KHR', and
     -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyImageToBuffer'. The per
     -- texel alignment requirements are enforced, but applications /should/ use
-    -- the optimal alignment for optimal performance and power use.
+    -- the optimal alignment for optimal performance and power use. The value
+    -- /must/ be a power of two.
     optimalBufferCopyOffsetAlignment :: DeviceSize
   , -- | #limits-optimalBufferCopyRowPitchAlignment#
     -- @optimalBufferCopyRowPitchAlignment@ is the optimal buffer row pitch
@@ -4454,11 +4519,22 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- the number of bytes between texels with the same X coordinate in
     -- adjacent rows (Y coordinates differ by one). The per texel alignment
     -- requirements are enforced, but applications /should/ use the optimal
-    -- alignment for optimal performance and power use.
+    -- alignment for optimal performance and power use. The value /must/ be a
+    -- power of two.
     optimalBufferCopyRowPitchAlignment :: DeviceSize
   , -- | #limits-nonCoherentAtomSize# @nonCoherentAtomSize@ is the size and
     -- alignment in bytes that bounds concurrent access to
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-device-hostaccess host-mapped device memory>.
+    -- The value /must/ be a power of two.
+    --
+    -- [1]
+    --     For all bitmasks of
+    --     'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits', the
+    --     sample count limits defined above represent the minimum supported
+    --     sample counts for each image type. Individual images /may/ support
+    --     additional sample counts, which are queried using
+    --     'getPhysicalDeviceImageFormatProperties' as described in
+    --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-supported-sample-counts Supported Sample Counts>.
     nonCoherentAtomSize :: DeviceSize
   }
   deriving (Typeable, Eq)
@@ -4468,7 +4544,7 @@ deriving instance Generic (PhysicalDeviceLimits)
 deriving instance Show PhysicalDeviceLimits
 
 instance ToCStruct PhysicalDeviceLimits where
-  withCStruct x f = allocaBytesAligned 504 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 504 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceLimits{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (maxImageDimension1D)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (maxImageDimension2D)

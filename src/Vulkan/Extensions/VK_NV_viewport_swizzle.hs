@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_viewport_swizzle:%20&body=@pdaniell-nv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_viewport_swizzle] @pdaniell-nv%0A<<Here describe the issue or question you have about the VK_NV_viewport_swizzle extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -51,13 +51,13 @@
 -- components of the original position vector.
 --
 -- This new viewport swizzle is useful for a number of algorithms,
--- including single-pass cubemap rendering (broadcasting a primitive to
+-- including single-pass cube map rendering (broadcasting a primitive to
 -- multiple faces and reorienting the vertex position for each face) and
 -- voxel rasterization. The per-viewport component remapping and negation
 -- provided by the swizzle allows application code to re-orient
 -- three-dimensional geometry with a view along any of the __X__, __Y__, or
 -- __Z__ axes. If a perspective projection and depth buffering is required,
--- 1\/W buffering should be used, as described in the single-pass cubemap
+-- 1\/W buffering should be used, as described in the single-pass cube map
 -- rendering example in the “Issues” section below.
 --
 -- == New Structures
@@ -97,7 +97,7 @@
 -- The viewport mask expansion (@VK_NV_viewport_array2@) and the viewport
 -- swizzle could potentially be performed before or after transform
 -- feedback, but feeding back several viewports worth of primitives with
--- different swizzles doesn’t seem particularly useful. This specification
+-- different swizzles does not seem particularly useful. This specification
 -- applies the viewport mask and swizzle after transform feedback, and
 -- makes primitive queries only count each primitive once.
 --
@@ -106,11 +106,11 @@
 -- used together in practice?
 --
 -- __RESOLVED__: One interesting use case for this extension is for
--- single-pass rendering to a cubemap. In this example, the application
--- would attach a cubemap texture to a layered FBO where the six cube faces
--- are treated as layers. Vertices are sent through the vertex shader
+-- single-pass rendering to a cube map. In this example, the application
+-- would attach a cube map texture to a layered FBO where the six cube
+-- faces are treated as layers. Vertices are sent through the vertex shader
 -- without applying a projection matrix, where the @gl_Position@ output is
--- (x,y,z,1) and the center of the cubemap is at (0,0,0). With unextended
+-- (x,y,z,1) and the center of the cube map is at (0,0,0). With unextended
 -- Vulkan, one could have a conventional instanced geometry shader that
 -- looks something like the following:
 --
@@ -141,7 +141,7 @@
 -- >         positions[i] = rotate(gl_in[i].gl_Position, face);
 -- >     }
 -- >
--- >     // If the primitive doesn't project onto this face, we're done.
+-- >     // If the primitive does not project onto this face, we are done.
 -- >     if (shouldCull(positions)) {
 -- >         return;
 -- >     }
@@ -224,7 +224,7 @@
 --
 -- 2.  On NVIDIA implementations supporting floating-point depth buffers
 --     with values outside [0,1], prevent unwanted near plane clipping by
---     enabling @depthClampEnable@. Ensure that the depth clamp doesn’t
+--     enabling @depthClampEnable@. Ensure that the depth clamp does not
 --     mess up depth testing by programming the depth range to very large
 --     values, such as @minDepthBounds@=-z, @maxDepthBounds@=+z, where z =
 --     2127. It should be possible to use IEEE infinity encodings also
@@ -250,13 +250,13 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PipelineViewportSwizzleStateCreateFlagsNV',
 -- 'PipelineViewportSwizzleStateCreateInfoNV',
 -- 'ViewportCoordinateSwizzleNV', 'ViewportSwizzleNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_viewport_swizzle Vulkan Specification>
@@ -284,7 +284,7 @@ module Vulkan.Extensions.VK_NV_viewport_swizzle  ( ViewportSwizzleNV(..)
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showString)
@@ -328,6 +328,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_viewport_swizzle VK_NV_viewport_swizzle>,
 -- 'PipelineViewportSwizzleStateCreateInfoNV',
 -- 'ViewportCoordinateSwizzleNV'
 data ViewportSwizzleNV = ViewportSwizzleNV
@@ -363,7 +364,7 @@ deriving instance Generic (ViewportSwizzleNV)
 deriving instance Show ViewportSwizzleNV
 
 instance ToCStruct ViewportSwizzleNV where
-  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ViewportSwizzleNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr ViewportCoordinateSwizzleNV)) (x)
     poke ((p `plusPtr` 4 :: Ptr ViewportCoordinateSwizzleNV)) (y)
@@ -409,6 +410,7 @@ instance Zero ViewportSwizzleNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_viewport_swizzle VK_NV_viewport_swizzle>,
 -- 'PipelineViewportSwizzleStateCreateFlagsNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'ViewportSwizzleNV'
 data PipelineViewportSwizzleStateCreateInfoNV = PipelineViewportSwizzleStateCreateInfoNV
@@ -432,13 +434,13 @@ deriving instance Generic (PipelineViewportSwizzleStateCreateInfoNV)
 deriving instance Show PipelineViewportSwizzleStateCreateInfoNV
 
 instance ToCStruct PipelineViewportSwizzleStateCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineViewportSwizzleStateCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineViewportSwizzleStateCreateFlagsNV)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (viewportSwizzles)) :: Word32))
-    pPViewportSwizzles' <- ContT $ allocaBytesAligned @ViewportSwizzleNV ((Data.Vector.length (viewportSwizzles)) * 16) 4
+    pPViewportSwizzles' <- ContT $ allocaBytes @ViewportSwizzleNV ((Data.Vector.length (viewportSwizzles)) * 16)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPViewportSwizzles' `plusPtr` (16 * (i)) :: Ptr ViewportSwizzleNV) (e)) (viewportSwizzles)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ViewportSwizzleNV))) (pPViewportSwizzles')
     lift $ f
@@ -473,6 +475,7 @@ instance Zero PipelineViewportSwizzleStateCreateInfoNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_viewport_swizzle VK_NV_viewport_swizzle>,
 -- 'PipelineViewportSwizzleStateCreateInfoNV'
 newtype PipelineViewportSwizzleStateCreateFlagsNV = PipelineViewportSwizzleStateCreateFlagsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -512,6 +515,7 @@ instance Read PipelineViewportSwizzleStateCreateFlagsNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_viewport_swizzle VK_NV_viewport_swizzle>,
 -- 'ViewportSwizzleNV'
 newtype ViewportCoordinateSwizzleNV = ViewportCoordinateSwizzleNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)

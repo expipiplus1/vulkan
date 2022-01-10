@@ -16,7 +16,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -48,6 +48,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateEvent))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyEvent))
 import Vulkan.Dynamic (DeviceCmds(pVkGetEventStatus))
@@ -87,7 +88,7 @@ foreign import ccall
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then the implementation
 --     does not support
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-events events>,
---     and 'createEvent' /must/ not be used.
+--     and 'createEvent' /must/ not be used
 --
 -- == Valid Usage (Implicit)
 --
@@ -118,6 +119,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event',
 -- 'EventCreateInfo'
@@ -134,7 +136,7 @@ createEvent :: forall io
                ("allocator" ::: Maybe AllocationCallbacks)
             -> io (Event)
 createEvent device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateEventPtr = pVkCreateEvent (deviceCmds (device :: Device))
+  let vkCreateEventPtr = pVkCreateEvent (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateEventPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateEvent is null" Nothing Nothing
   let vkCreateEvent' = mkVkCreateEvent vkCreateEventPtr
@@ -207,6 +209,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event'
 destroyEvent :: forall io
@@ -221,7 +224,7 @@ destroyEvent :: forall io
                 ("allocator" ::: Maybe AllocationCallbacks)
              -> io ()
 destroyEvent device event allocator = liftIO . evalContT $ do
-  let vkDestroyEventPtr = pVkDestroyEvent (deviceCmds (device :: Device))
+  let vkDestroyEventPtr = pVkDestroyEvent (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyEventPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyEvent is null" Nothing Nothing
   let vkDestroyEvent' = mkVkDestroyEvent vkDestroyEventPtr
@@ -288,6 +291,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event'
 getEventStatus :: forall io
                 . (MonadIO io)
@@ -310,7 +314,7 @@ getEventStatus :: forall io
                   Event
                -> io (Result)
 getEventStatus device event = liftIO $ do
-  let vkGetEventStatusPtr = pVkGetEventStatus (deviceCmds (device :: Device))
+  let vkGetEventStatusPtr = pVkGetEventStatus (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetEventStatusPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetEventStatus is null" Nothing Nothing
   let vkGetEventStatus' = mkVkGetEventStatus vkGetEventStatusPtr
@@ -371,6 +375,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event'
 setEvent :: forall io
           . (MonadIO io)
@@ -380,7 +385,7 @@ setEvent :: forall io
             Event
          -> io ()
 setEvent device event = liftIO $ do
-  let vkSetEventPtr = pVkSetEvent (deviceCmds (device :: Device))
+  let vkSetEventPtr = pVkSetEvent (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkSetEventPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetEvent is null" Nothing Nothing
   let vkSetEvent' = mkVkSetEvent vkSetEventPtr
@@ -409,15 +414,12 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkResetEvent-event-03821# There /must/ be an execution
---     dependency between
---     'Vulkan.Core10.CommandBufferBuilding.cmdResetEvent' and the
---     execution of any 'Vulkan.Core10.CommandBufferBuilding.cmdWaitEvents'
---     that includes @event@ in its @pEvents@ parameter
+--     dependency between 'resetEvent' and the execution of any
+--     'Vulkan.Core10.CommandBufferBuilding.cmdWaitEvents' that includes
+--     @event@ in its @pEvents@ parameter
 --
 -- -   #VUID-vkResetEvent-event-03822# There /must/ be an execution
---     dependency between
---     'Vulkan.Core10.CommandBufferBuilding.cmdResetEvent' and the
---     execution of any
+--     dependency between 'resetEvent' and the execution of any
 --     'Vulkan.Extensions.VK_KHR_synchronization2.cmdWaitEvents2KHR' that
 --     includes @event@ in its @pEvents@ parameter
 --
@@ -452,6 +454,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event'
 resetEvent :: forall io
             . (MonadIO io)
@@ -461,7 +464,7 @@ resetEvent :: forall io
               Event
            -> io ()
 resetEvent device event = liftIO $ do
-  let vkResetEventPtr = pVkResetEvent (deviceCmds (device :: Device))
+  let vkResetEventPtr = pVkResetEvent (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkResetEventPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetEvent is null" Nothing Nothing
   let vkResetEvent' = mkVkResetEvent vkResetEventPtr
@@ -476,6 +479,7 @@ resetEvent device event = liftIO $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.EventCreateFlagBits.EventCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createEvent'
 data EventCreateInfo = EventCreateInfo
@@ -494,7 +498,7 @@ deriving instance Generic (EventCreateInfo)
 deriving instance Show EventCreateInfo
 
 instance ToCStruct EventCreateInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p EventCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EVENT_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

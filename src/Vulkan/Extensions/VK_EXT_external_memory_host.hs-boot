@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_external_memory_host:%20&body=@drakos-amd%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_external_memory_host] @drakos-amd%0A<<Here describe the issue or question you have about the VK_EXT_external_memory_host extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -97,55 +97,55 @@
 --
 -- 1) What memory type has to be used to import host pointers?
 --
--- RESOLVED: Depends on the implementation. Applications have to use the
--- new 'getMemoryHostPointerPropertiesEXT' command to query the supported
--- memory types for a particular host pointer. The reported memory types
--- may include memory types that come from a memory heap that is otherwise
--- not usable for regular memory object allocation and thus such a heap’s
--- size may be zero.
+-- __RESOLVED__: Depends on the implementation. Applications have to use
+-- the new 'getMemoryHostPointerPropertiesEXT' command to query the
+-- supported memory types for a particular host pointer. The reported
+-- memory types may include memory types that come from a memory heap that
+-- is otherwise not usable for regular memory object allocation and thus
+-- such a heap’s size may be zero.
 --
 -- 2) Can the application still access the contents of the host allocation
 -- after importing?
 --
--- RESOLVED: Yes. However, usual synchronization requirements apply.
+-- __RESOLVED__: Yes. However, usual synchronization requirements apply.
 --
 -- 3) Can the application free the host allocation?
 --
--- RESOLVED: No, it violates valid usage conditions. Using the memory
--- object imported from a host allocation that’s already freed thus results
--- in undefined behavior.
+-- __RESOLVED__: No, it violates valid usage conditions. Using the memory
+-- object imported from a host allocation that is already freed thus
+-- results in undefined behavior.
 --
 -- 4) Is 'Vulkan.Core10.Memory.mapMemory' expected to return the same host
 -- address which was specified when importing it to the memory object?
 --
--- RESOLVED: No. Implementations are allowed to return the same address but
--- it’s not required. Some implementations might return a different virtual
--- mapping of the allocation, although the same physical pages will be
--- used.
+-- __RESOLVED__: No. Implementations are allowed to return the same address
+-- but it is not required. Some implementations might return a different
+-- virtual mapping of the allocation, although the same physical pages will
+-- be used.
 --
 -- 5) Is there any limitation on the alignment of the host pointer and\/or
 -- size?
 --
--- RESOLVED: Yes. Both the address and the size have to be an integer
+-- __RESOLVED__: Yes. Both the address and the size have to be an integer
 -- multiple of @minImportedHostPointerAlignment@. In addition, some
 -- platforms and foreign devices may have additional restrictions.
 --
 -- 6) Can the same host allocation be imported multiple times into a given
 -- physical device?
 --
--- RESOLVED: No, at least not guaranteed by this extension. Some platforms
--- do not allow locking the same physical pages for device access multiple
--- times, so attempting to do it may result in undefined behavior.
+-- __RESOLVED__: No, at least not guaranteed by this extension. Some
+-- platforms do not allow locking the same physical pages for device access
+-- multiple times, so attempting to do it may result in undefined behavior.
 --
 -- 7) Does this extension support exporting the new handle type?
 --
--- RESOLVED: No.
+-- __RESOLVED__: No.
 --
 -- 8) Should we include the possibility to import host mapped foreign
 -- device memory using this API?
 --
--- RESOLVED: Yes, through a separate handle type. Implementations are still
--- allowed to support only one of the handle types introduced by this
+-- __RESOLVED__: Yes, through a separate handle type. Implementations are
+-- still allowed to support only one of the handle types introduced by this
 -- extension by not returning import support for a particular handle type
 -- as returned in
 -- 'Vulkan.Extensions.VK_KHR_external_memory_capabilities.ExternalMemoryPropertiesKHR'.
@@ -156,13 +156,13 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'ImportMemoryHostPointerInfoEXT', 'MemoryHostPointerPropertiesEXT',
 -- 'PhysicalDeviceExternalMemoryHostPropertiesEXT',
 -- 'getMemoryHostPointerPropertiesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_external_memory_host Vulkan Specification>

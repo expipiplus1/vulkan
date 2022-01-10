@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_external_memory_capabilities:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_external_memory_capabilities] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_external_memory_capabilities extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -174,7 +174,7 @@
 -- 'ExternalBufferPropertiesKHR' structs need to include a list of memory
 -- type bits that support the given handle type?
 --
--- __PROPOSED RESOLUTION__: No. The memory types that don’t support the
+-- __PROPOSED RESOLUTION__: No. The memory types that do not support the
 -- handle types will simply be filtered out of the results returned by
 -- 'Vulkan.Core10.MemoryManagement.getImageMemoryRequirements' and
 -- 'Vulkan.Core10.MemoryManagement.getBufferMemoryRequirements' when a set
@@ -184,7 +184,7 @@
 --
 -- __PROPOSED RESOLUTION__: Perhaps. However, defining the handle type bits
 -- does very little and does not require any platform-specific types on its
--- own, and it’s easier to maintain the bitfield values in a single
+-- own, and it is easier to maintain the bitfield values in a single
 -- extension for now. Presumably more handle types could be added by
 -- separate extensions though, and it would be midly weird to have some
 -- platform-specific ones defined in the core spec and some in extensions
@@ -212,9 +212,9 @@
 -- API are added. To allow correlating with Direct3D devices, a device LUID
 -- is added that corresponds to a DXGI adapter LUID. A driver ID is not
 -- needed for Direct3D because mismatched driver component versions are not
--- a currently supported configuration on the Windows OS. Should support
--- for such configurations be introduced at the OS level, further Vulkan
--- extensions would be needed to correlate userspace component builds.
+-- currently supported on the Windows OS. Should support for such
+-- configurations be introduced at the OS level, further Vulkan extensions
+-- would be needed to correlate userspace component builds.
 --
 -- == Version History
 --
@@ -222,7 +222,7 @@
 --
 --     -   Initial version
 --
--- = See Also
+-- == See Also
 --
 -- 'Vulkan.Core10.APIConstants.LUID_SIZE_KHR',
 -- 'ExternalBufferPropertiesKHR', 'ExternalImageFormatPropertiesKHR',
@@ -234,7 +234,7 @@
 -- 'PhysicalDeviceIDPropertiesKHR',
 -- 'getPhysicalDeviceExternalBufferPropertiesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_capabilities Vulkan Specification>

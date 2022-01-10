@@ -33,7 +33,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_external_memory:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_external_memory] @cubanismo%0A<<Here describe the issue or question you have about the VK_NV_external_memory extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -123,11 +123,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'ExportMemoryAllocateInfoNV', 'ExternalMemoryImageCreateInfoNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_external_memory Vulkan Specification>
@@ -144,7 +144,7 @@ module Vulkan.Extensions.VK_NV_external_memory  ( ExternalMemoryImageCreateInfoN
                                                 , ExternalMemoryHandleTypeFlagsNV
                                                 ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -174,6 +174,7 @@ import Vulkan.Extensions.VK_NV_external_memory_capabilities (ExternalMemoryHandl
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_external_memory VK_NV_external_memory>,
 -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagsNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExternalMemoryImageCreateInfoNV = ExternalMemoryImageCreateInfoNV
@@ -193,7 +194,7 @@ deriving instance Generic (ExternalMemoryImageCreateInfoNV)
 deriving instance Show ExternalMemoryImageCreateInfoNV
 
 instance ToCStruct ExternalMemoryImageCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExternalMemoryImageCreateInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -230,6 +231,7 @@ instance Zero ExternalMemoryImageCreateInfoNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_external_memory VK_NV_external_memory>,
 -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagsNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExportMemoryAllocateInfoNV = ExportMemoryAllocateInfoNV
@@ -252,7 +254,7 @@ deriving instance Generic (ExportMemoryAllocateInfoNV)
 deriving instance Show ExportMemoryAllocateInfoNV
 
 instance ToCStruct ExportMemoryAllocateInfoNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExportMemoryAllocateInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

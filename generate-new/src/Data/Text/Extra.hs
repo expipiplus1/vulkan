@@ -31,7 +31,7 @@ lowerCaseFirst :: Text -> Text
 lowerCaseFirst = onFirst Data.Char.toLower
 
 upperCaseFirst :: Text -> Text
-upperCaseFirst = onFirst Data.Char.toUpper
+upperCaseFirst = onFirst Data.Char.toUpper . T.dropWhile (not . isAlpha)
 
 onFirst :: (Char -> Char) -> Text -> Text
 onFirst f = \case

@@ -22,7 +22,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -87,13 +87,14 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.CStruct.Extends (SomeStruct)
 import OpenXR.Core10.Handles (Space)
 import OpenXR.Core10.Handles (Space(..))
 import OpenXR.Core10.Handles (Space(Space))
-import OpenXR.Core10.Enums.SpaceLocationFlags (SpaceLocationFlags)
-import OpenXR.Core10.Enums.SpaceVelocityFlags (SpaceVelocityFlags)
+import OpenXR.Core10.Enums.SpaceLocationFlagBits (SpaceLocationFlags)
+import OpenXR.Core10.Enums.SpaceVelocityFlagBits (SpaceVelocityFlags)
 import OpenXR.Core10.Handles (Space_T)
 import OpenXR.Core10.Enums.StructureType (StructureType)
 import OpenXR.Core10.FundamentalTypes (Time)
@@ -150,7 +151,7 @@ destroySpace :: forall io
                 Space
              -> io ()
 destroySpace space = liftIO $ do
-  let xrDestroySpacePtr = pXrDestroySpace (instanceCmds (space :: Space))
+  let xrDestroySpacePtr = pXrDestroySpace (case space of Space{instanceCmds} -> instanceCmds)
   unless (xrDestroySpacePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrDestroySpace is null" Nothing Nothing
   let xrDestroySpace' = mkXrDestroySpace xrDestroySpacePtr
@@ -244,7 +245,7 @@ enumerateReferenceSpaces :: forall io
                             Session
                          -> io (Result, ("spaces" ::: Vector ReferenceSpaceType))
 enumerateReferenceSpaces session = liftIO . evalContT $ do
-  let xrEnumerateReferenceSpacesPtr = pXrEnumerateReferenceSpaces (instanceCmds (session :: Session))
+  let xrEnumerateReferenceSpacesPtr = pXrEnumerateReferenceSpaces (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrEnumerateReferenceSpacesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEnumerateReferenceSpaces is null" Nothing Nothing
   let xrEnumerateReferenceSpaces' = mkXrEnumerateReferenceSpaces xrEnumerateReferenceSpacesPtr
@@ -336,7 +337,7 @@ createReferenceSpace :: forall io
                         ReferenceSpaceCreateInfo
                      -> io (Result, Space)
 createReferenceSpace session createInfo = liftIO . evalContT $ do
-  let cmds = instanceCmds (session :: Session)
+  let cmds = case session of Session{instanceCmds} -> instanceCmds
   let xrCreateReferenceSpacePtr = pXrCreateReferenceSpace cmds
   lift $ unless (xrCreateReferenceSpacePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateReferenceSpace is null" Nothing Nothing
@@ -442,7 +443,7 @@ createActionSpace :: forall io
                      ActionSpaceCreateInfo
                   -> io (Result, Space)
 createActionSpace session createInfo = liftIO . evalContT $ do
-  let cmds = instanceCmds (session :: Session)
+  let cmds = case session of Session{instanceCmds} -> instanceCmds
   let xrCreateActionSpacePtr = pXrCreateActionSpace cmds
   lift $ unless (xrCreateActionSpacePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateActionSpace is null" Nothing Nothing
@@ -492,7 +493,8 @@ foreign import ccall
 -- The minimum valid range of values for @time@ are described in
 -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#prediction-time-limits>.
 -- For values of @time@ outside this range, 'locateSpace' /may/ return a
--- location with no position and @XR_SPACE_LOCATION_POSITION_VALID_BIT@
+-- location with no position and
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_VALID_BIT'
 -- unset.
 --
 -- Some devices improve their understanding of the world as the device is
@@ -506,43 +508,49 @@ foreign import ccall
 -- neck model updates, inertial dead reckoning, or a last-known position,
 -- so long as it is still reasonable for the application to use that pose.
 -- While a runtime is providing position data, it /must/ continue to set
--- @XR_SPACE_LOCATION_POSITION_VALID_BIT@ but it /can/ clear
--- @XR_SPACE_LOCATION_POSITION_TRACKED_BIT@ to indicate that the position
--- is inferred or last-known in this way.
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_VALID_BIT'
+-- but it /can/ clear
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_TRACKED_BIT'
+-- to indicate that the position is inferred or last-known in this way.
 --
 -- If the runtime has not yet observed even a last-known pose for how to
 -- locate @space@ in @baseSpace@ (e.g. one space is an action space bound
 -- to a motion controller that has not yet been detected, or the two spaces
 -- are in disconnected fragments of the runtime’s tracked volume), the
 -- runtime /should/ return a location with no position and
--- @XR_SPACE_LOCATION_POSITION_VALID_BIT@ unset.
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_VALID_BIT'
+-- unset.
 --
 -- The runtime /must/ return a location with both
--- @XR_SPACE_LOCATION_POSITION_VALID_BIT@ and
--- @XR_SPACE_LOCATION_POSITION_TRACKED_BIT@ set when locating @space@ and
--- @baseSpace@ if both spaces were created relative to the same entity
--- (e.g. two action spaces for the same action), even if the entity is
--- currently untracked. The location in this case is the difference in the
--- two spaces\' application-specified transforms relative to that common
--- entity.
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_VALID_BIT'
+-- and
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_TRACKED_BIT'
+-- set when locating @space@ and @baseSpace@ if both spaces were created
+-- relative to the same entity (e.g. two action spaces for the same
+-- action), even if the entity is currently untracked. The location in this
+-- case is the difference in the two spaces\' application-specified
+-- transforms relative to that common entity.
 --
 -- The runtime /should/ return a location with
--- @XR_SPACE_LOCATION_POSITION_VALID_BIT@ set and
--- @XR_SPACE_LOCATION_POSITION_TRACKED_BIT@ unset for spaces tracking two
--- static entities in the world when their relative pose is known to the
--- runtime. This enables applications to make use of the runtime’s latest
--- knowledge of the world, even during tracking loss.
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_VALID_BIT'
+-- set and
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_TRACKED_BIT'
+-- unset for spaces tracking two static entities in the world when their
+-- relative pose is known to the runtime. This enables applications to make
+-- use of the runtime’s latest knowledge of the world, even during tracking
+-- loss.
 --
 -- If an 'SpaceVelocity' structure is chained to the @next@ pointer of
 -- 'SpaceLocation' and the velocity is observed or can be calculated by the
 -- runtime, the runtime /must/ fill in the linear velocity of the origin of
 -- space within the reference frame of @baseSpace@ and set the
--- @XR_SPACE_VELOCITY_LINEAR_VALID_BIT@. Similarly, if an 'SpaceVelocity'
--- structure is chained to the @next@ pointer of 'SpaceLocation' and the
--- angular velocity is observed or can be calculated by the runtime, the
--- runtime /must/ fill in the angular velocity of the origin of space
--- within the reference frame of @baseSpace@ and set the
--- @XR_SPACE_VELOCITY_ANGULAR_VALID_BIT@.
+-- 'OpenXR.Core10.Enums.SpaceVelocityFlagBits.SPACE_VELOCITY_LINEAR_VALID_BIT'.
+-- Similarly, if an 'SpaceVelocity' structure is chained to the @next@
+-- pointer of 'SpaceLocation' and the angular velocity is observed or can
+-- be calculated by the runtime, the runtime /must/ fill in the angular
+-- velocity of the origin of space within the reference frame of
+-- @baseSpace@ and set the
+-- 'OpenXR.Core10.Enums.SpaceVelocityFlagBits.SPACE_VELOCITY_ANGULAR_VALID_BIT'.
 --
 -- The following example code shows how an application can get both the
 -- location and velocity of a space within a base space using the
@@ -597,7 +605,7 @@ foreign import ccall
 -- = See Also
 --
 -- 'OpenXR.Core10.Handles.Space', 'SpaceLocation',
--- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSpaceLocationFlagBits XrSpaceLocationFlagBits>,
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SpaceLocationFlagBits',
 -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrTime >
 locateSpace :: forall a io
              . (Extendss SpaceLocation a, PokeChain a, PeekChain a, MonadIO io)
@@ -609,7 +617,7 @@ locateSpace :: forall a io
                Time
             -> io (Result, SpaceLocation a)
 locateSpace space baseSpace time = liftIO . evalContT $ do
-  let xrLocateSpacePtr = pXrLocateSpace (instanceCmds (space :: Space))
+  let xrLocateSpacePtr = pXrLocateSpace (case space of Space{instanceCmds} -> instanceCmds)
   lift $ unless (xrLocateSpacePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrLocateSpace is null" Nothing Nothing
   let xrLocateSpace' = mkXrLocateSpace xrLocateSpacePtr
@@ -678,7 +686,7 @@ getReferenceSpaceBoundsRect :: forall io
                                ReferenceSpaceType
                             -> io (Result, ("bounds" ::: Extent2Df))
 getReferenceSpaceBoundsRect session referenceSpaceType = liftIO . evalContT $ do
-  let xrGetReferenceSpaceBoundsRectPtr = pXrGetReferenceSpaceBoundsRect (instanceCmds (session :: Session))
+  let xrGetReferenceSpaceBoundsRectPtr = pXrGetReferenceSpaceBoundsRect (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetReferenceSpaceBoundsRectPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetReferenceSpaceBoundsRect is null" Nothing Nothing
   let xrGetReferenceSpaceBoundsRect' = mkXrGetReferenceSpaceBoundsRect xrGetReferenceSpaceBoundsRectPtr
@@ -720,7 +728,7 @@ deriving instance Generic (Vector3f)
 deriving instance Show Vector3f
 
 instance ToCStruct Vector3f where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Vector3f{..} f = do
     poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (x))
     poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (y))
@@ -781,7 +789,7 @@ deriving instance Generic (Quaternionf)
 deriving instance Show Quaternionf
 
 instance ToCStruct Quaternionf where
-  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Quaternionf{..} f = do
     poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (x))
     poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (y))
@@ -867,7 +875,7 @@ deriving instance Generic (Posef)
 deriving instance Show Posef
 
 instance ToCStruct Posef where
-  withCStruct x f = allocaBytesAligned 28 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 28 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Posef{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Quaternionf)) (orientation)
     poke ((p `plusPtr` 16 :: Ptr Vector3f)) (position)
@@ -928,7 +936,7 @@ deriving instance Generic (ReferenceSpaceCreateInfo)
 deriving instance Show ReferenceSpaceCreateInfo
 
 instance ToCStruct ReferenceSpaceCreateInfo where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ReferenceSpaceCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_REFERENCE_SPACE_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1000,7 +1008,7 @@ deriving instance Generic (ActionSpaceCreateInfo)
 deriving instance Show ActionSpaceCreateInfo
 
 instance ToCStruct ActionSpaceCreateInfo where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ActionSpaceCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_ACTION_SPACE_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1045,7 +1053,7 @@ instance Zero ActionSpaceCreateInfo where
 -- = See Also
 --
 -- 'Posef', 'OpenXR.Core10.Handles.Space',
--- 'OpenXR.Core10.Enums.SpaceLocationFlags.SpaceLocationFlags',
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SpaceLocationFlags',
 -- 'SpaceVelocity', 'OpenXR.Core10.Enums.StructureType.StructureType',
 -- 'locateSpace'
 data SpaceLocation (es :: [Type]) = SpaceLocation
@@ -1060,15 +1068,14 @@ data SpaceLocation (es :: [Type]) = SpaceLocation
     -- 'SpaceVelocity'
     next :: Chain es
   , -- | @locationFlags@ is a bitfield, with bit masks defined in
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSpaceLocationFlagBits XrSpaceLocationFlagBits>,
-    -- to indicate which members contain valid data. If none of the bits are
-    -- set, no other fields in this structure /should/ be considered to be
-    -- valid or meaningful.
+    -- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SpaceLocationFlagBits', to
+    -- indicate which members contain valid data. If none of the bits are set,
+    -- no other fields in this structure /should/ be considered to be valid or
+    -- meaningful.
     --
     -- #VUID-XrSpaceLocation-locationFlags-parameter# @locationFlags@ /must/ be
     -- @0@ or a valid combination of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSpaceLocationFlagBits XrSpaceLocationFlagBits>
-    -- values
+    -- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SpaceLocationFlagBits' values
     locationFlags :: SpaceLocationFlags
   , -- | @pose@ is an 'Posef' defining the position and orientation of the origin
     -- of 'locateSpace'::@space@ within the reference frame of
@@ -1083,7 +1090,7 @@ deriving instance Show (Chain es) => Show (SpaceLocation es)
 
 instance Extensible SpaceLocation where
   extensibleTypeName = "SpaceLocation"
-  setNext x next = x{next = next}
+  setNext SpaceLocation{..} next' = SpaceLocation{next = next', ..}
   getNext SpaceLocation{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SpaceLocation e => b) -> Maybe b
   extends _ f
@@ -1092,21 +1099,21 @@ instance Extensible SpaceLocation where
     | otherwise = Nothing
 
 instance (Extendss SpaceLocation es, PokeChain es) => ToCStruct (SpaceLocation es) where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SpaceLocation{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SPACE_LOCATION)
     next'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) next''
     lift $ poke ((p `plusPtr` 16 :: Ptr SpaceLocationFlags)) (locationFlags)
-    lift $ poke ((p `plusPtr` 20 :: Ptr Posef)) (pose)
+    lift $ poke ((p `plusPtr` 24 :: Ptr Posef)) (pose)
     lift $ f
-  cStructSize = 48
+  cStructSize = 56
   cStructAlignment = 8
   pokeZeroCStruct p f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SPACE_LOCATION)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    lift $ poke ((p `plusPtr` 20 :: Ptr Posef)) (zero)
+    lift $ poke ((p `plusPtr` 24 :: Ptr Posef)) (zero)
     lift $ f
 
 instance (Extendss SpaceLocation es, PeekChain es) => FromCStruct (SpaceLocation es) where
@@ -1114,7 +1121,7 @@ instance (Extendss SpaceLocation es, PeekChain es) => FromCStruct (SpaceLocation
     next <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next' <- peekChain (castPtr next)
     locationFlags <- peek @SpaceLocationFlags ((p `plusPtr` 16 :: Ptr SpaceLocationFlags))
-    pose <- peekCStruct @Posef ((p `plusPtr` 20 :: Ptr Posef))
+    pose <- peekCStruct @Posef ((p `plusPtr` 24 :: Ptr Posef))
     pure $ SpaceLocation
              next' locationFlags pose
 
@@ -1132,20 +1139,19 @@ instance es ~ '[] => Zero (SpaceLocation es) where
 -- = See Also
 --
 -- 'OpenXR.Core10.Handles.Space', 'SpaceLocation',
--- 'OpenXR.Core10.Enums.SpaceVelocityFlags.SpaceVelocityFlags',
+-- 'OpenXR.Core10.Enums.SpaceVelocityFlagBits.SpaceVelocityFlags',
 -- 'OpenXR.Core10.Enums.StructureType.StructureType', 'Vector3f',
 -- 'locateSpace'
 data SpaceVelocity = SpaceVelocity
   { -- | @velocityFlags@ is a bitfield, with bit masks defined in
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSpaceVelocityFlagBits XrSpaceVelocityFlagBits>,
-    -- to indicate which members contain valid data. If none of the bits are
-    -- set, no other fields in this structure /should/ be considered to be
-    -- valid or meaningful.
+    -- 'OpenXR.Core10.Enums.SpaceVelocityFlagBits.SpaceVelocityFlagBits', to
+    -- indicate which members contain valid data. If none of the bits are set,
+    -- no other fields in this structure /should/ be considered to be valid or
+    -- meaningful.
     --
     -- #VUID-XrSpaceVelocity-velocityFlags-parameter# @velocityFlags@ /must/ be
     -- @0@ or a valid combination of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSpaceVelocityFlagBits XrSpaceVelocityFlagBits>
-    -- values
+    -- 'OpenXR.Core10.Enums.SpaceVelocityFlagBits.SpaceVelocityFlagBits' values
     velocityFlags :: SpaceVelocityFlags
   , -- | @linearVelocity@ is the relative linear velocity of the origin of
     -- 'locateSpace'::@space@ with respect to and expressed in the reference
@@ -1167,28 +1173,28 @@ deriving instance Generic (SpaceVelocity)
 deriving instance Show SpaceVelocity
 
 instance ToCStruct SpaceVelocity where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SpaceVelocity{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SPACE_VELOCITY)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr SpaceVelocityFlags)) (velocityFlags)
-    poke ((p `plusPtr` 20 :: Ptr Vector3f)) (linearVelocity)
-    poke ((p `plusPtr` 32 :: Ptr Vector3f)) (angularVelocity)
+    poke ((p `plusPtr` 24 :: Ptr Vector3f)) (linearVelocity)
+    poke ((p `plusPtr` 36 :: Ptr Vector3f)) (angularVelocity)
     f
   cStructSize = 48
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SPACE_VELOCITY)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 20 :: Ptr Vector3f)) (zero)
-    poke ((p `plusPtr` 32 :: Ptr Vector3f)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr Vector3f)) (zero)
+    poke ((p `plusPtr` 36 :: Ptr Vector3f)) (zero)
     f
 
 instance FromCStruct SpaceVelocity where
   peekCStruct p = do
     velocityFlags <- peek @SpaceVelocityFlags ((p `plusPtr` 16 :: Ptr SpaceVelocityFlags))
-    linearVelocity <- peekCStruct @Vector3f ((p `plusPtr` 20 :: Ptr Vector3f))
-    angularVelocity <- peekCStruct @Vector3f ((p `plusPtr` 32 :: Ptr Vector3f))
+    linearVelocity <- peekCStruct @Vector3f ((p `plusPtr` 24 :: Ptr Vector3f))
+    angularVelocity <- peekCStruct @Vector3f ((p `plusPtr` 36 :: Ptr Vector3f))
     pure $ SpaceVelocity
              velocityFlags linearVelocity angularVelocity
 

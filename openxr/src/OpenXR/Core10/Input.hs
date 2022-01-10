@@ -40,7 +40,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -106,9 +106,10 @@ import OpenXR.CStruct.Extends (Chain)
 import OpenXR.CStruct.Extends (Extends)
 import OpenXR.CStruct.Extends (Extendss)
 import OpenXR.CStruct.Extends (Extensible(..))
-import OpenXR.Core10.Enums.InputSourceLocalizedNameFlags (InputSourceLocalizedNameFlags)
+import OpenXR.Core10.Enums.InputSourceLocalizedNameFlagBits (InputSourceLocalizedNameFlags)
 import OpenXR.Core10.Handles (Instance)
 import OpenXR.Core10.Handles (Instance(..))
+import OpenXR.Core10.Handles (Instance(Instance))
 import OpenXR.Dynamic (InstanceCmds(pXrAttachSessionActionSets))
 import OpenXR.Dynamic (InstanceCmds(pXrCreateAction))
 import OpenXR.Dynamic (InstanceCmds(pXrCreateActionSet))
@@ -140,6 +141,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.CStruct.Extends (SomeStruct)
 import OpenXR.Core10.Enums.StructureType (StructureType)
@@ -214,7 +216,7 @@ getActionStateBoolean :: forall io
                          ActionStateGetInfo
                       -> io (Result, ActionStateBoolean)
 getActionStateBoolean session getInfo = liftIO . evalContT $ do
-  let xrGetActionStateBooleanPtr = pXrGetActionStateBoolean (instanceCmds (session :: Session))
+  let xrGetActionStateBooleanPtr = pXrGetActionStateBoolean (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetActionStateBooleanPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetActionStateBoolean is null" Nothing Nothing
   let xrGetActionStateBoolean' = mkXrGetActionStateBoolean xrGetActionStateBooleanPtr
@@ -282,7 +284,7 @@ getActionStateFloat :: forall io
                        ActionStateGetInfo
                     -> io (Result, ActionStateFloat)
 getActionStateFloat session getInfo = liftIO . evalContT $ do
-  let xrGetActionStateFloatPtr = pXrGetActionStateFloat (instanceCmds (session :: Session))
+  let xrGetActionStateFloatPtr = pXrGetActionStateFloat (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetActionStateFloatPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetActionStateFloat is null" Nothing Nothing
   let xrGetActionStateFloat' = mkXrGetActionStateFloat xrGetActionStateFloatPtr
@@ -350,7 +352,7 @@ getActionStateVector2f :: forall io
                           ActionStateGetInfo
                        -> io (Result, ActionStateVector2f)
 getActionStateVector2f session getInfo = liftIO . evalContT $ do
-  let xrGetActionStateVector2fPtr = pXrGetActionStateVector2f (instanceCmds (session :: Session))
+  let xrGetActionStateVector2fPtr = pXrGetActionStateVector2f (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetActionStateVector2fPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetActionStateVector2f is null" Nothing Nothing
   let xrGetActionStateVector2f' = mkXrGetActionStateVector2f xrGetActionStateVector2fPtr
@@ -430,7 +432,7 @@ getActionStatePose :: forall io
                       ActionStateGetInfo
                    -> io (Result, ActionStatePose)
 getActionStatePose session getInfo = liftIO . evalContT $ do
-  let xrGetActionStatePosePtr = pXrGetActionStatePose (instanceCmds (session :: Session))
+  let xrGetActionStatePosePtr = pXrGetActionStatePose (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetActionStatePosePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetActionStatePose is null" Nothing Nothing
   let xrGetActionStatePose' = mkXrGetActionStatePose xrGetActionStatePosePtr
@@ -507,7 +509,7 @@ createActionSet :: forall io
                    ActionSetCreateInfo
                 -> io (ActionSet)
 createActionSet instance' createInfo = liftIO . evalContT $ do
-  let cmds = instanceCmds (instance' :: Instance)
+  let cmds = case instance' of Instance{instanceCmds} -> instanceCmds
   let xrCreateActionSetPtr = pXrCreateActionSet cmds
   lift $ unless (xrCreateActionSetPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateActionSet is null" Nothing Nothing
@@ -590,7 +592,7 @@ destroyActionSet :: forall io
                     ActionSet
                  -> io ()
 destroyActionSet actionSet = liftIO $ do
-  let xrDestroyActionSetPtr = pXrDestroyActionSet (instanceCmds (actionSet :: ActionSet))
+  let xrDestroyActionSetPtr = pXrDestroyActionSet (case actionSet of ActionSet{instanceCmds} -> instanceCmds)
   unless (xrDestroyActionSetPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrDestroyActionSet is null" Nothing Nothing
   let xrDestroyActionSet' = mkXrDestroyActionSet xrDestroyActionSetPtr
@@ -673,7 +675,7 @@ createAction :: forall io
                 ActionCreateInfo
              -> io (Action)
 createAction actionSet createInfo = liftIO . evalContT $ do
-  let cmds = instanceCmds (actionSet :: ActionSet)
+  let cmds = case actionSet of ActionSet{instanceCmds} -> instanceCmds
   let xrCreateActionPtr = pXrCreateAction cmds
   lift $ unless (xrCreateActionPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateAction is null" Nothing Nothing
@@ -756,7 +758,7 @@ destroyAction :: forall io
                  Action
               -> io ()
 destroyAction action = liftIO $ do
-  let xrDestroyActionPtr = pXrDestroyAction (instanceCmds (action :: Action))
+  let xrDestroyActionPtr = pXrDestroyAction (case action of Action{instanceCmds} -> instanceCmds)
   unless (xrDestroyActionPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrDestroyAction is null" Nothing Nothing
   let xrDestroyAction' = mkXrDestroyAction xrDestroyActionPtr
@@ -852,7 +854,7 @@ suggestInteractionProfileBindings :: forall a io
                                      ("suggestedBindings" ::: InteractionProfileSuggestedBinding a)
                                   -> io ()
 suggestInteractionProfileBindings instance' suggestedBindings = liftIO . evalContT $ do
-  let xrSuggestInteractionProfileBindingsPtr = pXrSuggestInteractionProfileBindings (instanceCmds (instance' :: Instance))
+  let xrSuggestInteractionProfileBindingsPtr = pXrSuggestInteractionProfileBindings (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrSuggestInteractionProfileBindingsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrSuggestInteractionProfileBindings is null" Nothing Nothing
   let xrSuggestInteractionProfileBindings' = mkXrSuggestInteractionProfileBindings xrSuggestInteractionProfileBindingsPtr
@@ -931,7 +933,7 @@ attachSessionActionSets :: forall io
                            SessionActionSetsAttachInfo
                         -> io (Result)
 attachSessionActionSets session attachInfo = liftIO . evalContT $ do
-  let xrAttachSessionActionSetsPtr = pXrAttachSessionActionSets (instanceCmds (session :: Session))
+  let xrAttachSessionActionSetsPtr = pXrAttachSessionActionSets (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrAttachSessionActionSetsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrAttachSessionActionSets is null" Nothing Nothing
   let xrAttachSessionActionSets' = mkXrAttachSessionActionSets xrAttachSessionActionSetsPtr
@@ -1020,7 +1022,7 @@ getCurrentInteractionProfile :: forall io
                                 ("topLevelUserPath" ::: Path)
                              -> io (Result, InteractionProfileState)
 getCurrentInteractionProfile session topLevelUserPath = liftIO . evalContT $ do
-  let xrGetCurrentInteractionProfilePtr = pXrGetCurrentInteractionProfile (instanceCmds (session :: Session))
+  let xrGetCurrentInteractionProfilePtr = pXrGetCurrentInteractionProfile (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetCurrentInteractionProfilePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetCurrentInteractionProfile is null" Nothing Nothing
   let xrGetCurrentInteractionProfile' = mkXrGetCurrentInteractionProfile xrGetCurrentInteractionProfilePtr
@@ -1106,7 +1108,7 @@ syncActions :: forall io
                ActionsSyncInfo
             -> io (Result)
 syncActions session syncInfo = liftIO . evalContT $ do
-  let xrSyncActionsPtr = pXrSyncActions (instanceCmds (session :: Session))
+  let xrSyncActionsPtr = pXrSyncActions (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrSyncActionsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrSyncActions is null" Nothing Nothing
   let xrSyncActions' = mkXrSyncActions xrSyncActionsPtr
@@ -1219,7 +1221,7 @@ enumerateBoundSourcesForAction :: forall io
                                   BoundSourcesForActionEnumerateInfo
                                -> io (Result, ("sources" ::: Vector Path))
 enumerateBoundSourcesForAction session enumerateInfo = liftIO . evalContT $ do
-  let xrEnumerateBoundSourcesForActionPtr = pXrEnumerateBoundSourcesForAction (instanceCmds (session :: Session))
+  let xrEnumerateBoundSourcesForActionPtr = pXrEnumerateBoundSourcesForAction (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrEnumerateBoundSourcesForActionPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEnumerateBoundSourcesForAction is null" Nothing Nothing
   let xrEnumerateBoundSourcesForAction' = mkXrEnumerateBoundSourcesForAction xrEnumerateBoundSourcesForActionPtr
@@ -1335,7 +1337,7 @@ getInputSourceLocalizedName :: forall io
                                InputSourceLocalizedNameGetInfo
                             -> io (Result, ("buffer" ::: ByteString))
 getInputSourceLocalizedName session getInfo = liftIO . evalContT $ do
-  let xrGetInputSourceLocalizedNamePtr = pXrGetInputSourceLocalizedName (instanceCmds (session :: Session))
+  let xrGetInputSourceLocalizedNamePtr = pXrGetInputSourceLocalizedName (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetInputSourceLocalizedNamePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetInputSourceLocalizedName is null" Nothing Nothing
   let xrGetInputSourceLocalizedName' = mkXrGetInputSourceLocalizedName xrGetInputSourceLocalizedNamePtr
@@ -1382,7 +1384,7 @@ deriving instance Generic (Vector2f)
 deriving instance Show Vector2f
 
 instance ToCStruct Vector2f where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Vector2f{..} f = do
     poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (x))
     poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (y))
@@ -1459,7 +1461,7 @@ deriving instance Generic (ActionStateBoolean)
 deriving instance Show ActionStateBoolean
 
 instance ToCStruct ActionStateBoolean where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ActionStateBoolean{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_ACTION_STATE_BOOLEAN)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1543,7 +1545,7 @@ deriving instance Generic (ActionStateFloat)
 deriving instance Show ActionStateFloat
 
 instance ToCStruct ActionStateFloat where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ActionStateFloat{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_ACTION_STATE_FLOAT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1627,7 +1629,7 @@ deriving instance Generic (ActionStateVector2f)
 deriving instance Show ActionStateVector2f
 
 instance ToCStruct ActionStateVector2f where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ActionStateVector2f{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_ACTION_STATE_VECTOR2F)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1697,7 +1699,7 @@ deriving instance Generic (ActionStatePose)
 deriving instance Show ActionStatePose
 
 instance ToCStruct ActionStatePose where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ActionStatePose{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_ACTION_STATE_POSE)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1771,7 +1773,7 @@ deriving instance Generic (ActionStateGetInfo)
 deriving instance Show ActionStateGetInfo
 
 instance ToCStruct ActionStateGetInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ActionStateGetInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_ACTION_STATE_GET_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1886,7 +1888,7 @@ deriving instance Generic (ActionSetCreateInfo)
 deriving instance Show ActionSetCreateInfo
 
 instance ToCStruct ActionSetCreateInfo where
-  withCStruct x f = allocaBytesAligned 216 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 216 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ActionSetCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_ACTION_SET_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1956,7 +1958,7 @@ deriving instance Generic (ActionSuggestedBinding)
 deriving instance Show ActionSuggestedBinding
 
 instance ToCStruct ActionSuggestedBinding where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ActionSuggestedBinding{..} f = do
     poke ((p `plusPtr` 0 :: Ptr (Ptr Action_T))) (action)
     poke ((p `plusPtr` 8 :: Ptr Path)) (binding)
@@ -2037,7 +2039,7 @@ deriving instance Show (Chain es) => Show (InteractionProfileSuggestedBinding es
 
 instance Extensible InteractionProfileSuggestedBinding where
   extensibleTypeName = "InteractionProfileSuggestedBinding"
-  setNext x next = x{next = next}
+  setNext InteractionProfileSuggestedBinding{..} next' = InteractionProfileSuggestedBinding{next = next', ..}
   getNext InteractionProfileSuggestedBinding{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends InteractionProfileSuggestedBinding e => b) -> Maybe b
   extends _ f
@@ -2046,14 +2048,14 @@ instance Extensible InteractionProfileSuggestedBinding where
     | otherwise = Nothing
 
 instance (Extendss InteractionProfileSuggestedBinding es, PokeChain es) => ToCStruct (InteractionProfileSuggestedBinding es) where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p InteractionProfileSuggestedBinding{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_INTERACTION_PROFILE_SUGGESTED_BINDING)
     next'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) next''
     lift $ poke ((p `plusPtr` 16 :: Ptr Path)) (interactionProfile)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (suggestedBindings)) :: Word32))
-    pSuggestedBindings' <- ContT $ allocaBytesAligned @ActionSuggestedBinding ((Data.Vector.length (suggestedBindings)) * 16) 8
+    pSuggestedBindings' <- ContT $ allocaBytes @ActionSuggestedBinding ((Data.Vector.length (suggestedBindings)) * 16)
     lift $ Data.Vector.imapM_ (\i e -> poke (pSuggestedBindings' `plusPtr` (16 * (i)) :: Ptr ActionSuggestedBinding) (e)) (suggestedBindings)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr ActionSuggestedBinding))) (pSuggestedBindings')
     lift $ f
@@ -2127,7 +2129,7 @@ deriving instance Generic (ActiveActionSet)
 deriving instance Show ActiveActionSet
 
 instance ToCStruct ActiveActionSet where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ActiveActionSet{..} f = do
     poke ((p `plusPtr` 0 :: Ptr (Ptr ActionSet_T))) (actionSet)
     poke ((p `plusPtr` 8 :: Ptr Path)) (subactionPath)
@@ -2193,12 +2195,12 @@ deriving instance Generic (SessionActionSetsAttachInfo)
 deriving instance Show SessionActionSetsAttachInfo
 
 instance ToCStruct SessionActionSetsAttachInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SessionActionSetsAttachInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SESSION_ACTION_SETS_ATTACH_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (actionSets)) :: Word32))
-    pActionSets' <- ContT $ allocaBytesAligned @(Ptr ActionSet_T) ((Data.Vector.length (actionSets)) * 8) 8
+    pActionSets' <- ContT $ allocaBytes @(Ptr ActionSet_T) ((Data.Vector.length (actionSets)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pActionSets' `plusPtr` (8 * (i)) :: Ptr (Ptr ActionSet_T)) (e)) (actionSets)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr (Ptr ActionSet_T)))) (pActionSets')
     lift $ f
@@ -2257,7 +2259,7 @@ deriving instance Generic (ActionsSyncInfo)
 deriving instance Show ActionsSyncInfo
 
 instance ToCStruct ActionsSyncInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ActionsSyncInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_ACTIONS_SYNC_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -2272,7 +2274,7 @@ instance ToCStruct ActionsSyncInfo where
     activeActionSets'' <- if Data.Vector.null (activeActionSets)
       then pure nullPtr
       else do
-        pActiveActionSets <- ContT $ allocaBytesAligned @ActiveActionSet (((Data.Vector.length (activeActionSets))) * 16) 8
+        pActiveActionSets <- ContT $ allocaBytes @ActiveActionSet (((Data.Vector.length (activeActionSets))) * 16)
         lift $ Data.Vector.imapM_ (\i e -> poke (pActiveActionSets `plusPtr` (16 * (i)) :: Ptr ActiveActionSet) (e)) ((activeActionSets))
         pure $ pActiveActionSets
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ActiveActionSet))) activeActionSets''
@@ -2322,7 +2324,7 @@ deriving instance Generic (BoundSourcesForActionEnumerateInfo)
 deriving instance Show BoundSourcesForActionEnumerateInfo
 
 instance ToCStruct BoundSourcesForActionEnumerateInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BoundSourcesForActionEnumerateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_BOUND_SOURCES_FOR_ACTION_ENUMERATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -2360,7 +2362,7 @@ instance Zero BoundSourcesForActionEnumerateInfo where
 --
 -- = See Also
 --
--- 'OpenXR.Core10.Enums.InputSourceLocalizedNameFlags.InputSourceLocalizedNameFlags',
+-- 'OpenXR.Core10.Enums.InputSourceLocalizedNameFlagBits.InputSourceLocalizedNameFlags',
 -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrPath >,
 -- 'OpenXR.Core10.Enums.StructureType.StructureType',
 -- 'enumerateBoundSourcesForAction', 'getInputSourceLocalizedName'
@@ -2368,11 +2370,11 @@ data InputSourceLocalizedNameGetInfo = InputSourceLocalizedNameGetInfo
   { -- No documentation found for Nested "XrInputSourceLocalizedNameGetInfo" "sourcePath"
     sourcePath :: Path
   , -- | @whichComponents@ is any set of flags from
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrInputSourceLocalizedNameFlagBits XrInputSourceLocalizedNameFlagBits>.
+    -- 'OpenXR.Core10.Enums.InputSourceLocalizedNameFlagBits.InputSourceLocalizedNameFlagBits'.
     --
     -- #VUID-XrInputSourceLocalizedNameGetInfo-whichComponents-parameter#
     -- @whichComponents@ /must/ be a valid combination of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrInputSourceLocalizedNameFlagBits XrInputSourceLocalizedNameFlagBits>
+    -- 'OpenXR.Core10.Enums.InputSourceLocalizedNameFlagBits.InputSourceLocalizedNameFlagBits'
     -- values
     --
     -- #VUID-XrInputSourceLocalizedNameGetInfo-whichComponents-requiredbitmask#
@@ -2386,7 +2388,7 @@ deriving instance Generic (InputSourceLocalizedNameGetInfo)
 deriving instance Show InputSourceLocalizedNameGetInfo
 
 instance ToCStruct InputSourceLocalizedNameGetInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p InputSourceLocalizedNameGetInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_INPUT_SOURCE_LOCALIZED_NAME_GET_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -2461,7 +2463,7 @@ deriving instance Generic (InteractionProfileState)
 deriving instance Show InteractionProfileState
 
 instance ToCStruct InteractionProfileState where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p InteractionProfileState{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_INTERACTION_PROFILE_STATE)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -2626,7 +2628,7 @@ deriving instance Generic (ActionCreateInfo)
 deriving instance Show ActionCreateInfo
 
 instance ToCStruct ActionCreateInfo where
-  withCStruct x f = allocaBytesAligned 224 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 224 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ActionCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_ACTION_CREATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -2643,7 +2645,7 @@ instance ToCStruct ActionCreateInfo where
     subactionPaths'' <- if Data.Vector.null (subactionPaths)
       then pure nullPtr
       else do
-        pSubactionPaths <- ContT $ allocaBytesAligned @Path (((Data.Vector.length (subactionPaths))) * 8) 8
+        pSubactionPaths <- ContT $ allocaBytes @Path (((Data.Vector.length (subactionPaths))) * 8)
         lift $ Data.Vector.imapM_ (\i e -> poke (pSubactionPaths `plusPtr` (8 * (i)) :: Ptr Path) (e)) ((subactionPaths))
         pure $ pSubactionPaths
     lift $ poke ((p `plusPtr` 88 :: Ptr (Ptr Path))) subactionPaths''

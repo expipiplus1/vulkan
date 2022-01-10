@@ -37,7 +37,7 @@
 -- [__Contact__]
 --
 --     -   Andrew Garrard
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_sampler_ycbcr_conversion:%20&body=@fluppeteer%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_sampler_ycbcr_conversion] @fluppeteer%0A<<Here describe the issue or question you have about the VK_KHR_sampler_ycbcr_conversion extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -88,7 +88,7 @@
 -- == Description
 --
 -- The use of Y′CBCR sampler conversion is an area in 3D graphics not used
--- by most Vulkan developers. It’s mainly used for processing inputs from
+-- by most Vulkan developers. It is mainly used for processing inputs from
 -- video decoders and cameras. The use of the extension assumes basic
 -- knowledge of Y′CBCR concepts.
 --
@@ -336,11 +336,11 @@
 --
 --     -   Added query function, formats as RGB, clarifications
 --
--- -   Revision 5, 2017-04 (Andrew Garrard)
+-- -   Revision 5, 2017-04-?? (Andrew Garrard)
 --
 --     -   Simplified query and removed output conversions
 --
--- -   Revision 6, 2017-4-24 (Andrew Garrard)
+-- -   Revision 6, 2017-04-24 (Andrew Garrard)
 --
 --     -   Tidying, incorporated new image query, restored transfer
 --         functions
@@ -348,7 +348,7 @@
 -- -   Revision 7, 2017-04-25 (Andrew Garrard)
 --
 --     -   Added cosited option\/midpoint requirement for formats,
---         \"bypassConversion\"
+--         “bypassConversion”
 --
 -- -   Revision 8, 2017-04-25 (Andrew Garrard)
 --
@@ -378,7 +378,7 @@
 --
 --     -   Reflected quantization changes in BT.2100-1
 --
--- = See Also
+-- == See Also
 --
 -- 'BindImagePlaneMemoryInfoKHR', 'ChromaLocationKHR',
 -- 'ImagePlaneMemoryRequirementsInfoKHR',
@@ -389,7 +389,7 @@
 -- 'SamplerYcbcrModelConversionKHR', 'SamplerYcbcrRangeKHR',
 -- 'createSamplerYcbcrConversionKHR', 'destroySamplerYcbcrConversionKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion Vulkan Specification>

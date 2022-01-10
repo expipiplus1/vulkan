@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_direct_mode_display:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_direct_mode_display] @cubanismo%0A<<Here describe the issue or question you have about the VK_EXT_direct_mode_display extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -92,11 +92,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'releaseDisplayEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_direct_mode_display Vulkan Specification>
@@ -127,6 +127,7 @@ import Vulkan.Extensions.Handles (DisplayKHR(..))
 import Vulkan.Dynamic (InstanceCmds(pVkReleaseDisplayEXT))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -148,6 +149,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_direct_mode_display VK_EXT_direct_mode_display>,
 -- 'Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 releaseDisplayEXT :: forall io
@@ -167,7 +169,7 @@ releaseDisplayEXT :: forall io
                      DisplayKHR
                   -> io ()
 releaseDisplayEXT physicalDevice display = liftIO $ do
-  let vkReleaseDisplayEXTPtr = pVkReleaseDisplayEXT (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkReleaseDisplayEXTPtr = pVkReleaseDisplayEXT (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   unless (vkReleaseDisplayEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkReleaseDisplayEXT is null" Nothing Nothing
   let vkReleaseDisplayEXT' = mkVkReleaseDisplayEXT vkReleaseDisplayEXTPtr

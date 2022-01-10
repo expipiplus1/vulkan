@@ -6,7 +6,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_external_fence  ( ExportFenceCreateInf
                                                           , FenceImportFlags
                                                           ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -49,6 +49,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExportFenceCreateInfo = ExportFenceCreateInfo
@@ -65,7 +66,7 @@ deriving instance Generic (ExportFenceCreateInfo)
 deriving instance Show ExportFenceCreateInfo
 
 instance ToCStruct ExportFenceCreateInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExportFenceCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

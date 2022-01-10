@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NVX_multiview_per_view_attributes:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NVX_multiview_per_view_attributes] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_NVX_multiview_per_view_attributes extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -56,14 +56,17 @@
 --
 -- This extension adds a new way to write shaders to be used with multiview
 -- subpasses, where the attributes for all views are written out by a
--- single invocation of the vertex processing stages. Related SPIR-V and
--- GLSL extensions @SPV_NVX_multiview_per_view_attributes@ and
+-- single invocation of the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stages>.
+-- Related SPIR-V and GLSL extensions
+-- @SPV_NVX_multiview_per_view_attributes@ and
 -- @GL_NVX_multiview_per_view_attributes@ introduce per-view position and
 -- viewport mask attributes arrays, and this extension defines how those
 -- per-view attribute arrays are interpreted by Vulkan. Pipelines using
--- per-view attributes /may/ only execute the vertex processing stages once
--- for all views rather than once per-view, which reduces redundant shading
--- work.
+-- per-view attributes /may/ only execute the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stages>
+-- once for all views rather than once per-view, which reduces redundant
+-- shading work.
 --
 -- A subpass creation flag controls whether the subpass uses this
 -- extension. A subpass /must/ either exclusively use this extension or not
@@ -143,11 +146,11 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_multiview_per_view_attributes Vulkan Specification>
@@ -161,7 +164,7 @@ module Vulkan.Extensions.VK_NVX_multiview_per_view_attributes  ( PhysicalDeviceM
                                                                , pattern NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_EXTENSION_NAME
                                                                ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -186,23 +189,21 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- | VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX - Structure
 -- describing multiview limits that can be supported by an implementation
 --
--- = Members
---
--- The members of the
--- 'PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX' structure
--- describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX' structure
--- is included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- is included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_multiview_per_view_attributes VK_NVX_multiview_per_view_attributes>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX = PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX
@@ -218,7 +219,7 @@ deriving instance Generic (PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX
 deriving instance Show PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX
 
 instance ToCStruct PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_ATTRIBUTES_PROPERTIES_NVX)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

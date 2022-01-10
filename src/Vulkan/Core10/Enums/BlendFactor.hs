@@ -35,7 +35,7 @@ import GHC.Show (Show(showsPrec))
 --
 -- = Description
 --
--- The semantics of each enum value is described in the table below:
+-- The semantics of the enum values are described in the table below:
 --
 -- +-----------------------------------------+---------------------+--------+
 -- | 'BlendFactor'                           | RGB Blend Factors   | Alpha  |
@@ -106,6 +106,7 @@ import GHC.Show (Show(showsPrec))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Pipeline.PipelineColorBlendAttachmentState'
 newtype BlendFactor = BlendFactor Int32
   deriving newtype (Eq, Ord, Storable, Zero)

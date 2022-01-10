@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Matthaeus G. Chajdas
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_shader_core_properties2:%20&body=@anteru%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_shader_core_properties2] @anteru%0A<<Here describe the issue or question you have about the VK_AMD_shader_core_properties2 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -83,12 +83,12 @@
 --
 --     -   Initial draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceShaderCoreProperties2AMD',
 -- 'ShaderCorePropertiesFlagBitsAMD', 'ShaderCorePropertiesFlagsAMD'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_shader_core_properties2 Vulkan Specification>
@@ -106,7 +106,7 @@ module Vulkan.Extensions.VK_AMD_shader_core_properties2  ( PhysicalDeviceShaderC
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showString)
@@ -137,22 +137,21 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- | VkPhysicalDeviceShaderCoreProperties2AMD - Structure describing shader
 -- core properties that can be supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceShaderCoreProperties2AMD' structure
--- describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceShaderCoreProperties2AMD' structure is included in
--- the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_shader_core_properties2 VK_AMD_shader_core_properties2>,
 -- 'ShaderCorePropertiesFlagsAMD',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderCoreProperties2AMD = PhysicalDeviceShaderCoreProperties2AMD
@@ -172,7 +171,7 @@ deriving instance Generic (PhysicalDeviceShaderCoreProperties2AMD)
 deriving instance Show PhysicalDeviceShaderCoreProperties2AMD
 
 instance ToCStruct PhysicalDeviceShaderCoreProperties2AMD where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShaderCoreProperties2AMD{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_2_AMD)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -214,6 +213,7 @@ type ShaderCorePropertiesFlagsAMD = ShaderCorePropertiesFlagBitsAMD
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_shader_core_properties2 VK_AMD_shader_core_properties2>,
 -- 'PhysicalDeviceShaderCoreProperties2AMD', 'ShaderCorePropertiesFlagsAMD'
 newtype ShaderCorePropertiesFlagBitsAMD = ShaderCorePropertiesFlagBitsAMD Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

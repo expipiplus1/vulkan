@@ -26,6 +26,7 @@ module Vulkan.Core10.Enums.ObjectType  (ObjectType( OBJECT_TYPE_UNKNOWN
                                                   , OBJECT_TYPE_DESCRIPTOR_SET
                                                   , OBJECT_TYPE_FRAMEBUFFER
                                                   , OBJECT_TYPE_COMMAND_POOL
+                                                  , OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA
                                                   , OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT
                                                   , OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV
                                                   , OBJECT_TYPE_DEFERRED_OPERATION_KHR
@@ -34,6 +35,8 @@ module Vulkan.Core10.Enums.ObjectType  (ObjectType( OBJECT_TYPE_UNKNOWN
                                                   , OBJECT_TYPE_VALIDATION_CACHE_EXT
                                                   , OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR
                                                   , OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT
+                                                  , OBJECT_TYPE_CU_FUNCTION_NVX
+                                                  , OBJECT_TYPE_CU_MODULE_NVX
                                                   , OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT
                                                   , OBJECT_TYPE_DISPLAY_MODE_KHR
                                                   , OBJECT_TYPE_DISPLAY_KHR
@@ -149,6 +152,7 @@ import GHC.Show (Show(showsPrec))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsObjectNameInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsObjectTagInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_device_memory_report.DeviceMemoryReportCallbackDataEXT',
@@ -209,6 +213,8 @@ pattern OBJECT_TYPE_DESCRIPTOR_SET                  = ObjectType 23
 pattern OBJECT_TYPE_FRAMEBUFFER                     = ObjectType 24
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_COMMAND_POOL"
 pattern OBJECT_TYPE_COMMAND_POOL                    = ObjectType 25
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA"
+pattern OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA       = ObjectType 1000366000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT"
 pattern OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT           = ObjectType 1000295000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV"
@@ -225,6 +231,10 @@ pattern OBJECT_TYPE_VALIDATION_CACHE_EXT            = ObjectType 1000160000
 pattern OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR      = ObjectType 1000150000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT"
 pattern OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT       = ObjectType 1000128000
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_CU_FUNCTION_NVX"
+pattern OBJECT_TYPE_CU_FUNCTION_NVX                 = ObjectType 1000029001
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_CU_MODULE_NVX"
+pattern OBJECT_TYPE_CU_MODULE_NVX                   = ObjectType 1000029000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT"
 pattern OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT       = ObjectType 1000011000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DISPLAY_MODE_KHR"
@@ -265,6 +275,7 @@ pattern OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION        = ObjectType 1000156000
              OBJECT_TYPE_DESCRIPTOR_SET,
              OBJECT_TYPE_FRAMEBUFFER,
              OBJECT_TYPE_COMMAND_POOL,
+             OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA,
              OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT,
              OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV,
              OBJECT_TYPE_DEFERRED_OPERATION_KHR,
@@ -273,6 +284,8 @@ pattern OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION        = ObjectType 1000156000
              OBJECT_TYPE_VALIDATION_CACHE_EXT,
              OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR,
              OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT,
+             OBJECT_TYPE_CU_FUNCTION_NVX,
+             OBJECT_TYPE_CU_MODULE_NVX,
              OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT,
              OBJECT_TYPE_DISPLAY_MODE_KHR,
              OBJECT_TYPE_DISPLAY_KHR,
@@ -315,6 +328,7 @@ showTableObjectType =
   , (OBJECT_TYPE_DESCRIPTOR_SET                 , "DESCRIPTOR_SET")
   , (OBJECT_TYPE_FRAMEBUFFER                    , "FRAMEBUFFER")
   , (OBJECT_TYPE_COMMAND_POOL                   , "COMMAND_POOL")
+  , (OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA      , "BUFFER_COLLECTION_FUCHSIA")
   , (OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT          , "PRIVATE_DATA_SLOT_EXT")
   , (OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV    , "INDIRECT_COMMANDS_LAYOUT_NV")
   , (OBJECT_TYPE_DEFERRED_OPERATION_KHR         , "DEFERRED_OPERATION_KHR")
@@ -323,6 +337,8 @@ showTableObjectType =
   , (OBJECT_TYPE_VALIDATION_CACHE_EXT           , "VALIDATION_CACHE_EXT")
   , (OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR     , "ACCELERATION_STRUCTURE_KHR")
   , (OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT      , "DEBUG_UTILS_MESSENGER_EXT")
+  , (OBJECT_TYPE_CU_FUNCTION_NVX                , "CU_FUNCTION_NVX")
+  , (OBJECT_TYPE_CU_MODULE_NVX                  , "CU_MODULE_NVX")
   , (OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT      , "DEBUG_REPORT_CALLBACK_EXT")
   , (OBJECT_TYPE_DISPLAY_MODE_KHR               , "DISPLAY_MODE_KHR")
   , (OBJECT_TYPE_DISPLAY_KHR                    , "DISPLAY_KHR")

@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Pat Brown
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_fragment_shader_barycentric:%20&body=@nvpbrown%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_fragment_shader_barycentric] @nvpbrown%0A<<Here describe the issue or question you have about the VK_NV_fragment_shader_barycentric extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -159,7 +159,7 @@
 --
 -- __RESOLVED__: The SPIR-V extension for this feature chose to mirror the
 -- behavior of the GLSL extension, which provides two built-in variables.
--- Additionally, it’s not clear that its a good idea (or even legal) to
+-- Additionally, it is not clear that its a good idea (or even legal) to
 -- have two variables using the “same attribute”, but with different
 -- interpolation modifiers.
 --
@@ -169,11 +169,11 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceFragmentShaderBarycentricFeaturesNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_fragment_shader_barycentric Vulkan Specification>
@@ -187,7 +187,7 @@ module Vulkan.Extensions.VK_NV_fragment_shader_barycentric  ( PhysicalDeviceFrag
                                                             , pattern NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME
                                                             ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -215,8 +215,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceFragmentShaderBarycentricFeaturesNV'
--- structure describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
@@ -225,17 +224,21 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- for more information.
 --
 -- If the 'PhysicalDeviceFragmentShaderBarycentricFeaturesNV' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceFragmentShaderBarycentricFeaturesNV' /can/ also be
--- included in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to enable features.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceFragmentShaderBarycentricFeaturesNV' /can/
+-- also be used in the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
+-- features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_fragment_shader_barycentric VK_NV_fragment_shader_barycentric>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceFragmentShaderBarycentricFeaturesNV = PhysicalDeviceFragmentShaderBarycentricFeaturesNV
@@ -251,7 +254,7 @@ deriving instance Generic (PhysicalDeviceFragmentShaderBarycentricFeaturesNV)
 deriving instance Show PhysicalDeviceFragmentShaderBarycentricFeaturesNV
 
 instance ToCStruct PhysicalDeviceFragmentShaderBarycentricFeaturesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceFragmentShaderBarycentricFeaturesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

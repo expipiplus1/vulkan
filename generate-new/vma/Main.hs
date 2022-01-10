@@ -56,7 +56,7 @@ import           VMA.RenderParams
 
 vmaDir, vmaDocbookDir, vmaHeader :: FilePath
 vmaDir = "../VulkanMemoryAllocator/VulkanMemoryAllocator"
-vmaHeader = vmaDir <> "/src/vk_mem_alloc.h"
+vmaHeader = vmaDir <> "/include/vk_mem_alloc.h"
 vmaDocbookDir = vmaDir <> "/docs/docbook"
 
 main :: IO ()
@@ -142,11 +142,15 @@ marshalParams handles =
     getBespokeScheme :: Marshalable a => CName -> a -> Maybe (MarshalScheme a)
     getBespokeScheme p a = case (p, name a) of
       ("VmaAllocatorCreateInfo", "pHeapSizeLimit") -> Just $ Preserve (type' a)
+      ("VmaAllocatorCreateInfo", "pTypeExternalMemoryHandleTypes") -> Just $ Preserve (type' a)
       ("vmaBuildStatsString", "ppStatsString") | Ptr _ p <- type' a ->
+        Just $ Returned (Preserve p)
+      ("vmaBuildVirtualBlockStatsString", "ppStatsString") | Ptr _ p <- type' a ->
         Just $ Returned (Preserve p)
       ("vmaGetPoolName", "ppName") | Ptr _ p <- type' a ->
         Just $ Returned (Preserve p)
       ("vmaFreeStatsString", "pStatsString") -> Just $ Preserve (type' a)
+      ("vmaFreeVirtualBlockStatsString", "pStatsString") -> Just $ Preserve (type' a)
       _ -> Nothing
     isForeignStruct = const False
   in
@@ -219,12 +223,13 @@ unitEnums state ds = do
           evValue <- exprValue expr'
           pure EnumValue { .. }
 
-      let eName = CName (T.pack n)
-          isMaxEnum EnumValue {..} = "_MAX_ENUM" `T.isSuffixOf` unCName evName
-          eValues = V.filter (not . isMaxEnum) allValues
-          eType   = if "FlagBits" `List.isSuffixOf` n
-            then ABitmask (CName $ T.dropEnd 8 (T.pack n) <> "Flags")
-            else AnEnum
+      let
+        eName = CName (T.pack n)
+        isMaxEnum EnumValue {..} = "_MAX_ENUM" `T.isSuffixOf` unCName evName
+        eValues = V.filter (not . isMaxEnum) allValues
+        eType   = if "FlagBits" `List.isSuffixOf` n
+          then ABitmask (CName $ T.dropEnd 8 (T.pack n) <> "Flags") Bitmask32
+          else AnEnum
       pure (nodeInfo, Enum { .. })
 
 -- TODO: This may be a little fragile

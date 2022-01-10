@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Liam Middlebrook
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_robustness2:%20&body=@liam-middlebrook%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_robustness2] @liam-middlebrook%0A<<Here describe the issue or question you have about the VK_EXT_robustness2 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -55,10 +55,10 @@
 -- These additional requirements /may/ be expensive on some
 -- implementations, and should only be enabled when truly necessary.
 --
--- This extension also adds support for \"null descriptors\", where
+-- This extension also adds support for “null descriptors”, where
 -- 'Vulkan.Core10.APIConstants.NULL_HANDLE' /can/ be used instead of a
 -- valid handle. Accesses to null descriptors have well-defined behavior,
--- and don’t rely on robustness.
+-- and do not rely on robustness.
 --
 -- == New Structures
 --
@@ -93,14 +93,14 @@
 --     'PhysicalDeviceRobustness2PropertiesEXT'::@robustStorageBufferAccessSizeAlignment@
 --     exist?
 --
--- RESOLVED: Some implementations can’t efficiently tightly bounds-check
--- all buffer accesses. Rather, the size of the bound range is padded to
--- some power of two multiple, up to 256 bytes for uniform buffers and up
--- to 4 bytes for storage buffers, and that padded size is bounds-checked.
--- This is sufficient to implement D3D-like behavior, because D3D only
--- allows binding whole uniform buffers or ranges that are a multiple of
--- 256 bytes, and D3D raw and structured buffers only support 32-bit
--- accesses.
+-- __RESOLVED__: Some implementations cannot efficiently tightly
+-- bounds-check all buffer accesses. Rather, the size of the bound range is
+-- padded to some power of two multiple, up to 256 bytes for uniform
+-- buffers and up to 4 bytes for storage buffers, and that padded size is
+-- bounds-checked. This is sufficient to implement D3D-like behavior,
+-- because D3D only allows binding whole uniform buffers or ranges that are
+-- a multiple of 256 bytes, and D3D raw and structured buffers only support
+-- 32-bit accesses.
 --
 -- == Examples
 --
@@ -112,12 +112,12 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceRobustness2FeaturesEXT',
 -- 'PhysicalDeviceRobustness2PropertiesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_robustness2 Vulkan Specification>

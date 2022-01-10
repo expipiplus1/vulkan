@@ -30,6 +30,7 @@ type FN_vkInternalAllocationNotification = ("pUserData" ::: Ptr ()) -> CSize -> 
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 type PFN_vkInternalAllocationNotification = FunPtr FN_vkInternalAllocationNotification
 
@@ -38,8 +39,13 @@ type FN_vkInternalFreeNotification = ("pUserData" ::: Ptr ()) -> CSize -> Intern
 -- | PFN_vkInternalFreeNotification - Application-defined memory free
 -- notification function
 --
+-- = Description
+--
+-- > described link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-host-allocation-scope[here^].
+--
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 type PFN_vkInternalFreeNotification = FunPtr FN_vkInternalFreeNotification
 
@@ -78,6 +84,7 @@ type FN_vkReallocationFunction = ("pUserData" ::: Ptr ()) -> ("pOriginal" ::: Pt
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 type PFN_vkReallocationFunction = FunPtr FN_vkReallocationFunction
 
@@ -123,6 +130,7 @@ type FN_vkAllocationFunction = ("pUserData" ::: Ptr ()) -> CSize -> ("alignment"
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 type PFN_vkAllocationFunction = FunPtr FN_vkAllocationFunction
 
@@ -139,6 +147,7 @@ type FN_vkFreeFunction = ("pUserData" ::: Ptr ()) -> ("pMemory" ::: Ptr ()) -> I
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 type PFN_vkFreeFunction = FunPtr FN_vkFreeFunction
 
@@ -149,6 +158,7 @@ type FN_vkVoidFunction = () -> IO ()
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.DeviceInitialization.getDeviceProcAddr',
 -- 'Vulkan.Core10.DeviceInitialization.getInstanceProcAddr'
 type PFN_vkVoidFunction = FunPtr FN_vkVoidFunction

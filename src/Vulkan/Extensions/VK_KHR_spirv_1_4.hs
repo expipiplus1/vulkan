@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_spirv_1_4:%20&body=@critsec%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_spirv_1_4] @critsec%0A<<Here describe the issue or question you have about the VK_KHR_spirv_1_4 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -94,10 +94,10 @@
 -- == Issues
 --
 -- 1. Should we have an extension specific to this SPIR-V version, or add a
--- version-generic query for SPIR-V version? SPIR-V 1.4 doesn’t need any
+-- version-generic query for SPIR-V version? SPIR-V 1.4 does not need any
 -- other API changes.
 --
--- RESOLVED: Just expose SPIR-V 1.4.
+-- __RESOLVED__: Just expose SPIR-V 1.4.
 --
 -- Most new SPIR-V versions introduce optionally-required capabilities or
 -- have implementation-defined limits, and would need more API and
@@ -107,18 +107,18 @@
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_subgroup.PhysicalDeviceSubgroupProperties'
 -- to allow querying the supported group operation categories, maximum
 -- supported subgroup size, etc. While we could expose the parts of a new
--- SPIR-V version that don’t need accompanying changes generically, we’ll
--- still end up writing extensions specific to each version for the
--- remaining parts. Thus the generic mechanism won’t reduce future
+-- SPIR-V version that do not need accompanying changes generically, we
+-- will still end up writing extensions specific to each version for the
+-- remaining parts. Thus the generic mechanism will not reduce future
 -- spec-writing effort. In addition, making it clear which parts of a
--- future version are supported by the generic mechanism and which can’t be
--- used without specific support would be difficult to get right ahead of
--- time.
+-- future version are supported by the generic mechanism and which cannot
+-- be used without specific support would be difficult to get right ahead
+-- of time.
 --
 -- 2. Can different stages of the same pipeline use shaders with different
 -- SPIR-V versions?
 --
--- RESOLVED: Yes.
+-- __RESOLVED__: Yes.
 --
 -- Mixing SPIR-V versions 1.0-1.3 in the same pipeline has not been
 -- disallowed, so it would be inconsistent to disallow mixing 1.4 with
@@ -129,7 +129,7 @@
 -- promoted to core in 1.4 be enabled in order to use that functionality in
 -- a SPIR-V 1.4 module?
 --
--- RESOLVED: No, with caveats.
+-- __RESOLVED__: No, with caveats.
 --
 -- The SPIR-V 1.4 module does not need to declare the SPIR-V extensions,
 -- since the functionality is now part of core, so there is no need to
@@ -145,10 +145,10 @@
 -- though the extension was promoted in SPIR-V 1.4, the capabilities are
 -- still optional in implementations that support @VK_KHR_spirv_1_4@.
 --
--- A SPIR-V 1.4 module doesn’t need to enable @SPV_KHR_float_controls@ in
+-- A SPIR-V 1.4 module does not need to enable @SPV_KHR_float_controls@ in
 -- order to use the capabilities, so if the application has /a priori/
--- knowledge that the implementation supports the capabilities, it doesn’t
--- need to enable @VK_KHR_shader_float_controls@. However, if it doesn’t
+-- knowledge that the implementation supports the capabilities, it does not
+-- need to enable @VK_KHR_shader_float_controls@. However, if it does not
 -- have this knowledge and has to query for support at runtime, it must
 -- enable @VK_KHR_shader_float_controls@ in order to use
 -- 'Vulkan.Extensions.VK_KHR_shader_float_controls.PhysicalDeviceFloatControlsPropertiesKHR'.
@@ -159,11 +159,11 @@
 --
 --     -   Internal draft versions
 --
--- = See Also
+-- == See Also
 --
 -- No cross-references are available
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_spirv_1_4 Vulkan Specification>

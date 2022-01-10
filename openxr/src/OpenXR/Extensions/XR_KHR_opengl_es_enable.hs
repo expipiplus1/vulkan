@@ -49,7 +49,7 @@ module OpenXR.Extensions.XR_KHR_opengl_es_enable  ( getOpenGLESGraphicsRequireme
 import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -79,6 +79,7 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import OpenXR.Core10.Handles (Instance)
 import OpenXR.Core10.Handles (Instance(..))
+import OpenXR.Core10.Handles (Instance(Instance))
 import OpenXR.Dynamic (InstanceCmds(pXrGetOpenGLESGraphicsRequirementsKHR))
 import OpenXR.Core10.Handles (Instance_T)
 import OpenXR.Core10.Image (IsSwapchainImage(..))
@@ -120,8 +121,8 @@ foreign import ccall
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrGetOpenGLESGraphicsRequirementsKHR-extension-notenabled# The
---     @@ extension /must/ be enabled prior to calling
---     'getOpenGLESGraphicsRequirementsKHR'
+--     @XR_KHR_opengl_es_enable@ extension /must/ be enabled prior to
+--     calling 'getOpenGLESGraphicsRequirementsKHR'
 --
 -- -   #VUID-xrGetOpenGLESGraphicsRequirementsKHR-instance-parameter#
 --     @instance@ /must/ be a valid 'OpenXR.Core10.Handles.Instance' handle
@@ -165,7 +166,7 @@ getOpenGLESGraphicsRequirementsKHR :: forall io
                                       SystemId
                                    -> io (GraphicsRequirementsOpenGLESKHR)
 getOpenGLESGraphicsRequirementsKHR instance' systemId = liftIO . evalContT $ do
-  let xrGetOpenGLESGraphicsRequirementsKHRPtr = pXrGetOpenGLESGraphicsRequirementsKHR (instanceCmds (instance' :: Instance))
+  let xrGetOpenGLESGraphicsRequirementsKHRPtr = pXrGetOpenGLESGraphicsRequirementsKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetOpenGLESGraphicsRequirementsKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetOpenGLESGraphicsRequirementsKHR is null" Nothing Nothing
   let xrGetOpenGLESGraphicsRequirementsKHR' = mkXrGetOpenGLESGraphicsRequirementsKHR xrGetOpenGLESGraphicsRequirementsKHRPtr
@@ -195,7 +196,7 @@ getOpenGLESGraphicsRequirementsKHR instance' systemId = liftIO . evalContT $ do
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrGraphicsBindingOpenGLESAndroidKHR-extension-notenabled# The
---     @@ extension /must/ be enabled prior to using
+--     @XR_KHR_opengl_es_enable@ extension /must/ be enabled prior to using
 --     'GraphicsBindingOpenGLESAndroidKHR'
 --
 -- -   #VUID-XrGraphicsBindingOpenGLESAndroidKHR-type-type# @type@ /must/
@@ -234,7 +235,7 @@ deriving instance Generic (GraphicsBindingOpenGLESAndroidKHR)
 deriving instance Show GraphicsBindingOpenGLESAndroidKHR
 
 instance ToCStruct GraphicsBindingOpenGLESAndroidKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsBindingOpenGLESAndroidKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_BINDING_OPENGL_ES_ANDROID_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -301,8 +302,8 @@ instance Zero GraphicsBindingOpenGLESAndroidKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrSwapchainImageOpenGLESKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrSwapchainImageOpenGLESKHR-extension-notenabled# The
+--     @XR_KHR_opengl_es_enable@ extension /must/ be enabled prior to using
 --     'SwapchainImageOpenGLESKHR'
 --
 -- -   #VUID-XrSwapchainImageOpenGLESKHR-type-type# @type@ /must/ be
@@ -330,7 +331,7 @@ instance IsSwapchainImage SwapchainImageOpenGLESKHR where
   toSwapchainImageBaseHeader SwapchainImageOpenGLESKHR{} = SwapchainImageBaseHeader{type' = TYPE_SWAPCHAIN_IMAGE_OPENGL_ES_KHR}
 
 instance ToCStruct SwapchainImageOpenGLESKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainImageOpenGLESKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SWAPCHAIN_IMAGE_OPENGL_ES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -373,8 +374,8 @@ instance Zero SwapchainImageOpenGLESKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsRequirementsOpenGLESKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrGraphicsRequirementsOpenGLESKHR-extension-notenabled# The
+--     @XR_KHR_opengl_es_enable@ extension /must/ be enabled prior to using
 --     'GraphicsRequirementsOpenGLESKHR'
 --
 -- -   #VUID-XrGraphicsRequirementsOpenGLESKHR-type-type# @type@ /must/ be
@@ -408,7 +409,7 @@ deriving instance Generic (GraphicsRequirementsOpenGLESKHR)
 deriving instance Show GraphicsRequirementsOpenGLESKHR
 
 instance ToCStruct GraphicsRequirementsOpenGLESKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsRequirementsOpenGLESKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_REQUIREMENTS_OPENGL_ES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

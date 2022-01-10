@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_display_surface_counter:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_display_surface_counter] @cubanismo%0A<<Here describe the issue or question you have about the VK_EXT_display_surface_counter extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -78,6 +78,8 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
+--     -   'STRUCTURE_TYPE_SURFACE_CAPABILITIES2_EXT'
+--
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT'
 --
 -- == Version History
@@ -86,12 +88,12 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'SurfaceCapabilities2EXT', 'SurfaceCounterFlagBitsEXT',
 -- 'SurfaceCounterFlagsEXT', 'getPhysicalDeviceSurfaceCapabilities2EXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_surface_counter Vulkan Specification>
@@ -122,7 +124,7 @@ import Vulkan.Internal.Utils (enumShowsPrec)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -164,6 +166,7 @@ import Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceSurfaceCapabilities2EXT))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -195,6 +198,13 @@ foreign import ccall
 -- 'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceCapabilitiesKHR',
 -- with the ability to return extended information by adding extending
 -- structures to the @pNext@ chain of its @pSurfaceCapabilities@ parameter.
+--
+-- == Valid Usage
+--
+-- -   [[VUID-{refpage}-surface-06211]] @surface@ /must/ be supported by
+--     @physicalDevice@, as reported by
+--     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
+--     or an equivalent platform-specific mechanism
 --
 -- == Valid Usage (Implicit)
 --
@@ -231,6 +241,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_surface_counter VK_EXT_display_surface_counter>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'SurfaceCapabilities2EXT',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
 getPhysicalDeviceSurfaceCapabilities2EXT :: forall io
@@ -243,7 +254,7 @@ getPhysicalDeviceSurfaceCapabilities2EXT :: forall io
                                             SurfaceKHR
                                          -> io (SurfaceCapabilities2EXT)
 getPhysicalDeviceSurfaceCapabilities2EXT physicalDevice surface = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceSurfaceCapabilities2EXTPtr = pVkGetPhysicalDeviceSurfaceCapabilities2EXT (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceSurfaceCapabilities2EXTPtr = pVkGetPhysicalDeviceSurfaceCapabilities2EXT (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceSurfaceCapabilities2EXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSurfaceCapabilities2EXT is null" Nothing Nothing
   let vkGetPhysicalDeviceSurfaceCapabilities2EXT' = mkVkGetPhysicalDeviceSurfaceCapabilities2EXT vkGetPhysicalDeviceSurfaceCapabilities2EXTPtr
@@ -265,17 +276,11 @@ pattern SURFACE_COUNTER_VBLANK_EXT = SURFACE_COUNTER_VBLANK_BIT_EXT
 -- | VkSurfaceCapabilities2EXT - Structure describing capabilities of a
 -- surface
 --
--- = Members
---
--- All members of 'SurfaceCapabilities2EXT' are identical to the
--- corresponding members of
--- 'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR' where one
--- exists. The remaining members are:
---
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_surface_counter VK_EXT_display_surface_counter>,
 -- 'Vulkan.Extensions.VK_KHR_surface.CompositeAlphaFlagsKHR',
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
@@ -285,25 +290,69 @@ pattern SURFACE_COUNTER_VBLANK_EXT = SURFACE_COUNTER_VBLANK_BIT_EXT
 -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagsKHR',
 -- 'getPhysicalDeviceSurfaceCapabilities2EXT'
 data SurfaceCapabilities2EXT = SurfaceCapabilities2EXT
-  { -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "minImageCount"
+  { -- | @minImageCount@ is the minimum number of images the specified device
+    -- supports for a swapchain created for the surface, and will be at least
+    -- one.
     minImageCount :: Word32
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "maxImageCount"
+  , -- | @maxImageCount@ is the maximum number of images the specified device
+    -- supports for a swapchain created for the surface, and will be either 0,
+    -- or greater than or equal to @minImageCount@. A value of 0 means that
+    -- there is no limit on the number of images, though there /may/ be limits
+    -- related to the total amount of memory used by presentable images.
     maxImageCount :: Word32
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "currentExtent"
+  , -- | @currentExtent@ is the current width and height of the surface, or the
+    -- special value (0xFFFFFFFF, 0xFFFFFFFF) indicating that the surface size
+    -- will be determined by the extent of a swapchain targeting the surface.
     currentExtent :: Extent2D
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "minImageExtent"
+  , -- | @minImageExtent@ contains the smallest valid swapchain extent for the
+    -- surface on the specified device. The @width@ and @height@ of the extent
+    -- will each be less than or equal to the corresponding @width@ and
+    -- @height@ of @currentExtent@, unless @currentExtent@ has the special
+    -- value described above.
     minImageExtent :: Extent2D
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "maxImageExtent"
+  , -- | @maxImageExtent@ contains the largest valid swapchain extent for the
+    -- surface on the specified device. The @width@ and @height@ of the extent
+    -- will each be greater than or equal to the corresponding @width@ and
+    -- @height@ of @minImageExtent@. The @width@ and @height@ of the extent
+    -- will each be greater than or equal to the corresponding @width@ and
+    -- @height@ of @currentExtent@, unless @currentExtent@ has the special
+    -- value described above.
     maxImageExtent :: Extent2D
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "maxImageArrayLayers"
+  , -- | @maxImageArrayLayers@ is the maximum number of layers presentable images
+    -- /can/ have for a swapchain created for this device and surface, and will
+    -- be at least one.
     maxImageArrayLayers :: Word32
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "supportedTransforms"
+  , -- | @supportedTransforms@ is a bitmask of
+    -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR'
+    -- indicating the presentation transforms supported for the surface on the
+    -- specified device. At least one bit will be set.
     supportedTransforms :: SurfaceTransformFlagsKHR
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "currentTransform"
+  , -- | @currentTransform@ is
+    -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR' value
+    -- indicating the surface’s current transform relative to the presentation
+    -- engine’s natural orientation.
     currentTransform :: SurfaceTransformFlagBitsKHR
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "supportedCompositeAlpha"
+  , -- | @supportedCompositeAlpha@ is a bitmask of
+    -- 'Vulkan.Extensions.VK_KHR_surface.CompositeAlphaFlagBitsKHR',
+    -- representing the alpha compositing modes supported by the presentation
+    -- engine for the surface on the specified device, and at least one bit
+    -- will be set. Opaque composition /can/ be achieved in any alpha
+    -- compositing mode by either using an image format that has no alpha
+    -- component, or by ensuring that all pixels in the presentable images have
+    -- an alpha value of 1.0.
     supportedCompositeAlpha :: CompositeAlphaFlagsKHR
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "supportedUsageFlags"
+  , -- | @supportedUsageFlags@ is a bitmask of
+    -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' representing
+    -- the ways the application /can/ use the presentable images of a swapchain
+    -- created with 'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR' set to
+    -- 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_IMMEDIATE_KHR',
+    -- 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_MAILBOX_KHR',
+    -- 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_KHR' or
+    -- 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_FIFO_RELAXED_KHR' for the
+    -- surface on the specified device.
+    -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
+    -- /must/ be included in the set. Implementations /may/ support additional
+    -- usages.
     supportedUsageFlags :: ImageUsageFlags
   , -- | @supportedSurfaceCounters@ is a bitmask of 'SurfaceCounterFlagBitsEXT'
     -- indicating the supported surface counter types.
@@ -321,7 +370,7 @@ deriving instance Generic (SurfaceCapabilities2EXT)
 deriving instance Show SurfaceCapabilities2EXT
 
 instance ToCStruct SurfaceCapabilities2EXT where
-  withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SurfaceCapabilities2EXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -348,7 +397,10 @@ instance ToCStruct SurfaceCapabilities2EXT where
     poke ((p `plusPtr` 32 :: Ptr Extent2D)) (zero)
     poke ((p `plusPtr` 40 :: Ptr Extent2D)) (zero)
     poke ((p `plusPtr` 48 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 52 :: Ptr SurfaceTransformFlagsKHR)) (zero)
     poke ((p `plusPtr` 56 :: Ptr SurfaceTransformFlagBitsKHR)) (zero)
+    poke ((p `plusPtr` 60 :: Ptr CompositeAlphaFlagsKHR)) (zero)
+    poke ((p `plusPtr` 64 :: Ptr ImageUsageFlags)) (zero)
     f
 
 instance FromCStruct SurfaceCapabilities2EXT where
@@ -394,6 +446,7 @@ type SurfaceCounterFlagsEXT = SurfaceCounterFlagBitsEXT
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_surface_counter VK_EXT_display_surface_counter>,
 -- 'SurfaceCounterFlagsEXT',
 -- 'Vulkan.Extensions.VK_EXT_display_control.getSwapchainCounterEXT'
 newtype SurfaceCounterFlagBitsEXT = SurfaceCounterFlagBitsEXT Flags

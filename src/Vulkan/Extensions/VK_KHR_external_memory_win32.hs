@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_external_memory_win32:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_external_memory_win32] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_external_memory_win32 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -122,13 +122,13 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'ExportMemoryWin32HandleInfoKHR', 'ImportMemoryWin32HandleInfoKHR',
 -- 'MemoryGetWin32HandleInfoKHR', 'MemoryWin32HandlePropertiesKHR',
 -- 'getMemoryWin32HandleKHR', 'getMemoryWin32HandlePropertiesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_win32 Vulkan Specification>
@@ -155,7 +155,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -189,6 +189,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Extensions.VK_NV_external_memory_win32 (DWORD)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetMemoryWin32HandleKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkGetMemoryWin32HandlePropertiesKHR))
 import Vulkan.Core10.Handles (DeviceMemory)
@@ -246,6 +247,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_win32 VK_KHR_external_memory_win32>,
 -- 'Vulkan.Core10.Handles.Device', 'MemoryGetWin32HandleInfoKHR'
 getMemoryWin32HandleKHR :: forall io
                          . (MonadIO io)
@@ -264,7 +266,7 @@ getMemoryWin32HandleKHR :: forall io
                            MemoryGetWin32HandleInfoKHR
                         -> io (HANDLE)
 getMemoryWin32HandleKHR device getWin32HandleInfo = liftIO . evalContT $ do
-  let vkGetMemoryWin32HandleKHRPtr = pVkGetMemoryWin32HandleKHR (deviceCmds (device :: Device))
+  let vkGetMemoryWin32HandleKHRPtr = pVkGetMemoryWin32HandleKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetMemoryWin32HandleKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryWin32HandleKHR is null" Nothing Nothing
   let vkGetMemoryWin32HandleKHR' = mkVkGetMemoryWin32HandleKHR vkGetMemoryWin32HandleKHRPtr
@@ -300,6 +302,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_win32 VK_KHR_external_memory_win32>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'MemoryWin32HandlePropertiesKHR'
@@ -310,7 +313,9 @@ getMemoryWin32HandlePropertiesKHR :: forall io
                                      -- #VUID-vkGetMemoryWin32HandlePropertiesKHR-device-parameter# @device@
                                      -- /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                      Device
-                                  -> -- | @handleType@ is the type of the handle @handle@.
+                                  -> -- | @handleType@ is a
+                                     -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+                                     -- value specifying the type of the handle @handle@.
                                      --
                                      -- #VUID-vkGetMemoryWin32HandlePropertiesKHR-handleType-00666# @handleType@
                                      -- /must/ not be one of the handle types defined as opaque
@@ -327,7 +332,7 @@ getMemoryWin32HandlePropertiesKHR :: forall io
                                      HANDLE
                                   -> io (MemoryWin32HandlePropertiesKHR)
 getMemoryWin32HandlePropertiesKHR device handleType handle = liftIO . evalContT $ do
-  let vkGetMemoryWin32HandlePropertiesKHRPtr = pVkGetMemoryWin32HandlePropertiesKHR (deviceCmds (device :: Device))
+  let vkGetMemoryWin32HandlePropertiesKHRPtr = pVkGetMemoryWin32HandlePropertiesKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetMemoryWin32HandlePropertiesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryWin32HandlePropertiesKHR is null" Nothing Nothing
   let vkGetMemoryWin32HandlePropertiesKHR' = mkVkGetMemoryWin32HandlePropertiesKHR vkGetMemoryWin32HandlePropertiesKHRPtr
@@ -338,7 +343,7 @@ getMemoryWin32HandlePropertiesKHR device handleType handle = liftIO . evalContT 
   pure $ (pMemoryWin32HandleProperties)
 
 
--- | VkImportMemoryWin32HandleInfoKHR - import Win32 memory created on the
+-- | VkImportMemoryWin32HandleInfoKHR - Import Win32 memory created on the
 -- same physical device
 --
 -- = Description
@@ -421,15 +426,18 @@ getMemoryWin32HandlePropertiesKHR device handleType handle = liftIO . evalContT 
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_win32 VK_KHR_external_memory_win32>,
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImportMemoryWin32HandleInfoKHR = ImportMemoryWin32HandleInfoKHR
-  { -- | @handleType@ specifies the type of @handle@ or @name@.
+  { -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+    -- value specifying the type of @handle@ or @name@.
     handleType :: ExternalMemoryHandleTypeFlagBits
-  , -- | @handle@ is the external handle to import, or @NULL@.
+  , -- | @handle@ is @NULL@ or the external handle to import.
     handle :: HANDLE
-  , -- | @name@ is a null-terminated UTF-16 string naming the payload to import,
-    -- or @NULL@.
+  , -- | @name@ is @NULL@ or a null-terminated UTF-16 string naming the payload
+    -- to import.
     name :: LPCWSTR
   }
   deriving (Typeable, Eq)
@@ -439,7 +447,7 @@ deriving instance Generic (ImportMemoryWin32HandleInfoKHR)
 deriving instance Show ImportMemoryWin32HandleInfoKHR
 
 instance ToCStruct ImportMemoryWin32HandleInfoKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImportMemoryWin32HandleInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -482,13 +490,13 @@ instance Zero ImportMemoryWin32HandleInfoKHR where
 --
 -- If
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'
--- is not present in the same @pNext@ chain, this structure is ignored.
+-- is not included in the same @pNext@ chain, this structure is ignored.
 --
 -- If
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'
--- is present in the @pNext@ chain of
+-- is included in the @pNext@ chain of
 -- 'Vulkan.Core10.Memory.MemoryAllocateInfo' with a Windows @handleType@,
--- but either 'ExportMemoryWin32HandleInfoKHR' is not present in the
+-- but either 'ExportMemoryWin32HandleInfoKHR' is not included in the
 -- @pNext@ chain, or if it is but @pAttributes@ is set to @NULL@, default
 -- security descriptor values will be used, and child processes created by
 -- the application will not inherit the handle, as described in the MSDN
@@ -498,20 +506,10 @@ instance Zero ImportMemoryWin32HandleInfoKHR where
 --
 -- For handles of the following types:
 --
--- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT'
--- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT'
+-- -   'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT'
 --
 -- The implementation /must/ ensure the access rights allow read and write
 -- access to the memory.
---
--- For handles of the following types:
---
--- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT'
--- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT'
---
--- The access rights /must/ be:
---
--- @GENERIC_ALL@
 --
 -- [1]
 --     <https://docs.microsoft.com/en-us/windows/win32/sync/synchronization-object-security-and-access-rights>
@@ -522,10 +520,6 @@ instance Zero ImportMemoryWin32HandleInfoKHR where
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
 --     does not include
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT',
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT',
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT',
---     or
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT',
 --     a 'ExportMemoryWin32HandleInfoKHR' structure /must/ not be included
 --     in the @pNext@ chain of 'Vulkan.Core10.Memory.MemoryAllocateInfo'
 --
@@ -543,6 +537,7 @@ instance Zero ImportMemoryWin32HandleInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_win32 VK_KHR_external_memory_win32>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExportMemoryWin32HandleInfoKHR = ExportMemoryWin32HandleInfoKHR
   { -- | @pAttributes@ is a pointer to a Windows
@@ -563,7 +558,7 @@ deriving instance Generic (ExportMemoryWin32HandleInfoKHR)
 deriving instance Show ExportMemoryWin32HandleInfoKHR
 
 instance ToCStruct ExportMemoryWin32HandleInfoKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExportMemoryWin32HandleInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -608,6 +603,7 @@ instance Zero ExportMemoryWin32HandleInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_win32 VK_KHR_external_memory_win32>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getMemoryWin32HandlePropertiesKHR'
 data MemoryWin32HandlePropertiesKHR = MemoryWin32HandlePropertiesKHR
@@ -621,7 +617,7 @@ deriving instance Generic (MemoryWin32HandlePropertiesKHR)
 deriving instance Show MemoryWin32HandlePropertiesKHR
 
 instance ToCStruct MemoryWin32HandlePropertiesKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryWin32HandlePropertiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_WIN32_HANDLE_PROPERTIES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -696,6 +692,7 @@ instance Zero MemoryWin32HandlePropertiesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_win32 VK_KHR_external_memory_win32>,
 -- 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -703,7 +700,9 @@ instance Zero MemoryWin32HandlePropertiesKHR where
 data MemoryGetWin32HandleInfoKHR = MemoryGetWin32HandleInfoKHR
   { -- | @memory@ is the memory object from which the handle will be exported.
     memory :: DeviceMemory
-  , -- | @handleType@ is the type of handle requested.
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+    -- value specifying the type of handle requested.
     handleType :: ExternalMemoryHandleTypeFlagBits
   }
   deriving (Typeable, Eq)
@@ -713,7 +712,7 @@ deriving instance Generic (MemoryGetWin32HandleInfoKHR)
 deriving instance Show MemoryGetWin32HandleInfoKHR
 
 instance ToCStruct MemoryGetWin32HandleInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryGetWin32HandleInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_GET_WIN32_HANDLE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

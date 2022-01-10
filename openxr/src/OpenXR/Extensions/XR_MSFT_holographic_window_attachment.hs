@@ -40,7 +40,7 @@ module OpenXR.Extensions.XR_MSFT_holographic_window_attachment  ( HolographicWin
                                                                 , IUnknown
                                                                 ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import OpenXR.CStruct (FromCStruct)
@@ -88,9 +88,9 @@ import OpenXR.Extensions.XR_MSFT_perception_anchor_interop (IUnknown)
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrHolographicWindowAttachmentMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'HolographicWindowAttachmentMSFT'
+-- -   #VUID-XrHolographicWindowAttachmentMSFT-extension-notenabled# The
+--     @XR_MSFT_holographic_window_attachment@ extension /must/ be enabled
+--     prior to using 'HolographicWindowAttachmentMSFT'
 --
 -- -   #VUID-XrHolographicWindowAttachmentMSFT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_HOLOGRAPHIC_WINDOW_ATTACHMENT_MSFT'
@@ -125,7 +125,7 @@ deriving instance Generic (HolographicWindowAttachmentMSFT)
 deriving instance Show HolographicWindowAttachmentMSFT
 
 instance ToCStruct HolographicWindowAttachmentMSFT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HolographicWindowAttachmentMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_HOLOGRAPHIC_WINDOW_ATTACHMENT_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

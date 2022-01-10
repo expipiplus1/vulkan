@@ -26,10 +26,10 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_wayland_surface:%20&body=@critsec%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_wayland_surface] @critsec%0A<<Here describe the issue or question you have about the VK_KHR_wayland_surface extension>> >
 --
 --     -   Ian Elliott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_wayland_surface:%20&body=@ianelliottus%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_wayland_surface] @ianelliottus%0A<<Here describe the issue or question you have about the VK_KHR_wayland_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -147,7 +147,7 @@
 --
 --     -   Adjusted wording of issue #1 to match the agreed-upon solution.
 --
---     -   Renamed \"window\" parameters to \"surface\" to match Wayland
+--     -   Renamed “window” parameters to “surface” to match Wayland
 --         conventions.
 --
 -- -   Revision 3, 2015-10-26 (Ian Elliott)
@@ -173,13 +173,13 @@
 --         'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' and the
 --         Wayland requests sent to the compositor.
 --
--- = See Also
+-- == See Also
 --
 -- 'WaylandSurfaceCreateFlagsKHR', 'WaylandSurfaceCreateInfoKHR',
 -- 'createWaylandSurfaceKHR',
 -- 'getPhysicalDeviceWaylandPresentationSupportKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_wayland_surface Vulkan Specification>
@@ -205,7 +205,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -250,11 +250,13 @@ import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateWaylandSurfaceKHR))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceWaylandPresentationSupportKHR))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -307,6 +309,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_wayland_surface VK_KHR_wayland_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR', 'WaylandSurfaceCreateInfoKHR'
@@ -323,7 +326,7 @@ createWaylandSurfaceKHR :: forall io
                            ("allocator" ::: Maybe AllocationCallbacks)
                         -> io (SurfaceKHR)
 createWaylandSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateWaylandSurfaceKHRPtr = pVkCreateWaylandSurfaceKHR (instanceCmds (instance' :: Instance))
+  let vkCreateWaylandSurfaceKHRPtr = pVkCreateWaylandSurfaceKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateWaylandSurfaceKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateWaylandSurfaceKHR is null" Nothing Nothing
   let vkCreateWaylandSurfaceKHR' = mkVkCreateWaylandSurfaceKHR vkCreateWaylandSurfaceKHRPtr
@@ -357,6 +360,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_wayland_surface VK_KHR_wayland_surface>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceWaylandPresentationSupportKHR :: forall io
                                                 . (MonadIO io)
@@ -382,7 +386,7 @@ getPhysicalDeviceWaylandPresentationSupportKHR :: forall io
                                                   (Ptr Wl_display)
                                                -> io (Bool)
 getPhysicalDeviceWaylandPresentationSupportKHR physicalDevice queueFamilyIndex display = liftIO $ do
-  let vkGetPhysicalDeviceWaylandPresentationSupportKHRPtr = pVkGetPhysicalDeviceWaylandPresentationSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceWaylandPresentationSupportKHRPtr = pVkGetPhysicalDeviceWaylandPresentationSupportKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   unless (vkGetPhysicalDeviceWaylandPresentationSupportKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceWaylandPresentationSupportKHR is null" Nothing Nothing
   let vkGetPhysicalDeviceWaylandPresentationSupportKHR' = mkVkGetPhysicalDeviceWaylandPresentationSupportKHR vkGetPhysicalDeviceWaylandPresentationSupportKHRPtr
@@ -397,6 +401,7 @@ getPhysicalDeviceWaylandPresentationSupportKHR physicalDevice queueFamilyIndex d
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_wayland_surface VK_KHR_wayland_surface>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'WaylandSurfaceCreateFlagsKHR', 'createWaylandSurfaceKHR'
 data WaylandSurfaceCreateInfoKHR = WaylandSurfaceCreateInfoKHR
@@ -422,7 +427,7 @@ deriving instance Generic (WaylandSurfaceCreateInfoKHR)
 deriving instance Show WaylandSurfaceCreateInfoKHR
 
 instance ToCStruct WaylandSurfaceCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p WaylandSurfaceCreateInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -469,6 +474,7 @@ instance Zero WaylandSurfaceCreateInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_wayland_surface VK_KHR_wayland_surface>,
 -- 'WaylandSurfaceCreateInfoKHR'
 newtype WaylandSurfaceCreateFlagsKHR = WaylandSurfaceCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

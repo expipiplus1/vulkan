@@ -15,7 +15,7 @@
 --     219
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -26,17 +26,20 @@
 -- [__Contact__]
 --
 --     -   Matthew Netsch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_fragment_density_map:%20&body=@mnetsch%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_fragment_density_map] @mnetsch%0A<<Here describe the issue or question you have about the VK_EXT_fragment_density_map extension>> >
 --
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2018-09-25
+--     2021-09-30
 --
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_fragment_invocation_density.html SPV_EXT_fragment_invocation_density>
+--
+--     -   This extension provides API support for
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_fragment_invocation_density.txt GL_EXT_fragment_invocation_density>
 --
 -- [__Contributors__]
 --
@@ -145,6 +148,15 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FormatFeatureFlagBits2KHR':
+--
+--     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT'
+--
 -- == New or Modified Built-In Variables
 --
 -- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-fraginvocationcount FragInvocationCountEXT>
@@ -161,13 +173,17 @@
 --
 --     -   Initial version
 --
--- = See Also
+-- -   Revision 2, 2021-09-30 (Jon Leech)
+--
+--     -   Add interaction with @VK_KHR_format_feature_flags2@ to @vk.xml@
+--
+-- == See Also
 --
 -- 'PhysicalDeviceFragmentDensityMapFeaturesEXT',
 -- 'PhysicalDeviceFragmentDensityMapPropertiesEXT',
 -- 'RenderPassFragmentDensityMapCreateInfoEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_fragment_density_map Vulkan Specification>

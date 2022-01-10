@@ -86,11 +86,14 @@ pattern REFERENCE_SPACE_TYPE_VIEW           = ReferenceSpaceType 1
 -- inertial dead reckoning, or a last-known position, so long as it is
 -- still reasonable for the application to use that pose. While a runtime
 -- is providing position data, it /must/ continue to set
--- @XR_SPACE_LOCATION_POSITION_VALID_BIT@ and
--- @XR_VIEW_STATE_POSITION_VALID_BIT@ but it /can/ clear
--- @XR_SPACE_LOCATION_POSITION_TRACKED_BIT@ and
--- @XR_VIEW_STATE_POSITION_TRACKED_BIT@ to indicate that the position is
--- inferred or last-known in this way.
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_VALID_BIT'
+-- and
+-- 'OpenXR.Core10.Enums.ViewStateFlagBits.VIEW_STATE_POSITION_VALID_BIT'
+-- but it /can/ clear
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_TRACKED_BIT'
+-- and
+-- 'OpenXR.Core10.Enums.ViewStateFlagBits.VIEW_STATE_POSITION_TRACKED_BIT'
+-- to indicate that the position is inferred or last-known in this way.
 --
 -- When tracking is recovered, runtimes /should/ snap the pose of other
 -- spaces back into position relative to the @LOCAL@ space’s original
@@ -131,11 +134,14 @@ pattern REFERENCE_SPACE_TYPE_LOCAL          = ReferenceSpaceType 2
 -- inertial dead reckoning, or a last-known position, so long as it is
 -- still reasonable for the application to use that pose. While a runtime
 -- is providing position data, it /must/ continue to set
--- @XR_SPACE_LOCATION_POSITION_VALID_BIT@ and
--- @XR_VIEW_STATE_POSITION_VALID_BIT@ but it /can/ clear
--- @XR_SPACE_LOCATION_POSITION_TRACKED_BIT@ and
--- @XR_VIEW_STATE_POSITION_TRACKED_BIT@ to indicate that the position is
--- inferred or last-known in this way.
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_VALID_BIT'
+-- and
+-- 'OpenXR.Core10.Enums.ViewStateFlagBits.VIEW_STATE_POSITION_VALID_BIT'
+-- but it /can/ clear
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_TRACKED_BIT'
+-- and
+-- 'OpenXR.Core10.Enums.ViewStateFlagBits.VIEW_STATE_POSITION_TRACKED_BIT'
+-- to indicate that the position is inferred or last-known in this way.
 --
 -- When tracking is recovered, runtimes /should/ snap the pose of other
 -- spaces back into position relative to the @STAGE@ space’s original

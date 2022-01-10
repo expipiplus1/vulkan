@@ -67,7 +67,7 @@ import GHC.Show (Show(showsPrec))
 --
 -- = Description
 --
--- The semantics of each basic blend operations is described in the table
+-- The semantics of the basic blend operations are described in the table
 -- below:
 --
 -- +-------------------------------+--------------------+-----------------+
@@ -133,6 +133,7 @@ import GHC.Show (Show(showsPrec))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Pipeline.PipelineColorBlendAttachmentState'
 newtype BlendOp = BlendOp Int32
   deriving newtype (Eq, Ord, Storable, Zero)

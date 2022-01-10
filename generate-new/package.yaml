@@ -50,7 +50,7 @@ default-extensions:
 - ViewPatterns
 name: generate-new
 synopsis: A program to generate the vulkan package from the vulkan docs.
-author: Joe Hermaszewski
+author: Ellie Hermaszewska
 extra-source-files:
 - readme.md
 - package.yaml
@@ -102,9 +102,10 @@ dependencies:
 - algebraic-graphs
 - ascii-progress
 - async-pool
+- attoparsec
 - base
-- bytestring
 - brittany
+- bytestring
 - casing
 - containers
 - data-default
@@ -121,11 +122,11 @@ dependencies:
 - parsec
 - parsers
 - polysemy >= 1.4
-- polysemy-plugin
 - pretty-show
 - prettyprinter
 - regex-applicative
 - relude
+- replace-attoparsec >= 1.4.5
 - safe
 - say
 - some

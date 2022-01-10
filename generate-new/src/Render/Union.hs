@@ -1,7 +1,7 @@
 module Render.Union
   where
 
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import           Polysemy
 import           Polysemy.Input
 import           Polysemy.NonDet
@@ -16,6 +16,7 @@ import           Foreign.Ptr
 import           Language.Haskell.TH            ( mkName )
 
 import           CType
+import qualified Data.Text                     as T
 import           Error
 import           Haskell                       as H
 import           Marshal.Scheme
@@ -30,8 +31,8 @@ import           Render.State
 import           Render.Stmts
 import           Render.Stmts.Poke
 import           Render.Type
+import           Render.Utils                   ( chooseAlign )
 import           Spec.Parse
-import qualified Data.Text as T
 
 renderUnion
   :: ( HasErr r
@@ -145,11 +146,13 @@ toCStructInstance MarshaledStruct {..} = do
         addrRef <- stmt Nothing Nothing $ do
           tellImport 'castPtr
           pTyDoc <- renderTypeHighPrec
-            =<< cToHsType DoPreserve (smType msmStructMember)
+            =<< cToHsTypeWithHoles DoPreserve (smType msmStructMember)
           pure
-            . Pure AlwaysInline
-            . AddrDoc
-            $ ("castPtr @_ @" <> pTyDoc <+> addrVar)
+            .   Pure AlwaysInline
+            .   AddrDoc
+            $   "castPtr @_ @"
+            <>  pTyDoc
+            <+> addrVar
         ty       <- schemeTypeNegative msmScheme
         valueRef <-
           stmt ty Nothing . pure . Pure AlwaysInline . ValueDoc . pretty $ mVar
@@ -182,12 +185,13 @@ toCStructInstance MarshaledStruct {..} = do
   tellImport 'free
 
   (size, alignment) <- getTypeSize (TypeName msName)
+  let (a, an, af) = chooseAlign sAlignment
+  tellImport an
   tellDoc $ "instance ToCStruct" <+> pretty n <+> "where" <> line <> indent
     2
     (vsep
-      [ "withCStruct x f = allocaBytesAligned"
-      <+> viaShow sSize
-      <+> viaShow sAlignment
+      [ "withCStruct x f ="
+      <+> af (a <+> viaShow sSize)
       <+> "$ \\p -> pokeCStruct p x (f p)"
       , "pokeCStruct ::" <+> pokeCStructTDoc
       , "pokeCStruct"
@@ -232,8 +236,9 @@ zeroInstance MarshaledStruct {..} = do
           Just z  -> pure z
         let con = pretty (mkConName msName (smName msmStructMember))
         size <- case msmScheme of
-          Normal   t          -> fst <$> getTypeSize t
-          Preserve t          -> fst <$> getTypeSize t
+          Normal        t     -> fst <$> getTypeSize t
+          Preserve      t     -> fst <$> getTypeSize t
+          WrappedStruct t     -> fst <$> getTypeSize (TypeName t)
           Tupled n (Normal e) -> do
             (tSize, _) <- getTypeSize e
             pure $ tSize * fromIntegral n
@@ -280,7 +285,8 @@ peekUnionFunction UnionDiscriminator {..} MarshaledStruct {..} = do
         $ find ((== smName msmStructMember) . snd) udValueConstructorMap
     let pat' = mkPatternName pat
         con' = mkConName msName con
-    ty    <- cToHsType DoPreserve (smType msmStructMember)
+    -- Should this be wrapped, or withHoles?
+    ty    <- cToHsTypeWrapped DoPreserve (smType msmStructMember)
     tyDoc <- renderTypeHighPrec ty
     tellImport 'castPtr
     let addr = AddrDoc ("castPtr @_ @" <> tyDoc <+> ptrName)

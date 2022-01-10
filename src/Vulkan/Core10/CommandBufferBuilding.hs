@@ -71,7 +71,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.IO (throwIO)
@@ -121,6 +121,7 @@ import Vulkan.Core10.OtherTypes (BufferMemoryBarrier)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Core10.Enums.DependencyFlagBits (DependencyFlagBits(..))
 import Vulkan.Core10.Enums.DependencyFlagBits (DependencyFlags)
@@ -261,6 +262,11 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.cmdTraceRaysKHR' and
 --     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.cmdTraceRaysIndirectKHR'.
 --
+-- -   The pipeline bound to
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI'
+--     controls the behavior of
+--     'Vulkan.Extensions.VK_HUAWEI_subpass_shading.cmdSubpassShadingHUAWEI'.
+--
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdBindPipeline-pipelineBindPoint-00777# If
@@ -325,12 +331,98 @@ foreign import ccall
 -- -   #VUID-vkCmdBindPipeline-pipelineBindPoint-02392# If
 --     @pipelineBindPoint@ is
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_RAY_TRACING_KHR',
---     the @pipeline@ /must/ be a ray tracing pipeline
+--     @pipeline@ /must/ be a ray tracing pipeline
 --
--- -   #VUID-vkCmdBindPipeline-pipeline-03382# The @pipeline@ /must/ not
---     have been created with
+-- -   #VUID-vkCmdBindPipeline-pipeline-03382# @pipeline@ /must/ not have
+--     been created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'
 --     set
+--
+-- -   #VUID-vkCmdBindPipeline-commandBuffer-04808# If @commandBuffer@ is a
+--     secondary command buffer with
+--     'Vulkan.Extensions.VK_NV_inherited_viewport_scissor.CommandBufferInheritanceViewportScissorInfoNV'::@viewportScissor2D@
+--     enabled and @pipelineBindPoint@ is
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS',
+--     then the @pipeline@ /must/ have been created with
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     or 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT', and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
+--     or 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR' enabled
+--
+-- -   #VUID-vkCmdBindPipeline-commandBuffer-04809# If @commandBuffer@ is a
+--     secondary command buffer with
+--     'Vulkan.Extensions.VK_NV_inherited_viewport_scissor.CommandBufferInheritanceViewportScissorInfoNV'::@viewportScissor2D@
+--     enabled and @pipelineBindPoint@ is
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+--     and @pipeline@ was created with
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT'
+--     structure and its @discardRectangleCount@ member is not @0@, then
+--     the pipeline /must/ have been created with
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
+--     enabled
+--
+-- -   #VUID-vkCmdBindPipeline-pipelineBindPoint-04881# If
+--     @pipelineBindPoint@ is
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+--     and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-provokingVertexModePerPipeline provokingVertexModePerPipeline>
+--     limit is 'Vulkan.Core10.FundamentalTypes.FALSE', then pipeline’s
+--     'Vulkan.Extensions.VK_EXT_provoking_vertex.PipelineRasterizationProvokingVertexStateCreateInfoEXT'::@provokingVertexMode@
+--     /must/ be the same as that of any other pipelines previously bound
+--     to this bind point within the current render pass instance,
+--     including any pipeline already bound when beginning the render pass
+--     instance
+--
+-- -   #VUID-vkCmdBindPipeline-pipelineBindPoint-04949# If
+--     @pipelineBindPoint@ is
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI',
+--     the 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+--     allocated from /must/ support compute operations
+--
+-- -   #VUID-vkCmdBindPipeline-pipelineBindPoint-04950# If
+--     @pipelineBindPoint@ is
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI',
+--     @pipeline@ /must/ be a subpass shading pipeline
+--
+-- -   #VUID-vkCmdBindPipeline-pipeline-06195# If @pipeline@ is a graphics
+--     pipeline, this command has been called inside a render pass instance
+--     started with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     and commands using the previously bound graphics pipeline have been
+--     recorded within the render pass instance, then the value of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@colorAttachmentCount@
+--     specified by this pipeline /must/ match that set in the previous
+--     pipeline
+--
+-- -   #VUID-vkCmdBindPipeline-pipeline-06196# If @pipeline@ is a graphics
+--     pipeline, this command has been called inside a render pass instance
+--     started with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     and commands using the previously bound graphics pipeline have been
+--     recorded within the render pass instance, then the elements of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@pColorAttachmentFormats@
+--     specified by this pipeline /must/ match that set in the previous
+--     pipeline
+--
+-- -   #VUID-vkCmdBindPipeline-pipeline-06197# If @pipeline@ is a graphics
+--     pipeline, this command has been called inside a render pass instance
+--     started with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     and commands using the previously bound graphics pipeline have been
+--     recorded within the render pass instance, then the value of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@depthAttachmentFormat@
+--     specified by this pipeline /must/ match that set in the previous
+--     pipeline
+--
+-- -   #VUID-vkCmdBindPipeline-pipeline-06194# If @pipeline@ is a graphics
+--     pipeline, this command has been called inside a render pass instance
+--     started with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     and commands using the previously bound graphics pipeline have been
+--     recorded within the render pass instance, then the value of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@stencilAttachmentFormat@
+--     specified by this pipeline /must/ match that set in the previous
+--     pipeline
 --
 -- == Valid Usage (Implicit)
 --
@@ -367,15 +459,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Pipeline',
 -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
 cmdBindPipeline :: forall io
@@ -392,7 +485,7 @@ cmdBindPipeline :: forall io
                    Pipeline
                 -> io ()
 cmdBindPipeline commandBuffer pipelineBindPoint pipeline = liftIO $ do
-  let vkCmdBindPipelinePtr = pVkCmdBindPipeline (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBindPipelinePtr = pVkCmdBindPipeline (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdBindPipelinePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindPipeline is null" Nothing Nothing
   let vkCmdBindPipeline' = mkVkCmdBindPipeline vkCmdBindPipelinePtr
@@ -407,9 +500,17 @@ foreign import ccall
   "dynamic" mkVkCmdSetViewport
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Viewport -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Viewport -> IO ()
 
--- | vkCmdSetViewport - Set the viewport on a command buffer
+-- | vkCmdSetViewport - Set the viewport dynamically for a command buffer
 --
 -- = Description
+--
+-- This command sets the viewport transformation parameters state for
+-- subsequent drawing commands when the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT' set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@pViewports@
+-- values used to create the currently active pipeline.
 --
 -- The viewport parameters taken from element i of @pViewports@ replace the
 -- current state for the viewport index @firstViewport@ + i, for i in [0,
@@ -429,6 +530,11 @@ foreign import ccall
 -- -   #VUID-vkCmdSetViewport-viewportCount-01225# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @viewportCount@ /must/ be @1@
+--
+-- -   #VUID-vkCmdSetViewport-commandBuffer-04821# @commandBuffer@ /must/
+--     not have
+--     'Vulkan.Extensions.VK_NV_inherited_viewport_scissor.CommandBufferInheritanceViewportScissorInfoNV'::@viewportScissor2D@
+--     enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -461,15 +567,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Pipeline.Viewport'
 cmdSetViewport :: forall io
                 . (MonadIO io)
@@ -485,11 +592,11 @@ cmdSetViewport :: forall io
                   ("viewports" ::: Vector Viewport)
                -> io ()
 cmdSetViewport commandBuffer firstViewport viewports = liftIO . evalContT $ do
-  let vkCmdSetViewportPtr = pVkCmdSetViewport (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetViewportPtr = pVkCmdSetViewport (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetViewportPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetViewport is null" Nothing Nothing
   let vkCmdSetViewport' = mkVkCmdSetViewport vkCmdSetViewportPtr
-  pPViewports <- ContT $ allocaBytesAligned @Viewport ((Data.Vector.length (viewports)) * 24) 4
+  pPViewports <- ContT $ allocaBytes @Viewport ((Data.Vector.length (viewports)) * 24)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPViewports `plusPtr` (24 * (i)) :: Ptr Viewport) (e)) (viewports)
   lift $ traceAroundEvent "vkCmdSetViewport" (vkCmdSetViewport' (commandBufferHandle (commandBuffer)) (firstViewport) ((fromIntegral (Data.Vector.length $ (viewports)) :: Word32)) (pPViewports))
   pure $ ()
@@ -502,7 +609,8 @@ foreign import ccall
   "dynamic" mkVkCmdSetScissor
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Rect2D -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Rect2D -> IO ()
 
--- | vkCmdSetScissor - Set the dynamic scissor rectangles on a command buffer
+-- | vkCmdSetScissor - Set scissor rectangles dynamically for a command
+-- buffer
 --
 -- = Description
 --
@@ -510,10 +618,13 @@ foreign import ccall
 -- current state for the scissor index @firstScissor@ + i, for i in [0,
 -- @scissorCount@).
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR'
--- set in
+-- This command sets the scissor rectangles for subsequent drawing commands
+-- when the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR' set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@pScissors@
+-- values used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -541,6 +652,11 @@ foreign import ccall
 -- -   #VUID-vkCmdSetScissor-offset-00597# Evaluation of (@offset.y@ +
 --     @extent.height@) /must/ not cause a signed integer addition overflow
 --     for any element of @pScissors@
+--
+-- -   #VUID-vkCmdSetScissor-viewportScissor2D-04789# If this command is
+--     recorded in a secondary command buffer with
+--     'Vulkan.Extensions.VK_NV_inherited_viewport_scissor.CommandBufferInheritanceViewportScissorInfoNV'::@viewportScissor2D@
+--     enabled, then this function /must/ not be called
 --
 -- == Valid Usage (Implicit)
 --
@@ -573,15 +689,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.Rect2D'
 cmdSetScissor :: forall io
@@ -598,11 +715,11 @@ cmdSetScissor :: forall io
                  ("scissors" ::: Vector Rect2D)
               -> io ()
 cmdSetScissor commandBuffer firstScissor scissors = liftIO . evalContT $ do
-  let vkCmdSetScissorPtr = pVkCmdSetScissor (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetScissorPtr = pVkCmdSetScissor (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetScissorPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetScissor is null" Nothing Nothing
   let vkCmdSetScissor' = mkVkCmdSetScissor vkCmdSetScissorPtr
-  pPScissors <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (scissors)) * 16) 4
+  pPScissors <- ContT $ allocaBytes @Rect2D ((Data.Vector.length (scissors)) * 16)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPScissors `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (scissors)
   lift $ traceAroundEvent "vkCmdSetScissor" (vkCmdSetScissor' (commandBufferHandle (commandBuffer)) (firstScissor) ((fromIntegral (Data.Vector.length $ (scissors)) :: Word32)) (pPScissors))
   pure $ ()
@@ -615,7 +732,17 @@ foreign import ccall
   "dynamic" mkVkCmdSetLineWidth
   :: FunPtr (Ptr CommandBuffer_T -> CFloat -> IO ()) -> Ptr CommandBuffer_T -> CFloat -> IO ()
 
--- | vkCmdSetLineWidth - Set the dynamic line width state
+-- | vkCmdSetLineWidth - Set line width dynamically for a command buffer
+--
+-- = Description
+--
+-- This command sets the line width for subsequent drawing commands when
+-- the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_WIDTH' set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@lineWidth@
+-- value used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -647,15 +774,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetLineWidth :: forall io
                  . (MonadIO io)
@@ -666,7 +794,7 @@ cmdSetLineWidth :: forall io
                    ("lineWidth" ::: Float)
                 -> io ()
 cmdSetLineWidth commandBuffer lineWidth = liftIO $ do
-  let vkCmdSetLineWidthPtr = pVkCmdSetLineWidth (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetLineWidthPtr = pVkCmdSetLineWidth (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetLineWidthPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetLineWidth is null" Nothing Nothing
   let vkCmdSetLineWidth' = mkVkCmdSetLineWidth vkCmdSetLineWidthPtr
@@ -681,79 +809,19 @@ foreign import ccall
   "dynamic" mkVkCmdSetDepthBias
   :: FunPtr (Ptr CommandBuffer_T -> CFloat -> CFloat -> CFloat -> IO ()) -> Ptr CommandBuffer_T -> CFloat -> CFloat -> CFloat -> IO ()
 
--- | vkCmdSetDepthBias - Set the depth bias dynamic state
+-- | vkCmdSetDepthBias - Set depth bias factors and clamp dynamically for a
+-- command buffer
 --
 -- = Description
 --
--- If @depthBiasEnable@ is 'Vulkan.Core10.FundamentalTypes.FALSE', no depth
--- bias is applied and the fragment’s depth values are unchanged.
---
--- @depthBiasSlopeFactor@ scales the maximum depth slope of the polygon,
--- and @depthBiasConstantFactor@ scales an implementation-dependent
--- constant that relates to the usable resolution of the depth buffer. The
--- resulting values are summed to produce the depth bias value which is
--- then clamped to a minimum or maximum value specified by
--- @depthBiasClamp@. @depthBiasSlopeFactor@, @depthBiasConstantFactor@, and
--- @depthBiasClamp@ /can/ each be positive, negative, or zero.
---
--- The maximum depth slope m of a triangle is
---
--- \[m = \sqrt{ \left({{\partial z_f} \over {\partial x_f}}\right)^2
---         +  \left({{\partial z_f} \over {\partial y_f}}\right)^2}\]
---
--- where (xf, yf, zf) is a point on the triangle. m /may/ be approximated
--- as
---
--- \[m = \max\left( \left| { {\partial z_f} \over {\partial x_f} } \right|,
---                \left| { {\partial z_f} \over {\partial y_f} } \right|
---        \right).\]
---
--- The minimum resolvable difference r is an implementation-dependent
--- parameter that depends on the depth buffer representation. It is the
--- smallest difference in framebuffer coordinate z values that is
--- guaranteed to remain distinct throughout polygon rasterization and in
--- the depth buffer. All pairs of fragments generated by the rasterization
--- of two polygons with otherwise identical vertices, but @z@f values that
--- differ by r, will have distinct depth values.
---
--- For fixed-point depth buffer representations, r is constant throughout
--- the range of the entire depth buffer. For floating-point depth buffers,
--- there is no single minimum resolvable difference. In this case, the
--- minimum resolvable difference for a given polygon is dependent on the
--- maximum exponent, e, in the range of z values spanned by the primitive.
--- If n is the number of bits in the floating-point mantissa, the minimum
--- resolvable difference, r, for the given primitive is defined as
---
--- -   r = 2e-n
---
--- If a triangle is rasterized using the
--- 'Vulkan.Core10.Enums.PolygonMode.POLYGON_MODE_FILL_RECTANGLE_NV' polygon
--- mode, then this minimum resolvable difference /may/ not be resolvable
--- for samples outside of the triangle, where the depth is extrapolated.
---
--- If no depth buffer is present, r is undefined.
---
--- The bias value o for a polygon is
---
--- \[\begin{aligned}
--- o &= \mathrm{dbclamp}( m \times \mathtt{depthBiasSlopeFactor} + r \times \mathtt{depthBiasConstantFactor} ) \\
--- \text{where} &\quad \mathrm{dbclamp}(x) =
--- \begin{cases}
---     x                                 & \mathtt{depthBiasClamp} = 0 \ \text{or}\ \texttt{NaN} \\
---     \min(x, \mathtt{depthBiasClamp})  & \mathtt{depthBiasClamp} > 0 \\
---     \max(x, \mathtt{depthBiasClamp})  & \mathtt{depthBiasClamp} < 0 \\
--- \end{cases}
--- \end{aligned}\]
---
--- m is computed as described above. If the depth buffer uses a fixed-point
--- representation, m is a function of depth values in the range [0,1], and
--- o is applied to depth values in the same range.
---
--- For fixed-point depth buffers, fragment depth values are always limited
--- to the range [0,1] by clamping after depth bias addition is performed.
--- Unless the @VK_EXT_depth_range_unrestricted@ extension is enabled,
--- fragment depth values are clamped even when the depth buffer uses a
--- floating-point representation.
+-- This command sets the depth bias parameters for subsequent drawing
+-- commands when the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS' set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the corresponding
+-- 'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@depthBiasConstantFactor@,
+-- @depthBiasClamp@, and @depthBiasSlopeFactor@ values used to create the
+-- currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -785,15 +853,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetDepthBias :: forall io
                  . (MonadIO io)
@@ -810,7 +879,7 @@ cmdSetDepthBias :: forall io
                    ("depthBiasSlopeFactor" ::: Float)
                 -> io ()
 cmdSetDepthBias commandBuffer depthBiasConstantFactor depthBiasClamp depthBiasSlopeFactor = liftIO $ do
-  let vkCmdSetDepthBiasPtr = pVkCmdSetDepthBias (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetDepthBiasPtr = pVkCmdSetDepthBias (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetDepthBiasPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDepthBias is null" Nothing Nothing
   let vkCmdSetDepthBias' = mkVkCmdSetDepthBias vkCmdSetDepthBiasPtr
@@ -826,6 +895,16 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Ptr (FixedArray 4 CFloat) -> IO ()) -> Ptr CommandBuffer_T -> Ptr (FixedArray 4 CFloat) -> IO ()
 
 -- | vkCmdSetBlendConstants - Set the values of blend constants
+--
+-- = Description
+--
+-- This command sets blend constants for subsequent drawing commands when
+-- the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_BLEND_CONSTANTS' set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo'::@blendConstants@
+-- values used to create the currently active pipeline.
 --
 -- == Valid Usage (Implicit)
 --
@@ -852,15 +931,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetBlendConstants :: forall io
                       . (MonadIO io)
@@ -868,17 +948,17 @@ cmdSetBlendConstants :: forall io
                         -- recorded.
                         CommandBuffer
                      -> -- | @blendConstants@ is a pointer to an array of four values specifying the
-                        -- R, G, B, and A components of the blend constant color used in blending,
-                        -- depending on the
+                        -- Rc, Gc, Bc, and Ac components of the blend constant color used in
+                        -- blending, depending on the
                         -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-blendfactors blend factor>.
                         ("blendConstants" ::: (Float, Float, Float, Float))
                      -> io ()
 cmdSetBlendConstants commandBuffer blendConstants = liftIO . evalContT $ do
-  let vkCmdSetBlendConstantsPtr = pVkCmdSetBlendConstants (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetBlendConstantsPtr = pVkCmdSetBlendConstants (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetBlendConstantsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetBlendConstants is null" Nothing Nothing
   let vkCmdSetBlendConstants' = mkVkCmdSetBlendConstants vkCmdSetBlendConstantsPtr
-  pBlendConstants <- ContT $ allocaBytesAligned @(FixedArray 4 CFloat) 16 4
+  pBlendConstants <- ContT $ allocaBytes @(FixedArray 4 CFloat) 16
   let pBlendConstants' = lowerArrayPtr pBlendConstants
   lift $ case (blendConstants) of
     (e0, e1, e2, e3) -> do
@@ -897,15 +977,20 @@ foreign import ccall
   "dynamic" mkVkCmdSetDepthBounds
   :: FunPtr (Ptr CommandBuffer_T -> CFloat -> CFloat -> IO ()) -> Ptr CommandBuffer_T -> CFloat -> CFloat -> IO ()
 
--- | vkCmdSetDepthBounds - Set the depth bounds test values for a command
+-- | vkCmdSetDepthBounds - Set depth bounds range dynamically for a command
 -- buffer
 --
 -- = Description
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
+-- This command sets the depth bounds range for subsequent drawing commands
+-- when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BOUNDS' set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@minDepthBounds@
+-- and
+-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@maxDepthBounds@
+-- values used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -941,15 +1026,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetDepthBounds :: forall io
                    . (MonadIO io)
@@ -962,7 +1048,7 @@ cmdSetDepthBounds :: forall io
                      ("maxDepthBounds" ::: Float)
                   -> io ()
 cmdSetDepthBounds commandBuffer minDepthBounds maxDepthBounds = liftIO $ do
-  let vkCmdSetDepthBoundsPtr = pVkCmdSetDepthBounds (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetDepthBoundsPtr = pVkCmdSetDepthBounds (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetDepthBoundsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDepthBounds is null" Nothing Nothing
   let vkCmdSetDepthBounds' = mkVkCmdSetDepthBounds vkCmdSetDepthBoundsPtr
@@ -977,15 +1063,20 @@ foreign import ccall
   "dynamic" mkVkCmdSetStencilCompareMask
   :: FunPtr (Ptr CommandBuffer_T -> StencilFaceFlags -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> StencilFaceFlags -> Word32 -> IO ()
 
--- | vkCmdSetStencilCompareMask - Set the stencil compare mask dynamic state
+-- | vkCmdSetStencilCompareMask - Set stencil compare mask dynamically for a
+-- command buffer
 --
 -- = Description
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
+-- This command sets the stencil compare mask for subsequent drawing
+-- commands when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_COMPARE_MASK'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@compareMask@
+-- value used to create the currently active pipeline, for both front and
+-- back faces.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1019,15 +1110,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlags'
 cmdSetStencilCompareMask :: forall io
@@ -1043,7 +1135,7 @@ cmdSetStencilCompareMask :: forall io
                             ("compareMask" ::: Word32)
                          -> io ()
 cmdSetStencilCompareMask commandBuffer faceMask compareMask = liftIO $ do
-  let vkCmdSetStencilCompareMaskPtr = pVkCmdSetStencilCompareMask (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetStencilCompareMaskPtr = pVkCmdSetStencilCompareMask (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetStencilCompareMaskPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetStencilCompareMask is null" Nothing Nothing
   let vkCmdSetStencilCompareMask' = mkVkCmdSetStencilCompareMask vkCmdSetStencilCompareMaskPtr
@@ -1058,15 +1150,20 @@ foreign import ccall
   "dynamic" mkVkCmdSetStencilWriteMask
   :: FunPtr (Ptr CommandBuffer_T -> StencilFaceFlags -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> StencilFaceFlags -> Word32 -> IO ()
 
--- | vkCmdSetStencilWriteMask - Set the stencil write mask dynamic state
+-- | vkCmdSetStencilWriteMask - Set stencil write mask dynamically for a
+-- command buffer
 --
 -- = Description
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
+-- This command sets the stencil write mask for subsequent drawing commands
+-- when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_WRITE_MASK' set
 -- in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@writeMask@
+-- value used to create the currently active pipeline, for both front and
+-- back faces.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1100,15 +1197,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlags'
 cmdSetStencilWriteMask :: forall io
@@ -1125,7 +1223,7 @@ cmdSetStencilWriteMask :: forall io
                           ("writeMask" ::: Word32)
                        -> io ()
 cmdSetStencilWriteMask commandBuffer faceMask writeMask = liftIO $ do
-  let vkCmdSetStencilWriteMaskPtr = pVkCmdSetStencilWriteMask (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetStencilWriteMaskPtr = pVkCmdSetStencilWriteMask (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetStencilWriteMaskPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetStencilWriteMask is null" Nothing Nothing
   let vkCmdSetStencilWriteMask' = mkVkCmdSetStencilWriteMask vkCmdSetStencilWriteMaskPtr
@@ -1140,15 +1238,20 @@ foreign import ccall
   "dynamic" mkVkCmdSetStencilReference
   :: FunPtr (Ptr CommandBuffer_T -> StencilFaceFlags -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> StencilFaceFlags -> Word32 -> IO ()
 
--- | vkCmdSetStencilReference - Set the stencil reference dynamic state
+-- | vkCmdSetStencilReference - Set stencil reference value dynamically for a
+-- command buffer
 --
 -- = Description
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
+-- This command sets the stencil reference value for subsequent drawing
+-- commands when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_REFERENCE' set
 -- in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@reference@
+-- value used to create the currently active pipeline, for both front and
+-- back faces.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1182,15 +1285,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.StencilFaceFlagBits.StencilFaceFlags'
 cmdSetStencilReference :: forall io
@@ -1207,7 +1311,7 @@ cmdSetStencilReference :: forall io
                           ("reference" ::: Word32)
                        -> io ()
 cmdSetStencilReference commandBuffer faceMask reference = liftIO $ do
-  let vkCmdSetStencilReferencePtr = pVkCmdSetStencilReference (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetStencilReferencePtr = pVkCmdSetStencilReference (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetStencilReferencePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetStencilReference is null" Nothing Nothing
   let vkCmdSetStencilReference' = mkVkCmdSetStencilReference vkCmdSetStencilReferencePtr
@@ -1240,7 +1344,7 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>.
 --
 -- A compatible descriptor set /must/ be bound for all set numbers that any
--- shaders in a pipeline access, at the time that a draw or dispatch
+-- shaders in a pipeline access, at the time that a drawing or dispatching
 -- command is recorded to execute using that pipeline. However, if none of
 -- the shaders in a pipeline statically use any bindings with a particular
 -- set number, then no descriptor set need be bound for that set number,
@@ -1388,15 +1492,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Handles.DescriptorSet',
 -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint',
@@ -1419,20 +1524,20 @@ cmdBindDescriptorSets :: forall io
                          ("firstSet" ::: Word32)
                       -> -- | @pDescriptorSets@ is a pointer to an array of handles to
                          -- 'Vulkan.Core10.Handles.DescriptorSet' objects describing the descriptor
-                         -- sets to write to.
+                         -- sets to bind to.
                          ("descriptorSets" ::: Vector DescriptorSet)
                       -> -- | @pDynamicOffsets@ is a pointer to an array of @uint32_t@ values
                          -- specifying dynamic offsets.
                          ("dynamicOffsets" ::: Vector Word32)
                       -> io ()
 cmdBindDescriptorSets commandBuffer pipelineBindPoint layout firstSet descriptorSets dynamicOffsets = liftIO . evalContT $ do
-  let vkCmdBindDescriptorSetsPtr = pVkCmdBindDescriptorSets (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBindDescriptorSetsPtr = pVkCmdBindDescriptorSets (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBindDescriptorSetsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindDescriptorSets is null" Nothing Nothing
   let vkCmdBindDescriptorSets' = mkVkCmdBindDescriptorSets vkCmdBindDescriptorSetsPtr
-  pPDescriptorSets <- ContT $ allocaBytesAligned @DescriptorSet ((Data.Vector.length (descriptorSets)) * 8) 8
+  pPDescriptorSets <- ContT $ allocaBytes @DescriptorSet ((Data.Vector.length (descriptorSets)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorSets `plusPtr` (8 * (i)) :: Ptr DescriptorSet) (e)) (descriptorSets)
-  pPDynamicOffsets <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (dynamicOffsets)) * 4) 4
+  pPDynamicOffsets <- ContT $ allocaBytes @Word32 ((Data.Vector.length (dynamicOffsets)) * 4)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPDynamicOffsets `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (dynamicOffsets)
   lift $ traceAroundEvent "vkCmdBindDescriptorSets" (vkCmdBindDescriptorSets' (commandBufferHandle (commandBuffer)) (pipelineBindPoint) (layout) (firstSet) ((fromIntegral (Data.Vector.length $ (descriptorSets)) :: Word32)) (pPDescriptorSets) ((fromIntegral (Data.Vector.length $ (dynamicOffsets)) :: Word32)) (pPDynamicOffsets))
   pure $ ()
@@ -1508,15 +1613,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.IndexType.IndexType'
@@ -1531,11 +1637,11 @@ cmdBindIndexBuffer :: forall io
                       -- buffer address calculations.
                       ("offset" ::: DeviceSize)
                    -> -- | @indexType@ is a 'Vulkan.Core10.Enums.IndexType.IndexType' value
-                      -- specifying whether indices are treated as 16 bits or 32 bits.
+                      -- specifying the size of the indices.
                       IndexType
                    -> io ()
 cmdBindIndexBuffer commandBuffer buffer offset indexType = liftIO $ do
-  let vkCmdBindIndexBufferPtr = pVkCmdBindIndexBuffer (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBindIndexBufferPtr = pVkCmdBindIndexBuffer (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdBindIndexBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindIndexBuffer is null" Nothing Nothing
   let vkCmdBindIndexBuffer' = mkVkCmdBindIndexBuffer vkCmdBindIndexBufferPtr
@@ -1560,7 +1666,7 @@ foreign import ccall
 -- the offset indicated by @pOffsets@[i] from the start of the buffer
 -- @pBuffers@[i]. All vertex input attributes that use each of these
 -- bindings will use these updated addresses in their address calculations
--- for subsequent draw commands. If the
+-- for subsequent drawing commands. If the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
 -- feature is enabled, elements of @pBuffers@ /can/ be
 -- 'Vulkan.Core10.APIConstants.NULL_HANDLE', and /can/ be used by the
@@ -1644,15 +1750,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdBindVertexBuffers :: forall io
@@ -1669,16 +1776,16 @@ cmdBindVertexBuffers :: forall io
                         ("offsets" ::: Vector DeviceSize)
                      -> io ()
 cmdBindVertexBuffers commandBuffer firstBinding buffers offsets = liftIO . evalContT $ do
-  let vkCmdBindVertexBuffersPtr = pVkCmdBindVertexBuffers (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBindVertexBuffersPtr = pVkCmdBindVertexBuffers (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBindVertexBuffersPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindVertexBuffers is null" Nothing Nothing
   let vkCmdBindVertexBuffers' = mkVkCmdBindVertexBuffers vkCmdBindVertexBuffersPtr
   let pBuffersLength = Data.Vector.length $ (buffers)
   lift $ unless ((Data.Vector.length $ (offsets)) == pBuffersLength) $
     throwIO $ IOError Nothing InvalidArgument "" "pOffsets and pBuffers must have the same length" Nothing Nothing
-  pPBuffers <- ContT $ allocaBytesAligned @Buffer ((Data.Vector.length (buffers)) * 8) 8
+  pPBuffers <- ContT $ allocaBytes @Buffer ((Data.Vector.length (buffers)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPBuffers `plusPtr` (8 * (i)) :: Ptr Buffer) (e)) (buffers)
-  pPOffsets <- ContT $ allocaBytesAligned @DeviceSize ((Data.Vector.length (offsets)) * 8) 8
+  pPOffsets <- ContT $ allocaBytes @DeviceSize ((Data.Vector.length (offsets)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) (offsets)
   lift $ traceAroundEvent "vkCmdBindVertexBuffers" (vkCmdBindVertexBuffers' (commandBufferHandle (commandBuffer)) (firstBinding) ((fromIntegral pBuffersLength :: Word32)) (pPBuffers) (pPOffsets))
   pure $ ()
@@ -1713,6 +1820,24 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDraw-mipmapMode-04770# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDraw-None-06479# If a 'Vulkan.Core10.Handles.ImageView'
+--     is sampled with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-depth-compare-operation depth comparison>,
+--     the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR'
 --
 -- -   #VUID-vkCmdDraw-None-02691# If a 'Vulkan.Core10.Handles.ImageView'
 --     is accessed using atomic operations as a result of this command,
@@ -1762,6 +1887,22 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
+-- -   #VUID-vkCmdDraw-OpTypeImage-06423# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being written as a storage image
+--     or storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--
+-- -   #VUID-vkCmdDraw-OpTypeImage-06424# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
+--     storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--
 -- -   #VUID-vkCmdDraw-None-02697# For each set /n/ that is statically used
 --     by the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
 --     point used by this command, a descriptor set /must/ have been bound
@@ -1771,7 +1912,9 @@ foreign import ccall
 --     the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDraw-None-02698# For each push constant that is
+-- -   #VUID-vkCmdDraw-maintenance4-06425# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
+--     feature is not enabled, then for each push constant that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
 --     pipeline bind point used by this command, a push constant value
 --     /must/ have been set for the same pipeline bind point, with a
@@ -1791,9 +1934,10 @@ foreign import ccall
 -- -   #VUID-vkCmdDraw-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set for @commandBuffer@, and done so after any
---     previously bound pipeline with the corresponding state not specified
---     as dynamic
+--     /must/ have been set or inherited (if the
+--     @VK_NV_inherited_viewport_scissor@ extension is enabled) for
+--     @commandBuffer@, and done so after any previously bound pipeline
+--     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdDraw-None-02859# There /must/ not have been any calls to
 --     dynamic state setting commands for any state not specified as
@@ -1847,48 +1991,50 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdDraw-commandBuffer-02707# If @commandBuffer@ is an
---     unprotected command buffer, any resource accessed by the
+--     unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be a protected resource
 --
 -- -   #VUID-vkCmdDraw-None-04115# If a 'Vulkan.Core10.Handles.ImageView'
 --     is accessed using @OpImageWrite@ as a result of this command, then
 --     the @Type@ of the @Texel@ operand of that instruction /must/ have at
---     least as many components as the image view’s format.
+--     least as many components as the image view’s format
 --
 -- -   #VUID-vkCmdDraw-OpImageWrite-04469# If a
 --     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     buffer view’s format
 --
 -- -   #VUID-vkCmdDraw-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDraw-SampledType-04471# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdDraw-SampledType-04472# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDraw-SampledType-04473# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdDraw-sparseImageInt64Atomics-04474# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
@@ -1897,7 +2043,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdDraw-sparseImageInt64Atomics-04475# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
@@ -1906,7 +2052,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdDraw-renderPass-02684# The current render pass /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
@@ -1955,7 +2101,7 @@ foreign import ccall
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@scissorCount@
@@ -1969,7 +2115,7 @@ foreign import ccall
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @scissorCount@ parameter of
+--     drawing command, and the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@viewportCount@
@@ -1985,7 +2131,7 @@ foreign import ccall
 --     and
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ match the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
@@ -2041,10 +2187,10 @@ foreign import ccall
 -- -   #VUID-vkCmdDraw-VkPipelineVieportCreateInfo-04141# If the bound
 --     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
---     dynamic state enabled and an instance of
+--     dynamic state enabled and a
 --     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'
---     chained from @VkPipelineVieportCreateInfo@, then the bound graphics
---     pipeline /must/ have been created with
+--     structure chained from @VkPipelineVieportCreateInfo@, then the bound
+--     graphics pipeline /must/ have been created with
 --     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'::@viewportCount@
 --     greater or equal to the @viewportCount@ parameter in the last call
 --     to
@@ -2053,28 +2199,39 @@ foreign import ccall
 -- -   #VUID-vkCmdDraw-VkPipelineVieportCreateInfo-04142# If the bound
 --     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
---     dynamic state enabled and an instance of
+--     dynamic state enabled and a
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'
---     chained from @VkPipelineVieportCreateInfo@, then the bound graphics
---     pipeline /must/ have been created with
+--     structure chained from @VkPipelineVieportCreateInfo@, then the bound
+--     graphics pipeline /must/ have been created with
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'::@exclusiveScissorCount@
 --     greater or equal to the @viewportCount@ parameter in the last call
 --     to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   #VUID-vkCmdDraw-primitiveTopology-03420# If the bound graphics
---     pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
+-- -   #VUID-vkCmdDraw-None-04876# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT'
 --     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @primitiveTopology@ parameter of
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
---     /must/ be of the same
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
---     as the pipeline
---     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
---     state
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-04877# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-logicOp-04878# If the bound graphics pipeline state
+--     was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command and the @logicOp@ /must/ be a valid
+--     'Vulkan.Core10.Enums.LogicOp.LogicOp' value
 --
 -- -   #VUID-vkCmdDraw-primitiveFragmentShadingRateWithMultipleViewports-04552#
 --     If the
@@ -2087,7 +2244,7 @@ foreign import ccall
 --     then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ be @1@
 --
@@ -2101,16 +2258,264 @@ foreign import ccall
 --     @pAttachments@ member of @pColorBlendState@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
+-- -   #VUID-vkCmdDraw-rasterizationSamples-04740# If rasterization is not
+--     disabled in the bound graphics pipeline, and neither the
+--     @VK_AMD_mixed_attachment_samples@ nor the
+--     @VK_NV_framebuffer_mixed_samples@ extensions are enabled, then
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     /must/ be the same as the current subpass color and\/or
+--     depth\/stencil attachments
+--
+-- -   #VUID-vkCmdDraw-imageView-06172# If the current render pass instance
+--     was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pDepthAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pDepthAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the depth attachment
+--
+-- -   #VUID-vkCmdDraw-imageView-06173# If the current render pass instance
+--     was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pStencilAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pStencilAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the stencil attachment
+--
+-- -   #VUID-vkCmdDraw-imageView-06174# If the current render pass instance
+--     was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pDepthAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pDepthAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL',
+--     this command /must/ not write any values to the depth attachment
+--
+-- -   #VUID-vkCmdDraw-imageView-06175# If the current render pass instance
+--     was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pStencilAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pStencilAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the stencil attachment
+--
+-- -   #VUID-vkCmdDraw-imageView-06176# If the current render pass instance
+--     was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pDepthAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pDepthAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the depth attachment
+--
+-- -   #VUID-vkCmdDraw-imageView-06177# If the current render pass instance
+--     was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pStencilAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pStencilAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the stencil attachment
+--
+-- -   #VUID-vkCmdDraw-viewMask-06178# If the current render pass instance
+--     was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound graphics pipeline /must/ have been created with
+--     a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@viewMask@
+--     equal to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@viewMask@
+--
+-- -   #VUID-vkCmdDraw-colorAttachmentCount-06179# If the current render
+--     pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound graphics pipeline /must/ have been created with
+--     a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@colorAttachmentCount@
+--     equal to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--
+-- -   #VUID-vkCmdDraw-colorAttachmentCount-06180# If the current render
+--     pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     greater than @0@, then each element of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     array with a @imageView@ not equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
+--     with a 'Vulkan.Core10.Enums.Format.Format' equal to the
+--     corresponding element of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@pColorAttachmentFormats@
+--     used to create the currently bound graphics pipeline
+--
+-- -   #VUID-vkCmdDraw-pDepthAttachment-06181# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@depthAttachmentFormat@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the 'Vulkan.Core10.Enums.Format.Format' used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDraw-pStencilAttachment-06182# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@stencilAttachmentFormat@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the 'Vulkan.Core10.Enums.Format.Format' used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDraw-imageView-06183# If the current render pass instance
+--     was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'::@imageView@
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
+--     bound graphics pipeline /must/ have been created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--
+-- -   #VUID-vkCmdDraw-imageView-06184# If the current render pass instance
+--     was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'::@imageView@
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
+--     bound graphics pipeline /must/ have been created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--
+-- -   #VUID-vkCmdDraw-colorAttachmentCount-06185# If the currently bound
+--     pipeline was created with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and the current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     parameter greater than @0@, then each element of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     array with a @imageView@ not equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
+--     with a sample count equal to the corresponding element of the
+--     @pColorAttachmentSamples@ member of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     used to create the currently bound graphics pipeline
+--
+-- -   #VUID-vkCmdDraw-pDepthAttachment-06186# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
+--     @depthStencilAttachmentSamples@ member of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDraw-pStencilAttachment-06187# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
+--     @depthStencilAttachmentSamples@ member of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDraw-colorAttachmentCount-06188# If the currently bound
+--     pipeline was created without a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and the current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     parameter greater than @0@, then each element of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     array with a @imageView@ not equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
+--     with a sample count equal to the value of
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     used to create the currently bound graphics pipeline
+--
+-- -   #VUID-vkCmdDraw-pDepthAttachment-06189# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created without a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDraw-pStencilAttachment-06190# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created without a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDraw-renderPass-06198# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline /must/ have been created with a
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@renderPass@
+--     equal to 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
 -- -   #VUID-vkCmdDraw-commandBuffer-02712# If @commandBuffer@ is a
---     protected command buffer, any resource written to by the
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource written to by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be an unprotected resource
 --
 -- -   #VUID-vkCmdDraw-commandBuffer-02713# If @commandBuffer@ is a
---     protected command buffer, pipeline stages other than the
---     framebuffer-space and compute stages in the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point /must/ not write to any resource
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, pipeline stages other than the framebuffer-space
+--     and compute stages in the 'Vulkan.Core10.Handles.Pipeline' object
+--     bound to the pipeline bind point used by this command /must/ not
+--     write to any resource
 --
 -- -   #VUID-vkCmdDraw-commandBuffer-04617# If any of the shader stages of
 --     the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
@@ -2134,6 +2539,76 @@ foreign import ccall
 --     attribute data fetched /must/ be entirely contained within the
 --     corresponding vertex buffer binding, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input ???>
+--
+-- -   #VUID-vkCmdDraw-primitiveTopology-03420# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @primitiveTopology@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     /must/ be of the same
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
+--     as the pipeline
+--     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
+--     state
+--
+-- -   #VUID-vkCmdDraw-None-04912# If the bound graphics pipeline was
+--     created with both the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--     dynamic states enabled, then
+--     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command
+--
+-- -   #VUID-vkCmdDraw-pStrides-04913# If the bound graphics pipeline was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--     dynamic state enabled, but not the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     dynamic state enabled, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command, and the @pStrides@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+--     /must/ not be @NULL@
+--
+-- -   #VUID-vkCmdDraw-None-04914# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     dynamic state enabled, then
+--     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command
+--
+-- -   #VUID-vkCmdDraw-None-04875# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPatchControlPointsEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-04879# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-stage-06481# The bound graphics pipeline /must/ not
+--     have been created with the
+--     'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo'::@stage@
+--     member of an element of
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pStages@ set
+--     to
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_NV'
+--     or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_NV'
 --
 -- == Valid Usage (Implicit)
 --
@@ -2162,15 +2637,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              | Graphics                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdDraw :: forall io
          . (MonadIO io)
@@ -2187,7 +2663,7 @@ cmdDraw :: forall io
            ("firstInstance" ::: Word32)
         -> io ()
 cmdDraw commandBuffer vertexCount instanceCount firstVertex firstInstance = liftIO $ do
-  let vkCmdDrawPtr = pVkCmdDraw (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdDrawPtr = pVkCmdDraw (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDrawPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDraw is null" Nothing Nothing
   let vkCmdDraw' = mkVkCmdDraw vkCmdDrawPtr
@@ -2202,7 +2678,7 @@ foreign import ccall
   "dynamic" mkVkCmdDrawIndexed
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Word32 -> Int32 -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Word32 -> Int32 -> Word32 -> IO ()
 
--- | vkCmdDrawIndexed - Issue an indexed draw into a command buffer
+-- | vkCmdDrawIndexed - Draw primitives with indexed vertices
 --
 -- = Description
 --
@@ -2240,6 +2716,24 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDrawIndexed-mipmapMode-04770# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDrawIndexed-None-06479# If a
+--     'Vulkan.Core10.Handles.ImageView' is sampled with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-depth-compare-operation depth comparison>,
+--     the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR'
 --
 -- -   #VUID-vkCmdDrawIndexed-None-02691# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
@@ -2289,6 +2783,22 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
+-- -   #VUID-vkCmdDrawIndexed-OpTypeImage-06423# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being written as a storage image
+--     or storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--
+-- -   #VUID-vkCmdDrawIndexed-OpTypeImage-06424# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
+--     storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--
 -- -   #VUID-vkCmdDrawIndexed-None-02697# For each set /n/ that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
 --     pipeline bind point used by this command, a descriptor set /must/
@@ -2298,7 +2808,9 @@ foreign import ccall
 --     the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDrawIndexed-None-02698# For each push constant that is
+-- -   #VUID-vkCmdDrawIndexed-maintenance4-06425# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
+--     feature is not enabled, then for each push constant that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
 --     pipeline bind point used by this command, a push constant value
 --     /must/ have been set for the same pipeline bind point, with a
@@ -2319,9 +2831,10 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndexed-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set for @commandBuffer@, and done so after any
---     previously bound pipeline with the corresponding state not specified
---     as dynamic
+--     /must/ have been set or inherited (if the
+--     @VK_NV_inherited_viewport_scissor@ extension is enabled) for
+--     @commandBuffer@, and done so after any previously bound pipeline
+--     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdDrawIndexed-None-02859# There /must/ not have been any
 --     calls to dynamic state setting commands for any state not specified
@@ -2376,7 +2889,9 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdDrawIndexed-commandBuffer-02707# If @commandBuffer@ is an
---     unprotected command buffer, any resource accessed by the
+--     unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be a protected resource
 --
@@ -2384,41 +2899,41 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     image view’s format
 --
 -- -   #VUID-vkCmdDrawIndexed-OpImageWrite-04469# If a
 --     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     buffer view’s format
 --
 -- -   #VUID-vkCmdDrawIndexed-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDrawIndexed-SampledType-04471# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdDrawIndexed-SampledType-04472# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDrawIndexed-SampledType-04473# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdDrawIndexed-sparseImageInt64Atomics-04474# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
@@ -2427,7 +2942,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdDrawIndexed-sparseImageInt64Atomics-04475# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
@@ -2436,7 +2951,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdDrawIndexed-renderPass-02684# The current render pass
 --     /must/ be
@@ -2488,7 +3003,7 @@ foreign import ccall
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@scissorCount@
@@ -2502,7 +3017,7 @@ foreign import ccall
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @scissorCount@ parameter of
+--     drawing command, and the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@viewportCount@
@@ -2518,7 +3033,7 @@ foreign import ccall
 --     and
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ match the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
@@ -2574,10 +3089,10 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndexed-VkPipelineVieportCreateInfo-04141# If the
 --     bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
---     dynamic state enabled and an instance of
+--     dynamic state enabled and a
 --     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'
---     chained from @VkPipelineVieportCreateInfo@, then the bound graphics
---     pipeline /must/ have been created with
+--     structure chained from @VkPipelineVieportCreateInfo@, then the bound
+--     graphics pipeline /must/ have been created with
 --     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'::@viewportCount@
 --     greater or equal to the @viewportCount@ parameter in the last call
 --     to
@@ -2586,28 +3101,39 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndexed-VkPipelineVieportCreateInfo-04142# If the
 --     bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
---     dynamic state enabled and an instance of
+--     dynamic state enabled and a
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'
---     chained from @VkPipelineVieportCreateInfo@, then the bound graphics
---     pipeline /must/ have been created with
+--     structure chained from @VkPipelineVieportCreateInfo@, then the bound
+--     graphics pipeline /must/ have been created with
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'::@exclusiveScissorCount@
 --     greater or equal to the @viewportCount@ parameter in the last call
 --     to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   #VUID-vkCmdDrawIndexed-primitiveTopology-03420# If the bound
---     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
+-- -   #VUID-vkCmdDrawIndexed-None-04876# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT'
 --     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @primitiveTopology@ parameter of
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
---     /must/ be of the same
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
---     as the pipeline
---     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
---     state
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-04877# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-logicOp-04878# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command and the @logicOp@ /must/ be a valid
+--     'Vulkan.Core10.Enums.LogicOp.LogicOp' value
 --
 -- -   #VUID-vkCmdDrawIndexed-primitiveFragmentShadingRateWithMultipleViewports-04552#
 --     If the
@@ -2620,7 +3146,7 @@ foreign import ccall
 --     then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ be @1@
 --
@@ -2634,16 +3160,264 @@ foreign import ccall
 --     @pAttachments@ member of @pColorBlendState@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
+-- -   #VUID-vkCmdDrawIndexed-rasterizationSamples-04740# If rasterization
+--     is not disabled in the bound graphics pipeline, and neither the
+--     @VK_AMD_mixed_attachment_samples@ nor the
+--     @VK_NV_framebuffer_mixed_samples@ extensions are enabled, then
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     /must/ be the same as the current subpass color and\/or
+--     depth\/stencil attachments
+--
+-- -   #VUID-vkCmdDrawIndexed-imageView-06172# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pDepthAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pDepthAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the depth attachment
+--
+-- -   #VUID-vkCmdDrawIndexed-imageView-06173# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pStencilAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pStencilAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the stencil attachment
+--
+-- -   #VUID-vkCmdDrawIndexed-imageView-06174# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pDepthAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pDepthAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL',
+--     this command /must/ not write any values to the depth attachment
+--
+-- -   #VUID-vkCmdDrawIndexed-imageView-06175# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pStencilAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pStencilAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the stencil attachment
+--
+-- -   #VUID-vkCmdDrawIndexed-imageView-06176# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pDepthAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pDepthAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the depth attachment
+--
+-- -   #VUID-vkCmdDrawIndexed-imageView-06177# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pStencilAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pStencilAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the stencil attachment
+--
+-- -   #VUID-vkCmdDrawIndexed-viewMask-06178# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound graphics pipeline /must/ have been created with
+--     a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@viewMask@
+--     equal to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@viewMask@
+--
+-- -   #VUID-vkCmdDrawIndexed-colorAttachmentCount-06179# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound graphics pipeline /must/ have been created with
+--     a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@colorAttachmentCount@
+--     equal to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--
+-- -   #VUID-vkCmdDrawIndexed-colorAttachmentCount-06180# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     greater than @0@, then each element of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     array with a @imageView@ not equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
+--     with a 'Vulkan.Core10.Enums.Format.Format' equal to the
+--     corresponding element of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@pColorAttachmentFormats@
+--     used to create the currently bound graphics pipeline
+--
+-- -   #VUID-vkCmdDrawIndexed-pDepthAttachment-06181# If the current render
+--     pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@depthAttachmentFormat@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the 'Vulkan.Core10.Enums.Format.Format' used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndexed-pStencilAttachment-06182# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@stencilAttachmentFormat@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the 'Vulkan.Core10.Enums.Format.Format' used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndexed-imageView-06183# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'::@imageView@
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
+--     bound graphics pipeline /must/ have been created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--
+-- -   #VUID-vkCmdDrawIndexed-imageView-06184# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'::@imageView@
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
+--     bound graphics pipeline /must/ have been created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--
+-- -   #VUID-vkCmdDrawIndexed-colorAttachmentCount-06185# If the currently
+--     bound pipeline was created with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and the current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     parameter greater than @0@, then each element of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     array with a @imageView@ not equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
+--     with a sample count equal to the corresponding element of the
+--     @pColorAttachmentSamples@ member of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     used to create the currently bound graphics pipeline
+--
+-- -   #VUID-vkCmdDrawIndexed-pDepthAttachment-06186# If the current render
+--     pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
+--     @depthStencilAttachmentSamples@ member of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndexed-pStencilAttachment-06187# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
+--     @depthStencilAttachmentSamples@ member of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndexed-colorAttachmentCount-06188# If the currently
+--     bound pipeline was created without a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and the current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     parameter greater than @0@, then each element of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     array with a @imageView@ not equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
+--     with a sample count equal to the value of
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     used to create the currently bound graphics pipeline
+--
+-- -   #VUID-vkCmdDrawIndexed-pDepthAttachment-06189# If the current render
+--     pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created without a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndexed-pStencilAttachment-06190# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created without a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndexed-renderPass-06198# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline /must/ have been created with a
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@renderPass@
+--     equal to 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
 -- -   #VUID-vkCmdDrawIndexed-commandBuffer-02712# If @commandBuffer@ is a
---     protected command buffer, any resource written to by the
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource written to by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be an unprotected resource
 --
 -- -   #VUID-vkCmdDrawIndexed-commandBuffer-02713# If @commandBuffer@ is a
---     protected command buffer, pipeline stages other than the
---     framebuffer-space and compute stages in the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point /must/ not write to any resource
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, pipeline stages other than the framebuffer-space
+--     and compute stages in the 'Vulkan.Core10.Handles.Pipeline' object
+--     bound to the pipeline bind point used by this command /must/ not
+--     write to any resource
 --
 -- -   #VUID-vkCmdDrawIndexed-commandBuffer-04617# If any of the shader
 --     stages of the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline
@@ -2668,11 +3442,81 @@ foreign import ccall
 --     within the corresponding vertex buffer binding, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input ???>
 --
--- -   #VUID-vkCmdDrawIndexed-indexSize-00463# (@indexSize@ × (@firstIndex@
---     + @indexCount@) + @offset@) /must/ be less than or equal to the size
---     of the bound index buffer, with @indexSize@ being based on the type
---     specified by @indexType@, where the index buffer, @indexType@, and
---     @offset@ are specified via 'cmdBindIndexBuffer'
+-- -   #VUID-vkCmdDrawIndexed-primitiveTopology-03420# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @primitiveTopology@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     /must/ be of the same
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
+--     as the pipeline
+--     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
+--     state
+--
+-- -   #VUID-vkCmdDrawIndexed-None-04912# If the bound graphics pipeline
+--     was created with both the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--     dynamic states enabled, then
+--     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command
+--
+-- -   #VUID-vkCmdDrawIndexed-pStrides-04913# If the bound graphics
+--     pipeline was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--     dynamic state enabled, but not the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     dynamic state enabled, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command, and the @pStrides@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+--     /must/ not be @NULL@
+--
+-- -   #VUID-vkCmdDrawIndexed-None-04914# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     dynamic state enabled, then
+--     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-04875# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPatchControlPointsEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-04879# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-stage-06481# The bound graphics pipeline
+--     /must/ not have been created with the
+--     'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo'::@stage@
+--     member of an element of
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pStages@ set
+--     to
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_NV'
+--     or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_NV'
+--
+-- -   #VUID-vkCmdDrawIndexed-firstIndex-04932# (@indexSize@ ×
+--     (@firstIndex@ + @indexCount@) + @offset@) /must/ be less than or
+--     equal to the size of the bound index buffer, with @indexSize@ being
+--     based on the type specified by @indexType@, where the index buffer,
+--     @indexType@, and @offset@ are specified via 'cmdBindIndexBuffer'
 --
 -- == Valid Usage (Implicit)
 --
@@ -2701,15 +3545,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              | Graphics                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdDrawIndexed :: forall io
                 . (MonadIO io)
@@ -2729,7 +3574,7 @@ cmdDrawIndexed :: forall io
                   ("firstInstance" ::: Word32)
                -> io ()
 cmdDrawIndexed commandBuffer indexCount instanceCount firstIndex vertexOffset firstInstance = liftIO $ do
-  let vkCmdDrawIndexedPtr = pVkCmdDrawIndexed (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdDrawIndexedPtr = pVkCmdDrawIndexed (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDrawIndexedPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawIndexed is null" Nothing Nothing
   let vkCmdDrawIndexed' = mkVkCmdDrawIndexed vkCmdDrawIndexedPtr
@@ -2744,7 +3589,7 @@ foreign import ccall
   "dynamic" mkVkCmdDrawIndirect
   :: FunPtr (Ptr CommandBuffer_T -> Buffer -> DeviceSize -> Word32 -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> Buffer -> DeviceSize -> Word32 -> Word32 -> IO ()
 
--- | vkCmdDrawIndirect - Issue an indirect draw into a command buffer
+-- | vkCmdDrawIndirect - Draw primitives with indirect parameters
 --
 -- = Description
 --
@@ -2767,6 +3612,24 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDrawIndirect-mipmapMode-04770# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDrawIndirect-None-06479# If a
+--     'Vulkan.Core10.Handles.ImageView' is sampled with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-depth-compare-operation depth comparison>,
+--     the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR'
 --
 -- -   #VUID-vkCmdDrawIndirect-None-02691# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
@@ -2816,6 +3679,22 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
+-- -   #VUID-vkCmdDrawIndirect-OpTypeImage-06423# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being written as a storage image
+--     or storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--
+-- -   #VUID-vkCmdDrawIndirect-OpTypeImage-06424# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
+--     storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--
 -- -   #VUID-vkCmdDrawIndirect-None-02697# For each set /n/ that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
 --     pipeline bind point used by this command, a descriptor set /must/
@@ -2825,7 +3704,9 @@ foreign import ccall
 --     the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDrawIndirect-None-02698# For each push constant that is
+-- -   #VUID-vkCmdDrawIndirect-maintenance4-06425# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
+--     feature is not enabled, then for each push constant that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
 --     pipeline bind point used by this command, a push constant value
 --     /must/ have been set for the same pipeline bind point, with a
@@ -2846,9 +3727,10 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndirect-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set for @commandBuffer@, and done so after any
---     previously bound pipeline with the corresponding state not specified
---     as dynamic
+--     /must/ have been set or inherited (if the
+--     @VK_NV_inherited_viewport_scissor@ extension is enabled) for
+--     @commandBuffer@, and done so after any previously bound pipeline
+--     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdDrawIndirect-None-02859# There /must/ not have been any
 --     calls to dynamic state setting commands for any state not specified
@@ -2903,7 +3785,9 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdDrawIndirect-commandBuffer-02707# If @commandBuffer@ is
---     an unprotected command buffer, any resource accessed by the
+--     an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be a protected resource
 --
@@ -2911,41 +3795,41 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     image view’s format
 --
 -- -   #VUID-vkCmdDrawIndirect-OpImageWrite-04469# If a
 --     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     buffer view’s format
 --
 -- -   #VUID-vkCmdDrawIndirect-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDrawIndirect-SampledType-04471# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdDrawIndirect-SampledType-04472# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDrawIndirect-SampledType-04473# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdDrawIndirect-sparseImageInt64Atomics-04474# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
@@ -2954,7 +3838,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdDrawIndirect-sparseImageInt64Atomics-04475# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
@@ -2963,7 +3847,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdDrawIndirect-renderPass-02684# The current render pass
 --     /must/ be
@@ -3015,7 +3899,7 @@ foreign import ccall
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@scissorCount@
@@ -3029,7 +3913,7 @@ foreign import ccall
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @scissorCount@ parameter of
+--     drawing command, and the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@viewportCount@
@@ -3045,7 +3929,7 @@ foreign import ccall
 --     and
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ match the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
@@ -3101,10 +3985,10 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndirect-VkPipelineVieportCreateInfo-04141# If the
 --     bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
---     dynamic state enabled and an instance of
+--     dynamic state enabled and a
 --     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'
---     chained from @VkPipelineVieportCreateInfo@, then the bound graphics
---     pipeline /must/ have been created with
+--     structure chained from @VkPipelineVieportCreateInfo@, then the bound
+--     graphics pipeline /must/ have been created with
 --     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'::@viewportCount@
 --     greater or equal to the @viewportCount@ parameter in the last call
 --     to
@@ -3113,28 +3997,39 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndirect-VkPipelineVieportCreateInfo-04142# If the
 --     bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
---     dynamic state enabled and an instance of
+--     dynamic state enabled and a
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'
---     chained from @VkPipelineVieportCreateInfo@, then the bound graphics
---     pipeline /must/ have been created with
+--     structure chained from @VkPipelineVieportCreateInfo@, then the bound
+--     graphics pipeline /must/ have been created with
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'::@exclusiveScissorCount@
 --     greater or equal to the @viewportCount@ parameter in the last call
 --     to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   #VUID-vkCmdDrawIndirect-primitiveTopology-03420# If the bound
---     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
+-- -   #VUID-vkCmdDrawIndirect-None-04876# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT'
 --     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @primitiveTopology@ parameter of
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
---     /must/ be of the same
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
---     as the pipeline
---     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
---     state
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-04877# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-logicOp-04878# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command and the @logicOp@ /must/ be a valid
+--     'Vulkan.Core10.Enums.LogicOp.LogicOp' value
 --
 -- -   #VUID-vkCmdDrawIndirect-primitiveFragmentShadingRateWithMultipleViewports-04552#
 --     If the
@@ -3147,7 +4042,7 @@ foreign import ccall
 --     then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ be @1@
 --
@@ -3160,6 +4055,250 @@ foreign import ccall
 --     then the @blendEnable@ member of the corresponding element of the
 --     @pAttachments@ member of @pColorBlendState@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
+--
+-- -   #VUID-vkCmdDrawIndirect-rasterizationSamples-04740# If rasterization
+--     is not disabled in the bound graphics pipeline, and neither the
+--     @VK_AMD_mixed_attachment_samples@ nor the
+--     @VK_NV_framebuffer_mixed_samples@ extensions are enabled, then
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     /must/ be the same as the current subpass color and\/or
+--     depth\/stencil attachments
+--
+-- -   #VUID-vkCmdDrawIndirect-imageView-06172# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pDepthAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pDepthAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the depth attachment
+--
+-- -   #VUID-vkCmdDrawIndirect-imageView-06173# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pStencilAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pStencilAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the stencil attachment
+--
+-- -   #VUID-vkCmdDrawIndirect-imageView-06174# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pDepthAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pDepthAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL',
+--     this command /must/ not write any values to the depth attachment
+--
+-- -   #VUID-vkCmdDrawIndirect-imageView-06175# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pStencilAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pStencilAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the stencil attachment
+--
+-- -   #VUID-vkCmdDrawIndirect-imageView-06176# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pDepthAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pDepthAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the depth attachment
+--
+-- -   #VUID-vkCmdDrawIndirect-imageView-06177# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pStencilAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pStencilAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the stencil attachment
+--
+-- -   #VUID-vkCmdDrawIndirect-viewMask-06178# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound graphics pipeline /must/ have been created with
+--     a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@viewMask@
+--     equal to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@viewMask@
+--
+-- -   #VUID-vkCmdDrawIndirect-colorAttachmentCount-06179# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound graphics pipeline /must/ have been created with
+--     a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@colorAttachmentCount@
+--     equal to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--
+-- -   #VUID-vkCmdDrawIndirect-colorAttachmentCount-06180# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     greater than @0@, then each element of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     array with a @imageView@ not equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
+--     with a 'Vulkan.Core10.Enums.Format.Format' equal to the
+--     corresponding element of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@pColorAttachmentFormats@
+--     used to create the currently bound graphics pipeline
+--
+-- -   #VUID-vkCmdDrawIndirect-pDepthAttachment-06181# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@depthAttachmentFormat@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the 'Vulkan.Core10.Enums.Format.Format' used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndirect-pStencilAttachment-06182# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@stencilAttachmentFormat@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the 'Vulkan.Core10.Enums.Format.Format' used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndirect-imageView-06183# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'::@imageView@
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
+--     bound graphics pipeline /must/ have been created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--
+-- -   #VUID-vkCmdDrawIndirect-imageView-06184# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'::@imageView@
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
+--     bound graphics pipeline /must/ have been created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--
+-- -   #VUID-vkCmdDrawIndirect-colorAttachmentCount-06185# If the currently
+--     bound pipeline was created with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and the current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     parameter greater than @0@, then each element of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     array with a @imageView@ not equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
+--     with a sample count equal to the corresponding element of the
+--     @pColorAttachmentSamples@ member of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     used to create the currently bound graphics pipeline
+--
+-- -   #VUID-vkCmdDrawIndirect-pDepthAttachment-06186# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
+--     @depthStencilAttachmentSamples@ member of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndirect-pStencilAttachment-06187# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
+--     @depthStencilAttachmentSamples@ member of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndirect-colorAttachmentCount-06188# If the currently
+--     bound pipeline was created without a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and the current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     parameter greater than @0@, then each element of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     array with a @imageView@ not equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
+--     with a sample count equal to the value of
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     used to create the currently bound graphics pipeline
+--
+-- -   #VUID-vkCmdDrawIndirect-pDepthAttachment-06189# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created without a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndirect-pStencilAttachment-06190# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created without a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndirect-renderPass-06198# If the current render pass
+--     instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline /must/ have been created with a
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@renderPass@
+--     equal to 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-vkCmdDrawIndirect-None-04007# All vertex input bindings
 --     accessed via vertex input variables declared in the vertex shader
@@ -3176,6 +4315,76 @@ foreign import ccall
 --     binding, any attribute data fetched /must/ be entirely contained
 --     within the corresponding vertex buffer binding, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input ???>
+--
+-- -   #VUID-vkCmdDrawIndirect-primitiveTopology-03420# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @primitiveTopology@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     /must/ be of the same
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
+--     as the pipeline
+--     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
+--     state
+--
+-- -   #VUID-vkCmdDrawIndirect-None-04912# If the bound graphics pipeline
+--     was created with both the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--     dynamic states enabled, then
+--     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command
+--
+-- -   #VUID-vkCmdDrawIndirect-pStrides-04913# If the bound graphics
+--     pipeline was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--     dynamic state enabled, but not the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     dynamic state enabled, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command, and the @pStrides@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+--     /must/ not be @NULL@
+--
+-- -   #VUID-vkCmdDrawIndirect-None-04914# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     dynamic state enabled, then
+--     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-04875# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPatchControlPointsEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-04879# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-stage-06481# The bound graphics pipeline
+--     /must/ not have been created with the
+--     'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo'::@stage@
+--     member of an element of
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pStages@ set
+--     to
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_NV'
+--     or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_NV'
 --
 -- -   #VUID-vkCmdDrawIndirect-buffer-02708# If @buffer@ is non-sparse then
 --     it /must/ be bound completely and contiguously to a single
@@ -3255,15 +4464,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              | Graphics                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdDrawIndirect :: forall io
@@ -3281,7 +4491,7 @@ cmdDrawIndirect :: forall io
                    ("stride" ::: Word32)
                 -> io ()
 cmdDrawIndirect commandBuffer buffer offset drawCount stride = liftIO $ do
-  let vkCmdDrawIndirectPtr = pVkCmdDrawIndirect (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdDrawIndirectPtr = pVkCmdDrawIndirect (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDrawIndirectPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawIndirect is null" Nothing Nothing
   let vkCmdDrawIndirect' = mkVkCmdDrawIndirect vkCmdDrawIndirectPtr
@@ -3296,7 +4506,8 @@ foreign import ccall
   "dynamic" mkVkCmdDrawIndexedIndirect
   :: FunPtr (Ptr CommandBuffer_T -> Buffer -> DeviceSize -> Word32 -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> Buffer -> DeviceSize -> Word32 -> Word32 -> IO ()
 
--- | vkCmdDrawIndexedIndirect - Perform an indexed indirect draw
+-- | vkCmdDrawIndexedIndirect - Draw primitives with indirect parameters and
+-- indexed vertices
 --
 -- = Description
 --
@@ -3320,6 +4531,24 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-mipmapMode-04770# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-06479# If a
+--     'Vulkan.Core10.Handles.ImageView' is sampled with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-depth-compare-operation depth comparison>,
+--     the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR'
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-02691# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
@@ -3369,6 +4598,22 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-OpTypeImage-06423# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being written as a storage image
+--     or storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-OpTypeImage-06424# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
+--     storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-02697# For each set /n/ that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
 --     pipeline bind point used by this command, a descriptor set /must/
@@ -3378,14 +4623,15 @@ foreign import ccall
 --     the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDrawIndexedIndirect-None-02698# For each push constant
---     that is statically used by the 'Vulkan.Core10.Handles.Pipeline'
---     bound to the pipeline bind point used by this command, a push
---     constant value /must/ have been set for the same pipeline bind
---     point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
---     compatible for push constants, with the
---     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
---     'Vulkan.Core10.Handles.Pipeline', as described in
+-- -   #VUID-vkCmdDrawIndexedIndirect-maintenance4-06425# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
+--     feature is not enabled, then for each push constant that is
+--     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
+--     pipeline bind point used by this command, a push constant value
+--     /must/ have been set for the same pipeline bind point, with a
+--     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for push
+--     constants, with the 'Vulkan.Core10.Handles.PipelineLayout' used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-02699# Descriptors in each bound
@@ -3400,9 +4646,10 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndexedIndirect-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set for @commandBuffer@, and done so after any
---     previously bound pipeline with the corresponding state not specified
---     as dynamic
+--     /must/ have been set or inherited (if the
+--     @VK_NV_inherited_viewport_scissor@ extension is enabled) for
+--     @commandBuffer@, and done so after any previously bound pipeline
+--     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-02859# There /must/ not have
 --     been any calls to dynamic state setting commands for any state not
@@ -3457,50 +4704,51 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-commandBuffer-02707# If
---     @commandBuffer@ is an unprotected command buffer, any resource
---     accessed by the 'Vulkan.Core10.Handles.Pipeline' object bound to the
---     pipeline bind point used by this command /must/ not be a protected
---     resource
+--     @commandBuffer@ is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command /must/ not be a protected resource
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-04115# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     image view’s format
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-OpImageWrite-04469# If a
 --     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     buffer view’s format
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-SampledType-04471# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-SampledType-04472# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-SampledType-04473# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-sparseImageInt64Atomics-04474# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
@@ -3509,7 +4757,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-sparseImageInt64Atomics-04475# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
@@ -3518,7 +4766,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-renderPass-02684# The current render
 --     pass /must/ be
@@ -3570,7 +4818,7 @@ foreign import ccall
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@scissorCount@
@@ -3584,7 +4832,7 @@ foreign import ccall
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @scissorCount@ parameter of
+--     drawing command, and the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@viewportCount@
@@ -3600,7 +4848,7 @@ foreign import ccall
 --     and
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ match the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
@@ -3656,10 +4904,10 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndexedIndirect-VkPipelineVieportCreateInfo-04141# If
 --     the bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
---     dynamic state enabled and an instance of
+--     dynamic state enabled and a
 --     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'
---     chained from @VkPipelineVieportCreateInfo@, then the bound graphics
---     pipeline /must/ have been created with
+--     structure chained from @VkPipelineVieportCreateInfo@, then the bound
+--     graphics pipeline /must/ have been created with
 --     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'::@viewportCount@
 --     greater or equal to the @viewportCount@ parameter in the last call
 --     to
@@ -3668,28 +4916,39 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndexedIndirect-VkPipelineVieportCreateInfo-04142# If
 --     the bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
---     dynamic state enabled and an instance of
+--     dynamic state enabled and a
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'
---     chained from @VkPipelineVieportCreateInfo@, then the bound graphics
---     pipeline /must/ have been created with
+--     structure chained from @VkPipelineVieportCreateInfo@, then the bound
+--     graphics pipeline /must/ have been created with
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'::@exclusiveScissorCount@
 --     greater or equal to the @viewportCount@ parameter in the last call
 --     to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   #VUID-vkCmdDrawIndexedIndirect-primitiveTopology-03420# If the bound
---     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-04876# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT'
 --     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @primitiveTopology@ parameter of
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
---     /must/ be of the same
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
---     as the pipeline
---     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
---     state
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-04877# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-logicOp-04878# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command and the @logicOp@ /must/ be a valid
+--     'Vulkan.Core10.Enums.LogicOp.LogicOp' value
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-primitiveFragmentShadingRateWithMultipleViewports-04552#
 --     If the
@@ -3702,7 +4961,7 @@ foreign import ccall
 --     then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ be @1@
 --
@@ -3715,6 +4974,250 @@ foreign import ccall
 --     then the @blendEnable@ member of the corresponding element of the
 --     @pAttachments@ member of @pColorBlendState@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-rasterizationSamples-04740# If
+--     rasterization is not disabled in the bound graphics pipeline, and
+--     neither the @VK_AMD_mixed_attachment_samples@ nor the
+--     @VK_NV_framebuffer_mixed_samples@ extensions are enabled, then
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     /must/ be the same as the current subpass color and\/or
+--     depth\/stencil attachments
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-imageView-06172# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pDepthAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pDepthAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the depth attachment
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-imageView-06173# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pStencilAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pStencilAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the stencil attachment
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-imageView-06174# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pDepthAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pDepthAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL',
+--     this command /must/ not write any values to the depth attachment
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-imageView-06175# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pStencilAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pStencilAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the stencil attachment
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-imageView-06176# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pDepthAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pDepthAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the depth attachment
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-imageView-06177# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pStencilAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pStencilAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the stencil attachment
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-viewMask-06178# If the current render
+--     pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound graphics pipeline /must/ have been created with
+--     a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@viewMask@
+--     equal to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@viewMask@
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-colorAttachmentCount-06179# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound graphics pipeline /must/ have been created with
+--     a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@colorAttachmentCount@
+--     equal to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-colorAttachmentCount-06180# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     greater than @0@, then each element of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     array with a @imageView@ not equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
+--     with a 'Vulkan.Core10.Enums.Format.Format' equal to the
+--     corresponding element of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@pColorAttachmentFormats@
+--     used to create the currently bound graphics pipeline
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-pDepthAttachment-06181# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@depthAttachmentFormat@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the 'Vulkan.Core10.Enums.Format.Format' used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-pStencilAttachment-06182# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@stencilAttachmentFormat@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the 'Vulkan.Core10.Enums.Format.Format' used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-imageView-06183# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'::@imageView@
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
+--     bound graphics pipeline /must/ have been created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-imageView-06184# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'::@imageView@
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
+--     bound graphics pipeline /must/ have been created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-colorAttachmentCount-06185# If the
+--     currently bound pipeline was created with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and the current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     parameter greater than @0@, then each element of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     array with a @imageView@ not equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
+--     with a sample count equal to the corresponding element of the
+--     @pColorAttachmentSamples@ member of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     used to create the currently bound graphics pipeline
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-pDepthAttachment-06186# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
+--     @depthStencilAttachmentSamples@ member of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-pStencilAttachment-06187# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
+--     @depthStencilAttachmentSamples@ member of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-colorAttachmentCount-06188# If the
+--     currently bound pipeline was created without a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and the current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     parameter greater than @0@, then each element of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     array with a @imageView@ not equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
+--     with a sample count equal to the value of
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     used to create the currently bound graphics pipeline
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-pDepthAttachment-06189# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created without a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-pStencilAttachment-06190# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created without a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-renderPass-06198# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline /must/ have been created with a
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@renderPass@
+--     equal to 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-04007# All vertex input bindings
 --     accessed via vertex input variables declared in the vertex shader
@@ -3731,6 +5234,76 @@ foreign import ccall
 --     binding, any attribute data fetched /must/ be entirely contained
 --     within the corresponding vertex buffer binding, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input ???>
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-primitiveTopology-03420# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @primitiveTopology@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     /must/ be of the same
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
+--     as the pipeline
+--     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
+--     state
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-04912# If the bound graphics
+--     pipeline was created with both the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--     dynamic states enabled, then
+--     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-pStrides-04913# If the bound graphics
+--     pipeline was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--     dynamic state enabled, but not the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     dynamic state enabled, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command, and the @pStrides@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+--     /must/ not be @NULL@
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-04914# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     dynamic state enabled, then
+--     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-04875# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPatchControlPointsEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-04879# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-stage-06481# The bound graphics
+--     pipeline /must/ not have been created with the
+--     'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo'::@stage@
+--     member of an element of
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pStages@ set
+--     to
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_NV'
+--     or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_NV'
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-buffer-02708# If @buffer@ is
 --     non-sparse then it /must/ be bound completely and contiguously to a
@@ -3811,15 +5384,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              | Graphics                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdDrawIndexedIndirect :: forall io
@@ -3837,7 +5411,7 @@ cmdDrawIndexedIndirect :: forall io
                           ("stride" ::: Word32)
                        -> io ()
 cmdDrawIndexedIndirect commandBuffer buffer offset drawCount stride = liftIO $ do
-  let vkCmdDrawIndexedIndirectPtr = pVkCmdDrawIndexedIndirect (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdDrawIndexedIndirectPtr = pVkCmdDrawIndexedIndirect (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDrawIndexedIndirectPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawIndexedIndirect is null" Nothing Nothing
   let vkCmdDrawIndexedIndirect' = mkVkCmdDrawIndexedIndirect vkCmdDrawIndexedIndirectPtr
@@ -3871,6 +5445,24 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDispatch-mipmapMode-04770# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDispatch-None-06479# If a
+--     'Vulkan.Core10.Handles.ImageView' is sampled with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-depth-compare-operation depth comparison>,
+--     the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR'
 --
 -- -   #VUID-vkCmdDispatch-None-02691# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
@@ -3920,6 +5512,22 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
+-- -   #VUID-vkCmdDispatch-OpTypeImage-06423# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being written as a storage image
+--     or storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--
+-- -   #VUID-vkCmdDispatch-OpTypeImage-06424# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
+--     storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--
 -- -   #VUID-vkCmdDispatch-None-02697# For each set /n/ that is statically
 --     used by the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline
 --     bind point used by this command, a descriptor set /must/ have been
@@ -3929,7 +5537,9 @@ foreign import ccall
 --     the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDispatch-None-02698# For each push constant that is
+-- -   #VUID-vkCmdDispatch-maintenance4-06425# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
+--     feature is not enabled, then for each push constant that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
 --     pipeline bind point used by this command, a push constant value
 --     /must/ have been set for the same pipeline bind point, with a
@@ -3949,9 +5559,10 @@ foreign import ccall
 -- -   #VUID-vkCmdDispatch-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set for @commandBuffer@, and done so after any
---     previously bound pipeline with the corresponding state not specified
---     as dynamic
+--     /must/ have been set or inherited (if the
+--     @VK_NV_inherited_viewport_scissor@ extension is enabled) for
+--     @commandBuffer@, and done so after any previously bound pipeline
+--     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdDispatch-None-02859# There /must/ not have been any calls
 --     to dynamic state setting commands for any state not specified as
@@ -4006,7 +5617,9 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdDispatch-commandBuffer-02707# If @commandBuffer@ is an
---     unprotected command buffer, any resource accessed by the
+--     unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be a protected resource
 --
@@ -4014,41 +5627,41 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     image view’s format
 --
 -- -   #VUID-vkCmdDispatch-OpImageWrite-04469# If a
 --     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     buffer view’s format
 --
 -- -   #VUID-vkCmdDispatch-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDispatch-SampledType-04471# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdDispatch-SampledType-04472# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDispatch-SampledType-04473# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdDispatch-sparseImageInt64Atomics-04474# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
@@ -4057,7 +5670,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdDispatch-sparseImageInt64Atomics-04475# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
@@ -4066,18 +5679,22 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdDispatch-commandBuffer-02712# If @commandBuffer@ is a
---     protected command buffer, any resource written to by the
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource written to by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be an unprotected resource
 --
 -- -   #VUID-vkCmdDispatch-commandBuffer-02713# If @commandBuffer@ is a
---     protected command buffer, pipeline stages other than the
---     framebuffer-space and compute stages in the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point /must/ not write to any resource
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, pipeline stages other than the framebuffer-space
+--     and compute stages in the 'Vulkan.Core10.Handles.Pipeline' object
+--     bound to the pipeline bind point used by this command /must/ not
+--     write to any resource
 --
 -- -   #VUID-vkCmdDispatch-commandBuffer-04617# If any of the shader stages
 --     of the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
@@ -4125,15 +5742,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               | Compute                                                                                                                             |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdDispatch :: forall io
              . (MonadIO io)
@@ -4151,7 +5769,7 @@ cmdDispatch :: forall io
                ("groupCountZ" ::: Word32)
             -> io ()
 cmdDispatch commandBuffer groupCountX groupCountY groupCountZ = liftIO $ do
-  let vkCmdDispatchPtr = pVkCmdDispatch (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdDispatchPtr = pVkCmdDispatch (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDispatchPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDispatch is null" Nothing Nothing
   let vkCmdDispatch' = mkVkCmdDispatch vkCmdDispatchPtr
@@ -4166,7 +5784,7 @@ foreign import ccall
   "dynamic" mkVkCmdDispatchIndirect
   :: FunPtr (Ptr CommandBuffer_T -> Buffer -> DeviceSize -> IO ()) -> Ptr CommandBuffer_T -> Buffer -> DeviceSize -> IO ()
 
--- | vkCmdDispatchIndirect - Dispatch compute work items using indirect
+-- | vkCmdDispatchIndirect - Dispatch compute work items with indirect
 -- parameters
 --
 -- = Description
@@ -4188,6 +5806,24 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDispatchIndirect-mipmapMode-04770# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDispatchIndirect-None-06479# If a
+--     'Vulkan.Core10.Handles.ImageView' is sampled with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-depth-compare-operation depth comparison>,
+--     the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR'
 --
 -- -   #VUID-vkCmdDispatchIndirect-None-02691# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
@@ -4237,6 +5873,22 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
+-- -   #VUID-vkCmdDispatchIndirect-OpTypeImage-06423# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being written as a storage image
+--     or storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--
+-- -   #VUID-vkCmdDispatchIndirect-OpTypeImage-06424# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
+--     storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--
 -- -   #VUID-vkCmdDispatchIndirect-None-02697# For each set /n/ that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
 --     pipeline bind point used by this command, a descriptor set /must/
@@ -4246,9 +5898,11 @@ foreign import ccall
 --     the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDispatchIndirect-None-02698# For each push constant that
---     is statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to
---     the pipeline bind point used by this command, a push constant value
+-- -   #VUID-vkCmdDispatchIndirect-maintenance4-06425# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
+--     feature is not enabled, then for each push constant that is
+--     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
+--     pipeline bind point used by this command, a push constant value
 --     /must/ have been set for the same pipeline bind point, with a
 --     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for push
 --     constants, with the 'Vulkan.Core10.Handles.PipelineLayout' used to
@@ -4267,9 +5921,10 @@ foreign import ccall
 -- -   #VUID-vkCmdDispatchIndirect-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set for @commandBuffer@, and done so after any
---     previously bound pipeline with the corresponding state not specified
---     as dynamic
+--     /must/ have been set or inherited (if the
+--     @VK_NV_inherited_viewport_scissor@ extension is enabled) for
+--     @commandBuffer@, and done so after any previously bound pipeline
+--     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdDispatchIndirect-None-02859# There /must/ not have been
 --     any calls to dynamic state setting commands for any state not
@@ -4324,7 +5979,9 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdDispatchIndirect-commandBuffer-02707# If @commandBuffer@
---     is an unprotected command buffer, any resource accessed by the
+--     is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be a protected resource
 --
@@ -4332,41 +5989,41 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     image view’s format
 --
 -- -   #VUID-vkCmdDispatchIndirect-OpImageWrite-04469# If a
 --     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     buffer view’s format
 --
 -- -   #VUID-vkCmdDispatchIndirect-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDispatchIndirect-SampledType-04471# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdDispatchIndirect-SampledType-04472# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDispatchIndirect-SampledType-04473# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdDispatchIndirect-sparseImageInt64Atomics-04474# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
@@ -4375,7 +6032,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdDispatchIndirect-sparseImageInt64Atomics-04475# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
@@ -4384,7 +6041,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdDispatchIndirect-buffer-02708# If @buffer@ is non-sparse
 --     then it /must/ be bound completely and contiguously to a single
@@ -4439,15 +6096,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               | Compute                                                                                                                             |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdDispatchIndirect :: forall io
@@ -4461,7 +6119,7 @@ cmdDispatchIndirect :: forall io
                        ("offset" ::: DeviceSize)
                     -> io ()
 cmdDispatchIndirect commandBuffer buffer offset = liftIO $ do
-  let vkCmdDispatchIndirectPtr = pVkCmdDispatchIndirect (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdDispatchIndirectPtr = pVkCmdDispatchIndirect (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDispatchIndirectPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDispatchIndirect is null" Nothing Nothing
   let vkCmdDispatchIndirect' = mkVkCmdDispatchIndirect vkCmdDispatchIndirectPtr
@@ -4488,16 +6146,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyBuffer-commandBuffer-01822# If @commandBuffer@ is an
---     unprotected command buffer, then @srcBuffer@ /must/ not be a
---     protected buffer
+--     unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcBuffer@ /must/ not be a protected buffer
 --
 -- -   #VUID-vkCmdCopyBuffer-commandBuffer-01823# If @commandBuffer@ is an
---     unprotected command buffer, then @dstBuffer@ /must/ not be a
---     protected buffer
+--     unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be a protected buffer
 --
 -- -   #VUID-vkCmdCopyBuffer-commandBuffer-01824# If @commandBuffer@ is a
---     protected command buffer, then @dstBuffer@ /must/ not be an
---     unprotected buffer
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be an unprotected buffer
 --
 -- -   #VUID-vkCmdCopyBuffer-srcOffset-00113# The @srcOffset@ member of
 --     each element of @pRegions@ /must/ be less than the size of
@@ -4582,16 +6243,17 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Transfer                                                                                                              | Transfer                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |                                                                                                                                     |
--- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Transfer                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |
+-- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'BufferCopy',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdCopyBuffer :: forall io
@@ -4608,11 +6270,11 @@ cmdCopyBuffer :: forall io
                  ("regions" ::: Vector BufferCopy)
               -> io ()
 cmdCopyBuffer commandBuffer srcBuffer dstBuffer regions = liftIO . evalContT $ do
-  let vkCmdCopyBufferPtr = pVkCmdCopyBuffer (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyBufferPtr = pVkCmdCopyBuffer (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyBuffer is null" Nothing Nothing
   let vkCmdCopyBuffer' = mkVkCmdCopyBuffer vkCmdCopyBufferPtr
-  pPRegions <- ContT $ allocaBytesAligned @BufferCopy ((Data.Vector.length (regions)) * 24) 8
+  pPRegions <- ContT $ allocaBytes @BufferCopy ((Data.Vector.length (regions)) * 24)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions `plusPtr` (24 * (i)) :: Ptr BufferCopy) (e)) (regions)
   lift $ traceAroundEvent "vkCmdCopyBuffer" (vkCmdCopyBuffer' (commandBufferHandle (commandBuffer)) (srcBuffer) (dstBuffer) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions))
   pure $ ()
@@ -4638,8 +6300,8 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility Compatible Formats>
 -- table. Depth\/stencil formats /must/ match exactly.
 --
--- If the format of @srcImage@ or @dstImage@ is a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
+-- If either @srcImage@ or @dstImage@ has a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 -- regions of each plane to be copied /must/ be specified separately using
 -- the @srcSubresource@ and @dstSubresource@ members of the 'ImageCopy'
 -- structure. In this case, the @aspectMask@ of the @srcSubresource@ or
@@ -4744,16 +6406,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyImage-commandBuffer-01825# If @commandBuffer@ is an
---     unprotected command buffer, then @srcImage@ /must/ not be a
---     protected image
+--     unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdCopyImage-commandBuffer-01826# If @commandBuffer@ is an
---     unprotected command buffer, then @dstImage@ /must/ not be a
---     protected image
+--     unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdCopyImage-commandBuffer-01827# If @commandBuffer@ is a
---     protected command buffer, then @dstImage@ /must/ not be an
---     unprotected image
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be an unprotected image
 --
 -- -   #VUID-vkCmdCopyImage-pRegions-00124# The union of all source
 --     regions, and the union of all destination regions, specified by the
@@ -4925,12 +6590,12 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdCopyImage-srcImage-04443# If @srcImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each element
---     of @pRegions@, @srcSubresource.baseArrayLayer@ /must/ be @0@ and and
+--     of @pRegions@, @srcSubresource.baseArrayLayer@ /must/ be @0@ and
 --     @srcSubresource.layerCount@ /must/ be @1@
 --
 -- -   #VUID-vkCmdCopyImage-dstImage-04444# If @dstImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each element
---     of @pRegions@, @dstSubresource.baseArrayLayer@ /must/ be @0@ and and
+--     of @pRegions@, @dstSubresource.baseArrayLayer@ /must/ be @0@ and
 --     @dstSubresource.layerCount@ /must/ be @1@
 --
 -- -   #VUID-vkCmdCopyImage-aspectMask-00142# For each element of
@@ -5122,16 +6787,17 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Transfer                                                                                                              | Transfer                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |                                                                                                                                     |
--- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Transfer                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |
+-- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Image',
 -- 'ImageCopy', 'Vulkan.Core10.Enums.ImageLayout.ImageLayout'
 cmdCopyImage :: forall io
@@ -5153,11 +6819,11 @@ cmdCopyImage :: forall io
                 ("regions" ::: Vector ImageCopy)
              -> io ()
 cmdCopyImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regions = liftIO . evalContT $ do
-  let vkCmdCopyImagePtr = pVkCmdCopyImage (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyImagePtr = pVkCmdCopyImage (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyImage is null" Nothing Nothing
   let vkCmdCopyImage' = mkVkCmdCopyImage vkCmdCopyImagePtr
-  pPRegions <- ContT $ allocaBytesAligned @ImageCopy ((Data.Vector.length (regions)) * 68) 4
+  pPRegions <- ContT $ allocaBytes @ImageCopy ((Data.Vector.length (regions)) * 68)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions `plusPtr` (68 * (i)) :: Ptr ImageCopy) (e)) (regions)
   lift $ traceAroundEvent "vkCmdCopyImage" (vkCmdCopyImage' (commandBufferHandle (commandBuffer)) (srcImage) (srcImageLayout) (dstImage) (dstImageLayout) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions))
   pure $ ()
@@ -5248,8 +6914,8 @@ foreign import ccall
 -- Due to allowable rounding errors in the generation of the source texture
 -- coordinates, it is not always possible to guarantee exactly which source
 -- texels will be sampled for a given blit. As rounding errors are
--- implementation dependent, the exact results of a blitting operation are
--- also implementation dependent.
+-- implementation-dependent, the exact results of a blitting operation are
+-- also implementation-dependent.
 --
 -- Blits are done layer by layer starting with the @baseArrayLayer@ member
 -- of @srcSubresource@ for the source and @dstSubresource@ for the
@@ -5292,16 +6958,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdBlitImage-commandBuffer-01834# If @commandBuffer@ is an
---     unprotected command buffer, then @srcImage@ /must/ not be a
---     protected image
+--     unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdBlitImage-commandBuffer-01835# If @commandBuffer@ is an
---     unprotected command buffer, then @dstImage@ /must/ not be a
---     protected image
+--     unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdBlitImage-commandBuffer-01836# If @commandBuffer@ is a
---     protected command buffer, then @dstImage@ /must/ not be an
---     unprotected image
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be an unprotected image
 --
 -- -   #VUID-vkCmdBlitImage-pRegions-00215# The source region specified by
 --     each element of @pRegions@ /must/ be a region that is contained
@@ -5321,9 +6990,8 @@ foreign import ccall
 --     of @srcImage@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_SRC_BIT'
 --
--- -   #VUID-vkCmdBlitImage-srcImage-01561# @srcImage@ /must/ not use a
---     format listed in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion ???>
+-- -   #VUID-vkCmdBlitImage-srcImage-06421# @srcImage@ /must/ not use a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion format that requires a sampler Y’CBCR conversion>
 --
 -- -   #VUID-vkCmdBlitImage-srcImage-00219# @srcImage@ /must/ have been
 --     created with
@@ -5350,9 +7018,8 @@ foreign import ccall
 --     of @dstImage@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_DST_BIT'
 --
--- -   #VUID-vkCmdBlitImage-dstImage-01562# @dstImage@ /must/ not use a
---     format listed in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion ???>
+-- -   #VUID-vkCmdBlitImage-dstImage-06422# @dstImage@ /must/ not use a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion format that requires a sampler Y’CBCR conversion>
 --
 -- -   #VUID-vkCmdBlitImage-dstImage-00224# @dstImage@ /must/ have been
 --     created with
@@ -5447,7 +7114,7 @@ foreign import ccall
 --     then for each element of @pRegions@, @srcSubresource.baseArrayLayer@
 --     and @dstSubresource.baseArrayLayer@ /must/ each be @0@, and
 --     @srcSubresource.layerCount@ and @dstSubresource.layerCount@ /must/
---     each be @1@.
+--     each be @1@
 --
 -- -   #VUID-vkCmdBlitImage-aspectMask-00241# For each element of
 --     @pRegions@, @srcSubresource.aspectMask@ /must/ specify aspects
@@ -5458,55 +7125,55 @@ foreign import ccall
 --     present in @dstImage@
 --
 -- -   #VUID-vkCmdBlitImage-srcOffset-00243# For each element of
---     @pRegions@, @srcOffset@[0].x and @srcOffset@[1].x /must/ both be
+--     @pRegions@, @srcOffsets@[0].x and @srcOffsets@[1].x /must/ both be
 --     greater than or equal to @0@ and less than or equal to the width of
 --     the specified @srcSubresource@ of @srcImage@
 --
 -- -   #VUID-vkCmdBlitImage-srcOffset-00244# For each element of
---     @pRegions@, @srcOffset@[0].y and @srcOffset@[1].y /must/ both be
+--     @pRegions@, @srcOffsets@[0].y and @srcOffsets@[1].y /must/ both be
 --     greater than or equal to @0@ and less than or equal to the height of
 --     the specified @srcSubresource@ of @srcImage@
 --
 -- -   #VUID-vkCmdBlitImage-srcImage-00245# If @srcImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
---     of @pRegions@, @srcOffset@[0].y /must/ be @0@ and @srcOffset@[1].y
+--     of @pRegions@, @srcOffsets@[0].y /must/ be @0@ and @srcOffsets@[1].y
 --     /must/ be @1@
 --
 -- -   #VUID-vkCmdBlitImage-srcOffset-00246# For each element of
---     @pRegions@, @srcOffset@[0].z and @srcOffset@[1].z /must/ both be
+--     @pRegions@, @srcOffsets@[0].z and @srcOffsets@[1].z /must/ both be
 --     greater than or equal to @0@ and less than or equal to the depth of
 --     the specified @srcSubresource@ of @srcImage@
 --
 -- -   #VUID-vkCmdBlitImage-srcImage-00247# If @srcImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
---     of @pRegions@, @srcOffset@[0].z /must/ be @0@ and @srcOffset@[1].z
+--     of @pRegions@, @srcOffsets@[0].z /must/ be @0@ and @srcOffsets@[1].z
 --     /must/ be @1@
 --
 -- -   #VUID-vkCmdBlitImage-dstOffset-00248# For each element of
---     @pRegions@, @dstOffset@[0].x and @dstOffset@[1].x /must/ both be
+--     @pRegions@, @dstOffsets@[0].x and @dstOffsets@[1].x /must/ both be
 --     greater than or equal to @0@ and less than or equal to the width of
 --     the specified @dstSubresource@ of @dstImage@
 --
 -- -   #VUID-vkCmdBlitImage-dstOffset-00249# For each element of
---     @pRegions@, @dstOffset@[0].y and @dstOffset@[1].y /must/ both be
+--     @pRegions@, @dstOffsets@[0].y and @dstOffsets@[1].y /must/ both be
 --     greater than or equal to @0@ and less than or equal to the height of
 --     the specified @dstSubresource@ of @dstImage@
 --
 -- -   #VUID-vkCmdBlitImage-dstImage-00250# If @dstImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
---     of @pRegions@, @dstOffset@[0].y /must/ be @0@ and @dstOffset@[1].y
+--     of @pRegions@, @dstOffsets@[0].y /must/ be @0@ and @dstOffsets@[1].y
 --     /must/ be @1@
 --
 -- -   #VUID-vkCmdBlitImage-dstOffset-00251# For each element of
---     @pRegions@, @dstOffset@[0].z and @dstOffset@[1].z /must/ both be
+--     @pRegions@, @dstOffsets@[0].z and @dstOffsets@[1].z /must/ both be
 --     greater than or equal to @0@ and less than or equal to the depth of
 --     the specified @dstSubresource@ of @dstImage@
 --
 -- -   #VUID-vkCmdBlitImage-dstImage-00252# If @dstImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
---     of @pRegions@, @dstOffset@[0].z /must/ be @0@ and @dstOffset@[1].z
+--     of @pRegions@, @dstOffsets@[0].z /must/ be @0@ and @dstOffsets@[1].z
 --     /must/ be @1@
 --
 -- == Valid Usage (Implicit)
@@ -5564,15 +7231,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              | Transfer                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.Filter.Filter', 'Vulkan.Core10.Handles.Image',
 -- 'ImageBlit', 'Vulkan.Core10.Enums.ImageLayout.ImageLayout'
@@ -5599,11 +7267,11 @@ cmdBlitImage :: forall io
                 Filter
              -> io ()
 cmdBlitImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regions filter' = liftIO . evalContT $ do
-  let vkCmdBlitImagePtr = pVkCmdBlitImage (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBlitImagePtr = pVkCmdBlitImage (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBlitImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBlitImage is null" Nothing Nothing
   let vkCmdBlitImage' = mkVkCmdBlitImage vkCmdBlitImagePtr
-  pPRegions <- ContT $ allocaBytesAligned @ImageBlit ((Data.Vector.length (regions)) * 80) 4
+  pPRegions <- ContT $ allocaBytes @ImageBlit ((Data.Vector.length (regions)) * 80)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions `plusPtr` (80 * (i)) :: Ptr ImageBlit) (e)) (regions)
   lift $ traceAroundEvent "vkCmdBlitImage" (vkCmdBlitImage' (commandBufferHandle (commandBuffer)) (srcImage) (srcImageLayout) (dstImage) (dstImageLayout) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions) (filter'))
   pure $ ()
@@ -5623,8 +7291,8 @@ foreign import ccall
 -- Each region in @pRegions@ is copied from the specified region of the
 -- source buffer to the specified region of the destination image.
 --
--- If the format of @dstImage@ is a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
+-- If @dstImage@ has a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 -- regions of each plane to be a target of a copy /must/ be specified
 -- separately using the @pRegions@ member of the 'BufferImageCopy'
 -- structure. In this case, the @aspectMask@ of @imageSubresource@ /must/
@@ -5643,25 +7311,23 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyBufferToImage-commandBuffer-01828# If @commandBuffer@
---     is an unprotected command buffer, then @srcBuffer@ /must/ not be a
---     protected buffer
+--     is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcBuffer@ /must/ not be a protected buffer
 --
 -- -   #VUID-vkCmdCopyBufferToImage-commandBuffer-01829# If @commandBuffer@
---     is an unprotected command buffer, then @dstImage@ /must/ not be a
---     protected image
+--     is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdCopyBufferToImage-commandBuffer-01830# If @commandBuffer@
---     is a protected command buffer, then @dstImage@ /must/ not be an
---     unprotected image
+--     is a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be an unprotected image
 --
--- -   #VUID-vkCmdCopyBufferToImage-pRegions-00172# The image region
---     specified by each element of @pRegions@ /must/ be a region that is
---     contained within @dstImage@ if the @dstImage@’s
---     'Vulkan.Core10.Enums.Format.Format' is not a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     and /must/ be a region that is contained within the plane being
---     copied to if the @dstImage@’s 'Vulkan.Core10.Enums.Format.Format' is
---     a multi-planar format
+-- -   #VUID-vkCmdCopyBufferToImage-pRegions-06217# The image region
+--     specified by each element of @pRegions@ /must/ be contained within
+--     the specified @imageSubresource@ of @dstImage@
 --
 -- -   #VUID-vkCmdCopyBufferToImage-pRegions-00171# @srcBuffer@ /must/ be
 --     large enough to contain all buffer locations that are accessed
@@ -5739,23 +7405,19 @@ foreign import ccall
 --     element of @pRegions@, the @aspectMask@ member of @imageSubresource@
 --     /must/ not be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'.
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
--- -   #VUID-vkCmdCopyBufferToImage-imageOffset-00197# For each element of
+-- -   #VUID-vkCmdCopyBufferToImage-pRegions-06218# For each element of
 --     @pRegions@, @imageOffset.x@ and (@imageExtent.width@ +
 --     @imageOffset.x@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the width of the specified @imageSubresource@
---     of @dstImage@ where this refers to the width of the /plane/ of the
---     image involved in the copy in the case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     of @dstImage@
 --
--- -   #VUID-vkCmdCopyBufferToImage-imageOffset-00198# For each element of
---     @pRegions@, @imageOffset.y@ and (imageExtent.height +
+-- -   #VUID-vkCmdCopyBufferToImage-pRegions-06219# For each element of
+--     @pRegions@, @imageOffset.y@ and (@imageExtent.height@ +
 --     @imageOffset.y@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the height of the specified @imageSubresource@
---     of @dstImage@ where this refers to the height of the /plane/ of the
---     image involved in the copy in the case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     of @dstImage@
 --
 -- -   #VUID-vkCmdCopyBufferToImage-bufferOffset-01558# If @dstImage@ does
 --     not have either a depth\/stencil or a
@@ -5776,7 +7438,7 @@ foreign import ccall
 --     @imageExtent.height@ /must/ be @1@
 --
 -- -   #VUID-vkCmdCopyBufferToImage-imageOffset-00200# For each element of
---     @pRegions@, @imageOffset.z@ and (imageExtent.depth +
+--     @pRegions@, @imageOffset.z@ and (@imageExtent.depth@ +
 --     @imageOffset.z@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the depth of the specified @imageSubresource@
 --     of @dstImage@
@@ -5925,16 +7587,17 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Transfer                                                                                                              | Transfer                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |                                                                                                                                     |
--- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Transfer                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |
+-- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'BufferImageCopy',
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout'
@@ -5955,11 +7618,11 @@ cmdCopyBufferToImage :: forall io
                         ("regions" ::: Vector BufferImageCopy)
                      -> io ()
 cmdCopyBufferToImage commandBuffer srcBuffer dstImage dstImageLayout regions = liftIO . evalContT $ do
-  let vkCmdCopyBufferToImagePtr = pVkCmdCopyBufferToImage (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyBufferToImagePtr = pVkCmdCopyBufferToImage (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyBufferToImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyBufferToImage is null" Nothing Nothing
   let vkCmdCopyBufferToImage' = mkVkCmdCopyBufferToImage vkCmdCopyBufferToImagePtr
-  pPRegions <- ContT $ allocaBytesAligned @BufferImageCopy ((Data.Vector.length (regions)) * 56) 8
+  pPRegions <- ContT $ allocaBytes @BufferImageCopy ((Data.Vector.length (regions)) * 56)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions `plusPtr` (56 * (i)) :: Ptr BufferImageCopy) (e)) (regions)
   lift $ traceAroundEvent "vkCmdCopyBufferToImage" (vkCmdCopyBufferToImage' (commandBufferHandle (commandBuffer)) (srcBuffer) (dstImage) (dstImageLayout) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions))
   pure $ ()
@@ -5979,8 +7642,8 @@ foreign import ccall
 -- Each region in @pRegions@ is copied from the specified region of the
 -- source image to the specified region of the destination buffer.
 --
--- If the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@ is a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
+-- If @srcImage@ has a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 -- regions of each plane to be a source of a copy /must/ be specified
 -- separately using the @pRegions@ member of the 'BufferImageCopy'
 -- structure. In this case, the @aspectMask@ of @imageSubresource@ /must/
@@ -5999,25 +7662,23 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyImageToBuffer-commandBuffer-01831# If @commandBuffer@
---     is an unprotected command buffer, then @srcImage@ /must/ not be a
---     protected image
+--     is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdCopyImageToBuffer-commandBuffer-01832# If @commandBuffer@
---     is an unprotected command buffer, then @dstBuffer@ /must/ not be a
---     protected buffer
+--     is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be a protected buffer
 --
 -- -   #VUID-vkCmdCopyImageToBuffer-commandBuffer-01833# If @commandBuffer@
---     is a protected command buffer, then @dstBuffer@ /must/ not be an
---     unprotected buffer
+--     is a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be an unprotected buffer
 --
--- -   #VUID-vkCmdCopyImageToBuffer-pRegions-00182# The image region
---     specified by each element of @pRegions@ /must/ be a region that is
---     contained within @srcImage@ if the @srcImage@’s
---     'Vulkan.Core10.Enums.Format.Format' is not a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     and /must/ be a region that is contained within the plane being
---     copied if the @srcImage@’s 'Vulkan.Core10.Enums.Format.Format' is a
---     multi-planar format
+-- -   #VUID-vkCmdCopyImageToBuffer-pRegions-06220# The image region
+--     specified by each element of @pRegions@ /must/ be contained within
+--     the specified @imageSubresource@ of @srcImage@
 --
 -- -   #VUID-vkCmdCopyImageToBuffer-pRegions-00183# @dstBuffer@ /must/ be
 --     large enough to contain all buffer locations that are accessed
@@ -6088,21 +7749,17 @@ foreign import ccall
 --     have been created with @flags@ containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
 --
--- -   #VUID-vkCmdCopyImageToBuffer-imageOffset-00197# For each element of
---     @pRegions@ , @imageOffset.x@ and (@imageExtent.width@ +
+-- -   #VUID-vkCmdCopyImageToBuffer-pRegions-06221# For each element of
+--     @pRegions@, @imageOffset.x@ and (@imageExtent.width@ +
 --     @imageOffset.x@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the width of the specified @imageSubresource@
---     of @srcImage@ where this refers to the width of the /plane/ of the
---     image involved in the copy in the case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     of @srcImage@
 --
--- -   #VUID-vkCmdCopyImageToBuffer-imageOffset-00198# For each element of
---     @pRegions@ , @imageOffset.y@ and (imageExtent.height +
+-- -   #VUID-vkCmdCopyImageToBuffer-pRegions-06222# For each element of
+--     @pRegions@, @imageOffset.y@ and (imageExtent.height +
 --     @imageOffset.y@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the height of the specified @imageSubresource@
---     of @srcImage@ where this refers to the height of the /plane/ of the
---     image involved in the copy in the case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     of @srcImage@
 --
 -- -   #VUID-vkCmdCopyImageToBuffer-bufferOffset-01558# If @srcImage@ does
 --     not have either a depth\/stencil or a
@@ -6123,7 +7780,7 @@ foreign import ccall
 --     @imageExtent.height@ /must/ be @1@
 --
 -- -   #VUID-vkCmdCopyImageToBuffer-imageOffset-00200# For each element of
---     @pRegions@, @imageOffset.z@ and (imageExtent.depth +
+--     @pRegions@, @imageOffset.z@ and (@imageExtent.depth@ +
 --     @imageOffset.z@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the depth of the specified @imageSubresource@
 --     of @srcImage@
@@ -6272,16 +7929,17 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Transfer                                                                                                              | Transfer                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |                                                                                                                                     |
--- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Transfer                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |
+-- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'BufferImageCopy',
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout'
@@ -6302,11 +7960,11 @@ cmdCopyImageToBuffer :: forall io
                         ("regions" ::: Vector BufferImageCopy)
                      -> io ()
 cmdCopyImageToBuffer commandBuffer srcImage srcImageLayout dstBuffer regions = liftIO . evalContT $ do
-  let vkCmdCopyImageToBufferPtr = pVkCmdCopyImageToBuffer (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyImageToBufferPtr = pVkCmdCopyImageToBuffer (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyImageToBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyImageToBuffer is null" Nothing Nothing
   let vkCmdCopyImageToBuffer' = mkVkCmdCopyImageToBuffer vkCmdCopyImageToBufferPtr
-  pPRegions <- ContT $ allocaBytesAligned @BufferImageCopy ((Data.Vector.length (regions)) * 56) 8
+  pPRegions <- ContT $ allocaBytes @BufferImageCopy ((Data.Vector.length (regions)) * 56)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions `plusPtr` (56 * (i)) :: Ptr BufferImageCopy) (e)) (regions)
   lift $ traceAroundEvent "vkCmdCopyImageToBuffer" (vkCmdCopyImageToBuffer' (commandBufferHandle (commandBuffer)) (srcImage) (srcImageLayout) (dstBuffer) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions))
   pure $ ()
@@ -6382,12 +8040,14 @@ foreign import ccall
 --     multiple of @4@
 --
 -- -   #VUID-vkCmdUpdateBuffer-commandBuffer-01813# If @commandBuffer@ is
---     an unprotected command buffer, then @dstBuffer@ /must/ not be a
---     protected buffer
+--     an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be a protected buffer
 --
 -- -   #VUID-vkCmdUpdateBuffer-commandBuffer-01814# If @commandBuffer@ is a
---     protected command buffer, then @dstBuffer@ /must/ not be an
---     unprotected buffer
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be an unprotected buffer
 --
 -- == Valid Usage (Implicit)
 --
@@ -6430,16 +8090,17 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Transfer                                                                                                              | Transfer                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |                                                                                                                                     |
--- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Transfer                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |
+-- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdUpdateBuffer :: forall io
@@ -6460,7 +8121,7 @@ cmdUpdateBuffer :: forall io
                    ("data" ::: Ptr ())
                 -> io ()
 cmdUpdateBuffer commandBuffer dstBuffer dstOffset dataSize data' = liftIO $ do
-  let vkCmdUpdateBufferPtr = pVkCmdUpdateBuffer (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdUpdateBufferPtr = pVkCmdUpdateBuffer (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdUpdateBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdUpdateBuffer is null" Nothing Nothing
   let vkCmdUpdateBuffer' = mkVkCmdUpdateBuffer vkCmdUpdateBufferPtr
@@ -6516,12 +8177,14 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- -   #VUID-vkCmdFillBuffer-commandBuffer-01811# If @commandBuffer@ is an
---     unprotected command buffer, then @dstBuffer@ /must/ not be a
---     protected buffer
+--     unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be a protected buffer
 --
 -- -   #VUID-vkCmdFillBuffer-commandBuffer-01812# If @commandBuffer@ is a
---     protected command buffer, then @dstBuffer@ /must/ not be an
---     unprotected buffer
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be an unprotected buffer
 --
 -- == Valid Usage (Implicit)
 --
@@ -6558,16 +8221,17 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Transfer                                                                                                              | Transfer                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |                                                                                                                                     |
--- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Transfer                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |
+-- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdFillBuffer :: forall io
@@ -6593,7 +8257,7 @@ cmdFillBuffer :: forall io
                  ("data" ::: Word32)
               -> io ()
 cmdFillBuffer commandBuffer dstBuffer dstOffset size data' = liftIO $ do
-  let vkCmdFillBufferPtr = pVkCmdFillBuffer (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdFillBufferPtr = pVkCmdFillBuffer (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdFillBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdFillBuffer is null" Nothing Nothing
   let vkCmdFillBuffer' = mkVkCmdFillBuffer vkCmdFillBufferPtr
@@ -6627,9 +8291,9 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
 --     usage flag
 --
--- -   #VUID-vkCmdClearColorImage-image-01545# @image@ /must/ not use a
---     format listed in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>
+-- -   #VUID-vkCmdClearColorImage-image-01545# @image@ /must/ not use any
+--     of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>
 --
 -- -   #VUID-vkCmdClearColorImage-image-00003# If @image@ is non-sparse
 --     then it /must/ be bound completely and contiguously to a single
@@ -6683,13 +8347,18 @@ foreign import ccall
 -- -   #VUID-vkCmdClearColorImage-image-00007# @image@ /must/ not have a
 --     compressed or depth\/stencil format
 --
+-- -   #VUID-vkCmdClearColorImage-pColor-04961# @pColor@ /must/ be a valid
+--     pointer to a 'ClearColorValue' union
+--
 -- -   #VUID-vkCmdClearColorImage-commandBuffer-01805# If @commandBuffer@
---     is an unprotected command buffer, then @image@ /must/ not be a
---     protected image
+--     is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @image@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdClearColorImage-commandBuffer-01806# If @commandBuffer@
---     is a protected command buffer, then @image@ /must/ not be an
---     unprotected image
+--     is a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, /must/ not be an unprotected image
 --
 -- == Valid Usage (Implicit)
 --
@@ -6736,15 +8405,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              | Transfer                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'ClearColorValue', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
@@ -6775,12 +8445,12 @@ cmdClearColorImage :: forall io
                       ("ranges" ::: Vector ImageSubresourceRange)
                    -> io ()
 cmdClearColorImage commandBuffer image imageLayout color ranges = liftIO . evalContT $ do
-  let vkCmdClearColorImagePtr = pVkCmdClearColorImage (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdClearColorImagePtr = pVkCmdClearColorImage (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdClearColorImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdClearColorImage is null" Nothing Nothing
   let vkCmdClearColorImage' = mkVkCmdClearColorImage vkCmdClearColorImagePtr
   pColor <- ContT $ withCStruct (color)
-  pPRanges <- ContT $ allocaBytesAligned @ImageSubresourceRange ((Data.Vector.length (ranges)) * 20) 4
+  pPRanges <- ContT $ allocaBytes @ImageSubresourceRange ((Data.Vector.length (ranges)) * 20)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRanges `plusPtr` (20 * (i)) :: Ptr ImageSubresourceRange) (e)) (ranges)
   lift $ traceAroundEvent "vkCmdClearColorImage" (vkCmdClearColorImage' (commandBufferHandle (commandBuffer)) (image) (imageLayout) pColor ((fromIntegral (Data.Vector.length $ (ranges)) :: Word32)) (pPRanges))
   pure $ ()
@@ -6897,12 +8567,14 @@ foreign import ccall
 --     depth\/stencil format
 --
 -- -   #VUID-vkCmdClearDepthStencilImage-commandBuffer-01807# If
---     @commandBuffer@ is an unprotected command buffer, then @image@
---     /must/ not be a protected image
+--     @commandBuffer@ is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @image@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdClearDepthStencilImage-commandBuffer-01808# If
---     @commandBuffer@ is a protected command buffer, then @image@ /must/
---     not be an unprotected image
+--     @commandBuffer@ is a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @image@ /must/ not be an unprotected image
 --
 -- == Valid Usage (Implicit)
 --
@@ -6954,15 +8626,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              | Transfer                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'ClearDepthStencilValue', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
@@ -6993,12 +8666,12 @@ cmdClearDepthStencilImage :: forall io
                              ("ranges" ::: Vector ImageSubresourceRange)
                           -> io ()
 cmdClearDepthStencilImage commandBuffer image imageLayout depthStencil ranges = liftIO . evalContT $ do
-  let vkCmdClearDepthStencilImagePtr = pVkCmdClearDepthStencilImage (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdClearDepthStencilImagePtr = pVkCmdClearDepthStencilImage (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdClearDepthStencilImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdClearDepthStencilImage is null" Nothing Nothing
   let vkCmdClearDepthStencilImage' = mkVkCmdClearDepthStencilImage vkCmdClearDepthStencilImagePtr
   pDepthStencil <- ContT $ withCStruct (depthStencil)
-  pPRanges <- ContT $ allocaBytesAligned @ImageSubresourceRange ((Data.Vector.length (ranges)) * 20) 4
+  pPRanges <- ContT $ allocaBytes @ImageSubresourceRange ((Data.Vector.length (ranges)) * 20)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRanges `plusPtr` (20 * (i)) :: Ptr ImageSubresourceRange) (e)) (ranges)
   lift $ traceAroundEvent "vkCmdClearDepthStencilImage" (vkCmdClearDepthStencilImage' (commandBufferHandle (commandBuffer)) (image) (imageLayout) pDepthStencil ((fromIntegral (Data.Vector.length $ (ranges)) :: Word32)) (pPRanges))
   pure $ ()
@@ -7016,12 +8689,6 @@ foreign import ccall
 --
 -- = Description
 --
--- 'cmdClearAttachments' /can/ clear multiple regions of each attachment
--- used in the current subpass of a render pass instance. This command
--- /must/ be called only inside a render pass instance, and implicitly
--- selects the images to clear based on the current framebuffer attachments
--- and the command parameters.
---
 -- If the render pass has a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>,
 -- clears follow the
@@ -7035,7 +8702,7 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#clears clear commands>,
 -- 'cmdClearAttachments' executes as a drawing command, rather than a
 -- transfer command, with writes performed by it executing in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primrast-order rasterization order>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-order rasterization order>.
 -- Clears to color attachments are executed as color attachment writes, by
 -- the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT'
@@ -7048,6 +8715,15 @@ foreign import ccall
 -- and
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT'
 -- stages.
+--
+-- 'cmdClearAttachments' is not affected by the bound pipeline state.
+--
+-- Note
+--
+-- It is generally preferable to clear attachments by using the
+-- 'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_CLEAR' load
+-- operation at the start of rendering, as it is more efficient on some
+-- implementations.
 --
 -- == Valid Usage
 --
@@ -7091,12 +8767,16 @@ foreign import ccall
 --     member of each element of @pRects@ /must/ not be @0@
 --
 -- -   #VUID-vkCmdClearAttachments-commandBuffer-02504# If @commandBuffer@
---     is an unprotected command buffer, then each attachment to be cleared
---     /must/ not be a protected image
+--     is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, each attachment to be cleared /must/ not be a
+--     protected image
 --
 -- -   #VUID-vkCmdClearAttachments-commandBuffer-02505# If @commandBuffer@
---     is a protected command buffer, then each attachment to be cleared
---     /must/ not be an unprotected image
+--     is a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, each attachment to be cleared /must/ not be an
+--     unprotected image
 --
 -- -   #VUID-vkCmdClearAttachments-baseArrayLayer-00018# If the render pass
 --     instance this is recorded in uses multiview, then @baseArrayLayer@
@@ -7142,15 +8822,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              | Graphics                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'ClearAttachment', 'ClearRect', 'Vulkan.Core10.Handles.CommandBuffer'
 cmdClearAttachments :: forall io
                      . (MonadIO io)
@@ -7159,22 +8840,21 @@ cmdClearAttachments :: forall io
                        CommandBuffer
                     -> -- | @pAttachments@ is a pointer to an array of 'ClearAttachment' structures
                        -- defining the attachments to clear and the clear values to use. If any
-                       -- attachment to be cleared in the current subpass is
-                       -- 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', then the clear has no
-                       -- effect on that attachment.
+                       -- attachment index to be cleared is not backed by an image view, then the
+                       -- clear has no effect.
                        ("attachments" ::: Vector ClearAttachment)
                     -> -- | @pRects@ is a pointer to an array of 'ClearRect' structures defining
                        -- regions within each selected attachment to clear.
                        ("rects" ::: Vector ClearRect)
                     -> io ()
 cmdClearAttachments commandBuffer attachments rects = liftIO . evalContT $ do
-  let vkCmdClearAttachmentsPtr = pVkCmdClearAttachments (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdClearAttachmentsPtr = pVkCmdClearAttachments (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdClearAttachmentsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdClearAttachments is null" Nothing Nothing
   let vkCmdClearAttachments' = mkVkCmdClearAttachments vkCmdClearAttachmentsPtr
-  pPAttachments <- ContT $ allocaBytesAligned @ClearAttachment ((Data.Vector.length (attachments)) * 24) 4
+  pPAttachments <- ContT $ allocaBytes @ClearAttachment ((Data.Vector.length (attachments)) * 24)
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPAttachments `plusPtr` (24 * (i)) :: Ptr ClearAttachment) (e) . ($ ())) (attachments)
-  pPRects <- ContT $ allocaBytesAligned @ClearRect ((Data.Vector.length (rects)) * 24) 4
+  pPRects <- ContT $ allocaBytes @ClearRect ((Data.Vector.length (rects)) * 24)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRects `plusPtr` (24 * (i)) :: Ptr ClearRect) (e)) (rects)
   lift $ traceAroundEvent "vkCmdClearAttachments" (vkCmdClearAttachments' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (attachments)) :: Word32)) (pPAttachments) ((fromIntegral (Data.Vector.length $ (rects)) :: Word32)) (pPRects))
   pure $ ()
@@ -7211,16 +8891,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdResolveImage-commandBuffer-01837# If @commandBuffer@ is
---     an unprotected command buffer, then @srcImage@ /must/ not be a
---     protected image
+--     an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdResolveImage-commandBuffer-01838# If @commandBuffer@ is
---     an unprotected command buffer, then @dstImage@ /must/ not be a
---     protected image
+--     an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdResolveImage-commandBuffer-01839# If @commandBuffer@ is a
---     protected command buffer, then @dstImage@ /must/ not be an
---     unprotected image
+--     protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be an unprotected image
 --
 -- -   #VUID-vkCmdResolveImage-pRegions-00255# The union of all source
 --     regions, and the union of all destination regions, specified by the
@@ -7414,15 +9097,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              | Transfer                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout', 'ImageResolve'
 cmdResolveImage :: forall io
@@ -7445,11 +9129,11 @@ cmdResolveImage :: forall io
                    ("regions" ::: Vector ImageResolve)
                 -> io ()
 cmdResolveImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regions = liftIO . evalContT $ do
-  let vkCmdResolveImagePtr = pVkCmdResolveImage (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdResolveImagePtr = pVkCmdResolveImage (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdResolveImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdResolveImage is null" Nothing Nothing
   let vkCmdResolveImage' = mkVkCmdResolveImage vkCmdResolveImagePtr
-  pPRegions <- ContT $ allocaBytesAligned @ImageResolve ((Data.Vector.length (regions)) * 68) 4
+  pPRegions <- ContT $ allocaBytes @ImageResolve ((Data.Vector.length (regions)) * 68)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions `plusPtr` (68 * (i)) :: Ptr ImageResolve) (e)) (regions)
   lift $ traceAroundEvent "vkCmdResolveImage" (vkCmdResolveImage' (commandBufferHandle (commandBuffer)) (srcImage) (srcImageLayout) (dstImage) (dstImageLayout) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions))
   pure $ ()
@@ -7514,19 +9198,19 @@ foreign import ccall
 -- -   #VUID-vkCmdSetEvent-stageMask-04097# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @stageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
+--     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
--- -   #VUID-vkCmdSetEvent-stageMask-4098# Any pipeline stage included in
+-- -   #VUID-vkCmdSetEvent-stageMask-03937# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @stageMask@ /must/ not be @0@
+--
+-- -   #VUID-vkCmdSetEvent-stageMask-06457# Any pipeline stage included in
 --     @stageMask@ /must/ be supported by the capabilities of the queue
 --     family specified by the @queueFamilyIndex@ member of the
 --     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that was
 --     used to create the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
---
--- -   #VUID-vkCmdSetEvent-stageMask-03937# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
---     feature is not enabled, @stageMask@ /must/ not be @0@
 --
 -- -   #VUID-vkCmdSetEvent-stageMask-01149# @stageMask@ /must/ not include
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_HOST_BIT'
@@ -7546,9 +9230,6 @@ foreign import ccall
 --     valid combination of
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
 --     values
---
--- -   #VUID-vkCmdSetEvent-stageMask-requiredbitmask# @stageMask@ /must/
---     not be @0@
 --
 -- -   #VUID-vkCmdSetEvent-commandBuffer-recording# @commandBuffer@ /must/
 --     be in the
@@ -7576,15 +9257,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Event',
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags'
 cmdSetEvent :: forall io
@@ -7601,7 +9283,7 @@ cmdSetEvent :: forall io
                ("stageMask" ::: PipelineStageFlags)
             -> io ()
 cmdSetEvent commandBuffer event stageMask = liftIO $ do
-  let vkCmdSetEventPtr = pVkCmdSetEvent (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetEventPtr = pVkCmdSetEvent (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetEventPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetEvent is null" Nothing Nothing
   let vkCmdSetEvent' = mkVkCmdSetEvent vkCmdSetEventPtr
@@ -7665,19 +9347,19 @@ foreign import ccall
 -- -   #VUID-vkCmdResetEvent-stageMask-04097# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @stageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
+--     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
--- -   #VUID-vkCmdResetEvent-stageMask-4098# Any pipeline stage included in
---     @stageMask@ /must/ be supported by the capabilities of the queue
+-- -   #VUID-vkCmdResetEvent-stageMask-03937# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @stageMask@ /must/ not be @0@
+--
+-- -   #VUID-vkCmdResetEvent-stageMask-06458# Any pipeline stage included
+--     in @stageMask@ /must/ be supported by the capabilities of the queue
 --     family specified by the @queueFamilyIndex@ member of the
 --     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that was
 --     used to create the 'Vulkan.Core10.Handles.CommandPool' that
 --     @commandBuffer@ was allocated from, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
---
--- -   #VUID-vkCmdResetEvent-stageMask-03937# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
---     feature is not enabled, @stageMask@ /must/ not be @0@
 --
 -- -   #VUID-vkCmdResetEvent-stageMask-01153# @stageMask@ /must/ not
 --     include
@@ -7708,9 +9390,6 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
 --     values
 --
--- -   #VUID-vkCmdResetEvent-stageMask-requiredbitmask# @stageMask@ /must/
---     not be @0@
---
 -- -   #VUID-vkCmdResetEvent-commandBuffer-recording# @commandBuffer@
 --     /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
@@ -7737,15 +9416,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Event',
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags'
 cmdResetEvent :: forall io
@@ -7763,7 +9443,7 @@ cmdResetEvent :: forall io
                  ("stageMask" ::: PipelineStageFlags)
               -> io ()
 cmdResetEvent commandBuffer event stageMask = liftIO $ do
-  let vkCmdResetEventPtr = pVkCmdResetEvent (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdResetEventPtr = pVkCmdResetEvent (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdResetEventPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdResetEvent is null" Nothing Nothing
   let vkCmdResetEvent' = mkVkCmdResetEvent vkCmdResetEventPtr
@@ -7812,17 +9492,17 @@ cmdWaitEventsSafeOrUnsafe :: forall io
                              ("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier))
                           -> io ()
 cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask dstStageMask memoryBarriers bufferMemoryBarriers imageMemoryBarriers = liftIO . evalContT $ do
-  let vkCmdWaitEventsPtr = pVkCmdWaitEvents (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdWaitEventsPtr = pVkCmdWaitEvents (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdWaitEventsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWaitEvents is null" Nothing Nothing
   let vkCmdWaitEvents' = mkVkCmdWaitEvents vkCmdWaitEventsPtr
-  pPEvents <- ContT $ allocaBytesAligned @Event ((Data.Vector.length (events)) * 8) 8
+  pPEvents <- ContT $ allocaBytes @Event ((Data.Vector.length (events)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPEvents `plusPtr` (8 * (i)) :: Ptr Event) (e)) (events)
-  pPMemoryBarriers <- ContT $ allocaBytesAligned @MemoryBarrier ((Data.Vector.length (memoryBarriers)) * 24) 8
+  pPMemoryBarriers <- ContT $ allocaBytes @MemoryBarrier ((Data.Vector.length (memoryBarriers)) * 24)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPMemoryBarriers `plusPtr` (24 * (i)) :: Ptr MemoryBarrier) (e)) (memoryBarriers)
-  pPBufferMemoryBarriers <- ContT $ allocaBytesAligned @BufferMemoryBarrier ((Data.Vector.length (bufferMemoryBarriers)) * 56) 8
+  pPBufferMemoryBarriers <- ContT $ allocaBytes @BufferMemoryBarrier ((Data.Vector.length (bufferMemoryBarriers)) * 56)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPBufferMemoryBarriers `plusPtr` (56 * (i)) :: Ptr BufferMemoryBarrier) (e)) (bufferMemoryBarriers)
-  pPImageMemoryBarriers <- ContT $ allocaBytesAligned @(ImageMemoryBarrier _) ((Data.Vector.length (imageMemoryBarriers)) * 72) 8
+  pPImageMemoryBarriers <- ContT $ allocaBytes @(ImageMemoryBarrier _) ((Data.Vector.length (imageMemoryBarriers)) * 72)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPImageMemoryBarriers `plusPtr` (72 * (i)) :: Ptr (ImageMemoryBarrier _))) (e) . ($ ())) (imageMemoryBarriers)
   lift $ traceAroundEvent "vkCmdWaitEvents" (vkCmdWaitEvents' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (events)) :: Word32)) (pPEvents) (srcStageMask) (dstStageMask) ((fromIntegral (Data.Vector.length $ (memoryBarriers)) :: Word32)) (pPMemoryBarriers) ((fromIntegral (Data.Vector.length $ (bufferMemoryBarriers)) :: Word32)) (pPBufferMemoryBarriers) ((fromIntegral (Data.Vector.length $ (imageMemoryBarriers)) :: Word32)) (forgetExtensions (pPImageMemoryBarriers)))
   pure $ ()
@@ -7834,13 +9514,13 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 -- 'cmdWaitEvents' is largely similar to
 -- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdWaitEvents2KHR', but /can/
 -- only wait on signal operations defined by 'cmdSetEvent'. As
--- 'cmdSetEvent' doesn’t define any access scopes, 'cmdWaitEvents' defines
+-- 'cmdSetEvent' does not define any access scopes, 'cmdWaitEvents' defines
 -- the first access scope for each event signal operation in addition to
 -- its own access scopes.
 --
 -- Note
 --
--- Since 'cmdSetEvent' doesn’t have any dependency information beyond a
+-- Since 'cmdSetEvent' does not have any dependency information beyond a
 -- stage mask, implementations do not have the same opportunity to perform
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-available-and-visible availability and visibility operations>
 -- or
@@ -7882,7 +9562,7 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 --
 -- The first
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
--- is limited to access in the pipeline stages determined by the
+-- is limited to accesses in the pipeline stages determined by the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>
 -- specified by @srcStageMask@. Within that, the first access scope only
 -- includes the first access scopes defined by elements of the
@@ -7894,7 +9574,7 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 --
 -- The second
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
--- is limited to access in the pipeline stages determined by the
+-- is limited to accesses in the pipeline stages determined by the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-masks destination stage mask>
 -- specified by @dstStageMask@. Within that, the second access scope only
 -- includes the second access scopes defined by elements of the
@@ -7946,15 +9626,7 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 -- -   #VUID-vkCmdWaitEvents-srcStageMask-04097# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
---
--- -   #VUID-vkCmdWaitEvents-srcStageMask-4098# Any pipeline stage included
---     in @srcStageMask@ /must/ be supported by the capabilities of the
---     queue family specified by the @queueFamilyIndex@ member of the
---     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that was
---     used to create the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
+--     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
 -- -   #VUID-vkCmdWaitEvents-srcStageMask-03937# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
@@ -8000,15 +9672,7 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 -- -   #VUID-vkCmdWaitEvents-dstStageMask-04097# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
---
--- -   #VUID-vkCmdWaitEvents-dstStageMask-4098# Any pipeline stage included
---     in @dstStageMask@ /must/ be supported by the capabilities of the
---     queue family specified by the @queueFamilyIndex@ member of the
---     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that was
---     used to create the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
+--     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
 -- -   #VUID-vkCmdWaitEvents-dstStageMask-03937# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
@@ -8066,11 +9730,27 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 --     @dstStageMask@, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
 --
+-- -   #VUID-vkCmdWaitEvents-srcStageMask-06459# Any pipeline stage
+--     included in @srcStageMask@ /must/ be supported by the capabilities
+--     of the queue family specified by the @queueFamilyIndex@ member of
+--     the 'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that
+--     was used to create the 'Vulkan.Core10.Handles.CommandPool' that
+--     @commandBuffer@ was allocated from, as specified in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
+--
+-- -   #VUID-vkCmdWaitEvents-dstStageMask-06460# Any pipeline stage
+--     included in @dstStageMask@ /must/ be supported by the capabilities
+--     of the queue family specified by the @queueFamilyIndex@ member of
+--     the 'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that
+--     was used to create the 'Vulkan.Core10.Handles.CommandPool' that
+--     @commandBuffer@ was allocated from, as specified in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
+--
 -- -   #VUID-vkCmdWaitEvents-srcStageMask-01158# @srcStageMask@ /must/ be
 --     the bitwise OR of the @stageMask@ parameter used in previous calls
---     to 'cmdSetEvent' with any of the members of @pEvents@ and
+--     to 'cmdSetEvent' with any of the elements of @pEvents@ and
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_HOST_BIT'
---     if any of the members of @pEvents@ was set using
+--     if any of the elements of @pEvents@ was set using
 --     'Vulkan.Core10.Event.setEvent'
 --
 -- -   #VUID-vkCmdWaitEvents-pEvents-01163# If @pEvents@ includes one or
@@ -8086,8 +9766,8 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 -- -   #VUID-vkCmdWaitEvents-commandBuffer-01167# @commandBuffer@’s current
 --     device mask /must/ include exactly one physical device
 --
--- -   #VUID-vkCmdWaitEvents-pEvents-03847# Members of @pEvents@ /must/ not
---     have been signaled by
+-- -   #VUID-vkCmdWaitEvents-pEvents-03847# Elements of @pEvents@ /must/
+--     not have been signaled by
 --     'Vulkan.Extensions.VK_KHR_synchronization2.cmdSetEvent2KHR'
 --
 -- == Valid Usage (Implicit)
@@ -8150,15 +9830,16 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.OtherTypes.BufferMemoryBarrier',
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.Event',
 -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier',
@@ -8237,8 +9918,8 @@ foreign import ccall
 --
 -- 'cmdPipelineBarrier' operates almost identically to
 -- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdPipelineBarrier2KHR',
--- other than the scopes and barriers defined as direct parameters rather
--- than being defined by an
+-- except that the scopes and barriers are defined as direct parameters
+-- rather than being defined by an
 -- 'Vulkan.Extensions.VK_KHR_synchronization2.DependencyInfoKHR'.
 --
 -- When 'cmdPipelineBarrier' is submitted to a queue, it defines a memory
@@ -8273,7 +9954,7 @@ foreign import ccall
 --
 -- The first
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
--- is limited to access in the pipeline stages determined by the
+-- is limited to accesses in the pipeline stages determined by the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>
 -- specified by @srcStageMask@. Within that, the first access scope only
 -- includes the first access scopes defined by elements of the
@@ -8285,7 +9966,7 @@ foreign import ccall
 --
 -- The second
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
--- is limited to access in the pipeline stages determined by the
+-- is limited to accesses in the pipeline stages determined by the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-masks destination stage mask>
 -- specified by @dstStageMask@. Within that, the second access scope only
 -- includes the second access scopes defined by elements of the
@@ -8346,15 +10027,7 @@ foreign import ccall
 -- -   #VUID-vkCmdPipelineBarrier-srcStageMask-04097# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
---
--- -   #VUID-vkCmdPipelineBarrier-srcStageMask-4098# Any pipeline stage
---     included in @srcStageMask@ /must/ be supported by the capabilities
---     of the queue family specified by the @queueFamilyIndex@ member of
---     the 'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that
---     was used to create the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
+--     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
 -- -   #VUID-vkCmdPipelineBarrier-srcStageMask-03937# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
@@ -8400,15 +10073,7 @@ foreign import ccall
 -- -   #VUID-vkCmdPipelineBarrier-dstStageMask-04097# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
---
--- -   #VUID-vkCmdPipelineBarrier-dstStageMask-4098# Any pipeline stage
---     included in @dstStageMask@ /must/ be supported by the capabilities
---     of the queue family specified by the @queueFamilyIndex@ member of
---     the 'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that
---     was used to create the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
+--     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
 -- -   #VUID-vkCmdPipelineBarrier-dstStageMask-03937# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
@@ -8502,6 +10167,27 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_VIEW_LOCAL_BIT'
 --     /must/ not be included in the dependency flags
 --
+-- -   #VUID-vkCmdPipelineBarrier-None-06191# If 'cmdPipelineBarrier' is
+--     called within a render pass instance, the render pass /must/ not
+--     have been started with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--
+-- -   #VUID-vkCmdPipelineBarrier-srcStageMask-06461# Any pipeline stage
+--     included in @srcStageMask@ /must/ be supported by the capabilities
+--     of the queue family specified by the @queueFamilyIndex@ member of
+--     the 'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that
+--     was used to create the 'Vulkan.Core10.Handles.CommandPool' that
+--     @commandBuffer@ was allocated from, as specified in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
+--
+-- -   #VUID-vkCmdPipelineBarrier-dstStageMask-06462# Any pipeline stage
+--     included in @dstStageMask@ /must/ be supported by the capabilities
+--     of the queue family specified by the @queueFamilyIndex@ member of
+--     the 'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' structure that
+--     was used to create the 'Vulkan.Core10.Handles.CommandPool' that
+--     @commandBuffer@ was allocated from, as specified in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdPipelineBarrier-commandBuffer-parameter# @commandBuffer@
@@ -8512,16 +10198,10 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
 --     values
 --
--- -   #VUID-vkCmdPipelineBarrier-srcStageMask-requiredbitmask#
---     @srcStageMask@ /must/ not be @0@
---
 -- -   #VUID-vkCmdPipelineBarrier-dstStageMask-parameter# @dstStageMask@
 --     /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
 --     values
---
--- -   #VUID-vkCmdPipelineBarrier-dstStageMask-requiredbitmask#
---     @dstStageMask@ /must/ not be @0@
 --
 -- -   #VUID-vkCmdPipelineBarrier-dependencyFlags-parameter#
 --     @dependencyFlags@ /must/ be a valid combination of
@@ -8562,16 +10242,17 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Transfer                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |                                                                                                                                     |
--- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Transfer                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |
+-- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.OtherTypes.BufferMemoryBarrier',
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.DependencyFlagBits.DependencyFlags',
@@ -8608,15 +10289,15 @@ cmdPipelineBarrier :: forall io
                       ("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier))
                    -> io ()
 cmdPipelineBarrier commandBuffer srcStageMask dstStageMask dependencyFlags memoryBarriers bufferMemoryBarriers imageMemoryBarriers = liftIO . evalContT $ do
-  let vkCmdPipelineBarrierPtr = pVkCmdPipelineBarrier (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdPipelineBarrierPtr = pVkCmdPipelineBarrier (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdPipelineBarrierPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPipelineBarrier is null" Nothing Nothing
   let vkCmdPipelineBarrier' = mkVkCmdPipelineBarrier vkCmdPipelineBarrierPtr
-  pPMemoryBarriers <- ContT $ allocaBytesAligned @MemoryBarrier ((Data.Vector.length (memoryBarriers)) * 24) 8
+  pPMemoryBarriers <- ContT $ allocaBytes @MemoryBarrier ((Data.Vector.length (memoryBarriers)) * 24)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPMemoryBarriers `plusPtr` (24 * (i)) :: Ptr MemoryBarrier) (e)) (memoryBarriers)
-  pPBufferMemoryBarriers <- ContT $ allocaBytesAligned @BufferMemoryBarrier ((Data.Vector.length (bufferMemoryBarriers)) * 56) 8
+  pPBufferMemoryBarriers <- ContT $ allocaBytes @BufferMemoryBarrier ((Data.Vector.length (bufferMemoryBarriers)) * 56)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPBufferMemoryBarriers `plusPtr` (56 * (i)) :: Ptr BufferMemoryBarrier) (e)) (bufferMemoryBarriers)
-  pPImageMemoryBarriers <- ContT $ allocaBytesAligned @(ImageMemoryBarrier _) ((Data.Vector.length (imageMemoryBarriers)) * 72) 8
+  pPImageMemoryBarriers <- ContT $ allocaBytes @(ImageMemoryBarrier _) ((Data.Vector.length (imageMemoryBarriers)) * 72)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPImageMemoryBarriers `plusPtr` (72 * (i)) :: Ptr (ImageMemoryBarrier _))) (e) . ($ ())) (imageMemoryBarriers)
   lift $ traceAroundEvent "vkCmdPipelineBarrier" (vkCmdPipelineBarrier' (commandBufferHandle (commandBuffer)) (srcStageMask) (dstStageMask) (dependencyFlags) ((fromIntegral (Data.Vector.length $ (memoryBarriers)) :: Word32)) (pPMemoryBarriers) ((fromIntegral (Data.Vector.length $ (bufferMemoryBarriers)) :: Word32)) (pPBufferMemoryBarriers) ((fromIntegral (Data.Vector.length $ (imageMemoryBarriers)) :: Word32)) (forgetExtensions (pPImageMemoryBarriers)))
   pure $ ()
@@ -8651,12 +10332,6 @@ foreign import ccall
 -- executed are considered active for those secondary command buffers.
 --
 -- == Valid Usage
---
--- -   #VUID-vkCmdBeginQuery-queryPool-01922# @queryPool@ /must/ have been
---     created with a @queryType@ that differs from that of any queries
---     that are
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-operation-active active>
---     within @commandBuffer@
 --
 -- -   #VUID-vkCmdBeginQuery-None-00807# All queries used by the command
 --     /must/ be unavailable
@@ -8713,6 +10388,12 @@ foreign import ccall
 --     instance, the sum of @query@ and the number of bits set in the
 --     current subpass’s view mask /must/ be less than or equal to the
 --     number of queries in @queryPool@
+--
+-- -   #VUID-vkCmdBeginQuery-queryPool-01922# @queryPool@ /must/ have been
+--     created with a @queryType@ that differs from that of any queries
+--     that are
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-operation-active active>
+--     within @commandBuffer@
 --
 -- -   #VUID-vkCmdBeginQuery-queryType-02327# If the @queryType@ used to
 --     create @queryPool@ was
@@ -8806,15 +10487,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.QueryControlFlagBits.QueryControlFlags',
 -- 'Vulkan.Core10.Handles.QueryPool'
@@ -8834,7 +10516,7 @@ cmdBeginQuery :: forall io
                  QueryControlFlags
               -> io ()
 cmdBeginQuery commandBuffer queryPool query flags = liftIO $ do
-  let vkCmdBeginQueryPtr = pVkCmdBeginQuery (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBeginQueryPtr = pVkCmdBeginQuery (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdBeginQueryPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginQuery is null" Nothing Nothing
   let vkCmdBeginQuery' = mkVkCmdBeginQuery vkCmdBeginQueryPtr
@@ -8940,15 +10622,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.QueryPool'
 cmdEndQuery :: forall io
              . (MonadIO io)
@@ -8962,7 +10645,7 @@ cmdEndQuery :: forall io
                ("query" ::: Word32)
             -> io ()
 cmdEndQuery commandBuffer queryPool query = liftIO $ do
-  let vkCmdEndQueryPtr = pVkCmdEndQuery (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdEndQueryPtr = pVkCmdEndQuery (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdEndQueryPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndQuery is null" Nothing Nothing
   let vkCmdEndQuery' = mkVkCmdEndQuery vkCmdEndQueryPtr
@@ -9057,15 +10740,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.QueryPool'
 cmdResetQueryPool :: forall io
                    . (MonadIO io)
@@ -9081,7 +10765,7 @@ cmdResetQueryPool :: forall io
                      ("queryCount" ::: Word32)
                   -> io ()
 cmdResetQueryPool commandBuffer queryPool firstQuery queryCount = liftIO $ do
-  let vkCmdResetQueryPoolPtr = pVkCmdResetQueryPool (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdResetQueryPoolPtr = pVkCmdResetQueryPool (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdResetQueryPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdResetQueryPool is null" Nothing Nothing
   let vkCmdResetQueryPool' = mkVkCmdResetQueryPool vkCmdResetQueryPoolPtr
@@ -9112,13 +10796,13 @@ foreign import ccall
 -- at any specific stage of the pipeline, it /may/ instead do so at any
 -- logically later stage.
 --
--- Timestamps /may/ only be meaningfully compared if they are written by
--- commands submitted to the same queue.
+-- Comparisons between timestamps are not meaningful if the timestamps are
+-- written by commands submitted to different queues.
 --
 -- Note
 --
--- An example of such a comparison is determining the execution time of a
--- sequence of commands.
+-- An example of such a comparison is subtracting an older timestamp from a
+-- newer one to determine the execution time of a sequence of commands.
 --
 -- If 'cmdWriteTimestamp' is called while executing a render pass instance
 -- that has multiview enabled, the timestamp uses N consecutive query
@@ -9187,7 +10871,12 @@ foreign import ccall
 -- -   #VUID-vkCmdWriteTimestamp-pipelineStage-04081# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @pipelineStage@ /must/ not be
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
+--     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
+--
+-- -   #VUID-vkCmdWriteTimestamp-synchronization2-06489# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @pipelineStage@ /must/ not be
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_NONE_KHR'
 --
 -- -   #VUID-vkCmdWriteTimestamp-queryPool-01416# @queryPool@ /must/ have
 --     been created with a @queryType@ of
@@ -9198,6 +10887,9 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdWriteTimestamp-timestampValidBits-00829# The command
 --     pool’s queue family /must/ support a non-zero @timestampValidBits@
+--
+-- -   #VUID-vkCmdWriteTimestamp-query-04904# @query@ /must/ be less than
+--     the number of queries in @queryPool@
 --
 -- -   #VUID-vkCmdWriteTimestamp-None-00830# All queries used by the
 --     command /must/ be unavailable
@@ -9244,16 +10936,17 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Transfer                                                                                                              | Transfer                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |                                                                                                                                     |
--- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Transfer                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |
+-- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits',
 -- 'Vulkan.Core10.Handles.QueryPool'
@@ -9262,8 +10955,8 @@ cmdWriteTimestamp :: forall io
                   => -- | @commandBuffer@ is the command buffer into which the command will be
                      -- recorded.
                      CommandBuffer
-                  -> -- | @pipelineStage@ is one of the
-                     -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits',
+                  -> -- | @pipelineStage@ is a
+                     -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits' value,
                      -- specifying a stage of the pipeline.
                      PipelineStageFlagBits
                   -> -- | @queryPool@ is the query pool that will manage the timestamp.
@@ -9273,7 +10966,7 @@ cmdWriteTimestamp :: forall io
                      ("query" ::: Word32)
                   -> io ()
 cmdWriteTimestamp commandBuffer pipelineStage queryPool query = liftIO $ do
-  let vkCmdWriteTimestampPtr = pVkCmdWriteTimestamp (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdWriteTimestampPtr = pVkCmdWriteTimestamp (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdWriteTimestampPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWriteTimestamp is null" Nothing Nothing
   let vkCmdWriteTimestamp' = mkVkCmdWriteTimestamp vkCmdWriteTimestampPtr
@@ -9465,15 +11158,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              | Transfer                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Handles.QueryPool',
@@ -9507,7 +11201,7 @@ cmdCopyQueryPoolResults :: forall io
                            QueryResultFlags
                         -> io ()
 cmdCopyQueryPoolResults commandBuffer queryPool firstQuery queryCount dstBuffer dstOffset stride flags = liftIO $ do
-  let vkCmdCopyQueryPoolResultsPtr = pVkCmdCopyQueryPoolResults (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyQueryPoolResultsPtr = pVkCmdCopyQueryPoolResults (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdCopyQueryPoolResultsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyQueryPoolResults is null" Nothing Nothing
   let vkCmdCopyQueryPoolResults' = mkVkCmdCopyQueryPoolResults vkCmdCopyQueryPoolResultsPtr
@@ -9527,7 +11221,8 @@ foreign import ccall
 -- = Description
 --
 -- When a command buffer begins recording, all push constant values are
--- undefined.
+-- undefined. Reads of undefined push constant values by the executing
+-- shader return undefined values.
 --
 -- Push constant values /can/ be updated incrementally, causing shader
 -- stages in @stageFlags@ to read the new data from @pValues@ for push
@@ -9619,15 +11314,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Handles.PipelineLayout',
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags'
@@ -9654,7 +11350,7 @@ cmdPushConstants :: forall io
                     ("values" ::: Ptr ())
                  -> io ()
 cmdPushConstants commandBuffer layout stageFlags offset size values = liftIO $ do
-  let vkCmdPushConstantsPtr = pVkCmdPushConstants (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdPushConstantsPtr = pVkCmdPushConstants (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdPushConstantsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPushConstants is null" Nothing Nothing
   let vkCmdPushConstants' = mkVkCmdPushConstants vkCmdPushConstantsPtr
@@ -9775,8 +11471,8 @@ foreign import ccall
 --     have been created with a @usage@ value including
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
 --
--- -   #VUID-vkCmdBeginRenderPass-initialLayout-00900# If any of the
---     @initialLayout@ members of the
+-- -   #VUID-vkCmdBeginRenderPass-initialLayout-00900# If the
+--     @initialLayout@ member of any of the
 --     'Vulkan.Core10.Pass.AttachmentDescription' structures specified when
 --     creating the render pass specified in the @renderPass@ member of
 --     @pRenderPassBegin@ is not
@@ -9785,9 +11481,17 @@ foreign import ccall
 --     corresponding attachment image subresource of the framebuffer
 --     specified in the @framebuffer@ member of @pRenderPassBegin@
 --
--- -   #VUID-vkCmdBeginRenderPass-srcStageMask-00901# The @srcStageMask@
---     and @dstStageMask@ members of any element of the @pDependencies@
---     member of 'Vulkan.Core10.Pass.RenderPassCreateInfo' used to create
+-- -   #VUID-vkCmdBeginRenderPass-srcStageMask-06451# The @srcStageMask@
+--     members of any element of the @pDependencies@ member of
+--     'Vulkan.Core10.Pass.RenderPassCreateInfo' used to create
+--     @renderPass@ /must/ be supported by the capabilities of the queue
+--     family identified by the @queueFamilyIndex@ member of the
+--     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' used to create the
+--     command pool which @commandBuffer@ was allocated from
+--
+-- -   #VUID-vkCmdBeginRenderPass-dstStageMask-06452# The @dstStageMask@
+--     members of any element of the @pDependencies@ member of
+--     'Vulkan.Core10.Pass.RenderPassCreateInfo' used to create
 --     @renderPass@ /must/ be supported by the capabilities of the queue
 --     family identified by the @queueFamilyIndex@ member of the
 --     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' used to create the
@@ -9838,14 +11542,15 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              | Graphics                                                                                                                            |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'RenderPassBeginInfo',
 -- 'Vulkan.Core10.Enums.SubpassContents.SubpassContents'
 cmdBeginRenderPass :: forall a io
@@ -9861,7 +11566,7 @@ cmdBeginRenderPass :: forall a io
                       SubpassContents
                    -> io ()
 cmdBeginRenderPass commandBuffer renderPassBegin contents = liftIO . evalContT $ do
-  let vkCmdBeginRenderPassPtr = pVkCmdBeginRenderPass (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBeginRenderPassPtr = pVkCmdBeginRenderPass (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBeginRenderPassPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginRenderPass is null" Nothing Nothing
   let vkCmdBeginRenderPass' = mkVkCmdBeginRenderPass vkCmdBeginRenderPassPtr
@@ -9953,14 +11658,15 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              | Graphics                                                                                                                            |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.SubpassContents.SubpassContents'
 cmdNextSubpass :: forall io
@@ -9973,7 +11679,7 @@ cmdNextSubpass :: forall io
                   SubpassContents
                -> io ()
 cmdNextSubpass commandBuffer contents = liftIO $ do
-  let vkCmdNextSubpassPtr = pVkCmdNextSubpass (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdNextSubpassPtr = pVkCmdNextSubpass (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdNextSubpassPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdNextSubpass is null" Nothing Nothing
   let vkCmdNextSubpass' = mkVkCmdNextSubpass vkCmdNextSubpassPtr
@@ -10003,6 +11709,10 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdEndRenderPass-None-02351# This command /must/ not be
 --     recorded when transform feedback is active
+--
+-- -   #VUID-vkCmdEndRenderPass-None-06170# The current render pass
+--     instance /must/ not have been begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
 --
 -- == Valid Usage (Implicit)
 --
@@ -10034,14 +11744,15 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              | Graphics                                                                                                                            |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdEndRenderPass :: forall io
                   . (MonadIO io)
@@ -10050,7 +11761,7 @@ cmdEndRenderPass :: forall io
                     CommandBuffer
                  -> io ()
 cmdEndRenderPass commandBuffer = liftIO $ do
-  let vkCmdEndRenderPassPtr = pVkCmdEndRenderPass (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdEndRenderPassPtr = pVkCmdEndRenderPass (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdEndRenderPassPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndRenderPass is null" Nothing Nothing
   let vkCmdEndRenderPass' = mkVkCmdEndRenderPass vkCmdEndRenderPassPtr
@@ -10110,32 +11821,10 @@ foreign import ccall
 --     queue family as the 'Vulkan.Core10.Handles.CommandPool' from which
 --     @commandBuffer@ was allocated
 --
--- -   #VUID-vkCmdExecuteCommands-contents-00095# If 'cmdExecuteCommands'
---     is being called within a render pass instance, that render pass
---     instance /must/ have been begun with the @contents@ parameter of
---     'cmdBeginRenderPass' set to
---     'Vulkan.Core10.Enums.SubpassContents.SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS'
---
 -- -   #VUID-vkCmdExecuteCommands-pCommandBuffers-00096# If
 --     'cmdExecuteCommands' is being called within a render pass instance,
 --     each element of @pCommandBuffers@ /must/ have been recorded with the
 --     'Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT'
---
--- -   #VUID-vkCmdExecuteCommands-pCommandBuffers-00097# If
---     'cmdExecuteCommands' is being called within a render pass instance,
---     each element of @pCommandBuffers@ /must/ have been recorded with
---     'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo'::@subpass@
---     set to the index of the subpass which the given command buffer will
---     be executed in
---
--- -   #VUID-vkCmdExecuteCommands-pInheritanceInfo-00098# If
---     'cmdExecuteCommands' is being called within a render pass instance,
---     the render passes specified in the
---     @pBeginInfo->pInheritanceInfo->renderPass@ members of the
---     'Vulkan.Core10.CommandBuffer.beginCommandBuffer' commands used to
---     begin recording each element of @pCommandBuffers@ /must/ be
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
---     with the current render pass
 --
 -- -   #VUID-vkCmdExecuteCommands-pCommandBuffers-00099# If
 --     'cmdExecuteCommands' is being called within a render pass instance,
@@ -10145,6 +11834,29 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.Framebuffer' /must/ match the
 --     'Vulkan.Core10.Handles.Framebuffer' used in the current render pass
 --     instance
+--
+-- -   #VUID-vkCmdExecuteCommands-contents-06018# If 'cmdExecuteCommands'
+--     is being called within a render pass instance begun with
+--     'cmdBeginRenderPass', its @contents@ parameter /must/ have been set
+--     to
+--     'Vulkan.Core10.Enums.SubpassContents.SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS'
+--
+-- -   #VUID-vkCmdExecuteCommands-pCommandBuffers-06019# If
+--     'cmdExecuteCommands' is being called within a render pass instance
+--     begun with 'cmdBeginRenderPass', each element of @pCommandBuffers@
+--     /must/ have been recorded with
+--     'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo'::@subpass@
+--     set to the index of the subpass which the given command buffer will
+--     be executed in
+--
+-- -   #VUID-vkCmdExecuteCommands-pBeginInfo-06020# If 'cmdExecuteCommands'
+--     is being called within a render pass instance begun with
+--     'cmdBeginRenderPass', the render passes specified in the
+--     @pBeginInfo->pInheritanceInfo->renderPass@ members of the
+--     'Vulkan.Core10.CommandBuffer.beginCommandBuffer' commands used to
+--     begin recording each element of @pCommandBuffers@ /must/ be
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
+--     with the current render pass
 --
 -- -   #VUID-vkCmdExecuteCommands-pNext-02865# If 'cmdExecuteCommands' is
 --     being called within a render pass instance that included
@@ -10215,15 +11927,267 @@ foreign import ccall
 --     in @commandBuffer@
 --
 -- -   #VUID-vkCmdExecuteCommands-commandBuffer-01820# If @commandBuffer@
---     is a protected command buffer, then each element of
---     @pCommandBuffers@ /must/ be a protected command buffer
+--     is a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, each element of @pCommandBuffers@ /must/ be a
+--     protected command buffer
 --
 -- -   #VUID-vkCmdExecuteCommands-commandBuffer-01821# If @commandBuffer@
---     is an unprotected command buffer, then each element of
---     @pCommandBuffers@ /must/ be an unprotected command buffer
+--     is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, each element of @pCommandBuffers@ /must/ be an
+--     unprotected command buffer
 --
 -- -   #VUID-vkCmdExecuteCommands-None-02286# This command /must/ not be
 --     recorded when transform feedback is active
+--
+-- -   #VUID-vkCmdExecuteCommands-pCommandBuffers-06021# If
+--     @pCommandBuffers@ contains any
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-suspension suspended render pass instances>,
+--     there /must/ be no action or synchronization commands between that
+--     render pass instance and any render pass instance that resumes it
+--
+-- -   #VUID-vkCmdExecuteCommands-pCommandBuffers-06022# If
+--     @pCommandBuffers@ contains any
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-suspension suspended render pass instances>,
+--     there /must/ be no render pass instances between that render pass
+--     instance and any render pass instance that resumes it
+--
+-- -   #VUID-vkCmdExecuteCommands-variableSampleLocations-06023# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-variableSampleLocations variableSampleLocations>
+--     limit is not supported, and any element of @pCommandBuffers@
+--     contains any
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-suspension suspended render pass instances>,
+--     where a graphics pipeline has been bound, any pipelines bound in the
+--     render pass instance that resumes it, or any subsequent render pass
+--     instances that resume from that one and so on, /must/ use the same
+--     sample locations
+--
+-- -   #VUID-vkCmdExecuteCommands-flags-06024# If 'cmdExecuteCommands' is
+--     being called within a render pass instance begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     its
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@flags@
+--     parameter /must/ have included
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT_KHR'
+--
+-- -   #VUID-vkCmdExecuteCommands-pBeginInfo-06025# If 'cmdExecuteCommands'
+--     is being called within a render pass instance begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the render passes specified in the
+--     @pBeginInfo->pInheritanceInfo->renderPass@ members of the
+--     'Vulkan.Core10.CommandBuffer.beginCommandBuffer' commands used to
+--     begin recording each element of @pCommandBuffers@ /must/ be
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   #VUID-vkCmdExecuteCommands-flags-06026# If 'cmdExecuteCommands' is
+--     being called within a render pass instance begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @flags@ member of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfoKHR'
+--     structure included in the @pNext@ chain of
+--     'Vulkan.Core10.CommandBuffer.CommandBufferBeginInfo'::@pInheritanceInfo@
+--     used to begin recording each element of @pCommandBuffers@ /must/ be
+--     equal to the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@flags@
+--     parameter to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     excluding
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT_KHR'
+--
+-- -   #VUID-vkCmdExecuteCommands-colorAttachmentCount-06027# If
+--     'cmdExecuteCommands' is being called within a render pass instance
+--     begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @colorAttachmentCount@ member of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfoKHR'
+--     structure included in the @pNext@ chain of
+--     'Vulkan.Core10.CommandBuffer.CommandBufferBeginInfo'::@pInheritanceInfo@
+--     used to begin recording each element of @pCommandBuffers@ /must/ be
+--     equal to the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     parameter to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--
+-- -   #VUID-vkCmdExecuteCommands-imageView-06028# If 'cmdExecuteCommands'
+--     is being called within a render pass instance begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     if the @imageView@ member of an element of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     parameter to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR' is
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the corresponding
+--     element of the @pColorAttachmentFormats@ member of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfoKHR'
+--     structure included in the @pNext@ chain of
+--     'Vulkan.Core10.CommandBuffer.CommandBufferBeginInfo'::@pInheritanceInfo@
+--     used to begin recording each element of @pCommandBuffers@ /must/ be
+--     equal to the format used to create that image view
+--
+-- -   #VUID-vkCmdExecuteCommands-pDepthAttachment-06029# If
+--     'cmdExecuteCommands' is being called within a render pass instance
+--     begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     if the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->imageView@
+--     parameter to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR' is
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
+--     @depthAttachmentFormat@ member of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfoKHR'
+--     structure included in the @pNext@ chain of
+--     'Vulkan.Core10.CommandBuffer.CommandBufferBeginInfo'::@pInheritanceInfo@
+--     used to begin recording each element of @pCommandBuffers@ /must/ be
+--     equal to the format used to create that image view
+--
+-- -   #VUID-vkCmdExecuteCommands-pStencilAttachment-06030# If
+--     'cmdExecuteCommands' is being called within a render pass instance
+--     begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     if the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->imageView@
+--     parameter to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR' is
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
+--     @stencilAttachmentFormat@ member of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfoKHR'
+--     structure included in the @pNext@ chain of
+--     'Vulkan.Core10.CommandBuffer.CommandBufferBeginInfo'::@pInheritanceInfo@
+--     used to begin recording each element of @pCommandBuffers@ /must/ be
+--     equal to the format used to create that image view
+--
+-- -   #VUID-vkCmdExecuteCommands-viewMask-06031# If 'cmdExecuteCommands'
+--     is being called within a render pass instance begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @viewMask@ member of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfoKHR'
+--     structure included in the @pNext@ chain of
+--     'Vulkan.Core10.CommandBuffer.CommandBufferBeginInfo'::@pInheritanceInfo@
+--     used to begin recording each element of @pCommandBuffers@ /must/ be
+--     equal to the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@viewMask@
+--     parameter to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--
+-- -   #VUID-vkCmdExecuteCommands-pNext-06032# If 'cmdExecuteCommands' is
+--     being called within a render pass instance begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and the @pNext@ chain of
+--     'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo' includes
+--     a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, if the @imageView@ member of an element of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     parameter to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR' is
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the corresponding
+--     element of the @pColorAttachmentSamples@ member of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure included in the @pNext@ chain of
+--     'Vulkan.Core10.CommandBuffer.CommandBufferBeginInfo'::@pInheritanceInfo@
+--     used to begin recording each element of @pCommandBuffers@ /must/ be
+--     equal to the sample count used to create that image view
+--
+-- -   #VUID-vkCmdExecuteCommands-pNext-06033# If 'cmdExecuteCommands' is
+--     being called within a render pass instance begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and the @pNext@ chain of
+--     'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo' includes
+--     a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, if the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->imageView@
+--     parameter to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR' is
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
+--     @depthStencilAttachmentSamples@ member of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure included in the @pNext@ chain of
+--     'Vulkan.Core10.CommandBuffer.CommandBufferBeginInfo'::@pInheritanceInfo@
+--     used to begin recording each element of @pCommandBuffers@ /must/ be
+--     equal to the sample count used to create that image view
+--
+-- -   #VUID-vkCmdExecuteCommands-pNext-06034# If 'cmdExecuteCommands' is
+--     being called within a render pass instance begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and the @pNext@ chain of
+--     'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo' includes
+--     a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, if the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->imageView@
+--     parameter to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR' is
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
+--     @depthStencilAttachmentSamples@ member of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure included in the @pNext@ chain of
+--     'Vulkan.Core10.CommandBuffer.CommandBufferBeginInfo'::@pInheritanceInfo@
+--     used to begin recording each element of @pCommandBuffers@ /must/ be
+--     equal to the sample count used to create that image view
+--
+-- -   #VUID-vkCmdExecuteCommands-pNext-06035# If 'cmdExecuteCommands' is
+--     being called within a render pass instance begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and the @pNext@ chain of
+--     'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo' does not
+--     include a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, if the @imageView@ member of an element of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     parameter to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR' is
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfoKHR'::@rasterizationSamples@
+--     /must/ be equal to the sample count used to create that image view
+--
+-- -   #VUID-vkCmdExecuteCommands-pNext-06036# If 'cmdExecuteCommands' is
+--     being called within a render pass instance begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and the @pNext@ chain of
+--     'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo' does not
+--     include a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, if the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->imageView@
+--     parameter to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR' is
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfoKHR'::@rasterizationSamples@
+--     /must/ be equal to the sample count used to create that image view
+--
+-- -   #VUID-vkCmdExecuteCommands-pNext-06037# If 'cmdExecuteCommands' is
+--     being called within a render pass instance begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and the @pNext@ chain of
+--     'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo' does not
+--     include a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, if the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->imageView@
+--     parameter to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR' is
+--     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfoKHR'::@rasterizationSamples@
+--     /must/ be equal to the sample count used to create that image view
 --
 -- == Valid Usage (Implicit)
 --
@@ -10265,16 +12229,17 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Transfer                                                                                                              |                                                                                                                                     |
--- |                                                                                                                            |                                                                                                                        | Graphics                                                                                                              |                                                                                                                                     |
--- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Transfer                                                                                                              |
+-- |                                                                                                                            |                                                                                                                        | Graphics                                                                                                              |
+-- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdExecuteCommands :: forall io
                     . (MonadIO io)
@@ -10287,11 +12252,11 @@ cmdExecuteCommands :: forall io
                       ("commandBuffers" ::: Vector CommandBuffer)
                    -> io ()
 cmdExecuteCommands commandBuffer commandBuffers = liftIO . evalContT $ do
-  let vkCmdExecuteCommandsPtr = pVkCmdExecuteCommands (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdExecuteCommandsPtr = pVkCmdExecuteCommands (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdExecuteCommandsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdExecuteCommands is null" Nothing Nothing
   let vkCmdExecuteCommands' = mkVkCmdExecuteCommands vkCmdExecuteCommandsPtr
-  pPCommandBuffers <- ContT $ allocaBytesAligned @(Ptr CommandBuffer_T) ((Data.Vector.length (commandBuffers)) * 8) 8
+  pPCommandBuffers <- ContT $ allocaBytes @(Ptr CommandBuffer_T) ((Data.Vector.length (commandBuffers)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPCommandBuffers `plusPtr` (8 * (i)) :: Ptr (Ptr CommandBuffer_T)) (commandBufferHandle (e))) (commandBuffers)
   lift $ traceAroundEvent "vkCmdExecuteCommands" (vkCmdExecuteCommands' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (commandBuffers)) :: Word32)) (pPCommandBuffers))
   pure $ ()
@@ -10306,6 +12271,7 @@ cmdExecuteCommands commandBuffer commandBuffers = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.Rect2D', 'cmdClearAttachments'
 data ClearRect = ClearRect
   { -- | @rect@ is the two-dimensional region to be cleared.
@@ -10322,7 +12288,7 @@ deriving instance Generic (ClearRect)
 deriving instance Show ClearRect
 
 instance ToCStruct ClearRect where
-  withCStruct x f = allocaBytesAligned 24 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ClearRect{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Rect2D)) (rect)
     poke ((p `plusPtr` 16 :: Ptr Word32)) (baseArrayLayer)
@@ -10375,7 +12341,7 @@ instance Zero ClearRect where
 --
 -- -   #VUID-VkImageSubresourceLayers-aspectMask-02247# @aspectMask@ /must/
 --     not include @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any index
---     @i@
+--     /i/
 --
 -- -   #VUID-VkImageSubresourceLayers-layerCount-01700# @layerCount@ /must/
 --     be greater than 0
@@ -10391,6 +12357,7 @@ instance Zero ClearRect where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'BufferImageCopy',
 -- 'Vulkan.Extensions.VK_KHR_copy_commands2.BufferImageCopy2KHR',
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags', 'ImageBlit',
@@ -10402,7 +12369,7 @@ data ImageSubresourceLayers = ImageSubresourceLayers
     -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits', selecting
     -- the color, depth and\/or stencil aspects to be copied.
     aspectMask :: ImageAspectFlags
-  , -- | @mipLevel@ is the mipmap level to copy from.
+  , -- | @mipLevel@ is the mipmap level to copy
     mipLevel :: Word32
   , -- | @baseArrayLayer@ and @layerCount@ are the starting layer and number of
     -- layers to copy.
@@ -10417,7 +12384,7 @@ deriving instance Generic (ImageSubresourceLayers)
 deriving instance Show ImageSubresourceLayers
 
 instance ToCStruct ImageSubresourceLayers where
-  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageSubresourceLayers{..} f = do
     poke ((p `plusPtr` 0 :: Ptr ImageAspectFlags)) (aspectMask)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (mipLevel)
@@ -10464,6 +12431,7 @@ instance Zero ImageSubresourceLayers where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize', 'cmdCopyBuffer'
 data BufferCopy = BufferCopy
   { -- | @srcOffset@ is the starting offset in bytes from the start of
@@ -10482,7 +12450,7 @@ deriving instance Generic (BufferCopy)
 deriving instance Show BufferCopy
 
 instance ToCStruct BufferCopy where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferCopy{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (srcOffset)
     poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (dstOffset)
@@ -10559,6 +12527,7 @@ instance Zero BufferCopy where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.Extent3D', 'ImageSubresourceLayers',
 -- 'Vulkan.Core10.FundamentalTypes.Offset3D', 'cmdCopyImage'
 data ImageCopy = ImageCopy
@@ -10584,7 +12553,7 @@ deriving instance Generic (ImageCopy)
 deriving instance Show ImageCopy
 
 instance ToCStruct ImageCopy where
-  withCStruct x f = allocaBytesAligned 68 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 68 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageCopy{..} f = do
     poke ((p `plusPtr` 0 :: Ptr ImageSubresourceLayers)) (srcSubresource)
     poke ((p `plusPtr` 16 :: Ptr Offset3D)) (srcOffset)
@@ -10632,7 +12601,7 @@ instance Zero ImageCopy where
 -- = Description
 --
 -- For each element of the @pRegions@ array, a blit operation is performed
--- the specified source and destination regions.
+-- for the specified source and destination regions.
 --
 -- == Valid Usage
 --
@@ -10652,6 +12621,7 @@ instance Zero ImageCopy where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'ImageSubresourceLayers', 'Vulkan.Core10.FundamentalTypes.Offset3D',
 -- 'cmdBlitImage'
 data ImageBlit = ImageBlit
@@ -10675,7 +12645,7 @@ deriving instance Generic (ImageBlit)
 deriving instance Show ImageBlit
 
 instance ToCStruct ImageBlit where
-  withCStruct x f = allocaBytesAligned 80 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 80 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageBlit{..} f = do
     poke ((p `plusPtr` 0 :: Ptr ImageSubresourceLayers)) (srcSubresource)
     let pSrcOffsets' = lowerArrayPtr ((p `plusPtr` 16 :: Ptr (FixedArray 2 Offset3D)))
@@ -10813,6 +12783,7 @@ instance Zero ImageBlit where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.FundamentalTypes.Extent3D', 'ImageSubresourceLayers',
 -- 'Vulkan.Core10.FundamentalTypes.Offset3D', 'cmdCopyBufferToImage',
@@ -10847,7 +12818,7 @@ deriving instance Generic (BufferImageCopy)
 deriving instance Show BufferImageCopy
 
 instance ToCStruct BufferImageCopy where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferImageCopy{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (bufferOffset)
     poke ((p `plusPtr` 8 :: Ptr Word32)) (bufferRowLength)
@@ -10915,6 +12886,7 @@ instance Zero BufferImageCopy where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.Extent3D', 'ImageSubresourceLayers',
 -- 'Vulkan.Core10.FundamentalTypes.Offset3D', 'cmdResolveImage'
 data ImageResolve = ImageResolve
@@ -10941,7 +12913,7 @@ deriving instance Generic (ImageResolve)
 deriving instance Show ImageResolve
 
 instance ToCStruct ImageResolve where
-  withCStruct x f = allocaBytesAligned 68 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 68 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageResolve{..} f = do
     poke ((p `plusPtr` 0 :: Ptr ImageSubresourceLayers)) (srcSubresource)
     poke ((p `plusPtr` 16 :: Ptr Offset3D)) (srcOffset)
@@ -10984,7 +12956,8 @@ instance Zero ImageResolve where
            zero
 
 
--- | VkRenderPassBeginInfo - Structure specifying render pass begin info
+-- | VkRenderPassBeginInfo - Structure specifying render pass begin
+-- information
 --
 -- = Description
 --
@@ -11005,6 +12978,10 @@ instance Zero ImageResolve where
 -- 'Vulkan.Extensions.VK_QCOM_render_pass_transform.RenderPassTransformBeginInfoQCOM'::@transform@,
 -- the resulting render area /must/ be equal to the framebuffer dimensions.
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subpassShading subpass shading>
+-- is enabled, then @renderArea@ /must/ equal the framebuffer dimensions.
+--
 -- When multiview is enabled, the resolve operation at the end of a subpass
 -- applies to all views in the view mask.
 --
@@ -11018,9 +12995,13 @@ instance Zero ImageResolve where
 --
 -- -   #VUID-VkRenderPassBeginInfo-clearValueCount-00902# @clearValueCount@
 --     /must/ be greater than the largest attachment index in @renderPass@
---     that specifies a @loadOp@ (or @stencilLoadOp@, if the attachment has
---     a depth\/stencil format) of
+--     specifying a @loadOp@ (or @stencilLoadOp@, if the attachment has a
+--     depth\/stencil format) of
 --     'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_CLEAR'
+--
+-- -   #VUID-VkRenderPassBeginInfo-clearValueCount-04962# If
+--     @clearValueCount@ is not @0@, @pClearValues@ /must/ be a valid
+--     pointer to an array of @clearValueCount@ 'ClearValue' unions
 --
 -- -   #VUID-VkRenderPassBeginInfo-renderPass-00904# @renderPass@ /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
@@ -11044,7 +13025,7 @@ instance Zero ImageResolve where
 --     not contain
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
 --     or its @deviceRenderAreaCount@ member is equal to 0,
---     @renderArea.offset.x@ + @renderArea.offset.width@ /must/ be less
+--     @renderArea.offset.x@ + @renderArea.extent.width@ /must/ be less
 --     than or equal to 'Vulkan.Core10.Pass.FramebufferCreateInfo'::@width@
 --     the @framebuffer@ was created with
 --
@@ -11052,27 +13033,15 @@ instance Zero ImageResolve where
 --     not contain
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
 --     or its @deviceRenderAreaCount@ member is equal to 0,
---     @renderArea.offset.y@ + @renderArea.offset.height@ /must/ be less
+--     @renderArea.offset.y@ + @renderArea.extent.height@ /must/ be less
 --     than or equal to
 --     'Vulkan.Core10.Pass.FramebufferCreateInfo'::@height@ the
 --     @framebuffer@ was created with
 --
--- -   #VUID-VkRenderPassBeginInfo-pNext-02854# If the @pNext@ chain
---     contains
---     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo',
---     the @offset.x@ member of each element of @pDeviceRenderAreas@ /must/
---     be greater than or equal to 0
---
--- -   #VUID-VkRenderPassBeginInfo-pNext-02855# If the @pNext@ chain
---     contains
---     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo',
---     the @offset.y@ member of each element of @pDeviceRenderAreas@ /must/
---     be greater than or equal to 0
---
 -- -   #VUID-VkRenderPassBeginInfo-pNext-02856# If the @pNext@ chain
 --     contains
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo',
---     @offset.x@ + @offset.width@ of each element of @pDeviceRenderAreas@
+--     @offset.x@ + @extent.width@ of each element of @pDeviceRenderAreas@
 --     /must/ be less than or equal to
 --     'Vulkan.Core10.Pass.FramebufferCreateInfo'::@width@ the
 --     @framebuffer@ was created with
@@ -11080,7 +13049,7 @@ instance Zero ImageResolve where
 -- -   #VUID-VkRenderPassBeginInfo-pNext-02857# If the @pNext@ chain
 --     contains
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo',
---     @offset.y@ + @offset.height@ of each element of @pDeviceRenderAreas@
+--     @offset.y@ + @extent.height@ of each element of @pDeviceRenderAreas@
 --     /must/ be less than or equal to
 --     'Vulkan.Core10.Pass.FramebufferCreateInfo'::@height@ the
 --     @framebuffer@ was created with
@@ -11274,6 +13243,7 @@ instance Zero ImageResolve where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'ClearValue', 'Vulkan.Core10.Handles.Framebuffer',
 -- 'Vulkan.Core10.FundamentalTypes.Rect2D',
 -- 'Vulkan.Core10.Handles.RenderPass',
@@ -11292,8 +13262,8 @@ data RenderPassBeginInfo (es :: [Type]) = RenderPassBeginInfo
     -- instance, and is described in more detail below.
     renderArea :: Rect2D
   , -- | @pClearValues@ is a pointer to an array of @clearValueCount@
-    -- 'ClearValue' structures that contains clear values for each attachment,
-    -- if the attachment uses a @loadOp@ value of
+    -- 'ClearValue' structures containing clear values for each attachment, if
+    -- the attachment uses a @loadOp@ value of
     -- 'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_CLEAR' or if
     -- the attachment has a depth\/stencil format and uses a @stencilLoadOp@
     -- value of
@@ -11311,7 +13281,7 @@ deriving instance Show (Chain es) => Show (RenderPassBeginInfo es)
 
 instance Extensible RenderPassBeginInfo where
   extensibleTypeName = "RenderPassBeginInfo"
-  setNext x next = x{next = next}
+  setNext RenderPassBeginInfo{..} next' = RenderPassBeginInfo{next = next', ..}
   getNext RenderPassBeginInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RenderPassBeginInfo e => b) -> Maybe b
   extends _ f
@@ -11322,7 +13292,7 @@ instance Extensible RenderPassBeginInfo where
     | otherwise = Nothing
 
 instance (Extendss RenderPassBeginInfo es, PokeChain es) => ToCStruct (RenderPassBeginInfo es) where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RenderPassBeginInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -11331,7 +13301,7 @@ instance (Extendss RenderPassBeginInfo es, PokeChain es) => ToCStruct (RenderPas
     lift $ poke ((p `plusPtr` 24 :: Ptr Framebuffer)) (framebuffer)
     lift $ poke ((p `plusPtr` 32 :: Ptr Rect2D)) (renderArea)
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (clearValues)) :: Word32))
-    pPClearValues' <- ContT $ allocaBytesAligned @ClearValue ((Data.Vector.length (clearValues)) * 16) 4
+    pPClearValues' <- ContT $ allocaBytes @ClearValue ((Data.Vector.length (clearValues)) * 16)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPClearValues' `plusPtr` (16 * (i)) :: Ptr ClearValue) (e) . ($ ())) (clearValues)
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr ClearValue))) (pPClearValues')
     lift $ f
@@ -11366,6 +13336,7 @@ instance es ~ '[] => Zero (RenderPassBeginInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'ClearValue', 'cmdClearDepthStencilImage'
 data ClearDepthStencilValue = ClearDepthStencilValue
   { -- | @depth@ is the clear value for the depth aspect of the depth\/stencil
@@ -11385,7 +13356,7 @@ deriving instance Generic (ClearDepthStencilValue)
 deriving instance Show ClearDepthStencilValue
 
 instance ToCStruct ClearDepthStencilValue where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ClearDepthStencilValue{..} f = do
     poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (depth))
     poke ((p `plusPtr` 4 :: Ptr Word32)) (stencil)
@@ -11418,21 +13389,6 @@ instance Zero ClearDepthStencilValue where
 
 -- | VkClearAttachment - Structure specifying a clear attachment
 --
--- = Description
---
--- No memory barriers are needed between 'cmdClearAttachments' and
--- preceding or subsequent draw or attachment clear commands in the same
--- subpass.
---
--- The 'cmdClearAttachments' command is not affected by the bound pipeline
--- state.
---
--- Attachments /can/ also be cleared at the beginning of a render pass
--- instance by setting @loadOp@ (or @stencilLoadOp@) of
--- 'Vulkan.Core10.Pass.AttachmentDescription' to
--- 'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_CLEAR', as
--- described for 'Vulkan.Core10.Pass.createRenderPass'.
---
 -- == Valid Usage
 --
 -- -   #VUID-VkClearAttachment-aspectMask-00019# If @aspectMask@ includes
@@ -11446,7 +13402,7 @@ instance Zero ClearDepthStencilValue where
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_METADATA_BIT'
 --
 -- -   #VUID-VkClearAttachment-aspectMask-02246# @aspectMask@ /must/ not
---     include @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any index @i@
+--     include @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any index /i/
 --
 -- -   #VUID-VkClearAttachment-clearValue-00021# @clearValue@ /must/ be a
 --     valid 'ClearValue' union
@@ -11462,6 +13418,7 @@ instance Zero ClearDepthStencilValue where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'ClearValue',
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
 -- 'cmdClearAttachments'
@@ -11471,9 +13428,8 @@ data ClearAttachment = ClearAttachment
     aspectMask :: ImageAspectFlags
   , -- | @colorAttachment@ is only meaningful if
     -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT' is set
-    -- in @aspectMask@, in which case it is an index to the @pColorAttachments@
-    -- array in the 'Vulkan.Core10.Pass.SubpassDescription' structure of the
-    -- current subpass which selects the color attachment to clear.
+    -- in @aspectMask@, in which case it is an index into the currently bound
+    -- color attachments.
     colorAttachment :: Word32
   , -- | @clearValue@ is the color or depth\/stencil value to clear the
     -- attachment to, as described in
@@ -11488,7 +13444,7 @@ deriving instance Generic (ClearAttachment)
 deriving instance Show ClearAttachment
 
 instance ToCStruct ClearAttachment where
-  withCStruct x f = allocaBytesAligned 24 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ClearAttachment{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr ImageAspectFlags)) (aspectMask)
     lift $ poke ((p `plusPtr` 4 :: Ptr Word32)) (colorAttachment)
@@ -11516,7 +13472,7 @@ data ClearColorValue
   deriving (Show)
 
 instance ToCStruct ClearColorValue where
-  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct :: Ptr ClearColorValue -> ClearColorValue -> IO a -> IO a
   pokeCStruct p = (. const) . runContT .  \case
     Float32 v0 v1 v2 v3 -> lift $ do
@@ -11558,7 +13514,7 @@ data ClearValue
   deriving (Show)
 
 instance ToCStruct ClearValue where
-  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct :: Ptr ClearValue -> ClearValue -> IO a -> IO a
   pokeCStruct p = (. const) . runContT .  \case
     Color v -> ContT $ pokeCStruct (castPtr @_ @ClearColorValue p) (v) . ($ ())

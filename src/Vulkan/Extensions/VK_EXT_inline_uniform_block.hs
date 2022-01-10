@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_inline_uniform_block:%20&body=@aqnuep%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_inline_uniform_block] @aqnuep%0A<<Here describe the issue or question you have about the VK_EXT_inline_uniform_block extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -53,9 +53,9 @@
 -- This extension introduces the ability to back uniform blocks directly
 -- with descriptor sets by storing inline uniform data within descriptor
 -- pool storage. Compared to push constants this new construct allows
--- uniform data to be reused across multiple disjoint sets of draw or
--- dispatch commands and /may/ enable uniform data to be accessed with less
--- indirections compared to uniforms backed by buffer memory.
+-- uniform data to be reused across multiple disjoint sets of drawing or
+-- dispatching commands and /may/ enable uniform data to be accessed with
+-- fewer indirections compared to uniforms backed by buffer memory.
 --
 -- == New Structures
 --
@@ -160,14 +160,14 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'DescriptorPoolInlineUniformBlockCreateInfoEXT',
 -- 'PhysicalDeviceInlineUniformBlockFeaturesEXT',
 -- 'PhysicalDeviceInlineUniformBlockPropertiesEXT',
 -- 'WriteDescriptorSetInlineUniformBlockEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_inline_uniform_block Vulkan Specification>
@@ -184,7 +184,7 @@ module Vulkan.Extensions.VK_EXT_inline_uniform_block  ( PhysicalDeviceInlineUnif
                                                       , pattern EXT_INLINE_UNIFORM_BLOCK_EXTENSION_NAME
                                                       ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -215,23 +215,25 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_WRITE_DES
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceInlineUniformBlockFeaturesEXT'
--- structure describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceInlineUniformBlockFeaturesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceInlineUniformBlockFeaturesEXT' /can/ also be included in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- features.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceInlineUniformBlockFeaturesEXT' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_inline_uniform_block VK_EXT_inline_uniform_block>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceInlineUniformBlockFeaturesEXT = PhysicalDeviceInlineUniformBlockFeaturesEXT
@@ -257,7 +259,7 @@ deriving instance Generic (PhysicalDeviceInlineUniformBlockFeaturesEXT)
 deriving instance Show PhysicalDeviceInlineUniformBlockFeaturesEXT
 
 instance ToCStruct PhysicalDeviceInlineUniformBlockFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceInlineUniformBlockFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -296,22 +298,21 @@ instance Zero PhysicalDeviceInlineUniformBlockFeaturesEXT where
 -- inline uniform block properties that can be supported by an
 -- implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceInlineUniformBlockPropertiesEXT'
--- structure describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceInlineUniformBlockPropertiesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_inline_uniform_block VK_EXT_inline_uniform_block>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceInlineUniformBlockPropertiesEXT = PhysicalDeviceInlineUniformBlockPropertiesEXT
   { -- | #limits-maxInlineUniformBlockSize# @maxInlineUniformBlockSize@ is the
@@ -354,7 +355,7 @@ deriving instance Generic (PhysicalDeviceInlineUniformBlockPropertiesEXT)
 deriving instance Show PhysicalDeviceInlineUniformBlockPropertiesEXT
 
 instance ToCStruct PhysicalDeviceInlineUniformBlockPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceInlineUniformBlockPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -408,6 +409,7 @@ instance Zero PhysicalDeviceInlineUniformBlockPropertiesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_inline_uniform_block VK_EXT_inline_uniform_block>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data WriteDescriptorSetInlineUniformBlockEXT = WriteDescriptorSetInlineUniformBlockEXT
   { -- | @dataSize@ is the number of bytes of inline uniform block data pointed
@@ -433,7 +435,7 @@ deriving instance Generic (WriteDescriptorSetInlineUniformBlockEXT)
 deriving instance Show WriteDescriptorSetInlineUniformBlockEXT
 
 instance ToCStruct WriteDescriptorSetInlineUniformBlockEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p WriteDescriptorSetInlineUniformBlockEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -476,6 +478,7 @@ instance Zero WriteDescriptorSetInlineUniformBlockEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_inline_uniform_block VK_EXT_inline_uniform_block>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DescriptorPoolInlineUniformBlockCreateInfoEXT = DescriptorPoolInlineUniformBlockCreateInfoEXT
   { -- | @maxInlineUniformBlockBindings@ is the number of inline uniform block
@@ -488,7 +491,7 @@ deriving instance Generic (DescriptorPoolInlineUniformBlockCreateInfoEXT)
 deriving instance Show DescriptorPoolInlineUniformBlockCreateInfoEXT
 
 instance ToCStruct DescriptorPoolInlineUniformBlockCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorPoolInlineUniformBlockCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

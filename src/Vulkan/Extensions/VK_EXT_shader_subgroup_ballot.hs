@@ -29,7 +29,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_shader_subgroup_ballot:%20&body=@dgkoch%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_shader_subgroup_ballot] @dgkoch%0A<<Here describe the issue or question you have about the VK_EXT_shader_subgroup_ballot extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -71,26 +71,26 @@
 -- This extension provides access to a number of additional built-in shader
 -- variables in Vulkan:
 --
--- -   @SubgroupEqMaskKHR@, which contains the subgroup mask of the current
+-- -   @SubgroupEqMaskKHR@, containing the subgroup mask of the current
 --     subgroup invocation,
 --
--- -   @SubgroupGeMaskKHR@, which contains the subgroup mask of the
---     invocations greater than or equal to the current invocation,
+-- -   @SubgroupGeMaskKHR@, containing the subgroup mask of the invocations
+--     greater than or equal to the current invocation,
 --
--- -   @SubgroupGtMaskKHR@, which contains the subgroup mask of the
---     invocations greater than the current invocation,
+-- -   @SubgroupGtMaskKHR@, containing the subgroup mask of the invocations
+--     greater than the current invocation,
 --
--- -   @SubgroupLeMaskKHR@, which contains the subgroup mask of the
---     invocations less than or equal to the current invocation,
+-- -   @SubgroupLeMaskKHR@, containing the subgroup mask of the invocations
+--     less than or equal to the current invocation,
 --
--- -   @SubgroupLtMaskKHR@, which contains the subgroup mask of the
---     invocations less than the current invocation,
+-- -   @SubgroupLtMaskKHR@, containing the subgroup mask of the invocations
+--     less than the current invocation,
 --
--- -   @SubgroupLocalInvocationId@, which contains the index of an
---     invocation within a subgroup, and
+-- -   @SubgroupLocalInvocationId@, containing the index of an invocation
+--     within a subgroup, and
 --
--- -   @SubgroupSize@, which contains the maximum number of invocations in
---     a subgroup.
+-- -   @SubgroupSize@, containing the maximum number of invocations in a
+--     subgroup.
 --
 -- Additionally, this extension provides access to the new SPIR-V
 -- instructions:
@@ -130,7 +130,7 @@
 -- Most of the functionality in this extension is superseded by the core
 -- Vulkan 1.1
 -- <VkPhysicalDeviceSubgroupProperties.html subgroup operations>. However,
--- Vulkan 1.1 required the @OpGroupNonUniformBroadcast@ \"Id\" to be
+-- Vulkan 1.1 required the @OpGroupNonUniformBroadcast@ “Id” to be
 -- constant. This restriction was removed in Vulkan 1.2 with the addition
 -- of the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subgroupBroadcastDynamicId subgroupBroadcastDynamicId>
@@ -168,11 +168,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- No cross-references are available
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_subgroup_ballot Vulkan Specification>

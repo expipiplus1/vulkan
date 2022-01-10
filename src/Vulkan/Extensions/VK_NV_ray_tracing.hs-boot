@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Eric Werness
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_ray_tracing:%20&body=@ewerness%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_ray_tracing] @ewerness-nv%0A<<Here describe the issue or question you have about the VK_NV_ray_tracing extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -430,7 +430,7 @@
 --     -   update to use InstanceId instead of InstanceIndex as
 --         implemented.
 --
--- = See Also
+-- == See Also
 --
 -- 'Vulkan.Core10.APIConstants.SHADER_UNUSED_NV', 'AabbPositionsNV',
 -- 'AccelerationStructureCreateInfoNV', 'AccelerationStructureInfoNV',
@@ -458,7 +458,7 @@
 -- 'getAccelerationStructureMemoryRequirementsNV',
 -- 'getRayTracingShaderGroupHandlesNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing Vulkan Specification>

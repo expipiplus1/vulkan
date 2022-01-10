@@ -26,10 +26,10 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_display:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_display] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_display extension>> >
 --
 --     -   Norbert Nopper
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_display:%20&body=@FslNopper%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_display] @FslNopper%0A<<Here describe the issue or question you have about the VK_KHR_display extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -126,9 +126,9 @@
 --
 -- == Issues
 --
--- 1) Which properties of a mode should be fixed in the mode info vs.
--- settable in some other function when setting the mode? E.g., do we need
--- to double the size of the mode pool to include both stereo and
+-- 1) Which properties of a mode should be fixed in the mode information
+-- vs. settable in some other function when setting the mode? E.g., do we
+-- need to double the size of the mode pool to include both stereo and
 -- non-stereo modes? YUV and RGB scanout even if they both take RGB input
 -- images? BGR vs. RGB input? etc.
 --
@@ -181,9 +181,9 @@
 -- monitor side or in the GPU display engine, making “modes” something of a
 -- relic\/compatibility construct).
 --
--- __PROPOSED RESOLUTION__: Expose both. Display info structures will
--- expose a set of predefined modes, as well as any attributes necessary to
--- construct a customized mode.
+-- __PROPOSED RESOLUTION__: Expose both. Display information structures
+-- will expose a set of predefined modes, as well as any attributes
+-- necessary to construct a customized mode.
 --
 -- 6) Is it fine if we return the display and display mode handles in the
 -- structure used to query their properties?
@@ -204,12 +204,11 @@
 -- __PROPOSED RESOLUTION__: Require specifying a plane explicitly.
 --
 -- 9) Should displays have an associated window system display, such as an
--- @HDC@ or 'Vulkan.Extensions.VK_KHR_xlib_surface.Display'*?
+-- @HDC@ or @Display*@?
 --
 -- __PROPOSED RESOLUTION__: No. Displays are independent of any windowing
--- system in use on the system. Further, neither @HDC@ nor
--- 'Vulkan.Extensions.VK_KHR_xlib_surface.Display'* refer to a physical
--- display object.
+-- system in use on the system. Further, neither @HDC@ nor @Display*@ refer
+-- to a physical display object.
 --
 -- 10) Are displays queried from a physical GPU or from a device instance?
 --
@@ -312,7 +311,7 @@
 --
 --     -   Added functions to query count of display, mode and overlay.
 --
---     -   Added native display handle, which is maybe needed on some
+--     -   Added native display handle, which may be needed on some
 --         platforms to create a native Window.
 --
 -- -   Revision 4, 2015-03-18 (Norbert Nopper)
@@ -320,7 +319,7 @@
 --     -   Removed primary and virtualPostion members (see comment of James
 --         Jones in Bugzilla).
 --
---     -   Added native overlay handle to info structure.
+--     -   Added native overlay handle to information structure.
 --
 --     -   Replaced , with ; in struct.
 --
@@ -328,7 +327,7 @@
 --
 --     -   Added WSI extension suffix to all items.
 --
---     -   Made the whole API more \"Vulkanish\".
+--     -   Made the whole API more “Vulkanish”.
 --
 --     -   Replaced all functions with a single vkGetDisplayInfoKHR
 --         function to better match the rest of the API.
@@ -340,8 +339,8 @@
 --     -   Renamed *Info structures to *Properties.
 --
 --     -   Removed overlayIndex field from VkOverlayProperties as there is
---         an implicit index already as a result of moving to a
---         \"Vulkanish\" API.
+--         an implicit index already as a result of moving to a “Vulkanish”
+--         API.
 --
 --     -   Displays are not get through device, but through physical GPU to
 --         match the rest of the Vulkan API. Also this is something ISVs
@@ -392,14 +391,14 @@
 --         swapchain specifications and the latest Vulkan API.
 --
 --     -   Address overlay planes by their index rather than an object
---         handle and refer to them as \"planes\" rather than \"overlays\"
---         to make it slightly clearer that even a display with no
---         \"overlays\" still has at least one base \"plane\" that images
---         can be displayed on.
+--         handle and refer to them as “planes” rather than “overlays” to
+--         make it slightly clearer that even a display with no “overlays”
+--         still has at least one base “plane” that images can be displayed
+--         on.
 --
 --     -   Updated most of the issues.
 --
---     -   Added an \"extension type\" section to the specification header.
+--     -   Added an “extension type” section to the specification header.
 --
 --     -   Re-used the VK_EXT_KHR_surface surface transform enumerations
 --         rather than redefining them here.
@@ -412,7 +411,7 @@
 --         functions, etc. This makes it compliant with the proposed
 --         standard for Vulkan extensions.
 --
---     -   Switched from \"revision\" to \"version\", including use of the
+--     -   Switched from “revision” to “version”, including use of the
 --         VK_MAKE_VERSION macro in the header file.
 --
 -- -   Revision 14, 2015-09-01 (James Jones)
@@ -443,7 +442,7 @@
 --
 --     -   Removed detailed mode timing data. It was agreed that the mode
 --         extents and refresh rate are sufficient for current use cases.
---         Other information could be added back2 in as an extension if it
+--         Other information could be added back in as an extension if it
 --         is needed in the future.
 --
 --     -   Added support for smart\/persistent\/buffered display devices.
@@ -477,7 +476,7 @@
 --
 -- -   Revision 22, 2015-12-18 (James Jones)
 --
---     -   Added missing \"planeIndex\" parameter to
+--     -   Added missing “planeIndex” parameter to
 --         vkGetDisplayPlaneSupportedDisplaysKHR()
 --
 -- -   Revision 23, 2017-03-13 (James Jones)
@@ -489,7 +488,7 @@
 --     -   Removed the sample code and noted it has been integrated into
 --         the official Vulkan SDK cube demo.
 --
--- = See Also
+-- == See Also
 --
 -- 'Vulkan.Extensions.Handles.DisplayKHR', 'DisplayModeCreateFlagsKHR',
 -- 'DisplayModeCreateInfoKHR', 'Vulkan.Extensions.Handles.DisplayModeKHR',
@@ -505,7 +504,7 @@
 -- 'getPhysicalDeviceDisplayPlanePropertiesKHR',
 -- 'getPhysicalDeviceDisplayPropertiesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display Vulkan Specification>
@@ -552,7 +551,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -613,6 +612,7 @@ import Vulkan.Core10.FundamentalTypes (Extent2D)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateDisplayModeKHR))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateDisplayPlaneSurfaceKHR))
 import Vulkan.Dynamic (InstanceCmds(pVkGetDisplayModePropertiesKHR))
@@ -624,6 +624,7 @@ import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.FundamentalTypes (Offset2D)
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -660,11 +661,9 @@ foreign import ccall
 -- variable is overwritten with the number of structures actually written
 -- to @pProperties@. If the value of @pPropertyCount@ is less than the
 -- number of display devices for @physicalDevice@, at most @pPropertyCount@
--- structures will be written. If @pPropertyCount@ is smaller than the
--- number of display devices available for @physicalDevice@,
--- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS' to indicate that not all the
--- available values were returned.
+-- structures will be written, and 'Vulkan.Core10.Enums.Result.INCOMPLETE'
+-- will be returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to
+-- indicate that not all the available properties were returned.
 --
 -- == Valid Usage (Implicit)
 --
@@ -696,6 +695,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'DisplayPropertiesKHR', 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceDisplayPropertiesKHR :: forall io
                                        . (MonadIO io)
@@ -703,7 +703,7 @@ getPhysicalDeviceDisplayPropertiesKHR :: forall io
                                          PhysicalDevice
                                       -> io (Result, ("properties" ::: Vector DisplayPropertiesKHR))
 getPhysicalDeviceDisplayPropertiesKHR physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceDisplayPropertiesKHRPtr = pVkGetPhysicalDeviceDisplayPropertiesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceDisplayPropertiesKHRPtr = pVkGetPhysicalDeviceDisplayPropertiesKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceDisplayPropertiesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceDisplayPropertiesKHR is null" Nothing Nothing
   let vkGetPhysicalDeviceDisplayPropertiesKHR' = mkVkGetPhysicalDeviceDisplayPropertiesKHR vkGetPhysicalDeviceDisplayPropertiesKHRPtr
@@ -773,6 +773,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'DisplayPlanePropertiesKHR', 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceDisplayPlanePropertiesKHR :: forall io
                                             . (MonadIO io)
@@ -780,7 +781,7 @@ getPhysicalDeviceDisplayPlanePropertiesKHR :: forall io
                                               PhysicalDevice
                                            -> io (Result, ("properties" ::: Vector DisplayPlanePropertiesKHR))
 getPhysicalDeviceDisplayPlanePropertiesKHR physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceDisplayPlanePropertiesKHRPtr = pVkGetPhysicalDeviceDisplayPlanePropertiesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceDisplayPlanePropertiesKHRPtr = pVkGetPhysicalDeviceDisplayPlanePropertiesKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceDisplayPlanePropertiesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceDisplayPlanePropertiesKHR is null" Nothing Nothing
   let vkGetPhysicalDeviceDisplayPlanePropertiesKHR' = mkVkGetPhysicalDeviceDisplayPlanePropertiesKHR vkGetPhysicalDeviceDisplayPlanePropertiesKHRPtr
@@ -816,12 +817,11 @@ foreign import ccall
 -- set by the user to the number of elements in the @pDisplays@ array, and
 -- on return the variable is overwritten with the number of handles
 -- actually written to @pDisplays@. If the value of @pDisplayCount@ is less
--- than the number of display planes for @physicalDevice@, at most
--- @pDisplayCount@ handles will be written. If @pDisplayCount@ is smaller
--- than the number of displays usable with the specified @planeIndex@ for
--- @physicalDevice@, 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be
--- returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS' to indicate
--- that not all the available values were returned.
+-- than the number of usable display-plane pairs for @physicalDevice@, at
+-- most @pDisplayCount@ handles will be written, and
+-- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
+-- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
+-- available pairs were returned.
 --
 -- == Valid Usage
 --
@@ -860,6 +860,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getDisplayPlaneSupportedDisplaysKHR :: forall io
@@ -871,7 +872,7 @@ getDisplayPlaneSupportedDisplaysKHR :: forall io
                                        ("planeIndex" ::: Word32)
                                     -> io (Result, ("displays" ::: Vector DisplayKHR))
 getDisplayPlaneSupportedDisplaysKHR physicalDevice planeIndex = liftIO . evalContT $ do
-  let vkGetDisplayPlaneSupportedDisplaysKHRPtr = pVkGetDisplayPlaneSupportedDisplaysKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetDisplayPlaneSupportedDisplaysKHRPtr = pVkGetDisplayPlaneSupportedDisplaysKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetDisplayPlaneSupportedDisplaysKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDisplayPlaneSupportedDisplaysKHR is null" Nothing Nothing
   let vkGetDisplayPlaneSupportedDisplaysKHR' = mkVkGetDisplayPlaneSupportedDisplaysKHR vkGetDisplayPlaneSupportedDisplaysKHRPtr
@@ -907,11 +908,10 @@ foreign import ccall
 -- and on return the variable is overwritten with the number of structures
 -- actually written to @pProperties@. If the value of @pPropertyCount@ is
 -- less than the number of display modes for @physicalDevice@, at most
--- @pPropertyCount@ structures will be written. If @pPropertyCount@ is
--- smaller than the number of display modes available on the specified
--- @display@ for @physicalDevice@, 'Vulkan.Core10.Enums.Result.INCOMPLETE'
--- will be returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS' to
--- indicate that not all the available values were returned.
+-- @pPropertyCount@ structures will be written, and
+-- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
+-- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
+-- available display modes were returned.
 --
 -- == Valid Usage (Implicit)
 --
@@ -949,6 +949,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Extensions.Handles.DisplayKHR', 'DisplayModePropertiesKHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getDisplayModePropertiesKHR :: forall io
@@ -959,7 +960,7 @@ getDisplayModePropertiesKHR :: forall io
                                DisplayKHR
                             -> io (Result, ("properties" ::: Vector DisplayModePropertiesKHR))
 getDisplayModePropertiesKHR physicalDevice display = liftIO . evalContT $ do
-  let vkGetDisplayModePropertiesKHRPtr = pVkGetDisplayModePropertiesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetDisplayModePropertiesKHRPtr = pVkGetDisplayModePropertiesKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetDisplayModePropertiesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDisplayModePropertiesKHR is null" Nothing Nothing
   let vkGetDisplayModePropertiesKHR' = mkVkGetDisplayModePropertiesKHR vkGetDisplayModePropertiesKHRPtr
@@ -1029,6 +1030,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Extensions.Handles.DisplayKHR', 'DisplayModeCreateInfoKHR',
 -- 'Vulkan.Extensions.Handles.DisplayModeKHR',
@@ -1039,8 +1041,8 @@ createDisplayModeKHR :: forall io
                         PhysicalDevice
                      -> -- | @display@ is the display to create an additional mode for.
                         DisplayKHR
-                     -> -- | @pCreateInfo@ is a 'DisplayModeCreateInfoKHR' structure describing the
-                        -- new mode to create.
+                     -> -- | @pCreateInfo@ is a pointer to a 'DisplayModeCreateInfoKHR' structure
+                        -- describing the new mode to create.
                         DisplayModeCreateInfoKHR
                      -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                         -- display mode object when there is no more specific allocator available
@@ -1049,7 +1051,7 @@ createDisplayModeKHR :: forall io
                         ("allocator" ::: Maybe AllocationCallbacks)
                      -> io (DisplayModeKHR)
 createDisplayModeKHR physicalDevice display createInfo allocator = liftIO . evalContT $ do
-  let vkCreateDisplayModeKHRPtr = pVkCreateDisplayModeKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkCreateDisplayModeKHRPtr = pVkCreateDisplayModeKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateDisplayModeKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDisplayModeKHR is null" Nothing Nothing
   let vkCreateDisplayModeKHR' = mkVkCreateDisplayModeKHR vkCreateDisplayModeKHRPtr
@@ -1105,11 +1107,13 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Extensions.Handles.DisplayModeKHR',
 -- 'DisplayPlaneCapabilitiesKHR', 'Vulkan.Core10.Handles.PhysicalDevice'
 getDisplayPlaneCapabilitiesKHR :: forall io
                                 . (MonadIO io)
-                               => -- | @physicalDevice@ is the physical device associated with @display@
+                               => -- | @physicalDevice@ is the physical device associated with the display
+                                  -- specified by @mode@
                                   PhysicalDevice
                                -> -- | @mode@ is the display mode the application intends to program when using
                                   -- the specified plane. Note this parameter also implicitly specifies a
@@ -1121,7 +1125,7 @@ getDisplayPlaneCapabilitiesKHR :: forall io
                                   ("planeIndex" ::: Word32)
                                -> io (DisplayPlaneCapabilitiesKHR)
 getDisplayPlaneCapabilitiesKHR physicalDevice mode planeIndex = liftIO . evalContT $ do
-  let vkGetDisplayPlaneCapabilitiesKHRPtr = pVkGetDisplayPlaneCapabilitiesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetDisplayPlaneCapabilitiesKHRPtr = pVkGetDisplayPlaneCapabilitiesKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetDisplayPlaneCapabilitiesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDisplayPlaneCapabilitiesKHR is null" Nothing Nothing
   let vkGetDisplayPlaneCapabilitiesKHR' = mkVkGetDisplayPlaneCapabilitiesKHR vkGetDisplayPlaneCapabilitiesKHRPtr
@@ -1175,6 +1179,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'DisplaySurfaceCreateInfoKHR', 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
@@ -1193,7 +1198,7 @@ createDisplayPlaneSurfaceKHR :: forall io
                                 ("allocator" ::: Maybe AllocationCallbacks)
                              -> io (SurfaceKHR)
 createDisplayPlaneSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateDisplayPlaneSurfaceKHRPtr = pVkCreateDisplayPlaneSurfaceKHR (instanceCmds (instance' :: Instance))
+  let vkCreateDisplayPlaneSurfaceKHRPtr = pVkCreateDisplayPlaneSurfaceKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateDisplayPlaneSurfaceKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDisplayPlaneSurfaceKHR is null" Nothing Nothing
   let vkCreateDisplayPlaneSurfaceKHR' = mkVkCreateDisplayPlaneSurfaceKHR vkCreateDisplayPlaneSurfaceKHRPtr
@@ -1226,6 +1231,7 @@ createDisplayPlaneSurfaceKHR instance' createInfo allocator = liftIO . evalContT
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Vulkan.Extensions.VK_KHR_get_display_properties2.DisplayProperties2KHR',
@@ -1236,11 +1242,11 @@ data DisplayPropertiesKHR = DisplayPropertiesKHR
   { -- | @display@ is a handle that is used to refer to the display described
     -- here. This handle will be valid for the lifetime of the Vulkan instance.
     display :: DisplayKHR
-  , -- | @displayName@ is a pointer to a null-terminated UTF-8 string containing
-    -- the name of the display. Generally, this will be the name provided by
-    -- the display’s EDID. It /can/ be @NULL@ if no suitable name is available.
-    -- If not @NULL@, the memory it points to /must/ remain accessible as long
-    -- as @display@ is valid.
+  , -- | @displayName@ is @NULL@ or a pointer to a null-terminated UTF-8 string
+    -- containing the name of the display. Generally, this will be the name
+    -- provided by the display’s EDID. If @NULL@, no suitable name is
+    -- available. If not @NULL@, the string pointed to /must/ remain accessible
+    -- and unmodified as long as @display@ is valid.
     displayName :: ByteString
   , -- | @physicalDimensions@ describes the physical width and height of the
     -- visible portion of the display, in millimeters.
@@ -1270,7 +1276,7 @@ deriving instance Generic (DisplayPropertiesKHR)
 deriving instance Show DisplayPropertiesKHR
 
 instance ToCStruct DisplayPropertiesKHR where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplayPropertiesKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr DisplayKHR)) (display)
     displayName'' <- ContT $ useAsCString (displayName)
@@ -1321,6 +1327,7 @@ instance Zero DisplayPropertiesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Vulkan.Extensions.VK_KHR_get_display_properties2.DisplayPlaneProperties2KHR',
 -- 'getPhysicalDeviceDisplayPlanePropertiesKHR'
@@ -1341,7 +1348,7 @@ deriving instance Generic (DisplayPlanePropertiesKHR)
 deriving instance Show DisplayPlanePropertiesKHR
 
 instance ToCStruct DisplayPlanePropertiesKHR where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplayPlanePropertiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DisplayKHR)) (currentDisplay)
     poke ((p `plusPtr` 8 :: Ptr Word32)) (currentStackIndex)
@@ -1394,6 +1401,7 @@ instance Zero DisplayPlanePropertiesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'DisplayModeCreateInfoKHR', 'DisplayModePropertiesKHR',
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D'
 data DisplayModeParametersKHR = DisplayModeParametersKHR
@@ -1410,7 +1418,7 @@ deriving instance Generic (DisplayModeParametersKHR)
 deriving instance Show DisplayModeParametersKHR
 
 instance ToCStruct DisplayModeParametersKHR where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplayModeParametersKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Extent2D)) (visibleRegion)
     poke ((p `plusPtr` 8 :: Ptr Word32)) (refreshRate)
@@ -1446,6 +1454,7 @@ instance Zero DisplayModeParametersKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Extensions.Handles.DisplayModeKHR', 'DisplayModeParametersKHR',
 -- 'Vulkan.Extensions.VK_KHR_get_display_properties2.DisplayModeProperties2KHR',
 -- 'getDisplayModePropertiesKHR'
@@ -1465,7 +1474,7 @@ deriving instance Generic (DisplayModePropertiesKHR)
 deriving instance Show DisplayModePropertiesKHR
 
 instance ToCStruct DisplayModePropertiesKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplayModePropertiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DisplayModeKHR)) (displayMode)
     poke ((p `plusPtr` 8 :: Ptr DisplayModeParametersKHR)) (parameters)
@@ -1503,6 +1512,7 @@ instance Zero DisplayModePropertiesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'DisplayModeCreateFlagsKHR', 'DisplayModeParametersKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createDisplayModeKHR'
@@ -1528,7 +1538,7 @@ deriving instance Generic (DisplayModeCreateInfoKHR)
 deriving instance Show DisplayModeCreateInfoKHR
 
 instance ToCStruct DisplayModeCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplayModeCreateInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1573,16 +1583,16 @@ instance Zero DisplayModeCreateInfoKHR where
 -- swapchain’s presentable images on the specified display plane. This is
 -- expressed by returning @minSrcPosition@, @maxSrcPosition@,
 -- @minSrcExtent@, and @maxSrcExtent@ values that indicate a range of
--- possible positions and sizes /may/ be used to specify the region within
--- the presentable images that source pixels will be read from when
+-- possible positions and sizes which /may/ be used to specify the region
+-- within the presentable images that source pixels will be read from when
 -- creating a swapchain on the specified display mode and plane.
 --
 -- Vendors /may/ also support mapping the presentable images’ content to a
 -- subset or superset of the visible region in the specified display mode.
 -- This is expressed by returning @minDstPosition@, @maxDstPosition@,
 -- @minDstExtent@ and @maxDstExtent@ values that indicate a range of
--- possible positions and sizes /may/ be used to describe the region within
--- the display mode that the source pixels will be mapped to.
+-- possible positions and sizes which /may/ be used to describe the region
+-- within the display mode that the source pixels will be mapped to.
 --
 -- Other vendors /may/ support only a 1-1 mapping between pixels in the
 -- presentable images and the display mode. This /may/ be indicated by
@@ -1602,6 +1612,7 @@ instance Zero DisplayModeCreateInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'DisplayPlaneAlphaFlagsKHR',
 -- 'Vulkan.Extensions.VK_KHR_get_display_properties2.DisplayPlaneCapabilities2KHR',
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
@@ -1645,7 +1656,7 @@ deriving instance Generic (DisplayPlaneCapabilitiesKHR)
 deriving instance Show DisplayPlaneCapabilitiesKHR
 
 instance ToCStruct DisplayPlaneCapabilitiesKHR where
-  withCStruct x f = allocaBytesAligned 68 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 68 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplayPlaneCapabilitiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DisplayPlaneAlphaFlagsKHR)) (supportedAlpha)
     poke ((p `plusPtr` 4 :: Ptr Offset2D)) (minSrcPosition)
@@ -1772,6 +1783,7 @@ instance Zero DisplayPlaneCapabilitiesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Extensions.Handles.DisplayModeKHR',
 -- 'DisplayPlaneAlphaFlagBitsKHR', 'DisplaySurfaceCreateFlagsKHR',
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
@@ -1799,7 +1811,7 @@ data DisplaySurfaceCreateInfoKHR = DisplaySurfaceCreateInfoKHR
   , -- | @alphaMode@ is a 'DisplayPlaneAlphaFlagBitsKHR' value specifying the
     -- type of alpha blending to use.
     alphaMode :: DisplayPlaneAlphaFlagBitsKHR
-  , -- | @imageExtent@ The size of the presentable images to use with the
+  , -- | @imageExtent@ is the size of the presentable images to use with the
     -- surface.
     imageExtent :: Extent2D
   }
@@ -1810,7 +1822,7 @@ deriving instance Generic (DisplaySurfaceCreateInfoKHR)
 deriving instance Show DisplaySurfaceCreateInfoKHR
 
 instance ToCStruct DisplaySurfaceCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplaySurfaceCreateInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1877,6 +1889,7 @@ instance Zero DisplaySurfaceCreateInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'DisplayModeCreateInfoKHR'
 newtype DisplayModeCreateFlagsKHR = DisplayModeCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -1915,6 +1928,7 @@ instance Read DisplayModeCreateFlagsKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'DisplaySurfaceCreateInfoKHR'
 newtype DisplaySurfaceCreateFlagsKHR = DisplaySurfaceCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -1950,6 +1964,7 @@ type DisplayPlaneAlphaFlagsKHR = DisplayPlaneAlphaFlagBitsKHR
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'DisplayPlaneAlphaFlagsKHR', 'DisplaySurfaceCreateInfoKHR'
 newtype DisplayPlaneAlphaFlagBitsKHR = DisplayPlaneAlphaFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -1962,15 +1977,15 @@ pattern DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR                  = DisplayPlaneAlphaF
 -- image.
 pattern DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR                  = DisplayPlaneAlphaFlagBitsKHR 0x00000002
 -- | 'DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR' specifies that the alpha value
--- will be determined by the alpha channel of the source image’s pixels. If
--- the source format contains no alpha values, no blending will be applied.
--- The source alpha values are not premultiplied into the source image’s
--- other color channels.
+-- will be determined by the alpha component of the source image’s pixels.
+-- If the source format contains no alpha values, no blending will be
+-- applied. The source alpha values are not premultiplied into the source
+-- image’s other color components.
 pattern DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR               = DisplayPlaneAlphaFlagBitsKHR 0x00000004
 -- | 'DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR' is equivalent to
 -- 'DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR', except the source alpha values
 -- are assumed to be premultiplied into the source image’s other color
--- channels.
+-- components.
 pattern DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = DisplayPlaneAlphaFlagBitsKHR 0x00000008
 
 conNameDisplayPlaneAlphaFlagBitsKHR :: String

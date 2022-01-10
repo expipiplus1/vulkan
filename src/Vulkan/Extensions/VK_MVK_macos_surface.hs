@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Bill Hollings
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_MVK_macos_surface:%20&body=@billhollings%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_MVK_macos_surface] @billhollings%0A<<Here describe the issue or question you have about the VK_MVK_macos_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -98,12 +98,12 @@
 --
 --     -   Mark as deprecated by @VK_EXT_metal_surface@.
 --
--- = See Also
+-- == See Also
 --
 -- 'MacOSSurfaceCreateFlagsMVK', 'MacOSSurfaceCreateInfoMVK',
 -- 'createMacOSSurfaceMVK'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_MVK_macos_surface Vulkan Specification>
@@ -126,7 +126,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -167,6 +167,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateMacOSSurfaceMVK))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Enums.Result (Result)
@@ -246,6 +247,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_MVK_macos_surface VK_MVK_macos_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance', 'MacOSSurfaceCreateInfoMVK',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
@@ -259,7 +261,7 @@ createMacOSSurfaceMVK :: forall io
                          ("allocator" ::: Maybe AllocationCallbacks)
                       -> io (SurfaceKHR)
 createMacOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateMacOSSurfaceMVKPtr = pVkCreateMacOSSurfaceMVK (instanceCmds (instance' :: Instance))
+  let vkCreateMacOSSurfaceMVKPtr = pVkCreateMacOSSurfaceMVK (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateMacOSSurfaceMVKPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateMacOSSurfaceMVK is null" Nothing Nothing
   let vkCreateMacOSSurfaceMVK' = mkVkCreateMacOSSurfaceMVK vkCreateMacOSSurfaceMVKPtr
@@ -282,13 +284,13 @@ createMacOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do
 -- -   #VUID-VkMacOSSurfaceCreateInfoMVK-pView-04144# If @pView@ is a
 --     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer' object, it
 --     /must/ be a valid
---     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer'.
+--     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer'
 --
 -- -   #VUID-VkMacOSSurfaceCreateInfoMVK-pView-01317# If @pView@ is an
 --     @NSView@ object, it /must/ be a valid @NSView@, /must/ be backed by
 --     a @CALayer@ object of type
 --     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer', and
---     'createMacOSSurfaceMVK' /must/ be called on the main thread.
+--     'createMacOSSurfaceMVK' /must/ be called on the main thread
 --
 -- == Valid Usage (Implicit)
 --
@@ -303,6 +305,7 @@ createMacOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_MVK_macos_surface VK_MVK_macos_surface>,
 -- 'MacOSSurfaceCreateFlagsMVK',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createMacOSSurfaceMVK'
@@ -321,7 +324,7 @@ deriving instance Generic (MacOSSurfaceCreateInfoMVK)
 deriving instance Show MacOSSurfaceCreateInfoMVK
 
 instance ToCStruct MacOSSurfaceCreateInfoMVK where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MacOSSurfaceCreateInfoMVK{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -364,6 +367,7 @@ instance Zero MacOSSurfaceCreateInfoMVK where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_MVK_macos_surface VK_MVK_macos_surface>,
 -- 'MacOSSurfaceCreateInfoMVK'
 newtype MacOSSurfaceCreateFlagsMVK = MacOSSurfaceCreateFlagsMVK Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Pat Brown
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_shading_rate_image:%20&body=@nvpbrown%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_shading_rate_image] @nvpbrown%0A<<Here describe the issue or question you have about the VK_NV_shading_rate_image extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -142,7 +142,7 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits':
 --
---     -   'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV'
+--     -   'ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV'
 --
 -- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
 --
@@ -152,17 +152,17 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.ImageLayout.ImageLayout':
 --
---     -   'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV'
+--     -   'IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits':
 --
---     -   'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV'
+--     -   'IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits':
 --
---     -   'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
+--     -   'PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -201,15 +201,15 @@
 -- perform such a query, it could instead just set its own order, also
 -- using custom per-pixel sample locations if required.
 --
--- (2) For the pipeline stage
--- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV',
+-- (2) For the pipeline stage 'PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV',
 -- should we specify a precise location in the pipeline the shading rate
 -- image is accessed (after geometry shading, but before the early fragment
 -- tests) or leave it under-specified in case there are other
 -- implementations that access the image in a different pipeline location?
 --
 -- __RESOLVED__ We are specifying the pipeline stage to be between the
--- final stage used for vertex processing
+-- final
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>
 -- ('Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT')
 -- and before the first stage used for fragment processing
 -- ('Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT'),
@@ -240,7 +240,7 @@
 -- that this same problem also exists for multisampling with single-pixel
 -- fragments, but is less severe because it only affects certain samples of
 -- a pixel and such bright\/dark samples may be averaged with other samples
--- that don’t have a similar problem.
+-- that do not have a similar problem.
 --
 -- == Version History
 --
@@ -256,7 +256,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'CoarseSampleLocationNV', 'CoarseSampleOrderCustomNV',
 -- 'CoarseSampleOrderTypeNV', 'PhysicalDeviceShadingRateImageFeaturesNV',
@@ -267,7 +267,7 @@
 -- 'cmdBindShadingRateImageNV', 'cmdSetCoarseSampleOrderNV',
 -- 'cmdSetViewportShadingRatePaletteNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image Vulkan Specification>
@@ -277,6 +277,10 @@
 module Vulkan.Extensions.VK_NV_shading_rate_image  ( cmdBindShadingRateImageNV
                                                    , cmdSetViewportShadingRatePaletteNV
                                                    , cmdSetCoarseSampleOrderNV
+                                                   , pattern IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV
+                                                   , pattern ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV
+                                                   , pattern IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV
+                                                   , pattern PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV
                                                    , ShadingRatePaletteNV(..)
                                                    , PipelineViewportShadingRateImageStateCreateInfoNV(..)
                                                    , PhysicalDeviceShadingRateImageFeaturesNV(..)
@@ -315,7 +319,7 @@ import Vulkan.Internal.Utils (enumShowsPrec)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -358,6 +362,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBindShadingRateImageNV))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetCoarseSampleOrderNV))
@@ -368,6 +373,13 @@ import Vulkan.Core10.Enums.ImageLayout (ImageLayout(..))
 import Vulkan.Core10.Handles (ImageView)
 import Vulkan.Core10.Handles (ImageView(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
+import Vulkan.Core10.Enums.AccessFlagBits (AccessFlags)
+import Vulkan.Core10.Enums.AccessFlagBits (AccessFlagBits(ACCESS_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR))
+import Vulkan.Core10.Enums.ImageLayout (ImageLayout(IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR))
+import Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
+import Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlagBits(IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR))
+import Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlags)
+import Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlagBits(PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_FEATURES_NV))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_PROPERTIES_NV))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_VIEWPORT_COARSE_SAMPLE_ORDER_STATE_CREATE_INFO_NV))
@@ -401,7 +413,7 @@ foreign import ccall
 -- -   #VUID-vkCmdBindShadingRateImageNV-imageView-02061# If @imageView@ is
 --     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ have been
 --     created with a @usage@ value including
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV'
+--     'IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
 -- -   #VUID-vkCmdBindShadingRateImageNV-imageView-02062# If @imageView@ is
 --     not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @imageLayout@ /must/
@@ -411,9 +423,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBindShadingRateImageNV-imageLayout-02063# If @imageView@
 --     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @imageLayout@
---     /must/ be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV'
---     or 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
+--     /must/ be 'IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV' or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
 --
 -- == Valid Usage (Implicit)
 --
@@ -454,15 +465,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.Handles.ImageView'
@@ -481,7 +493,7 @@ cmdBindShadingRateImageNV :: forall io
                              ImageLayout
                           -> io ()
 cmdBindShadingRateImageNV commandBuffer imageView imageLayout = liftIO $ do
-  let vkCmdBindShadingRateImageNVPtr = pVkCmdBindShadingRateImageNV (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBindShadingRateImageNVPtr = pVkCmdBindShadingRateImageNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdBindShadingRateImageNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindShadingRateImageNV is null" Nothing Nothing
   let vkCmdBindShadingRateImageNV' = mkVkCmdBindShadingRateImageNV vkCmdBindShadingRateImageNVPtr
@@ -497,7 +509,18 @@ foreign import ccall
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr ShadingRatePaletteNV -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr ShadingRatePaletteNV -> IO ()
 
 -- | vkCmdSetViewportShadingRatePaletteNV - Set shading rate image palettes
--- on a command buffer
+-- dynamically for a command buffer
+--
+-- = Description
+--
+-- This command sets the per-viewport shading rate image palettes for
+-- subsequent drawing commands when the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV'
+-- set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'PipelineViewportShadingRateImageStateCreateInfoNV'::@pShadingRatePalettes@
+-- values used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -552,15 +575,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'ShadingRatePaletteNV'
 cmdSetViewportShadingRatePaletteNV :: forall io
                                     . (MonadIO io)
@@ -576,11 +600,11 @@ cmdSetViewportShadingRatePaletteNV :: forall io
                                       ("shadingRatePalettes" ::: Vector ShadingRatePaletteNV)
                                    -> io ()
 cmdSetViewportShadingRatePaletteNV commandBuffer firstViewport shadingRatePalettes = liftIO . evalContT $ do
-  let vkCmdSetViewportShadingRatePaletteNVPtr = pVkCmdSetViewportShadingRatePaletteNV (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetViewportShadingRatePaletteNVPtr = pVkCmdSetViewportShadingRatePaletteNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetViewportShadingRatePaletteNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetViewportShadingRatePaletteNV is null" Nothing Nothing
   let vkCmdSetViewportShadingRatePaletteNV' = mkVkCmdSetViewportShadingRatePaletteNV vkCmdSetViewportShadingRatePaletteNVPtr
-  pPShadingRatePalettes <- ContT $ allocaBytesAligned @ShadingRatePaletteNV ((Data.Vector.length (shadingRatePalettes)) * 16) 8
+  pPShadingRatePalettes <- ContT $ allocaBytes @ShadingRatePaletteNV ((Data.Vector.length (shadingRatePalettes)) * 16)
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPShadingRatePalettes `plusPtr` (16 * (i)) :: Ptr ShadingRatePaletteNV) (e) . ($ ())) (shadingRatePalettes)
   lift $ traceAroundEvent "vkCmdSetViewportShadingRatePaletteNV" (vkCmdSetViewportShadingRatePaletteNV' (commandBufferHandle (commandBuffer)) (firstViewport) ((fromIntegral (Data.Vector.length $ (shadingRatePalettes)) :: Word32)) (pPShadingRatePalettes))
   pure $ ()
@@ -593,8 +617,8 @@ foreign import ccall
   "dynamic" mkVkCmdSetCoarseSampleOrderNV
   :: FunPtr (Ptr CommandBuffer_T -> CoarseSampleOrderTypeNV -> Word32 -> Ptr CoarseSampleOrderCustomNV -> IO ()) -> Ptr CommandBuffer_T -> CoarseSampleOrderTypeNV -> Word32 -> Ptr CoarseSampleOrderCustomNV -> IO ()
 
--- | vkCmdSetCoarseSampleOrderNV - Set sample order for coarse fragments on a
--- command buffer
+-- | vkCmdSetCoarseSampleOrderNV - Set order of coverage samples for coarse
+-- fragments dynamically for a command buffer
 --
 -- = Description
 --
@@ -602,6 +626,15 @@ foreign import ccall
 -- coverage sample order used for any combination of fragment area and
 -- coverage sample count not enumerated in @pCustomSampleOrders@ will be
 -- identical to that used for 'COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV'.
+--
+-- This command sets the order of coverage samples for subsequent drawing
+-- commands when the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV'
+-- set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'PipelineViewportCoarseSampleOrderStateCreateInfoNV' values used to
+-- create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -646,15 +679,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'CoarseSampleOrderCustomNV', 'CoarseSampleOrderTypeNV',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetCoarseSampleOrderNV :: forall io
@@ -666,20 +700,36 @@ cmdSetCoarseSampleOrderNV :: forall io
                              -- in fragments larger than one pixel.
                              CoarseSampleOrderTypeNV
                           -> -- | @pCustomSampleOrders@ is a pointer to an array of
-                             -- 'CoarseSampleOrderCustomNV' structures, each of which specifies the
+                             -- 'CoarseSampleOrderCustomNV' structures, each structure specifying the
                              -- coverage sample order for a single combination of fragment area and
                              -- coverage sample count.
                              ("customSampleOrders" ::: Vector CoarseSampleOrderCustomNV)
                           -> io ()
 cmdSetCoarseSampleOrderNV commandBuffer sampleOrderType customSampleOrders = liftIO . evalContT $ do
-  let vkCmdSetCoarseSampleOrderNVPtr = pVkCmdSetCoarseSampleOrderNV (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetCoarseSampleOrderNVPtr = pVkCmdSetCoarseSampleOrderNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetCoarseSampleOrderNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetCoarseSampleOrderNV is null" Nothing Nothing
   let vkCmdSetCoarseSampleOrderNV' = mkVkCmdSetCoarseSampleOrderNV vkCmdSetCoarseSampleOrderNVPtr
-  pPCustomSampleOrders <- ContT $ allocaBytesAligned @CoarseSampleOrderCustomNV ((Data.Vector.length (customSampleOrders)) * 24) 8
+  pPCustomSampleOrders <- ContT $ allocaBytes @CoarseSampleOrderCustomNV ((Data.Vector.length (customSampleOrders)) * 24)
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPCustomSampleOrders `plusPtr` (24 * (i)) :: Ptr CoarseSampleOrderCustomNV) (e) . ($ ())) (customSampleOrders)
   lift $ traceAroundEvent "vkCmdSetCoarseSampleOrderNV" (vkCmdSetCoarseSampleOrderNV' (commandBufferHandle (commandBuffer)) (sampleOrderType) ((fromIntegral (Data.Vector.length $ (customSampleOrders)) :: Word32)) (pPCustomSampleOrders))
   pure $ ()
+
+
+-- No documentation found for TopLevel "VK_IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV"
+pattern IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV = IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR
+
+
+-- No documentation found for TopLevel "VK_ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV"
+pattern ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV = ACCESS_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV"
+pattern IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV = IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV"
+pattern PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV = PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
 
 
 -- | VkShadingRatePaletteNV - Structure specifying a single shading rate
@@ -689,6 +739,7 @@ cmdSetCoarseSampleOrderNV commandBuffer sampleOrderType customSampleOrders = lif
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'PipelineViewportShadingRateImageStateCreateInfoNV',
 -- 'ShadingRatePaletteEntryNV', 'cmdSetViewportShadingRatePaletteNV'
 data ShadingRatePaletteNV = ShadingRatePaletteNV
@@ -707,10 +758,10 @@ deriving instance Generic (ShadingRatePaletteNV)
 deriving instance Show ShadingRatePaletteNV
 
 instance ToCStruct ShadingRatePaletteNV where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ShadingRatePaletteNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (shadingRatePaletteEntries)) :: Word32))
-    pPShadingRatePaletteEntries' <- ContT $ allocaBytesAligned @ShadingRatePaletteEntryNV ((Data.Vector.length (shadingRatePaletteEntries)) * 4) 4
+    pPShadingRatePaletteEntries' <- ContT $ allocaBytes @ShadingRatePaletteEntryNV ((Data.Vector.length (shadingRatePaletteEntries)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPShadingRatePaletteEntries' `plusPtr` (4 * (i)) :: Ptr ShadingRatePaletteEntryNV) (e)) (shadingRatePaletteEntries)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ShadingRatePaletteEntryNV))) (pPShadingRatePaletteEntries')
     lift $ f
@@ -765,6 +816,7 @@ instance Zero ShadingRatePaletteNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32', 'ShadingRatePaletteNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineViewportShadingRateImageStateCreateInfoNV = PipelineViewportShadingRateImageStateCreateInfoNV
@@ -784,13 +836,13 @@ deriving instance Generic (PipelineViewportShadingRateImageStateCreateInfoNV)
 deriving instance Show PipelineViewportShadingRateImageStateCreateInfoNV
 
 instance ToCStruct PipelineViewportShadingRateImageStateCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineViewportShadingRateImageStateCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_SHADING_RATE_IMAGE_STATE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (shadingRateImageEnable))
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (shadingRatePalettes)) :: Word32))
-    pPShadingRatePalettes' <- ContT $ allocaBytesAligned @ShadingRatePaletteNV ((Data.Vector.length (shadingRatePalettes)) * 16) 8
+    pPShadingRatePalettes' <- ContT $ allocaBytes @ShadingRatePaletteNV ((Data.Vector.length (shadingRatePalettes)) * 16)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPShadingRatePalettes' `plusPtr` (16 * (i)) :: Ptr ShadingRatePaletteNV) (e) . ($ ())) (shadingRatePalettes)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ShadingRatePaletteNV))) (pPShadingRatePalettes')
     lift $ f
@@ -822,8 +874,7 @@ instance Zero PipelineViewportShadingRateImageStateCreateInfoNV where
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceShadingRateImageFeaturesNV' structure
--- describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
@@ -832,17 +883,20 @@ instance Zero PipelineViewportShadingRateImageStateCreateInfoNV where
 -- for more information.
 --
 -- If the 'PhysicalDeviceShadingRateImageFeaturesNV' structure is included
--- in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceShadingRateImageFeaturesNV' /can/ also be included in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- features.
+-- in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceShadingRateImageFeaturesNV' /can/ also be used
+-- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShadingRateImageFeaturesNV = PhysicalDeviceShadingRateImageFeaturesNV
@@ -863,7 +917,7 @@ deriving instance Generic (PhysicalDeviceShadingRateImageFeaturesNV)
 deriving instance Show PhysicalDeviceShadingRateImageFeaturesNV
 
 instance ToCStruct PhysicalDeviceShadingRateImageFeaturesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShadingRateImageFeaturesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_FEATURES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -901,37 +955,36 @@ instance Zero PhysicalDeviceShadingRateImageFeaturesNV where
 -- | VkPhysicalDeviceShadingRateImagePropertiesNV - Structure describing
 -- shading rate image limits that can be supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceShadingRateImagePropertiesNV'
--- structure describe the following implementation-dependent properties
--- related to the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-shading-rate-image shading rate image>
--- feature:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceShadingRateImagePropertiesNV' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
+--
+-- These properties are related to the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-shading-rate-image shading rate image>
+-- feature.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShadingRateImagePropertiesNV = PhysicalDeviceShadingRateImagePropertiesNV
-  { -- | #limits-shading-rate-texel-size# @shadingRateTexelSize@ indicates the
-    -- width and height of the portion of the framebuffer corresponding to each
-    -- texel in the shading rate image.
+  { -- | #limits-shadingRateTexelSize# @shadingRateTexelSize@ indicates the width
+    -- and height of the portion of the framebuffer corresponding to each texel
+    -- in the shading rate image.
     shadingRateTexelSize :: Extent2D
-  , -- | #limits-shading-rate-palette-size# @shadingRatePaletteSize@ indicates
-    -- the maximum number of palette entries supported for the shading rate
-    -- image.
+  , -- | #limits-shadingRatePaletteSize# @shadingRatePaletteSize@ indicates the
+    -- maximum number of palette entries supported for the shading rate image.
     shadingRatePaletteSize :: Word32
-  , -- | #limits-shading-rate-max-coarse-samples# @shadingRateMaxCoarseSamples@
+  , -- | #limits-shadingRateMaxCoarseSamples# @shadingRateMaxCoarseSamples@
     -- specifies the maximum number of coverage samples supported in a single
     -- fragment. If the product of the fragment size derived from the base
     -- shading rate and the number of coverage samples per pixel exceeds this
@@ -946,7 +999,7 @@ deriving instance Generic (PhysicalDeviceShadingRateImagePropertiesNV)
 deriving instance Show PhysicalDeviceShadingRateImagePropertiesNV
 
 instance ToCStruct PhysicalDeviceShadingRateImagePropertiesNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShadingRateImagePropertiesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_PROPERTIES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -992,6 +1045,7 @@ instance Zero PhysicalDeviceShadingRateImagePropertiesNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'CoarseSampleOrderCustomNV'
 data CoarseSampleLocationNV = CoarseSampleLocationNV
   { -- | @pixelX@ is added to the x coordinate of the upper-leftmost pixel of
@@ -1021,7 +1075,7 @@ deriving instance Generic (CoarseSampleLocationNV)
 deriving instance Show CoarseSampleLocationNV
 
 instance ToCStruct CoarseSampleLocationNV where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CoarseSampleLocationNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (pixelX)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (pixelY)
@@ -1108,6 +1162,7 @@ instance Zero CoarseSampleLocationNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'CoarseSampleLocationNV',
 -- 'PipelineViewportCoarseSampleOrderStateCreateInfoNV',
 -- 'ShadingRatePaletteEntryNV', 'cmdSetCoarseSampleOrderNV'
@@ -1131,12 +1186,12 @@ deriving instance Generic (CoarseSampleOrderCustomNV)
 deriving instance Show CoarseSampleOrderCustomNV
 
 instance ToCStruct CoarseSampleOrderCustomNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CoarseSampleOrderCustomNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr ShadingRatePaletteEntryNV)) (shadingRate)
     lift $ poke ((p `plusPtr` 4 :: Ptr Word32)) (sampleCount)
     lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (sampleLocations)) :: Word32))
-    pPSampleLocations' <- ContT $ allocaBytesAligned @CoarseSampleLocationNV ((Data.Vector.length (sampleLocations)) * 12) 4
+    pPSampleLocations' <- ContT $ allocaBytes @CoarseSampleLocationNV ((Data.Vector.length (sampleLocations)) * 12)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPSampleLocations' `plusPtr` (12 * (i)) :: Ptr CoarseSampleLocationNV) (e)) (sampleLocations)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr CoarseSampleLocationNV))) (pPSampleLocations')
     lift $ f
@@ -1210,6 +1265,7 @@ instance Zero CoarseSampleOrderCustomNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'CoarseSampleOrderCustomNV', 'CoarseSampleOrderTypeNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineViewportCoarseSampleOrderStateCreateInfoNV = PipelineViewportCoarseSampleOrderStateCreateInfoNV
@@ -1217,9 +1273,9 @@ data PipelineViewportCoarseSampleOrderStateCreateInfoNV = PipelineViewportCoarse
     -- in fragments larger than one pixel.
     sampleOrderType :: CoarseSampleOrderTypeNV
   , -- | @pCustomSampleOrders@ is a pointer to an array of
-    -- @customSampleOrderCount@ 'CoarseSampleOrderCustomNV' structures, each of
-    -- which specifies the coverage sample order for a single combination of
-    -- fragment area and coverage sample count.
+    -- @customSampleOrderCount@ 'CoarseSampleOrderCustomNV' structures, each
+    -- structure specifying the coverage sample order for a single combination
+    -- of fragment area and coverage sample count.
     customSampleOrders :: Vector CoarseSampleOrderCustomNV
   }
   deriving (Typeable)
@@ -1229,13 +1285,13 @@ deriving instance Generic (PipelineViewportCoarseSampleOrderStateCreateInfoNV)
 deriving instance Show PipelineViewportCoarseSampleOrderStateCreateInfoNV
 
 instance ToCStruct PipelineViewportCoarseSampleOrderStateCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineViewportCoarseSampleOrderStateCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_COARSE_SAMPLE_ORDER_STATE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr CoarseSampleOrderTypeNV)) (sampleOrderType)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (customSampleOrders)) :: Word32))
-    pPCustomSampleOrders' <- ContT $ allocaBytesAligned @CoarseSampleOrderCustomNV ((Data.Vector.length (customSampleOrders)) * 24) 8
+    pPCustomSampleOrders' <- ContT $ allocaBytes @CoarseSampleOrderCustomNV ((Data.Vector.length (customSampleOrders)) * 24)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPCustomSampleOrders' `plusPtr` (24 * (i)) :: Ptr CoarseSampleOrderCustomNV) (e) . ($ ())) (customSampleOrders)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr CoarseSampleOrderCustomNV))) (pPCustomSampleOrders')
     lift $ f
@@ -1303,6 +1359,7 @@ instance Zero PipelineViewportCoarseSampleOrderStateCreateInfoNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'CoarseSampleOrderCustomNV', 'ShadingRatePaletteNV'
 newtype ShadingRatePaletteEntryNV = ShadingRatePaletteEntryNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -1384,6 +1441,7 @@ instance Read ShadingRatePaletteEntryNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>,
 -- 'PipelineViewportCoarseSampleOrderStateCreateInfoNV',
 -- 'cmdSetCoarseSampleOrderNV'
 newtype CoarseSampleOrderTypeNV = CoarseSampleOrderTypeNV Int32

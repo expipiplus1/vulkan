@@ -32,7 +32,7 @@
 -- [__Contact__]
 --
 --     -   Tobin Ehlis
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_validation_flags:%20&body=@tobine%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_validation_flags] @tobine%0A<<Here describe the issue or question you have about the VK_EXT_validation_flags extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -93,11 +93,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'ValidationCheckEXT', 'ValidationFlagsEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_flags Vulkan Specification>
@@ -117,7 +117,7 @@ module Vulkan.Extensions.VK_EXT_validation_flags  ( ValidationFlagsEXT(..)
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showsPrec)
@@ -156,6 +156,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_VALIDATIO
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_flags VK_EXT_validation_flags>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'ValidationCheckEXT'
 data ValidationFlagsEXT = ValidationFlagsEXT
   { -- | @pDisabledValidationChecks@ is a pointer to an array of
@@ -173,12 +174,12 @@ deriving instance Generic (ValidationFlagsEXT)
 deriving instance Show ValidationFlagsEXT
 
 instance ToCStruct ValidationFlagsEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ValidationFlagsEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_VALIDATION_FLAGS_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (disabledValidationChecks)) :: Word32))
-    pPDisabledValidationChecks' <- ContT $ allocaBytesAligned @ValidationCheckEXT ((Data.Vector.length (disabledValidationChecks)) * 4) 4
+    pPDisabledValidationChecks' <- ContT $ allocaBytes @ValidationCheckEXT ((Data.Vector.length (disabledValidationChecks)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPDisabledValidationChecks' `plusPtr` (4 * (i)) :: Ptr ValidationCheckEXT) (e)) (disabledValidationChecks)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ValidationCheckEXT))) (pPDisabledValidationChecks')
     lift $ f
@@ -206,6 +207,7 @@ instance Zero ValidationFlagsEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_flags VK_EXT_validation_flags>,
 -- 'ValidationFlagsEXT'
 newtype ValidationCheckEXT = ValidationCheckEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)

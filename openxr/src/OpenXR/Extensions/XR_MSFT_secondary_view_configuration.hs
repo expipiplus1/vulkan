@@ -49,7 +49,7 @@ module OpenXR.Extensions.XR_MSFT_secondary_view_configuration  ( SecondaryViewCo
                                                                , pattern MSFT_SECONDARY_VIEW_CONFIGURATION_EXTENSION_NAME
                                                                ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -116,7 +116,8 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_SECONDARY_VIEW_CONF
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrSecondaryViewConfigurationSessionBeginInfoMSFT-extension-notenabled#
---     The @@ extension /must/ be enabled prior to using
+--     The @XR_MSFT_secondary_view_configuration@ extension /must/ be
+--     enabled prior to using
 --     'SecondaryViewConfigurationSessionBeginInfoMSFT'
 --
 -- -   #VUID-XrSecondaryViewConfigurationSessionBeginInfoMSFT-type-type#
@@ -152,12 +153,12 @@ deriving instance Generic (SecondaryViewConfigurationSessionBeginInfoMSFT)
 deriving instance Show SecondaryViewConfigurationSessionBeginInfoMSFT
 
 instance ToCStruct SecondaryViewConfigurationSessionBeginInfoMSFT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SecondaryViewConfigurationSessionBeginInfoMSFT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SECONDARY_VIEW_CONFIGURATION_SESSION_BEGIN_INFO_MSFT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (enabledViewConfigurationTypes)) :: Word32))
-    pEnabledViewConfigurationTypes' <- ContT $ allocaBytesAligned @ViewConfigurationType ((Data.Vector.length (enabledViewConfigurationTypes)) * 4) 4
+    pEnabledViewConfigurationTypes' <- ContT $ allocaBytes @ViewConfigurationType ((Data.Vector.length (enabledViewConfigurationTypes)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pEnabledViewConfigurationTypes' `plusPtr` (4 * (i)) :: Ptr ViewConfigurationType) (e)) (enabledViewConfigurationTypes)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ViewConfigurationType))) (pEnabledViewConfigurationTypes')
     lift $ f
@@ -226,8 +227,8 @@ instance Zero SecondaryViewConfigurationSessionBeginInfoMSFT where
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrSecondaryViewConfigurationStateMSFT-extension-notenabled#
---     The @@ extension /must/ be enabled prior to using
---     'SecondaryViewConfigurationStateMSFT'
+--     The @XR_MSFT_secondary_view_configuration@ extension /must/ be
+--     enabled prior to using 'SecondaryViewConfigurationStateMSFT'
 --
 -- -   #VUID-XrSecondaryViewConfigurationStateMSFT-type-type# @type@ /must/
 --     be
@@ -267,7 +268,7 @@ deriving instance Generic (SecondaryViewConfigurationStateMSFT)
 deriving instance Show SecondaryViewConfigurationStateMSFT
 
 instance ToCStruct SecondaryViewConfigurationStateMSFT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SecondaryViewConfigurationStateMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SECONDARY_VIEW_CONFIGURATION_STATE_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -320,8 +321,8 @@ instance Zero SecondaryViewConfigurationStateMSFT where
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrSecondaryViewConfigurationFrameStateMSFT-extension-notenabled#
---     The @@ extension /must/ be enabled prior to using
---     'SecondaryViewConfigurationFrameStateMSFT'
+--     The @XR_MSFT_secondary_view_configuration@ extension /must/ be
+--     enabled prior to using 'SecondaryViewConfigurationFrameStateMSFT'
 --
 -- -   #VUID-XrSecondaryViewConfigurationFrameStateMSFT-type-type# @type@
 --     /must/ be
@@ -359,7 +360,7 @@ deriving instance Generic (SecondaryViewConfigurationFrameStateMSFT)
 deriving instance Show SecondaryViewConfigurationFrameStateMSFT
 
 instance ToCStruct SecondaryViewConfigurationFrameStateMSFT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SecondaryViewConfigurationFrameStateMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SECONDARY_VIEW_CONFIGURATION_FRAME_STATE_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -425,8 +426,8 @@ instance Zero SecondaryViewConfigurationFrameStateMSFT where
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrSecondaryViewConfigurationFrameEndInfoMSFT-extension-notenabled#
---     The @@ extension /must/ be enabled prior to using
---     'SecondaryViewConfigurationFrameEndInfoMSFT'
+--     The @XR_MSFT_secondary_view_configuration@ extension /must/ be
+--     enabled prior to using 'SecondaryViewConfigurationFrameEndInfoMSFT'
 --
 -- -   #VUID-XrSecondaryViewConfigurationFrameEndInfoMSFT-type-type# @type@
 --     /must/ be
@@ -461,12 +462,12 @@ deriving instance Generic (SecondaryViewConfigurationFrameEndInfoMSFT)
 deriving instance Show SecondaryViewConfigurationFrameEndInfoMSFT
 
 instance ToCStruct SecondaryViewConfigurationFrameEndInfoMSFT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SecondaryViewConfigurationFrameEndInfoMSFT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SECONDARY_VIEW_CONFIGURATION_FRAME_END_INFO_MSFT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (viewConfigurationLayersInfo)) :: Word32))
-    pViewConfigurationLayersInfo' <- ContT $ allocaBytesAligned @SecondaryViewConfigurationLayerInfoMSFT ((Data.Vector.length (viewConfigurationLayersInfo)) * 40) 8
+    pViewConfigurationLayersInfo' <- ContT $ allocaBytes @SecondaryViewConfigurationLayerInfoMSFT ((Data.Vector.length (viewConfigurationLayersInfo)) * 40)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pViewConfigurationLayersInfo' `plusPtr` (40 * (i)) :: Ptr SecondaryViewConfigurationLayerInfoMSFT) (e) . ($ ())) (viewConfigurationLayersInfo)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr SecondaryViewConfigurationLayerInfoMSFT))) (pViewConfigurationLayersInfo')
     lift $ f
@@ -527,8 +528,8 @@ instance Zero SecondaryViewConfigurationFrameEndInfoMSFT where
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrSecondaryViewConfigurationLayerInfoMSFT-extension-notenabled#
---     The @@ extension /must/ be enabled prior to using
---     'SecondaryViewConfigurationLayerInfoMSFT'
+--     The @XR_MSFT_secondary_view_configuration@ extension /must/ be
+--     enabled prior to using 'SecondaryViewConfigurationLayerInfoMSFT'
 --
 -- -   #VUID-XrSecondaryViewConfigurationLayerInfoMSFT-type-type# @type@
 --     /must/ be
@@ -592,14 +593,14 @@ deriving instance Generic (SecondaryViewConfigurationLayerInfoMSFT)
 deriving instance Show SecondaryViewConfigurationLayerInfoMSFT
 
 instance ToCStruct SecondaryViewConfigurationLayerInfoMSFT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SecondaryViewConfigurationLayerInfoMSFT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SECONDARY_VIEW_CONFIGURATION_LAYER_INFO_MSFT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr ViewConfigurationType)) (viewConfigurationType)
     lift $ poke ((p `plusPtr` 20 :: Ptr EnvironmentBlendMode)) (environmentBlendMode)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (layers)) :: Word32))
-    pLayers' <- ContT $ allocaBytesAligned @(Ptr _) ((Data.Vector.length (layers)) * 8) 8
+    pLayers' <- ContT $ allocaBytes @(Ptr _) ((Data.Vector.length (layers)) * 8)
     Data.Vector.imapM_ (\i e -> do
       layers'' <- ContT $ withSomeChild (e)
       lift $ poke (pLayers' `plusPtr` (8 * (i)) :: Ptr (Ptr _)) layers'') (layers)
@@ -654,7 +655,8 @@ instance Zero SecondaryViewConfigurationLayerInfoMSFT where
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrSecondaryViewConfigurationSwapchainCreateInfoMSFT-extension-notenabled#
---     The @@ extension /must/ be enabled prior to using
+--     The @XR_MSFT_secondary_view_configuration@ extension /must/ be
+--     enabled prior to using
 --     'SecondaryViewConfigurationSwapchainCreateInfoMSFT'
 --
 -- -   #VUID-XrSecondaryViewConfigurationSwapchainCreateInfoMSFT-type-type#
@@ -686,7 +688,7 @@ deriving instance Generic (SecondaryViewConfigurationSwapchainCreateInfoMSFT)
 deriving instance Show SecondaryViewConfigurationSwapchainCreateInfoMSFT
 
 instance ToCStruct SecondaryViewConfigurationSwapchainCreateInfoMSFT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SecondaryViewConfigurationSwapchainCreateInfoMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SECONDARY_VIEW_CONFIGURATION_SWAPCHAIN_CREATE_INFO_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

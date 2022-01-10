@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Lisa Wu
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_headless_surface:%20&body=@chengtianww%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_headless_surface] @chengtianww%0A<<Here describe the issue or question you have about the VK_EXT_headless_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -90,12 +90,12 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'HeadlessSurfaceCreateFlagsEXT', 'HeadlessSurfaceCreateInfoEXT',
 -- 'createHeadlessSurfaceEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_headless_surface Vulkan Specification>
@@ -118,7 +118,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -159,6 +159,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateHeadlessSurfaceEXT))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Enums.Result (Result)
@@ -212,6 +213,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_headless_surface VK_EXT_headless_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'HeadlessSurfaceCreateInfoEXT', 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
@@ -228,7 +230,7 @@ createHeadlessSurfaceEXT :: forall io
                             ("allocator" ::: Maybe AllocationCallbacks)
                          -> io (SurfaceKHR)
 createHeadlessSurfaceEXT instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateHeadlessSurfaceEXTPtr = pVkCreateHeadlessSurfaceEXT (instanceCmds (instance' :: Instance))
+  let vkCreateHeadlessSurfaceEXTPtr = pVkCreateHeadlessSurfaceEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateHeadlessSurfaceEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateHeadlessSurfaceEXT is null" Nothing Nothing
   let vkCreateHeadlessSurfaceEXT' = mkVkCreateHeadlessSurfaceEXT vkCreateHeadlessSurfaceEXTPtr
@@ -250,6 +252,7 @@ createHeadlessSurfaceEXT instance' createInfo allocator = liftIO . evalContT $ d
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_headless_surface VK_EXT_headless_surface>,
 -- 'HeadlessSurfaceCreateFlagsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createHeadlessSurfaceEXT'
@@ -266,7 +269,7 @@ deriving instance Generic (HeadlessSurfaceCreateInfoEXT)
 deriving instance Show HeadlessSurfaceCreateInfoEXT
 
 instance ToCStruct HeadlessSurfaceCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HeadlessSurfaceCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_HEADLESS_SURFACE_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -305,6 +308,7 @@ instance Zero HeadlessSurfaceCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_headless_surface VK_EXT_headless_surface>,
 -- 'HeadlessSurfaceCreateInfoEXT'
 newtype HeadlessSurfaceCreateFlagsEXT = HeadlessSurfaceCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

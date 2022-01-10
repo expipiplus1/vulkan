@@ -12,7 +12,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -57,6 +57,7 @@ import OpenXR.CStruct.Extends (Extendss)
 import OpenXR.CStruct.Extends (Extensible(..))
 import OpenXR.Core10.Handles (Instance)
 import OpenXR.Core10.Handles (Instance(..))
+import OpenXR.Core10.Handles (Instance(Instance))
 import OpenXR.Dynamic (InstanceCmds(pXrEnumerateViewConfigurationViews))
 import OpenXR.Dynamic (InstanceCmds(pXrEnumerateViewConfigurations))
 import OpenXR.Dynamic (InstanceCmds(pXrGetViewConfigurationProperties))
@@ -179,7 +180,7 @@ enumerateViewConfigurations :: forall io
                                SystemId
                             -> io (("viewConfigurationTypes" ::: Vector ViewConfigurationType))
 enumerateViewConfigurations instance' systemId = liftIO . evalContT $ do
-  let xrEnumerateViewConfigurationsPtr = pXrEnumerateViewConfigurations (instanceCmds (instance' :: Instance))
+  let xrEnumerateViewConfigurationsPtr = pXrEnumerateViewConfigurations (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrEnumerateViewConfigurationsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEnumerateViewConfigurations is null" Nothing Nothing
   let xrEnumerateViewConfigurations' = mkXrEnumerateViewConfigurations xrEnumerateViewConfigurationsPtr
@@ -264,7 +265,7 @@ getViewConfigurationProperties :: forall io
                                   ViewConfigurationType
                                -> io (ViewConfigurationProperties)
 getViewConfigurationProperties instance' systemId viewConfigurationType = liftIO . evalContT $ do
-  let xrGetViewConfigurationPropertiesPtr = pXrGetViewConfigurationProperties (instanceCmds (instance' :: Instance))
+  let xrGetViewConfigurationPropertiesPtr = pXrGetViewConfigurationProperties (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetViewConfigurationPropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetViewConfigurationProperties is null" Nothing Nothing
   let xrGetViewConfigurationProperties' = mkXrGetViewConfigurationProperties xrGetViewConfigurationPropertiesPtr
@@ -361,7 +362,7 @@ enumerateViewConfigurationViews :: forall a io
                                    ViewConfigurationType
                                 -> io (("views" ::: Vector (ViewConfigurationView a)))
 enumerateViewConfigurationViews instance' systemId viewConfigurationType = liftIO . evalContT $ do
-  let xrEnumerateViewConfigurationViewsPtr = pXrEnumerateViewConfigurationViews (instanceCmds (instance' :: Instance))
+  let xrEnumerateViewConfigurationViewsPtr = pXrEnumerateViewConfigurationViews (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrEnumerateViewConfigurationViewsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEnumerateViewConfigurationViews is null" Nothing Nothing
   let xrEnumerateViewConfigurationViews' = mkXrEnumerateViewConfigurationViews xrEnumerateViewConfigurationViewsPtr
@@ -443,7 +444,7 @@ deriving instance Show (Chain es) => Show (ViewConfigurationView es)
 
 instance Extensible ViewConfigurationView where
   extensibleTypeName = "ViewConfigurationView"
-  setNext x next = x{next = next}
+  setNext ViewConfigurationView{..} next' = ViewConfigurationView{next = next', ..}
   getNext ViewConfigurationView{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ViewConfigurationView e => b) -> Maybe b
   extends _ f
@@ -452,7 +453,7 @@ instance Extensible ViewConfigurationView where
     | otherwise = Nothing
 
 instance (Extendss ViewConfigurationView es, PokeChain es) => ToCStruct (ViewConfigurationView es) where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ViewConfigurationView{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VIEW_CONFIGURATION_VIEW)
     next'' <- fmap castPtr . ContT $ withChain (next)
@@ -533,7 +534,7 @@ deriving instance Generic (ViewConfigurationProperties)
 deriving instance Show ViewConfigurationProperties
 
 instance ToCStruct ViewConfigurationProperties where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ViewConfigurationProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VIEW_CONFIGURATION_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

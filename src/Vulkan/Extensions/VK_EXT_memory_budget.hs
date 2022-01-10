@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_memory_budget:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_memory_budget] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_EXT_memory_budget extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -63,9 +63,8 @@
 -- @heapUsage@. From here the application can notice if it is over budget
 -- and decide how it wants to handle the memory situation (free it, move to
 -- host memory, changing mipmap levels, etc). This extension is designed to
--- be used in concert with
--- <VK_EXT_memory_priority.html VK_EXT_memory_priority> to help with this
--- part of memory management.
+-- be used in concert with @VK_EXT_memory_priority@ to help with this part
+-- of memory management.
 --
 -- == New Structures
 --
@@ -90,11 +89,11 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceMemoryBudgetPropertiesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_memory_budget Vulkan Specification>
@@ -110,7 +109,7 @@ module Vulkan.Extensions.VK_EXT_memory_budget  ( PhysicalDeviceMemoryBudgetPrope
 
 import Vulkan.CStruct.Utils (FixedArray)
 import Control.Monad (unless)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -159,6 +158,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_memory_budget VK_EXT_memory_budget>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMemoryBudgetPropertiesEXT = PhysicalDeviceMemoryBudgetPropertiesEXT
@@ -184,7 +184,7 @@ deriving instance Generic (PhysicalDeviceMemoryBudgetPropertiesEXT)
 deriving instance Show PhysicalDeviceMemoryBudgetPropertiesEXT
 
 instance ToCStruct PhysicalDeviceMemoryBudgetPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 272 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 272 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceMemoryBudgetPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

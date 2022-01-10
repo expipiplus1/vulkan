@@ -14,7 +14,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
@@ -54,6 +54,7 @@ import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
@@ -81,6 +82,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'ExternalSemaphoreProperties', 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceExternalSemaphoreInfo'
 getPhysicalDeviceExternalSemaphoreProperties :: forall a io
@@ -103,7 +105,7 @@ getPhysicalDeviceExternalSemaphoreProperties :: forall a io
                                                 (PhysicalDeviceExternalSemaphoreInfo a)
                                              -> io (ExternalSemaphoreProperties)
 getPhysicalDeviceExternalSemaphoreProperties physicalDevice externalSemaphoreInfo = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceExternalSemaphorePropertiesPtr = pVkGetPhysicalDeviceExternalSemaphoreProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceExternalSemaphorePropertiesPtr = pVkGetPhysicalDeviceExternalSemaphoreProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceExternalSemaphorePropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceExternalSemaphoreProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceExternalSemaphoreProperties' = mkVkGetPhysicalDeviceExternalSemaphoreProperties vkGetPhysicalDeviceExternalSemaphorePropertiesPtr
@@ -137,6 +139,7 @@ getPhysicalDeviceExternalSemaphoreProperties physicalDevice externalSemaphoreInf
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceExternalSemaphoreProperties',
@@ -158,7 +161,7 @@ deriving instance Show (Chain es) => Show (PhysicalDeviceExternalSemaphoreInfo e
 
 instance Extensible PhysicalDeviceExternalSemaphoreInfo where
   extensibleTypeName = "PhysicalDeviceExternalSemaphoreInfo"
-  setNext x next = x{next = next}
+  setNext PhysicalDeviceExternalSemaphoreInfo{..} next' = PhysicalDeviceExternalSemaphoreInfo{next = next', ..}
   getNext PhysicalDeviceExternalSemaphoreInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceExternalSemaphoreInfo e => b) -> Maybe b
   extends _ f
@@ -166,7 +169,7 @@ instance Extensible PhysicalDeviceExternalSemaphoreInfo where
     | otherwise = Nothing
 
 instance (Extendss PhysicalDeviceExternalSemaphoreInfo es, PokeChain es) => ToCStruct (PhysicalDeviceExternalSemaphoreInfo es) where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceExternalSemaphoreInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -209,6 +212,7 @@ instance es ~ '[] => Zero (PhysicalDeviceExternalSemaphoreInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Enums.ExternalSemaphoreFeatureFlagBits.ExternalSemaphoreFeatureFlags',
 -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -237,7 +241,7 @@ deriving instance Generic (ExternalSemaphoreProperties)
 deriving instance Show ExternalSemaphoreProperties
 
 instance ToCStruct ExternalSemaphoreProperties where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExternalSemaphoreProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

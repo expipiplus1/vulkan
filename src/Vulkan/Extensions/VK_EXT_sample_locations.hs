@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_sample_locations:%20&body=@drakos-amd%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_sample_locations] @drakos-amd%0A<<Here describe the issue or question you have about the VK_EXT_sample_locations extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -151,7 +151,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'AttachmentSampleLocationsEXT', 'MultisamplePropertiesEXT',
 -- 'PhysicalDeviceSampleLocationsPropertiesEXT',
@@ -160,7 +160,7 @@
 -- 'SampleLocationsInfoEXT', 'SubpassSampleLocationsEXT',
 -- 'cmdSetSampleLocationsEXT', 'getPhysicalDeviceMultisamplePropertiesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations Vulkan Specification>
@@ -187,7 +187,7 @@ import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -230,12 +230,14 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetSampleLocationsEXT))
 import Vulkan.Core10.FundamentalTypes (Extent2D)
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceMultisamplePropertiesEXT))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits)
 import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits(..))
@@ -253,7 +255,23 @@ foreign import ccall
   "dynamic" mkVkCmdSetSampleLocationsEXT
   :: FunPtr (Ptr CommandBuffer_T -> Ptr SampleLocationsInfoEXT -> IO ()) -> Ptr CommandBuffer_T -> Ptr SampleLocationsInfoEXT -> IO ()
 
--- | vkCmdSetSampleLocationsEXT - Set the dynamic sample locations state
+-- | vkCmdSetSampleLocationsEXT - Set sample locations dynamically for a
+-- command buffer
+--
+-- = Description
+--
+-- This command sets the custom sample locations for subsequent drawing
+-- commands when the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+-- set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@,
+-- and when the
+-- 'PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
+-- property of the bound graphics pipeline is
+-- 'Vulkan.Core10.FundamentalTypes.TRUE'. Otherwise, this state is
+-- specified by the
+-- 'PipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsInfo@
+-- values used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -302,15 +320,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'SampleLocationsInfoEXT'
 cmdSetSampleLocationsEXT :: forall io
                           . (MonadIO io)
@@ -321,7 +340,7 @@ cmdSetSampleLocationsEXT :: forall io
                             SampleLocationsInfoEXT
                          -> io ()
 cmdSetSampleLocationsEXT commandBuffer sampleLocationsInfo = liftIO . evalContT $ do
-  let vkCmdSetSampleLocationsEXTPtr = pVkCmdSetSampleLocationsEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetSampleLocationsEXTPtr = pVkCmdSetSampleLocationsEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetSampleLocationsEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetSampleLocationsEXT is null" Nothing Nothing
   let vkCmdSetSampleLocationsEXT' = mkVkCmdSetSampleLocationsEXT vkCmdSetSampleLocationsEXTPtr
@@ -344,6 +363,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>,
 -- 'MultisamplePropertiesEXT', 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'
 getPhysicalDeviceMultisamplePropertiesEXT :: forall io
@@ -355,7 +375,9 @@ getPhysicalDeviceMultisamplePropertiesEXT :: forall io
                                              -- @physicalDevice@ /must/ be a valid
                                              -- 'Vulkan.Core10.Handles.PhysicalDevice' handle
                                              PhysicalDevice
-                                          -> -- | @samples@ is the sample count to query the capabilities for.
+                                          -> -- | @samples@ is a
+                                             -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
+                                             -- specifying the sample count to query capabilities for.
                                              --
                                              -- #VUID-vkGetPhysicalDeviceMultisamplePropertiesEXT-samples-parameter#
                                              -- @samples@ /must/ be a valid
@@ -363,7 +385,7 @@ getPhysicalDeviceMultisamplePropertiesEXT :: forall io
                                              ("samples" ::: SampleCountFlagBits)
                                           -> io (MultisamplePropertiesEXT)
 getPhysicalDeviceMultisamplePropertiesEXT physicalDevice samples = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceMultisamplePropertiesEXTPtr = pVkGetPhysicalDeviceMultisamplePropertiesEXT (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceMultisamplePropertiesEXTPtr = pVkGetPhysicalDeviceMultisamplePropertiesEXT (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceMultisamplePropertiesEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceMultisamplePropertiesEXT is null" Nothing Nothing
   let vkGetPhysicalDeviceMultisamplePropertiesEXT' = mkVkGetPhysicalDeviceMultisamplePropertiesEXT vkGetPhysicalDeviceMultisamplePropertiesEXTPtr
@@ -384,13 +406,12 @@ getPhysicalDeviceMultisamplePropertiesEXT physicalDevice samples = liftIO . eval
 -- The values specified in a 'SampleLocationEXT' structure are always
 -- clamped to the implementation-dependent sample location coordinate range
 -- [@sampleLocationCoordinateRange@[0],@sampleLocationCoordinateRange@[1]]
--- that /can/ be queried by adding a
--- 'PhysicalDeviceSampleLocationsPropertiesEXT' structure to the @pNext@
--- chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'.
+-- that /can/ be queried using
+-- 'PhysicalDeviceSampleLocationsPropertiesEXT'.
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>,
 -- 'SampleLocationsInfoEXT'
 data SampleLocationEXT = SampleLocationEXT
   { -- | @x@ is the horizontal coordinate of the sample’s location.
@@ -405,7 +426,7 @@ deriving instance Generic (SampleLocationEXT)
 deriving instance Show SampleLocationEXT
 
 instance ToCStruct SampleLocationEXT where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SampleLocationEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (x))
     poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (y))
@@ -480,6 +501,7 @@ instance Zero SampleLocationEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>,
 -- 'AttachmentSampleLocationsEXT',
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'PipelineSampleLocationsStateCreateInfoEXT',
@@ -505,14 +527,14 @@ deriving instance Generic (SampleLocationsInfoEXT)
 deriving instance Show SampleLocationsInfoEXT
 
 instance ToCStruct SampleLocationsInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SampleLocationsInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr SampleCountFlagBits)) (sampleLocationsPerPixel)
     lift $ poke ((p `plusPtr` 20 :: Ptr Extent2D)) (sampleLocationGridSize)
     lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (sampleLocations)) :: Word32))
-    pPSampleLocations' <- ContT $ allocaBytesAligned @SampleLocationEXT ((Data.Vector.length (sampleLocations)) * 8) 4
+    pPSampleLocations' <- ContT $ allocaBytes @SampleLocationEXT ((Data.Vector.length (sampleLocations)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPSampleLocations' `plusPtr` (8 * (i)) :: Ptr SampleLocationEXT) (e)) (sampleLocations)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr SampleLocationEXT))) (pPSampleLocations')
     lift $ f
@@ -556,6 +578,7 @@ instance Zero SampleLocationsInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>,
 -- 'RenderPassSampleLocationsBeginInfoEXT', 'SampleLocationsInfoEXT'
 data AttachmentSampleLocationsEXT = AttachmentSampleLocationsEXT
   { -- | @attachmentIndex@ is the index of the attachment for which the sample
@@ -584,7 +607,7 @@ deriving instance Generic (AttachmentSampleLocationsEXT)
 deriving instance Show AttachmentSampleLocationsEXT
 
 instance ToCStruct AttachmentSampleLocationsEXT where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AttachmentSampleLocationsEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (attachmentIndex)
     ContT $ pokeCStruct ((p `plusPtr` 8 :: Ptr SampleLocationsInfoEXT)) (sampleLocationsInfo) . ($ ())
@@ -627,6 +650,7 @@ instance Zero AttachmentSampleLocationsEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>,
 -- 'RenderPassSampleLocationsBeginInfoEXT', 'SampleLocationsInfoEXT'
 data SubpassSampleLocationsEXT = SubpassSampleLocationsEXT
   { -- | @subpassIndex@ is the index of the subpass for which the sample
@@ -655,7 +679,7 @@ deriving instance Generic (SubpassSampleLocationsEXT)
 deriving instance Show SubpassSampleLocationsEXT
 
 instance ToCStruct SubpassSampleLocationsEXT where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SubpassSampleLocationsEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (subpassIndex)
     ContT $ pokeCStruct ((p `plusPtr` 8 :: Ptr SampleLocationsInfoEXT)) (sampleLocationsInfo) . ($ ())
@@ -704,6 +728,7 @@ instance Zero SubpassSampleLocationsEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>,
 -- 'AttachmentSampleLocationsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'SubpassSampleLocationsEXT'
@@ -744,16 +769,16 @@ deriving instance Generic (RenderPassSampleLocationsBeginInfoEXT)
 deriving instance Show RenderPassSampleLocationsBeginInfoEXT
 
 instance ToCStruct RenderPassSampleLocationsBeginInfoEXT where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RenderPassSampleLocationsBeginInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (attachmentInitialSampleLocations)) :: Word32))
-    pPAttachmentInitialSampleLocations' <- ContT $ allocaBytesAligned @AttachmentSampleLocationsEXT ((Data.Vector.length (attachmentInitialSampleLocations)) * 48) 8
+    pPAttachmentInitialSampleLocations' <- ContT $ allocaBytes @AttachmentSampleLocationsEXT ((Data.Vector.length (attachmentInitialSampleLocations)) * 48)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPAttachmentInitialSampleLocations' `plusPtr` (48 * (i)) :: Ptr AttachmentSampleLocationsEXT) (e) . ($ ())) (attachmentInitialSampleLocations)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr AttachmentSampleLocationsEXT))) (pPAttachmentInitialSampleLocations')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (postSubpassSampleLocations)) :: Word32))
-    pPPostSubpassSampleLocations' <- ContT $ allocaBytesAligned @SubpassSampleLocationsEXT ((Data.Vector.length (postSubpassSampleLocations)) * 48) 8
+    pPPostSubpassSampleLocations' <- ContT $ allocaBytes @SubpassSampleLocationsEXT ((Data.Vector.length (postSubpassSampleLocations)) * 48)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPPostSubpassSampleLocations' `plusPtr` (48 * (i)) :: Ptr SubpassSampleLocationsEXT) (e) . ($ ())) (postSubpassSampleLocations)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr SubpassSampleLocationsEXT))) (pPPostSubpassSampleLocations')
     lift $ f
@@ -788,6 +813,7 @@ instance Zero RenderPassSampleLocationsBeginInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32', 'SampleLocationsInfoEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineSampleLocationsStateCreateInfoEXT = PipelineSampleLocationsStateCreateInfoEXT
@@ -814,7 +840,7 @@ deriving instance Generic (PipelineSampleLocationsStateCreateInfoEXT)
 deriving instance Show PipelineSampleLocationsStateCreateInfoEXT
 
 instance ToCStruct PipelineSampleLocationsStateCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineSampleLocationsStateCreateInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_SAMPLE_LOCATIONS_STATE_CREATE_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -846,22 +872,21 @@ instance Zero PipelineSampleLocationsStateCreateInfoEXT where
 -- | VkPhysicalDeviceSampleLocationsPropertiesEXT - Structure describing
 -- sample location limits that can be supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceSampleLocationsPropertiesEXT'
--- structure describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceSampleLocationsPropertiesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlags',
@@ -898,7 +923,7 @@ deriving instance Generic (PhysicalDeviceSampleLocationsPropertiesEXT)
 deriving instance Show PhysicalDeviceSampleLocationsPropertiesEXT
 
 instance ToCStruct PhysicalDeviceSampleLocationsPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceSampleLocationsPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -962,6 +987,7 @@ instance Zero PhysicalDeviceSampleLocationsPropertiesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sample_locations VK_EXT_sample_locations>,
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceMultisamplePropertiesEXT'
@@ -976,7 +1002,7 @@ deriving instance Generic (MultisamplePropertiesEXT)
 deriving instance Show MultisamplePropertiesEXT
 
 instance ToCStruct MultisamplePropertiesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MultisamplePropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

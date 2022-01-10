@@ -58,7 +58,7 @@ import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -104,6 +104,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.Core10.Enums.StructureType (StructureType)
 import OpenXR.Core10.Enums.Result (Result(SUCCESS))
@@ -144,8 +145,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrEnumerateColorSpacesFB-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
+-- -   #VUID-xrEnumerateColorSpacesFB-extension-notenabled# The
+--     @XR_FB_color_space@ extension /must/ be enabled prior to calling
 --     'enumerateColorSpacesFB'
 --
 -- -   #VUID-xrEnumerateColorSpacesFB-session-parameter# @session@ /must/
@@ -192,7 +193,7 @@ enumerateColorSpacesFB :: forall io
                           Session
                        -> io (Result, ("colorSpaces" ::: Vector ColorSpaceFB))
 enumerateColorSpacesFB session = liftIO . evalContT $ do
-  let xrEnumerateColorSpacesFBPtr = pXrEnumerateColorSpacesFB (instanceCmds (session :: Session))
+  let xrEnumerateColorSpacesFBPtr = pXrEnumerateColorSpacesFB (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrEnumerateColorSpacesFBPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEnumerateColorSpacesFB is null" Nothing Nothing
   let xrEnumerateColorSpacesFB' = mkXrEnumerateColorSpacesFB xrEnumerateColorSpacesFBPtr
@@ -233,8 +234,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrSetColorSpaceFB-extension-notenabled# The @@ extension
---     /must/ be enabled prior to calling 'setColorSpaceFB'
+-- -   #VUID-xrSetColorSpaceFB-extension-notenabled# The
+--     @XR_FB_color_space@ extension /must/ be enabled prior to calling
+--     'setColorSpaceFB'
 --
 -- -   #VUID-xrSetColorSpaceFB-session-parameter# @session@ /must/ be a
 --     valid 'OpenXR.Core10.Handles.Session' handle
@@ -280,7 +282,7 @@ setColorSpaceFB :: forall io
                    ColorSpaceFB
                 -> io (Result)
 setColorSpaceFB session colorspace = liftIO $ do
-  let xrSetColorSpaceFBPtr = pXrSetColorSpaceFB (instanceCmds (session :: Session))
+  let xrSetColorSpaceFBPtr = pXrSetColorSpaceFB (case session of Session{instanceCmds} -> instanceCmds)
   unless (xrSetColorSpaceFBPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrSetColorSpaceFB is null" Nothing Nothing
   let xrSetColorSpaceFB' = mkXrSetColorSpaceFB xrSetColorSpaceFBPtr
@@ -293,8 +295,8 @@ setColorSpaceFB session colorspace = liftIO $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrSystemColorSpacePropertiesFB-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrSystemColorSpacePropertiesFB-extension-notenabled# The
+--     @XR_FB_color_space@ extension /must/ be enabled prior to using
 --     'SystemColorSpacePropertiesFB'
 --
 -- -   #VUID-XrSystemColorSpacePropertiesFB-type-type# @type@ /must/ be
@@ -320,7 +322,7 @@ deriving instance Generic (SystemColorSpacePropertiesFB)
 deriving instance Show SystemColorSpacePropertiesFB
 
 instance ToCStruct SystemColorSpacePropertiesFB where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SystemColorSpacePropertiesFB{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SYSTEM_COLOR_SPACE_PROPERTIES_FB)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

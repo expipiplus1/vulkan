@@ -72,6 +72,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.CStruct.Extends (SomeStruct)
 import OpenXR.Core10.Handles (Swapchain)
@@ -143,8 +144,8 @@ foreign import ccall
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrCreateSwapchainAndroidSurfaceKHR-extension-notenabled# The
---     @@ extension /must/ be enabled prior to calling
---     'createSwapchainAndroidSurfaceKHR'
+--     @XR_KHR_android_surface_swapchain@ extension /must/ be enabled prior
+--     to calling 'createSwapchainAndroidSurfaceKHR'
 --
 -- -   #VUID-xrCreateSwapchainAndroidSurfaceKHR-session-parameter#
 --     @session@ /must/ be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -202,7 +203,7 @@ createSwapchainAndroidSurfaceKHR :: forall a io
                                     ("surface" ::: Ptr Jobject)
                                  -> io (Result, Swapchain)
 createSwapchainAndroidSurfaceKHR session info surface = liftIO . evalContT $ do
-  let cmds = instanceCmds (session :: Session)
+  let cmds = case session of Session{instanceCmds} -> instanceCmds
   let xrCreateSwapchainAndroidSurfaceKHRPtr = pXrCreateSwapchainAndroidSurfaceKHR cmds
   lift $ unless (xrCreateSwapchainAndroidSurfaceKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateSwapchainAndroidSurfaceKHR is null" Nothing Nothing

@@ -36,7 +36,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -96,6 +96,7 @@ import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing (De
 import Vulkan.Core10.Enums.DescriptorType (DescriptorType)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkAllocateDescriptorSets))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateDescriptorPool))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateDescriptorSetLayout))
@@ -182,6 +183,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.DescriptorSetLayout',
 -- 'DescriptorSetLayoutCreateInfo', 'Vulkan.Core10.Handles.Device'
@@ -198,7 +200,7 @@ createDescriptorSetLayout :: forall a io
                              ("allocator" ::: Maybe AllocationCallbacks)
                           -> io (DescriptorSetLayout)
 createDescriptorSetLayout device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateDescriptorSetLayoutPtr = pVkCreateDescriptorSetLayout (deviceCmds (device :: Device))
+  let vkCreateDescriptorSetLayoutPtr = pVkCreateDescriptorSetLayout (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateDescriptorSetLayoutPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDescriptorSetLayout is null" Nothing Nothing
   let vkCreateDescriptorSetLayout' = mkVkCreateDescriptorSetLayout vkCreateDescriptorSetLayoutPtr
@@ -273,6 +275,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.DescriptorSetLayout',
 -- 'Vulkan.Core10.Handles.Device'
@@ -288,7 +291,7 @@ destroyDescriptorSetLayout :: forall io
                               ("allocator" ::: Maybe AllocationCallbacks)
                            -> io ()
 destroyDescriptorSetLayout device descriptorSetLayout allocator = liftIO . evalContT $ do
-  let vkDestroyDescriptorSetLayoutPtr = pVkDestroyDescriptorSetLayout (deviceCmds (device :: Device))
+  let vkDestroyDescriptorSetLayoutPtr = pVkDestroyDescriptorSetLayout (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyDescriptorSetLayoutPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyDescriptorSetLayout is null" Nothing Nothing
   let vkDestroyDescriptorSetLayout' = mkVkDestroyDescriptorSetLayout vkDestroyDescriptorSetLayoutPtr
@@ -309,10 +312,6 @@ foreign import ccall
 -- | vkCreateDescriptorPool - Creates a descriptor pool object
 --
 -- = Description
---
--- @pAllocator@ controls host memory allocation as described in the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
--- chapter.
 --
 -- The created descriptor pool is returned in @pDescriptorPool@.
 --
@@ -349,6 +348,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.DescriptorPool', 'DescriptorPoolCreateInfo',
 -- 'Vulkan.Core10.Handles.Device'
@@ -365,7 +365,7 @@ createDescriptorPool :: forall a io
                         ("allocator" ::: Maybe AllocationCallbacks)
                      -> io (DescriptorPool)
 createDescriptorPool device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateDescriptorPoolPtr = pVkCreateDescriptorPool (deviceCmds (device :: Device))
+  let vkCreateDescriptorPoolPtr = pVkCreateDescriptorPool (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateDescriptorPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDescriptorPool is null" Nothing Nothing
   let vkCreateDescriptorPool' = mkVkCreateDescriptorPool vkCreateDescriptorPoolPtr
@@ -449,6 +449,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.DescriptorPool', 'Vulkan.Core10.Handles.Device'
 destroyDescriptorPool :: forall io
@@ -463,7 +464,7 @@ destroyDescriptorPool :: forall io
                          ("allocator" ::: Maybe AllocationCallbacks)
                       -> io ()
 destroyDescriptorPool device descriptorPool allocator = liftIO . evalContT $ do
-  let vkDestroyDescriptorPoolPtr = pVkDestroyDescriptorPool (deviceCmds (device :: Device))
+  let vkDestroyDescriptorPoolPtr = pVkDestroyDescriptorPool (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyDescriptorPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyDescriptorPool is null" Nothing Nothing
   let vkDestroyDescriptorPool' = mkVkDestroyDescriptorPool vkDestroyDescriptorPoolPtr
@@ -524,6 +525,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.DescriptorPool',
 -- 'Vulkan.Core10.Enums.DescriptorPoolResetFlags.DescriptorPoolResetFlags',
 -- 'Vulkan.Core10.Handles.Device'
@@ -537,7 +539,7 @@ resetDescriptorPool :: forall io
                        DescriptorPoolResetFlags
                     -> io ()
 resetDescriptorPool device descriptorPool flags = liftIO $ do
-  let vkResetDescriptorPoolPtr = pVkResetDescriptorPool (deviceCmds (device :: Device))
+  let vkResetDescriptorPoolPtr = pVkResetDescriptorPool (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkResetDescriptorPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetDescriptorPool is null" Nothing Nothing
   let vkResetDescriptorPool' = mkVkResetDescriptorPool vkResetDescriptorPoolPtr
@@ -593,7 +595,7 @@ foreign import ccall
 -- fail due to lack of space if the call to 'allocateDescriptorSets' would
 -- cause the number of any given descriptor type to exceed the sum of all
 -- the @descriptorCount@ members of each element of
--- 'DescriptorPoolCreateInfo'::@pPoolSizes@ with a @member@ equal to that
+-- 'DescriptorPoolCreateInfo'::@pPoolSizes@ with a @type@ equal to that
 -- type.
 --
 -- Additionally, the allocation /may/ also fail if a call to
@@ -653,6 +655,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.DescriptorSet', 'DescriptorSetAllocateInfo',
 -- 'Vulkan.Core10.Handles.Device'
 allocateDescriptorSets :: forall a io
@@ -664,7 +667,7 @@ allocateDescriptorSets :: forall a io
                           (DescriptorSetAllocateInfo a)
                        -> io (("descriptorSets" ::: Vector DescriptorSet))
 allocateDescriptorSets device allocateInfo = liftIO . evalContT $ do
-  let vkAllocateDescriptorSetsPtr = pVkAllocateDescriptorSets (deviceCmds (device :: Device))
+  let vkAllocateDescriptorSetsPtr = pVkAllocateDescriptorSets (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkAllocateDescriptorSetsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAllocateDescriptorSets is null" Nothing Nothing
   let vkAllocateDescriptorSets' = mkVkAllocateDescriptorSets vkAllocateDescriptorSetsPtr
@@ -754,6 +757,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.DescriptorPool',
 -- 'Vulkan.Core10.Handles.DescriptorSet', 'Vulkan.Core10.Handles.Device'
 freeDescriptorSets :: forall io
@@ -768,11 +772,11 @@ freeDescriptorSets :: forall io
                       ("descriptorSets" ::: Vector DescriptorSet)
                    -> io ()
 freeDescriptorSets device descriptorPool descriptorSets = liftIO . evalContT $ do
-  let vkFreeDescriptorSetsPtr = pVkFreeDescriptorSets (deviceCmds (device :: Device))
+  let vkFreeDescriptorSetsPtr = pVkFreeDescriptorSets (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkFreeDescriptorSetsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkFreeDescriptorSets is null" Nothing Nothing
   let vkFreeDescriptorSets' = mkVkFreeDescriptorSets vkFreeDescriptorSetsPtr
-  pPDescriptorSets <- ContT $ allocaBytesAligned @DescriptorSet ((Data.Vector.length (descriptorSets)) * 8) 8
+  pPDescriptorSets <- ContT $ allocaBytes @DescriptorSet ((Data.Vector.length (descriptorSets)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorSets `plusPtr` (8 * (i)) :: Ptr DescriptorSet) (e)) (descriptorSets)
   _ <- lift $ traceAroundEvent "vkFreeDescriptorSets" (vkFreeDescriptorSets' (deviceHandle (device)) (descriptorPool) ((fromIntegral (Data.Vector.length $ (descriptorSets)) :: Word32)) (pPDescriptorSets))
   pure $ ()
@@ -815,6 +819,59 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   #VUID-vkUpdateDescriptorSets-pDescriptorWrites-06236# For each
+--     element i where @pDescriptorWrites@[i].@descriptorType@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER',
+--     elements of the @pTexelBufferView@ member of @pDescriptorWrites@[i]
+--     /must/ have been created on @device@
+--
+-- -   #VUID-vkUpdateDescriptorSets-pDescriptorWrites-06237# For each
+--     element i where @pDescriptorWrites@[i].@descriptorType@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC',
+--     the @buffer@ member of any element of the @pBufferInfo@ member of
+--     @pDescriptorWrites@[i] /must/ have been created on @device@
+--
+-- -   #VUID-vkUpdateDescriptorSets-pDescriptorWrites-06238# For each
+--     element i where @pDescriptorWrites@[i].@descriptorType@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER' or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
+--     and @dstSet@ was not allocated with a layout that included immutable
+--     samplers for @dstBinding@ with @descriptorType@, the @sampler@
+--     member of any element of the @pImageInfo@ member of
+--     @pDescriptorWrites@[i] /must/ have been created on @device@
+--
+-- -   #VUID-vkUpdateDescriptorSets-pDescriptorWrites-06239# For each
+--     element i where @pDescriptorWrites@[i].@descriptorType@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
+--     the @imageView@ member of any element of @pDescriptorWrites@[i]
+--     /must/ have been created on @device@
+--
+-- -   #VUID-vkUpdateDescriptorSets-pDescriptorWrites-06240# For each
+--     element i where @pDescriptorWrites@[i].@descriptorType@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR',
+--     elements of the @pAccelerationStructures@ member of a
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR'
+--     structure in the @pNext@ chain of @pDescriptorWrites@[i] /must/ have
+--     been created on @device@
+--
+-- -   #VUID-vkUpdateDescriptorSets-pDescriptorWrites-06241# For each
+--     element i where @pDescriptorWrites@[i].@descriptorType@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV',
+--     elements of the @pAccelerationStructures@ member of a
+--     'Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV'
+--     structure in the @pNext@ chain of @pDescriptorWrites@[i] /must/ have
+--     been created on @device@
+--
 -- -   #VUID-vkUpdateDescriptorSets-None-03047# Descriptor bindings updated
 --     by this command which were created without the
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
@@ -849,6 +906,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'CopyDescriptorSet', 'Vulkan.Core10.Handles.Device',
 -- 'WriteDescriptorSet'
 updateDescriptorSets :: forall io
@@ -863,19 +921,20 @@ updateDescriptorSets :: forall io
                         ("descriptorCopies" ::: Vector CopyDescriptorSet)
                      -> io ()
 updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalContT $ do
-  let vkUpdateDescriptorSetsPtr = pVkUpdateDescriptorSets (deviceCmds (device :: Device))
+  let vkUpdateDescriptorSetsPtr = pVkUpdateDescriptorSets (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkUpdateDescriptorSetsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkUpdateDescriptorSets is null" Nothing Nothing
   let vkUpdateDescriptorSets' = mkVkUpdateDescriptorSets vkUpdateDescriptorSetsPtr
-  pPDescriptorWrites <- ContT $ allocaBytesAligned @(WriteDescriptorSet _) ((Data.Vector.length (descriptorWrites)) * 64) 8
+  pPDescriptorWrites <- ContT $ allocaBytes @(WriteDescriptorSet _) ((Data.Vector.length (descriptorWrites)) * 64)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPDescriptorWrites `plusPtr` (64 * (i)) :: Ptr (WriteDescriptorSet _))) (e) . ($ ())) (descriptorWrites)
-  pPDescriptorCopies <- ContT $ allocaBytesAligned @CopyDescriptorSet ((Data.Vector.length (descriptorCopies)) * 56) 8
+  pPDescriptorCopies <- ContT $ allocaBytes @CopyDescriptorSet ((Data.Vector.length (descriptorCopies)) * 56)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorCopies `plusPtr` (56 * (i)) :: Ptr CopyDescriptorSet) (e)) (descriptorCopies)
   lift $ traceAroundEvent "vkUpdateDescriptorSets" (vkUpdateDescriptorSets' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (descriptorWrites)) :: Word32)) (forgetExtensions (pPDescriptorWrites)) ((fromIntegral (Data.Vector.length $ (descriptorCopies)) :: Word32)) (pPDescriptorCopies))
   pure $ ()
 
 
--- | VkDescriptorBufferInfo - Structure specifying descriptor buffer info
+-- | VkDescriptorBufferInfo - Structure specifying descriptor buffer
+-- information
 --
 -- = Description
 --
@@ -930,6 +989,7 @@ updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalCon
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize', 'WriteDescriptorSet'
 data DescriptorBufferInfo = DescriptorBufferInfo
@@ -952,7 +1012,7 @@ deriving instance Generic (DescriptorBufferInfo)
 deriving instance Show DescriptorBufferInfo
 
 instance ToCStruct DescriptorBufferInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorBufferInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Buffer)) (buffer)
     poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (offset)
@@ -986,7 +1046,8 @@ instance Zero DescriptorBufferInfo where
            zero
 
 
--- | VkDescriptorImageInfo - Structure specifying descriptor image info
+-- | VkDescriptorImageInfo - Structure specifying descriptor image
+-- information
 --
 -- = Description
 --
@@ -1028,7 +1089,7 @@ instance Zero DescriptorBufferInfo where
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then @sampler@ /must/
 --     have been created with
 --     'Vulkan.Core10.Sampler.SamplerCreateInfo'::@compareEnable@ set to
---     'Vulkan.Core10.FundamentalTypes.FALSE'.
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- == Valid Usage (Implicit)
 --
@@ -1039,6 +1100,7 @@ instance Zero DescriptorBufferInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.Handles.ImageView', 'Vulkan.Core10.Handles.Sampler',
 -- 'WriteDescriptorSet'
@@ -1073,7 +1135,7 @@ deriving instance Generic (DescriptorImageInfo)
 deriving instance Show DescriptorImageInfo
 
 instance ToCStruct DescriptorImageInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorImageInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Sampler)) (sampler)
     poke ((p `plusPtr` 8 :: Ptr ImageView)) (imageView)
@@ -1153,7 +1215,11 @@ instance Zero DescriptorImageInfo where
 -- element zero. If a binding has a @descriptorCount@ of zero, it is
 -- skipped. This behavior applies recursively, with the update affecting
 -- consecutive bindings as needed to update all @descriptorCount@
--- descriptors.
+-- descriptors. Consecutive bindings /must/ have identical
+-- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType',
+-- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags',
+-- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DescriptorBindingFlagBits',
+-- and immutable samplers references.
 --
 -- Note
 --
@@ -1485,11 +1551,6 @@ instance Zero DescriptorImageInfo where
 --     been created with
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT' set
 --
--- -   #VUID-VkWriteDescriptorSet-descriptorCount-03048# All consecutive
---     bindings updated via a single 'WriteDescriptorSet' structure, except
---     those with a @descriptorCount@ of zero, /must/ have identical
---     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DescriptorBindingFlagBits'
---
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-02752# If @descriptorType@
 --     is 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',
 --     then @dstSet@ /must/ not have been allocated with a layout that
@@ -1500,6 +1561,16 @@ instance Zero DescriptorImageInfo where
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE',
 --     the new active descriptor type @descriptorType@ /must/ exist in the
 --     corresponding @pMutableDescriptorTypeLists@ list for @dstBinding@
+--
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-06450# If @descriptorType@
+--     is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
+--     the @imageView@ member of each element of @pImageInfo@ /must/ have
+--     either been created without a
+--     'Vulkan.Extensions.VK_EXT_image_view_min_lod.ImageViewMinLodCreateInfoEXT'
+--     present in the @pNext@ chain or with a
+--     'Vulkan.Extensions.VK_EXT_image_view_min_lod.ImageViewMinLodCreateInfoEXT'::@minLod@
+--     of @0.0@
 --
 -- == Valid Usage (Implicit)
 --
@@ -1531,6 +1602,7 @@ instance Zero DescriptorImageInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.BufferView', 'DescriptorBufferInfo',
 -- 'DescriptorImageInfo', 'Vulkan.Core10.Handles.DescriptorSet',
 -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType',
@@ -1551,17 +1623,26 @@ data WriteDescriptorSet (es :: [Type]) = WriteDescriptorSet
     -- then @dstArrayElement@ specifies the starting byte offset within the
     -- binding.
     dstArrayElement :: Word32
-  , -- | @descriptorCount@ is the number of descriptors to update (the number of
-    -- elements in @pImageInfo@, @pBufferInfo@, or @pTexelBufferView@ , or a
-    -- value matching the @dataSize@ member of a
-    -- 'Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
-    -- structure in the @pNext@ chain , or a value matching the
-    -- @accelerationStructureCount@ of a
-    -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR'
-    -- structure in the @pNext@ chain ). If the descriptor binding identified
-    -- by @dstSet@ and @dstBinding@ has a descriptor type of
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+  , -- | @descriptorCount@ is the number of descriptors to update. If the
+    -- descriptor binding identified by @dstSet@ and @dstBinding@ has a
+    -- descriptor type of
+    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
     -- then @descriptorCount@ specifies the number of bytes to update.
+    -- Otherwise, @descriptorCount@ is one of
+    --
+    -- -   the number of elements in @pImageInfo@
+    --
+    -- -   the number of elements in @pBufferInfo@
+    --
+    -- -   the number of elements in @pTexelBufferView@
+    --
+    -- -   a value matching the @dataSize@ member of a
+    --     'Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
+    --     structure in the @pNext@ chain
+    --
+    -- -   a value matching the @accelerationStructureCount@ of a
+    --     'Vulkan.Extensions.VK_KHR_acceleration_structure.WriteDescriptorSetAccelerationStructureKHR'
+    --     structure in the @pNext@ chain
     descriptorCount :: Word32
   , -- | @descriptorType@ is a
     -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType' specifying the type
@@ -1569,9 +1650,10 @@ data WriteDescriptorSet (es :: [Type]) = WriteDescriptorSet
     -- @pTexelBufferView@, as described below. If 'DescriptorSetLayoutBinding'
     -- for @dstSet@ at @dstBinding@ is not equal to
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE',
-    -- @descriptorType@ /must/ be the same type as that specified in
-    -- 'DescriptorSetLayoutBinding' for @dstSet@ at @dstBinding@. The type of
-    -- the descriptor also controls which array the descriptors are taken from.
+    -- @descriptorType@ /must/ be the same type as the @descriptorType@
+    -- specified in 'DescriptorSetLayoutBinding' for @dstSet@ at @dstBinding@.
+    -- The type of the descriptor also controls which array the descriptors are
+    -- taken from.
     descriptorType :: DescriptorType
   , -- | @pImageInfo@ is a pointer to an array of 'DescriptorImageInfo'
     -- structures or is ignored, as described below.
@@ -1593,7 +1675,7 @@ deriving instance Show (Chain es) => Show (WriteDescriptorSet es)
 
 instance Extensible WriteDescriptorSet where
   extensibleTypeName = "WriteDescriptorSet"
-  setNext x next = x{next = next}
+  setNext WriteDescriptorSet{..} next' = WriteDescriptorSet{next = next', ..}
   getNext WriteDescriptorSet{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends WriteDescriptorSet e => b) -> Maybe b
   extends _ f
@@ -1603,7 +1685,7 @@ instance Extensible WriteDescriptorSet where
     | otherwise = Nothing
 
 instance (Extendss WriteDescriptorSet es, PokeChain es) => ToCStruct (WriteDescriptorSet es) where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p WriteDescriptorSet{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1625,21 +1707,21 @@ instance (Extendss WriteDescriptorSet es, PokeChain es) => ToCStruct (WriteDescr
     pImageInfo'' <- if Data.Vector.null (imageInfo)
       then pure nullPtr
       else do
-        pPImageInfo <- ContT $ allocaBytesAligned @DescriptorImageInfo (((Data.Vector.length (imageInfo))) * 24) 8
+        pPImageInfo <- ContT $ allocaBytes @DescriptorImageInfo (((Data.Vector.length (imageInfo))) * 24)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPImageInfo `plusPtr` (24 * (i)) :: Ptr DescriptorImageInfo) (e)) ((imageInfo))
         pure $ pPImageInfo
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr DescriptorImageInfo))) pImageInfo''
     pBufferInfo'' <- if Data.Vector.null (bufferInfo)
       then pure nullPtr
       else do
-        pPBufferInfo <- ContT $ allocaBytesAligned @DescriptorBufferInfo (((Data.Vector.length (bufferInfo))) * 24) 8
+        pPBufferInfo <- ContT $ allocaBytes @DescriptorBufferInfo (((Data.Vector.length (bufferInfo))) * 24)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPBufferInfo `plusPtr` (24 * (i)) :: Ptr DescriptorBufferInfo) (e)) ((bufferInfo))
         pure $ pPBufferInfo
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr DescriptorBufferInfo))) pBufferInfo''
     pTexelBufferView'' <- if Data.Vector.null (texelBufferView)
       then pure nullPtr
       else do
-        pPTexelBufferView <- ContT $ allocaBytesAligned @BufferView (((Data.Vector.length (texelBufferView))) * 8) 8
+        pPTexelBufferView <- ContT $ allocaBytes @BufferView (((Data.Vector.length (texelBufferView))) * 8)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPTexelBufferView `plusPtr` (8 * (i)) :: Ptr BufferView) (e)) ((texelBufferView))
         pure $ pPTexelBufferView
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr BufferView))) pTexelBufferView''
@@ -1770,11 +1852,13 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     flag set
 --
--- -   #VUID-VkCopyDescriptorSet-srcSet-01919# If @srcSet@’s layout was
---     created without the
+-- -   #VUID-VkCopyDescriptorSet-srcSet-04885# If @srcSet@’s layout was
+--     created with neither
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     flag set, then @dstSet@’s layout /must/ also have been created
---     without the
+--     nor
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE'
+--     flags set, then @dstSet@’s layout /must/ have been created without
+--     the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     flag set
 --
@@ -1786,11 +1870,13 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
 --     flag set
 --
--- -   #VUID-VkCopyDescriptorSet-srcSet-01921# If the descriptor pool from
---     which @srcSet@ was allocated was created without the
+-- -   #VUID-VkCopyDescriptorSet-srcSet-04887# If the descriptor pool from
+--     which @srcSet@ was allocated was created with neither
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
---     flag set, then the descriptor pool from which @dstSet@ was allocated
---     /must/ also have been created without the
+--     nor
+--     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_VALVE'
+--     flags set, then the descriptor pool from which @dstSet@ was
+--     allocated /must/ have been created without the
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
 --     flag set
 --
@@ -1844,6 +1930,7 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.DescriptorSet',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'updateDescriptorSets'
@@ -1889,7 +1976,7 @@ deriving instance Generic (CopyDescriptorSet)
 deriving instance Show CopyDescriptorSet
 
 instance ToCStruct CopyDescriptorSet where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CopyDescriptorSet{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COPY_DESCRIPTOR_SET)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1962,15 +2049,15 @@ instance Zero CopyDescriptorSet where
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
 --     descriptor with immutable samplers does not modify the samplers (the
 --     image views are updated, but the sampler updates are ignored). If
---     @pImmutableSamplers@ is not @NULL@, then it points to an array of
---     sampler handles that will be copied into the set layout and used for
---     the corresponding binding. Only the sampler handles are copied; the
---     sampler objects /must/ not be destroyed before the final use of the
---     set layout and any descriptor pools and sets created using it. If
---     @pImmutableSamplers@ is @NULL@, then the sampler slots are dynamic
---     and sampler handles /must/ be bound into descriptor sets using this
---     layout. If @descriptorType@ is not one of these descriptor types,
---     then @pImmutableSamplers@ is ignored.
+--     @pImmutableSamplers@ is not @NULL@, then it is a pointer to an array
+--     of sampler handles that will be copied into the set layout and used
+--     for the corresponding binding. Only the sampler handles are copied;
+--     the sampler objects /must/ not be destroyed before the final use of
+--     the set layout and any descriptor pools and sets created using it.
+--     If @pImmutableSamplers@ is @NULL@, then the sampler slots are
+--     dynamic and sampler handles /must/ be bound into descriptor sets
+--     using this layout. If @descriptorType@ is not one of these
+--     descriptor types, then @pImmutableSamplers@ is ignored.
 --
 -- The above layout definition allows the descriptor bindings to be
 -- specified sparsely such that not all binding numbers between 0 and the
@@ -2034,7 +2121,7 @@ instance Zero CopyDescriptorSet where
 -- -   #VUID-VkDescriptorSetLayoutBinding-descriptorType-04605# If
 --     @descriptorType@ is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE',
---     then @pImmutableSamplers@ /must/ be @NULL@.
+--     then @pImmutableSamplers@ /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
@@ -2044,6 +2131,7 @@ instance Zero CopyDescriptorSet where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'DescriptorSetLayoutCreateInfo',
 -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType',
 -- 'Vulkan.Core10.Handles.Sampler',
@@ -2057,10 +2145,10 @@ data DescriptorSetLayoutBinding = DescriptorSetLayoutBinding
     -- type of resource descriptors are used for this binding.
     descriptorType :: DescriptorType
   , -- | @descriptorCount@ is the number of descriptors contained in the binding,
-    -- accessed in a shader as an array , except if @descriptorType@ is
+    -- accessed in a shader as an array, except if @descriptorType@ is
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
     -- in which case @descriptorCount@ is the size in bytes of the inline
-    -- uniform block . If @descriptorCount@ is zero this binding entry is
+    -- uniform block. If @descriptorCount@ is zero this binding entry is
     -- reserved and the resource /must/ not be accessed from any stage via this
     -- binding within any pipeline using the set layout.
     descriptorCount :: Word32
@@ -2088,7 +2176,7 @@ deriving instance Generic (DescriptorSetLayoutBinding)
 deriving instance Show DescriptorSetLayoutBinding
 
 instance ToCStruct DescriptorSetLayoutBinding where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorSetLayoutBinding{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) (binding)
     lift $ poke ((p `plusPtr` 4 :: Ptr DescriptorType)) (descriptorType)
@@ -2104,7 +2192,7 @@ instance ToCStruct DescriptorSetLayoutBinding where
     pImmutableSamplers'' <- if Data.Vector.null (immutableSamplers)
       then pure nullPtr
       else do
-        pPImmutableSamplers <- ContT $ allocaBytesAligned @Sampler (((Data.Vector.length (immutableSamplers))) * 8) 8
+        pPImmutableSamplers <- ContT $ allocaBytes @Sampler (((Data.Vector.length (immutableSamplers))) * 8)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPImmutableSamplers `plusPtr` (8 * (i)) :: Ptr Sampler) (e)) ((immutableSamplers))
         pure $ pPImmutableSamplers
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr Sampler))) pImmutableSamplers''
@@ -2253,6 +2341,7 @@ instance Zero DescriptorSetLayoutBinding where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'DescriptorSetLayoutBinding',
 -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DescriptorSetLayoutCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -2278,7 +2367,7 @@ deriving instance Show (Chain es) => Show (DescriptorSetLayoutCreateInfo es)
 
 instance Extensible DescriptorSetLayoutCreateInfo where
   extensibleTypeName = "DescriptorSetLayoutCreateInfo"
-  setNext x next = x{next = next}
+  setNext DescriptorSetLayoutCreateInfo{..} next' = DescriptorSetLayoutCreateInfo{next = next', ..}
   getNext DescriptorSetLayoutCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DescriptorSetLayoutCreateInfo e => b) -> Maybe b
   extends _ f
@@ -2287,14 +2376,14 @@ instance Extensible DescriptorSetLayoutCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss DescriptorSetLayoutCreateInfo es, PokeChain es) => ToCStruct (DescriptorSetLayoutCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorSetLayoutCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr DescriptorSetLayoutCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (bindings)) :: Word32))
-    pPBindings' <- ContT $ allocaBytesAligned @DescriptorSetLayoutBinding ((Data.Vector.length (bindings)) * 24) 8
+    pPBindings' <- ContT $ allocaBytes @DescriptorSetLayoutBinding ((Data.Vector.length (bindings)) * 24)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBindings' `plusPtr` (24 * (i)) :: Ptr DescriptorSetLayoutBinding) (e) . ($ ())) (bindings)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorSetLayoutBinding))) (pPBindings')
     lift $ f
@@ -2352,6 +2441,7 @@ instance es ~ '[] => Zero (DescriptorSetLayoutCreateInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'DescriptorPoolCreateInfo',
 -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType'
 data DescriptorPoolSize = DescriptorPoolSize
@@ -2371,7 +2461,7 @@ deriving instance Generic (DescriptorPoolSize)
 deriving instance Show DescriptorPoolSize
 
 instance ToCStruct DescriptorPoolSize where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorPoolSize{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DescriptorType)) (type')
     poke ((p `plusPtr` 4 :: Ptr Word32)) (descriptorCount)
@@ -2407,9 +2497,10 @@ instance Zero DescriptorPoolSize where
 --
 -- = Description
 --
--- If multiple 'DescriptorPoolSize' structures appear in the @pPoolSizes@
--- array then the pool will be created with enough storage for the total
--- number of descriptors of each type.
+-- If multiple 'DescriptorPoolSize' structures containing the same
+-- descriptor type appear in the @pPoolSizes@ array then the pool will be
+-- created with enough storage for the total number of descriptors of each
+-- type.
 --
 -- Fragmentation of a descriptor pool is possible and /may/ lead to
 -- descriptor set allocation failures. A failure due to fragmentation is
@@ -2464,7 +2555,26 @@ instance Zero DescriptorPoolSize where
 -- descriptor. A mutable descriptor /can/ be allocated from a pool entry if
 -- the type list in 'DescriptorSetLayoutCreateInfo' is a subset of the type
 -- list declared in the descriptor pool, or if the pool entry is created
--- without a descriptor type list.
+-- without a descriptor type list. Multiple @pPoolSizes@ entries with
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE' /can/
+-- be declared. When multiple such pool entries are present in
+-- @pPoolSizes@, they specify sets of supported descriptor types which
+-- either fully overlap, partially overlap, or are disjoint. Two sets fully
+-- overlap if the sets of supported descriptor types are equal. If the sets
+-- are not disjoint they partially overlap. A pool entry without a
+-- 'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.MutableDescriptorTypeListVALVE'
+-- assigned to it is considered to partially overlap any other pool entry
+-- which has a
+-- 'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.MutableDescriptorTypeListVALVE'
+-- assigned to it. The application /must/ ensure that partial overlap does
+-- not exist in @pPoolSizes@.
+--
+-- Note
+--
+-- The requirement of no partial overlap is intended to resolve ambiguity
+-- for validation as there is no confusion which @pPoolSizes@ entries will
+-- be allocated from. An implementation is not expected to depend on this
+-- requirement.
 --
 -- == Valid Usage
 --
@@ -2488,6 +2598,14 @@ instance Zero DescriptorPoolSize where
 --     bit set,
 --     'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.PhysicalDeviceMutableDescriptorTypeFeaturesVALVE'::@mutableDescriptorType@
 --     /must/ be enabled
+--
+-- -   #VUID-VkDescriptorPoolCreateInfo-pPoolSizes-04787# If @pPoolSizes@
+--     contains a @descriptorType@ of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE',
+--     any other
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE'
+--     element in @pPoolSizes@ /must/ not have sets of supported descriptor
+--     types which partially overlap
 --
 -- == Valid Usage (Implicit)
 --
@@ -2518,6 +2636,7 @@ instance Zero DescriptorPoolSize where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DescriptorPoolCreateFlags',
 -- 'DescriptorPoolSize', 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createDescriptorPool'
@@ -2544,7 +2663,7 @@ deriving instance Show (Chain es) => Show (DescriptorPoolCreateInfo es)
 
 instance Extensible DescriptorPoolCreateInfo where
   extensibleTypeName = "DescriptorPoolCreateInfo"
-  setNext x next = x{next = next}
+  setNext DescriptorPoolCreateInfo{..} next' = DescriptorPoolCreateInfo{next = next', ..}
   getNext DescriptorPoolCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DescriptorPoolCreateInfo e => b) -> Maybe b
   extends _ f
@@ -2553,7 +2672,7 @@ instance Extensible DescriptorPoolCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss DescriptorPoolCreateInfo es, PokeChain es) => ToCStruct (DescriptorPoolCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorPoolCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -2561,7 +2680,7 @@ instance (Extendss DescriptorPoolCreateInfo es, PokeChain es) => ToCStruct (Desc
     lift $ poke ((p `plusPtr` 16 :: Ptr DescriptorPoolCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (maxSets)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (poolSizes)) :: Word32))
-    pPPoolSizes' <- ContT $ allocaBytesAligned @DescriptorPoolSize ((Data.Vector.length (poolSizes)) * 8) 4
+    pPPoolSizes' <- ContT $ allocaBytes @DescriptorPoolSize ((Data.Vector.length (poolSizes)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPPoolSizes' `plusPtr` (8 * (i)) :: Ptr DescriptorPoolSize) (e)) (poolSizes)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr DescriptorPoolSize))) (pPPoolSizes')
     lift $ f
@@ -2649,6 +2768,7 @@ instance es ~ '[] => Zero (DescriptorPoolCreateInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.DescriptorPool',
 -- 'Vulkan.Core10.Handles.DescriptorSetLayout',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -2671,7 +2791,7 @@ deriving instance Show (Chain es) => Show (DescriptorSetAllocateInfo es)
 
 instance Extensible DescriptorSetAllocateInfo where
   extensibleTypeName = "DescriptorSetAllocateInfo"
-  setNext x next = x{next = next}
+  setNext DescriptorSetAllocateInfo{..} next' = DescriptorSetAllocateInfo{next = next', ..}
   getNext DescriptorSetAllocateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DescriptorSetAllocateInfo e => b) -> Maybe b
   extends _ f
@@ -2679,14 +2799,14 @@ instance Extensible DescriptorSetAllocateInfo where
     | otherwise = Nothing
 
 instance (Extendss DescriptorSetAllocateInfo es, PokeChain es) => ToCStruct (DescriptorSetAllocateInfo es) where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorSetAllocateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr DescriptorPool)) (descriptorPool)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (setLayouts)) :: Word32))
-    pPSetLayouts' <- ContT $ allocaBytesAligned @DescriptorSetLayout ((Data.Vector.length (setLayouts)) * 8) 8
+    pPSetLayouts' <- ContT $ allocaBytes @DescriptorSetLayout ((Data.Vector.length (setLayouts)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPSetLayouts' `plusPtr` (8 * (i)) :: Ptr DescriptorSetLayout) (e)) (setLayouts)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr DescriptorSetLayout))) (pPSetLayouts')
     lift $ f

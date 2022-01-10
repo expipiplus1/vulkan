@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_shader_sm_builtins:%20&body=@dgkoch%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_shader_sm_builtins] @dgkoch%0A<<Here describe the issue or question you have about the VK_NV_shader_sm_builtins extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -36,9 +36,8 @@
 --     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_shader_sm_builtins.html SPV_NV_shader_sm_builtins>.
 --
---     -   This extension enables
+--     -   This extension provides API support for
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GLSL_NV_shader_sm_builtins.txt GL_NV_shader_sm_builtins>
---         for GLSL source languages.
 --
 -- [__Contributors__]
 --
@@ -103,14 +102,14 @@
 --
 -- 1.  What should we call this extension?
 --
---     RESOLVED: Using NV_shader_sm_builtins. Other options considered
+--     __RESOLVED__: @NV_shader_sm_builtins@. Other options considered
 --     included:
 --
---     -   NV_shader_smid - but SMID is really easy to typo\/confuse as
+--     -   @NV_shader_smid@ - but SMID is really easy to typo\/confuse as
 --         SIMD.
 --
---     -   NV_shader_sm_info - but __Info__ is typically reserved for input
---         structures
+--     -   @NV_shader_sm_info@ - but __Info__ is typically reserved for
+--         input structures
 --
 -- == Version History
 --
@@ -118,12 +117,12 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceShaderSMBuiltinsFeaturesNV',
 -- 'PhysicalDeviceShaderSMBuiltinsPropertiesNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shader_sm_builtins Vulkan Specification>
@@ -138,7 +137,7 @@ module Vulkan.Extensions.VK_NV_shader_sm_builtins  ( PhysicalDeviceShaderSMBuilt
                                                    , pattern NV_SHADER_SM_BUILTINS_EXTENSION_NAME
                                                    ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -165,22 +164,21 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- | VkPhysicalDeviceShaderSMBuiltinsPropertiesNV - Structure describing
 -- shader SM Builtins properties supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceShaderSMBuiltinsPropertiesNV'
--- structure describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceShaderSMBuiltinsPropertiesNV' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shader_sm_builtins VK_NV_shader_sm_builtins>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderSMBuiltinsPropertiesNV = PhysicalDeviceShaderSMBuiltinsPropertiesNV
   { -- | #limits-shaderSMCount# @shaderSMCount@ is the number of SMs on the
@@ -197,7 +195,7 @@ deriving instance Generic (PhysicalDeviceShaderSMBuiltinsPropertiesNV)
 deriving instance Show PhysicalDeviceShaderSMBuiltinsPropertiesNV
 
 instance ToCStruct PhysicalDeviceShaderSMBuiltinsPropertiesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShaderSMBuiltinsPropertiesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_PROPERTIES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -237,23 +235,25 @@ instance Zero PhysicalDeviceShaderSMBuiltinsPropertiesNV where
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceShaderSMBuiltinsFeaturesNV' structure
--- describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceShaderSMBuiltinsFeaturesNV' structure is included
--- in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceShaderSMBuiltinsFeaturesNV' /can/ also be included in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the
--- feature.
+-- in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceShaderSMBuiltinsFeaturesNV' /can/ also be used
+-- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shader_sm_builtins VK_NV_shader_sm_builtins>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderSMBuiltinsFeaturesNV = PhysicalDeviceShaderSMBuiltinsFeaturesNV
@@ -267,7 +267,7 @@ deriving instance Generic (PhysicalDeviceShaderSMBuiltinsFeaturesNV)
 deriving instance Show PhysicalDeviceShaderSMBuiltinsFeaturesNV
 
 instance ToCStruct PhysicalDeviceShaderSMBuiltinsFeaturesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShaderSMBuiltinsFeaturesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SM_BUILTINS_FEATURES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

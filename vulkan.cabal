@@ -1,16 +1,17 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.34.4.
+-- This file has been generated from package.yaml by hpack version 0.34.5.
 --
 -- see: https://github.com/sol/hpack
 
 name:           vulkan
-version:        3.10
+version:        3.14.2
 synopsis:       Bindings to the Vulkan graphics API.
+description:    Please see [the readme](https://github.com/expipiplus1/vulkan/#readme)
 category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme
 bug-reports:    https://github.com/expipiplus1/vulkan/issues
-maintainer:     Joe Hermaszewski <live.long.and.prosper@monoid.al>
+maintainer:     Ellie Hermaszewska <live.long.and.prosper@monoid.al>
 license:        BSD-3-Clause
 license-file:   LICENSE
 build-type:     Simple
@@ -107,9 +108,9 @@ library
       Vulkan.Core10.Enums.PipelineBindPoint
       Vulkan.Core10.Enums.PipelineCacheCreateFlagBits
       Vulkan.Core10.Enums.PipelineCacheHeaderVersion
-      Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlags
+      Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits
       Vulkan.Core10.Enums.PipelineCreateFlagBits
-      Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlags
+      Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits
       Vulkan.Core10.Enums.PipelineDynamicStateCreateFlags
       Vulkan.Core10.Enums.PipelineInputAssemblyStateCreateFlags
       Vulkan.Core10.Enums.PipelineLayoutCreateFlags
@@ -135,7 +136,7 @@ library
       Vulkan.Core10.Enums.SamplerCreateFlagBits
       Vulkan.Core10.Enums.SamplerMipmapMode
       Vulkan.Core10.Enums.SemaphoreCreateFlags
-      Vulkan.Core10.Enums.ShaderModuleCreateFlagBits
+      Vulkan.Core10.Enums.ShaderModuleCreateFlags
       Vulkan.Core10.Enums.ShaderStageFlagBits
       Vulkan.Core10.Enums.SharingMode
       Vulkan.Core10.Enums.SparseImageFormatFlagBits
@@ -276,18 +277,23 @@ library
       Vulkan.Extensions.VK_AMD_shader_trinary_minmax
       Vulkan.Extensions.VK_AMD_texture_gather_bias_lod
       Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
+      Vulkan.Extensions.VK_ARM_rasterization_order_attachment_access
       Vulkan.Extensions.VK_EXT_4444_formats
+      Vulkan.Extensions.VK_EXT_acquire_drm_display
       Vulkan.Extensions.VK_EXT_acquire_xlib_display
       Vulkan.Extensions.VK_EXT_astc_decode_mode
       Vulkan.Extensions.VK_EXT_blend_operation_advanced
+      Vulkan.Extensions.VK_EXT_border_color_swizzle
       Vulkan.Extensions.VK_EXT_buffer_device_address
       Vulkan.Extensions.VK_EXT_calibrated_timestamps
+      Vulkan.Extensions.VK_EXT_color_write_enable
       Vulkan.Extensions.VK_EXT_conditional_rendering
       Vulkan.Extensions.VK_EXT_conservative_rasterization
       Vulkan.Extensions.VK_EXT_custom_border_color
       Vulkan.Extensions.VK_EXT_debug_marker
       Vulkan.Extensions.VK_EXT_debug_report
       Vulkan.Extensions.VK_EXT_debug_utils
+      Vulkan.Extensions.VK_EXT_depth_clip_control
       Vulkan.Extensions.VK_EXT_depth_clip_enable
       Vulkan.Extensions.VK_EXT_depth_range_unrestricted
       Vulkan.Extensions.VK_EXT_descriptor_indexing
@@ -298,6 +304,7 @@ library
       Vulkan.Extensions.VK_EXT_display_control
       Vulkan.Extensions.VK_EXT_display_surface_counter
       Vulkan.Extensions.VK_EXT_extended_dynamic_state
+      Vulkan.Extensions.VK_EXT_extended_dynamic_state2
       Vulkan.Extensions.VK_EXT_external_memory_dma_buf
       Vulkan.Extensions.VK_EXT_external_memory_host
       Vulkan.Extensions.VK_EXT_filter_cubic
@@ -306,29 +313,39 @@ library
       Vulkan.Extensions.VK_EXT_fragment_shader_interlock
       Vulkan.Extensions.VK_EXT_full_screen_exclusive
       Vulkan.Extensions.VK_EXT_global_priority
+      Vulkan.Extensions.VK_EXT_global_priority_query
       Vulkan.Extensions.VK_EXT_hdr_metadata
       Vulkan.Extensions.VK_EXT_headless_surface
       Vulkan.Extensions.VK_EXT_host_query_reset
       Vulkan.Extensions.VK_EXT_image_drm_format_modifier
       Vulkan.Extensions.VK_EXT_image_robustness
+      Vulkan.Extensions.VK_EXT_image_view_min_lod
       Vulkan.Extensions.VK_EXT_index_type_uint8
       Vulkan.Extensions.VK_EXT_inline_uniform_block
       Vulkan.Extensions.VK_EXT_line_rasterization
+      Vulkan.Extensions.VK_EXT_load_store_op_none
       Vulkan.Extensions.VK_EXT_memory_budget
       Vulkan.Extensions.VK_EXT_memory_priority
       Vulkan.Extensions.VK_EXT_metal_surface
+      Vulkan.Extensions.VK_EXT_multi_draw
+      Vulkan.Extensions.VK_EXT_pageable_device_local_memory
       Vulkan.Extensions.VK_EXT_pci_bus_info
+      Vulkan.Extensions.VK_EXT_physical_device_drm
       Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
       Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
       Vulkan.Extensions.VK_EXT_post_depth_coverage
+      Vulkan.Extensions.VK_EXT_primitive_topology_list_restart
       Vulkan.Extensions.VK_EXT_private_data
+      Vulkan.Extensions.VK_EXT_provoking_vertex
       Vulkan.Extensions.VK_EXT_queue_family_foreign
+      Vulkan.Extensions.VK_EXT_rgba10x6_formats
       Vulkan.Extensions.VK_EXT_robustness2
       Vulkan.Extensions.VK_EXT_sample_locations
       Vulkan.Extensions.VK_EXT_sampler_filter_minmax
       Vulkan.Extensions.VK_EXT_scalar_block_layout
       Vulkan.Extensions.VK_EXT_separate_stencil_usage
       Vulkan.Extensions.VK_EXT_shader_atomic_float
+      Vulkan.Extensions.VK_EXT_shader_atomic_float2
       Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation
       Vulkan.Extensions.VK_EXT_shader_image_atomic_int64
       Vulkan.Extensions.VK_EXT_shader_stencil_export
@@ -345,7 +362,12 @@ library
       Vulkan.Extensions.VK_EXT_validation_features
       Vulkan.Extensions.VK_EXT_validation_flags
       Vulkan.Extensions.VK_EXT_vertex_attribute_divisor
+      Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state
+      Vulkan.Extensions.VK_EXT_ycbcr_2plane_444_formats
       Vulkan.Extensions.VK_EXT_ycbcr_image_arrays
+      Vulkan.Extensions.VK_FUCHSIA_buffer_collection
+      Vulkan.Extensions.VK_FUCHSIA_external_memory
+      Vulkan.Extensions.VK_FUCHSIA_external_semaphore
       Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface
       Vulkan.Extensions.VK_GGP_frame_token
       Vulkan.Extensions.VK_GGP_stream_descriptor_surface
@@ -353,6 +375,8 @@ library
       Vulkan.Extensions.VK_GOOGLE_display_timing
       Vulkan.Extensions.VK_GOOGLE_hlsl_functionality1
       Vulkan.Extensions.VK_GOOGLE_user_type
+      Vulkan.Extensions.VK_HUAWEI_invocation_mask
+      Vulkan.Extensions.VK_HUAWEI_subpass_shading
       Vulkan.Extensions.VK_IMG_filter_cubic
       Vulkan.Extensions.VK_IMG_format_pvrtc
       Vulkan.Extensions.VK_INTEL_performance_query
@@ -375,6 +399,7 @@ library
       Vulkan.Extensions.VK_KHR_display_swapchain
       Vulkan.Extensions.VK_KHR_draw_indirect_count
       Vulkan.Extensions.VK_KHR_driver_properties
+      Vulkan.Extensions.VK_KHR_dynamic_rendering
       Vulkan.Extensions.VK_KHR_external_fence
       Vulkan.Extensions.VK_KHR_external_fence_capabilities
       Vulkan.Extensions.VK_KHR_external_fence_fd
@@ -387,6 +412,7 @@ library
       Vulkan.Extensions.VK_KHR_external_semaphore_capabilities
       Vulkan.Extensions.VK_KHR_external_semaphore_fd
       Vulkan.Extensions.VK_KHR_external_semaphore_win32
+      Vulkan.Extensions.VK_KHR_format_feature_flags2
       Vulkan.Extensions.VK_KHR_fragment_shading_rate
       Vulkan.Extensions.VK_KHR_get_display_properties2
       Vulkan.Extensions.VK_KHR_get_memory_requirements2
@@ -398,11 +424,14 @@ library
       Vulkan.Extensions.VK_KHR_maintenance1
       Vulkan.Extensions.VK_KHR_maintenance2
       Vulkan.Extensions.VK_KHR_maintenance3
+      Vulkan.Extensions.VK_KHR_maintenance4
       Vulkan.Extensions.VK_KHR_multiview
       Vulkan.Extensions.VK_KHR_performance_query
       Vulkan.Extensions.VK_KHR_pipeline_executable_properties
       Vulkan.Extensions.VK_KHR_pipeline_library
       Vulkan.Extensions.VK_KHR_portability_subset
+      Vulkan.Extensions.VK_KHR_present_id
+      Vulkan.Extensions.VK_KHR_present_wait
       Vulkan.Extensions.VK_KHR_push_descriptor
       Vulkan.Extensions.VK_KHR_ray_query
       Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
@@ -415,8 +444,10 @@ library
       Vulkan.Extensions.VK_KHR_shader_draw_parameters
       Vulkan.Extensions.VK_KHR_shader_float16_int8
       Vulkan.Extensions.VK_KHR_shader_float_controls
+      Vulkan.Extensions.VK_KHR_shader_integer_dot_product
       Vulkan.Extensions.VK_KHR_shader_non_semantic_info
       Vulkan.Extensions.VK_KHR_shader_subgroup_extended_types
+      Vulkan.Extensions.VK_KHR_shader_subgroup_uniform_control_flow
       Vulkan.Extensions.VK_KHR_shader_terminate_invocation
       Vulkan.Extensions.VK_KHR_shared_presentable_image
       Vulkan.Extensions.VK_KHR_spirv_1_4
@@ -453,6 +484,7 @@ library
       Vulkan.Extensions.VK_NV_device_generated_commands
       Vulkan.Extensions.VK_NV_external_memory
       Vulkan.Extensions.VK_NV_external_memory_capabilities
+      Vulkan.Extensions.VK_NV_external_memory_rdma
       Vulkan.Extensions.VK_NV_external_memory_win32
       Vulkan.Extensions.VK_NV_fill_rectangle
       Vulkan.Extensions.VK_NV_fragment_coverage_to_color
@@ -461,8 +493,10 @@ library
       Vulkan.Extensions.VK_NV_framebuffer_mixed_samples
       Vulkan.Extensions.VK_NV_geometry_shader_passthrough
       Vulkan.Extensions.VK_NV_glsl_shader
+      Vulkan.Extensions.VK_NV_inherited_viewport_scissor
       Vulkan.Extensions.VK_NV_mesh_shader
       Vulkan.Extensions.VK_NV_ray_tracing
+      Vulkan.Extensions.VK_NV_ray_tracing_motion_blur
       Vulkan.Extensions.VK_NV_representative_fragment_test
       Vulkan.Extensions.VK_NV_sample_mask_override_coverage
       Vulkan.Extensions.VK_NV_scissor_exclusive
@@ -473,12 +507,14 @@ library
       Vulkan.Extensions.VK_NV_viewport_array2
       Vulkan.Extensions.VK_NV_viewport_swizzle
       Vulkan.Extensions.VK_NV_win32_keyed_mutex
+      Vulkan.Extensions.VK_NVX_binary_import
       Vulkan.Extensions.VK_NVX_image_view_handle
       Vulkan.Extensions.VK_NVX_multiview_per_view_attributes
       Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
       Vulkan.Extensions.VK_QCOM_render_pass_store_ops
       Vulkan.Extensions.VK_QCOM_render_pass_transform
       Vulkan.Extensions.VK_QCOM_rotated_copy_commands
+      Vulkan.Extensions.VK_QNX_screen_surface
       Vulkan.Extensions.VK_VALVE_mutable_descriptor_type
       Vulkan.NamedType
       Vulkan.SPIRVRequirements
@@ -506,6 +542,7 @@ library
       InstanceSigs
       LambdaCase
       MagicHash
+      NamedFieldPuns
       NoMonomorphismRestriction
       OverloadedStrings
       PartialTypeSignatures
@@ -545,4 +582,59 @@ library
     cpp-options: -DGENERIC_INSTANCES
   if flag(trace-calls)
     cpp-options: -DTRACE_CALLS
+  default-language: Haskell2010
+
+test-suite test
+  type: exitcode-stdio-1.0
+  main-is: Driver.hs
+  other-modules:
+      Structs
+      VkCtx
+  hs-source-dirs:
+      test
+  default-extensions:
+      AllowAmbiguousTypes
+      CPP
+      DataKinds
+      DefaultSignatures
+      DeriveAnyClass
+      DeriveGeneric
+      DerivingStrategies
+      DuplicateRecordFields
+      FlexibleContexts
+      FlexibleInstances
+      GADTs
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      LambdaCase
+      MagicHash
+      NamedFieldPuns
+      NoMonomorphismRestriction
+      OverloadedStrings
+      PartialTypeSignatures
+      PatternSynonyms
+      PolyKinds
+      QuantifiedConstraints
+      RankNTypes
+      RecordWildCards
+      RoleAnnotations
+      ScopedTypeVariables
+      StandaloneDeriving
+      Strict
+      TypeApplications
+      TypeFamilyDependencies
+      TypeOperators
+      TypeSynonymInstances
+      UndecidableInstances
+      ViewPatterns
+  build-tool-depends:
+      tasty-discover:tasty-discover
+  build-depends:
+      base
+    , containers
+    , inline-c
+    , tasty
+    , tasty-hunit
+    , template-haskell
+    , vulkan
   default-language: Haskell2010

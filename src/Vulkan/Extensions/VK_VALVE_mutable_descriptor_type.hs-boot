@@ -30,10 +30,10 @@
 -- [__Contact__]
 --
 --     -   Joshua Ashton
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_VALVE_mutable_descriptor_type:%20&body=@Joshua-Ashton%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_VALVE_mutable_descriptor_type] @Joshua-Ashton%0A<<Here describe the issue or question you have about the VK_VALVE_mutable_descriptor_type extension>> >
 --
 --     -   Hans-Kristian Arntzen
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_VALVE_mutable_descriptor_type:%20&body=@HansKristian-Work%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_VALVE_mutable_descriptor_type] @HansKristian-Work%0A<<Here describe the issue or question you have about the VK_VALVE_mutable_descriptor_type extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -121,13 +121,13 @@
 --
 --     -   Initial specification, squashed from public draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'MutableDescriptorTypeCreateInfoVALVE',
 -- 'MutableDescriptorTypeListVALVE',
 -- 'PhysicalDeviceMutableDescriptorTypeFeaturesVALVE'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VALVE_mutable_descriptor_type Vulkan Specification>

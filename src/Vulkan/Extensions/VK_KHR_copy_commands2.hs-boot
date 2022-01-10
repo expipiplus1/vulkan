@@ -24,18 +24,18 @@
 -- [__Contact__]
 --
 --     -   Jeff Leger
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_copy_commands2:%20&body=@jackohound%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_copy_commands2] @jackohound%0A<<Here describe the issue or question you have about the VK_KHR_copy_commands2 extension>> >
 --
 -- == Other Extension Metadata
 --
--- [Last Modified Date]
+-- [__Last Modified Date__]
 --     2020-07-06
 --
 -- [__Interactions and External Dependencies__]
 --
 --     -   None
 --
--- [Contributors]
+-- [__Contributors__]
 --
 --     -   Jeff Leger, Qualcomm
 --
@@ -56,10 +56,10 @@
 -- The following extensible copy commands are introduced with this
 -- extension: 'cmdCopyBuffer2KHR', 'cmdCopyImage2KHR',
 -- 'cmdCopyBufferToImage2KHR', 'cmdCopyImageToBuffer2KHR',
--- 'cmdBlitImage2KHR', and 'cmdResolveImage2KHR'. Each command
--- contain@*Info2KHR@ structure parameter that includes @sType@\/@pNext@
--- members. Lower level structures that describe each region to be copied
--- are also extended with @sType@\/@pNext@ members.
+-- 'cmdBlitImage2KHR', and 'cmdResolveImage2KHR'. Each command contains an
+-- @*Info2KHR@ structure parameter that includes @sType@\/@pNext@ members.
+-- Lower level structures describing each region to be copied are also
+-- extended with @sType@\/@pNext@ members.
 --
 -- == New Commands
 --
@@ -135,7 +135,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'BlitImageInfo2KHR', 'BufferCopy2KHR', 'BufferImageCopy2KHR',
 -- 'CopyBufferInfo2KHR', 'CopyBufferToImageInfo2KHR', 'CopyImageInfo2KHR',
@@ -144,7 +144,7 @@
 -- 'cmdCopyBuffer2KHR', 'cmdCopyBufferToImage2KHR', 'cmdCopyImage2KHR',
 -- 'cmdCopyImageToBuffer2KHR', 'cmdResolveImage2KHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 Vulkan Specification>

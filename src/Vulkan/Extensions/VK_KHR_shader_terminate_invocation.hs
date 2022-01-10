@@ -26,7 +26,9 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_shader_terminate_invocation:%20&body=@critsec%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shader_terminate_invocation] @critsec%0A<<Here describe the issue or question you have about the VK_KHR_shader_terminate_invocation extension>> >
+--
+-- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
 --     2020-08-11
@@ -62,12 +64,11 @@
 -- previously executed instructions will have observable effects. The
 -- @OpTerminateInvocation@ instruction, along with the
 -- @OpDemoteToHelperInvocation@ instruction from the
--- <VK_EXT_shader_demote_to_helper_invocation.html VK_EXT_shader_demote_to_helper_invocation>
--- extension, together replace the @OpKill@ instruction, which could behave
--- like either of these instructions. @OpTerminateInvocation@ provides the
--- behavior required by the GLSL @discard@ statement, and should be used
--- when available by GLSL compilers and applications that need the GLSL
--- @discard@ behavior.
+-- @VK_EXT_shader_demote_to_helper_invocation@ extension, together replace
+-- the @OpKill@ instruction, which could behave like either of these
+-- instructions. @OpTerminateInvocation@ provides the behavior required by
+-- the GLSL @discard@ statement, and should be used when available by GLSL
+-- compilers and applications that need the GLSL @discard@ behavior.
 --
 -- == New Structures
 --
@@ -91,11 +92,11 @@
 --
 -- -   Revision 1, 2020-08-11 (Jesse Hall)
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceShaderTerminateInvocationFeaturesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_terminate_invocation Vulkan Specification>
@@ -109,7 +110,7 @@ module Vulkan.Extensions.VK_KHR_shader_terminate_invocation  ( PhysicalDeviceSha
                                                              , pattern KHR_SHADER_TERMINATE_INVOCATION_EXTENSION_NAME
                                                              ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -137,23 +138,26 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceShaderTerminateInvocationFeaturesKHR'
--- structure describe the following feature:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceShaderTerminateInvocationFeaturesKHR' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with a value indicating whether the feature is supported.
--- 'PhysicalDeviceShaderTerminateInvocationFeaturesKHR' /can/ also be
--- included in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to enable the features.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceShaderTerminateInvocationFeaturesKHR' /can/
+-- also be used in the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
+-- features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_terminate_invocation VK_KHR_shader_terminate_invocation>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderTerminateInvocationFeaturesKHR = PhysicalDeviceShaderTerminateInvocationFeaturesKHR
@@ -168,7 +172,7 @@ deriving instance Generic (PhysicalDeviceShaderTerminateInvocationFeaturesKHR)
 deriving instance Show PhysicalDeviceShaderTerminateInvocationFeaturesKHR
 
 instance ToCStruct PhysicalDeviceShaderTerminateInvocationFeaturesKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShaderTerminateInvocationFeaturesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

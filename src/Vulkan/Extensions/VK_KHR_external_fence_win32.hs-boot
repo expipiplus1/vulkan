@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_external_fence_win32:%20&body=@critsec%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_external_fence_win32] @critsec%0A<<Here describe the issue or question you have about the VK_KHR_external_fence_win32 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -100,7 +100,7 @@
 -- 'Vulkan.Core10.Handles.Semaphore' instead of a
 -- 'Vulkan.Core10.Handles.Fence', and applications can check status or wait
 -- on the D3D12 fence using non-Vulkan APIs. The convenience of being able
--- to do these operations on 'Vulkan.Core10.Handles.Fence' objects doesn’t
+-- to do these operations on 'Vulkan.Core10.Handles.Fence' objects does not
 -- justify the extra API complexity.
 --
 -- == Version History
@@ -109,13 +109,13 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'ExportFenceWin32HandleInfoKHR', 'FenceGetWin32HandleInfoKHR',
 -- 'ImportFenceWin32HandleInfoKHR', 'getFenceWin32HandleKHR',
 -- 'importFenceWin32HandleKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_win32 Vulkan Specification>

@@ -34,7 +34,7 @@
 -- [__Contact__]
 --
 --     -   Baldur Karlsson
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_debug_marker:%20&body=@baldurk%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_debug_marker] @baldurk%0A<<Here describe the issue or question you have about the VK_EXT_debug_marker extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -256,7 +256,7 @@
 --
 --     -   Fixed typo in dates in revision history
 --
--- = See Also
+-- == See Also
 --
 -- 'DebugMarkerMarkerInfoEXT', 'DebugMarkerObjectNameInfoEXT',
 -- 'DebugMarkerObjectTagInfoEXT',
@@ -265,7 +265,7 @@
 -- 'cmdDebugMarkerInsertEXT', 'debugMarkerSetObjectNameEXT',
 -- 'debugMarkerSetObjectTagEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_marker Vulkan Specification>

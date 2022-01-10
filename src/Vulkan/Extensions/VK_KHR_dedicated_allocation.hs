@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_dedicated_allocation:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_dedicated_allocation] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_dedicated_allocation extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -200,15 +200,15 @@
 --
 -- -   Revision 3, 2017-07-31 (Jason Ekstrand)
 --
---     -   Clarify that memory objects created with
+--     -   Clarify that memory objects allocated with
 --         VkMemoryDedicatedAllocateInfoKHR can only have the specified
 --         resource bound and no others.
 --
--- = See Also
+-- == See Also
 --
 -- 'MemoryDedicatedAllocateInfoKHR', 'MemoryDedicatedRequirementsKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dedicated_allocation Vulkan Specification>

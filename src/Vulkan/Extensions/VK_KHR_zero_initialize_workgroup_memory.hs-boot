@@ -26,7 +26,9 @@
 -- [__Contact__]
 --
 --     -   Alan Baker
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_zero_initialize_workgroup_memory:%20&body=@alan-baker%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_zero_initialize_workgroup_memory] @alan-baker%0A<<Here describe the issue or question you have about the VK_KHR_zero_initialize_workgroup_memory extension>> >
+--
+-- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
 --     2020-11-18
@@ -44,6 +46,8 @@
 --     -   Jeff Bolz, Nvidia
 --
 --     -   Jason Ekstrand, Intel
+--
+-- == Description
 --
 -- This extension allows the use of a null constant initializer on shader
 -- Workgroup memory variables, allowing implementations to expose any
@@ -75,11 +79,11 @@
 --
 --     -   Internal draft version
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_zero_initialize_workgroup_memory Vulkan Specification>

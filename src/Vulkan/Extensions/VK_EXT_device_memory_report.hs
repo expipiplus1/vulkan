@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Yiwei Zhang
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_device_memory_report:%20&body=@zhangyiwei%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_device_memory_report] @zhangyiwei%0A<<Here describe the issue or question you have about the VK_EXT_device_memory_report extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -101,7 +101,7 @@
 -- == Issues
 --
 -- 1) Should this be better expressed as an extension to VK_EXT_debug_utils
--- and its general purpose messenger construct?
+-- and its general-purpose messenger construct?
 --
 -- __RESOLVED__: No. The intended lifecycle is quite different. We want to
 -- make this extension tied to the device’s lifecycle. Each ICD just
@@ -114,25 +114,25 @@
 -- instead of adding the new callback structure in this extension?
 --
 -- __RESOLVED__: No. Our memory reporting layer that combines this
--- information with other memory info it collects directly (e.g. bindings
--- of resources to 'Vulkan.Core10.Handles.DeviceMemory') would have to
--- intercept all entry points that take a
+-- information with other memory information it collects directly (e.g.
+-- bindings of resources to 'Vulkan.Core10.Handles.DeviceMemory') would
+-- have to intercept all entry points that take a
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' parameter and
--- inject its own @pfnInternalAllocation@ and @pfnInternalFree@. That’s
--- maybe doable for the extensions we know about, but not for ones we
--- don’t. The proposal would work fine in the face of most unknown
--- extensions. But even for ones we know about, since apps can provide a
--- different set of callbacks and userdata and those can be retained by the
--- driver and used later (esp. for pool object, but not just those), we’d
--- have to dynamically allocate the interception trampoline every time.
--- That’s getting to be an unreasonably large amount of complexity and
--- (possibly) overhead.
+-- inject its own @pfnInternalAllocation@ and @pfnInternalFree@. That may
+-- be doable for the extensions we know about, but not for ones we do not.
+-- The proposal would work fine in the face of most unknown extensions. But
+-- even for ones we know about, since apps can provide a different set of
+-- callbacks and userdata and those can be retained by the driver and used
+-- later (esp. for pool object, but not just those), we would have to
+-- dynamically allocate the interception trampoline every time. That is
+-- getting to be an unreasonably large amount of complexity and (possibly)
+-- overhead.
 --
--- We’re interested in both alloc\/free and import\/unimport. The latter is
--- fairly important for tracking (and avoiding double-counting) of
--- swapchain images (still true with \"native swapchains\" based on
--- external memory) and media\/camera interop. Though we might be able to
--- handle this with additional
+-- We are interested in both alloc\/free and import\/unimport. The latter
+-- is fairly important for tracking (and avoiding double-counting) of
+-- swapchain images (still true with “native swapchains” based on external
+-- memory) and media\/camera interop. Though we might be able to handle
+-- this with additional
 -- 'Vulkan.Core10.Enums.InternalAllocationType.InternalAllocationType'
 -- values, for import\/export we do want to be able to tie this to the
 -- external resource, which is one thing that the @memoryObjectId@ is for.
@@ -140,10 +140,10 @@
 -- The internal alloc\/free callbacks are not extensible except via new
 -- 'Vulkan.Core10.Enums.InternalAllocationType.InternalAllocationType'
 -- values. The 'DeviceMemoryReportCallbackDataEXT' in this extension is
--- extensible. That was deliberate: there’s a real possibility we’ll want
--- to get extra information in the future. As one example, currently this
--- reports only physical allocations, but we believe there are interesting
--- cases for tracking how populated that VA region is.
+-- extensible. That was deliberate: there is a real possibility we will
+-- want to get extra information in the future. As one example, currently
+-- this reports only physical allocations, but we believe there are
+-- interesting cases for tracking how populated that VA region is.
 --
 -- The callbacks are clearly specified as only callable within the context
 -- of a call from the app into Vulkan. We believe there are some cases
@@ -153,18 +153,18 @@
 -- do) leading up to 1.0.
 --
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' is described in
--- a section called \"Host memory\" and the intro to it is very explicitly
+-- a section called “Host memory” and the intro to it is very explicitly
 -- about host memory. The other callbacks are all inherently about host
 -- memory. But this extension is very focused on device memory.
 --
 -- 3) Should the callback be reporting which heap is used?
 --
--- __RESOLVED__: Yes. It’s important for non-UMA systems to have all the
+-- __RESOLVED__: Yes. It is important for non-UMA systems to have all the
 -- device memory allocations attributed to the corresponding device memory
 -- heaps. For internally-allocated device memory, @heapIndex@ will always
 -- correspond to an advertised heap, rather than having a magic value
--- indicating a non-advertised heap. Drivers can advertise heaps that don’t
--- have any corresponding memory types if they need to.
+-- indicating a non-advertised heap. Drivers can advertise heaps that do
+-- not have any corresponding memory types if they need to.
 --
 -- 4) Should we use an array of callback for the layers to intercept
 -- instead of chaining multiple of the
@@ -173,9 +173,9 @@
 --
 -- __RESOLVED__ No. The pointer to the
 -- 'DeviceDeviceMemoryReportCreateInfoEXT' structure itself is const and
--- you can’t just cast it away. Thus we can’t update the callback array
--- inside the structure. In addition, we can’t drop this @pNext@ chain
--- either, so making a copy of this whole structure doesn’t work either.
+-- you cannot just cast it away. Thus we cannot update the callback array
+-- inside the structure. In addition, we cannot drop this @pNext@ chain
+-- either, so making a copy of this whole structure does not work either.
 --
 -- 5) Should we track bulk allocations shared among multiple objects?
 --
@@ -197,11 +197,11 @@
 -- __RESOLVED__ No. Some implementations might choose to multiplex work
 -- from multiple application threads into a single backend thread and
 -- perform JIT allocations as a part of that flow. Since this behavior is
--- theoretically legit, we can’t require the callbacks to be always called
+-- theoretically legit, we cannot require the callbacks to be always called
 -- in the same thread with the Vulkan commands, and the note is to remind
 -- the applications to handle this case properly.
 --
--- 7) Should we add an additional \"allocation failed\" event type with
+-- 7) Should we add an additional “allocation failed” event type with
 -- things like size and heap index reported?
 --
 -- __RESOLVED__ Yes. This fits in well with the callback infrastructure
@@ -223,7 +223,7 @@
 --
 --     -   Minor description update
 --
--- = See Also
+-- == See Also
 --
 -- 'PFN_vkDeviceMemoryReportCallbackEXT',
 -- 'DeviceDeviceMemoryReportCreateInfoEXT',
@@ -231,7 +231,7 @@
 -- 'DeviceMemoryReportFlagsEXT',
 -- 'PhysicalDeviceDeviceMemoryReportFeaturesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_memory_report Vulkan Specification>
@@ -259,7 +259,7 @@ module Vulkan.Extensions.VK_EXT_device_memory_report  ( PhysicalDeviceDeviceMemo
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showString)
@@ -305,23 +305,25 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceDeviceMemoryReportFeaturesEXT'
--- structure describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceDeviceMemoryReportFeaturesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with a value indicating whether the feature is supported.
--- 'PhysicalDeviceDeviceMemoryReportFeaturesEXT' /can/ also be used in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the
--- feature.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceDeviceMemoryReportFeaturesEXT' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_memory_report VK_EXT_device_memory_report>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDeviceMemoryReportFeaturesEXT = PhysicalDeviceDeviceMemoryReportFeaturesEXT
@@ -336,7 +338,7 @@ deriving instance Generic (PhysicalDeviceDeviceMemoryReportFeaturesEXT)
 deriving instance Show PhysicalDeviceDeviceMemoryReportFeaturesEXT
 
 instance ToCStruct PhysicalDeviceDeviceMemoryReportFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceDeviceMemoryReportFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_MEMORY_REPORT_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -386,7 +388,9 @@ instance Zero PhysicalDeviceDeviceMemoryReportFeaturesEXT where
 --
 -- = See Also
 --
--- 'PFN_vkDeviceMemoryReportCallbackEXT', 'DeviceMemoryReportFlagsEXT',
+-- 'PFN_vkDeviceMemoryReportCallbackEXT',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_memory_report VK_EXT_device_memory_report>,
+-- 'DeviceMemoryReportFlagsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceDeviceMemoryReportCreateInfoEXT = DeviceDeviceMemoryReportCreateInfoEXT
   { -- | @flags@ is 0 and reserved for future use.
@@ -413,7 +417,7 @@ deriving instance Generic (DeviceDeviceMemoryReportCreateInfoEXT)
 deriving instance Show DeviceDeviceMemoryReportCreateInfoEXT
 
 instance ToCStruct DeviceDeviceMemoryReportCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceDeviceMemoryReportCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_DEVICE_MEMORY_REPORT_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -482,12 +486,13 @@ instance Zero DeviceDeviceMemoryReportCreateInfoEXT where
 -- usually will not yet exist when the application or tool receives the
 -- callback. @objectHandle@ will only exist when the create or allocate
 -- call that triggered the event returns, and if the allocation or import
--- ends up failing @objectHandle@ won’t ever exist.
+-- ends up failing @objectHandle@ will not ever exist.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_memory_report VK_EXT_device_memory_report>,
 -- 'DeviceMemoryReportEventTypeEXT', 'DeviceMemoryReportFlagsEXT',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.ObjectType.ObjectType',
@@ -527,7 +532,7 @@ data DeviceMemoryReportCallbackDataEXT = DeviceMemoryReportCallbackDataEXT
     -- 'DEVICE_MEMORY_REPORT_EVENT_TYPE_UNIMPORT_EXT', @objectHandle@ is a
     -- valid Vulkan handle of the type associated with @objectType@ as defined
     -- in the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-object-types VkObjectType and Vulkan Handle Relationship>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-object-types  and Vulkan Handle Relationship>
     -- table. Otherwise, @objectHandle@ is undefined.
     objectHandle :: Word64
   , -- | @heapIndex@ describes which memory heap this device memory allocation is
@@ -545,7 +550,7 @@ deriving instance Generic (DeviceMemoryReportCallbackDataEXT)
 deriving instance Show DeviceMemoryReportCallbackDataEXT
 
 instance ToCStruct DeviceMemoryReportCallbackDataEXT where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceMemoryReportCallbackDataEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_MEMORY_REPORT_CALLBACK_DATA_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -600,7 +605,18 @@ instance Zero DeviceMemoryReportCallbackDataEXT where
            zero
 
 
--- No documentation found for TopLevel "VkDeviceMemoryReportFlagsEXT"
+-- | VkDeviceMemoryReportFlagsEXT - Reserved for future use
+--
+-- = Description
+--
+-- 'DeviceMemoryReportFlagsEXT' is a bitmask type for setting a mask, but
+-- is currently reserved for future use.
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_memory_report VK_EXT_device_memory_report>,
+-- 'DeviceDeviceMemoryReportCreateInfoEXT',
+-- 'DeviceMemoryReportCallbackDataEXT'
 newtype DeviceMemoryReportFlagsEXT = DeviceMemoryReportFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -634,6 +650,7 @@ instance Read DeviceMemoryReportFlagsEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_memory_report VK_EXT_device_memory_report>,
 -- 'DeviceMemoryReportCallbackDataEXT'
 newtype DeviceMemoryReportEventTypeEXT = DeviceMemoryReportEventTypeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -701,6 +718,7 @@ type FN_vkDeviceMemoryReportCallbackEXT = ("pCallbackData" ::: Ptr DeviceMemoryR
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_device_memory_report VK_EXT_device_memory_report>,
 -- 'DeviceDeviceMemoryReportCreateInfoEXT'
 type PFN_vkDeviceMemoryReportCallbackEXT = FunPtr FN_vkDeviceMemoryReportCallbackEXT
 

@@ -6,7 +6,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_variable_pointers  ( pattern STRUCTURE
                                                              , StructureType(..)
                                                              ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -37,10 +37,14 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES = STRUCTURE_TYP
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceVariablePointersFeatures' structure
--- describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
+--
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
 --
 -- -   #extension-features-variablePointersStorageBuffer#
 --     @variablePointersStorageBuffer@ specifies whether the implementation
@@ -55,12 +59,14 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES = STRUCTURE_TYP
 --     not declare the @VariablePointers@ capability.
 --
 -- If the 'PhysicalDeviceVariablePointersFeatures' structure is included in
--- the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceVariablePointersFeatures' /can/ also be included in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the
--- features.
+-- the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceVariablePointersFeatures' /can/ also be used
+-- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage
 --
@@ -76,6 +82,8 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES = STRUCTURE_TYP
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_variable_pointers VK_KHR_variable_pointers>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceVariablePointersFeatures = PhysicalDeviceVariablePointersFeatures
@@ -91,7 +99,7 @@ deriving instance Generic (PhysicalDeviceVariablePointersFeatures)
 deriving instance Show PhysicalDeviceVariablePointersFeatures
 
 instance ToCStruct PhysicalDeviceVariablePointersFeatures where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceVariablePointersFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

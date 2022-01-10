@@ -10,7 +10,7 @@ synopsis:       Haskell examples for the Vulkan graphics API.
 category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme
 bug-reports:    https://github.com/expipiplus1/vulkan/issues
-maintainer:     Joe Hermaszewski <live.long.and.prosper@monoid.al>
+maintainer:     Ellie Hermaszewska <live.long.and.prosper@monoid.al>
 license:        BSD-3-Clause
 build-type:     Simple
 extra-source-files:

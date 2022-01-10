@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_framebuffer_mixed_samples:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_framebuffer_mixed_samples] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_NV_framebuffer_mixed_samples extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -107,13 +107,13 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'CoverageModulationModeNV',
 -- 'PipelineCoverageModulationStateCreateFlagsNV',
 -- 'PipelineCoverageModulationStateCreateInfoNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_framebuffer_mixed_samples Vulkan Specification>
@@ -137,7 +137,7 @@ module Vulkan.Extensions.VK_NV_framebuffer_mixed_samples  ( PipelineCoverageModu
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Monad (unless)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -224,8 +224,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 -- value of R. Which components are modulated is controlled by
 -- @coverageModulationMode@.
 --
--- If this structure is not present, it is as if @coverageModulationMode@
--- is 'COVERAGE_MODULATION_MODE_NONE_NV'.
+-- If this structure is not included in the @pNext@ chain, it is as if
+-- @coverageModulationMode@ is 'COVERAGE_MODULATION_MODE_NONE_NV'.
 --
 -- If the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-coverage-reduction coverage reduction mode>
@@ -259,6 +259,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_framebuffer_mixed_samples VK_NV_framebuffer_mixed_samples>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32', 'CoverageModulationModeNV',
 -- 'PipelineCoverageModulationStateCreateFlagsNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -285,7 +286,7 @@ deriving instance Generic (PipelineCoverageModulationStateCreateInfoNV)
 deriving instance Show PipelineCoverageModulationStateCreateInfoNV
 
 instance ToCStruct PipelineCoverageModulationStateCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineCoverageModulationStateCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -303,7 +304,7 @@ instance ToCStruct PipelineCoverageModulationStateCreateInfoNV where
     pCoverageModulationTable'' <- if Data.Vector.null (coverageModulationTable)
       then pure nullPtr
       else do
-        pPCoverageModulationTable <- ContT $ allocaBytesAligned @CFloat (((Data.Vector.length (coverageModulationTable))) * 4) 4
+        pPCoverageModulationTable <- ContT $ allocaBytes @CFloat (((Data.Vector.length (coverageModulationTable))) * 4)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPCoverageModulationTable `plusPtr` (4 * (i)) :: Ptr CFloat) (CFloat (e))) ((coverageModulationTable))
         pure $ pPCoverageModulationTable
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr CFloat))) pCoverageModulationTable''
@@ -349,6 +350,7 @@ instance Zero PipelineCoverageModulationStateCreateInfoNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_framebuffer_mixed_samples VK_NV_framebuffer_mixed_samples>,
 -- 'PipelineCoverageModulationStateCreateInfoNV'
 newtype PipelineCoverageModulationStateCreateFlagsNV = PipelineCoverageModulationStateCreateFlagsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -382,6 +384,7 @@ instance Read PipelineCoverageModulationStateCreateFlagsNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_framebuffer_mixed_samples VK_NV_framebuffer_mixed_samples>,
 -- 'PipelineCoverageModulationStateCreateInfoNV'
 newtype CoverageModulationModeNV = CoverageModulationModeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)

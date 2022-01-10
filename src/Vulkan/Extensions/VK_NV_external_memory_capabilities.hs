@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_external_memory_capabilities:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_external_memory_capabilities] @cubanismo%0A<<Here describe the issue or question you have about the VK_NV_external_memory_capabilities extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -122,14 +122,14 @@
 --
 --     -   Initial version
 --
--- = See Also
+-- == See Also
 --
 -- 'ExternalImageFormatPropertiesNV', 'ExternalMemoryFeatureFlagBitsNV',
 -- 'ExternalMemoryFeatureFlagsNV', 'ExternalMemoryHandleTypeFlagBitsNV',
 -- 'ExternalMemoryHandleTypeFlagsNV',
 -- 'getPhysicalDeviceExternalImageFormatPropertiesNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_external_memory_capabilities Vulkan Specification>
@@ -162,7 +162,7 @@ import Vulkan.Internal.Utils (enumShowsPrec)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -211,6 +211,7 @@ import Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceExternalImageFormatPropertiesNV))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -223,7 +224,7 @@ foreign import ccall
   "dynamic" mkVkGetPhysicalDeviceExternalImageFormatPropertiesNV
   :: FunPtr (Ptr PhysicalDevice_T -> Format -> ImageType -> ImageTiling -> ImageUsageFlags -> ImageCreateFlags -> ExternalMemoryHandleTypeFlagsNV -> Ptr ExternalImageFormatPropertiesNV -> IO Result) -> Ptr PhysicalDevice_T -> Format -> ImageType -> ImageTiling -> ImageUsageFlags -> ImageCreateFlags -> ExternalMemoryHandleTypeFlagsNV -> Ptr ExternalImageFormatPropertiesNV -> IO Result
 
--- | vkGetPhysicalDeviceExternalImageFormatPropertiesNV - determine image
+-- | vkGetPhysicalDeviceExternalImageFormatPropertiesNV - Determine image
 -- capabilities compatible with external memory handle types
 --
 -- = Description
@@ -252,6 +253,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_external_memory_capabilities VK_NV_external_memory_capabilities>,
 -- 'ExternalImageFormatPropertiesNV', 'ExternalMemoryHandleTypeFlagsNV',
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlags',
@@ -313,7 +315,7 @@ getPhysicalDeviceExternalImageFormatPropertiesNV :: forall io
                                                     ("externalHandleType" ::: ExternalMemoryHandleTypeFlagsNV)
                                                  -> io (ExternalImageFormatPropertiesNV)
 getPhysicalDeviceExternalImageFormatPropertiesNV physicalDevice format type' tiling usage flags externalHandleType = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceExternalImageFormatPropertiesNVPtr = pVkGetPhysicalDeviceExternalImageFormatPropertiesNV (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceExternalImageFormatPropertiesNVPtr = pVkGetPhysicalDeviceExternalImageFormatPropertiesNV (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceExternalImageFormatPropertiesNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceExternalImageFormatPropertiesNV is null" Nothing Nothing
   let vkGetPhysicalDeviceExternalImageFormatPropertiesNV' = mkVkGetPhysicalDeviceExternalImageFormatPropertiesNV vkGetPhysicalDeviceExternalImageFormatPropertiesNVPtr
@@ -329,6 +331,7 @@ getPhysicalDeviceExternalImageFormatPropertiesNV physicalDevice format type' til
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_external_memory_capabilities VK_NV_external_memory_capabilities>,
 -- 'ExternalMemoryFeatureFlagsNV', 'ExternalMemoryHandleTypeFlagsNV',
 -- 'Vulkan.Core10.DeviceInitialization.ImageFormatProperties',
 -- 'getPhysicalDeviceExternalImageFormatPropertiesNV'
@@ -368,7 +371,7 @@ deriving instance Generic (ExternalImageFormatPropertiesNV)
 deriving instance Show ExternalImageFormatPropertiesNV
 
 instance ToCStruct ExternalImageFormatPropertiesNV where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExternalImageFormatPropertiesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr ImageFormatProperties)) (imageFormatProperties)
     poke ((p `plusPtr` 32 :: Ptr ExternalMemoryFeatureFlagsNV)) (externalMemoryFeatures)
@@ -411,6 +414,7 @@ type ExternalMemoryHandleTypeFlagsNV = ExternalMemoryHandleTypeFlagBitsNV
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_external_memory_capabilities VK_NV_external_memory_capabilities>,
 -- 'ExternalMemoryHandleTypeFlagsNV'
 newtype ExternalMemoryHandleTypeFlagBitsNV = ExternalMemoryHandleTypeFlagBitsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -467,6 +471,7 @@ type ExternalMemoryFeatureFlagsNV = ExternalMemoryFeatureFlagBitsNV
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_external_memory_capabilities VK_NV_external_memory_capabilities>,
 -- 'ExternalImageFormatPropertiesNV', 'ExternalMemoryFeatureFlagsNV',
 -- 'getPhysicalDeviceExternalImageFormatPropertiesNV'
 newtype ExternalMemoryFeatureFlagBitsNV = ExternalMemoryFeatureFlagBitsNV Flags

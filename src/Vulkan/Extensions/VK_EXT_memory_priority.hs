@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_memory_priority:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_memory_priority] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_EXT_memory_priority extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -79,12 +79,12 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'MemoryPriorityAllocateInfoEXT',
 -- 'PhysicalDeviceMemoryPriorityFeaturesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_memory_priority Vulkan Specification>
@@ -99,7 +99,7 @@ module Vulkan.Extensions.VK_EXT_memory_priority  ( PhysicalDeviceMemoryPriorityF
                                                  , pattern EXT_MEMORY_PRIORITY_EXTENSION_NAME
                                                  ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Data.Coerce (coerce)
@@ -131,23 +131,25 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceMemoryPriorityFeaturesEXT' structure
--- describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceMemoryPriorityFeaturesEXT' structure is included
--- in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceMemoryPriorityFeaturesEXT' /can/ also be included in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- features.
+-- in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceMemoryPriorityFeaturesEXT' /can/ also be used
+-- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_memory_priority VK_EXT_memory_priority>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMemoryPriorityFeaturesEXT = PhysicalDeviceMemoryPriorityFeaturesEXT
@@ -162,7 +164,7 @@ deriving instance Generic (PhysicalDeviceMemoryPriorityFeaturesEXT)
 deriving instance Show PhysicalDeviceMemoryPriorityFeaturesEXT
 
 instance ToCStruct PhysicalDeviceMemoryPriorityFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceMemoryPriorityFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -207,6 +209,7 @@ instance Zero PhysicalDeviceMemoryPriorityFeaturesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_memory_priority VK_EXT_memory_priority>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data MemoryPriorityAllocateInfoEXT = MemoryPriorityAllocateInfoEXT
   { -- | @priority@ is a floating-point value between @0@ and @1@, indicating the
@@ -224,7 +227,7 @@ deriving instance Generic (MemoryPriorityAllocateInfoEXT)
 deriving instance Show MemoryPriorityAllocateInfoEXT
 
 instance ToCStruct MemoryPriorityAllocateInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryPriorityAllocateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

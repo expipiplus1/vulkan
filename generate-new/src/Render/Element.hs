@@ -55,7 +55,7 @@ import           Data.Char                      ( isAlpha
                                                 )
 import           Data.Set                       ( insert )
 import           Data.Text                     as T
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import qualified Data.Vector.Extra             as V
 import           Data.Vector.Extra              ( pattern Empty
                                                 , Vector
@@ -251,7 +251,9 @@ data RenderParams = RenderParams
   , upperPrefix                 :: Text
     -- ^ "VK" or "XR" or "VMA"
   , flagsTypeName               :: CName
-    -- ^ "VkFlags" or "XrFlags64"
+    -- ^ 32 bit flag type
+  , flags64TypeName             :: CName
+    -- ^ 64 bit flag type
   , alwaysQualifiedNames        :: Vector Name
   , extraNewtypes               :: Vector Name
   , mkIdiomaticType             :: Type -> Maybe IdiomaticType

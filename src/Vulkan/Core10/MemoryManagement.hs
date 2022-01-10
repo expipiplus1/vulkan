@@ -11,7 +11,7 @@ module Vulkan.Core10.MemoryManagement  ( getBufferMemoryRequirements
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -42,6 +42,7 @@ import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Handles (Buffer(..))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkBindBufferMemory))
 import Vulkan.Dynamic (DeviceCmds(pVkBindImageMemory))
 import Vulkan.Dynamic (DeviceCmds(pVkGetBufferMemoryRequirements))
@@ -71,6 +72,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.Device',
 -- 'MemoryRequirements'
 getBufferMemoryRequirements :: forall io
@@ -90,7 +92,7 @@ getBufferMemoryRequirements :: forall io
                                Buffer
                             -> io (MemoryRequirements)
 getBufferMemoryRequirements device buffer = liftIO . evalContT $ do
-  let vkGetBufferMemoryRequirementsPtr = pVkGetBufferMemoryRequirements (deviceCmds (device :: Device))
+  let vkGetBufferMemoryRequirementsPtr = pVkGetBufferMemoryRequirements (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetBufferMemoryRequirementsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetBufferMemoryRequirements is null" Nothing Nothing
   let vkGetBufferMemoryRequirements' = mkVkGetBufferMemoryRequirements vkGetBufferMemoryRequirementsPtr
@@ -142,11 +144,11 @@ foreign import ccall
 --     equal to the size of @memory@ minus @memoryOffset@
 --
 -- -   #VUID-vkBindBufferMemory-buffer-01444# If @buffer@ requires a
---     dedicated allocation(as reported by
+--     dedicated allocation (as reported by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2'
 --     in
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'::requiresDedicatedAllocation
---     for @buffer@), @memory@ /must/ have been created with
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'::@requiresDedicatedAllocation@
+--     for @buffer@), @memory@ /must/ have been allocated with
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@
 --     equal to @buffer@
 --
@@ -161,22 +163,24 @@ foreign import ccall
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@,
 --     and @memoryOffset@ /must/ be zero
 --
--- -   #VUID-vkBindBufferMemory-None-01898# If buffer was created with the
+-- -   #VUID-vkBindBufferMemory-None-01898# If @buffer@ was created with
+--     the
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
 --     bit set, the buffer /must/ be bound to a memory object allocated
 --     with a memory type that reports
 --     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
 --
--- -   #VUID-vkBindBufferMemory-None-01899# If buffer was created with the
+-- -   #VUID-vkBindBufferMemory-None-01899# If @buffer@ was created with
+--     the
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
 --     bit not set, the buffer /must/ not be bound to a memory object
---     created with a memory type that reports
+--     allocated with a memory type that reports
 --     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
 --
 -- -   #VUID-vkBindBufferMemory-buffer-01038# If @buffer@ was created with
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV'::@dedicatedAllocation@
 --     equal to 'Vulkan.Core10.FundamentalTypes.TRUE', @memory@ /must/ have
---     been created with
+--     been allocated with
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::@buffer@
 --     equal to a buffer handle created with identical creation parameters
 --     to @buffer@ and @memoryOffset@ /must/ be zero
@@ -188,16 +192,16 @@ foreign import ccall
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
 --     when @buffer@ was created
 --
--- -   #VUID-vkBindBufferMemory-memory-02985# If @memory@ was created by a
---     memory import operation, that is not
+-- -   #VUID-vkBindBufferMemory-memory-02985# If @memory@ was allocated by
+--     a memory import operation, that is not
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
 --     with a non-@NULL@ @buffer@ value, the external handle type of the
 --     imported memory /must/ also have been set in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
 --     when @buffer@ was created
 --
--- -   #VUID-vkBindBufferMemory-memory-02986# If @memory@ was created with
---     the
+-- -   #VUID-vkBindBufferMemory-memory-02986# If @memory@ was allocated
+--     with the
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
 --     memory import operation with a non-@NULL@ @buffer@ value,
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
@@ -212,6 +216,13 @@ foreign import ccall
 --     bit set, @memory@ /must/ have been allocated with the
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
 --     bit set
+--
+-- -   #VUID-vkBindBufferMemory-buffer-06408# If @buffer@ was created with
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionBufferCreateInfoFUCHSIA'
+--     chained to 'Vulkan.Core10.Buffer.BufferCreateInfo'::@pNext@,
+--     @memory@ /must/ be allocated with a
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImportMemoryBufferCollectionFUCHSIA'
+--     chained to 'Vulkan.Core10.Memory.MemoryAllocateInfo'::@pNext@
 --
 -- == Valid Usage (Implicit)
 --
@@ -250,6 +261,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
@@ -269,7 +281,7 @@ bindBufferMemory :: forall io
                     ("memoryOffset" ::: DeviceSize)
                  -> io ()
 bindBufferMemory device buffer memory memoryOffset = liftIO $ do
-  let vkBindBufferMemoryPtr = pVkBindBufferMemory (deviceCmds (device :: Device))
+  let vkBindBufferMemoryPtr = pVkBindBufferMemory (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkBindBufferMemoryPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBindBufferMemory is null" Nothing Nothing
   let vkBindBufferMemory' = mkVkBindBufferMemory vkBindBufferMemoryPtr
@@ -316,6 +328,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image',
 -- 'MemoryRequirements'
 getImageMemoryRequirements :: forall io
@@ -326,7 +339,7 @@ getImageMemoryRequirements :: forall io
                               Image
                            -> io (MemoryRequirements)
 getImageMemoryRequirements device image = liftIO . evalContT $ do
-  let vkGetImageMemoryRequirementsPtr = pVkGetImageMemoryRequirements (deviceCmds (device :: Device))
+  let vkGetImageMemoryRequirementsPtr = pVkGetImageMemoryRequirements (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetImageMemoryRequirementsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageMemoryRequirements is null" Nothing Nothing
   let vkGetImageMemoryRequirements' = mkVkGetImageMemoryRequirements vkGetImageMemoryRequirementsPtr
@@ -366,7 +379,7 @@ foreign import ccall
 --     allocation (as reported by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
 --     in
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'::requiresDedicatedAllocation
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'::@requiresDedicatedAllocation@
 --     for @image@), @memory@ /must/ have been created with
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
 --     equal to @image@
@@ -468,6 +481,13 @@ foreign import ccall
 --     @size@ member of the 'MemoryRequirements' structure returned from a
 --     call to 'getImageMemoryRequirements' with the same @image@
 --
+-- -   #VUID-vkBindImageMemory-image-06392# If @image@ was created with
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionImageCreateInfoFUCHSIA'
+--     chained to 'Vulkan.Core10.Image.ImageCreateInfo'::@pNext@, @memory@
+--     /must/ be allocated with a
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImportMemoryBufferCollectionFUCHSIA'
+--     chained to 'Vulkan.Core10.Memory.MemoryAllocateInfo'::@pNext@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkBindImageMemory-device-parameter# @device@ /must/ be a valid
@@ -503,6 +523,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Handles.Image'
@@ -522,7 +543,7 @@ bindImageMemory :: forall io
                    ("memoryOffset" ::: DeviceSize)
                 -> io ()
 bindImageMemory device image memory memoryOffset = liftIO $ do
-  let vkBindImageMemoryPtr = pVkBindImageMemory (deviceCmds (device :: Device))
+  let vkBindImageMemoryPtr = pVkBindImageMemory (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkBindImageMemoryPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBindImageMemory is null" Nothing Nothing
   let vkBindImageMemory' = mkVkBindImageMemory vkBindImageMemoryPtr
@@ -534,6 +555,7 @@ bindImageMemory device image memory memoryOffset = liftIO $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2',
 -- 'getBufferMemoryRequirements', 'getImageMemoryRequirements'
@@ -558,7 +580,7 @@ deriving instance Generic (MemoryRequirements)
 deriving instance Show MemoryRequirements
 
 instance ToCStruct MemoryRequirements where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryRequirements{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (size)
     poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (alignment)

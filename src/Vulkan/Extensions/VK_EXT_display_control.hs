@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_display_control:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_display_control] @cubanismo%0A<<Here describe the issue or question you have about the VK_EXT_display_control extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -135,7 +135,7 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'DeviceEventInfoEXT', 'DeviceEventTypeEXT', 'DisplayEventInfoEXT',
 -- 'DisplayEventTypeEXT', 'DisplayPowerInfoEXT', 'DisplayPowerStateEXT',
@@ -143,7 +143,7 @@
 -- 'getSwapchainCounterEXT', 'registerDeviceEventEXT',
 -- 'registerDisplayEventEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control Vulkan Specification>
@@ -185,7 +185,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -224,6 +224,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkDisplayPowerControlEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkGetSwapchainCounterEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkRegisterDeviceEventEXT))
@@ -288,6 +289,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Extensions.Handles.DisplayKHR',
 -- 'DisplayPowerInfoEXT'
 displayPowerControlEXT :: forall io
@@ -296,12 +298,12 @@ displayPowerControlEXT :: forall io
                           Device
                        -> -- | @display@ is the display whose power state is modified.
                           DisplayKHR
-                       -> -- | @pDisplayPowerInfo@ is a 'DisplayPowerInfoEXT' structure specifying the
-                          -- new power state of @display@.
+                       -> -- | @pDisplayPowerInfo@ is a pointer to a 'DisplayPowerInfoEXT' structure
+                          -- specifying the new power state of @display@.
                           DisplayPowerInfoEXT
                        -> io ()
 displayPowerControlEXT device display displayPowerInfo = liftIO . evalContT $ do
-  let vkDisplayPowerControlEXTPtr = pVkDisplayPowerControlEXT (deviceCmds (device :: Device))
+  let vkDisplayPowerControlEXTPtr = pVkDisplayPowerControlEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDisplayPowerControlEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDisplayPowerControlEXT is null" Nothing Nothing
   let vkDisplayPowerControlEXT' = mkVkDisplayPowerControlEXT vkDisplayPowerControlEXTPtr
@@ -347,6 +349,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'DeviceEventInfoEXT',
 -- 'Vulkan.Core10.Handles.Fence'
@@ -363,7 +366,7 @@ registerDeviceEventEXT :: forall io
                           ("allocator" ::: Maybe AllocationCallbacks)
                        -> io (Fence)
 registerDeviceEventEXT device deviceEventInfo allocator = liftIO . evalContT $ do
-  let vkRegisterDeviceEventEXTPtr = pVkRegisterDeviceEventEXT (deviceCmds (device :: Device))
+  let vkRegisterDeviceEventEXTPtr = pVkRegisterDeviceEventEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkRegisterDeviceEventEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkRegisterDeviceEventEXT is null" Nothing Nothing
   let vkRegisterDeviceEventEXT' = mkVkRegisterDeviceEventEXT vkRegisterDeviceEventEXTPtr
@@ -423,6 +426,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'DisplayEventInfoEXT',
 -- 'Vulkan.Extensions.Handles.DisplayKHR', 'Vulkan.Core10.Handles.Fence'
@@ -441,7 +445,7 @@ registerDisplayEventEXT :: forall io
                            ("allocator" ::: Maybe AllocationCallbacks)
                         -> io (Fence)
 registerDisplayEventEXT device display displayEventInfo allocator = liftIO . evalContT $ do
-  let vkRegisterDisplayEventEXTPtr = pVkRegisterDisplayEventEXT (deviceCmds (device :: Device))
+  let vkRegisterDisplayEventEXTPtr = pVkRegisterDisplayEventEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkRegisterDisplayEventEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkRegisterDisplayEventEXT is null" Nothing Nothing
   let vkRegisterDisplayEventEXT' = mkVkRegisterDisplayEventEXT vkRegisterDisplayEventEXTPtr
@@ -513,6 +517,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.VK_EXT_display_surface_counter.SurfaceCounterFlagBitsEXT',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
@@ -523,11 +528,13 @@ getSwapchainCounterEXT :: forall io
                           Device
                        -> -- | @swapchain@ is the swapchain from which to query the counter value.
                           SwapchainKHR
-                       -> -- | @counter@ is the counter to query.
+                       -> -- | @counter@ is a
+                          -- 'Vulkan.Extensions.VK_EXT_display_surface_counter.SurfaceCounterFlagBitsEXT'
+                          -- value specifying the counter to query.
                           SurfaceCounterFlagBitsEXT
                        -> io (("counterValue" ::: Word64))
 getSwapchainCounterEXT device swapchain counter = liftIO . evalContT $ do
-  let vkGetSwapchainCounterEXTPtr = pVkGetSwapchainCounterEXT (deviceCmds (device :: Device))
+  let vkGetSwapchainCounterEXTPtr = pVkGetSwapchainCounterEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetSwapchainCounterEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSwapchainCounterEXT is null" Nothing Nothing
   let vkGetSwapchainCounterEXT' = mkVkGetSwapchainCounterEXT vkGetSwapchainCounterEXTPtr
@@ -544,6 +551,7 @@ getSwapchainCounterEXT device swapchain counter = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
 -- 'DisplayPowerStateEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'displayPowerControlEXT'
@@ -561,7 +569,7 @@ deriving instance Generic (DisplayPowerInfoEXT)
 deriving instance Show DisplayPowerInfoEXT
 
 instance ToCStruct DisplayPowerInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplayPowerInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_POWER_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -598,6 +606,7 @@ instance Zero DisplayPowerInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
 -- 'DeviceEventTypeEXT', 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'registerDeviceEventEXT'
 data DeviceEventInfoEXT = DeviceEventInfoEXT
@@ -611,7 +620,7 @@ deriving instance Generic (DeviceEventInfoEXT)
 deriving instance Show DeviceEventInfoEXT
 
 instance ToCStruct DeviceEventInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceEventInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_EVENT_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -648,6 +657,7 @@ instance Zero DeviceEventInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
 -- 'DisplayEventTypeEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'registerDisplayEventEXT'
@@ -665,7 +675,7 @@ deriving instance Generic (DisplayEventInfoEXT)
 deriving instance Show DisplayEventInfoEXT
 
 instance ToCStruct DisplayEventInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplayEventInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_EVENT_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -718,6 +728,7 @@ instance Zero DisplayEventInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Extensions.VK_EXT_display_surface_counter.SurfaceCounterFlagsEXT'
 data SwapchainCounterCreateInfoEXT = SwapchainCounterCreateInfoEXT
@@ -732,7 +743,7 @@ deriving instance Generic (SwapchainCounterCreateInfoEXT)
 deriving instance Show SwapchainCounterCreateInfoEXT
 
 instance ToCStruct SwapchainCounterCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainCounterCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SWAPCHAIN_COUNTER_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -766,6 +777,7 @@ instance Zero SwapchainCounterCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
 -- 'DisplayPowerInfoEXT'
 newtype DisplayPowerStateEXT = DisplayPowerStateEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -816,6 +828,7 @@ instance Read DisplayPowerStateEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
 -- 'DeviceEventInfoEXT'
 newtype DeviceEventTypeEXT = DeviceEventTypeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -852,6 +865,7 @@ instance Read DeviceEventTypeEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control VK_EXT_display_control>,
 -- 'DisplayEventInfoEXT'
 newtype DisplayEventTypeEXT = DisplayEventTypeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)

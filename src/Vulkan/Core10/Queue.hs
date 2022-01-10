@@ -17,7 +17,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -58,6 +58,7 @@ import Vulkan.Core10.Handles (CommandBuffer_T)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_semaphore_win32 (D3D12FenceSubmitInfoKHR)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkDeviceWaitIdle))
 import Vulkan.Dynamic (DeviceCmds(pVkGetDeviceQueue))
 import Vulkan.Dynamic (DeviceCmds(pVkQueueSubmit))
@@ -119,9 +120,10 @@ foreign import ccall
 --     structure
 --
 -- -   #VUID-vkGetDeviceQueue-queueIndex-00385# @queueIndex@ /must/ be less
---     than the number of queues created for the specified queue family
---     index when @device@ was created, via the @queueCount@ member of the
---     'Vulkan.Core10.Device.DeviceQueueCreateInfo' structure
+--     than the value of
+--     'Vulkan.Core10.Device.DeviceQueueCreateInfo'::@queueCount@ for the
+--     queue family indicated by @queueFamilyIndex@ when @device@ was
+--     created
 --
 -- -   #VUID-vkGetDeviceQueue-flags-01841#
 --     'Vulkan.Core10.Device.DeviceQueueCreateInfo'::@flags@ /must/ have
@@ -137,6 +139,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Queue'
 getDeviceQueue :: forall io
                 . (MonadIO io)
@@ -150,7 +153,7 @@ getDeviceQueue :: forall io
                   ("queueIndex" ::: Word32)
                -> io (Queue)
 getDeviceQueue device queueFamilyIndex queueIndex = liftIO . evalContT $ do
-  let cmds = deviceCmds (device :: Device)
+  let cmds = case device of Device{deviceCmds} -> deviceCmds
   let vkGetDeviceQueuePtr = pVkGetDeviceQueue cmds
   lift $ unless (vkGetDeviceQueuePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceQueue is null" Nothing Nothing
@@ -256,10 +259,10 @@ foreign import ccall
 --     capabilities of @queue@, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
 --
--- -   #VUID-vkQueueSubmit-pSignalSemaphores-00067# Each element of the
---     @pSignalSemaphores@ member of any element of @pSubmits@ /must/ be
---     unsignaled when the semaphore signal operation it defines is
---     executed on the device
+-- -   #VUID-vkQueueSubmit-pSignalSemaphores-00067# Each binary semaphore
+--     element of the @pSignalSemaphores@ member of any element of
+--     @pSubmits@ /must/ be unsignaled when the semaphore signal operation
+--     it defines is executed on the device
 --
 -- -   #VUID-vkQueueSubmit-pWaitSemaphores-00068# When a semaphore wait
 --     operation referring to a binary semaphore defined by any element of
@@ -339,6 +342,13 @@ foreign import ccall
 --     accessed by an operation specified by @pSubmits@ /must/ have
 --     included the queue family of @queue@ at resource creation time
 --
+-- -   #VUID-vkQueueSubmit-queue-06448# If @queue@ was not created with
+--     'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DEVICE_QUEUE_CREATE_PROTECTED_BIT',
+--     there /must/ be no element of @pSubmits@ that includes an
+--     'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.ProtectedSubmitInfo'
+--     structure in its @pNext@ chain with @protectedSubmit@ equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkQueueSubmit-queue-parameter# @queue@ /must/ be a valid
@@ -367,11 +377,11 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | -                                                                                                                          | -                                                                                                                      | Any                                                                                                                   | -                                                                                                                                   |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | -                                                                                                                          | -                                                                                                                      | Any                                                                                                                   |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- == Return Codes
 --
@@ -389,6 +399,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Fence', 'Vulkan.Core10.Handles.Queue',
 -- 'SubmitInfo'
 queueSubmit :: forall io
@@ -405,11 +416,11 @@ queueSubmit :: forall io
                Fence
             -> io ()
 queueSubmit queue submits fence = liftIO . evalContT $ do
-  let vkQueueSubmitPtr = pVkQueueSubmit (deviceCmds (queue :: Queue))
+  let vkQueueSubmitPtr = pVkQueueSubmit (case queue of Queue{deviceCmds} -> deviceCmds)
   lift $ unless (vkQueueSubmitPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueSubmit is null" Nothing Nothing
   let vkQueueSubmit' = mkVkQueueSubmit vkQueueSubmitPtr
-  pPSubmits <- ContT $ allocaBytesAligned @(SubmitInfo _) ((Data.Vector.length (submits)) * 72) 8
+  pPSubmits <- ContT $ allocaBytes @(SubmitInfo _) ((Data.Vector.length (submits)) * 72)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPSubmits `plusPtr` (72 * (i)) :: Ptr (SubmitInfo _))) (e) . ($ ())) (submits)
   r <- lift $ traceAroundEvent "vkQueueSubmit" (vkQueueSubmit' (queueHandle (queue)) ((fromIntegral (Data.Vector.length $ (submits)) :: Word32)) (forgetExtensions (pPSubmits)) (fence))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -434,7 +445,7 @@ queueWaitIdleSafeOrUnsafe :: forall io
                              Queue
                           -> io ()
 queueWaitIdleSafeOrUnsafe mkVkQueueWaitIdle queue = liftIO $ do
-  let vkQueueWaitIdlePtr = pVkQueueWaitIdle (deviceCmds (queue :: Queue))
+  let vkQueueWaitIdlePtr = pVkQueueWaitIdle (case queue of Queue{deviceCmds} -> deviceCmds)
   unless (vkQueueWaitIdlePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueWaitIdle is null" Nothing Nothing
   let vkQueueWaitIdle' = mkVkQueueWaitIdle vkQueueWaitIdlePtr
@@ -445,8 +456,12 @@ queueWaitIdleSafeOrUnsafe mkVkQueueWaitIdle queue = liftIO $ do
 --
 -- = Description
 --
--- 'queueWaitIdle' is equivalent to submitting a fence to a queue and
--- waiting with an infinite timeout for that fence to signal.
+-- 'queueWaitIdle' is equivalent to having submitted a valid fence to every
+-- previously executed
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-submission queue submission command>
+-- that accepts a fence, then waiting for all of those fences to signal
+-- using 'Vulkan.Core10.Fence.waitForFences' with an infinite timeout and
+-- @waitAll@ set to 'Vulkan.Core10.FundamentalTypes.TRUE'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -461,11 +476,11 @@ queueWaitIdleSafeOrUnsafe mkVkQueueWaitIdle queue = liftIO $ do
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | -                                                                                                                          | -                                                                                                                      | Any                                                                                                                   | -                                                                                                                                   |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | -                                                                                                                          | -                                                                                                                      | Any                                                                                                                   |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- == Return Codes
 --
@@ -483,6 +498,7 @@ queueWaitIdleSafeOrUnsafe mkVkQueueWaitIdle queue = liftIO $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Queue'
 queueWaitIdle :: forall io
                . (MonadIO io)
@@ -519,7 +535,7 @@ deviceWaitIdleSafeOrUnsafe :: forall io
                               Device
                            -> io ()
 deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdle device = liftIO $ do
-  let vkDeviceWaitIdlePtr = pVkDeviceWaitIdle (deviceCmds (device :: Device))
+  let vkDeviceWaitIdlePtr = pVkDeviceWaitIdle (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkDeviceWaitIdlePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDeviceWaitIdle is null" Nothing Nothing
   let vkDeviceWaitIdle' = mkVkDeviceWaitIdle vkDeviceWaitIdlePtr
@@ -559,6 +575,7 @@ deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdle device = liftIO $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device'
 deviceWaitIdle :: forall io
                 . (MonadIO io)
@@ -591,23 +608,55 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --
 -- == Valid Usage
 --
--- -   #VUID-VkSubmitInfo-pCommandBuffers-00075# Each element of
---     @pCommandBuffers@ /must/ not have been allocated with
---     'Vulkan.Core10.Enums.CommandBufferLevel.COMMAND_BUFFER_LEVEL_SECONDARY'
---
--- -   #VUID-VkSubmitInfo-pWaitDstStageMask-00076# If the
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-04090# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
---     feature is not enabled, each element of @pWaitDstStageMask@ /must/
---     not contain
+--     feature is not enabled, @pWaitDstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
 --
--- -   #VUID-VkSubmitInfo-pWaitDstStageMask-00077# If the
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-04091# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
---     feature is not enabled, each element of @pWaitDstStageMask@ /must/
---     not contain
+--     feature is not enabled, @pWaitDstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
 --     or
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
+--
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-04092# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-conditionalRendering conditional rendering>
+--     feature is not enabled, @pWaitDstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT'
+--
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-04093# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMap fragment density map>
+--     feature is not enabled, @pWaitDstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
+--
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-04094# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-transformFeedback transform feedback>
+--     feature is not enabled, @pWaitDstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT'
+--
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-04095# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
+--     feature is not enabled, @pWaitDstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV'
+--
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-04096# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader task shaders>
+--     feature is not enabled, @pWaitDstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
+--
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-04097# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
+--     feature is not enabled, @pWaitDstStageMask@ /must/ not contain
+--     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
+--
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-03937# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @pWaitDstStageMask@ /must/ not be @0@
+--
+-- -   #VUID-VkSubmitInfo-pCommandBuffers-00075# Each element of
+--     @pCommandBuffers@ /must/ not have been allocated with
+--     'Vulkan.Core10.Enums.CommandBufferLevel.COMMAND_BUFFER_LEVEL_SECONDARY'
 --
 -- -   #VUID-VkSubmitInfo-pWaitDstStageMask-00078# Each element of
 --     @pWaitDstStageMask@ /must/ not include
@@ -644,7 +693,7 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE' the
 --     corresponding element of
---     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::pSignalSemaphoreValues
+--     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::@pSignalSemaphoreValues@
 --     /must/ have a value greater than the current value of the semaphore
 --     when the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
@@ -655,7 +704,7 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE' the
 --     corresponding element of
---     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::pWaitSemaphoreValues
+--     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::@pWaitSemaphoreValues@
 --     /must/ have a value which does not differ from the current value of
 --     the semaphore or the value of any outstanding semaphore wait or
 --     signal operation on that semaphore by more than
@@ -666,23 +715,11 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE' the
 --     corresponding element of
---     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::pSignalSemaphoreValues
+--     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::@pSignalSemaphoreValues@
 --     /must/ have a value which does not differ from the current value of
 --     the semaphore or the value of any outstanding semaphore wait or
 --     signal operation on that semaphore by more than
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
---
--- -   #VUID-VkSubmitInfo-pWaitDstStageMask-02089# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
---     feature is not enabled, each element of @pWaitDstStageMask@ /must/
---     not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV'
---
--- -   #VUID-VkSubmitInfo-pWaitDstStageMask-02090# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader task shaders>
---     feature is not enabled, each element of @pWaitDstStageMask@ /must/
---     not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
 --
 -- -   #VUID-VkSubmitInfo-pNext-04120# If the @pNext@ chain of this
 --     structure does not include a
@@ -697,6 +734,40 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     structure with @protectedSubmit@ set to
 --     'Vulkan.Core10.FundamentalTypes.TRUE', then each element of the
 --     @pCommandBuffers@ array /must/ be a protected command buffer
+--
+-- -   #VUID-VkSubmitInfo-pCommandBuffers-06193# If @pCommandBuffers@
+--     contains any
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-suspension resumed render pass instances>,
+--     they /must/ be suspended by a render pass instance earlier in
+--     submission order within @pCommandBuffers@
+--
+-- -   #VUID-VkSubmitInfo-pCommandBuffers-06014# If @pCommandBuffers@
+--     contains any
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-suspension suspended render pass instances>,
+--     they /must/ be resumed by a render pass instance later in submission
+--     order within @pCommandBuffers@
+--
+-- -   #VUID-VkSubmitInfo-pCommandBuffers-06015# If @pCommandBuffers@
+--     contains any
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-suspension suspended render pass instances>,
+--     there /must/ be no action or synchronization commands between that
+--     render pass instance and the render pass instance that resumes it
+--
+-- -   #VUID-VkSubmitInfo-pCommandBuffers-06016# If @pCommandBuffers@
+--     contains any
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-suspension suspended render pass instances>,
+--     there /must/ be no render pass instances between that render pass
+--     instance and the render pass instance that resumes it
+--
+-- -   #VUID-VkSubmitInfo-variableSampleLocations-06017# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-variableSampleLocations variableSampleLocations>
+--     limit is not supported, and any element of @pCommandBuffers@
+--     contains any
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-suspension suspended render pass instances>,
+--     where a graphics pipeline has been bound, any pipelines bound in the
+--     render pass instance that resumes it, or any subsequent render pass
+--     instances that resume from that one and so on, /must/ use the same
+--     sample locations
 --
 -- == Valid Usage (Implicit)
 --
@@ -750,6 +821,7 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags',
 -- 'Vulkan.Core10.Handles.Semaphore',
@@ -784,7 +856,7 @@ deriving instance Show (Chain es) => Show (SubmitInfo es)
 
 instance Extensible SubmitInfo where
   extensibleTypeName = "SubmitInfo"
-  setNext x next = x{next = next}
+  setNext SubmitInfo{..} next' = SubmitInfo{next = next', ..}
   getNext SubmitInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SubmitInfo e => b) -> Maybe b
   extends _ f
@@ -798,7 +870,7 @@ instance Extensible SubmitInfo where
     | otherwise = Nothing
 
 instance (Extendss SubmitInfo es, PokeChain es) => ToCStruct (SubmitInfo es) where
-  withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SubmitInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBMIT_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -807,18 +879,18 @@ instance (Extendss SubmitInfo es, PokeChain es) => ToCStruct (SubmitInfo es) whe
     lift $ unless ((Data.Vector.length $ (waitDstStageMask)) == pWaitSemaphoresLength) $
       throwIO $ IOError Nothing InvalidArgument "" "pWaitDstStageMask and pWaitSemaphores must have the same length" Nothing Nothing
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral pWaitSemaphoresLength :: Word32))
-    pPWaitSemaphores' <- ContT $ allocaBytesAligned @Semaphore ((Data.Vector.length (waitSemaphores)) * 8) 8
+    pPWaitSemaphores' <- ContT $ allocaBytes @Semaphore ((Data.Vector.length (waitSemaphores)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitSemaphores' `plusPtr` (8 * (i)) :: Ptr Semaphore) (e)) (waitSemaphores)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Semaphore))) (pPWaitSemaphores')
-    pPWaitDstStageMask' <- ContT $ allocaBytesAligned @PipelineStageFlags ((Data.Vector.length (waitDstStageMask)) * 4) 4
+    pPWaitDstStageMask' <- ContT $ allocaBytes @PipelineStageFlags ((Data.Vector.length (waitDstStageMask)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitDstStageMask' `plusPtr` (4 * (i)) :: Ptr PipelineStageFlags) (e)) (waitDstStageMask)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr PipelineStageFlags))) (pPWaitDstStageMask')
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (commandBuffers)) :: Word32))
-    pPCommandBuffers' <- ContT $ allocaBytesAligned @(Ptr CommandBuffer_T) ((Data.Vector.length (commandBuffers)) * 8) 8
+    pPCommandBuffers' <- ContT $ allocaBytes @(Ptr CommandBuffer_T) ((Data.Vector.length (commandBuffers)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPCommandBuffers' `plusPtr` (8 * (i)) :: Ptr (Ptr CommandBuffer_T)) (e)) (commandBuffers)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr (Ptr CommandBuffer_T)))) (pPCommandBuffers')
     lift $ poke ((p `plusPtr` 56 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (signalSemaphores)) :: Word32))
-    pPSignalSemaphores' <- ContT $ allocaBytesAligned @Semaphore ((Data.Vector.length (signalSemaphores)) * 8) 8
+    pPSignalSemaphores' <- ContT $ allocaBytes @Semaphore ((Data.Vector.length (signalSemaphores)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPSignalSemaphores' `plusPtr` (8 * (i)) :: Ptr Semaphore) (e)) (signalSemaphores)
     lift $ poke ((p `plusPtr` 64 :: Ptr (Ptr Semaphore))) (pPSignalSemaphores')
     lift $ f

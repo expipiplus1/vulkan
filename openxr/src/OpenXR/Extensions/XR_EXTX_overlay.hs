@@ -35,8 +35,14 @@
 -- the generator scripts, not directly.
 module OpenXR.Extensions.XR_EXTX_overlay  ( SessionCreateInfoOverlayEXTX(..)
                                           , EventDataMainSessionVisibilityChangedEXTX(..)
-                                          , OverlayMainSessionFlagsEXTX(..)
-                                          , OverlaySessionCreateFlagsEXTX(..)
+                                          , OverlayMainSessionFlagsEXTX
+                                          , OverlayMainSessionFlagBitsEXTX( OVERLAY_MAIN_SESSION_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT_EXTX
+                                                                          , ..
+                                                                          )
+                                          , OverlaySessionCreateFlagsEXTX
+                                          , OverlaySessionCreateFlagBitsEXTX( OVERLAY_SESSION_CREATE_RELAXED_DISPLAY_TIME_BIT_EXTX
+                                                                            , ..
+                                                                            )
                                           , EXTX_overlay_SPEC_VERSION
                                           , pattern EXTX_overlay_SPEC_VERSION
                                           , EXTX_OVERLAY_EXTENSION_NAME
@@ -45,7 +51,7 @@ module OpenXR.Extensions.XR_EXTX_overlay  ( SessionCreateInfoOverlayEXTX(..)
 
 import OpenXR.Internal.Utils (enumReadPrec)
 import OpenXR.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showString)
@@ -84,8 +90,8 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_SESSION_CREATE_INFO
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrSessionCreateInfoOverlayEXTX-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrSessionCreateInfoOverlayEXTX-extension-notenabled# The
+--     @XR_EXTX_overlay@ extension /must/ be enabled prior to using
 --     'SessionCreateInfoOverlayEXTX'
 --
 -- -   #VUID-XrSessionCreateInfoOverlayEXTX-type-type# @type@ /must/ be
@@ -97,8 +103,7 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_SESSION_CREATE_INFO
 --
 -- -   #VUID-XrSessionCreateInfoOverlayEXTX-createFlags-parameter#
 --     @createFlags@ /must/ be a valid combination of
---     <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrOverlaySessionCreateFlagBitsEXTX XrOverlaySessionCreateFlagBitsEXTX>
---     values
+--     'OverlaySessionCreateFlagBitsEXTX' values
 --
 -- -   #VUID-XrSessionCreateInfoOverlayEXTX-createFlags-requiredbitmask#
 --     @createFlags@ /must/ not be @0@
@@ -108,8 +113,7 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_SESSION_CREATE_INFO
 -- 'OverlaySessionCreateFlagsEXTX',
 -- 'OpenXR.Core10.Enums.StructureType.StructureType'
 data SessionCreateInfoOverlayEXTX = SessionCreateInfoOverlayEXTX
-  { -- | @createFlags@ is @0@ or one or more
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrOverlaySessionCreateFlagBitsEXTX XrOverlaySessionCreateFlagBitsEXTX>
+  { -- | @createFlags@ is @0@ or one or more 'OverlaySessionCreateFlagBitsEXTX'
     -- which indicate various characteristics desired for the overlay session.
     createFlags :: OverlaySessionCreateFlagsEXTX
   , -- | @sessionLayersPlacement@ is a value indicating the desired placement of
@@ -123,31 +127,31 @@ deriving instance Generic (SessionCreateInfoOverlayEXTX)
 deriving instance Show SessionCreateInfoOverlayEXTX
 
 instance ToCStruct SessionCreateInfoOverlayEXTX where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SessionCreateInfoOverlayEXTX{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SESSION_CREATE_INFO_OVERLAY_EXTX)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr OverlaySessionCreateFlagsEXTX)) (createFlags)
-    poke ((p `plusPtr` 20 :: Ptr Word32)) (sessionLayersPlacement)
+    poke ((p `plusPtr` 24 :: Ptr Word32)) (sessionLayersPlacement)
     f
-  cStructSize = 24
+  cStructSize = 32
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SESSION_CREATE_INFO_OVERLAY_EXTX)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr OverlaySessionCreateFlagsEXTX)) (zero)
-    poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
     f
 
 instance FromCStruct SessionCreateInfoOverlayEXTX where
   peekCStruct p = do
     createFlags <- peek @OverlaySessionCreateFlagsEXTX ((p `plusPtr` 16 :: Ptr OverlaySessionCreateFlagsEXTX))
-    sessionLayersPlacement <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
+    sessionLayersPlacement <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
     pure $ SessionCreateInfoOverlayEXTX
              createFlags sessionLayersPlacement
 
 instance Storable SessionCreateInfoOverlayEXTX where
-  sizeOf ~_ = 24
+  sizeOf ~_ = 32
   alignment ~_ = 8
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
@@ -171,8 +175,7 @@ instance Zero SessionCreateInfoOverlayEXTX where
 -- standard behavior. This structure contains additional information on the
 -- main session including @flags@ which indicate additional state
 -- information of the main session. Currently, the only flag value supplied
--- is
--- @XR_OVERLAY_MAIN_SESSION_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT_EXTX@
+-- is 'OVERLAY_MAIN_SESSION_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT_EXTX'
 -- which indicates if the main session has enabled the
 -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_KHR_composition_layer_depth>
 -- extension.
@@ -190,14 +193,13 @@ instance Zero SessionCreateInfoOverlayEXTX where
 --     <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrBool32 >
 --     which indicates if @session@ is now visible or is not.
 --
--- -   @flags@ is 0 or one or more
---     <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrOverlayMainSessionFlagBitsEXTX XrOverlayMainSessionFlagBitsEXTX>
---     which indicates various state information for the main session.
+-- -   @flags@ is 0 or one or more 'OverlayMainSessionFlagBitsEXTX' which
+--     indicates various state information for the main session.
 --
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrEventDataMainSessionVisibilityChangedEXTX-extension-notenabled#
---     The @@ extension /must/ be enabled prior to using
+--     The @XR_EXTX_overlay@ extension /must/ be enabled prior to using
 --     'EventDataMainSessionVisibilityChangedEXTX'
 --
 -- -   #VUID-XrEventDataMainSessionVisibilityChangedEXTX-type-type# @type@
@@ -210,8 +212,7 @@ instance Zero SessionCreateInfoOverlayEXTX where
 --
 -- -   #VUID-XrEventDataMainSessionVisibilityChangedEXTX-flags-parameter#
 --     @flags@ /must/ be a valid combination of
---     <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrOverlayMainSessionFlagBitsEXTX XrOverlayMainSessionFlagBitsEXTX>
---     values
+--     'OverlayMainSessionFlagBitsEXTX' values
 --
 -- -   #VUID-XrEventDataMainSessionVisibilityChangedEXTX-flags-requiredbitmask#
 --     @flags@ /must/ not be @0@
@@ -237,31 +238,31 @@ instance IsEventData EventDataMainSessionVisibilityChangedEXTX where
   toEventDataBaseHeader EventDataMainSessionVisibilityChangedEXTX{} = EventDataBaseHeader{type' = TYPE_EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX}
 
 instance ToCStruct EventDataMainSessionVisibilityChangedEXTX where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p EventDataMainSessionVisibilityChangedEXTX{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (visible))
-    poke ((p `plusPtr` 20 :: Ptr OverlayMainSessionFlagsEXTX)) (flags)
+    poke ((p `plusPtr` 24 :: Ptr OverlayMainSessionFlagsEXTX)) (flags)
     f
-  cStructSize = 24
+  cStructSize = 32
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
-    poke ((p `plusPtr` 20 :: Ptr OverlayMainSessionFlagsEXTX)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr OverlayMainSessionFlagsEXTX)) (zero)
     f
 
 instance FromCStruct EventDataMainSessionVisibilityChangedEXTX where
   peekCStruct p = do
     visible <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
-    flags <- peek @OverlayMainSessionFlagsEXTX ((p `plusPtr` 20 :: Ptr OverlayMainSessionFlagsEXTX))
+    flags <- peek @OverlayMainSessionFlagsEXTX ((p `plusPtr` 24 :: Ptr OverlayMainSessionFlagsEXTX))
     pure $ EventDataMainSessionVisibilityChangedEXTX
              (bool32ToBool visible) flags
 
 instance Storable EventDataMainSessionVisibilityChangedEXTX where
-  sizeOf ~_ = 24
+  sizeOf ~_ = 32
   alignment ~_ = 8
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
@@ -272,70 +273,77 @@ instance Zero EventDataMainSessionVisibilityChangedEXTX where
            zero
 
 
--- | XrOverlayMainSessionFlagsEXTX - XrOverlayMainSessionFlagsEXTX
+type OverlayMainSessionFlagsEXTX = OverlayMainSessionFlagBitsEXTX
+
+-- | XrOverlayMainSessionFlagBitsEXTX - XrOverlayMainSessionFlagBitsEXTX
 --
 -- = See Also
 --
--- 'EventDataMainSessionVisibilityChangedEXTX'
-newtype OverlayMainSessionFlagsEXTX = OverlayMainSessionFlagsEXTX Flags64
+-- No cross-references are available
+newtype OverlayMainSessionFlagBitsEXTX = OverlayMainSessionFlagBitsEXTX Flags64
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
+-- No documentation found for Nested "XrOverlayMainSessionFlagBitsEXTX" "XR_OVERLAY_MAIN_SESSION_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT_EXTX"
+pattern OVERLAY_MAIN_SESSION_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT_EXTX =
+  OverlayMainSessionFlagBitsEXTX 0x0000000000000001
 
+conNameOverlayMainSessionFlagBitsEXTX :: String
+conNameOverlayMainSessionFlagBitsEXTX = "OverlayMainSessionFlagBitsEXTX"
 
-conNameOverlayMainSessionFlagsEXTX :: String
-conNameOverlayMainSessionFlagsEXTX = "OverlayMainSessionFlagsEXTX"
+enumPrefixOverlayMainSessionFlagBitsEXTX :: String
+enumPrefixOverlayMainSessionFlagBitsEXTX = "OVERLAY_MAIN_SESSION_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT_EXTX"
 
-enumPrefixOverlayMainSessionFlagsEXTX :: String
-enumPrefixOverlayMainSessionFlagsEXTX = ""
+showTableOverlayMainSessionFlagBitsEXTX :: [(OverlayMainSessionFlagBitsEXTX, String)]
+showTableOverlayMainSessionFlagBitsEXTX = [(OVERLAY_MAIN_SESSION_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT_EXTX, "")]
 
-showTableOverlayMainSessionFlagsEXTX :: [(OverlayMainSessionFlagsEXTX, String)]
-showTableOverlayMainSessionFlagsEXTX = []
-
-instance Show OverlayMainSessionFlagsEXTX where
-  showsPrec = enumShowsPrec enumPrefixOverlayMainSessionFlagsEXTX
-                            showTableOverlayMainSessionFlagsEXTX
-                            conNameOverlayMainSessionFlagsEXTX
-                            (\(OverlayMainSessionFlagsEXTX x) -> x)
+instance Show OverlayMainSessionFlagBitsEXTX where
+  showsPrec = enumShowsPrec enumPrefixOverlayMainSessionFlagBitsEXTX
+                            showTableOverlayMainSessionFlagBitsEXTX
+                            conNameOverlayMainSessionFlagBitsEXTX
+                            (\(OverlayMainSessionFlagBitsEXTX x) -> x)
                             (\x -> showString "0x" . showHex x)
 
-instance Read OverlayMainSessionFlagsEXTX where
-  readPrec = enumReadPrec enumPrefixOverlayMainSessionFlagsEXTX
-                          showTableOverlayMainSessionFlagsEXTX
-                          conNameOverlayMainSessionFlagsEXTX
-                          OverlayMainSessionFlagsEXTX
+instance Read OverlayMainSessionFlagBitsEXTX where
+  readPrec = enumReadPrec enumPrefixOverlayMainSessionFlagBitsEXTX
+                          showTableOverlayMainSessionFlagBitsEXTX
+                          conNameOverlayMainSessionFlagBitsEXTX
+                          OverlayMainSessionFlagBitsEXTX
 
 
--- | XrOverlaySessionCreateFlagsEXTX - XrOverlaySessionCreateFlagsEXTX
+type OverlaySessionCreateFlagsEXTX = OverlaySessionCreateFlagBitsEXTX
+
+-- | XrOverlaySessionCreateFlagBitsEXTX - XrOverlaySessionCreateFlagBitsEXTX
 --
 -- = See Also
 --
--- 'SessionCreateInfoOverlayEXTX'
-newtype OverlaySessionCreateFlagsEXTX = OverlaySessionCreateFlagsEXTX Flags64
+-- No cross-references are available
+newtype OverlaySessionCreateFlagBitsEXTX = OverlaySessionCreateFlagBitsEXTX Flags64
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
+-- No documentation found for Nested "XrOverlaySessionCreateFlagBitsEXTX" "XR_OVERLAY_SESSION_CREATE_RELAXED_DISPLAY_TIME_BIT_EXTX"
+pattern OVERLAY_SESSION_CREATE_RELAXED_DISPLAY_TIME_BIT_EXTX = OverlaySessionCreateFlagBitsEXTX 0x0000000000000001
 
+conNameOverlaySessionCreateFlagBitsEXTX :: String
+conNameOverlaySessionCreateFlagBitsEXTX = "OverlaySessionCreateFlagBitsEXTX"
 
-conNameOverlaySessionCreateFlagsEXTX :: String
-conNameOverlaySessionCreateFlagsEXTX = "OverlaySessionCreateFlagsEXTX"
+enumPrefixOverlaySessionCreateFlagBitsEXTX :: String
+enumPrefixOverlaySessionCreateFlagBitsEXTX = "OVERLAY_SESSION_CREATE_RELAXED_DISPLAY_TIME_BIT_EXTX"
 
-enumPrefixOverlaySessionCreateFlagsEXTX :: String
-enumPrefixOverlaySessionCreateFlagsEXTX = ""
+showTableOverlaySessionCreateFlagBitsEXTX :: [(OverlaySessionCreateFlagBitsEXTX, String)]
+showTableOverlaySessionCreateFlagBitsEXTX = [(OVERLAY_SESSION_CREATE_RELAXED_DISPLAY_TIME_BIT_EXTX, "")]
 
-showTableOverlaySessionCreateFlagsEXTX :: [(OverlaySessionCreateFlagsEXTX, String)]
-showTableOverlaySessionCreateFlagsEXTX = []
-
-instance Show OverlaySessionCreateFlagsEXTX where
-  showsPrec = enumShowsPrec enumPrefixOverlaySessionCreateFlagsEXTX
-                            showTableOverlaySessionCreateFlagsEXTX
-                            conNameOverlaySessionCreateFlagsEXTX
-                            (\(OverlaySessionCreateFlagsEXTX x) -> x)
+instance Show OverlaySessionCreateFlagBitsEXTX where
+  showsPrec = enumShowsPrec enumPrefixOverlaySessionCreateFlagBitsEXTX
+                            showTableOverlaySessionCreateFlagBitsEXTX
+                            conNameOverlaySessionCreateFlagBitsEXTX
+                            (\(OverlaySessionCreateFlagBitsEXTX x) -> x)
                             (\x -> showString "0x" . showHex x)
 
-instance Read OverlaySessionCreateFlagsEXTX where
-  readPrec = enumReadPrec enumPrefixOverlaySessionCreateFlagsEXTX
-                          showTableOverlaySessionCreateFlagsEXTX
-                          conNameOverlaySessionCreateFlagsEXTX
-                          OverlaySessionCreateFlagsEXTX
+instance Read OverlaySessionCreateFlagBitsEXTX where
+  readPrec = enumReadPrec enumPrefixOverlaySessionCreateFlagBitsEXTX
+                          showTableOverlaySessionCreateFlagBitsEXTX
+                          conNameOverlaySessionCreateFlagBitsEXTX
+                          OverlaySessionCreateFlagBitsEXTX
 
 
 type EXTX_overlay_SPEC_VERSION = 4

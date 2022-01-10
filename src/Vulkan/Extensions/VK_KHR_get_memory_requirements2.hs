@@ -29,7 +29,7 @@
 -- [__Contact__]
 --
 --     -   Jason Ekstrand
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_get_memory_requirements2:%20&body=@jekstrand%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_get_memory_requirements2] @jekstrand%0A<<Here describe the issue or question you have about the VK_KHR_get_memory_requirements2 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -114,14 +114,14 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'BufferMemoryRequirementsInfo2KHR', 'ImageMemoryRequirementsInfo2KHR',
 -- 'ImageSparseMemoryRequirementsInfo2KHR', 'MemoryRequirements2KHR',
 -- 'SparseImageMemoryRequirements2KHR', 'getBufferMemoryRequirements2KHR',
 -- 'getImageMemoryRequirements2KHR', 'getImageSparseMemoryRequirements2KHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_memory_requirements2 Vulkan Specification>

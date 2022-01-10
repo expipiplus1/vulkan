@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Christoph Kubisch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_mesh_shader:%20&body=@pixeljetstream%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_mesh_shader] @pixeljetstream%0A<<Here describe the issue or question you have about the VK_NV_mesh_shader extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -63,10 +63,11 @@
 --
 -- There are new programmable shader types — the task and mesh shader — to
 -- generate these collections to be processed by fixed-function primitive
--- assembly and rasterization logic. When the task and mesh shaders are
--- dispatched, they replace the standard programmable vertex processing
--- pipeline, including vertex array attribute fetching, vertex shader
--- processing, tessellation, and the geometry shader processing.
+-- assembly and rasterization logic. When task and mesh shaders are
+-- dispatched, they replace the core
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization stages>,
+-- including vertex array attribute fetching, vertex shader processing,
+-- tessellation, and geometry shader processing.
 --
 -- This extension also adds support for the following SPIR-V extension in
 -- Vulkan:
@@ -180,7 +181,7 @@
 --
 -- 1.  How to name this extension?
 --
---     RESOLVED: VK_NV_mesh_shader
+--     __RESOLVED__: VK_NV_mesh_shader
 --
 --     Other options considered:
 --
@@ -194,25 +195,25 @@
 --
 -- 2.  Do we need a new VkPrimitiveTopology?
 --
---     RESOLVED: NO, we skip the InputAssembler stage
+--     __RESOLVED__: No. We skip the InputAssembler stage.
 --
 -- 3.  Should we allow Instancing?
 --
---     RESOLVED: NO, there is no fixed function input, other than the IDs.
---     However, allow offsetting with a \"first\" value.
+--     __RESOLVED__: No. There is no fixed function input, other than the
+--     IDs. However, allow offsetting with a “first” value.
 --
 -- 4.  Should we use existing vkCmdDraw or introduce new functions?
 --
---     RESOLVED: Introduce new functions.
+--     __RESOLVED__: Introduce new functions.
 --
---     New functions make it easier to separate from \"programmable
---     primitive shading\" chapter, less \"dual use\" language about
---     existing functions having alternative behavior. The text around the
---     existing \"draws\" is heavily based around emitting vertices.
+--     New functions make it easier to separate from “programmable
+--     primitive shading” chapter, less “dual use” language about existing
+--     functions having alternative behavior. The text around the existing
+--     “draws” is heavily based around emitting vertices.
 --
 -- 5.  If new functions, how to name?
 --
---     RESOLVED: CmdDrawMeshTasks*
+--     __RESOLVED__: CmdDrawMeshTasks*
 --
 --     Other options considered:
 --
@@ -225,13 +226,13 @@
 -- 6.  Should VK_SHADER_STAGE_ALL_GRAPHICS be updated to include the new
 --     stages?
 --
---     RESOLVED: No. If an application were to be recompiled with headers
---     that include additional shader stage bits in
+--     __RESOLVED__: No. If an application were to be recompiled with
+--     headers that include additional shader stage bits in
 --     VK_SHADER_STAGE_ALL_GRAPHICS, then the previously valid application
---     would no longer be valid on implementations that don’t support mesh
+--     would no longer be valid on implementations that do not support mesh
 --     or task shaders. This means the change would not be backwards
---     compatible. It’s too bad VkShaderStageFlagBits doesn’t have a
---     dedicated \"all supported graphics stages\" bit like
+--     compatible. It is too bad VkShaderStageFlagBits does not have a
+--     dedicated “all supported graphics stages” bit like
 --     VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, which would have avoided this
 --     problem.
 --
@@ -241,14 +242,14 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'DrawMeshTasksIndirectCommandNV', 'PhysicalDeviceMeshShaderFeaturesNV',
 -- 'PhysicalDeviceMeshShaderPropertiesNV',
 -- 'cmdDrawMeshTasksIndirectCountNV', 'cmdDrawMeshTasksIndirectNV',
 -- 'cmdDrawMeshTasksNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_mesh_shader Vulkan Specification>

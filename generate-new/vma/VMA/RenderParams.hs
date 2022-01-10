@@ -56,6 +56,7 @@ renderParams handles = r
     , lowerPrefix                    = "vma"
     , upperPrefix                    = "VMA"
     , flagsTypeName                  = "VkFlags"
+    , flags64TypeName                = "VkFlags64"
     , alwaysQualifiedNames           = mempty
     , extraNewtypes                  = mempty
     , mkIdiomaticType = let dropVulkanModule = transformBi
@@ -199,6 +200,7 @@ vulkanManifest getVar structStyle RenderParams {..} =
                    , "VkDeviceMemory"
                    , "VkDeviceSize"
                    , "VkDevice_T"
+                   , "VkExternalMemoryHandleTypeFlagsKHR"
                    , "VkInstance_T"
                    , "VkMemoryPropertyFlags"
                    , "VkPhysicalDevice_T"

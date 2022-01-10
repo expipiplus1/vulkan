@@ -5,7 +5,7 @@ module Render.Struct where
 
 import qualified Data.Map                      as Map
 import qualified Data.Text.Extra               as T
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import qualified Data.Vector.Extra             as V
 import           Polysemy
 import           Polysemy.Input
@@ -13,7 +13,6 @@ import           Relude                  hiding ( Handle )
 import           Text.InterpolatedString.Perl6.Unindented
 
 import           Control.Monad.Trans.Cont       ( evalContT )
-import           Foreign.Marshal.Alloc
 import           Foreign.Ptr
 import           Foreign.Storable
 
@@ -155,7 +154,12 @@ renderExtensibleInstance MarshaledStruct {..} = do
       2
       (vsep
         [ "extensibleTypeName =" <+> dquotes (pretty n)
-        , "setNext x next = x{next = next}"
+        , "setNext"
+        <+> pretty con
+        <>  "{..}"
+        <+> "next' ="
+        <+> pretty con
+        <>  "{next = next', ..}"
         , "getNext" <+> pretty con <> "{..} = next"
         , "extends :: forall e b proxy. Typeable e => proxy e -> (Extends"
         <+> pretty n
@@ -381,7 +385,6 @@ toCStructInstance m@MarshaledStruct {..} pokeValue = do
   tellImportWithAll (TyConName "ToCStruct")
   let con         = mkConName msName msName
       Struct {..} = msStruct
-  tellImport 'allocaBytesAligned
   zero    <- pokeZeroCStructDecl m
   pokeDoc <- case pokeValue of
     ContTStmts d -> do
@@ -391,12 +394,13 @@ toCStructInstance m@MarshaledStruct {..} pokeValue = do
   (size, alignment) <- getTypeSize (TypeName msName)
   let unpack = if all (isElided . msmScheme) msMembers then "" else "{..}"
   stub <- toCStructInstanceStub tellImport msStruct
+  let (a, an, af) = chooseAlign sAlignment
+  tellImport an
   tellDoc $ (stub <+> "where") <> line <> indent
     2
     (vsep
-      [ "withCStruct x f = allocaBytesAligned"
-      <+> viaShow sSize
-      <+> viaShow sAlignment
+      [ "withCStruct x f ="
+      <+> af (a <+> viaShow sSize)
       <+> "$ \\p -> pokeCStruct p x (f p)"
       , "pokeCStruct"
       <+> pretty addrVar

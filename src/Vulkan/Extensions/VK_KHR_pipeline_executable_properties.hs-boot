@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Jason Ekstrand
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_pipeline_executable_properties:%20&body=@jekstrand%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_pipeline_executable_properties] @jekstrand%0A<<Here describe the issue or question you have about the VK_KHR_pipeline_executable_properties extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -145,9 +145,9 @@
 -- the compilation process and about which you can query properties and
 -- statistics?
 --
--- __RESOLVED__: Call them \"executables\". The name \"binary\" was used in
--- early drafts of the extension but it was determined that \"pipeline
--- binary\" could have a fairly broad meaning (such as a binary serialized
+-- __RESOLVED__: Call them “executables”. The name “binary” was used in
+-- early drafts of the extension but it was determined that “pipeline
+-- binary” could have a fairly broad meaning (such as a binary serialized
 -- form of an entire pipeline) and was too big of a namespace for the very
 -- specific needs of this extension.
 --
@@ -157,7 +157,7 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDevicePipelineExecutablePropertiesFeaturesKHR',
 -- 'PipelineExecutableInfoKHR',
@@ -169,7 +169,7 @@
 -- 'getPipelineExecutablePropertiesKHR',
 -- 'getPipelineExecutableStatisticsKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_executable_properties Vulkan Specification>

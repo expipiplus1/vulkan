@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Christoph Kubisch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_pipeline_library:%20&body=@pixeljetstream%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_pipeline_library] @pixeljetstream%0A<<Here describe the issue or question you have about the VK_KHR_pipeline_library extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -36,7 +36,7 @@
 --
 -- [__Contributors__]
 --
---     -   See contributors to @VK_KHR_ray_tracing@
+--     -   See contributors to @VK_KHR_ray_tracing_pipeline@
 --
 -- == Description
 --
@@ -71,11 +71,11 @@
 --
 --     -   Initial draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'PipelineLibraryCreateInfoKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_library Vulkan Specification>
@@ -89,7 +89,7 @@ module Vulkan.Extensions.VK_KHR_pipeline_library  ( PipelineLibraryCreateInfoKHR
                                                   , pattern KHR_PIPELINE_LIBRARY_EXTENSION_NAME
                                                   ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -140,12 +140,14 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_library VK_KHR_pipeline_library>,
 -- 'Vulkan.Core10.Handles.Pipeline',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineLibraryCreateInfoKHR = PipelineLibraryCreateInfoKHR
-  { -- | @pLibraries@ is an array of pipeline libraries to use when creating a
-    -- pipeline.
+  { -- | @pLibraries@ is a pointer to an array of
+    -- 'Vulkan.Core10.Handles.Pipeline' structures specifying pipeline
+    -- libraries to use when creating a pipeline.
     libraries :: Vector Pipeline }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -154,12 +156,12 @@ deriving instance Generic (PipelineLibraryCreateInfoKHR)
 deriving instance Show PipelineLibraryCreateInfoKHR
 
 instance ToCStruct PipelineLibraryCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineLibraryCreateInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (libraries)) :: Word32))
-    pPLibraries' <- ContT $ allocaBytesAligned @Pipeline ((Data.Vector.length (libraries)) * 8) 8
+    pPLibraries' <- ContT $ allocaBytes @Pipeline ((Data.Vector.length (libraries)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPLibraries' `plusPtr` (8 * (i)) :: Ptr Pipeline) (e)) (libraries)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Pipeline))) (pPLibraries')
     lift $ f

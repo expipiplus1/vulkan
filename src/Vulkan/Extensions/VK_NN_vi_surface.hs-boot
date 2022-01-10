@@ -84,13 +84,13 @@
 --
 -- 2) 'ViSurfaceCreateInfoNN'::@pWindow@ is intended to store an
 -- @nn@::@vi@::@NativeWindowHandle@, but its declared type is a bare
--- @void@* to store the window handle. Why the discrepancy?
+-- @void*@ to store the window handle. Why the discrepancy?
 --
 -- __RESOLVED__: It is for C compatibility. The definition for the VI
 -- native window handle type is defined inside the @nn@::@vi@ C++
 -- namespace. This prevents its use in C source files.
--- @nn@::@vi@::@NativeWindowHandle@ is always defined to be @void@*, so
--- this extension uses @void@* to match.
+-- @nn@::@vi@::@NativeWindowHandle@ is always defined to be @void*@, so
+-- this extension uses @void*@ to match.
 --
 -- == Version History
 --
@@ -98,11 +98,11 @@
 --
 --     -   Initial draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'ViSurfaceCreateFlagsNN', 'ViSurfaceCreateInfoNN', 'createViSurfaceNN'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NN_vi_surface Vulkan Specification>

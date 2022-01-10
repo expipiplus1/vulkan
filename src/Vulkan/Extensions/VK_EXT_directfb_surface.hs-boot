@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Nicolas Caramelli
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_directfb_surface:%20&body=@caramelli%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_directfb_surface] @caramelli%0A<<Here describe the issue or question you have about the VK_EXT_directfb_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -78,13 +78,13 @@
 --
 --     -   Initial version
 --
--- = See Also
+-- == See Also
 --
 -- 'DirectFBSurfaceCreateFlagsEXT', 'DirectFBSurfaceCreateInfoEXT',
 -- 'createDirectFBSurfaceEXT',
 -- 'getPhysicalDeviceDirectFBPresentationSupportEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_directfb_surface Vulkan Specification>

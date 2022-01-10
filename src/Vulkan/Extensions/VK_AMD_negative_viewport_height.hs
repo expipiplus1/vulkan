@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   Matthaeus G. Chajdas
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_negative_viewport_height:%20&body=@anteru%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_negative_viewport_height] @anteru%0A<<Here describe the issue or question you have about the VK_AMD_negative_viewport_height extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -81,11 +81,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- No cross-references are available
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_negative_viewport_height Vulkan Specification>

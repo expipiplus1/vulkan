@@ -2,7 +2,7 @@
 {-# language QuasiQuotes #-}
 module Render.Enum where
 
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import qualified Data.Vector                   as V
 import           Polysemy
 import           Polysemy.Input
@@ -37,8 +37,10 @@ renderEnum e@Enum {..} = do
     tellCanFormat
 
     innerTy <- case eType of
-      AnEnum     -> pure $ ConT ''Int32
-      ABitmask _ -> cToHsType DoNotPreserve (TypeName flagsTypeName)
+      AnEnum               -> pure $ ConT ''Int32
+      ABitmask _ Bitmask32 -> cToHsType DoNotPreserve (TypeName flagsTypeName)
+      ABitmask _ Bitmask64 ->
+        cToHsType DoNotPreserve (TypeName flags64TypeName)
     let n       = mkTyName eName
         conName = mkConName eName eName
 
@@ -46,7 +48,7 @@ renderEnum e@Enum {..} = do
     -- Haddocks, this means when viewing the page there, the user will also
     -- have the flags visible
     case eType of
-      ABitmask flags | flags /= eName -> do
+      ABitmask flags _ | flags /= eName -> do
         let flagsName = mkTyName flags
         let syn :: HasRenderElem r => Sem r ()
             syn = do
@@ -64,15 +66,15 @@ renderEnum e@Enum {..} = do
       tellDoc $ "data" <+> pretty n
     tDoc <- renderType innerTy
     let complete = case eType of
-          AnEnum     -> completePragma n (mkPatternName . evName <$> eValues)
-          ABitmask _ -> Nothing
+          AnEnum       -> completePragma n (mkPatternName . evName <$> eValues)
+          ABitmask _ _ -> Nothing
     tellImport (TyConName "Zero")
     derivedClasses <- do
       tellImport ''Storable
       let always = ["Eq", "Ord", "Storable", "Zero"]
       special <- case eType of
-        AnEnum     -> pure []
-        ABitmask _ -> do
+        AnEnum       -> pure []
+        ABitmask _ _ -> do
           tellImport ''Bits
           tellImport ''FiniteBits
           pure ["Bits", "FiniteBits"]
@@ -124,8 +126,9 @@ renderEnumValue eName conName enumType EnumValue {..} = do
   RenderParams {..} <- input
   let n = mkPatternName evName
       v = case enumType of
-        AnEnum     -> showsPrec 9 evValue ""
-        ABitmask _ -> printf "0x%08x" evValue
+        AnEnum               -> showsPrec 9 evValue ""
+        ABitmask _ Bitmask32 -> printf "0x%08x" evValue
+        ABitmask _ Bitmask64 -> printf "0x%016x" evValue
   pure
     ( \getDoc -> vsep
       [ getDoc (Nested eName evName)
@@ -204,7 +207,7 @@ renderShowInstance prefixString showTableName conNameName Enum {..} = do
     AnEnum -> do
       tellImport 'showsPrec
       pure ("(showsPrec 11)" :: Text)
-    ABitmask _ -> do
+    ABitmask _ _ -> do
       tellImport 'showString
       tellImport 'showHex
       pure "(\\x -> showString \"0x\" . showHex x)"

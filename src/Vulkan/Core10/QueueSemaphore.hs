@@ -13,7 +13,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -47,6 +47,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateSemaphore))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroySemaphore))
 import Vulkan.Core10.Handles (Device_T)
@@ -110,6 +111,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Semaphore',
 -- 'SemaphoreCreateInfo'
@@ -126,7 +128,7 @@ createSemaphore :: forall a io
                    ("allocator" ::: Maybe AllocationCallbacks)
                 -> io (Semaphore)
 createSemaphore device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateSemaphorePtr = pVkCreateSemaphore (deviceCmds (device :: Device))
+  let vkCreateSemaphorePtr = pVkCreateSemaphore (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateSemaphorePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateSemaphore is null" Nothing Nothing
   let vkCreateSemaphore' = mkVkCreateSemaphore vkCreateSemaphorePtr
@@ -200,6 +202,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Semaphore'
 destroySemaphore :: forall io
@@ -214,7 +217,7 @@ destroySemaphore :: forall io
                     ("allocator" ::: Maybe AllocationCallbacks)
                  -> io ()
 destroySemaphore device semaphore allocator = liftIO . evalContT $ do
-  let vkDestroySemaphorePtr = pVkDestroySemaphore (deviceCmds (device :: Device))
+  let vkDestroySemaphorePtr = pVkDestroySemaphore (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroySemaphorePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroySemaphore is null" Nothing Nothing
   let vkDestroySemaphore' = mkVkDestroySemaphore vkDestroySemaphorePtr
@@ -248,6 +251,7 @@ destroySemaphore device semaphore allocator = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.SemaphoreCreateFlags.SemaphoreCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createSemaphore'
 data SemaphoreCreateInfo (es :: [Type]) = SemaphoreCreateInfo
@@ -264,7 +268,7 @@ deriving instance Show (Chain es) => Show (SemaphoreCreateInfo es)
 
 instance Extensible SemaphoreCreateInfo where
   extensibleTypeName = "SemaphoreCreateInfo"
-  setNext x next = x{next = next}
+  setNext SemaphoreCreateInfo{..} next' = SemaphoreCreateInfo{next = next', ..}
   getNext SemaphoreCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SemaphoreCreateInfo e => b) -> Maybe b
   extends _ f
@@ -274,7 +278,7 @@ instance Extensible SemaphoreCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss SemaphoreCreateInfo es, PokeChain es) => ToCStruct (SemaphoreCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SemaphoreCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)

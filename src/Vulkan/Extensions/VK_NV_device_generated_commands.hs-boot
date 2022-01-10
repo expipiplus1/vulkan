@@ -21,10 +21,12 @@
 --
 --     -   Requires Vulkan 1.1
 --
+--     -   Requires @VK_KHR_buffer_device_address@
+--
 -- [__Contact__]
 --
 --     -   Christoph Kubisch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_device_generated_commands:%20&body=@pixeljetstream%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_device_generated_commands] @pixeljetstream%0A<<Here describe the issue or question you have about the VK_NV_device_generated_commands extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -304,11 +306,11 @@
 -- the command buffer reservation process, however as the memory
 -- requirements can be substantial, we want to give developers the ability
 -- to budget the memory themselves. By lowering the @maxSequencesCount@ the
--- memory consumption can be reduced. Furthermore re-use of the memory is
+-- memory consumption can be reduced. Furthermore reuse of the memory is
 -- possible, for example for doing explicit preprocessing and execution in
 -- a ping-pong fashion.
 --
--- The actual buffer size is implementation dependent and may be zero, i.e.
+-- The actual buffer size is implementation-dependent and may be zero, i.e.
 -- not always required.
 --
 -- When making use of Graphics Shader Groups, the programs should behave
@@ -334,7 +336,7 @@
 --
 -- 8) How do we allow re-using already “generated” @indirectCommands@?
 --
--- Expose a @preprocessBuffer@ to re-use implementation-dependencyFlags
+-- Expose a @preprocessBuffer@ to reuse implementation-dependencyFlags
 -- data. Set the @isPreprocessed@ to true in
 -- 'cmdExecuteGeneratedCommandsNV'.
 --
@@ -506,7 +508,16 @@
 --
 --     -   Initial version
 --
--- = See Also
+-- -   Revision 2, 2020-03-09 (Christoph Kubisch)
+--
+--     -   Remove VK_EXT_debug_report interactions
+--
+-- -   Revision 3, 2020-03-09 (Christoph Kubisch)
+--
+--     -   Fix naming VkPhysicalDeviceGenerated to
+--         VkPhysicalDeviceDeviceGenerated
+--
+-- == See Also
 --
 -- 'BindIndexBufferIndirectCommandNV', 'BindShaderGroupIndirectCommandNV',
 -- 'BindVertexBufferIndirectCommandNV', 'GeneratedCommandsInfoNV',
@@ -526,7 +537,7 @@
 -- 'createIndirectCommandsLayoutNV', 'destroyIndirectCommandsLayoutNV',
 -- 'getGeneratedCommandsMemoryRequirementsNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands Vulkan Specification>

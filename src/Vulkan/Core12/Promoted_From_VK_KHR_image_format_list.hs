@@ -4,7 +4,7 @@ module Vulkan.Core12.Promoted_From_VK_KHR_image_format_list  ( ImageFormatListCr
                                                              , StructureType(..)
                                                              ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -38,7 +38,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- If @viewFormatCount@ is zero, @pViewFormats@ is ignored and the image is
 -- created as if the 'ImageFormatListCreateInfo' structure were not
--- included in the @pNext@ list of 'Vulkan.Core10.Image.ImageCreateInfo'.
+-- included in the @pNext@ chain of 'Vulkan.Core10.Image.ImageCreateInfo'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -52,11 +52,14 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_image_format_list VK_KHR_image_format_list>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImageFormatListCreateInfo = ImageFormatListCreateInfo
-  { -- | @pViewFormats@ is an array which lists of all formats which /can/ be
-    -- used when creating views of this image.
+  { -- | @pViewFormats@ is a pointer to an array of
+    -- 'Vulkan.Core10.Enums.Format.Format' values specifying all formats which
+    -- /can/ be used when creating views of this image.
     viewFormats :: Vector Format }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -65,12 +68,12 @@ deriving instance Generic (ImageFormatListCreateInfo)
 deriving instance Show ImageFormatListCreateInfo
 
 instance ToCStruct ImageFormatListCreateInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageFormatListCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (viewFormats)) :: Word32))
-    pPViewFormats' <- ContT $ allocaBytesAligned @Format ((Data.Vector.length (viewFormats)) * 4) 4
+    pPViewFormats' <- ContT $ allocaBytes @Format ((Data.Vector.length (viewFormats)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPViewFormats' `plusPtr` (4 * (i)) :: Ptr Format) (e)) (viewFormats)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Format))) (pPViewFormats')
     lift $ f

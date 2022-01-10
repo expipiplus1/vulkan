@@ -2,6 +2,39 @@
 
 ## WIP
 
+## [0.7.5] - 2021-11-25
+- Bump VMA, adds `getAllocationMemoryProperties`
+- Raise upper bound on `vulkan`
+
+## [0.7.4] - 2021-11-08
+- Bump VMA, documentation changes
+
+## [0.7.3] - 2021-11-03
+- Bump VMA, Adds virtual allocation functionality
+
+## [0.7.2] - 2021-10-14
+- Bump VMA, documentation changes and internal improvements
+- Raise upper bound on `vulkan`
+
+## [0.7.1] - 2021-08-12
+- Raise upper bound on `vulkan`
+
+## [0.7] - 2021-07-23
+- Bump VMA, adds vkaCreateBufferWithAlignment and fixes aligned_alloc on OS X.
+
+## [0.6.0.1] - 2021-06-26
+- Bump VMA, no functional change
+- Use allocaBytes over allocaBytesAligned where possible
+
+## [0.6] - 2021-06-22
+- Bump VMA, adding alignment info to PoolCreateInfo
+
+## [0.5.1] - 2021-06-05
+- Bump VMA, documentation changes
+
+## [0.5] - 2021-03-31
+- Bump VMA, deprecates resizeAllocation
+
 ## [0.4] - 2021-02-18
 - Bump VMA, support for VK_EXT_memory_priority
 

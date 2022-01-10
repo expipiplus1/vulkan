@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_texel_buffer_alignment:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_texel_buffer_alignment] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_EXT_texel_buffer_alignment extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -44,7 +44,7 @@
 --
 -- This extension adds more expressive alignment requirements for uniform
 -- and storage texel buffers. Some implementations have single texel
--- alignment requirements that can’t be expressed via
+-- alignment requirements that cannot be expressed via
 -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@minTexelBufferOffsetAlignment@.
 --
 -- == New Structures
@@ -78,12 +78,12 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceTexelBufferAlignmentFeaturesEXT',
 -- 'PhysicalDeviceTexelBufferAlignmentPropertiesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_texel_buffer_alignment Vulkan Specification>

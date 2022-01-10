@@ -33,18 +33,18 @@
 -- [__Contact__]
 --
 --     -   Tobias Hector
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_create_renderpass2:%20&body=@tobias%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_create_renderpass2] @tobias%0A<<Here describe the issue or question you have about the VK_KHR_create_renderpass2 extension>> >
 --
 -- == Other Extension Metadata
 --
--- [Last Modified Date]
+-- [__Last Modified Date__]
 --     2018-02-07
 --
 -- [__Interactions and External Dependencies__]
 --
 --     -   Promoted to Vulkan 1.2 Core
 --
--- [Contributors]
+-- [__Contributors__]
 --
 --     -   Tobias Hector
 --
@@ -56,7 +56,7 @@
 -- way that can be easily extended by other extensions through the
 -- substructures of render pass creation. The Vulkan 1.0 render pass
 -- creation sub-structures do not include @sType@\/@pNext@ members.
--- Additionally, the renderpass begin\/next\/end commands have been
+-- Additionally, the render pass begin\/next\/end commands have been
 -- augmented with new extensible structures for passing additional subpass
 -- information.
 --
@@ -148,7 +148,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'AttachmentDescription2KHR', 'AttachmentReference2KHR',
 -- 'RenderPassCreateInfo2KHR', 'SubpassBeginInfoKHR',
@@ -156,7 +156,7 @@
 -- 'cmdBeginRenderPass2KHR', 'cmdEndRenderPass2KHR', 'cmdNextSubpass2KHR',
 -- 'createRenderPass2KHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 Vulkan Specification>

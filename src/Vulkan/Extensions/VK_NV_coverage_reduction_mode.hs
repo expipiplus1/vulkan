@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Kedarnath Thangudu
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_coverage_reduction_mode:%20&body=@kthangudu%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_coverage_reduction_mode] @kthangudu%0A<<Here describe the issue or question you have about the VK_NV_coverage_reduction_mode extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -47,7 +47,7 @@
 -- control how this reduction is performed.
 --
 -- -   Merge: When there are more samples in the pixel coverage than color
---     samples, there is an implementation dependent association of each
+--     samples, there is an implementation-dependent association of each
 --     pixel coverage sample to a color sample. In the merge mode, the
 --     color sample coverage is computed such that only if any associated
 --     sample in the pixel coverage is covered, the color sample is
@@ -115,7 +115,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'CoverageReductionModeNV', 'FramebufferMixedSamplesCombinationNV',
 -- 'PhysicalDeviceCoverageReductionModeFeaturesNV',
@@ -123,7 +123,7 @@
 -- 'PipelineCoverageReductionStateCreateInfoNV',
 -- 'getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode Vulkan Specification>
@@ -151,7 +151,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -201,6 +201,7 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -231,9 +232,9 @@ foreign import ccall
 -- return the variable is overwritten with the number of values actually
 -- written to @pCombinations@. If the value of @pCombinationCount@ is less
 -- than the number of combinations supported for the given
--- @physicalDevice@, at most @pCombinationCount@ values will be written
--- @pCombinations@ and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be
--- returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS' to indicate
+-- @physicalDevice@, at most @pCombinationCount@ values will be written to
+-- @pCombinations@, and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be
+-- returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate
 -- that not all the supported values were returned.
 --
 -- == Valid Usage (Implicit)
@@ -267,6 +268,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode VK_NV_coverage_reduction_mode>,
 -- 'FramebufferMixedSamplesCombinationNV',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV :: forall io
@@ -276,7 +278,7 @@ getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV :: forall io
                                                                    PhysicalDevice
                                                                 -> io (Result, ("combinations" ::: Vector FramebufferMixedSamplesCombinationNV))
 getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNVPtr = pVkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNVPtr = pVkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV is null" Nothing Nothing
   let vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV' = mkVkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNVPtr
@@ -300,23 +302,25 @@ getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV physicalDevice =
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceCoverageReductionModeFeaturesNV'
--- structure describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceCoverageReductionModeFeaturesNV' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceCoverageReductionModeFeaturesNV' /can/ also be included
--- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- enable the feature.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceCoverageReductionModeFeaturesNV' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode VK_NV_coverage_reduction_mode>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCoverageReductionModeFeaturesNV = PhysicalDeviceCoverageReductionModeFeaturesNV
@@ -331,7 +335,7 @@ deriving instance Generic (PhysicalDeviceCoverageReductionModeFeaturesNV)
 deriving instance Show PhysicalDeviceCoverageReductionModeFeaturesNV
 
 instance ToCStruct PhysicalDeviceCoverageReductionModeFeaturesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceCoverageReductionModeFeaturesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_COVERAGE_REDUCTION_MODE_FEATURES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -367,8 +371,9 @@ instance Zero PhysicalDeviceCoverageReductionModeFeaturesNV where
 --
 -- = Description
 --
--- If this structure is not present, or if the extension is not enabled,
--- the default coverage reduction mode is inferred as follows:
+-- If this structure is not included in the @pNext@ chain, or if the
+-- extension is not enabled, the default coverage reduction mode is
+-- inferred as follows:
 --
 -- -   If the @VK_NV_framebuffer_mixed_samples@ extension is enabled, then
 --     it is as if the @coverageReductionMode@ is
@@ -397,6 +402,7 @@ instance Zero PhysicalDeviceCoverageReductionModeFeaturesNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode VK_NV_coverage_reduction_mode>,
 -- 'CoverageReductionModeNV',
 -- 'PipelineCoverageReductionStateCreateFlagsNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -414,7 +420,7 @@ deriving instance Generic (PipelineCoverageReductionStateCreateInfoNV)
 deriving instance Show PipelineCoverageReductionStateCreateInfoNV
 
 instance ToCStruct PipelineCoverageReductionStateCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineCoverageReductionStateCreateInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_COVERAGE_REDUCTION_STATE_CREATE_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -455,6 +461,7 @@ instance Zero PipelineCoverageReductionStateCreateInfoNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode VK_NV_coverage_reduction_mode>,
 -- 'CoverageReductionModeNV',
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits',
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlags',
@@ -464,8 +471,9 @@ data FramebufferMixedSamplesCombinationNV = FramebufferMixedSamplesCombinationNV
   { -- | @coverageReductionMode@ is a 'CoverageReductionModeNV' value specifying
     -- the coverage reduction mode.
     coverageReductionMode :: CoverageReductionModeNV
-  , -- | @rasterizationSamples@ specifies the number of rasterization samples in
-    -- the supported combination.
+  , -- | @rasterizationSamples@ is a
+    -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' specifying
+    -- the number of rasterization samples in the supported combination.
     rasterizationSamples :: SampleCountFlagBits
   , -- | @depthStencilSamples@ specifies the number of samples in the depth
     -- stencil attachment in the supported combination. A value of 0 indicates
@@ -483,7 +491,7 @@ deriving instance Generic (FramebufferMixedSamplesCombinationNV)
 deriving instance Show FramebufferMixedSamplesCombinationNV
 
 instance ToCStruct FramebufferMixedSamplesCombinationNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FramebufferMixedSamplesCombinationNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FRAMEBUFFER_MIXED_SAMPLES_COMBINATION_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -535,6 +543,7 @@ instance Zero FramebufferMixedSamplesCombinationNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode VK_NV_coverage_reduction_mode>,
 -- 'PipelineCoverageReductionStateCreateInfoNV'
 newtype PipelineCoverageReductionStateCreateFlagsNV = PipelineCoverageReductionStateCreateFlagsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -568,6 +577,7 @@ instance Read PipelineCoverageReductionStateCreateFlagsNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode VK_NV_coverage_reduction_mode>,
 -- 'FramebufferMixedSamplesCombinationNV',
 -- 'PipelineCoverageReductionStateCreateInfoNV'
 newtype CoverageReductionModeNV = CoverageReductionModeNV Int32

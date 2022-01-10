@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Jean-Francois Roy
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_pipeline_creation_feedback:%20&body=@jfroy%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_pipeline_creation_feedback] @jfroy%0A<<Here describe the issue or question you have about the VK_EXT_pipeline_creation_feedback extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -102,13 +102,13 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'PipelineCreationFeedbackCreateInfoEXT', 'PipelineCreationFeedbackEXT',
 -- 'PipelineCreationFeedbackFlagBitsEXT',
 -- 'PipelineCreationFeedbackFlagsEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_creation_feedback Vulkan Specification>

@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_cooperative_matrix:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_cooperative_matrix] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_NV_cooperative_matrix extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -113,7 +113,7 @@
 --
 -- (1) What matrix properties will be supported in practice?
 --
--- RESOLVED: In NVIDIA’s initial implementation, we will support:
+-- __RESOLVED__: In NVIDIA’s initial implementation, we will support:
 --
 -- -   AType = BType = fp16 CType = DType = fp16 MxNxK = 16x8x16 scope =
 --     Subgroup
@@ -133,14 +133,14 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'ComponentTypeNV', 'CooperativeMatrixPropertiesNV',
 -- 'PhysicalDeviceCooperativeMatrixFeaturesNV',
 -- 'PhysicalDeviceCooperativeMatrixPropertiesNV', 'ScopeNV',
 -- 'getPhysicalDeviceCooperativeMatrixPropertiesNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cooperative_matrix Vulkan Specification>
@@ -182,7 +182,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -227,6 +227,7 @@ import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceCooperativeMatrixPropertiesNV))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -256,11 +257,10 @@ foreign import ccall
 -- variable is overwritten with the number of structures actually written
 -- to @pProperties@. If @pPropertyCount@ is less than the number of
 -- cooperative matrix properties available, at most @pPropertyCount@
--- structures will be written. If @pPropertyCount@ is smaller than the
--- number of cooperative matrix properties available,
--- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
--- available cooperative matrix properties were returned.
+-- structures will be written, and 'Vulkan.Core10.Enums.Result.INCOMPLETE'
+-- will be returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to
+-- indicate that not all the available cooperative matrix properties were
+-- returned.
 --
 -- == Valid Usage (Implicit)
 --
@@ -293,6 +293,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cooperative_matrix VK_NV_cooperative_matrix>,
 -- 'CooperativeMatrixPropertiesNV', 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceCooperativeMatrixPropertiesNV :: forall io
                                                 . (MonadIO io)
@@ -300,7 +301,7 @@ getPhysicalDeviceCooperativeMatrixPropertiesNV :: forall io
                                                   PhysicalDevice
                                                -> io (Result, ("properties" ::: Vector CooperativeMatrixPropertiesNV))
 getPhysicalDeviceCooperativeMatrixPropertiesNV physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceCooperativeMatrixPropertiesNVPtr = pVkGetPhysicalDeviceCooperativeMatrixPropertiesNV (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceCooperativeMatrixPropertiesNVPtr = pVkGetPhysicalDeviceCooperativeMatrixPropertiesNV (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceCooperativeMatrixPropertiesNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceCooperativeMatrixPropertiesNV is null" Nothing Nothing
   let vkGetPhysicalDeviceCooperativeMatrixPropertiesNV' = mkVkGetPhysicalDeviceCooperativeMatrixPropertiesNV vkGetPhysicalDeviceCooperativeMatrixPropertiesNVPtr
@@ -323,23 +324,25 @@ getPhysicalDeviceCooperativeMatrixPropertiesNV physicalDevice = liftIO . evalCon
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceCooperativeMatrixFeaturesNV' structure
--- describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceCooperativeMatrixFeaturesNV' structure is included
--- in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceCooperativeMatrixFeaturesNV' /can/ also be included in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- features.
+-- in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceCooperativeMatrixFeaturesNV' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cooperative_matrix VK_NV_cooperative_matrix>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCooperativeMatrixFeaturesNV = PhysicalDeviceCooperativeMatrixFeaturesNV
@@ -359,7 +362,7 @@ deriving instance Generic (PhysicalDeviceCooperativeMatrixFeaturesNV)
 deriving instance Show PhysicalDeviceCooperativeMatrixFeaturesNV
 
 instance ToCStruct PhysicalDeviceCooperativeMatrixFeaturesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceCooperativeMatrixFeaturesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -397,22 +400,21 @@ instance Zero PhysicalDeviceCooperativeMatrixFeaturesNV where
 -- | VkPhysicalDeviceCooperativeMatrixPropertiesNV - Structure describing
 -- cooperative matrix properties supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceCooperativeMatrixPropertiesNV'
--- structure describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceCooperativeMatrixPropertiesNV' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cooperative_matrix VK_NV_cooperative_matrix>,
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCooperativeMatrixPropertiesNV = PhysicalDeviceCooperativeMatrixPropertiesNV
@@ -432,7 +434,7 @@ deriving instance Generic (PhysicalDeviceCooperativeMatrixPropertiesNV)
 deriving instance Show PhysicalDeviceCooperativeMatrixPropertiesNV
 
 instance ToCStruct PhysicalDeviceCooperativeMatrixPropertiesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceCooperativeMatrixPropertiesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -479,6 +481,7 @@ instance Zero PhysicalDeviceCooperativeMatrixPropertiesNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cooperative_matrix VK_NV_cooperative_matrix>,
 -- 'ComponentTypeNV', 'ScopeNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceCooperativeMatrixPropertiesNV'
@@ -522,7 +525,7 @@ deriving instance Generic (CooperativeMatrixPropertiesNV)
 deriving instance Show CooperativeMatrixPropertiesNV
 
 instance ToCStruct CooperativeMatrixPropertiesNV where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CooperativeMatrixPropertiesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -589,6 +592,7 @@ instance Zero CooperativeMatrixPropertiesNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cooperative_matrix VK_NV_cooperative_matrix>,
 -- 'CooperativeMatrixPropertiesNV'
 newtype ScopeNV = ScopeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -633,6 +637,7 @@ instance Read ScopeNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_cooperative_matrix VK_NV_cooperative_matrix>,
 -- 'CooperativeMatrixPropertiesNV'
 newtype ComponentTypeNV = ComponentTypeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)

@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Josh Barczak
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_deferred_host_operations:%20&body=@jbarczak%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_deferred_host_operations] @jbarczak%0A<<Here describe the issue or question you have about the VK_KHR_deferred_host_operations extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -59,14 +59,12 @@
 --
 -- == Description
 --
--- The
--- <VK_KHR_deferred_host_operations.html VK_KHR_deferred_host_operations>
--- extension defines the infrastructure and usage patterns for deferrable
--- commands, but does not specify any commands as deferrable. This is left
--- to additional dependent extensions. Commands /must/ not be deferred
--- unless the deferral is specifically allowed by another extension which
--- depends on
--- <VK_KHR_deferred_host_operations.html VK_KHR_deferred_host_operations>.
+-- The @VK_KHR_deferred_host_operations@ extension defines the
+-- infrastructure and usage patterns for deferrable commands, but does not
+-- specify any commands as deferrable. This is left to additional dependent
+-- extensions. Commands /must/ not be deferred unless the deferral is
+-- specifically allowed by another extension which depends on
+-- @VK_KHR_deferred_host_operations@.
 --
 -- == New Object Types
 --
@@ -137,6 +135,43 @@
 -- >     }
 -- > );
 --
+-- The following example illustrates extracting concurrency from a single
+-- deferred operation:
+--
+-- > // create a deferred operation
+-- > VkDeferredOperationKHR hOp;
+-- > VkResult result = vkCreateDeferredOperationKHR(device, pCallbacks, &hOp);
+-- > assert(result == VK_SUCCESS);
+-- >
+-- > result = vkDoSomethingExpensive(device, hOp, ...);
+-- > assert( result == VK_OPERATION_DEFERRED_KHR );
+-- >
+-- > // Query the maximum amount of concurrency and clamp to the desired maximum
+-- > uint32_t numLaunches = std::min(vkGetDeferredOperationMaxConcurrencyKHR(device, hOp), maxThreads);
+-- >
+-- > std::vector<std::future<void> > joins;
+-- >
+-- > for (uint32_t i = 0; i < numLaunches; i++) {
+-- >   joins.emplace_back(std::async::launch(
+-- >     [ hOp ] ( )
+-- >     {
+-- >         vkDeferredOperationJoinKHR(device, hOp);
+-- >                 // in a job system, a return of VK_THREAD_IDLE_KHR should queue another
+-- >                 // job, but it is not functionally required
+-- >     }
+-- >   );
+-- > }
+-- >
+-- > for (auto &f : joins) {
+-- >   f.get();
+-- > }
+-- >
+-- > result = vkGetDeferredOperationResultKHR(device, hOp);
+-- >
+-- > // deferred operation is now complete.  'result' indicates success or failure
+-- >
+-- > vkDestroyDeferredOperationKHR(device, hOp, pCallbacks);
+--
 -- The following example shows a subroutine which guarantees completion of
 -- a deferred operation, in the presence of multiple worker threads, and
 -- returns the result of the operation.
@@ -183,13 +218,13 @@
 --
 -- == Issues
 --
--- 1.  Should this entension have a VkPhysicalDevice*FeaturesKHR structure?
+-- 1.  Should this extension have a VkPhysicalDevice*FeaturesKHR structure?
 --
--- RESOLVED: No. This extension does not add any functionality on its own
--- and requires a dependent extension to actually enable functionality and
--- thus there is no value in adding a feature structure. If necessary, any
--- dependent extension could add a feature boolean if it wanted to indicate
--- that it is adding optional deferral support.
+-- __RESOLVED__: No. This extension does not add any functionality on its
+-- own and requires a dependent extension to actually enable functionality
+-- and thus there is no value in adding a feature structure. If necessary,
+-- any dependent extension could add a feature boolean if it wanted to
+-- indicate that it is adding optional deferral support.
 --
 -- == Version History
 --
@@ -219,14 +254,14 @@
 --     -   clarify return value of vkGetDeferredOperationResultKHR
 --         (#2339,!4110)
 --
--- = See Also
+-- == See Also
 --
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'createDeferredOperationKHR', 'deferredOperationJoinKHR',
 -- 'destroyDeferredOperationKHR', 'getDeferredOperationMaxConcurrencyKHR',
 -- 'getDeferredOperationResultKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_deferred_host_operations Vulkan Specification>
@@ -274,6 +309,7 @@ import Vulkan.Extensions.Handles (DeferredOperationKHR)
 import Vulkan.Extensions.Handles (DeferredOperationKHR(..))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateDeferredOperationKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkDeferredOperationJoinKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyDeferredOperationKHR))
@@ -320,6 +356,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_deferred_host_operations VK_KHR_deferred_host_operations>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'Vulkan.Core10.Handles.Device'
@@ -333,7 +370,7 @@ createDeferredOperationKHR :: forall io
                               ("allocator" ::: Maybe AllocationCallbacks)
                            -> io (DeferredOperationKHR)
 createDeferredOperationKHR device allocator = liftIO . evalContT $ do
-  let vkCreateDeferredOperationKHRPtr = pVkCreateDeferredOperationKHR (deviceCmds (device :: Device))
+  let vkCreateDeferredOperationKHRPtr = pVkCreateDeferredOperationKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateDeferredOperationKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDeferredOperationKHR is null" Nothing Nothing
   let vkCreateDeferredOperationKHR' = mkVkCreateDeferredOperationKHR vkCreateDeferredOperationKHRPtr
@@ -408,6 +445,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_deferred_host_operations VK_KHR_deferred_host_operations>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'Vulkan.Core10.Handles.Device'
@@ -423,7 +461,7 @@ destroyDeferredOperationKHR :: forall io
                                ("allocator" ::: Maybe AllocationCallbacks)
                             -> io ()
 destroyDeferredOperationKHR device operation allocator = liftIO . evalContT $ do
-  let vkDestroyDeferredOperationKHRPtr = pVkDestroyDeferredOperationKHR (deviceCmds (device :: Device))
+  let vkDestroyDeferredOperationKHRPtr = pVkDestroyDeferredOperationKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyDeferredOperationKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyDeferredOperationKHR is null" Nothing Nothing
   let vkDestroyDeferredOperationKHR' = mkVkDestroyDeferredOperationKHR vkDestroyDeferredOperationKHRPtr
@@ -486,6 +524,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_deferred_host_operations VK_KHR_deferred_host_operations>,
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'Vulkan.Core10.Handles.Device'
 getDeferredOperationMaxConcurrencyKHR :: forall io
@@ -507,7 +546,7 @@ getDeferredOperationMaxConcurrencyKHR :: forall io
                                          DeferredOperationKHR
                                       -> io (Word32)
 getDeferredOperationMaxConcurrencyKHR device operation = liftIO $ do
-  let vkGetDeferredOperationMaxConcurrencyKHRPtr = pVkGetDeferredOperationMaxConcurrencyKHR (deviceCmds (device :: Device))
+  let vkGetDeferredOperationMaxConcurrencyKHRPtr = pVkGetDeferredOperationMaxConcurrencyKHR (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetDeferredOperationMaxConcurrencyKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeferredOperationMaxConcurrencyKHR is null" Nothing Nothing
   let vkGetDeferredOperationMaxConcurrencyKHR' = mkVkGetDeferredOperationMaxConcurrencyKHR vkGetDeferredOperationMaxConcurrencyKHRPtr
@@ -549,6 +588,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_deferred_host_operations VK_KHR_deferred_host_operations>,
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'Vulkan.Core10.Handles.Device'
 getDeferredOperationResultKHR :: forall io
@@ -569,7 +609,7 @@ getDeferredOperationResultKHR :: forall io
                                  DeferredOperationKHR
                               -> io (Result)
 getDeferredOperationResultKHR device operation = liftIO $ do
-  let vkGetDeferredOperationResultKHRPtr = pVkGetDeferredOperationResultKHR (deviceCmds (device :: Device))
+  let vkGetDeferredOperationResultKHRPtr = pVkGetDeferredOperationResultKHR (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetDeferredOperationResultKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeferredOperationResultKHR is null" Nothing Nothing
   let vkGetDeferredOperationResultKHR' = mkVkGetDeferredOperationResultKHR vkGetDeferredOperationResultKHRPtr
@@ -659,6 +699,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_deferred_host_operations VK_KHR_deferred_host_operations>,
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'Vulkan.Core10.Handles.Device'
 deferredOperationJoinKHR :: forall io
@@ -670,7 +711,7 @@ deferredOperationJoinKHR :: forall io
                             DeferredOperationKHR
                          -> io (Result)
 deferredOperationJoinKHR device operation = liftIO $ do
-  let vkDeferredOperationJoinKHRPtr = pVkDeferredOperationJoinKHR (deviceCmds (device :: Device))
+  let vkDeferredOperationJoinKHRPtr = pVkDeferredOperationJoinKHR (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkDeferredOperationJoinKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDeferredOperationJoinKHR is null" Nothing Nothing
   let vkDeferredOperationJoinKHR' = mkVkDeferredOperationJoinKHR vkDeferredOperationJoinKHRPtr

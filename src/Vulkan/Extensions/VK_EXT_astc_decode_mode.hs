@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jan-Harald Fredriksen
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_astc_decode_mode:%20&body=@janharaldfredriksen-arm%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_astc_decode_mode] @janharaldfredriksen-arm%0A<<Here describe the issue or question you have about the VK_EXT_astc_decode_mode extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -144,11 +144,11 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'ImageViewASTCDecodeModeEXT', 'PhysicalDeviceASTCDecodeFeaturesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_astc_decode_mode Vulkan Specification>
@@ -163,7 +163,7 @@ module Vulkan.Extensions.VK_EXT_astc_decode_mode  ( ImageViewASTCDecodeModeEXT(.
                                                   , pattern EXT_ASTC_DECODE_MODE_EXTENSION_NAME
                                                   ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -224,6 +224,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_astc_decode_mode VK_EXT_astc_decode_mode>,
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImageViewASTCDecodeModeEXT = ImageViewASTCDecodeModeEXT
@@ -237,7 +238,7 @@ deriving instance Generic (ImageViewASTCDecodeModeEXT)
 deriving instance Show ImageViewASTCDecodeModeEXT
 
 instance ToCStruct ImageViewASTCDecodeModeEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageViewASTCDecodeModeEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -273,22 +274,25 @@ instance Zero ImageViewASTCDecodeModeEXT where
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceASTCDecodeFeaturesEXT' structure
--- describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceASTCDecodeFeaturesEXT' structure is included in
--- the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceASTCDecodeFeaturesEXT' /can/ also be included in the
--- @pNext@ chain of 'Vulkan.Core10.Device.createDevice' to enable features.
+-- the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceASTCDecodeFeaturesEXT' /can/ also be used in
+-- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_astc_decode_mode VK_EXT_astc_decode_mode>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceASTCDecodeFeaturesEXT = PhysicalDeviceASTCDecodeFeaturesEXT
@@ -304,7 +308,7 @@ deriving instance Generic (PhysicalDeviceASTCDecodeFeaturesEXT)
 deriving instance Show PhysicalDeviceASTCDecodeFeaturesEXT
 
 instance ToCStruct PhysicalDeviceASTCDecodeFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceASTCDecodeFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

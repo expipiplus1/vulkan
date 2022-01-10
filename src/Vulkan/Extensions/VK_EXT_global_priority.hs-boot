@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Andres Rodriguez
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_global_priority:%20&body=@lostgoat%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_global_priority] @lostgoat%0A<<Here describe the issue or question you have about the VK_EXT_global_priority extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -48,8 +48,8 @@
 --
 -- In Vulkan, users can specify device-scope queue priorities. In some
 -- cases it may be useful to extend this concept to a system-wide scope.
--- This extension provides a mechanism for caller’s to set their
--- system-wide priority. The default queue priority is
+-- This extension provides a mechanism for callers to set their system-wide
+-- priority. The default queue priority is
 -- 'QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT'.
 --
 -- The driver implementation will attempt to skew hardware resource
@@ -108,11 +108,11 @@
 --
 --     -   First version.
 --
--- = See Also
+-- == See Also
 --
 -- 'DeviceQueueGlobalPriorityCreateInfoEXT', 'QueueGlobalPriorityEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_global_priority Vulkan Specification>

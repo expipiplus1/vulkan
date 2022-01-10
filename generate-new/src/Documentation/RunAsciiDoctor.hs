@@ -3,11 +3,14 @@ module Documentation.RunAsciiDoctor
   , main
   ) where
 
+import qualified Data.Attoparsec.Text.Lazy     as A
 import qualified Data.List                     as L
 import qualified Data.Text                     as T
 import qualified Data.Text.Lazy                as T
                                                 ( toStrict )
+import qualified Data.Text.Lazy                as TL
 import           Relude
+import           Replace.Attoparsec.Text.Lazy
 import           Say
 import           Spec.Flavor
 import           System.Directory
@@ -32,7 +35,8 @@ manTxtToDocbook
   -> IO (Either Text Text)
   -- ^ Either an error if something went wrong, or the docbook xml
 manTxtToDocbook specFlavor extensions vkPath manTxt =
-  fmap fixupDocbookOutput <$> asciidoctor specFlavor extensions vkPath manTxt
+  fmap (T.toStrict . asciidoctor4076 . asciidoctor4075 . fixupDocbookOutput)
+    <$> asciidoctor specFlavor extensions vkPath manTxt
 
 asciidoctor
   :: SpecFlavor
@@ -42,7 +46,7 @@ asciidoctor
   -- ^ The 'Vulkan-Docs' directory, necessary to find plugins
   -> FilePath
   -- ^ The path to the man page to translate
-  -> IO (Either Text Text)
+  -> IO (Either Text TL.Text)
 asciidoctor specFlavor extensions vkPathRelative manTxt = do
   vkPath <- makeAbsolute vkPathRelative
   let
@@ -64,6 +68,8 @@ asciidoctor specFlavor extensions vkPathRelative manTxt = do
       , "-a"
       , "config=" <> vkPath <> "/config"
       , "-a"
+      , "appendices=" <> vkPath <> "/appendices"
+      , "-a"
       , "refprefix="
       , "-a"
       , "spirv=" <> spirvPath
@@ -72,7 +78,9 @@ asciidoctor specFlavor extensions vkPathRelative manTxt = do
     noteOpts = []
     adocExts = case specFlavor of
       SpecVk ->
-        [ "-r"
+        [ "-I"
+        , vkPath </> "gen"
+        , "-r"
         , vkPath </> "config/spec-macros.rb"
         , "-r"
         , vkPath </> "config/tilde_open_block.rb"
@@ -111,29 +119,51 @@ asciidoctor specFlavor extensions vkPathRelative manTxt = do
         <> T.concat ((" " <>) . T.pack <$> args)
         <> "\noutput:"
         <> T.toStrict (decodeUtf8 err)
-    ExitSuccess -> pure . Right $ T.toStrict (decodeUtf8 out)
+    ExitSuccess -> do
+      pure
+        . Right
+        . decodeUtf8
+        $ out
 
 -- | Some hacky replaces in the docbook XML to make pandoc cope better
 -- TODO: Write an asciidoctor plugin to do these
-fixupDocbookOutput :: Text -> Text
-fixupDocbookOutput = replaceTag "sidebar" Nothing "section"
-  . replaceTag "strong" (Just "class=\"purple\"") "emphasis"
+-- TODO: remove the xml:id hack
+fixupDocbookOutput :: TL.Text -> TL.Text
+fixupDocbookOutput =
+  replaceTag "sidebar" Nothing "section"
+    . replaceTag "strong" (Just "class=\"purple\"") "emphasis"
+    . TL.replace "<sidebar xml:id=\"resources-image-creation-limits\">"
+                 "<sidebar>"
+    . streamEdit
+        ("<literal><xref linkend=\"" *> A.takeTill (== '"') <* "\"/></literal>")
+        (\e -> "<literal>" <> e <> "</literal>")
+
+-- | Work around https://github.com/asciidoctor/asciidoctor/issues/4075
+asciidoctor4075 :: TL.Text -> TL.Text
+asciidoctor4075 = TL.replace
+  "base64<"
+  "base64\"></imagedata></imageobject></inlinemediaobject><"
+
+-- | Work around https://github.com/asciidoctor/asciidoctor/issues/4076
+asciidoctor4076 :: TL.Text -> TL.Text
+asciidoctor4076 = TL.replace "</superscript></link>" "</link></superscript>"
 
 replaceTag
-  :: Text
+  :: TL.Text
   -- ^ Tag name
-  -> Maybe Text
+  -> Maybe TL.Text
   -- ^ Optional attribute to search for
-  -> Text
+  -> TL.Text
   -- ^ Replacement
-  -> Text
+  -> TL.Text
   -- ^ Haystack
-  -> Text
+  -> TL.Text
 replaceTag needle maybeAttr replacement =
   let attr = maybe "" (" " <>) maybeAttr
-  in  T.replace ("<" <> needle <> attr <> ">") ("<" <> replacement <> ">")
-        . T.replace ("</" <> needle <> ">") ("</" <> replacement <> ">")
+  in  TL.replace ("<" <> needle <> attr <> ">") ("<" <> replacement <> ">")
+        . TL.replace ("</" <> needle <> ">") ("</" <> replacement <> ">")
 
+-- call like: :main vk ./Vulkan-Docs ./Vulkan-Docs/gen/api/structs/VkXYColorEXT.txt
 main :: IO ()
 main = do
   [flavor, d, m] <- getArgs

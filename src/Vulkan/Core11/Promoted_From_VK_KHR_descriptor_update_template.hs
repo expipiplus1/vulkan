@@ -17,7 +17,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -68,6 +68,7 @@ import Vulkan.Core11.Enums.DescriptorUpdateTemplateCreateFlags (DescriptorUpdate
 import Vulkan.Core11.Enums.DescriptorUpdateTemplateType (DescriptorUpdateTemplateType)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateDescriptorUpdateTemplate))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyDescriptorUpdateTemplate))
 import Vulkan.Dynamic (DeviceCmds(pVkUpdateDescriptorSetWithTemplate))
@@ -127,6 +128,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core11.Handles.DescriptorUpdateTemplate',
 -- 'DescriptorUpdateTemplateCreateInfo', 'Vulkan.Core10.Handles.Device'
@@ -147,7 +149,7 @@ createDescriptorUpdateTemplate :: forall io
                                   ("allocator" ::: Maybe AllocationCallbacks)
                                -> io (DescriptorUpdateTemplate)
 createDescriptorUpdateTemplate device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateDescriptorUpdateTemplatePtr = pVkCreateDescriptorUpdateTemplate (deviceCmds (device :: Device))
+  let vkCreateDescriptorUpdateTemplatePtr = pVkCreateDescriptorUpdateTemplate (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateDescriptorUpdateTemplatePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDescriptorUpdateTemplate is null" Nothing Nothing
   let vkCreateDescriptorUpdateTemplate' = mkVkCreateDescriptorUpdateTemplate vkCreateDescriptorUpdateTemplatePtr
@@ -189,13 +191,13 @@ foreign import ccall
 --
 -- -   #VUID-vkDestroyDescriptorUpdateTemplate-descriptorSetLayout-00356#
 --     If 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
---     provided when @descriptorSetLayout@ was created, a compatible set of
---     callbacks /must/ be provided here
+--     provided when @descriptorUpdateTemplate@ was created, a compatible
+--     set of callbacks /must/ be provided here
 --
 -- -   #VUID-vkDestroyDescriptorUpdateTemplate-descriptorSetLayout-00357#
 --     If no 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
---     provided when @descriptorSetLayout@ was created, @pAllocator@ /must/
---     be @NULL@
+--     provided when @descriptorUpdateTemplate@ was created, @pAllocator@
+--     /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
@@ -224,6 +226,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core11.Handles.DescriptorUpdateTemplate',
 -- 'Vulkan.Core10.Handles.Device'
@@ -240,7 +243,7 @@ destroyDescriptorUpdateTemplate :: forall io
                                    ("allocator" ::: Maybe AllocationCallbacks)
                                 -> io ()
 destroyDescriptorUpdateTemplate device descriptorUpdateTemplate allocator = liftIO . evalContT $ do
-  let vkDestroyDescriptorUpdateTemplatePtr = pVkDestroyDescriptorUpdateTemplate (deviceCmds (device :: Device))
+  let vkDestroyDescriptorUpdateTemplatePtr = pVkDestroyDescriptorUpdateTemplate (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyDescriptorUpdateTemplatePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyDescriptorUpdateTemplate is null" Nothing Nothing
   let vkDestroyDescriptorUpdateTemplate' = mkVkDestroyDescriptorUpdateTemplate vkDestroyDescriptorUpdateTemplatePtr
@@ -362,8 +365,6 @@ foreign import ccall
 -- >     &createInfo,
 -- >     NULL,
 -- >     &myDescriptorUpdateTemplate);
--- > }
--- >
 -- >
 -- > AppDataStructure appData;
 -- >
@@ -372,12 +373,13 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.DescriptorSet',
 -- 'Vulkan.Core11.Handles.DescriptorUpdateTemplate',
 -- 'Vulkan.Core10.Handles.Device'
 updateDescriptorSetWithTemplate :: forall io
                                  . (MonadIO io)
-                                => -- | @device@ is the logical device that updates the descriptor sets.
+                                => -- | @device@ is the logical device that updates the descriptor set.
                                    Device
                                 -> -- | @descriptorSet@ is the descriptor set to update
                                    DescriptorSet
@@ -395,7 +397,7 @@ updateDescriptorSetWithTemplate :: forall io
                                    ("data" ::: Ptr ())
                                 -> io ()
 updateDescriptorSetWithTemplate device descriptorSet descriptorUpdateTemplate data' = liftIO $ do
-  let vkUpdateDescriptorSetWithTemplatePtr = pVkUpdateDescriptorSetWithTemplate (deviceCmds (device :: Device))
+  let vkUpdateDescriptorSetWithTemplatePtr = pVkUpdateDescriptorSetWithTemplate (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkUpdateDescriptorSetWithTemplatePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkUpdateDescriptorSetWithTemplate is null" Nothing Nothing
   let vkUpdateDescriptorSetWithTemplate' = mkVkUpdateDescriptorSetWithTemplate vkUpdateDescriptorSetWithTemplatePtr
@@ -439,6 +441,7 @@ updateDescriptorSetWithTemplate device descriptorSet descriptorUpdateTemplate da
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType',
 -- 'DescriptorUpdateTemplateCreateInfo'
 data DescriptorUpdateTemplateEntry = DescriptorUpdateTemplateEntry
@@ -491,7 +494,7 @@ deriving instance Generic (DescriptorUpdateTemplateEntry)
 deriving instance Show DescriptorUpdateTemplateEntry
 
 instance ToCStruct DescriptorUpdateTemplateEntry where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorUpdateTemplateEntry{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (dstBinding)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (dstArrayElement)
@@ -606,6 +609,7 @@ instance Zero DescriptorUpdateTemplateEntry where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.DescriptorSetLayout',
 -- 'Vulkan.Core11.Enums.DescriptorUpdateTemplateCreateFlags.DescriptorUpdateTemplateCreateFlags',
 -- 'DescriptorUpdateTemplateEntry',
@@ -631,15 +635,12 @@ data DescriptorUpdateTemplateCreateInfo = DescriptorUpdateTemplateCreateInfo
     -- it /can/ only be used to push descriptor sets using the provided
     -- @pipelineBindPoint@, @pipelineLayout@, and @set@ number.
     templateType :: DescriptorUpdateTemplateType
-  , -- | @descriptorSetLayout@ is the descriptor set layout the parameter update
-    -- template will be used with. All descriptor sets which are going to be
+  , -- | @descriptorSetLayout@ is the descriptor set layout used to build the
+    -- descriptor update template. All descriptor sets which are going to be
     -- updated through the newly created descriptor update template /must/ be
-    -- created with this layout. @descriptorSetLayout@ is the descriptor set
-    -- layout used to build the descriptor update template. All descriptor sets
-    -- which are going to be updated through the newly created descriptor
-    -- update template /must/ be created with a layout that matches (is the
-    -- same as, or defined identically to) this layout. This parameter is
-    -- ignored if @templateType@ is not
+    -- created with a layout that matches (is the same as, or defined
+    -- identically to) this layout. This parameter is ignored if @templateType@
+    -- is not
     -- 'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET'.
     descriptorSetLayout :: DescriptorSetLayout
   , -- | @pipelineBindPoint@ is a
@@ -665,13 +666,13 @@ deriving instance Generic (DescriptorUpdateTemplateCreateInfo)
 deriving instance Show DescriptorUpdateTemplateCreateInfo
 
 instance ToCStruct DescriptorUpdateTemplateCreateInfo where
-  withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorUpdateTemplateCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr DescriptorUpdateTemplateCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (descriptorUpdateEntries)) :: Word32))
-    pPDescriptorUpdateEntries' <- ContT $ allocaBytesAligned @DescriptorUpdateTemplateEntry ((Data.Vector.length (descriptorUpdateEntries)) * 32) 8
+    pPDescriptorUpdateEntries' <- ContT $ allocaBytes @DescriptorUpdateTemplateEntry ((Data.Vector.length (descriptorUpdateEntries)) * 32)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorUpdateEntries' `plusPtr` (32 * (i)) :: Ptr DescriptorUpdateTemplateEntry) (e)) (descriptorUpdateEntries)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorUpdateTemplateEntry))) (pPDescriptorUpdateEntries')
     lift $ poke ((p `plusPtr` 32 :: Ptr DescriptorUpdateTemplateType)) (templateType)

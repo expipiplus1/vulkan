@@ -33,7 +33,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_buffer_device_address:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_buffer_device_address] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_EXT_buffer_device_address extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -47,6 +47,11 @@
 --
 --     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_physical_storage_buffer.html SPV_EXT_physical_storage_buffer>
+--
+--     -   This extension provides API support for
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_buffer_reference.txt GLSL_EXT_buffer_reference>
+--         and
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_buffer_reference_uvec2.txt GLSL_EXT_buffer_reference_uvec2>
 --
 -- [__Contributors__]
 --
@@ -89,6 +94,8 @@
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
 --     'Vulkan.Core10.Device.DeviceCreateInfo':
 --
+--     -   'PhysicalDeviceBufferAddressFeaturesEXT'
+--
 --     -   'PhysicalDeviceBufferDeviceAddressFeaturesEXT'
 --
 -- == New Enum Constants
@@ -116,6 +123,8 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT'
 --
 --     -   'STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO_EXT'
+--
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_ADDRESS_FEATURES_EXT'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT'
 --
@@ -145,14 +154,14 @@
 --
 --     -   Minor updates to appendix for publication
 --
--- = See Also
+-- == See Also
 --
 -- 'BufferDeviceAddressCreateInfoEXT', 'BufferDeviceAddressInfoEXT',
 -- 'PhysicalDeviceBufferAddressFeaturesEXT',
 -- 'PhysicalDeviceBufferDeviceAddressFeaturesEXT',
 -- 'getBufferDeviceAddressEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_buffer_device_address Vulkan Specification>
@@ -175,7 +184,7 @@ module Vulkan.Extensions.VK_EXT_buffer_device_address  ( pattern STRUCTURE_TYPE_
                                                        , pattern EXT_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
                                                        ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -236,18 +245,19 @@ getBufferDeviceAddressEXT = getBufferDeviceAddress
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceBufferDeviceAddressFeaturesEXT'
--- structure describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceBufferDeviceAddressFeaturesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceBufferDeviceAddressFeaturesEXT' /can/ also be included in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- features.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceBufferDeviceAddressFeaturesEXT' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- Note
 --
@@ -265,6 +275,7 @@ getBufferDeviceAddressEXT = getBufferDeviceAddress
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_buffer_device_address VK_EXT_buffer_device_address>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceBufferDeviceAddressFeaturesEXT = PhysicalDeviceBufferDeviceAddressFeaturesEXT
@@ -292,7 +303,7 @@ deriving instance Generic (PhysicalDeviceBufferDeviceAddressFeaturesEXT)
 deriving instance Show PhysicalDeviceBufferDeviceAddressFeaturesEXT
 
 instance ToCStruct PhysicalDeviceBufferDeviceAddressFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceBufferDeviceAddressFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -353,6 +364,7 @@ instance Zero PhysicalDeviceBufferDeviceAddressFeaturesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_buffer_device_address VK_EXT_buffer_device_address>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceAddress',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data BufferDeviceAddressCreateInfoEXT = BufferDeviceAddressCreateInfoEXT
@@ -365,7 +377,7 @@ deriving instance Generic (BufferDeviceAddressCreateInfoEXT)
 deriving instance Show BufferDeviceAddressCreateInfoEXT
 
 instance ToCStruct BufferDeviceAddressCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferDeviceAddressCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

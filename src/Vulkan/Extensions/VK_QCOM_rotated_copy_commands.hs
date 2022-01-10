@@ -15,7 +15,7 @@
 --     334
 --
 -- [__Revision__]
---     0
+--     1
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -28,18 +28,18 @@
 -- [__Contact__]
 --
 --     -   Jeff Leger
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_QCOM_rotated_copy_commands:%20&body=@jackohound%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QCOM_rotated_copy_commands] @jackohound%0A<<Here describe the issue or question you have about the VK_QCOM_rotated_copy_commands extension>> >
 --
 -- == Other Extension Metadata
 --
--- [Last Modified Date]
+-- [__Last Modified Date__]
 --     2020-09-18
 --
 -- [__Interactions and External Dependencies__]
 --
 --     -   None
 --
--- [Contributors]
+-- [__Contributors__]
 --
 --     -   Jeff Leger, Qualcomm Technologies, Inc.
 --
@@ -52,7 +52,7 @@
 -- copying between two resources, where one resource contains rotated
 -- content and the other does not, a rotated copy may be desired. This
 -- extension may be used in combination with VK_QCOM_render_pass_transform
--- which adds rotated renderpasses.
+-- which adds rotated render passes.
 --
 -- This extension adds an extension structure to the following commands:
 -- vkCmdBlitImage2KHR, vkCmdCopyImageToBuffer2KHR and
@@ -61,12 +61,13 @@
 -- == Issues
 --
 -- 1) What is an appropriate name for the added extension structure? The
--- style guide says \"Structures which extend other structures through the
--- pNext chain should reflect the name of the base structure they
--- extend.\", but in this case a single extension structure is used to
+-- style guide says “Structures which extend other structures through the
+-- @pNext@ chain should reflect the name of the base structure they
+-- extend.”, but in this case a single extension structure is used to
 -- extend three base structures (vkCmdBlitImage2KHR,
 -- vkCmdCopyImageToBuffer2KHR and vkCmdCopyBufferToImage2KHR). Creating
 -- three identical structures with unique names seemed undesirable.
+--
 -- __RESOLVED__: Deviate from the style guide for extension structure
 -- naming.
 --
@@ -107,11 +108,11 @@
 --
 -- -   Revision 1, 2020-09-19 (Jeff Leger)
 --
--- = See Also
+-- == See Also
 --
 -- 'CopyCommandTransformInfoQCOM'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_rotated_copy_commands Vulkan Specification>
@@ -127,7 +128,7 @@ module Vulkan.Extensions.VK_QCOM_rotated_copy_commands  ( CopyCommandTransformIn
                                                         , SurfaceTransformFlagsKHR
                                                         ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -156,6 +157,7 @@ import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagsKHR)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_rotated_copy_commands VK_QCOM_rotated_copy_commands>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR'
 data CopyCommandTransformInfoQCOM = CopyCommandTransformInfoQCOM
@@ -178,7 +180,7 @@ deriving instance Generic (CopyCommandTransformInfoQCOM)
 deriving instance Show CopyCommandTransformInfoQCOM
 
 instance ToCStruct CopyCommandTransformInfoQCOM where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CopyCommandTransformInfoQCOM{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COPY_COMMAND_TRANSFORM_INFO_QCOM)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -209,11 +211,11 @@ instance Zero CopyCommandTransformInfoQCOM where
            zero
 
 
-type QCOM_ROTATED_COPY_COMMANDS_SPEC_VERSION = 0
+type QCOM_ROTATED_COPY_COMMANDS_SPEC_VERSION = 1
 
 -- No documentation found for TopLevel "VK_QCOM_ROTATED_COPY_COMMANDS_SPEC_VERSION"
 pattern QCOM_ROTATED_COPY_COMMANDS_SPEC_VERSION :: forall a . Integral a => a
-pattern QCOM_ROTATED_COPY_COMMANDS_SPEC_VERSION = 0
+pattern QCOM_ROTATED_COPY_COMMANDS_SPEC_VERSION = 1
 
 
 type QCOM_ROTATED_COPY_COMMANDS_EXTENSION_NAME = "VK_QCOM_rotated_copy_commands"

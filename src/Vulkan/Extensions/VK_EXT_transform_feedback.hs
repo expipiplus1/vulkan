@@ -34,7 +34,7 @@
 -- [__Contact__]
 --
 --     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_transform_feedback:%20&body=@pdaniell-nv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_transform_feedback] @pdaniell-nv%0A<<Here describe the issue or question you have about the VK_EXT_transform_feedback extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -205,9 +205,11 @@
 -- 'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT'.
 -- A query pool created with this type will capture 2 integers -
 -- numPrimitivesWritten and numPrimitivesNeeded - for the specified vertex
--- stream output from the last vertex processing stage. The vertex stream
--- output queried is zero by default, but can be specified with the new
--- 'cmdBeginQueryIndexedEXT' and 'cmdEndQueryIndexedEXT' commands.
+-- stream output from the last
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>.
+-- The vertex stream output queried is zero by default, but can be
+-- specified with the new 'cmdBeginQueryIndexedEXT' and
+-- 'cmdEndQueryIndexedEXT' commands.
 --
 -- == Version History
 --
@@ -215,7 +217,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceTransformFeedbackFeaturesEXT',
 -- 'PhysicalDeviceTransformFeedbackPropertiesEXT',
@@ -225,7 +227,7 @@
 -- 'cmdBindTransformFeedbackBuffersEXT', 'cmdDrawIndirectByteCountEXT',
 -- 'cmdEndQueryIndexedEXT', 'cmdEndTransformFeedbackEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback Vulkan Specification>
@@ -255,7 +257,7 @@ import Vulkan.Internal.Utils (enumShowsPrec)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -301,6 +303,7 @@ import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Handles (Buffer(..))
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBeginQueryIndexedEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBeginTransformFeedbackEXT))
@@ -429,15 +432,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdBindTransformFeedbackBuffersEXT :: forall io
@@ -452,16 +456,17 @@ cmdBindTransformFeedbackBuffersEXT :: forall io
                                       ("buffers" ::: Vector Buffer)
                                    -> -- | @pOffsets@ is a pointer to an array of buffer offsets.
                                       ("offsets" ::: Vector DeviceSize)
-                                   -> -- | @pSizes@ is an optional array of buffer sizes, specifying the maximum
-                                      -- number of bytes to capture to the corresponding transform feedback
-                                      -- buffer. If @pSizes@ is @NULL@, or the value of the @pSizes@ array
-                                      -- element is 'Vulkan.Core10.APIConstants.WHOLE_SIZE', then the maximum
-                                      -- bytes captured will be the size of the corresponding buffer minus the
-                                      -- buffer offset.
+                                   -> -- | @pSizes@ is @NULL@ or a pointer to an array of
+                                      -- 'Vulkan.Core10.FundamentalTypes.DeviceSize' buffer sizes, specifying the
+                                      -- maximum number of bytes to capture to the corresponding transform
+                                      -- feedback buffer. If @pSizes@ is @NULL@, or the value of the @pSizes@
+                                      -- array element is 'Vulkan.Core10.APIConstants.WHOLE_SIZE', then the
+                                      -- maximum number of bytes captured will be the size of the corresponding
+                                      -- buffer minus the buffer offset.
                                       ("sizes" ::: Vector DeviceSize)
                                    -> io ()
 cmdBindTransformFeedbackBuffersEXT commandBuffer firstBinding buffers offsets sizes = liftIO . evalContT $ do
-  let vkCmdBindTransformFeedbackBuffersEXTPtr = pVkCmdBindTransformFeedbackBuffersEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBindTransformFeedbackBuffersEXTPtr = pVkCmdBindTransformFeedbackBuffersEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBindTransformFeedbackBuffersEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindTransformFeedbackBuffersEXT is null" Nothing Nothing
   let vkCmdBindTransformFeedbackBuffersEXT' = mkVkCmdBindTransformFeedbackBuffersEXT vkCmdBindTransformFeedbackBuffersEXTPtr
@@ -471,14 +476,14 @@ cmdBindTransformFeedbackBuffersEXT commandBuffer firstBinding buffers offsets si
   let pSizesLength = Data.Vector.length $ (sizes)
   lift $ unless (fromIntegral pSizesLength == pBuffersLength || pSizesLength == 0) $
     throwIO $ IOError Nothing InvalidArgument "" "pSizes and pBuffers must have the same length" Nothing Nothing
-  pPBuffers <- ContT $ allocaBytesAligned @Buffer ((Data.Vector.length (buffers)) * 8) 8
+  pPBuffers <- ContT $ allocaBytes @Buffer ((Data.Vector.length (buffers)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPBuffers `plusPtr` (8 * (i)) :: Ptr Buffer) (e)) (buffers)
-  pPOffsets <- ContT $ allocaBytesAligned @DeviceSize ((Data.Vector.length (offsets)) * 8) 8
+  pPOffsets <- ContT $ allocaBytes @DeviceSize ((Data.Vector.length (offsets)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) (offsets)
   pSizes <- if Data.Vector.null (sizes)
     then pure nullPtr
     else do
-      pPSizes <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (sizes))) * 8) 8
+      pPSizes <- ContT $ allocaBytes @DeviceSize (((Data.Vector.length (sizes))) * 8)
       lift $ Data.Vector.imapM_ (\i e -> poke (pPSizes `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((sizes))
       pure $ pPSizes
   lift $ traceAroundEvent "vkCmdBindTransformFeedbackBuffersEXT" (vkCmdBindTransformFeedbackBuffersEXT' (commandBufferHandle (commandBuffer)) (firstBinding) ((fromIntegral pBuffersLength :: Word32)) (pPBuffers) (pPOffsets) pSizes)
@@ -542,9 +547,14 @@ foreign import ccall
 --     with a @usage@ value containing
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT'
 --
--- -   #VUID-vkCmdBeginTransformFeedbackEXT-None-04128# The last vertex
---     processing stage of the bound graphics pipeline /must/ have been
---     declared with the @Xfb@ execution mode
+-- -   #VUID-vkCmdBeginTransformFeedbackEXT-None-06233# A valid graphics
+--     pipeline /must/ be bound to
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+--
+-- -   #VUID-vkCmdBeginTransformFeedbackEXT-None-04128# The last
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>
+--     of the bound graphics pipeline /must/ have been declared with the
+--     @Xfb@ execution mode
 --
 -- -   #VUID-vkCmdBeginTransformFeedbackEXT-None-02373# Transform feedback
 --     /must/ not be made active in a render pass instance with multiview
@@ -589,15 +599,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdBeginTransformFeedbackEXT :: forall io
@@ -608,30 +619,32 @@ cmdBeginTransformFeedbackEXT :: forall io
                              -> -- | @firstCounterBuffer@ is the index of the first transform feedback buffer
                                 -- corresponding to @pCounterBuffers@[0] and @pCounterBufferOffsets@[0].
                                 ("firstCounterBuffer" ::: Word32)
-                             -> -- | @pCounterBuffers@ is an optional array of buffer handles to the counter
-                                -- buffers which contain a 4 byte integer value representing the byte
-                                -- offset from the start of the corresponding transform feedback buffer
-                                -- from where to start capturing vertex data. If the byte offset stored to
-                                -- the counter buffer location was done using 'cmdEndTransformFeedbackEXT'
-                                -- it can be used to resume transform feedback from the previous location.
-                                -- If @pCounterBuffers@ is @NULL@, then transform feedback will start
+                             -> -- | @pCounterBuffers@ is @NULL@ or a pointer to an array of
+                                -- 'Vulkan.Core10.Handles.Buffer' handles to counter buffers. Each buffer
+                                -- contains a 4 byte integer value representing the byte offset from the
+                                -- start of the corresponding transform feedback buffer from where to start
+                                -- capturing vertex data. If the byte offset stored to the counter buffer
+                                -- location was done using 'cmdEndTransformFeedbackEXT' it can be used to
+                                -- resume transform feedback from the previous location. If
+                                -- @pCounterBuffers@ is @NULL@, then transform feedback will start
                                 -- capturing vertex data to byte offset zero in all bound transform
                                 -- feedback buffers. For each element of @pCounterBuffers@ that is
                                 -- 'Vulkan.Core10.APIConstants.NULL_HANDLE', transform feedback will start
                                 -- capturing vertex data to byte zero in the corresponding bound transform
                                 -- feedback buffer.
                                 ("counterBuffers" ::: Vector Buffer)
-                             -> -- | @pCounterBufferOffsets@ is an optional array of offsets within each of
-                                -- the @pCounterBuffers@ where the counter values were previously written.
-                                -- The location in each counter buffer at these offsets /must/ be large
-                                -- enough to contain 4 bytes of data. This data is the number of bytes
-                                -- captured by the previous transform feedback to this buffer. If
-                                -- @pCounterBufferOffsets@ is @NULL@, then it is assumed the offsets are
-                                -- zero.
+                             -> -- | @pCounterBufferOffsets@ is @NULL@ or a pointer to an array of
+                                -- 'Vulkan.Core10.FundamentalTypes.DeviceSize' values specifying offsets
+                                -- within each of the @pCounterBuffers@ where the counter values were
+                                -- previously written. The location in each counter buffer at these offsets
+                                -- /must/ be large enough to contain 4 bytes of data. This data is the
+                                -- number of bytes captured by the previous transform feedback to this
+                                -- buffer. If @pCounterBufferOffsets@ is @NULL@, then it is assumed the
+                                -- offsets are zero.
                                 ("counterBufferOffsets" ::: Vector DeviceSize)
                              -> io ()
 cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers counterBufferOffsets = liftIO . evalContT $ do
-  let vkCmdBeginTransformFeedbackEXTPtr = pVkCmdBeginTransformFeedbackEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBeginTransformFeedbackEXTPtr = pVkCmdBeginTransformFeedbackEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBeginTransformFeedbackEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginTransformFeedbackEXT is null" Nothing Nothing
   let vkCmdBeginTransformFeedbackEXT' = mkVkCmdBeginTransformFeedbackEXT vkCmdBeginTransformFeedbackEXTPtr
@@ -639,12 +652,12 @@ cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers cou
   let pCounterBufferOffsetsLength = Data.Vector.length $ (counterBufferOffsets)
   lift $ unless (fromIntegral pCounterBufferOffsetsLength == pCounterBuffersLength || pCounterBufferOffsetsLength == 0) $
     throwIO $ IOError Nothing InvalidArgument "" "pCounterBufferOffsets and pCounterBuffers must have the same length" Nothing Nothing
-  pPCounterBuffers <- ContT $ allocaBytesAligned @Buffer ((Data.Vector.length (counterBuffers)) * 8) 8
+  pPCounterBuffers <- ContT $ allocaBytes @Buffer ((Data.Vector.length (counterBuffers)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPCounterBuffers `plusPtr` (8 * (i)) :: Ptr Buffer) (e)) (counterBuffers)
   pCounterBufferOffsets <- if Data.Vector.null (counterBufferOffsets)
     then pure nullPtr
     else do
-      pPCounterBufferOffsets <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (counterBufferOffsets))) * 8) 8
+      pPCounterBufferOffsets <- ContT $ allocaBytes @DeviceSize (((Data.Vector.length (counterBufferOffsets))) * 8)
       lift $ Data.Vector.imapM_ (\i e -> poke (pPCounterBufferOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((counterBufferOffsets))
       pure $ pPCounterBufferOffsets
   lift $ traceAroundEvent "vkCmdBeginTransformFeedbackEXT" (vkCmdBeginTransformFeedbackEXT' (commandBufferHandle (commandBuffer)) (firstCounterBuffer) ((fromIntegral pCounterBuffersLength :: Word32)) (pPCounterBuffers) pCounterBufferOffsets)
@@ -749,15 +762,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdEndTransformFeedbackEXT :: forall io
@@ -768,25 +782,28 @@ cmdEndTransformFeedbackEXT :: forall io
                            -> -- | @firstCounterBuffer@ is the index of the first transform feedback buffer
                               -- corresponding to @pCounterBuffers@[0] and @pCounterBufferOffsets@[0].
                               ("firstCounterBuffer" ::: Word32)
-                           -> -- | @pCounterBuffers@ is an optional array of buffer handles to the counter
-                              -- buffers used to record the current byte positions of each transform
+                           -> -- | @pCounterBuffers@ is @NULL@ or a pointer to an array of
+                              -- 'Vulkan.Core10.Handles.Buffer' handles to counter buffers. The counter
+                              -- buffers are used to record the current byte positions of each transform
                               -- feedback buffer where the next vertex output data would be captured.
                               -- This /can/ be used by a subsequent 'cmdBeginTransformFeedbackEXT' call
                               -- to resume transform feedback capture from this position. It can also be
                               -- used by 'cmdDrawIndirectByteCountEXT' to determine the vertex count of
                               -- the draw call.
                               ("counterBuffers" ::: Vector Buffer)
-                           -> -- | @pCounterBufferOffsets@ is an optional array of offsets within each of
-                              -- the @pCounterBuffers@ where the counter values can be written. The
-                              -- location in each counter buffer at these offsets /must/ be large enough
-                              -- to contain 4 bytes of data. The data stored at this location is the byte
-                              -- offset from the start of the transform feedback buffer binding where the
-                              -- next vertex data would be written. If @pCounterBufferOffsets@ is @NULL@,
-                              -- then it is assumed the offsets are zero.
+                           -> -- | @pCounterBufferOffsets@ is @NULL@ or a pointer to an array of
+                              -- 'Vulkan.Core10.FundamentalTypes.DeviceSize' values specifying offsets
+                              -- within each of the @pCounterBuffers@ where the counter values can be
+                              -- written. The location in each counter buffer at these offsets /must/ be
+                              -- large enough to contain 4 bytes of data. The data stored at this
+                              -- location is the byte offset from the start of the transform feedback
+                              -- buffer binding where the next vertex data would be written. If
+                              -- @pCounterBufferOffsets@ is @NULL@, then it is assumed the offsets are
+                              -- zero.
                               ("counterBufferOffsets" ::: Vector DeviceSize)
                            -> io ()
 cmdEndTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers counterBufferOffsets = liftIO . evalContT $ do
-  let vkCmdEndTransformFeedbackEXTPtr = pVkCmdEndTransformFeedbackEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdEndTransformFeedbackEXTPtr = pVkCmdEndTransformFeedbackEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdEndTransformFeedbackEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndTransformFeedbackEXT is null" Nothing Nothing
   let vkCmdEndTransformFeedbackEXT' = mkVkCmdEndTransformFeedbackEXT vkCmdEndTransformFeedbackEXTPtr
@@ -794,12 +811,12 @@ cmdEndTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers count
   let pCounterBufferOffsetsLength = Data.Vector.length $ (counterBufferOffsets)
   lift $ unless (fromIntegral pCounterBufferOffsetsLength == pCounterBuffersLength || pCounterBufferOffsetsLength == 0) $
     throwIO $ IOError Nothing InvalidArgument "" "pCounterBufferOffsets and pCounterBuffers must have the same length" Nothing Nothing
-  pPCounterBuffers <- ContT $ allocaBytesAligned @Buffer ((Data.Vector.length (counterBuffers)) * 8) 8
+  pPCounterBuffers <- ContT $ allocaBytes @Buffer ((Data.Vector.length (counterBuffers)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPCounterBuffers `plusPtr` (8 * (i)) :: Ptr Buffer) (e)) (counterBuffers)
   pCounterBufferOffsets <- if Data.Vector.null (counterBufferOffsets)
     then pure nullPtr
     else do
-      pPCounterBufferOffsets <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (counterBufferOffsets))) * 8) 8
+      pPCounterBufferOffsets <- ContT $ allocaBytes @DeviceSize (((Data.Vector.length (counterBufferOffsets))) * 8)
       lift $ Data.Vector.imapM_ (\i e -> poke (pPCounterBufferOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((counterBufferOffsets))
       pure $ pPCounterBufferOffsets
   lift $ traceAroundEvent "vkCmdEndTransformFeedbackEXT" (vkCmdEndTransformFeedbackEXT' (commandBufferHandle (commandBuffer)) (firstCounterBuffer) ((fromIntegral pCounterBuffersLength :: Word32)) (pPCounterBuffers) pCounterBufferOffsets)
@@ -822,12 +839,6 @@ foreign import ccall
 -- it also accepts a query type specific @index@ parameter.
 --
 -- == Valid Usage
---
--- -   #VUID-vkCmdBeginQueryIndexedEXT-queryPool-01922# @queryPool@ /must/
---     have been created with a @queryType@ that differs from that of any
---     queries that are
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-operation-active active>
---     within @commandBuffer@
 --
 -- -   #VUID-vkCmdBeginQueryIndexedEXT-None-00807# All queries used by the
 --     command /must/ be unavailable
@@ -884,6 +895,12 @@ foreign import ccall
 --     render pass instance, the sum of @query@ and the number of bits set
 --     in the current subpass’s view mask /must/ be less than or equal to
 --     the number of queries in @queryPool@
+--
+-- -   #VUID-vkCmdBeginQueryIndexedEXT-queryPool-04753# If the @queryPool@
+--     was created with the same @queryType@ as that of another
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-operation-active active>
+--     query within @commandBuffer@, then @index@ /must/ not match the
+--     index used for the active query
 --
 -- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-02338# If the @queryType@
 --     used to create @queryPool@ was
@@ -990,15 +1007,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Enums.QueryControlFlagBits.QueryControlFlags',
 -- 'Vulkan.Core10.Handles.QueryPool'
@@ -1022,7 +1040,7 @@ cmdBeginQueryIndexedEXT :: forall io
                            ("index" ::: Word32)
                         -> io ()
 cmdBeginQueryIndexedEXT commandBuffer queryPool query flags index = liftIO $ do
-  let vkCmdBeginQueryIndexedEXTPtr = pVkCmdBeginQueryIndexedEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBeginQueryIndexedEXTPtr = pVkCmdBeginQueryIndexedEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdBeginQueryIndexedEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginQueryIndexedEXT is null" Nothing Nothing
   let vkCmdBeginQueryIndexedEXT' = mkVkCmdBeginQueryIndexedEXT vkCmdBeginQueryIndexedEXTPtr
@@ -1120,15 +1138,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'Vulkan.Core10.Handles.QueryPool'
 cmdEndQueryIndexedEXT :: forall io
                        . (MonadIO io)
@@ -1144,7 +1163,7 @@ cmdEndQueryIndexedEXT :: forall io
                          ("index" ::: Word32)
                       -> io ()
 cmdEndQueryIndexedEXT commandBuffer queryPool query index = liftIO $ do
-  let vkCmdEndQueryIndexedEXTPtr = pVkCmdEndQueryIndexedEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdEndQueryIndexedEXTPtr = pVkCmdEndQueryIndexedEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdEndQueryIndexedEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndQueryIndexedEXT is null" Nothing Nothing
   let vkCmdEndQueryIndexedEXT' = mkVkCmdEndQueryIndexedEXT vkCmdEndQueryIndexedEXTPtr
@@ -1159,8 +1178,9 @@ foreign import ccall
   "dynamic" mkVkCmdDrawIndirectByteCountEXT
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Buffer -> DeviceSize -> Word32 -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Buffer -> DeviceSize -> Word32 -> Word32 -> IO ()
 
--- | vkCmdDrawIndirectByteCountEXT - Draw primitives where the vertex count
--- is derived from the counter byte value in the counter buffer
+-- | vkCmdDrawIndirectByteCountEXT - Draw primitives with indirect parameters
+-- where the vertex count is derived from the counter byte value in the
+-- counter buffer
 --
 -- = Description
 --
@@ -1188,6 +1208,24 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-mipmapMode-04770# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-06479# If a
+--     'Vulkan.Core10.Handles.ImageView' is sampled with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-depth-compare-operation depth comparison>,
+--     the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR'
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-02691# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
@@ -1237,6 +1275,22 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-OpTypeImage-06423# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being written as a storage image
+--     or storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-OpTypeImage-06424# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
+--     storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-02697# For each set /n/
 --     that is statically used by the 'Vulkan.Core10.Handles.Pipeline'
 --     bound to the pipeline bind point used by this command, a descriptor
@@ -1246,11 +1300,12 @@ foreign import ccall
 --     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-02698# For each push
---     constant that is statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command, a push constant value /must/ have been set for
---     the same pipeline bind point, with a
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-maintenance4-06425# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
+--     feature is not enabled, then for each push constant that is
+--     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
+--     pipeline bind point used by this command, a push constant value
+--     /must/ have been set for the same pipeline bind point, with a
 --     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for push
 --     constants, with the 'Vulkan.Core10.Handles.PipelineLayout' used to
 --     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
@@ -1269,9 +1324,10 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set for @commandBuffer@, and done so after any
---     previously bound pipeline with the corresponding state not specified
---     as dynamic
+--     /must/ have been set or inherited (if the
+--     @VK_NV_inherited_viewport_scissor@ extension is enabled) for
+--     @commandBuffer@, and done so after any previously bound pipeline
+--     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-02859# There /must/ not
 --     have been any calls to dynamic state setting commands for any state
@@ -1326,50 +1382,51 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-commandBuffer-02707# If
---     @commandBuffer@ is an unprotected command buffer, any resource
---     accessed by the 'Vulkan.Core10.Handles.Pipeline' object bound to the
---     pipeline bind point used by this command /must/ not be a protected
---     resource
+--     @commandBuffer@ is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command /must/ not be a protected resource
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-04115# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     image view’s format
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-OpImageWrite-04469# If a
 --     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     buffer view’s format
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-SampledType-04471# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-SampledType-04472# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-SampledType-04473# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-sparseImageInt64Atomics-04474#
 --     If the
@@ -1379,7 +1436,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-sparseImageInt64Atomics-04475#
 --     If the
@@ -1389,7 +1446,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-renderPass-02684# The current
 --     render pass /must/ be
@@ -1441,7 +1498,7 @@ foreign import ccall
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@scissorCount@
@@ -1455,7 +1512,7 @@ foreign import ccall
 --     dynamic state enabled, then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @scissorCount@ parameter of
+--     drawing command, and the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@viewportCount@
@@ -1471,7 +1528,7 @@ foreign import ccall
 --     and
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ match the @scissorCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
@@ -1527,10 +1584,10 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-VkPipelineVieportCreateInfo-04141#
 --     If the bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
---     dynamic state enabled and an instance of
+--     dynamic state enabled and a
 --     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'
---     chained from @VkPipelineVieportCreateInfo@, then the bound graphics
---     pipeline /must/ have been created with
+--     structure chained from @VkPipelineVieportCreateInfo@, then the bound
+--     graphics pipeline /must/ have been created with
 --     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'::@viewportCount@
 --     greater or equal to the @viewportCount@ parameter in the last call
 --     to
@@ -1539,28 +1596,39 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-VkPipelineVieportCreateInfo-04142#
 --     If the bound graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
---     dynamic state enabled and an instance of
+--     dynamic state enabled and a
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'
---     chained from @VkPipelineVieportCreateInfo@, then the bound graphics
---     pipeline /must/ have been created with
+--     structure chained from @VkPipelineVieportCreateInfo@, then the bound
+--     graphics pipeline /must/ have been created with
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'::@exclusiveScissorCount@
 --     greater or equal to the @viewportCount@ parameter in the last call
 --     to
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --
--- -   #VUID-vkCmdDrawIndirectByteCountEXT-primitiveTopology-03420# If the
---     bound graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-04876# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT'
 --     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @primitiveTopology@ parameter of
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
---     /must/ be of the same
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
---     as the pipeline
---     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
---     state
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-04877# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-logicOp-04878# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command and the @logicOp@ /must/ be a valid
+--     'Vulkan.Core10.Enums.LogicOp.LogicOp' value
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-primitiveFragmentShadingRateWithMultipleViewports-04552#
 --     If the
@@ -1573,7 +1641,7 @@ foreign import ccall
 --     then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ have been called in the current command buffer prior to this
---     draw command, and the @viewportCount@ parameter of
+--     drawing command, and the @viewportCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
 --     /must/ be @1@
 --
@@ -1587,6 +1655,250 @@ foreign import ccall
 --     then the @blendEnable@ member of the corresponding element of the
 --     @pAttachments@ member of @pColorBlendState@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-rasterizationSamples-04740# If
+--     rasterization is not disabled in the bound graphics pipeline, and
+--     neither the @VK_AMD_mixed_attachment_samples@ nor the
+--     @VK_NV_framebuffer_mixed_samples@ extensions are enabled, then
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     /must/ be the same as the current subpass color and\/or
+--     depth\/stencil attachments
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-imageView-06172# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pDepthAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pDepthAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the depth attachment
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-imageView-06173# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pStencilAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pStencilAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the stencil attachment
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-imageView-06174# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pDepthAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pDepthAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL',
+--     this command /must/ not write any values to the depth attachment
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-imageView-06175# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pStencilAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pStencilAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the stencil attachment
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-imageView-06176# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pDepthAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pDepthAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the depth attachment
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-imageView-06177# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the @imageView@ member of @pStencilAttachment@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
+--     @pStencilAttachment@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL',
+--     this command /must/ not write any values to the stencil attachment
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-viewMask-06178# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound graphics pipeline /must/ have been created with
+--     a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@viewMask@
+--     equal to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@viewMask@
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-colorAttachmentCount-06179# If
+--     the current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound graphics pipeline /must/ have been created with
+--     a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@colorAttachmentCount@
+--     equal to
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-colorAttachmentCount-06180# If
+--     the current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     greater than @0@, then each element of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     array with a @imageView@ not equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
+--     with a 'Vulkan.Core10.Enums.Format.Format' equal to the
+--     corresponding element of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@pColorAttachmentFormats@
+--     used to create the currently bound graphics pipeline
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-pDepthAttachment-06181# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@depthAttachmentFormat@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the 'Vulkan.Core10.Enums.Format.Format' used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-pStencilAttachment-06182# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@stencilAttachmentFormat@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the 'Vulkan.Core10.Enums.Format.Format' used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-imageView-06183# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'::@imageView@
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
+--     bound graphics pipeline /must/ have been created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-imageView-06184# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'::@imageView@
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
+--     bound graphics pipeline /must/ have been created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-colorAttachmentCount-06185# If
+--     the currently bound pipeline was created with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and the current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     parameter greater than @0@, then each element of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     array with a @imageView@ not equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
+--     with a sample count equal to the corresponding element of the
+--     @pColorAttachmentSamples@ member of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     used to create the currently bound graphics pipeline
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-pDepthAttachment-06186# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
+--     @depthStencilAttachmentSamples@ member of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-pStencilAttachment-06187# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
+--     @depthStencilAttachmentSamples@ member of
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-colorAttachmentCount-06188# If
+--     the currently bound pipeline was created without a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and the current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     with a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     parameter greater than @0@, then each element of the
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     array with a @imageView@ not equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
+--     with a sample count equal to the value of
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     used to create the currently bound graphics pipeline
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-pDepthAttachment-06189# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created without a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-pStencilAttachment-06190# If the
+--     current render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline was created without a
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
+--     or
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
+--     structure, and
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to the sample count used to create
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-renderPass-06198# If the current
+--     render pass instance was begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     the currently bound pipeline /must/ have been created with a
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@renderPass@
+--     equal to 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-04007# All vertex input
 --     bindings accessed via vertex input variables declared in the vertex
@@ -1604,6 +1916,76 @@ foreign import ccall
 --     contained within the corresponding vertex buffer binding, as
 --     described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input ???>
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-primitiveTopology-03420# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @primitiveTopology@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     /must/ be of the same
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
+--     as the pipeline
+--     'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@topology@
+--     state
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-04912# If the bound
+--     graphics pipeline was created with both the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--     dynamic states enabled, then
+--     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-pStrides-04913# If the bound
+--     graphics pipeline was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--     dynamic state enabled, but not the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     dynamic state enabled, then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command, and the @pStrides@ parameter of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+--     /must/ not be @NULL@
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-04914# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
+--     dynamic state enabled, then
+--     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     draw command
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-04875# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPatchControlPointsEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-04879# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-stage-06481# The bound graphics
+--     pipeline /must/ not have been created with the
+--     'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo'::@stage@
+--     member of an element of
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pStages@ set
+--     to
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_NV'
+--     or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_NV'
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-transformFeedback-02287#
 --     'PhysicalDeviceTransformFeedbackFeaturesEXT'::@transformFeedback@
@@ -1668,15 +2050,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              | Graphics                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdDrawIndirectByteCountEXT :: forall io
@@ -1705,7 +2088,7 @@ cmdDrawIndirectByteCountEXT :: forall io
                                ("vertexStride" ::: Word32)
                             -> io ()
 cmdDrawIndirectByteCountEXT commandBuffer instanceCount firstInstance counterBuffer counterBufferOffset counterOffset vertexStride = liftIO $ do
-  let vkCmdDrawIndirectByteCountEXTPtr = pVkCmdDrawIndirectByteCountEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdDrawIndirectByteCountEXTPtr = pVkCmdDrawIndirectByteCountEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDrawIndirectByteCountEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawIndirectByteCountEXT is null" Nothing Nothing
   let vkCmdDrawIndirectByteCountEXT' = mkVkCmdDrawIndirectByteCountEXT vkCmdDrawIndirectByteCountEXTPtr
@@ -1718,23 +2101,25 @@ cmdDrawIndirectByteCountEXT commandBuffer instanceCount firstInstance counterBuf
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceTransformFeedbackFeaturesEXT'
--- structure describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceTransformFeedbackFeaturesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceTransformFeedbackFeaturesEXT' /can/ also be included in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- features.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceTransformFeedbackFeaturesEXT' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceTransformFeedbackFeaturesEXT = PhysicalDeviceTransformFeedbackFeaturesEXT
@@ -1753,7 +2138,7 @@ deriving instance Generic (PhysicalDeviceTransformFeedbackFeaturesEXT)
 deriving instance Show PhysicalDeviceTransformFeedbackFeaturesEXT
 
 instance ToCStruct PhysicalDeviceTransformFeedbackFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceTransformFeedbackFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1791,22 +2176,21 @@ instance Zero PhysicalDeviceTransformFeedbackFeaturesEXT where
 -- | VkPhysicalDeviceTransformFeedbackPropertiesEXT - Structure describing
 -- transform feedback properties that can be supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceTransformFeedbackPropertiesEXT'
--- structure describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceTransformFeedbackPropertiesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits and properties.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -1820,7 +2204,8 @@ data PhysicalDeviceTransformFeedbackPropertiesEXT = PhysicalDeviceTransformFeedb
     maxTransformFeedbackStreams :: Word32
   , -- | #limits-maxTransformFeedbackBuffers# @maxTransformFeedbackBuffers@ is
     -- the maximum number of transform feedback buffers that can be bound for
-    -- capturing shader outputs from the last vertex processing stage.
+    -- capturing shader outputs from the last
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>.
     maxTransformFeedbackBuffers :: Word32
   , -- | #limits-maxTransformFeedbackBufferSize# @maxTransformFeedbackBufferSize@
     -- is the maximum size that can be specified when binding a buffer for
@@ -1840,31 +2225,35 @@ data PhysicalDeviceTransformFeedbackPropertiesEXT = PhysicalDeviceTransformFeedb
     -- @maxTransformFeedbackBufferDataStride@ is the maximum stride between
     -- each capture of vertex data to the buffer.
     maxTransformFeedbackBufferDataStride :: Word32
-  , -- | #limits-transformFeedbackQueries# @transformFeedbackQueries@ is true if
-    -- the implementation supports the
+  , -- | #limits-transformFeedbackQueries# @transformFeedbackQueries@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the implementation supports the
     -- 'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT'
-    -- query type. @transformFeedbackQueries@ is false if queries of this type
-    -- /cannot/ be created.
+    -- query type. @transformFeedbackQueries@ is
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE' if queries of this type /cannot/
+    -- be created.
     transformFeedbackQueries :: Bool
   , -- | #limits-transformFeedbackStreamsLinesTriangles#
-    -- @transformFeedbackStreamsLinesTriangles@ is true if the implementation
-    -- supports the geometry shader @OpExecutionMode@ of @OutputLineStrip@ and
+    -- @transformFeedbackStreamsLinesTriangles@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the implementation supports the
+    -- geometry shader @OpExecutionMode@ of @OutputLineStrip@ and
     -- @OutputTriangleStrip@ in addition to @OutputPoints@ when more than one
     -- vertex stream is output. If @transformFeedbackStreamsLinesTriangles@ is
-    -- false the implementation only supports an @OpExecutionMode@ of
-    -- @OutputPoints@ when more than one vertex stream is output from the
-    -- geometry shader.
+    -- 'Vulkan.Core10.FundamentalTypes.FALSE' the implementation only supports
+    -- an @OpExecutionMode@ of @OutputPoints@ when more than one vertex stream
+    -- is output from the geometry shader.
     transformFeedbackStreamsLinesTriangles :: Bool
   , -- | #limits-transformFeedbackRasterizationStreamSelect#
-    -- @transformFeedbackRasterizationStreamSelect@ is true if the
-    -- implementation supports the @GeometryStreams@ SPIR-V capability and the
-    -- application can use 'PipelineRasterizationStateStreamCreateInfoEXT' to
-    -- modify which vertex stream output is used for rasterization. Otherwise
-    -- vertex stream @0@ /must/ always be used for rasterization.
+    -- @transformFeedbackRasterizationStreamSelect@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the implementation supports the
+    -- @GeometryStreams@ SPIR-V capability and the application can use
+    -- 'PipelineRasterizationStateStreamCreateInfoEXT' to modify which vertex
+    -- stream output is used for rasterization. Otherwise vertex stream @0@
+    -- /must/ always be used for rasterization.
     transformFeedbackRasterizationStreamSelect :: Bool
-  , -- | #limits-transformFeedbackDraw# @transformFeedbackDraw@ is true if the
-    -- implementation supports the 'cmdDrawIndirectByteCountEXT' function
-    -- otherwise the function /must/ not be called.
+  , -- | #limits-transformFeedbackDraw# @transformFeedbackDraw@ is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the implementation supports the
+    -- 'cmdDrawIndirectByteCountEXT' function otherwise the function /must/ not
+    -- be called.
     transformFeedbackDraw :: Bool
   }
   deriving (Typeable, Eq)
@@ -1874,7 +2263,7 @@ deriving instance Generic (PhysicalDeviceTransformFeedbackPropertiesEXT)
 deriving instance Show PhysicalDeviceTransformFeedbackPropertiesEXT
 
 instance ToCStruct PhysicalDeviceTransformFeedbackPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceTransformFeedbackPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1953,6 +2342,7 @@ instance Zero PhysicalDeviceTransformFeedbackPropertiesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>,
 -- 'PipelineRasterizationStateStreamCreateFlagsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineRasterizationStateStreamCreateInfoEXT = PipelineRasterizationStateStreamCreateInfoEXT
@@ -1980,7 +2370,7 @@ deriving instance Generic (PipelineRasterizationStateStreamCreateInfoEXT)
 deriving instance Show PipelineRasterizationStateStreamCreateInfoEXT
 
 instance ToCStruct PipelineRasterizationStateStreamCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineRasterizationStateStreamCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -2024,6 +2414,7 @@ instance Zero PipelineRasterizationStateStreamCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>,
 -- 'PipelineRasterizationStateStreamCreateInfoEXT'
 newtype PipelineRasterizationStateStreamCreateFlagsEXT = PipelineRasterizationStateStreamCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_discard_rectangles:%20&body=@pdaniell-nv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_discard_rectangles] @pdaniell-nv%0A<<Here describe the issue or question you have about the VK_EXT_discard_rectangles extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -109,7 +109,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'DiscardRectangleModeEXT',
 -- 'PhysicalDeviceDiscardRectanglePropertiesEXT',
@@ -117,7 +117,7 @@
 -- 'PipelineDiscardRectangleStateCreateInfoEXT',
 -- 'cmdSetDiscardRectangleEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_discard_rectangles Vulkan Specification>

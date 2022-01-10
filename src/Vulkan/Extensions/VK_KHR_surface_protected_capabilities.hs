@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Sandeep Shinde
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_surface_protected_capabilities:%20&body=@sashinde%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_surface_protected_capabilities] @sashinde%0A<<Here describe the issue or question you have about the VK_KHR_surface_protected_capabilities extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -96,11 +96,11 @@
 --
 --     -   Internal revisions.
 --
--- = See Also
+-- == See Also
 --
 -- 'SurfaceProtectedCapabilitiesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface_protected_capabilities Vulkan Specification>
@@ -114,7 +114,7 @@ module Vulkan.Extensions.VK_KHR_surface_protected_capabilities  ( SurfaceProtect
                                                                 , pattern KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME
                                                                 ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -143,6 +143,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SURFACE_P
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface_protected_capabilities VK_KHR_surface_protected_capabilities>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SurfaceProtectedCapabilitiesKHR = SurfaceProtectedCapabilitiesKHR
@@ -161,7 +162,7 @@ deriving instance Generic (SurfaceProtectedCapabilitiesKHR)
 deriving instance Show SurfaceProtectedCapabilitiesKHR
 
 instance ToCStruct SurfaceProtectedCapabilitiesKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SurfaceProtectedCapabilitiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

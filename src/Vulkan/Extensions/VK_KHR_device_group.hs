@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_device_group:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_device_group] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_KHR_device_group extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -148,7 +148,8 @@
 --
 --     -   'MemoryAllocateFlagsInfoKHR'
 --
--- -   Extending 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo':
+-- -   Extending 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo',
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR':
 --
 --     -   'DeviceGroupRenderPassBeginInfoKHR'
 --
@@ -342,10 +343,10 @@
 --
 -- -   Revision 4, 2017-10-10 (Jeff Bolz)
 --
---     -   Rename \"SFR\" bits and structure members to use the phrase
---         \"split instance bind regions\".
+--     -   Rename “SFR” bits and structure members to use the phrase “split
+--         instance bind regions”.
 --
--- = See Also
+-- == See Also
 --
 -- 'DeviceGroupBindSparseInfoKHR', 'DeviceGroupCommandBufferBeginInfoKHR',
 -- 'DeviceGroupRenderPassBeginInfoKHR', 'DeviceGroupSubmitInfoKHR',
@@ -354,7 +355,7 @@
 -- 'PeerMemoryFeatureFlagsKHR', 'cmdDispatchBaseKHR',
 -- 'cmdSetDeviceMaskKHR', 'getDeviceGroupPeerMemoryFeaturesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group Vulkan Specification>

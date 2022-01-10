@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_inline_uniform_block:%20&body=@aqnuep%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_inline_uniform_block] @aqnuep%0A<<Here describe the issue or question you have about the VK_EXT_inline_uniform_block extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -53,9 +53,9 @@
 -- This extension introduces the ability to back uniform blocks directly
 -- with descriptor sets by storing inline uniform data within descriptor
 -- pool storage. Compared to push constants this new construct allows
--- uniform data to be reused across multiple disjoint sets of draw or
--- dispatch commands and /may/ enable uniform data to be accessed with less
--- indirections compared to uniforms backed by buffer memory.
+-- uniform data to be reused across multiple disjoint sets of drawing or
+-- dispatching commands and /may/ enable uniform data to be accessed with
+-- fewer indirections compared to uniforms backed by buffer memory.
 --
 -- == New Structures
 --
@@ -160,14 +160,14 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'DescriptorPoolInlineUniformBlockCreateInfoEXT',
 -- 'PhysicalDeviceInlineUniformBlockFeaturesEXT',
 -- 'PhysicalDeviceInlineUniformBlockPropertiesEXT',
 -- 'WriteDescriptorSetInlineUniformBlockEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_inline_uniform_block Vulkan Specification>

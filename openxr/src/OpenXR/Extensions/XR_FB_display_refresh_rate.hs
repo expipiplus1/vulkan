@@ -48,7 +48,7 @@ import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -97,6 +97,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.Core10.Enums.StructureType (StructureType)
 import OpenXR.Core10.Enums.Result (Result(SUCCESS))
@@ -141,9 +142,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrEnumerateDisplayRefreshRatesFB-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
---     'enumerateDisplayRefreshRatesFB'
+-- -   #VUID-xrEnumerateDisplayRefreshRatesFB-extension-notenabled# The
+--     @XR_FB_display_refresh_rate@ extension /must/ be enabled prior to
+--     calling 'enumerateDisplayRefreshRatesFB'
 --
 -- -   #VUID-xrEnumerateDisplayRefreshRatesFB-session-parameter# @session@
 --     /must/ be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -191,7 +192,7 @@ enumerateDisplayRefreshRatesFB :: forall io
                                   Session
                                -> io (Result, ("displayRefreshRates" ::: Vector Float))
 enumerateDisplayRefreshRatesFB session = liftIO . evalContT $ do
-  let xrEnumerateDisplayRefreshRatesFBPtr = pXrEnumerateDisplayRefreshRatesFB (instanceCmds (session :: Session))
+  let xrEnumerateDisplayRefreshRatesFBPtr = pXrEnumerateDisplayRefreshRatesFB (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrEnumerateDisplayRefreshRatesFBPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEnumerateDisplayRefreshRatesFB is null" Nothing Nothing
   let xrEnumerateDisplayRefreshRatesFB' = mkXrEnumerateDisplayRefreshRatesFB xrEnumerateDisplayRefreshRatesFBPtr
@@ -227,9 +228,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrGetDisplayRefreshRateFB-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
---     'getDisplayRefreshRateFB'
+-- -   #VUID-xrGetDisplayRefreshRateFB-extension-notenabled# The
+--     @XR_FB_display_refresh_rate@ extension /must/ be enabled prior to
+--     calling 'getDisplayRefreshRateFB'
 --
 -- -   #VUID-xrGetDisplayRefreshRateFB-session-parameter# @session@ /must/
 --     be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -269,7 +270,7 @@ getDisplayRefreshRateFB :: forall io
                            Session
                         -> io (Result, ("displayRefreshRate" ::: Float))
 getDisplayRefreshRateFB session = liftIO . evalContT $ do
-  let xrGetDisplayRefreshRateFBPtr = pXrGetDisplayRefreshRateFB (instanceCmds (session :: Session))
+  let xrGetDisplayRefreshRateFBPtr = pXrGetDisplayRefreshRateFB (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetDisplayRefreshRateFBPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetDisplayRefreshRateFB is null" Nothing Nothing
   let xrGetDisplayRefreshRateFB' = mkXrGetDisplayRefreshRateFB xrGetDisplayRefreshRateFBPtr
@@ -306,9 +307,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrRequestDisplayRefreshRateFB-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
---     'requestDisplayRefreshRateFB'
+-- -   #VUID-xrRequestDisplayRefreshRateFB-extension-notenabled# The
+--     @XR_FB_display_refresh_rate@ extension /must/ be enabled prior to
+--     calling 'requestDisplayRefreshRateFB'
 --
 -- -   #VUID-xrRequestDisplayRefreshRateFB-session-parameter# @session@
 --     /must/ be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -353,7 +354,7 @@ requestDisplayRefreshRateFB :: forall io
                                ("displayRefreshRate" ::: Float)
                             -> io (Result)
 requestDisplayRefreshRateFB session displayRefreshRate = liftIO $ do
-  let xrRequestDisplayRefreshRateFBPtr = pXrRequestDisplayRefreshRateFB (instanceCmds (session :: Session))
+  let xrRequestDisplayRefreshRateFBPtr = pXrRequestDisplayRefreshRateFB (case session of Session{instanceCmds} -> instanceCmds)
   unless (xrRequestDisplayRefreshRateFBPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrRequestDisplayRefreshRateFB is null" Nothing Nothing
   let xrRequestDisplayRefreshRateFB' = mkXrRequestDisplayRefreshRateFB xrRequestDisplayRefreshRateFBPtr
@@ -368,8 +369,8 @@ requestDisplayRefreshRateFB session displayRefreshRate = liftIO $ do
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrEventDataDisplayRefreshRateChangedFB-extension-notenabled#
---     The @@ extension /must/ be enabled prior to using
---     'EventDataDisplayRefreshRateChangedFB'
+--     The @XR_FB_display_refresh_rate@ extension /must/ be enabled prior
+--     to using 'EventDataDisplayRefreshRateChangedFB'
 --
 -- -   #VUID-XrEventDataDisplayRefreshRateChangedFB-type-type# @type@
 --     /must/ be
@@ -399,7 +400,7 @@ instance IsEventData EventDataDisplayRefreshRateChangedFB where
   toEventDataBaseHeader EventDataDisplayRefreshRateChangedFB{} = EventDataBaseHeader{type' = TYPE_EVENT_DATA_DISPLAY_REFRESH_RATE_CHANGED_FB}
 
 instance ToCStruct EventDataDisplayRefreshRateChangedFB where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p EventDataDisplayRefreshRateChangedFB{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_EVENT_DATA_DISPLAY_REFRESH_RATE_CHANGED_FB)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

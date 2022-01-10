@@ -29,7 +29,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_vulkan_memory_model:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_vulkan_memory_model] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_KHR_vulkan_memory_model extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -115,11 +115,11 @@
 --     -   Add vulkanMemoryModelAvailabilityVisibilityChains member to the
 --         VkPhysicalDeviceVulkanMemoryModelFeaturesKHR structure.
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceVulkanMemoryModelFeaturesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_vulkan_memory_model Vulkan Specification>

@@ -10,7 +10,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
@@ -47,6 +47,7 @@ import Vulkan.Core10.DescriptorSet (DescriptorSetLayoutCreateInfo)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing (DescriptorSetVariableDescriptorCountLayoutSupport)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetDescriptorSetLayoutSupport))
 import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
@@ -106,6 +107,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo',
 -- 'DescriptorSetLayoutSupport', 'Vulkan.Core10.Handles.Device'
 getDescriptorSetLayoutSupport :: forall a b io
@@ -126,7 +128,7 @@ getDescriptorSetLayoutSupport :: forall a b io
                                  (DescriptorSetLayoutCreateInfo a)
                               -> io (DescriptorSetLayoutSupport b)
 getDescriptorSetLayoutSupport device createInfo = liftIO . evalContT $ do
-  let vkGetDescriptorSetLayoutSupportPtr = pVkGetDescriptorSetLayoutSupport (deviceCmds (device :: Device))
+  let vkGetDescriptorSetLayoutSupportPtr = pVkGetDescriptorSetLayoutSupport (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDescriptorSetLayoutSupportPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDescriptorSetLayoutSupport is null" Nothing Nothing
   let vkGetDescriptorSetLayoutSupport' = mkVkGetDescriptorSetLayoutSupport vkGetDescriptorSetLayoutSupportPtr
@@ -140,22 +142,21 @@ getDescriptorSetLayoutSupport device createInfo = liftIO . evalContT $ do
 -- | VkPhysicalDeviceMaintenance3Properties - Structure describing descriptor
 -- set properties
 --
--- = Members
---
--- The members of the 'PhysicalDeviceMaintenance3Properties' structure
--- describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceMaintenance3Properties' structure is included in
--- the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMaintenance3Properties = PhysicalDeviceMaintenance3Properties
@@ -178,7 +179,7 @@ deriving instance Generic (PhysicalDeviceMaintenance3Properties)
 deriving instance Show PhysicalDeviceMaintenance3Properties
 
 instance ToCStruct PhysicalDeviceMaintenance3Properties where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceMaintenance3Properties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -236,6 +237,7 @@ instance Zero PhysicalDeviceMaintenance3Properties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getDescriptorSetLayoutSupport',
@@ -255,7 +257,7 @@ deriving instance Show (Chain es) => Show (DescriptorSetLayoutSupport es)
 
 instance Extensible DescriptorSetLayoutSupport where
   extensibleTypeName = "DescriptorSetLayoutSupport"
-  setNext x next = x{next = next}
+  setNext DescriptorSetLayoutSupport{..} next' = DescriptorSetLayoutSupport{next = next', ..}
   getNext DescriptorSetLayoutSupport{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DescriptorSetLayoutSupport e => b) -> Maybe b
   extends _ f
@@ -263,7 +265,7 @@ instance Extensible DescriptorSetLayoutSupport where
     | otherwise = Nothing
 
 instance (Extendss DescriptorSetLayoutSupport es, PokeChain es) => ToCStruct (DescriptorSetLayoutSupport es) where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorSetLayoutSupport{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT)
     pNext'' <- fmap castPtr . ContT $ withChain (next)

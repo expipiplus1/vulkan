@@ -15,7 +15,7 @@
 --     151
 --
 -- [__Revision__]
---     11
+--     13
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -30,14 +30,16 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_acceleration_structure:%20&body=@dgkoch%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_acceleration_structure] @dgkoch%0A<<Here describe the issue or question you have about the VK_KHR_acceleration_structure extension>> >
 --
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2020-11-12
+--     2021-09-30
 --
 -- [__Contributors__]
+--
+--     -   Samuel Bourasseau, Adobe
 --
 --     -   Matthäus Chajdas, AMD
 --
@@ -349,6 +351,14 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- is supported:
+--
+-- -   Extending 'FormatFeatureFlagBits2KHR':
+--
+--     -   'FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR'
+--
 -- == Issues
 --
 -- (1) How does this extension differ from VK_NV_ray_tracing?
@@ -466,7 +476,7 @@
 --
 --     -   'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureCreateInfoNV'
 --         → 'AccelerationStructureCreateInfoKHR' (reshuffle geometry
---         layout\/info)
+--         layout\/information)
 --
 --     -   'Vulkan.Extensions.VK_NV_ray_tracing.PhysicalDeviceRayTracingPropertiesNV'
 --         → 'PhysicalDeviceAccelerationStructurePropertiesKHR' (for
@@ -486,7 +496,7 @@
 --
 --     -   'Vulkan.Extensions.VK_NV_ray_tracing.createAccelerationStructureNV'
 --         → 'createAccelerationStructureKHR' (device address, different
---         geometry layout\/info)
+--         geometry layout\/information)
 --
 --     -   'Vulkan.Extensions.VK_NV_ray_tracing.getAccelerationStructureMemoryRequirementsNV'
 --         (deleted - replaced by allocating on top of
@@ -609,10 +619,8 @@
 -- -   change 'cmdBuildAccelerationStructuresIndirectKHR' to use buffer
 --     device address for indirect parameter
 --
--- -   make
---     <VK_KHR_deferred_host_operations.html VK_KHR_deferred_host_operations>
---     an interaction instead of a required extension (later went back on
---     this)
+-- -   make @VK_KHR_deferred_host_operations@ an interaction instead of a
+--     required extension (later went back on this)
 --
 -- -   renamed @VkAccelerationStructureBuildOffsetInfoKHR@ to
 --     'AccelerationStructureBuildRangeInfoKHR'
@@ -669,14 +677,13 @@
 --         that the implementation can modify such parameters until the
 --         deferred host operation completes
 --
---     -   <VK_KHR_deferred_host_operations.html VK_KHR_deferred_host_operations>
---         is required again
+--     -   @VK_KHR_deferred_host_operations@ is required again
 --
 -- -   Change acceleration structure build to always be sized
 --
 --     -   de-alias
 --         'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureMemoryRequirementsTypeNV'
---         and @VkAccelerationStructureMemoryRequirementsTypeKHR@ and
+--         and @VkAccelerationStructureMemoryRequirementsTypeKHR@, and
 --         remove @VkAccelerationStructureMemoryRequirementsTypeKHR@
 --
 --     -   add 'getAccelerationStructureBuildSizesKHR' command and
@@ -705,33 +712,30 @@
 --     implementation flexibility and decoupling ray query support from ray
 --     pipelines:
 --
---     -   <VK_KHR_acceleration_structure.html VK_KHR_acceleration_structure>
---         (for acceleration structure operations)
+--     -   @VK_KHR_acceleration_structure@ (for acceleration structure
+--         operations)
 --
---     -   <VK_KHR_ray_tracing_pipeline.html VK_KHR_ray_tracing_pipeline>
---         (for ray tracing pipeline and shader stages)
+--     -   @VK_KHR_ray_tracing_pipeline@ (for ray tracing pipeline and
+--         shader stages)
 --
---     -   <VK_KHR_ray_query.html VK_KHR_ray_query> (for ray queries in
---         existing shader stages)
+--     -   @VK_KHR_ray_query@ (for ray queries in existing shader stages)
 --
 -- -   clarify buffer usage flags for ray tracing
 --
 --     -   'Vulkan.Extensions.VK_NV_ray_tracing.BUFFER_USAGE_RAY_TRACING_BIT_NV'
---         is left alone in <VK_NV_ray_tracing.html VK_NV_ray_tracing>
---         (required on @scratch@ and @instanceData@)
+--         is left alone in @VK_NV_ray_tracing@ (required on @scratch@ and
+--         @instanceData@)
 --
 --     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR'
 --         is added as an alias of
 --         'Vulkan.Extensions.VK_NV_ray_tracing.BUFFER_USAGE_RAY_TRACING_BIT_NV'
---         in
---         <VK_KHR_ray_tracing_pipeline.html VK_KHR_ray_tracing_pipeline>
---         and is required on shader binding table buffers
+--         in @VK_KHR_ray_tracing_pipeline@ and is required on shader
+--         binding table buffers
 --
 --     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR'
---         is added in
---         <VK_KHR_acceleration_structure.html VK_KHR_acceleration_structure>
---         for all vertex, index, transform, aabb, and instance buffer data
---         referenced by device build commands
+--         is added in @VK_KHR_acceleration_structure@ for all vertex,
+--         index, transform, aabb, and instance buffer data referenced by
+--         device build commands
 --
 --     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_BUFFER_BIT'
 --         is used for @scratchData@
@@ -743,7 +747,8 @@
 --     constrain the device address
 --
 --     -   de-alias
---         'Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV',
+--         'Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV'
+--         and
 --         'Vulkan.Extensions.VK_NV_ray_tracing.bindAccelerationStructureMemoryNV',
 --         and remove @VkBindAccelerationStructureMemoryInfoKHR@,
 --         @VkAccelerationStructureMemoryRequirementsInfoKHR@, and
@@ -755,7 +760,7 @@
 --
 --     -   add a new
 --         'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR'
---         buffer usage such buffers
+--         buffer usage for such buffers
 --
 --     -   add a new 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR' acceleration
 --         structure type for layering
@@ -786,12 +791,12 @@
 --
 -- (5) What is 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR' for?
 --
--- RESOLVED: It is primarily intended for API layering. In DXR, the
+-- __RESOLVED__: It is primarily intended for API layering. In DXR, the
 -- acceleration structure is basically just a buffer in a special layout,
--- and you don’t know at creation time whether it will be used as a top or
+-- and you do not know at creation time whether it will be used as a top or
 -- bottom level acceleration structure. We thus added a generic
 -- acceleration structure type whose type is unknown at creation time, but
--- is specified at build type instead. Applications which are written
+-- is specified at build time instead. Applications which are written
 -- directly for Vulkan should not use it.
 --
 -- == Version History
@@ -815,7 +820,7 @@
 --         better match its type (!3523)
 --
 --     -   Allow VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS for pipeline
---         creation if shader group handles cannot be re-used. (!3523)
+--         creation if shader group handles cannot be reused (!3523)
 --
 --     -   update documentation for the
 --         VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS error code and add
@@ -1080,7 +1085,20 @@
 --     -   define sync for AS build inputs and indirect buffer
 --         (#2407,!4208)
 --
--- = See Also
+-- -   Revision 12, 2021-08-06 (Samuel Bourasseau)
+--
+--     -   rename
+--         VK_GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR to
+--         VK_GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR (keep previous
+--         as alias).
+--
+--     -   Clarify description and add note.
+--
+-- -   Revision 13, 2021-09-30 (Jon Leech)
+--
+--     -   Add interaction with @VK_KHR_format_feature_flags2@ to @vk.xml@
+--
+-- == See Also
 --
 -- 'AabbPositionsKHR', 'AccelerationStructureBuildGeometryInfoKHR',
 -- 'AccelerationStructureBuildRangeInfoKHR',
@@ -1125,7 +1143,7 @@
 -- 'getDeviceAccelerationStructureCompatibilityKHR',
 -- 'writeAccelerationStructuresPropertiesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure Vulkan Specification>
@@ -1149,6 +1167,7 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( destroyAccelerationStr
                                                         , buildAccelerationStructuresKHR
                                                         , getAccelerationStructureDeviceAddressKHR
                                                         , getAccelerationStructureBuildSizesKHR
+                                                        , pattern GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR
                                                         , WriteDescriptorSetAccelerationStructureKHR(..)
                                                         , PhysicalDeviceAccelerationStructureFeaturesKHR(..)
                                                         , PhysicalDeviceAccelerationStructurePropertiesKHR(..)
@@ -1173,7 +1192,7 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( destroyAccelerationStr
                                                         , AccelerationStructureGeometryDataKHR(..)
                                                         , GeometryInstanceFlagsKHR
                                                         , GeometryInstanceFlagBitsKHR( GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR
-                                                                                     , GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR
+                                                                                     , GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR
                                                                                      , GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR
                                                                                      , GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR
                                                                                      , ..
@@ -1189,10 +1208,12 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( destroyAccelerationStr
                                                                                                , BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR
                                                                                                , BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR
                                                                                                , BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR
+                                                                                               , BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV
                                                                                                , ..
                                                                                                )
                                                         , AccelerationStructureCreateFlagsKHR
                                                         , AccelerationStructureCreateFlagBitsKHR( ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR
+                                                                                                , ACCELERATION_STRUCTURE_CREATE_MOTION_BIT_NV
                                                                                                 , ..
                                                                                                 )
                                                         , CopyAccelerationStructureModeKHR( COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR
@@ -1224,6 +1245,39 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( destroyAccelerationStr
                                                                                                , ACCELERATION_STRUCTURE_COMPATIBILITY_INCOMPATIBLE_KHR
                                                                                                , ..
                                                                                                )
+                                                        , FormatFeatureFlags2KHR
+                                                        , FormatFeatureFlagBits2KHR( FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_STORAGE_IMAGE_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_VERTEX_BUFFER_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_BLIT_SRC_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_BLIT_DST_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT
+                                                                                   , FORMAT_FEATURE_2_TRANSFER_SRC_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_TRANSFER_DST_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_DISJOINT_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
+                                                                                   , FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT
+                                                                                   , FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR
+                                                                                   , ..
+                                                                                   )
                                                         , KHR_ACCELERATION_STRUCTURE_SPEC_VERSION
                                                         , pattern KHR_ACCELERATION_STRUCTURE_SPEC_VERSION
                                                         , KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME
@@ -1231,6 +1285,7 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( destroyAccelerationStr
                                                         , AccelerationStructureKHR(..)
                                                         , DeferredOperationKHR(..)
                                                         , DebugReportObjectTypeEXT(..)
+                                                        , Flags64
                                                         ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
@@ -1244,7 +1299,8 @@ import Data.Bits ((.&.))
 import Data.Bits ((.|.))
 import Data.Bits (shiftL)
 import Data.Bits (shiftR)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Data.Typeable (eqT)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -1278,6 +1334,7 @@ import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Data.String (IsString)
+import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CFloat)
@@ -1307,20 +1364,27 @@ import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
+import Vulkan.CStruct.Extends (pokeSomeCStruct)
 import Vulkan.NamedType ((:::))
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (AccelerationStructureGeometryMotionTrianglesDataNV)
 import Vulkan.Extensions.Handles (AccelerationStructureKHR)
 import Vulkan.Extensions.Handles (AccelerationStructureKHR(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (AccelerationStructureMotionInfoNV)
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Buffer)
+import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Extensions.Handles (DeferredOperationKHR)
 import Vulkan.Extensions.Handles (DeferredOperationKHR(..))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Core10.FundamentalTypes (DeviceAddress)
 import Vulkan.Dynamic (DeviceCmds(pVkBuildAccelerationStructuresKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBuildAccelerationStructuresIndirectKHR))
@@ -1340,15 +1404,25 @@ import Vulkan.Dynamic (DeviceCmds(pVkGetDeviceAccelerationStructureCompatibility
 import Vulkan.Dynamic (DeviceCmds(pVkWriteAccelerationStructuresPropertiesKHR))
 import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
+import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
+import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.FundamentalTypes (Flags)
+import Vulkan.Core10.FundamentalTypes (Flags64)
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.Core10.Enums.IndexType (IndexType)
+import Vulkan.CStruct.Extends (PeekChain)
+import Vulkan.CStruct.Extends (PeekChain(..))
+import Vulkan.CStruct.Extends (PokeChain)
+import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.Handles (QueryPool)
 import Vulkan.Core10.Handles (QueryPool(..))
 import Vulkan.Core10.Enums.QueryType (QueryType)
 import Vulkan.Core10.Enums.QueryType (QueryType(..))
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
+import Vulkan.CStruct.Extends (SomeStruct)
+import Vulkan.CStruct.Extends (SomeStruct(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR))
@@ -1371,6 +1445,7 @@ import Vulkan.Core10.APIConstants (pattern UUID_SIZE)
 import Vulkan.Extensions.Handles (AccelerationStructureKHR(..))
 import Vulkan.Extensions.VK_EXT_debug_report (DebugReportObjectTypeEXT(..))
 import Vulkan.Extensions.Handles (DeferredOperationKHR(..))
+import Vulkan.Core10.FundamentalTypes (Flags64)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -1424,12 +1499,13 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device'
 destroyAccelerationStructureKHR :: forall io
                                  . (MonadIO io)
-                                => -- | @device@ is the logical device that destroys the buffer.
+                                => -- | @device@ is the logical device that destroys the acceleration structure.
                                    Device
                                 -> -- | @accelerationStructure@ is the acceleration structure to destroy.
                                    AccelerationStructureKHR
@@ -1439,7 +1515,7 @@ destroyAccelerationStructureKHR :: forall io
                                    ("allocator" ::: Maybe AllocationCallbacks)
                                 -> io ()
 destroyAccelerationStructureKHR device accelerationStructure allocator = liftIO . evalContT $ do
-  let vkDestroyAccelerationStructureKHRPtr = pVkDestroyAccelerationStructureKHR (deviceCmds (device :: Device))
+  let vkDestroyAccelerationStructureKHRPtr = pVkDestroyAccelerationStructureKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyAccelerationStructureKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyAccelerationStructureKHR is null" Nothing Nothing
   let vkDestroyAccelerationStructureKHR' = mkVkDestroyAccelerationStructureKHR vkDestroyAccelerationStructureKHRPtr
@@ -1461,7 +1537,11 @@ foreign import ccall
 --
 -- = Description
 --
--- Accesses to @pInfo@->@src@ and @pInfo@->@dst@ /must/ be
+-- This command copies the @pInfo->src@ acceleration structure to the
+-- @pInfo->dst@ acceleration structure in the manner specified by
+-- @pInfo->mode@.
+--
+-- Accesses to @pInfo->src@ and @pInfo->dst@ /must/ be
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
@@ -1477,10 +1557,10 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyAccelerationStructureKHR-buffer-03737# The @buffer@
---     used to create @pInfo@->@src@ /must/ be bound to device memory
+--     used to create @pInfo->src@ /must/ be bound to device memory
 --
 -- -   #VUID-vkCmdCopyAccelerationStructureKHR-buffer-03738# The @buffer@
---     used to create @pInfo@->@dst@ /must/ be bound to device memory
+--     used to create @pInfo->dst@ /must/ be bound to device memory
 --
 -- == Valid Usage (Implicit)
 --
@@ -1514,15 +1594,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'CopyAccelerationStructureInfoKHR'
 cmdCopyAccelerationStructureKHR :: forall io
@@ -1535,7 +1616,7 @@ cmdCopyAccelerationStructureKHR :: forall io
                                    CopyAccelerationStructureInfoKHR
                                 -> io ()
 cmdCopyAccelerationStructureKHR commandBuffer info = liftIO . evalContT $ do
-  let vkCmdCopyAccelerationStructureKHRPtr = pVkCmdCopyAccelerationStructureKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyAccelerationStructureKHRPtr = pVkCmdCopyAccelerationStructureKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyAccelerationStructureKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyAccelerationStructureKHR is null" Nothing Nothing
   let vkCmdCopyAccelerationStructureKHR' = mkVkCmdCopyAccelerationStructureKHR vkCmdCopyAccelerationStructureKHRPtr
@@ -1571,12 +1652,10 @@ foreign import ccall
 --     @deferredOperation@ /must/ be complete
 --
 -- -   #VUID-vkCopyAccelerationStructureKHR-buffer-03727# The @buffer@ used
---     to create @pInfo@->@src@ /must/ be bound to host-visible device
---     memory
+--     to create @pInfo->src@ /must/ be bound to host-visible device memory
 --
 -- -   #VUID-vkCopyAccelerationStructureKHR-buffer-03728# The @buffer@ used
---     to create @pInfo@->@dst@ /must/ be bound to host-visible device
---     memory
+--     to create @pInfo->dst@ /must/ be bound to host-visible device memory
 --
 -- -   #VUID-vkCopyAccelerationStructureKHR-accelerationStructureHostCommands-03582#
 --     The
@@ -1584,11 +1663,11 @@ foreign import ccall
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCopyAccelerationStructureKHR-buffer-03780# The @buffer@ used
---     to create @pInfo@->@src@ /must/ be bound to memory that was not
+--     to create @pInfo->src@ /must/ be bound to memory that was not
 --     allocated with multiple instances
 --
 -- -   #VUID-vkCopyAccelerationStructureKHR-buffer-03781# The @buffer@ used
---     to create @pInfo@->@dst@ /must/ be bound to memory that was not
+--     to create @pInfo->dst@ /must/ be bound to memory that was not
 --     allocated with multiple instances
 --
 -- == Valid Usage (Implicit)
@@ -1627,6 +1706,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'CopyAccelerationStructureInfoKHR',
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'Vulkan.Core10.Handles.Device'
@@ -1644,7 +1724,7 @@ copyAccelerationStructureKHR :: forall io
                                 CopyAccelerationStructureInfoKHR
                              -> io (Result)
 copyAccelerationStructureKHR device deferredOperation info = liftIO . evalContT $ do
-  let vkCopyAccelerationStructureKHRPtr = pVkCopyAccelerationStructureKHR (deviceCmds (device :: Device))
+  let vkCopyAccelerationStructureKHRPtr = pVkCopyAccelerationStructureKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCopyAccelerationStructureKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCopyAccelerationStructureKHR is null" Nothing Nothing
   let vkCopyAccelerationStructureKHR' = mkVkCopyAccelerationStructureKHR vkCopyAccelerationStructureKHRPtr
@@ -1666,7 +1746,7 @@ foreign import ccall
 --
 -- = Description
 --
--- Accesses to @pInfo@->@src@ /must/ be
+-- Accesses to @pInfo->src@ /must/ be
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
@@ -1675,8 +1755,8 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types access type>
 -- of
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR'.
--- Accesses to the buffer indicated by @pInfo@->@dst.deviceAddress@ /must/
--- be synchronized with the
+-- Accesses to the buffer indicated by @pInfo->dst.deviceAddress@ /must/ be
+-- synchronized with the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
 -- pipeline stage and an access type of
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_TRANSFER_WRITE_BIT'.
@@ -1705,7 +1785,10 @@ foreign import ccall
 --
 -- -   A 64-bit integer of the count of the number of acceleration
 --     structure handles following. This will be zero for a bottom-level
---     acceleration structure.
+--     acceleration structure. For top-level acceleration structures this
+--     number is implementation-dependent; the number of and ordering of
+--     the handles may not match the instance descriptions which were used
+--     to build the acceleration structure.
 --
 -- The corresponding handles matching the values returned by
 -- 'getAccelerationStructureDeviceAddressKHR' or
@@ -1719,19 +1802,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyAccelerationStructureToMemoryKHR-pInfo-03739#
---     @pInfo@->@dst.deviceAddress@ /must/ be a valid device address for a
---     buffer bound to device memory.
+--     @pInfo->dst.deviceAddress@ /must/ be a valid device address for a
+--     buffer bound to device memory
 --
 -- -   #VUID-vkCmdCopyAccelerationStructureToMemoryKHR-pInfo-03740#
---     @pInfo@->@dst.deviceAddress@ /must/ be aligned to @256@ bytes
+--     @pInfo->dst.deviceAddress@ /must/ be aligned to @256@ bytes
 --
 -- -   #VUID-vkCmdCopyAccelerationStructureToMemoryKHR-pInfo-03741# If the
---     buffer pointed to by @pInfo@->@dst.deviceAddress@ is non-sparse then
+--     buffer pointed to by @pInfo->dst.deviceAddress@ is non-sparse then
 --     it /must/ be bound completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- -   #VUID-vkCmdCopyAccelerationStructureToMemoryKHR-None-03559# The
---     @buffer@ used to create @pInfo@->@src@ /must/ be bound to device
+--     @buffer@ used to create @pInfo->src@ /must/ be bound to device
 --     memory
 --
 -- == Valid Usage (Implicit)
@@ -1766,15 +1849,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'CopyAccelerationStructureToMemoryInfoKHR'
 cmdCopyAccelerationStructureToMemoryKHR :: forall io
@@ -1787,7 +1871,7 @@ cmdCopyAccelerationStructureToMemoryKHR :: forall io
                                            CopyAccelerationStructureToMemoryInfoKHR
                                         -> io ()
 cmdCopyAccelerationStructureToMemoryKHR commandBuffer info = liftIO . evalContT $ do
-  let vkCmdCopyAccelerationStructureToMemoryKHRPtr = pVkCmdCopyAccelerationStructureToMemoryKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyAccelerationStructureToMemoryKHRPtr = pVkCmdCopyAccelerationStructureToMemoryKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyAccelerationStructureToMemoryKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyAccelerationStructureToMemoryKHR is null" Nothing Nothing
   let vkCmdCopyAccelerationStructureToMemoryKHR' = mkVkCmdCopyAccelerationStructureToMemoryKHR vkCmdCopyAccelerationStructureToMemoryKHRPtr
@@ -1831,14 +1915,14 @@ foreign import ccall
 --     @deferredOperation@ /must/ be complete
 --
 -- -   #VUID-vkCopyAccelerationStructureToMemoryKHR-buffer-03731# The
---     @buffer@ used to create @pInfo@->@src@ /must/ be bound to
---     host-visible device memory
+--     @buffer@ used to create @pInfo->src@ /must/ be bound to host-visible
+--     device memory
 --
 -- -   #VUID-vkCopyAccelerationStructureToMemoryKHR-pInfo-03732#
---     @pInfo@->@dst.hostAddress@ /must/ be a valid host pointer
+--     @pInfo->dst.hostAddress@ /must/ be a valid host pointer
 --
 -- -   #VUID-vkCopyAccelerationStructureToMemoryKHR-pInfo-03751#
---     @pInfo@->@dst.hostAddress@ /must/ be aligned to 16 bytes
+--     @pInfo->dst.hostAddress@ /must/ be aligned to 16 bytes
 --
 -- -   #VUID-vkCopyAccelerationStructureToMemoryKHR-accelerationStructureHostCommands-03584#
 --     The
@@ -1846,8 +1930,8 @@ foreign import ccall
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCopyAccelerationStructureToMemoryKHR-buffer-03783# The
---     @buffer@ used to create @pInfo@->@src@ /must/ be bound to memory
---     that was not allocated with multiple instances
+--     @buffer@ used to create @pInfo->src@ /must/ be bound to memory that
+--     was not allocated with multiple instances
 --
 -- == Valid Usage (Implicit)
 --
@@ -1885,12 +1969,13 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'CopyAccelerationStructureToMemoryInfoKHR',
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'Vulkan.Core10.Handles.Device'
 copyAccelerationStructureToMemoryKHR :: forall io
                                       . (MonadIO io)
-                                     => -- | @device@ is the device which owns @pInfo@->@src@.
+                                     => -- | @device@ is the device which owns @pInfo->src@.
                                         Device
                                      -> -- | @deferredOperation@ is an optional
                                         -- 'Vulkan.Extensions.Handles.DeferredOperationKHR' to
@@ -1902,7 +1987,7 @@ copyAccelerationStructureToMemoryKHR :: forall io
                                         CopyAccelerationStructureToMemoryInfoKHR
                                      -> io (Result)
 copyAccelerationStructureToMemoryKHR device deferredOperation info = liftIO . evalContT $ do
-  let vkCopyAccelerationStructureToMemoryKHRPtr = pVkCopyAccelerationStructureToMemoryKHR (deviceCmds (device :: Device))
+  let vkCopyAccelerationStructureToMemoryKHRPtr = pVkCopyAccelerationStructureToMemoryKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCopyAccelerationStructureToMemoryKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCopyAccelerationStructureToMemoryKHR is null" Nothing Nothing
   let vkCopyAccelerationStructureToMemoryKHR' = mkVkCopyAccelerationStructureToMemoryKHR vkCopyAccelerationStructureToMemoryKHRPtr
@@ -1924,7 +2009,7 @@ foreign import ccall
 --
 -- = Description
 --
--- Accesses to @pInfo@->@dst@ /must/ be
+-- Accesses to @pInfo->dst@ /must/ be
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
@@ -1933,8 +2018,8 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types access type>
 -- of
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR'.
--- Accesses to the buffer indicated by @pInfo@->@src.deviceAddress@ /must/
--- be synchronized with the
+-- Accesses to the buffer indicated by @pInfo->src.deviceAddress@ /must/ be
+-- synchronized with the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
 -- pipeline stage and an access type of
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_TRANSFER_READ_BIT'.
@@ -1952,19 +2037,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyMemoryToAccelerationStructureKHR-pInfo-03742#
---     @pInfo@->@src.deviceAddress@ /must/ be a valid device address for a
---     buffer bound to device memory.
+--     @pInfo->src.deviceAddress@ /must/ be a valid device address for a
+--     buffer bound to device memory
 --
 -- -   #VUID-vkCmdCopyMemoryToAccelerationStructureKHR-pInfo-03743#
---     @pInfo@->@src.deviceAddress@ /must/ be aligned to @256@ bytes
+--     @pInfo->src.deviceAddress@ /must/ be aligned to @256@ bytes
 --
 -- -   #VUID-vkCmdCopyMemoryToAccelerationStructureKHR-pInfo-03744# If the
---     buffer pointed to by @pInfo@->@src.deviceAddress@ is non-sparse then
+--     buffer pointed to by @pInfo->src.deviceAddress@ is non-sparse then
 --     it /must/ be bound completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- -   #VUID-vkCmdCopyMemoryToAccelerationStructureKHR-buffer-03745# The
---     @buffer@ used to create @pInfo@->@dst@ /must/ be bound to device
+--     @buffer@ used to create @pInfo->dst@ /must/ be bound to device
 --     memory
 --
 -- == Valid Usage (Implicit)
@@ -1999,15 +2084,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'CopyMemoryToAccelerationStructureInfoKHR'
 cmdCopyMemoryToAccelerationStructureKHR :: forall io
@@ -2020,7 +2106,7 @@ cmdCopyMemoryToAccelerationStructureKHR :: forall io
                                            CopyMemoryToAccelerationStructureInfoKHR
                                         -> io ()
 cmdCopyMemoryToAccelerationStructureKHR commandBuffer info = liftIO . evalContT $ do
-  let vkCmdCopyMemoryToAccelerationStructureKHRPtr = pVkCmdCopyMemoryToAccelerationStructureKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyMemoryToAccelerationStructureKHRPtr = pVkCmdCopyMemoryToAccelerationStructureKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyMemoryToAccelerationStructureKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyMemoryToAccelerationStructureKHR is null" Nothing Nothing
   let vkCmdCopyMemoryToAccelerationStructureKHR' = mkVkCmdCopyMemoryToAccelerationStructureKHR vkCmdCopyMemoryToAccelerationStructureKHRPtr
@@ -2060,14 +2146,14 @@ foreign import ccall
 --     @deferredOperation@ /must/ be complete
 --
 -- -   #VUID-vkCopyMemoryToAccelerationStructureKHR-pInfo-03729#
---     @pInfo@->@src.hostAddress@ /must/ be a valid host pointer
+--     @pInfo->src.hostAddress@ /must/ be a valid host pointer
 --
 -- -   #VUID-vkCopyMemoryToAccelerationStructureKHR-pInfo-03750#
---     @pInfo@->@src.hostAddress@ /must/ be aligned to 16 bytes
+--     @pInfo->src.hostAddress@ /must/ be aligned to 16 bytes
 --
 -- -   #VUID-vkCopyMemoryToAccelerationStructureKHR-buffer-03730# The
---     @buffer@ used to create @pInfo@->@dst@ /must/ be bound to
---     host-visible device memory
+--     @buffer@ used to create @pInfo->dst@ /must/ be bound to host-visible
+--     device memory
 --
 -- -   #VUID-vkCopyMemoryToAccelerationStructureKHR-accelerationStructureHostCommands-03583#
 --     The
@@ -2075,8 +2161,8 @@ foreign import ccall
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCopyMemoryToAccelerationStructureKHR-buffer-03782# The
---     @buffer@ used to create @pInfo@->@dst@ /must/ be bound to memory
---     that was not allocated with multiple instances
+--     @buffer@ used to create @pInfo->dst@ /must/ be bound to memory that
+--     was not allocated with multiple instances
 --
 -- == Valid Usage (Implicit)
 --
@@ -2114,6 +2200,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'CopyMemoryToAccelerationStructureInfoKHR',
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'Vulkan.Core10.Handles.Device'
@@ -2131,7 +2218,7 @@ copyMemoryToAccelerationStructureKHR :: forall io
                                         CopyMemoryToAccelerationStructureInfoKHR
                                      -> io (Result)
 copyMemoryToAccelerationStructureKHR device deferredOperation info = liftIO . evalContT $ do
-  let vkCopyMemoryToAccelerationStructureKHRPtr = pVkCopyMemoryToAccelerationStructureKHR (deviceCmds (device :: Device))
+  let vkCopyMemoryToAccelerationStructureKHRPtr = pVkCopyMemoryToAccelerationStructureKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCopyMemoryToAccelerationStructureKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCopyMemoryToAccelerationStructureKHR is null" Nothing Nothing
   let vkCopyMemoryToAccelerationStructureKHR' = mkVkCopyMemoryToAccelerationStructureKHR vkCopyMemoryToAccelerationStructureKHRPtr
@@ -2164,6 +2251,16 @@ foreign import ccall
 -- of
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR'.
 --
+-- -   If @queryType@ is
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR',
+--     then the value written out is the number of bytes required by a
+--     compacted acceleration structure.
+--
+-- -   If @queryType@ is
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR',
+--     then the value written out is the number of bytes required by a
+--     serialized acceleration structure.
+--
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-queryPool-02493#
@@ -2177,6 +2274,14 @@ foreign import ccall
 -- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-buffer-03736#
 --     The @buffer@ used to create each acceleration structure in
 --     @pAccelerationStructures@ /must/ be bound to device memory
+--
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-query-04880# The
+--     sum of @query@ plus @accelerationStructureCount@ /must/ be less than
+--     or equal to the number of queries in @queryPool@
+--
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-pAccelerationStructures-04964#
+--     All acceleration structures in @pAccelerationStructures@ /must/ have
+--     been built prior to the execution of this command
 --
 -- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-accelerationStructures-03431#
 --     All acceleration structures in @pAccelerationStructures@ /must/ have
@@ -2240,15 +2345,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Handles.QueryPool',
@@ -2271,11 +2377,11 @@ cmdWriteAccelerationStructuresPropertiesKHR :: forall io
                                                ("firstQuery" ::: Word32)
                                             -> io ()
 cmdWriteAccelerationStructuresPropertiesKHR commandBuffer accelerationStructures queryType queryPool firstQuery = liftIO . evalContT $ do
-  let vkCmdWriteAccelerationStructuresPropertiesKHRPtr = pVkCmdWriteAccelerationStructuresPropertiesKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdWriteAccelerationStructuresPropertiesKHRPtr = pVkCmdWriteAccelerationStructuresPropertiesKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdWriteAccelerationStructuresPropertiesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWriteAccelerationStructuresPropertiesKHR is null" Nothing Nothing
   let vkCmdWriteAccelerationStructuresPropertiesKHR' = mkVkCmdWriteAccelerationStructuresPropertiesKHR vkCmdWriteAccelerationStructuresPropertiesKHRPtr
-  pPAccelerationStructures <- ContT $ allocaBytesAligned @AccelerationStructureKHR ((Data.Vector.length (accelerationStructures)) * 8) 8
+  pPAccelerationStructures <- ContT $ allocaBytes @AccelerationStructureKHR ((Data.Vector.length (accelerationStructures)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPAccelerationStructures `plusPtr` (8 * (i)) :: Ptr AccelerationStructureKHR) (e)) (accelerationStructures)
   lift $ traceAroundEvent "vkCmdWriteAccelerationStructuresPropertiesKHR" (vkCmdWriteAccelerationStructuresPropertiesKHR' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (accelerationStructures)) :: Word32)) (pPAccelerationStructures) (queryType) (queryPool) (firstQuery))
   pure $ ()
@@ -2298,6 +2404,10 @@ foreign import ccall
 -- host.
 --
 -- == Valid Usage
+--
+-- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-pAccelerationStructures-04964#
+--     All acceleration structures in @pAccelerationStructures@ /must/ have
+--     been built prior to the execution of this command
 --
 -- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-accelerationStructures-03431#
 --     All acceleration structures in @pAccelerationStructures@ /must/ have
@@ -2396,6 +2506,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core10.Enums.QueryType.QueryType'
@@ -2404,8 +2515,8 @@ writeAccelerationStructuresPropertiesKHR :: forall io
                                          => -- | @device@ is the device which owns the acceleration structures in
                                             -- @pAccelerationStructures@.
                                             Device
-                                         -> -- | @pAccelerationStructures@ points to an array of existing previously
-                                            -- built acceleration structures.
+                                         -> -- | @pAccelerationStructures@ is a pointer to an array of existing
+                                            -- previously built acceleration structures.
                                             ("accelerationStructures" ::: Vector AccelerationStructureKHR)
                                          -> -- | @queryType@ is a 'Vulkan.Core10.Enums.QueryType.QueryType' value
                                             -- specifying the property to be queried.
@@ -2420,11 +2531,11 @@ writeAccelerationStructuresPropertiesKHR :: forall io
                                             ("stride" ::: Word64)
                                          -> io ()
 writeAccelerationStructuresPropertiesKHR device accelerationStructures queryType dataSize data' stride = liftIO . evalContT $ do
-  let vkWriteAccelerationStructuresPropertiesKHRPtr = pVkWriteAccelerationStructuresPropertiesKHR (deviceCmds (device :: Device))
+  let vkWriteAccelerationStructuresPropertiesKHRPtr = pVkWriteAccelerationStructuresPropertiesKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkWriteAccelerationStructuresPropertiesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkWriteAccelerationStructuresPropertiesKHR is null" Nothing Nothing
   let vkWriteAccelerationStructuresPropertiesKHR' = mkVkWriteAccelerationStructuresPropertiesKHR vkWriteAccelerationStructuresPropertiesKHRPtr
-  pPAccelerationStructures <- ContT $ allocaBytesAligned @AccelerationStructureKHR ((Data.Vector.length (accelerationStructures)) * 8) 8
+  pPAccelerationStructures <- ContT $ allocaBytes @AccelerationStructureKHR ((Data.Vector.length (accelerationStructures)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPAccelerationStructures `plusPtr` (8 * (i)) :: Ptr AccelerationStructureKHR) (e)) (accelerationStructures)
   r <- lift $ traceAroundEvent "vkWriteAccelerationStructuresPropertiesKHR" (vkWriteAccelerationStructuresPropertiesKHR' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (accelerationStructures)) :: Word32)) (pPAccelerationStructures) (queryType) (CSize (dataSize)) (data') (CSize (stride)))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -2464,18 +2575,19 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureCompatibilityKHR',
 -- 'AccelerationStructureVersionInfoKHR', 'Vulkan.Core10.Handles.Device'
 getDeviceAccelerationStructureCompatibilityKHR :: forall io
                                                 . (MonadIO io)
                                                => -- | @device@ is the device to check the version against.
                                                   Device
-                                               -> -- | @pVersionInfo@ points to the 'AccelerationStructureVersionInfoKHR'
-                                                  -- version information to check against the device.
+                                               -> -- | @pVersionInfo@ is a pointer to a 'AccelerationStructureVersionInfoKHR'
+                                                  -- structure specifying version information to check against the device.
                                                   AccelerationStructureVersionInfoKHR
                                                -> io (AccelerationStructureCompatibilityKHR)
 getDeviceAccelerationStructureCompatibilityKHR device versionInfo = liftIO . evalContT $ do
-  let vkGetDeviceAccelerationStructureCompatibilityKHRPtr = pVkGetDeviceAccelerationStructureCompatibilityKHR (deviceCmds (device :: Device))
+  let vkGetDeviceAccelerationStructureCompatibilityKHRPtr = pVkGetDeviceAccelerationStructureCompatibilityKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDeviceAccelerationStructureCompatibilityKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceAccelerationStructureCompatibilityKHR is null" Nothing Nothing
   let vkGetDeviceAccelerationStructureCompatibilityKHR' = mkVkGetDeviceAccelerationStructureCompatibilityKHR vkGetDeviceAccelerationStructureCompatibilityKHRPtr
@@ -2491,7 +2603,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateAccelerationStructureKHR
-  :: FunPtr (Ptr Device_T -> Ptr AccelerationStructureCreateInfoKHR -> Ptr AllocationCallbacks -> Ptr AccelerationStructureKHR -> IO Result) -> Ptr Device_T -> Ptr AccelerationStructureCreateInfoKHR -> Ptr AllocationCallbacks -> Ptr AccelerationStructureKHR -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct AccelerationStructureCreateInfoKHR) -> Ptr AllocationCallbacks -> Ptr AccelerationStructureKHR -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct AccelerationStructureCreateInfoKHR) -> Ptr AllocationCallbacks -> Ptr AccelerationStructureKHR -> IO Result
 
 -- | vkCreateAccelerationStructureKHR - Create a new acceleration structure
 -- object
@@ -2567,26 +2679,27 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureCreateInfoKHR',
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device'
-createAccelerationStructureKHR :: forall io
-                                . (MonadIO io)
+createAccelerationStructureKHR :: forall a io
+                                . (Extendss AccelerationStructureCreateInfoKHR a, PokeChain a, MonadIO io)
                                => -- | @device@ is the logical device that creates the acceleration structure
                                   -- object.
                                   Device
                                -> -- | @pCreateInfo@ is a pointer to a 'AccelerationStructureCreateInfoKHR'
                                   -- structure containing parameters affecting creation of the acceleration
                                   -- structure.
-                                  AccelerationStructureCreateInfoKHR
+                                  (AccelerationStructureCreateInfoKHR a)
                                -> -- | @pAllocator@ controls host memory allocation as described in the
                                   -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                   -- chapter.
                                   ("allocator" ::: Maybe AllocationCallbacks)
                                -> io (AccelerationStructureKHR)
 createAccelerationStructureKHR device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateAccelerationStructureKHRPtr = pVkCreateAccelerationStructureKHR (deviceCmds (device :: Device))
+  let vkCreateAccelerationStructureKHRPtr = pVkCreateAccelerationStructureKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateAccelerationStructureKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateAccelerationStructureKHR is null" Nothing Nothing
   let vkCreateAccelerationStructureKHR' = mkVkCreateAccelerationStructureKHR vkCreateAccelerationStructureKHRPtr
@@ -2595,7 +2708,7 @@ createAccelerationStructureKHR device createInfo allocator = liftIO . evalContT 
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPAccelerationStructure <- ContT $ bracket (callocBytes @AccelerationStructureKHR 8) free
-  r <- lift $ traceAroundEvent "vkCreateAccelerationStructureKHR" (vkCreateAccelerationStructureKHR' (deviceHandle (device)) pCreateInfo pAllocator (pPAccelerationStructure))
+  r <- lift $ traceAroundEvent "vkCreateAccelerationStructureKHR" (vkCreateAccelerationStructureKHR' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPAccelerationStructure))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pAccelerationStructure <- lift $ peek @AccelerationStructureKHR pPAccelerationStructure
   pure $ (pAccelerationStructure)
@@ -2608,7 +2721,7 @@ createAccelerationStructureKHR device createInfo allocator = liftIO . evalContT 
 -- favourite resource management library) as the last argument.
 -- To just extract the pair pass '(,)' as the last argument.
 --
-withAccelerationStructureKHR :: forall io r . MonadIO io => Device -> AccelerationStructureCreateInfoKHR -> Maybe AllocationCallbacks -> (io AccelerationStructureKHR -> (AccelerationStructureKHR -> io ()) -> r) -> r
+withAccelerationStructureKHR :: forall a io r . (Extendss AccelerationStructureCreateInfoKHR a, PokeChain a, MonadIO io) => Device -> AccelerationStructureCreateInfoKHR a -> Maybe AllocationCallbacks -> (io AccelerationStructureKHR -> (AccelerationStructureKHR -> io ()) -> r) -> r
 withAccelerationStructureKHR device pCreateInfo pAllocator b =
   b (createAccelerationStructureKHR device pCreateInfo pAllocator)
     (\(o0) -> destroyAccelerationStructureKHR device o0 pAllocator)
@@ -2640,7 +2753,7 @@ foreign import ccall
 -- the builds.
 --
 -- Accesses to the acceleration structure scratch buffers as identified by
--- the 'AccelerationStructureBuildGeometryInfoKHR'→@scratchData@ buffer
+-- the 'AccelerationStructureBuildGeometryInfoKHR'::@scratchData@ buffer
 -- device addresses /must/ be
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
@@ -2653,16 +2766,17 @@ foreign import ccall
 -- or
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR'.
 -- Similarly for accesses to each
--- 'AccelerationStructureBuildGeometryInfoKHR'→@srcAccelerationStructure@
+-- 'AccelerationStructureBuildGeometryInfoKHR'::@srcAccelerationStructure@
 -- and
--- 'AccelerationStructureBuildGeometryInfoKHR'→@dstAccelerationStructure@.
+-- 'AccelerationStructureBuildGeometryInfoKHR'::@dstAccelerationStructure@.
 --
 -- Accesses to other input buffers as identified by any used values of
--- 'AccelerationStructureGeometryTrianglesDataKHR'→@vertexData@,
--- 'AccelerationStructureGeometryTrianglesDataKHR'→@indexData@,
--- 'AccelerationStructureGeometryTrianglesDataKHR'→@transformData@,
--- 'AccelerationStructureGeometryAabbsDataKHR'→@data@, and
--- 'AccelerationStructureGeometryInstancesDataKHR'→@data@ /must/ be
+-- 'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureGeometryMotionTrianglesDataNV'::@vertexData@,
+-- 'AccelerationStructureGeometryTrianglesDataKHR'::@vertexData@,
+-- 'AccelerationStructureGeometryTrianglesDataKHR'::@indexData@,
+-- 'AccelerationStructureGeometryTrianglesDataKHR'::@transformData@,
+-- 'AccelerationStructureGeometryAabbsDataKHR'::@data@, and
+-- 'AccelerationStructureGeometryInstancesDataKHR'::@data@ /must/ be
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
@@ -2782,18 +2896,13 @@ foreign import ccall
 --     'GEOMETRY_TYPE_INSTANCES_KHR' in any other element of @pInfos@,
 --     which is accessed by this command
 --
--- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03666# For each
---     element of @pInfos@, if its @mode@ member is
---     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its
---     @srcAccelerationStructure@ member /must/ not be
---     'Vulkan.Core10.APIConstants.NULL_HANDLE'
---
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03667# For each
 --     element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its
---     @srcAccelerationStructure@ member /must/ have been built before with
---     'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR' set in
---     'AccelerationStructureBuildGeometryInfoKHR'::@flags@
+--     @srcAccelerationStructure@ member /must/ have previously been
+--     constructed with 'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR'
+--     set in 'AccelerationStructureBuildGeometryInfoKHR'::@flags@ in the
+--     build
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03668# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -2808,19 +2917,19 @@ foreign import ccall
 --     element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its @geometryCount@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03759# For each
 --     element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its @flags@ member
 --     /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03760# For each
 --     element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its @type@ member
 --     /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03761# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -2828,7 +2937,7 @@ foreign import ccall
 --     'AccelerationStructureGeometryKHR' structure referred to by its
 --     @pGeometries@ or @ppGeometries@ members, its @geometryType@ member
 --     /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03762# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -2836,7 +2945,7 @@ foreign import ccall
 --     'AccelerationStructureGeometryKHR' structure referred to by its
 --     @pGeometries@ or @ppGeometries@ members, its @flags@ member /must/
 --     have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03763# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -2845,7 +2954,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', its @geometry.triangles.vertexFormat@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03764# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -2854,7 +2963,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', its @geometry.triangles.maxVertex@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03765# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -2863,7 +2972,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', its @geometry.triangles.indexType@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03766# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -2871,8 +2980,8 @@ foreign import ccall
 --     'AccelerationStructureGeometryKHR' structure referred to by its
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', if its
---     @geometry.triangles.transformData@ member was NULL when
---     @srcAccelerationStructure@ was last built, then it must be NULL.
+--     @geometry.triangles.transformData@ address was @NULL@ when
+--     @srcAccelerationStructure@ was last built, then it /must/ be @NULL@
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03767# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -2880,8 +2989,9 @@ foreign import ccall
 --     'AccelerationStructureGeometryKHR' structure referred to by its
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', if its
---     @geometry.triangles.transformData@ member was not NULL when
---     @srcAccelerationStructure@ was last built, then it may not be NULL.
+--     @geometry.triangles.transformData@ address was not @NULL@ when
+--     @srcAccelerationStructure@ was last built, then it /must/ not be
+--     @NULL@
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03768# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -2890,20 +3000,20 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', and @geometry.triangles.indexType@ is
 --     not 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_KHR', then the
---     value of each index referenced index must be the same as the
+--     value of each index referenced /must/ be the same as the
 --     corresponding index value when @srcAccelerationStructure@ was last
---     built.
+--     built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-primitiveCount-03769# For
 --     each 'AccelerationStructureBuildRangeInfoKHR' referenced by this
 --     command, its @primitiveCount@ member /must/ have the same value
---     which was specified when @srcAccelerationStructure@ was last built.
+--     which was specified when @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-firstVertex-03770# For
 --     each 'AccelerationStructureBuildRangeInfoKHR' referenced by this
 --     command, if the corresponding geometry uses indices, its
 --     @firstVertex@ member /must/ have the same value which was specified
---     when @srcAccelerationStructure@ was last built.
+--     when @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03801# For each
 --     element of @pInfos@[i].@pGeometries@ or @pInfos@[i].@ppGeometries@
@@ -2956,7 +3066,8 @@ foreign import ccall
 --     @geometry.triangles.vertexData@, @geometry.triangles.indexData@,
 --     @geometry.triangles.transformData@, @geometry.aabbs.data@, and
 --     @geometry.instances.data@ members of all @pInfos@[i].@pGeometries@
---     and @pInfos@[i].@ppGeometries@ /must/ have been created with the
+--     and @pInfos@[i].@ppGeometries@ are queried /must/ have been created
+--     with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR'
 --     usage flag
 --
@@ -3166,15 +3277,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureBuildGeometryInfoKHR',
 -- 'AccelerationStructureBuildRangeInfoKHR',
 -- 'Vulkan.Core10.Handles.CommandBuffer'
@@ -3183,31 +3295,31 @@ cmdBuildAccelerationStructuresKHR :: forall io
                                   => -- | @commandBuffer@ is the command buffer into which the command will be
                                      -- recorded.
                                      CommandBuffer
-                                  -> -- | @pInfos@ is an array of @infoCount@
+                                  -> -- | @pInfos@ is a pointer to an array of @infoCount@
                                      -- 'AccelerationStructureBuildGeometryInfoKHR' structures defining the
                                      -- geometry used to build each acceleration structure.
                                      ("infos" ::: Vector AccelerationStructureBuildGeometryInfoKHR)
-                                  -> -- | @ppBuildRangeInfos@ is an array of @infoCount@ pointers to arrays of
-                                     -- 'AccelerationStructureBuildRangeInfoKHR' structures. Each
-                                     -- @ppBuildRangeInfos@[i] is an array of @pInfos@[i].@geometryCount@
-                                     -- 'AccelerationStructureBuildRangeInfoKHR' structures defining dynamic
-                                     -- offsets to the addresses where geometry data is stored, as defined by
-                                     -- @pInfos@[i].
+                                  -> -- | @ppBuildRangeInfos@ is a pointer to an array of @infoCount@ pointers to
+                                     -- arrays of 'AccelerationStructureBuildRangeInfoKHR' structures. Each
+                                     -- @ppBuildRangeInfos@[i] is a pointer to an array of
+                                     -- @pInfos@[i].@geometryCount@ 'AccelerationStructureBuildRangeInfoKHR'
+                                     -- structures defining dynamic offsets to the addresses where geometry data
+                                     -- is stored, as defined by @pInfos@[i].
                                      ("buildRangeInfos" ::: Vector (Vector AccelerationStructureBuildRangeInfoKHR))
                                   -> io ()
 cmdBuildAccelerationStructuresKHR commandBuffer infos buildRangeInfos = liftIO . evalContT $ do
-  let vkCmdBuildAccelerationStructuresKHRPtr = pVkCmdBuildAccelerationStructuresKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBuildAccelerationStructuresKHRPtr = pVkCmdBuildAccelerationStructuresKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBuildAccelerationStructuresKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBuildAccelerationStructuresKHR is null" Nothing Nothing
   let vkCmdBuildAccelerationStructuresKHR' = mkVkCmdBuildAccelerationStructuresKHR vkCmdBuildAccelerationStructuresKHRPtr
   let pInfosLength = Data.Vector.length $ (infos)
   lift $ unless ((Data.Vector.length $ (buildRangeInfos)) == pInfosLength) $
     throwIO $ IOError Nothing InvalidArgument "" "ppBuildRangeInfos and pInfos must have the same length" Nothing Nothing
-  pPInfos <- ContT $ allocaBytesAligned @AccelerationStructureBuildGeometryInfoKHR ((Data.Vector.length (infos)) * 80) 8
+  pPInfos <- ContT $ allocaBytes @AccelerationStructureBuildGeometryInfoKHR ((Data.Vector.length (infos)) * 80)
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPInfos `plusPtr` (80 * (i)) :: Ptr AccelerationStructureBuildGeometryInfoKHR) (e) . ($ ())) (infos)
-  pPpBuildRangeInfos <- ContT $ allocaBytesAligned @(Ptr AccelerationStructureBuildRangeInfoKHR) ((Data.Vector.length (buildRangeInfos)) * 8) 8
+  pPpBuildRangeInfos <- ContT $ allocaBytes @(Ptr AccelerationStructureBuildRangeInfoKHR) ((Data.Vector.length (buildRangeInfos)) * 8)
   Data.Vector.imapM_ (\i e -> do
-    pPpBuildRangeInfos' <- ContT $ allocaBytesAligned @AccelerationStructureBuildRangeInfoKHR ((Data.Vector.length (e)) * 16) 4
+    pPpBuildRangeInfos' <- ContT $ allocaBytes @AccelerationStructureBuildRangeInfoKHR ((Data.Vector.length (e)) * 16)
     lift $ Data.Vector.imapM_ (\i' e' -> poke (pPpBuildRangeInfos' `plusPtr` (16 * (i')) :: Ptr AccelerationStructureBuildRangeInfoKHR) (e')) (e)
     lift $ poke (pPpBuildRangeInfos `plusPtr` (8 * (i)) :: Ptr (Ptr AccelerationStructureBuildRangeInfoKHR)) (pPpBuildRangeInfos')) (buildRangeInfos)
   lift $ traceAroundEvent "vkCmdBuildAccelerationStructuresKHR" (vkCmdBuildAccelerationStructuresKHR' (commandBufferHandle (commandBuffer)) ((fromIntegral pInfosLength :: Word32)) (pPInfos) (pPpBuildRangeInfos))
@@ -3351,18 +3463,13 @@ foreign import ccall
 --     'GEOMETRY_TYPE_INSTANCES_KHR' in any other element of @pInfos@,
 --     which is accessed by this command
 --
--- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03666# For
---     each element of @pInfos@, if its @mode@ member is
---     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its
---     @srcAccelerationStructure@ member /must/ not be
---     'Vulkan.Core10.APIConstants.NULL_HANDLE'
---
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03667# For
 --     each element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its
---     @srcAccelerationStructure@ member /must/ have been built before with
---     'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR' set in
---     'AccelerationStructureBuildGeometryInfoKHR'::@flags@
+--     @srcAccelerationStructure@ member /must/ have previously been
+--     constructed with 'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR'
+--     set in 'AccelerationStructureBuildGeometryInfoKHR'::@flags@ in the
+--     build
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03668# For
 --     each element of @pInfos@, if its @mode@ member is
@@ -3377,19 +3484,19 @@ foreign import ccall
 --     each element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its @geometryCount@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03759# For
 --     each element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its @flags@ member
 --     /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03760# For
 --     each element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its @type@ member
 --     /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03761# For
 --     each element of @pInfos@, if its @mode@ member is
@@ -3397,7 +3504,7 @@ foreign import ccall
 --     'AccelerationStructureGeometryKHR' structure referred to by its
 --     @pGeometries@ or @ppGeometries@ members, its @geometryType@ member
 --     /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03762# For
 --     each element of @pInfos@, if its @mode@ member is
@@ -3405,7 +3512,7 @@ foreign import ccall
 --     'AccelerationStructureGeometryKHR' structure referred to by its
 --     @pGeometries@ or @ppGeometries@ members, its @flags@ member /must/
 --     have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03763# For
 --     each element of @pInfos@, if its @mode@ member is
@@ -3414,7 +3521,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', its @geometry.triangles.vertexFormat@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03764# For
 --     each element of @pInfos@, if its @mode@ member is
@@ -3423,7 +3530,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', its @geometry.triangles.maxVertex@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03765# For
 --     each element of @pInfos@, if its @mode@ member is
@@ -3432,7 +3539,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', its @geometry.triangles.indexType@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03766# For
 --     each element of @pInfos@, if its @mode@ member is
@@ -3440,8 +3547,8 @@ foreign import ccall
 --     'AccelerationStructureGeometryKHR' structure referred to by its
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', if its
---     @geometry.triangles.transformData@ member was NULL when
---     @srcAccelerationStructure@ was last built, then it must be NULL.
+--     @geometry.triangles.transformData@ address was @NULL@ when
+--     @srcAccelerationStructure@ was last built, then it /must/ be @NULL@
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03767# For
 --     each element of @pInfos@, if its @mode@ member is
@@ -3449,8 +3556,9 @@ foreign import ccall
 --     'AccelerationStructureGeometryKHR' structure referred to by its
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', if its
---     @geometry.triangles.transformData@ member was not NULL when
---     @srcAccelerationStructure@ was last built, then it may not be NULL.
+--     @geometry.triangles.transformData@ address was not @NULL@ when
+--     @srcAccelerationStructure@ was last built, then it /must/ not be
+--     @NULL@
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03768# For
 --     each element of @pInfos@, if its @mode@ member is
@@ -3459,20 +3567,20 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', and @geometry.triangles.indexType@ is
 --     not 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_KHR', then the
---     value of each index referenced index must be the same as the
+--     value of each index referenced /must/ be the same as the
 --     corresponding index value when @srcAccelerationStructure@ was last
---     built.
+--     built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-primitiveCount-03769#
 --     For each 'AccelerationStructureBuildRangeInfoKHR' referenced by this
 --     command, its @primitiveCount@ member /must/ have the same value
---     which was specified when @srcAccelerationStructure@ was last built.
+--     which was specified when @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-firstVertex-03770#
 --     For each 'AccelerationStructureBuildRangeInfoKHR' referenced by this
 --     command, if the corresponding geometry uses indices, its
 --     @firstVertex@ member /must/ have the same value which was specified
---     when @srcAccelerationStructure@ was last built.
+--     when @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03801# For
 --     each element of @pInfos@[i].@pGeometries@ or
@@ -3526,7 +3634,8 @@ foreign import ccall
 --     @geometry.triangles.vertexData@, @geometry.triangles.indexData@,
 --     @geometry.triangles.transformData@, @geometry.aabbs.data@, and
 --     @geometry.instances.data@ members of all @pInfos@[i].@pGeometries@
---     and @pInfos@[i].@ppGeometries@ /must/ have been created with the
+--     and @pInfos@[i].@ppGeometries@ are queried /must/ have been created
+--     with the
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR'
 --     usage flag
 --
@@ -3706,7 +3815,7 @@ foreign import ccall
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pIndirectDeviceAddresses-03646#
 --     For any element of @pIndirectDeviceAddresses@[i], all device
 --     addresses between @pIndirectDeviceAddresses@[i] and
---     @pIndirectDeviceAddresses@[i] + (@pInfos@[i]→geometryCount ×
+--     @pIndirectDeviceAddresses@[i] + (@pInfos@[i].@geometryCount@ ×
 --     @pIndirectStrides@[i]) - 1 /must/ be in the buffer device address
 --     range of the same buffer
 --
@@ -3797,15 +3906,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureBuildGeometryInfoKHR',
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceAddress'
@@ -3814,26 +3924,27 @@ cmdBuildAccelerationStructuresIndirectKHR :: forall io
                                           => -- | @commandBuffer@ is the command buffer into which the command will be
                                              -- recorded.
                                              CommandBuffer
-                                          -> -- | @pInfos@ is an array of @infoCount@
+                                          -> -- | @pInfos@ is a pointer to an array of @infoCount@
                                              -- 'AccelerationStructureBuildGeometryInfoKHR' structures defining the
                                              -- geometry used to build each acceleration structure.
                                              ("infos" ::: Vector AccelerationStructureBuildGeometryInfoKHR)
-                                          -> -- | @pIndirectDeviceAddresses@ is an array of @infoCount@ buffer device
-                                             -- addresses which point to @pInfos@[i]→@geometryCount@
+                                          -> -- | @pIndirectDeviceAddresses@ is a pointer to an array of @infoCount@
+                                             -- buffer device addresses which point to @pInfos@[i].@geometryCount@
                                              -- 'AccelerationStructureBuildRangeInfoKHR' structures defining dynamic
                                              -- offsets to the addresses where geometry data is stored, as defined by
                                              -- @pInfos@[i].
                                              ("indirectDeviceAddresses" ::: Vector DeviceAddress)
-                                          -> -- | @pIndirectStrides@ is an array of @infoCount@ byte strides between
-                                             -- elements of @pIndirectDeviceAddresses@.
+                                          -> -- | @pIndirectStrides@ is a pointer to an array of @infoCount@ byte strides
+                                             -- between elements of @pIndirectDeviceAddresses@.
                                              ("indirectStrides" ::: Vector Word32)
-                                          -> -- | @ppMaxPrimitiveCounts@ is an array of @infoCount@ arrays of
-                                             -- @pInfo@[i]→@geometryCount@ values indicating the maximum number of
-                                             -- primitives that will be built by this command for each geometry.
+                                          -> -- | @ppMaxPrimitiveCounts@ is a pointer to an array of @infoCount@ pointers
+                                             -- to arrays of @pInfos@[i].@geometryCount@ values indicating the maximum
+                                             -- number of primitives that will be built by this command for each
+                                             -- geometry.
                                              ("maxPrimitiveCounts" ::: Vector (Vector Word32))
                                           -> io ()
 cmdBuildAccelerationStructuresIndirectKHR commandBuffer infos indirectDeviceAddresses indirectStrides maxPrimitiveCounts = liftIO . evalContT $ do
-  let vkCmdBuildAccelerationStructuresIndirectKHRPtr = pVkCmdBuildAccelerationStructuresIndirectKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBuildAccelerationStructuresIndirectKHRPtr = pVkCmdBuildAccelerationStructuresIndirectKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBuildAccelerationStructuresIndirectKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBuildAccelerationStructuresIndirectKHR is null" Nothing Nothing
   let vkCmdBuildAccelerationStructuresIndirectKHR' = mkVkCmdBuildAccelerationStructuresIndirectKHR vkCmdBuildAccelerationStructuresIndirectKHRPtr
@@ -3844,15 +3955,15 @@ cmdBuildAccelerationStructuresIndirectKHR commandBuffer infos indirectDeviceAddr
     throwIO $ IOError Nothing InvalidArgument "" "pIndirectStrides and pInfos must have the same length" Nothing Nothing
   lift $ unless ((Data.Vector.length $ (maxPrimitiveCounts)) == pInfosLength) $
     throwIO $ IOError Nothing InvalidArgument "" "ppMaxPrimitiveCounts and pInfos must have the same length" Nothing Nothing
-  pPInfos <- ContT $ allocaBytesAligned @AccelerationStructureBuildGeometryInfoKHR ((Data.Vector.length (infos)) * 80) 8
+  pPInfos <- ContT $ allocaBytes @AccelerationStructureBuildGeometryInfoKHR ((Data.Vector.length (infos)) * 80)
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPInfos `plusPtr` (80 * (i)) :: Ptr AccelerationStructureBuildGeometryInfoKHR) (e) . ($ ())) (infos)
-  pPIndirectDeviceAddresses <- ContT $ allocaBytesAligned @DeviceAddress ((Data.Vector.length (indirectDeviceAddresses)) * 8) 8
+  pPIndirectDeviceAddresses <- ContT $ allocaBytes @DeviceAddress ((Data.Vector.length (indirectDeviceAddresses)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPIndirectDeviceAddresses `plusPtr` (8 * (i)) :: Ptr DeviceAddress) (e)) (indirectDeviceAddresses)
-  pPIndirectStrides <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (indirectStrides)) * 4) 4
+  pPIndirectStrides <- ContT $ allocaBytes @Word32 ((Data.Vector.length (indirectStrides)) * 4)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPIndirectStrides `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (indirectStrides)
-  pPpMaxPrimitiveCounts <- ContT $ allocaBytesAligned @(Ptr Word32) ((Data.Vector.length (maxPrimitiveCounts)) * 8) 8
+  pPpMaxPrimitiveCounts <- ContT $ allocaBytes @(Ptr Word32) ((Data.Vector.length (maxPrimitiveCounts)) * 8)
   Data.Vector.imapM_ (\i e -> do
-    pPpMaxPrimitiveCounts' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (e)) * 4) 4
+    pPpMaxPrimitiveCounts' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (e)) * 4)
     lift $ Data.Vector.imapM_ (\i' e' -> poke (pPpMaxPrimitiveCounts' `plusPtr` (4 * (i')) :: Ptr Word32) (e')) (e)
     lift $ poke (pPpMaxPrimitiveCounts `plusPtr` (8 * (i)) :: Ptr (Ptr Word32)) (pPpMaxPrimitiveCounts')) (maxPrimitiveCounts)
   lift $ traceAroundEvent "vkCmdBuildAccelerationStructuresIndirectKHR" (vkCmdBuildAccelerationStructuresIndirectKHR' (commandBufferHandle (commandBuffer)) ((fromIntegral pInfosLength :: Word32)) (pPInfos) (pPIndirectDeviceAddresses) (pPIndirectStrides) (pPpMaxPrimitiveCounts))
@@ -3999,18 +4110,13 @@ foreign import ccall
 --     'GEOMETRY_TYPE_INSTANCES_KHR' in any other element of @pInfos@,
 --     which is accessed by this command
 --
--- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03666# For each
---     element of @pInfos@, if its @mode@ member is
---     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its
---     @srcAccelerationStructure@ member /must/ not be
---     'Vulkan.Core10.APIConstants.NULL_HANDLE'
---
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03667# For each
 --     element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its
---     @srcAccelerationStructure@ member /must/ have been built before with
---     'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR' set in
---     'AccelerationStructureBuildGeometryInfoKHR'::@flags@
+--     @srcAccelerationStructure@ member /must/ have previously been
+--     constructed with 'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR'
+--     set in 'AccelerationStructureBuildGeometryInfoKHR'::@flags@ in the
+--     build
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03668# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -4025,19 +4131,19 @@ foreign import ccall
 --     element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its @geometryCount@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03759# For each
 --     element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its @flags@ member
 --     /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03760# For each
 --     element of @pInfos@, if its @mode@ member is
 --     'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR', its @type@ member
 --     /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03761# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -4045,7 +4151,7 @@ foreign import ccall
 --     'AccelerationStructureGeometryKHR' structure referred to by its
 --     @pGeometries@ or @ppGeometries@ members, its @geometryType@ member
 --     /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03762# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -4053,7 +4159,7 @@ foreign import ccall
 --     'AccelerationStructureGeometryKHR' structure referred to by its
 --     @pGeometries@ or @ppGeometries@ members, its @flags@ member /must/
 --     have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03763# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -4062,7 +4168,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', its @geometry.triangles.vertexFormat@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03764# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -4071,7 +4177,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', its @geometry.triangles.maxVertex@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03765# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -4080,7 +4186,7 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', its @geometry.triangles.indexType@
 --     member /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03766# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -4088,8 +4194,8 @@ foreign import ccall
 --     'AccelerationStructureGeometryKHR' structure referred to by its
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', if its
---     @geometry.triangles.transformData@ member was NULL when
---     @srcAccelerationStructure@ was last built, then it must be NULL.
+--     @geometry.triangles.transformData@ address was @NULL@ when
+--     @srcAccelerationStructure@ was last built, then it /must/ be @NULL@
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03767# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -4097,8 +4203,9 @@ foreign import ccall
 --     'AccelerationStructureGeometryKHR' structure referred to by its
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', if its
---     @geometry.triangles.transformData@ member was not NULL when
---     @srcAccelerationStructure@ was last built, then it may not be NULL.
+--     @geometry.triangles.transformData@ address was not @NULL@ when
+--     @srcAccelerationStructure@ was last built, then it /must/ not be
+--     @NULL@
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03768# For each
 --     element of @pInfos@, if its @mode@ member is
@@ -4107,20 +4214,20 @@ foreign import ccall
 --     @pGeometries@ or @ppGeometries@ members, if @geometryType@ is
 --     'GEOMETRY_TYPE_TRIANGLES_KHR', and @geometry.triangles.indexType@ is
 --     not 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_KHR', then the
---     value of each index referenced index must be the same as the
+--     value of each index referenced /must/ be the same as the
 --     corresponding index value when @srcAccelerationStructure@ was last
---     built.
+--     built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-primitiveCount-03769# For
 --     each 'AccelerationStructureBuildRangeInfoKHR' referenced by this
 --     command, its @primitiveCount@ member /must/ have the same value
---     which was specified when @srcAccelerationStructure@ was last built.
+--     which was specified when @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-firstVertex-03770# For each
 --     'AccelerationStructureBuildRangeInfoKHR' referenced by this command,
 --     if the corresponding geometry uses indices, its @firstVertex@ member
 --     /must/ have the same value which was specified when
---     @srcAccelerationStructure@ was last built.
+--     @srcAccelerationStructure@ was last built
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03801# For each
 --     element of @pInfos@[i].@pGeometries@ or @pInfos@[i].@ppGeometries@
@@ -4252,6 +4359,15 @@ foreign import ccall
 --     value in @geometry.instances.data.hostAddress@ must be a valid
 --     'Vulkan.Extensions.Handles.AccelerationStructureKHR' object
 --
+-- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-04930# For any element
+--     of @pInfos@[i].@pGeometries@ or @pInfos@[i].@ppGeometries@ with a
+--     @geometryType@ of 'GEOMETRY_TYPE_INSTANCES_KHR' with
+--     'BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV' set, each
+--     @accelerationStructureReference@ in any structure in
+--     'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureMotionInstanceNV'
+--     value in @geometry.instances.data.hostAddress@ must be a valid
+--     'Vulkan.Extensions.Handles.AccelerationStructureKHR' object
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-device-parameter# @device@
@@ -4295,6 +4411,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureBuildGeometryInfoKHR',
 -- 'AccelerationStructureBuildRangeInfoKHR',
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
@@ -4313,27 +4430,27 @@ buildAccelerationStructuresKHR :: forall io
                                   -- 'AccelerationStructureBuildGeometryInfoKHR' structures defining the
                                   -- geometry used to build each acceleration structure.
                                   ("infos" ::: Vector AccelerationStructureBuildGeometryInfoKHR)
-                               -> -- | @ppBuildRangeInfos@ is an array of @infoCount@ pointers to arrays of
-                                  -- 'AccelerationStructureBuildRangeInfoKHR' structures. Each
-                                  -- @ppBuildRangeInfos@[i] is an array of @pInfos@[i].@geometryCount@
-                                  -- 'AccelerationStructureBuildRangeInfoKHR' structures defining dynamic
-                                  -- offsets to the addresses where geometry data is stored, as defined by
-                                  -- @pInfos@[i].
+                               -> -- | @ppBuildRangeInfos@ is a pointer to an array of @infoCount@ pointers to
+                                  -- arrays of 'AccelerationStructureBuildRangeInfoKHR' structures. Each
+                                  -- @ppBuildRangeInfos@[i] is a pointer to an array of
+                                  -- @pInfos@[i].@geometryCount@ 'AccelerationStructureBuildRangeInfoKHR'
+                                  -- structures defining dynamic offsets to the addresses where geometry data
+                                  -- is stored, as defined by @pInfos@[i].
                                   ("buildRangeInfos" ::: Vector (Vector AccelerationStructureBuildRangeInfoKHR))
                                -> io (Result)
 buildAccelerationStructuresKHR device deferredOperation infos buildRangeInfos = liftIO . evalContT $ do
-  let vkBuildAccelerationStructuresKHRPtr = pVkBuildAccelerationStructuresKHR (deviceCmds (device :: Device))
+  let vkBuildAccelerationStructuresKHRPtr = pVkBuildAccelerationStructuresKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkBuildAccelerationStructuresKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBuildAccelerationStructuresKHR is null" Nothing Nothing
   let vkBuildAccelerationStructuresKHR' = mkVkBuildAccelerationStructuresKHR vkBuildAccelerationStructuresKHRPtr
   let pInfosLength = Data.Vector.length $ (infos)
   lift $ unless ((Data.Vector.length $ (buildRangeInfos)) == pInfosLength) $
     throwIO $ IOError Nothing InvalidArgument "" "ppBuildRangeInfos and pInfos must have the same length" Nothing Nothing
-  pPInfos <- ContT $ allocaBytesAligned @AccelerationStructureBuildGeometryInfoKHR ((Data.Vector.length (infos)) * 80) 8
+  pPInfos <- ContT $ allocaBytes @AccelerationStructureBuildGeometryInfoKHR ((Data.Vector.length (infos)) * 80)
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPInfos `plusPtr` (80 * (i)) :: Ptr AccelerationStructureBuildGeometryInfoKHR) (e) . ($ ())) (infos)
-  pPpBuildRangeInfos <- ContT $ allocaBytesAligned @(Ptr AccelerationStructureBuildRangeInfoKHR) ((Data.Vector.length (buildRangeInfos)) * 8) 8
+  pPpBuildRangeInfos <- ContT $ allocaBytes @(Ptr AccelerationStructureBuildRangeInfoKHR) ((Data.Vector.length (buildRangeInfos)) * 8)
   Data.Vector.imapM_ (\i e -> do
-    pPpBuildRangeInfos' <- ContT $ allocaBytesAligned @AccelerationStructureBuildRangeInfoKHR ((Data.Vector.length (e)) * 16) 4
+    pPpBuildRangeInfos' <- ContT $ allocaBytes @AccelerationStructureBuildRangeInfoKHR ((Data.Vector.length (e)) * 16)
     lift $ Data.Vector.imapM_ (\i' e' -> poke (pPpBuildRangeInfos' `plusPtr` (16 * (i')) :: Ptr AccelerationStructureBuildRangeInfoKHR) (e')) (e)
     lift $ poke (pPpBuildRangeInfos `plusPtr` (8 * (i)) :: Ptr (Ptr AccelerationStructureBuildRangeInfoKHR)) (pPpBuildRangeInfos')) (buildRangeInfos)
   r <- lift $ traceAroundEvent "vkBuildAccelerationStructuresKHR" (vkBuildAccelerationStructuresKHR' (deviceHandle (device)) (deferredOperation) ((fromIntegral pInfosLength :: Word32)) (pPInfos) (pPpBuildRangeInfos))
@@ -4359,13 +4476,13 @@ foreign import ccall
 -- structure building.
 --
 -- If the acceleration structure was created with a non-zero value of
--- 'AccelerationStructureCreateInfoKHR'::@deviceAddress@ the return value
+-- 'AccelerationStructureCreateInfoKHR'::@deviceAddress@, the return value
 -- will be the same address.
 --
 -- If the acceleration structure was created with a @type@ of
--- 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR' the returned address /must/ be
--- consistent with the relative offset to other acceleration structures of
--- @type@ of 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR' allocated with the
+-- 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR', the returned address /must/
+-- be consistent with the relative offset to other acceleration structures
+-- with @type@ 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR' allocated with the
 -- same 'Vulkan.Core10.Handles.Buffer'. That is, the difference in returned
 -- addresses between the two /must/ be the same as the difference in
 -- offsets provided at acceleration structure creation.
@@ -4395,11 +4512,12 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureDeviceAddressInfoKHR',
 -- 'Vulkan.Core10.Handles.Device'
 getAccelerationStructureDeviceAddressKHR :: forall io
                                           . (MonadIO io)
-                                         => -- | @device@ is the logical device that the accelerationStructure was
+                                         => -- | @device@ is the logical device that the acceleration structure was
                                             -- created on.
                                             Device
                                          -> -- | @pInfo@ is a pointer to a 'AccelerationStructureDeviceAddressInfoKHR'
@@ -4408,7 +4526,7 @@ getAccelerationStructureDeviceAddressKHR :: forall io
                                             AccelerationStructureDeviceAddressInfoKHR
                                          -> io (DeviceAddress)
 getAccelerationStructureDeviceAddressKHR device info = liftIO . evalContT $ do
-  let vkGetAccelerationStructureDeviceAddressKHRPtr = pVkGetAccelerationStructureDeviceAddressKHR (deviceCmds (device :: Device))
+  let vkGetAccelerationStructureDeviceAddressKHRPtr = pVkGetAccelerationStructureDeviceAddressKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetAccelerationStructureDeviceAddressKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetAccelerationStructureDeviceAddressKHR is null" Nothing Nothing
   let vkGetAccelerationStructureDeviceAddressKHR' = mkVkGetAccelerationStructureDeviceAddressKHR vkGetAccelerationStructureDeviceAddressKHRPtr
@@ -4452,27 +4570,27 @@ foreign import ccall
 --
 -- -   For 'AccelerationStructureBuildGeometryInfoKHR':
 --
---     -   Its @type@, and @flags@ members are equal to those specified in
---         @pBuildInfo@.
+--     -   Its @type@, and @flags@ members are equal to @pBuildInfo->type@
+--         andm @pBuildInfo->flags@, respectively.
 --
---     -   @geometryCount@ is less than or equal to that specified in
---         @pBuildInfo@.
+--     -   @geometryCount@ is less than or equal to
+--         @pBuildInfo->geometryCount@.
 --
 --     -   For each element of either @pGeometries@ or @ppGeometries@ at a
---         given index, its @geometryType@ member is equal to that
---         specified in @pBuildInfo@.
+--         given index, its @geometryType@ member is equal to
+--         @pBuildInfo->geometryType@.
 --
 --     -   For each element of either @pGeometries@ or @ppGeometries@ at a
 --         given index, with a @geometryType@ member equal to
 --         'GEOMETRY_TYPE_TRIANGLES_KHR', the @vertexFormat@ and
---         @indexType@ members of @geometry.triangles@ are equal to those
---         specified in the same element in @pBuildInfo@.
+--         @indexType@ members of @geometry.triangles@ are equal to the
+--         corresponding members of the same element in @pBuildInfo@.
 --
 --     -   For each element of either @pGeometries@ or @ppGeometries@ at a
 --         given index, with a @geometryType@ member equal to
 --         'GEOMETRY_TYPE_TRIANGLES_KHR', the @maxVertex@ member of
---         @geometry.triangles@ is less than or equal to that specified in
---         the same element in @pBuildInfo@.
+--         @geometry.triangles@ is less than or equal to the corresponding
+--         member of the same element in @pBuildInfo@.
 --
 --     -   For each element of either @pGeometries@ or @ppGeometries@ at a
 --         given index, with a @geometryType@ member equal to
@@ -4543,6 +4661,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureBuildGeometryInfoKHR',
 -- 'AccelerationStructureBuildSizesInfoKHR',
 -- 'AccelerationStructureBuildTypeKHR', 'Vulkan.Core10.Handles.Device'
@@ -4564,7 +4683,7 @@ getAccelerationStructureBuildSizesKHR :: forall io
                                          ("maxPrimitiveCounts" ::: Vector Word32)
                                       -> io (("sizeInfo" ::: AccelerationStructureBuildSizesInfoKHR))
 getAccelerationStructureBuildSizesKHR device buildType buildInfo maxPrimitiveCounts = liftIO . evalContT $ do
-  let vkGetAccelerationStructureBuildSizesKHRPtr = pVkGetAccelerationStructureBuildSizesKHR (deviceCmds (device :: Device))
+  let vkGetAccelerationStructureBuildSizesKHRPtr = pVkGetAccelerationStructureBuildSizesKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetAccelerationStructureBuildSizesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetAccelerationStructureBuildSizesKHR is null" Nothing Nothing
   let vkGetAccelerationStructureBuildSizesKHR' = mkVkGetAccelerationStructureBuildSizesKHR vkGetAccelerationStructureBuildSizesKHRPtr
@@ -4572,7 +4691,7 @@ getAccelerationStructureBuildSizesKHR device buildType buildInfo maxPrimitiveCou
   pMaxPrimitiveCounts <- if Data.Vector.null (maxPrimitiveCounts)
     then pure nullPtr
     else do
-      pPMaxPrimitiveCounts <- ContT $ allocaBytesAligned @Word32 (((Data.Vector.length (maxPrimitiveCounts))) * 4) 4
+      pPMaxPrimitiveCounts <- ContT $ allocaBytes @Word32 (((Data.Vector.length (maxPrimitiveCounts))) * 4)
       lift $ Data.Vector.imapM_ (\i e -> poke (pPMaxPrimitiveCounts `plusPtr` (4 * (i)) :: Ptr Word32) (e)) ((maxPrimitiveCounts))
       pure $ pPMaxPrimitiveCounts
   pPSizeInfo <- ContT (withZeroCStruct @AccelerationStructureBuildSizesInfoKHR)
@@ -4581,8 +4700,12 @@ getAccelerationStructureBuildSizesKHR device buildType buildInfo maxPrimitiveCou
   pure $ (pSizeInfo)
 
 
+-- No documentation found for TopLevel "VK_GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR"
+pattern GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR = GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR
+
+
 -- | VkWriteDescriptorSetAccelerationStructureKHR - Structure specifying
--- acceleration structure descriptor info
+-- acceleration structure descriptor information
 --
 -- == Valid Usage
 --
@@ -4599,7 +4722,7 @@ getAccelerationStructureBuildSizesKHR device buildType buildInfo maxPrimitiveCou
 -- -   #VUID-VkWriteDescriptorSetAccelerationStructureKHR-pAccelerationStructures-03580#
 --     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
---     feature is not enabled, each member of @pAccelerationStructures@
+--     feature is not enabled, each element of @pAccelerationStructures@
 --     /must/ not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- == Valid Usage (Implicit)
@@ -4619,10 +4742,13 @@ getAccelerationStructureBuildSizesKHR device buildType buildInfo maxPrimitiveCou
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data WriteDescriptorSetAccelerationStructureKHR = WriteDescriptorSetAccelerationStructureKHR
-  { -- | @pAccelerationStructures@ are the acceleration structures to update.
+  { -- | @pAccelerationStructures@ is a pointer to an array of
+    -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR' structures
+    -- specifying the acceleration structures to update.
     accelerationStructures :: Vector AccelerationStructureKHR }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -4631,12 +4757,12 @@ deriving instance Generic (WriteDescriptorSetAccelerationStructureKHR)
 deriving instance Show WriteDescriptorSetAccelerationStructureKHR
 
 instance ToCStruct WriteDescriptorSetAccelerationStructureKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p WriteDescriptorSetAccelerationStructureKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (accelerationStructures)) :: Word32))
-    pPAccelerationStructures' <- ContT $ allocaBytesAligned @AccelerationStructureKHR ((Data.Vector.length (accelerationStructures)) * 8) 8
+    pPAccelerationStructures' <- ContT $ allocaBytes @AccelerationStructureKHR ((Data.Vector.length (accelerationStructures)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPAccelerationStructures' `plusPtr` (8 * (i)) :: Ptr AccelerationStructureKHR) (e)) (accelerationStructures)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr AccelerationStructureKHR))) (pPAccelerationStructures')
     lift $ f
@@ -4666,23 +4792,25 @@ instance Zero WriteDescriptorSetAccelerationStructureKHR where
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceAccelerationStructureFeaturesKHR'
--- structure describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceAccelerationStructureFeaturesKHR' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceAccelerationStructureFeaturesKHR' /can/ also be used in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- the features.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceAccelerationStructureFeaturesKHR' /can/ also
+-- be used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
+-- to selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceAccelerationStructureFeaturesKHR = PhysicalDeviceAccelerationStructureFeaturesKHR
@@ -4725,7 +4853,7 @@ deriving instance Generic (PhysicalDeviceAccelerationStructureFeaturesKHR)
 deriving instance Show PhysicalDeviceAccelerationStructureFeaturesKHR
 
 instance ToCStruct PhysicalDeviceAccelerationStructureFeaturesKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceAccelerationStructureFeaturesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -4777,10 +4905,21 @@ instance Zero PhysicalDeviceAccelerationStructureFeaturesKHR where
 --
 -- = Description
 --
+-- Due to the fact that the geometry, instance, and primitive counts are
+-- specified at acceleration structure creation as 32-bit values,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxGeometryCount maxGeometryCount>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxInstanceCount maxInstanceCount>,
+-- and
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxPrimitiveCount maxPrimitiveCount>
+-- /must/ not exceed 232-1.
+--
 -- If the 'PhysicalDeviceAccelerationStructurePropertiesKHR' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- Limits specified by this structure /must/ match those specified with the
 -- same name in
@@ -4790,16 +4929,18 @@ instance Zero PhysicalDeviceAccelerationStructureFeaturesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceAccelerationStructurePropertiesKHR = PhysicalDeviceAccelerationStructurePropertiesKHR
-  { -- | @maxGeometryCount@ is the maximum number of geometries in the bottom
-    -- level acceleration structure.
-    maxGeometryCount :: Word64
-  , -- | @maxInstanceCount@ is the maximum number of instances in the top level
-    -- acceleration structure.
-    maxInstanceCount :: Word64
-  , -- | @maxPrimitiveCount@ is the maximum number of triangles or AABBs in all
+  { -- | #limits-maxGeometryCount# @maxGeometryCount@ is the maximum number of
     -- geometries in the bottom level acceleration structure.
+    maxGeometryCount :: Word64
+  , -- | #limits-maxInstanceCount# @maxInstanceCount@ is the maximum number of
+    -- instances in the top level acceleration structure.
+    maxInstanceCount :: Word64
+  , -- | #limits-maxPrimitiveCount# @maxPrimitiveCount@ is the maximum number of
+    -- triangles or AABBs in all geometries in the bottom level acceleration
+    -- structure.
     maxPrimitiveCount :: Word64
   , -- | #limits-maxPerStageDescriptorAccelerationStructures#
     -- @maxPerStageDescriptorAccelerationStructures@ is the maximum number of
@@ -4840,7 +4981,8 @@ data PhysicalDeviceAccelerationStructurePropertiesKHR = PhysicalDeviceAccelerati
   , -- | #limits-minAccelerationStructureScratchOffsetAlignment#
     -- @minAccelerationStructureScratchOffsetAlignment@ is the minimum
     -- /required/ alignment, in bytes, for scratch data passed in to an
-    -- acceleration structure build command.
+    -- acceleration structure build command. The value /must/ be a power of
+    -- two.
     minAccelerationStructureScratchOffsetAlignment :: Word32
   }
   deriving (Typeable, Eq)
@@ -4850,7 +4992,7 @@ deriving instance Generic (PhysicalDeviceAccelerationStructurePropertiesKHR)
 deriving instance Show PhysicalDeviceAccelerationStructurePropertiesKHR
 
 instance ToCStruct PhysicalDeviceAccelerationStructurePropertiesKHR where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceAccelerationStructurePropertiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_PROPERTIES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -4922,77 +5064,106 @@ instance Zero PhysicalDeviceAccelerationStructurePropertiesKHR where
 -- @vertexStride@ for acceleration structure geometry is instead restricted
 -- to being a 32-bit value.
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-vertexStride-03735#
+--     @vertexStride@ /must/ be a multiple of the size in bytes of the
+--     smallest component of @vertexFormat@
+--
+-- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-vertexStride-03819#
+--     @vertexStride@ /must/ be less than or equal to 232-1
+--
+-- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-vertexFormat-03797#
+--     @vertexFormat@ /must/ support the
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR'
+--     in
+--     'Vulkan.Core10.DeviceInitialization.FormatProperties'::@bufferFeatures@
+--     as returned by
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFormatProperties2'
+--
+-- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-indexType-03798#
+--     @indexType@ /must/ be
+--     'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT16',
+--     'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT32', or
+--     'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_KHR'
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-sType-sType#
+--     @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR'
+--
+-- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-pNext-pNext#
+--     @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureGeometryMotionTrianglesDataNV'
+--
+-- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-sType-unique#
+--     The @sType@ value of each struct in the @pNext@ chain /must/ be
+--     unique
+--
+-- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-vertexFormat-parameter#
+--     @vertexFormat@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format'
+--     value
+--
+-- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-indexType-parameter#
+--     @indexType@ /must/ be a valid
+--     'Vulkan.Core10.Enums.IndexType.IndexType' value
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureGeometryDataKHR', 'DeviceOrHostAddressConstKHR',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Core10.Enums.IndexType.IndexType',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data AccelerationStructureGeometryTrianglesDataKHR = AccelerationStructureGeometryTrianglesDataKHR
-  { -- | @vertexFormat@ is the 'Vulkan.Core10.Enums.Format.Format' of each vertex
+data AccelerationStructureGeometryTrianglesDataKHR (es :: [Type]) = AccelerationStructureGeometryTrianglesDataKHR
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @vertexFormat@ is the 'Vulkan.Core10.Enums.Format.Format' of each vertex
     -- element.
-    --
-    -- #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-vertexFormat-03797#
-    -- @vertexFormat@ /must/ support the
-    -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR'
-    -- in
-    -- 'Vulkan.Core10.DeviceInitialization.FormatProperties'::@bufferFeatures@
-    -- as returned by
-    -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFormatProperties2'
-    --
-    -- #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-vertexFormat-parameter#
-    -- @vertexFormat@ /must/ be a valid 'Vulkan.Core10.Enums.Format.Format'
-    -- value
     vertexFormat :: Format
   , -- | @vertexData@ is a device or host address to memory containing vertex
     -- data for this geometry.
     vertexData :: DeviceOrHostAddressConstKHR
   , -- | @vertexStride@ is the stride in bytes between each vertex.
-    --
-    -- #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-vertexStride-03735#
-    -- @vertexStride@ /must/ be a multiple of the size in bytes of the smallest
-    -- component of @vertexFormat@
-    --
-    -- #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-vertexStride-03819#
-    -- @vertexStride@ /must/ be less than or equal to 232-1
     vertexStride :: DeviceSize
   , -- | @maxVertex@ is the highest index of a vertex that will be addressed by a
     -- build command using this structure.
     maxVertex :: Word32
   , -- | @indexType@ is the 'Vulkan.Core10.Enums.IndexType.IndexType' of each
     -- index element.
-    --
-    -- #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-indexType-03798#
-    -- @indexType@ /must/ be 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT16',
-    -- 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT32', or
-    -- 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_KHR'
-    --
-    -- #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-indexType-parameter#
-    -- @indexType@ /must/ be a valid 'Vulkan.Core10.Enums.IndexType.IndexType'
-    -- value
     indexType :: IndexType
   , -- | @indexData@ is a device or host address to memory containing index data
     -- for this geometry.
     indexData :: DeviceOrHostAddressConstKHR
   , -- | @transformData@ is a device or host address to memory containing an
-    -- optional reference to a 'TransformMatrixKHR' structure defining a
-    -- transformation that should be applied to vertices in this geometry.
+    -- optional reference to a 'TransformMatrixKHR' structure describing a
+    -- transformation from the space in which the vertices in this geometry are
+    -- described to the space in which the acceleration structure is defined.
     transformData :: DeviceOrHostAddressConstKHR
   }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (AccelerationStructureGeometryTrianglesDataKHR)
+deriving instance Generic (AccelerationStructureGeometryTrianglesDataKHR (es :: [Type]))
 #endif
-deriving instance Show AccelerationStructureGeometryTrianglesDataKHR
+deriving instance Show (Chain es) => Show (AccelerationStructureGeometryTrianglesDataKHR es)
 
-instance ToCStruct AccelerationStructureGeometryTrianglesDataKHR where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+instance Extensible AccelerationStructureGeometryTrianglesDataKHR where
+  extensibleTypeName = "AccelerationStructureGeometryTrianglesDataKHR"
+  setNext AccelerationStructureGeometryTrianglesDataKHR{..} next' = AccelerationStructureGeometryTrianglesDataKHR{next = next', ..}
+  getNext AccelerationStructureGeometryTrianglesDataKHR{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends AccelerationStructureGeometryTrianglesDataKHR e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @AccelerationStructureGeometryMotionTrianglesDataNV = Just f
+    | otherwise = Nothing
+
+instance (Extendss AccelerationStructureGeometryTrianglesDataKHR es, PokeChain es) => ToCStruct (AccelerationStructureGeometryTrianglesDataKHR es) where
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureGeometryTrianglesDataKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr Format)) (vertexFormat)
     ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr DeviceOrHostAddressConstKHR)) (vertexData) . ($ ())
     lift $ poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (vertexStride)
@@ -5005,7 +5176,8 @@ instance ToCStruct AccelerationStructureGeometryTrianglesDataKHR where
   cStructAlignment = 8
   pokeZeroCStruct p f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ poke ((p `plusPtr` 16 :: Ptr Format)) (zero)
     ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr DeviceOrHostAddressConstKHR)) (zero) . ($ ())
     lift $ poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (zero)
@@ -5015,8 +5187,9 @@ instance ToCStruct AccelerationStructureGeometryTrianglesDataKHR where
     ContT $ pokeCStruct ((p `plusPtr` 56 :: Ptr DeviceOrHostAddressConstKHR)) (zero) . ($ ())
     lift $ f
 
-instance Zero AccelerationStructureGeometryTrianglesDataKHR where
+instance es ~ '[] => Zero (AccelerationStructureGeometryTrianglesDataKHR es) where
   zero = AccelerationStructureGeometryTrianglesDataKHR
+           ()
            zero
            zero
            zero
@@ -5034,6 +5207,7 @@ instance Zero AccelerationStructureGeometryTrianglesDataKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureGeometryDataKHR', 'DeviceOrHostAddressConstKHR',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -5059,7 +5233,7 @@ deriving instance Generic (AccelerationStructureGeometryAabbsDataKHR)
 deriving instance Show AccelerationStructureGeometryAabbsDataKHR
 
 instance ToCStruct AccelerationStructureGeometryAabbsDataKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureGeometryAabbsDataKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_AABBS_DATA_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -5088,6 +5262,7 @@ instance Zero AccelerationStructureGeometryAabbsDataKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureGeometryDataKHR',
 -- 'Vulkan.Core10.FundamentalTypes.Bool32', 'DeviceOrHostAddressConstKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -5096,9 +5271,16 @@ data AccelerationStructureGeometryInstancesDataKHR = AccelerationStructureGeomet
     -- addresses or just an array.
     arrayOfPointers :: Bool
   , -- | @data@ is either the address of an array of device or host addresses
-    -- referencing individual 'AccelerationStructureInstanceKHR' structures if
-    -- @arrayOfPointers@ is 'Vulkan.Core10.FundamentalTypes.TRUE', or the
-    -- address of an array of 'AccelerationStructureInstanceKHR' structures.
+    -- referencing individual 'AccelerationStructureInstanceKHR' structures or
+    -- packed motion instance information as described in
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-motion-instances motion instances>
+    -- if @arrayOfPointers@ is 'Vulkan.Core10.FundamentalTypes.TRUE', or the
+    -- address of an array of 'AccelerationStructureInstanceKHR' or
+    -- 'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureMotionInstanceNV'
+    -- structures. Addresses and 'AccelerationStructureInstanceKHR' structures
+    -- are tightly packed.
+    -- 'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureMotionInstanceNV'
+    -- structures have a stride of 160 bytes.
     data' :: DeviceOrHostAddressConstKHR
   }
   deriving (Typeable)
@@ -5108,7 +5290,7 @@ deriving instance Generic (AccelerationStructureGeometryInstancesDataKHR)
 deriving instance Show AccelerationStructureGeometryInstancesDataKHR
 
 instance ToCStruct AccelerationStructureGeometryInstancesDataKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureGeometryInstancesDataKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_INSTANCES_DATA_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -5132,23 +5314,6 @@ instance Zero AccelerationStructureGeometryInstancesDataKHR where
 
 -- | VkAccelerationStructureGeometryKHR - Structure specifying geometries to
 -- be built into an acceleration structure
---
--- == Valid Usage
---
--- -   #VUID-VkAccelerationStructureGeometryKHR-geometryType-03541# If
---     @geometryType@ is 'GEOMETRY_TYPE_AABBS_KHR', the @aabbs@ member of
---     @geometry@ /must/ be a valid
---     'AccelerationStructureGeometryAabbsDataKHR' structure
---
--- -   #VUID-VkAccelerationStructureGeometryKHR-geometryType-03542# If
---     @geometryType@ is 'GEOMETRY_TYPE_TRIANGLES_KHR', the @triangles@
---     member of @geometry@ /must/ be a valid
---     'AccelerationStructureGeometryTrianglesDataKHR' structure
---
--- -   #VUID-VkAccelerationStructureGeometryKHR-geometryType-03543# If
---     @geometryType@ is 'GEOMETRY_TYPE_INSTANCES_KHR', the @instances@
---     member of @geometry@ /must/ be a valid
---     'AccelerationStructureGeometryInstancesDataKHR' structure
 --
 -- == Valid Usage (Implicit)
 --
@@ -5182,6 +5347,7 @@ instance Zero AccelerationStructureGeometryInstancesDataKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureBuildGeometryInfoKHR',
 -- 'AccelerationStructureGeometryDataKHR', 'GeometryFlagsKHR',
 -- 'GeometryTypeKHR', 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -5203,7 +5369,7 @@ deriving instance Generic (AccelerationStructureGeometryKHR)
 deriving instance Show AccelerationStructureGeometryKHR
 
 instance ToCStruct AccelerationStructureGeometryKHR where
-  withCStruct x f = allocaBytesAligned 96 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 96 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureGeometryKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -5245,6 +5411,36 @@ instance Zero AccelerationStructureGeometryKHR where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shader-binding-table-hit-shader-indexing used to determine hit and intersection shaders executed during traversal>.
 -- The geometry index is available to ray queries via the
 -- @OpRayQueryGetIntersectionGeometryIndexKHR@ instruction.
+--
+-- Setting 'BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV' in @flags@
+-- indicates that this build is a motion top level acceleration structure.
+-- A motion top level uses instances of format
+-- 'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureMotionInstanceNV'
+-- if 'AccelerationStructureGeometryInstancesDataKHR'::@arrayOfPointers@ is
+-- 'Vulkan.Core10.FundamentalTypes.FALSE'.
+--
+-- If 'AccelerationStructureGeometryInstancesDataKHR'::@arrayOfPointers@ is
+-- 'Vulkan.Core10.FundamentalTypes.TRUE', the pointer for any given element
+-- of the array of instance pointers consists of 4 bits of
+-- 'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureMotionInstanceTypeNV'
+-- in the low 4 bits of the pointer identifying the type of structure at
+-- the pointer. The device address accessed is the value in the array with
+-- the low 4 bits set to zero. The structure at the pointer is one of
+-- 'AccelerationStructureInstanceKHR',
+-- 'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureMatrixMotionInstanceNV'
+-- or
+-- 'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureSRTMotionInstanceNV',
+-- depending on the type value encoded in the low 4 bits.
+--
+-- A top level acceleration structure with either motion instances or
+-- vertex motion in its instances /must/ set
+-- 'BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV' in @flags@.
+--
+-- Members @srcAccelerationStructure@ and @dstAccelerationStructure@ /may/
+-- be the same or different for an update operation (when @mode@ is
+-- 'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR'). If they are the same,
+-- the update happens in-place. Otherwise, the target acceleration
+-- structure is updated and the source is not modified.
 --
 -- == Valid Usage
 --
@@ -5299,6 +5495,23 @@ instance Zero AccelerationStructureGeometryKHR where
 --     then it /must/ not have the
 --     'BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR' bit set
 --
+-- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-dstAccelerationStructure-04927#
+--     If @dstAccelerationStructure@ was created with
+--     'ACCELERATION_STRUCTURE_CREATE_MOTION_BIT_NV' set in
+--     'AccelerationStructureCreateInfoKHR'::@flags@,
+--     'BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV' /must/ be set in
+--     @flags@
+--
+-- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-flags-04928# If
+--     'BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV' is set in @flags@,
+--     @dstAccelerationStructure@ /must/ have been created with
+--     'ACCELERATION_STRUCTURE_CREATE_MOTION_BIT_NV' set in
+--     'AccelerationStructureCreateInfoKHR'::@flags@
+--
+-- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-flags-04929# If
+--     'BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV' is set in @flags@,
+--     @type@ /must/ not be 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-sType-sType#
@@ -5334,6 +5547,7 @@ instance Zero AccelerationStructureGeometryKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureGeometryKHR',
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'AccelerationStructureTypeKHR', 'BuildAccelerationStructureFlagsKHR',
@@ -5353,12 +5567,12 @@ data AccelerationStructureBuildGeometryInfoKHR = AccelerationStructureBuildGeome
   , -- | @mode@ is a 'BuildAccelerationStructureModeKHR' value specifying the
     -- type of operation to perform.
     mode :: BuildAccelerationStructureModeKHR
-  , -- | @srcAccelerationStructure@ points to an existing acceleration structure
-    -- that is to be used to update the @dst@ acceleration structure when
-    -- @mode@ is 'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR'.
+  , -- | @srcAccelerationStructure@ is a pointer to an existing acceleration
+    -- structure that is to be used to update the @dst@ acceleration structure
+    -- when @mode@ is 'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR'.
     srcAccelerationStructure :: AccelerationStructureKHR
-  , -- | @dstAccelerationStructure@ points to the target acceleration structure
-    -- for the build.
+  , -- | @dstAccelerationStructure@ is a pointer to the target acceleration
+    -- structure for the build.
     dstAccelerationStructure :: AccelerationStructureKHR
   , -- | @pGeometries@ is a pointer to an array of
     -- 'AccelerationStructureGeometryKHR' structures.
@@ -5374,7 +5588,7 @@ deriving instance Generic (AccelerationStructureBuildGeometryInfoKHR)
 deriving instance Show AccelerationStructureBuildGeometryInfoKHR
 
 instance ToCStruct AccelerationStructureBuildGeometryInfoKHR where
-  withCStruct x f = allocaBytesAligned 80 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 80 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureBuildGeometryInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -5384,7 +5598,7 @@ instance ToCStruct AccelerationStructureBuildGeometryInfoKHR where
     lift $ poke ((p `plusPtr` 32 :: Ptr AccelerationStructureKHR)) (srcAccelerationStructure)
     lift $ poke ((p `plusPtr` 40 :: Ptr AccelerationStructureKHR)) (dstAccelerationStructure)
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (geometries)) :: Word32))
-    pPGeometries' <- ContT $ allocaBytesAligned @AccelerationStructureGeometryKHR ((Data.Vector.length (geometries)) * 96) 8
+    pPGeometries' <- ContT $ allocaBytes @AccelerationStructureGeometryKHR ((Data.Vector.length (geometries)) * 96)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPGeometries' `plusPtr` (96 * (i)) :: Ptr AccelerationStructureGeometryKHR) (e) . ($ ())) (geometries)
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr AccelerationStructureGeometryKHR))) (pPGeometries')
     lift $ poke ((p `plusPtr` 64 :: Ptr (Ptr (Ptr AccelerationStructureGeometryKHR)))) (nullPtr)
@@ -5438,10 +5652,15 @@ instance Zero AccelerationStructureBuildGeometryInfoKHR where
 --         'AccelerationStructureGeometryTrianglesDataKHR'::@vertexStride@
 --         × @firstVertex@.
 --
---     -   A single 'TransformMatrixKHR' structure is consumed from
+--     -   If
+--         'AccelerationStructureGeometryTrianglesDataKHR'::@transformData@
+--         is not @NULL@, a single 'TransformMatrixKHR' structure is
+--         consumed from
 --         'AccelerationStructureGeometryTrianglesDataKHR'::@transformData@,
---         at an offset of @transformOffset@. This transformation matrix is
---         used by all triangles.
+--         at an offset of @transformOffset@. This matrix describes a
+--         transformation from the space in which the vertices for all
+--         triangles in this geometry are described to the space in which
+--         the acceleration structure is defined.
 --
 -- -   For geometries of type 'GEOMETRY_TYPE_AABBS_KHR', @primitiveCount@
 --     is the number of axis-aligned bounding boxes. @primitiveCount@
@@ -5451,8 +5670,9 @@ instance Zero AccelerationStructureBuildGeometryInfoKHR where
 --
 -- -   For geometries of type 'GEOMETRY_TYPE_INSTANCES_KHR',
 --     @primitiveCount@ is the number of acceleration structures.
---     @primitiveCount@ 'AccelerationStructureInstanceKHR' structures are
---     consumed from
+--     @primitiveCount@ 'AccelerationStructureInstanceKHR' or
+--     'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureMotionInstanceNV'
+--     structures are consumed from
 --     'AccelerationStructureGeometryInstancesDataKHR'::@data@, starting at
 --     an offset of @primitiveOffset@.
 --
@@ -5467,7 +5687,7 @@ instance Zero AccelerationStructureBuildGeometryInfoKHR where
 --
 -- -   #VUID-VkAccelerationStructureBuildRangeInfoKHR-primitiveOffset-03657#
 --     For geometries of type 'GEOMETRY_TYPE_TRIANGLES_KHR', if the
---     geometry doesn’t use indices, the offset @primitiveOffset@ from
+--     geometry does not use indices, the offset @primitiveOffset@ from
 --     'AccelerationStructureGeometryTrianglesDataKHR'::@vertexData@ /must/
 --     be a multiple of the component size of
 --     'AccelerationStructureGeometryTrianglesDataKHR'::@vertexFormat@
@@ -5492,6 +5712,7 @@ instance Zero AccelerationStructureBuildGeometryInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'buildAccelerationStructuresKHR', 'cmdBuildAccelerationStructuresKHR'
 data AccelerationStructureBuildRangeInfoKHR = AccelerationStructureBuildRangeInfoKHR
   { -- | @primitiveCount@ defines the number of primitives for a corresponding
@@ -5514,7 +5735,7 @@ deriving instance Generic (AccelerationStructureBuildRangeInfoKHR)
 deriving instance Show AccelerationStructureBuildRangeInfoKHR
 
 instance ToCStruct AccelerationStructureBuildRangeInfoKHR where
-  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureBuildRangeInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (primitiveCount)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (primitiveOffset)
@@ -5578,13 +5799,17 @@ instance Zero AccelerationStructureBuildRangeInfoKHR where
 -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
 -- flag to all buffers that use
 -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT',
--- and
+-- and will add
 -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT'
 -- to all buffers used as storage for an acceleration structure where
--- @deviceAddress@ is not zero. During capture the tool will save the
--- queried opaque device addresses in the trace. During replay, the buffers
--- will be created specifying the original address so any address values
--- stored in the trace data will remain valid.
+-- @deviceAddress@ is not zero. This also means that the tool will need to
+-- add
+-- 'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
+-- to memory allocations to allow the flag to be set where the application
+-- may not have otherwise required it. During capture the tool will save
+-- the queried opaque device addresses in the trace. During replay, the
+-- buffers will be created specifying the original address so any address
+-- values stored in the trace data will remain valid.
 --
 -- Implementations are expected to separate such buffers in the GPU address
 -- space so normal allocations will avoid using these addresses.
@@ -5604,6 +5829,13 @@ instance Zero AccelerationStructureBuildRangeInfoKHR where
 -- 'cmdWriteAccelerationStructuresPropertiesKHR' or
 -- 'writeAccelerationStructuresPropertiesKHR' /can/ be used to obtain the
 -- compacted size required.
+--
+-- If the acceleration structure will be the target of a build operation
+-- with 'BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV' it /must/ include
+-- 'ACCELERATION_STRUCTURE_CREATE_MOTION_BIT_NV' in @flags@ and include
+-- 'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureMotionInfoNV'
+-- as an extension structure in @pNext@ with the number of instances as
+-- metadata for the object.
 --
 -- == Valid Usage
 --
@@ -5631,6 +5863,18 @@ instance Zero AccelerationStructureBuildRangeInfoKHR where
 -- -   #VUID-VkAccelerationStructureCreateInfoKHR-offset-03734# @offset@
 --     /must/ be a multiple of @256@ bytes
 --
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-flags-04954# If
+--     'ACCELERATION_STRUCTURE_CREATE_MOTION_BIT_NV' is set in @flags@ and
+--     @type@ is 'ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR', one member of
+--     the @pNext@ chain /must/ be a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureMotionInfoNV'
+--
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-flags-04955# If any
+--     geometry includes
+--     'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureGeometryMotionTrianglesDataNV'
+--     then @flags@ /must/ contain
+--     'ACCELERATION_STRUCTURE_CREATE_MOTION_BIT_NV'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkAccelerationStructureCreateInfoKHR-sType-sType# @sType@
@@ -5638,7 +5882,11 @@ instance Zero AccelerationStructureBuildRangeInfoKHR where
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR'
 --
 -- -   #VUID-VkAccelerationStructureCreateInfoKHR-pNext-pNext# @pNext@
---     /must/ be @NULL@
+--     /must/ be @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureMotionInfoNV'
+--
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-sType-unique# The @sType@
+--     value of each struct in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkAccelerationStructureCreateInfoKHR-createFlags-parameter#
 --     @createFlags@ /must/ be a valid combination of
@@ -5652,14 +5900,17 @@ instance Zero AccelerationStructureBuildRangeInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureCreateFlagsKHR', 'AccelerationStructureTypeKHR',
 -- 'Vulkan.Core10.Handles.Buffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceAddress',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createAccelerationStructureKHR'
-data AccelerationStructureCreateInfoKHR = AccelerationStructureCreateInfoKHR
-  { -- | @createFlags@ is a bitmask of 'AccelerationStructureCreateFlagBitsKHR'
+data AccelerationStructureCreateInfoKHR (es :: [Type]) = AccelerationStructureCreateInfoKHR
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @createFlags@ is a bitmask of 'AccelerationStructureCreateFlagBitsKHR'
     -- specifying additional creation parameters of the acceleration structure.
     createFlags :: AccelerationStructureCreateFlagsKHR
   , -- | @buffer@ is the buffer on which the acceleration structure will be
@@ -5680,37 +5931,50 @@ data AccelerationStructureCreateInfoKHR = AccelerationStructureCreateInfoKHR
     -- feature is being used.
     deviceAddress :: DeviceAddress
   }
-  deriving (Typeable, Eq)
+  deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (AccelerationStructureCreateInfoKHR)
+deriving instance Generic (AccelerationStructureCreateInfoKHR (es :: [Type]))
 #endif
-deriving instance Show AccelerationStructureCreateInfoKHR
+deriving instance Show (Chain es) => Show (AccelerationStructureCreateInfoKHR es)
 
-instance ToCStruct AccelerationStructureCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p AccelerationStructureCreateInfoKHR{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr AccelerationStructureCreateFlagsKHR)) (createFlags)
-    poke ((p `plusPtr` 24 :: Ptr Buffer)) (buffer)
-    poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (offset)
-    poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (size)
-    poke ((p `plusPtr` 48 :: Ptr AccelerationStructureTypeKHR)) (type')
-    poke ((p `plusPtr` 56 :: Ptr DeviceAddress)) (deviceAddress)
-    f
+instance Extensible AccelerationStructureCreateInfoKHR where
+  extensibleTypeName = "AccelerationStructureCreateInfoKHR"
+  setNext AccelerationStructureCreateInfoKHR{..} next' = AccelerationStructureCreateInfoKHR{next = next', ..}
+  getNext AccelerationStructureCreateInfoKHR{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends AccelerationStructureCreateInfoKHR e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @AccelerationStructureMotionInfoNV = Just f
+    | otherwise = Nothing
+
+instance (Extendss AccelerationStructureCreateInfoKHR es, PokeChain es) => ToCStruct (AccelerationStructureCreateInfoKHR es) where
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p AccelerationStructureCreateInfoKHR{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr AccelerationStructureCreateFlagsKHR)) (createFlags)
+    lift $ poke ((p `plusPtr` 24 :: Ptr Buffer)) (buffer)
+    lift $ poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (offset)
+    lift $ poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (size)
+    lift $ poke ((p `plusPtr` 48 :: Ptr AccelerationStructureTypeKHR)) (type')
+    lift $ poke ((p `plusPtr` 56 :: Ptr DeviceAddress)) (deviceAddress)
+    lift $ f
   cStructSize = 64
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 24 :: Ptr Buffer)) (zero)
-    poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (zero)
-    poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (zero)
-    poke ((p `plusPtr` 48 :: Ptr AccelerationStructureTypeKHR)) (zero)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ poke ((p `plusPtr` 24 :: Ptr Buffer)) (zero)
+    lift $ poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (zero)
+    lift $ poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (zero)
+    lift $ poke ((p `plusPtr` 48 :: Ptr AccelerationStructureTypeKHR)) (zero)
+    lift $ f
 
-instance FromCStruct AccelerationStructureCreateInfoKHR where
+instance (Extendss AccelerationStructureCreateInfoKHR es, PeekChain es) => FromCStruct (AccelerationStructureCreateInfoKHR es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     createFlags <- peek @AccelerationStructureCreateFlagsKHR ((p `plusPtr` 16 :: Ptr AccelerationStructureCreateFlagsKHR))
     buffer <- peek @Buffer ((p `plusPtr` 24 :: Ptr Buffer))
     offset <- peek @DeviceSize ((p `plusPtr` 32 :: Ptr DeviceSize))
@@ -5718,16 +5982,11 @@ instance FromCStruct AccelerationStructureCreateInfoKHR where
     type' <- peek @AccelerationStructureTypeKHR ((p `plusPtr` 48 :: Ptr AccelerationStructureTypeKHR))
     deviceAddress <- peek @DeviceAddress ((p `plusPtr` 56 :: Ptr DeviceAddress))
     pure $ AccelerationStructureCreateInfoKHR
-             createFlags buffer offset size type' deviceAddress
+             next createFlags buffer offset size type' deviceAddress
 
-instance Storable AccelerationStructureCreateInfoKHR where
-  sizeOf ~_ = 64
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero AccelerationStructureCreateInfoKHR where
+instance es ~ '[] => Zero (AccelerationStructureCreateInfoKHR es) where
   zero = AccelerationStructureCreateInfoKHR
+           ()
            zero
            zero
            zero
@@ -5743,7 +6002,8 @@ instance Zero AccelerationStructureCreateInfoKHR where
 --
 -- = See Also
 --
--- No cross-references are available
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
 data AabbPositionsKHR = AabbPositionsKHR
   { -- | @minX@ is the x position of one opposing corner of a bounding box.
     --
@@ -5774,7 +6034,7 @@ deriving instance Generic (AabbPositionsKHR)
 deriving instance Show AabbPositionsKHR
 
 instance ToCStruct AabbPositionsKHR where
-  withCStruct x f = allocaBytesAligned 24 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AabbPositionsKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (minX))
     poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (minY))
@@ -5831,7 +6091,10 @@ instance Zero AabbPositionsKHR where
 --
 -- = See Also
 --
--- 'AccelerationStructureInstanceKHR'
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
+-- 'AccelerationStructureInstanceKHR',
+-- 'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureMatrixMotionInstanceNV'
 data TransformMatrixKHR = TransformMatrixKHR
   { -- No documentation found for Nested "VkTransformMatrixKHR" "matrixRow0"
     matrixRow0 :: (Float, Float, Float, Float)
@@ -5847,7 +6110,7 @@ deriving instance Generic (TransformMatrixKHR)
 deriving instance Show TransformMatrixKHR
 
 instance ToCStruct TransformMatrixKHR where
-  withCStruct x f = allocaBytesAligned 48 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p TransformMatrixKHR{..} f = do
     let pMatrixRow0' = lowerArrayPtr ((p `plusPtr` 0 :: Ptr (FixedArray 4 CFloat)))
     case (matrixRow0) of
@@ -5918,8 +6181,8 @@ instance Zero TransformMatrixKHR where
 --
 -- = Description
 --
--- The C language spec does not define the ordering of bit-fields, but in
--- practice, this struct produces the correct layout with existing
+-- The C language specification does not define the ordering of bit-fields,
+-- but in practice, this struct produces the correct layout with existing
 -- compilers. The intended bit pattern is for the following:
 --
 -- If a compiler produces code that diverges from that pattern,
@@ -5930,6 +6193,9 @@ instance Zero TransformMatrixKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
+-- 'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureMotionInstanceDataNV',
 -- 'GeometryInstanceFlagsKHR', 'TransformMatrixKHR'
 data AccelerationStructureInstanceKHR = AccelerationStructureInstanceKHR
   { -- | @transform@ is a 'TransformMatrixKHR' structure describing a
@@ -5939,7 +6205,7 @@ data AccelerationStructureInstanceKHR = AccelerationStructureInstanceKHR
     -- to ray shaders in the @InstanceCustomIndexKHR@ built-in.
     --
     -- @instanceCustomIndex@ and @mask@ occupy the same memory as if a single
-    -- @int32_t@ was specified in their place
+    -- @uint32_t@ was specified in their place
     --
     -- -   @instanceCustomIndex@ occupies the 24 least significant bits of that
     --     memory
@@ -5947,13 +6213,13 @@ data AccelerationStructureInstanceKHR = AccelerationStructureInstanceKHR
     -- -   @mask@ occupies the 8 most significant bits of that memory
     instanceCustomIndex :: Word32
   , -- | @mask@ is an 8-bit visibility mask for the geometry. The instance /may/
-    -- only be hit if @rayMask & instance.mask != 0@
+    -- only be hit if @Cull Mask & instance.mask != 0@
     mask :: Word32
   , -- | @instanceShaderBindingTableRecordOffset@ is a 24-bit offset used in
     -- calculating the hit shader binding table index.
     --
     -- @instanceShaderBindingTableRecordOffset@ and @flags@ occupy the same
-    -- memory as if a single @int32_t@ was specified in their place
+    -- memory as if a single @uint32_t@ was specified in their place
     --
     -- -   @instanceShaderBindingTableRecordOffset@ occupies the 24 least
     --     significant bits of that memory
@@ -5985,7 +6251,7 @@ deriving instance Generic (AccelerationStructureInstanceKHR)
 deriving instance Show AccelerationStructureInstanceKHR
 
 instance ToCStruct AccelerationStructureInstanceKHR where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureInstanceKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr TransformMatrixKHR)) (transform)
     poke ((p `plusPtr` 48 :: Ptr Word32)) (((coerce @_ @Word32 (mask)) `shiftL` 24) .|. (instanceCustomIndex))
@@ -6037,6 +6303,7 @@ instance Zero AccelerationStructureInstanceKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getAccelerationStructureDeviceAddressKHR'
@@ -6055,7 +6322,7 @@ deriving instance Generic (AccelerationStructureDeviceAddressInfoKHR)
 deriving instance Show AccelerationStructureDeviceAddressInfoKHR
 
 instance ToCStruct AccelerationStructureDeviceAddressInfoKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureDeviceAddressInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DEVICE_ADDRESS_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -6106,6 +6373,7 @@ instance Zero AccelerationStructureDeviceAddressInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getDeviceAccelerationStructureCompatibilityKHR'
 data AccelerationStructureVersionInfoKHR = AccelerationStructureVersionInfoKHR
@@ -6114,7 +6382,7 @@ data AccelerationStructureVersionInfoKHR = AccelerationStructureVersionInfoKHR
     --
     -- #VUID-VkAccelerationStructureVersionInfoKHR-pVersionData-parameter#
     -- @pVersionData@ /must/ be a valid pointer to an array of
-    -- @2@*'Vulkan.Core10.APIConstants.UUID_SIZE' @uint8_t@ values
+    -- \(2 \times \mathtt{VK\_UUID\_SIZE}\) @uint8_t@ values
     versionData :: ByteString }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -6123,7 +6391,7 @@ deriving instance Generic (AccelerationStructureVersionInfoKHR)
 deriving instance Show AccelerationStructureVersionInfoKHR
 
 instance ToCStruct AccelerationStructureVersionInfoKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureVersionInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_VERSION_INFO_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -6160,10 +6428,14 @@ instance Zero AccelerationStructureVersionInfoKHR where
 --     be 'COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR' or
 --     'COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR'
 --
+-- -   #VUID-VkCopyAccelerationStructureInfoKHR-src-04963# The source
+--     acceleration structure @src@ /must/ have been constructed prior to
+--     the execution of this command
+--
 -- -   #VUID-VkCopyAccelerationStructureInfoKHR-src-03411# If @mode@ is
 --     'COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR', @src@ /must/ have
---     been built with
---     'BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR'
+--     been constructed with
+--     'BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR' in the build
 --
 -- -   #VUID-VkCopyAccelerationStructureInfoKHR-buffer-03718# The @buffer@
 --     used to create @src@ /must/ be bound to device memory
@@ -6197,6 +6469,7 @@ instance Zero AccelerationStructureVersionInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'CopyAccelerationStructureModeKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -6206,7 +6479,7 @@ data CopyAccelerationStructureInfoKHR = CopyAccelerationStructureInfoKHR
     src :: AccelerationStructureKHR
   , -- | @dst@ is the target acceleration structure for the copy.
     dst :: AccelerationStructureKHR
-  , -- | @mode@ is a 'CopyAccelerationStructureModeKHR' value that specifies
+  , -- | @mode@ is a 'CopyAccelerationStructureModeKHR' value specifying
     -- additional operations to perform during the copy.
     mode :: CopyAccelerationStructureModeKHR
   }
@@ -6217,7 +6490,7 @@ deriving instance Generic (CopyAccelerationStructureInfoKHR)
 deriving instance Show CopyAccelerationStructureInfoKHR
 
 instance ToCStruct CopyAccelerationStructureInfoKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CopyAccelerationStructureInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -6261,6 +6534,10 @@ instance Zero CopyAccelerationStructureInfoKHR where
 --
 -- == Valid Usage
 --
+-- -   #VUID-VkCopyAccelerationStructureToMemoryInfoKHR-src-04959# The
+--     source acceleration structure @src@ /must/ have been constructed
+--     prior to the execution of this command
+--
 -- -   #VUID-VkCopyAccelerationStructureToMemoryInfoKHR-dst-03561# The
 --     memory pointed to by @dst@ /must/ be at least as large as the
 --     serialization size of @src@, as reported by
@@ -6289,6 +6566,7 @@ instance Zero CopyAccelerationStructureInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'CopyAccelerationStructureModeKHR', 'DeviceOrHostAddressKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -6300,7 +6578,7 @@ data CopyAccelerationStructureToMemoryInfoKHR = CopyAccelerationStructureToMemor
   , -- | @dst@ is the device or host address to memory which is the target for
     -- the copy
     dst :: DeviceOrHostAddressKHR
-  , -- | @mode@ is a 'CopyAccelerationStructureModeKHR' value that specifies
+  , -- | @mode@ is a 'CopyAccelerationStructureModeKHR' value specifying
     -- additional operations to perform during the copy.
     mode :: CopyAccelerationStructureModeKHR
   }
@@ -6311,7 +6589,7 @@ deriving instance Generic (CopyAccelerationStructureToMemoryInfoKHR)
 deriving instance Show CopyAccelerationStructureToMemoryInfoKHR
 
 instance ToCStruct CopyAccelerationStructureToMemoryInfoKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CopyAccelerationStructureToMemoryInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_TO_MEMORY_INFO_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -6340,6 +6618,12 @@ instance Zero CopyAccelerationStructureToMemoryInfoKHR where
 -- deserializing an acceleration structure
 --
 -- == Valid Usage
+--
+-- -   #VUID-VkCopyMemoryToAccelerationStructureInfoKHR-src-04960# The
+--     source memory pointed to by @src@ /must/ contain data previously
+--     serialized using 'cmdCopyAccelerationStructureToMemoryKHR',
+--     potentially modified to relocate acceleration structure references
+--     as described in that command
 --
 -- -   #VUID-VkCopyMemoryToAccelerationStructureInfoKHR-mode-03413# @mode@
 --     /must/ be 'COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR'
@@ -6371,6 +6655,7 @@ instance Zero CopyAccelerationStructureToMemoryInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Extensions.Handles.AccelerationStructureKHR',
 -- 'CopyAccelerationStructureModeKHR', 'DeviceOrHostAddressConstKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -6382,7 +6667,7 @@ data CopyMemoryToAccelerationStructureInfoKHR = CopyMemoryToAccelerationStructur
     src :: DeviceOrHostAddressConstKHR
   , -- | @dst@ is the target acceleration structure for the copy.
     dst :: AccelerationStructureKHR
-  , -- | @mode@ is a 'CopyAccelerationStructureModeKHR' value that specifies
+  , -- | @mode@ is a 'CopyAccelerationStructureModeKHR' value specifying
     -- additional operations to perform during the copy.
     mode :: CopyAccelerationStructureModeKHR
   }
@@ -6393,7 +6678,7 @@ deriving instance Generic (CopyMemoryToAccelerationStructureInfoKHR)
 deriving instance Show CopyMemoryToAccelerationStructureInfoKHR
 
 instance ToCStruct CopyMemoryToAccelerationStructureInfoKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CopyMemoryToAccelerationStructureInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COPY_MEMORY_TO_ACCELERATION_STRUCTURE_INFO_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -6425,6 +6710,7 @@ instance Zero CopyMemoryToAccelerationStructureInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getAccelerationStructureBuildSizesKHR'
@@ -6447,7 +6733,7 @@ deriving instance Generic (AccelerationStructureBuildSizesInfoKHR)
 deriving instance Show AccelerationStructureBuildSizesInfoKHR
 
 instance ToCStruct AccelerationStructureBuildSizesInfoKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureBuildSizesInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_SIZES_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -6492,7 +6778,7 @@ data DeviceOrHostAddressKHR
   deriving (Show)
 
 instance ToCStruct DeviceOrHostAddressKHR where
-  withCStruct x f = allocaBytesAligned 8 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct :: Ptr DeviceOrHostAddressKHR -> DeviceOrHostAddressKHR -> IO a -> IO a
   pokeCStruct p = (. const) . runContT .  \case
     DeviceAddress v -> lift $ poke (castPtr @_ @DeviceAddress p) (v)
@@ -6512,7 +6798,7 @@ data DeviceOrHostAddressConstKHR
   deriving (Show)
 
 instance ToCStruct DeviceOrHostAddressConstKHR where
-  withCStruct x f = allocaBytesAligned 8 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct :: Ptr DeviceOrHostAddressConstKHR -> DeviceOrHostAddressConstKHR -> IO a -> IO a
   pokeCStruct p = (. const) . runContT .  \case
     DeviceAddressConst v -> lift $ poke (castPtr @_ @DeviceAddress p) (v)
@@ -6527,16 +6813,16 @@ instance Zero DeviceOrHostAddressConstKHR where
 
 
 data AccelerationStructureGeometryDataKHR
-  = Triangles AccelerationStructureGeometryTrianglesDataKHR
+  = Triangles (SomeStruct AccelerationStructureGeometryTrianglesDataKHR)
   | Aabbs AccelerationStructureGeometryAabbsDataKHR
   | Instances AccelerationStructureGeometryInstancesDataKHR
   deriving (Show)
 
 instance ToCStruct AccelerationStructureGeometryDataKHR where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct :: Ptr AccelerationStructureGeometryDataKHR -> AccelerationStructureGeometryDataKHR -> IO a -> IO a
   pokeCStruct p = (. const) . runContT .  \case
-    Triangles v -> ContT $ pokeCStruct (castPtr @_ @AccelerationStructureGeometryTrianglesDataKHR p) (v) . ($ ())
+    Triangles v -> ContT $ pokeSomeCStruct (forgetExtensions (castPtr @_ @(AccelerationStructureGeometryTrianglesDataKHR _) p)) (v) . ($ ())
     Aabbs v -> ContT $ pokeCStruct (castPtr @_ @AccelerationStructureGeometryAabbsDataKHR p) (v) . ($ ())
     Instances v -> ContT $ pokeCStruct (castPtr @_ @AccelerationStructureGeometryInstancesDataKHR p) (v) . ($ ())
   pokeZeroCStruct :: Ptr AccelerationStructureGeometryDataKHR -> IO b -> IO b
@@ -6545,7 +6831,7 @@ instance ToCStruct AccelerationStructureGeometryDataKHR where
   cStructAlignment = 8
 
 instance Zero AccelerationStructureGeometryDataKHR where
-  zero = Triangles zero
+  zero = Triangles (SomeStruct zero)
 
 
 type GeometryInstanceFlagsKHR = GeometryInstanceFlagBitsKHR
@@ -6560,29 +6846,31 @@ type GeometryInstanceFlagsKHR = GeometryInstanceFlagBitsKHR
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'GeometryInstanceFlagsKHR'
 newtype GeometryInstanceFlagBitsKHR = GeometryInstanceFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR' disables face
 -- culling for this instance.
-pattern GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR    = GeometryInstanceFlagBitsKHR 0x00000001
--- | 'GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR' indicates
--- that the front face of the triangle for culling purposes is the face
--- that is counter clockwise in object space relative to the ray origin.
--- Because the facing is determined in object space, an instance transform
--- matrix does not change the winding, but a geometry transform does.
-pattern GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR = GeometryInstanceFlagBitsKHR 0x00000002
+pattern GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR = GeometryInstanceFlagBitsKHR 0x00000001
+-- | 'GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR' indicates that the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-traversal-culling-face facing determination>
+-- for geometry in this instance is inverted. Because the facing is
+-- determined in object space, an instance transform does not change the
+-- winding, but a geometry transform does.
+pattern GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR         = GeometryInstanceFlagBitsKHR 0x00000002
 -- | 'GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR' causes this instance to act as
 -- though 'GEOMETRY_OPAQUE_BIT_KHR' were specified on all geometries
 -- referenced by this instance. This behavior /can/ be overridden by the
 -- SPIR-V @NoOpaqueKHR@ ray flag.
-pattern GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR                    = GeometryInstanceFlagBitsKHR 0x00000004
+pattern GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR                 = GeometryInstanceFlagBitsKHR 0x00000004
 -- | 'GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR' causes this instance to act
 -- as though 'GEOMETRY_OPAQUE_BIT_KHR' were not specified on all geometries
 -- referenced by this instance. This behavior /can/ be overridden by the
 -- SPIR-V @OpaqueKHR@ ray flag.
-pattern GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR                 = GeometryInstanceFlagBitsKHR 0x00000008
+pattern GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR              = GeometryInstanceFlagBitsKHR 0x00000008
 
 conNameGeometryInstanceFlagBitsKHR :: String
 conNameGeometryInstanceFlagBitsKHR = "GeometryInstanceFlagBitsKHR"
@@ -6592,10 +6880,10 @@ enumPrefixGeometryInstanceFlagBitsKHR = "GEOMETRY_INSTANCE_"
 
 showTableGeometryInstanceFlagBitsKHR :: [(GeometryInstanceFlagBitsKHR, String)]
 showTableGeometryInstanceFlagBitsKHR =
-  [ (GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR   , "TRIANGLE_FACING_CULL_DISABLE_BIT_KHR")
-  , (GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR, "TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR")
-  , (GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR                   , "FORCE_OPAQUE_BIT_KHR")
-  , (GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR                , "FORCE_NO_OPAQUE_BIT_KHR")
+  [ (GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR, "TRIANGLE_FACING_CULL_DISABLE_BIT_KHR")
+  , (GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR        , "TRIANGLE_FLIP_FACING_BIT_KHR")
+  , (GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR                , "FORCE_OPAQUE_BIT_KHR")
+  , (GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR             , "FORCE_NO_OPAQUE_BIT_KHR")
   ]
 
 instance Show GeometryInstanceFlagBitsKHR where
@@ -6619,6 +6907,8 @@ type GeometryFlagsKHR = GeometryFlagBitsKHR
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'GeometryFlagsKHR'
 newtype GeometryFlagBitsKHR = GeometryFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -6674,14 +6964,17 @@ type BuildAccelerationStructureFlagsKHR = BuildAccelerationStructureFlagBitsKHR
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'BuildAccelerationStructureFlagsKHR'
 newtype BuildAccelerationStructureFlagBitsKHR = BuildAccelerationStructureFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR' indicates that the
--- specified acceleration structure /can/ be updated with @update@ of
+-- specified acceleration structure /can/ be updated with a @mode@ of
+-- 'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR' in
+-- 'AccelerationStructureBuildGeometryInfoKHR' or an @update@ of
 -- 'Vulkan.Core10.FundamentalTypes.TRUE' in
--- 'cmdBuildAccelerationStructuresKHR' or
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdBuildAccelerationStructureNV' .
 pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR      = BuildAccelerationStructureFlagBitsKHR 0x00000001
 -- | 'BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR' indicates that
@@ -6700,9 +6993,11 @@ pattern BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR = BuildAccelerati
 pattern BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR = BuildAccelerationStructureFlagBitsKHR 0x00000008
 -- | 'BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR' indicates that this
 -- acceleration structure /should/ minimize the size of the scratch memory
--- and the final result build, potentially at the expense of build time or
--- trace performance.
+-- and the final result acceleration structure, potentially at the expense
+-- of build time or trace performance.
 pattern BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR        = BuildAccelerationStructureFlagBitsKHR 0x00000010
+-- No documentation found for Nested "VkBuildAccelerationStructureFlagBitsKHR" "VK_BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV"
+pattern BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV             = BuildAccelerationStructureFlagBitsKHR 0x00000020
 
 conNameBuildAccelerationStructureFlagBitsKHR :: String
 conNameBuildAccelerationStructureFlagBitsKHR = "BuildAccelerationStructureFlagBitsKHR"
@@ -6717,6 +7012,7 @@ showTableBuildAccelerationStructureFlagBitsKHR =
   , (BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR, "PREFER_FAST_TRACE_BIT_KHR")
   , (BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR, "PREFER_FAST_BUILD_BIT_KHR")
   , (BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR       , "LOW_MEMORY_BIT_KHR")
+  , (BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV            , "MOTION_BIT_NV")
   ]
 
 instance Show BuildAccelerationStructureFlagBitsKHR where
@@ -6740,6 +7036,7 @@ type AccelerationStructureCreateFlagsKHR = AccelerationStructureCreateFlagBitsKH
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureCreateFlagsKHR'
 newtype AccelerationStructureCreateFlagBitsKHR = AccelerationStructureCreateFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -6749,17 +7046,20 @@ newtype AccelerationStructureCreateFlagBitsKHR = AccelerationStructureCreateFlag
 -- reused on a subsequent run.
 pattern ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR =
   AccelerationStructureCreateFlagBitsKHR 0x00000001
+-- No documentation found for Nested "VkAccelerationStructureCreateFlagBitsKHR" "VK_ACCELERATION_STRUCTURE_CREATE_MOTION_BIT_NV"
+pattern ACCELERATION_STRUCTURE_CREATE_MOTION_BIT_NV = AccelerationStructureCreateFlagBitsKHR 0x00000004
 
 conNameAccelerationStructureCreateFlagBitsKHR :: String
 conNameAccelerationStructureCreateFlagBitsKHR = "AccelerationStructureCreateFlagBitsKHR"
 
 enumPrefixAccelerationStructureCreateFlagBitsKHR :: String
-enumPrefixAccelerationStructureCreateFlagBitsKHR =
-  "ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR"
+enumPrefixAccelerationStructureCreateFlagBitsKHR = "ACCELERATION_STRUCTURE_CREATE_"
 
 showTableAccelerationStructureCreateFlagBitsKHR :: [(AccelerationStructureCreateFlagBitsKHR, String)]
 showTableAccelerationStructureCreateFlagBitsKHR =
-  [(ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR, "")]
+  [ (ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR, "DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR")
+  , (ACCELERATION_STRUCTURE_CREATE_MOTION_BIT_NV                        , "MOTION_BIT_NV")
+  ]
 
 instance Show AccelerationStructureCreateFlagBitsKHR where
   showsPrec = enumShowsPrec enumPrefixAccelerationStructureCreateFlagBitsKHR
@@ -6779,6 +7079,8 @@ instance Read AccelerationStructureCreateFlagBitsKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'CopyAccelerationStructureInfoKHR',
 -- 'CopyAccelerationStructureToMemoryInfoKHR',
 -- 'CopyMemoryToAccelerationStructureInfoKHR',
@@ -6789,14 +7091,18 @@ newtype CopyAccelerationStructureModeKHR = CopyAccelerationStructureModeKHR Int3
 -- | 'COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR' creates a direct copy of
 -- the acceleration structure specified in @src@ into the one specified by
 -- @dst@. The @dst@ acceleration structure /must/ have been created with
--- the same parameters as @src@.
+-- the same parameters as @src@. If @src@ contains references to other
+-- acceleration structures, @dst@ will reference the same acceleration
+-- structures.
 pattern COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR       = CopyAccelerationStructureModeKHR 0
 -- | 'COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR' creates a more compact
 -- version of an acceleration structure @src@ into @dst@. The acceleration
 -- structure @dst@ /must/ have been created with a size at least as large
 -- as that returned by 'cmdWriteAccelerationStructuresPropertiesKHR' or
 -- 'writeAccelerationStructuresPropertiesKHR' after the build of the
--- acceleration structure specified by @src@.
+-- acceleration structure specified by @src@. If @src@ contains references
+-- to other acceleration structures, @dst@ will reference the same
+-- acceleration structures.
 pattern COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR     = CopyAccelerationStructureModeKHR 1
 -- | 'COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR' serializes the
 -- acceleration structure to a semi-opaque format which can be reloaded on
@@ -6844,6 +7150,7 @@ instance Read CopyAccelerationStructureModeKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'AccelerationStructureBuildGeometryInfoKHR'
 newtype BuildAccelerationStructureModeKHR = BuildAccelerationStructureModeKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -6889,8 +7196,11 @@ instance Read BuildAccelerationStructureModeKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'AccelerationStructureBuildGeometryInfoKHR',
--- 'AccelerationStructureCreateInfoKHR'
+-- 'AccelerationStructureCreateInfoKHR',
+-- 'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureInfoNV'
 newtype AccelerationStructureTypeKHR = AccelerationStructureTypeKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
@@ -6940,6 +7250,8 @@ instance Read AccelerationStructureTypeKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'AccelerationStructureGeometryKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.GeometryNV'
 newtype GeometryTypeKHR = GeometryTypeKHR Int32
@@ -6986,6 +7298,7 @@ instance Read GeometryTypeKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'getAccelerationStructureBuildSizesKHR'
 newtype AccelerationStructureBuildTypeKHR = AccelerationStructureBuildTypeKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -7036,15 +7349,17 @@ instance Read AccelerationStructureBuildTypeKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'getDeviceAccelerationStructureCompatibilityKHR'
 newtype AccelerationStructureCompatibilityKHR = AccelerationStructureCompatibilityKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- | 'ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR' when the
--- @pVersion@ version acceleration structure is compatibile with @device@.
+-- | 'ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR' if the
+-- @pVersionData@ version acceleration structure is compatible with
+-- @device@.
 pattern ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR   = AccelerationStructureCompatibilityKHR 0
--- | 'ACCELERATION_STRUCTURE_COMPATIBILITY_INCOMPATIBLE_KHR' when the
--- @pVersion@ version acceleration structure is not compatibile with
+-- | 'ACCELERATION_STRUCTURE_COMPATIBILITY_INCOMPATIBLE_KHR' if the
+-- @pVersionData@ version acceleration structure is not compatible with
 -- @device@.
 pattern ACCELERATION_STRUCTURE_COMPATIBILITY_INCOMPATIBLE_KHR = AccelerationStructureCompatibilityKHR 1
 {-# complete ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR,
@@ -7076,11 +7391,507 @@ instance Read AccelerationStructureCompatibilityKHR where
                           AccelerationStructureCompatibilityKHR
 
 
-type KHR_ACCELERATION_STRUCTURE_SPEC_VERSION = 11
+type FormatFeatureFlags2KHR = FormatFeatureFlagBits2KHR
+
+-- | VkFormatFeatureFlagBits2KHR - Bitmask specifying features supported by a
+-- buffer
+--
+-- = Description
+--
+-- The following bits /may/ be set in @linearTilingFeatures@ and
+-- @optimalTilingFeatures@, specifying that the features are supported by
+-- <VkImage.html images> or <VkImageView.html image views> or
+-- <VkSamplerYcbcrConversion.html sampler Y′CBCR conversion objects>
+-- created with the queried
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFormatProperties2'::@format@:
+--
+-- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR' specifies that an image
+--     view /can/ be
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-sampledimage sampled from>.
+--
+-- -   'FORMAT_FEATURE_2_STORAGE_IMAGE_BIT_KHR' specifies that an image
+--     view /can/ be used as a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage storage image>.
+--
+-- -   'FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT_KHR' specifies that an
+--     image view /can/ be used as storage image that supports atomic
+--     operations.
+--
+-- -   'FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT_KHR' specifies that an image
+--     view /can/ be used as a framebuffer color attachment and as an input
+--     attachment.
+--
+-- -   'FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT_KHR' specifies that an
+--     image view /can/ be used as a framebuffer color attachment that
+--     supports blending and as an input attachment.
+--
+-- -   'FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR' specifies that
+--     an image view /can/ be used as a framebuffer depth\/stencil
+--     attachment and as an input attachment.
+--
+-- -   'FORMAT_FEATURE_2_BLIT_SRC_BIT_KHR' specifies that an image /can/ be
+--     used as @srcImage@ for the
+--     'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR' and
+--     'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' commands.
+--
+-- -   'FORMAT_FEATURE_2_BLIT_DST_BIT_KHR' specifies that an image /can/ be
+--     used as @dstImage@ for the
+--     'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR' and
+--     'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' commands.
+--
+-- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT_KHR' specifies
+--     that if 'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR' is also set, an
+--     image view /can/ be used with a sampler that has either of
+--     @magFilter@ or @minFilter@ set to
+--     'Vulkan.Core10.Enums.Filter.FILTER_LINEAR', or @mipmapMode@ set to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'.
+--     If 'FORMAT_FEATURE_2_BLIT_SRC_BIT_KHR' is also set, an image can be
+--     used as the @srcImage@ to
+--     'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR' and
+--     'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' with a @filter@
+--     of 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR'. This bit /must/ only
+--     be exposed for formats that also support the
+--     'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR' or
+--     'FORMAT_FEATURE_2_BLIT_SRC_BIT_KHR'.
+--
+--     If the format being queried is a depth\/stencil format, this bit
+--     only specifies that the depth aspect (not the stencil aspect) of an
+--     image of this format supports linear filtering. Where depth
+--     comparison is supported it /may/ be linear filtered whether this bit
+--     is present or not, but where this bit is not present the filtered
+--     value /may/ be computed in an implementation-dependent manner which
+--     differs from the normal rules of linear filtering. The resulting
+--     value /must/ be in the range [0,1] and /should/ be proportional to,
+--     or a weighted average of, the number of comparison passes or
+--     failures.
+--
+-- -   'FORMAT_FEATURE_2_TRANSFER_SRC_BIT_KHR' specifies that an image
+--     /can/ be used as a source image for
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies copy commands>.
+--
+-- -   'FORMAT_FEATURE_2_TRANSFER_DST_BIT_KHR' specifies that an image
+--     /can/ be used as a destination image for
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies copy commands>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#clears clear commands>.
+--
+-- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT_KHR' specifies
+--     'Vulkan.Core10.Handles.Image' /can/ be used as a sampled image with
+--     a min or max
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SamplerReductionMode'.
+--     This bit /must/ only be exposed for formats that also support the
+--     'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR'.
+--
+-- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT' specifies that
+--     'Vulkan.Core10.Handles.Image' /can/ be used with a sampler that has
+--     either of @magFilter@ or @minFilter@ set to
+--     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT', or be the
+--     source image for a blit with @filter@ set to
+--     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT'. This bit
+--     /must/ only be exposed for formats that also support the
+--     'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR'. If the format being
+--     queried is a depth\/stencil format, this only specifies that the
+--     depth aspect is cubic filterable.
+--
+-- -   'FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT_KHR' specifies that an
+--     application /can/ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+--     using this format as a source, and that an image of this format
+--     /can/ be used with a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'
+--     @xChromaOffset@ and\/or @yChromaOffset@ of
+--     'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_MIDPOINT'.
+--     Otherwise both @xChromaOffset@ and @yChromaOffset@ /must/ be
+--     'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_COSITED_EVEN'.
+--     If a format does not incorporate chroma downsampling (it is not a
+--     “422” or “420” format) but the implementation supports sampler
+--     Y′CBCR conversion for this format, the implementation /must/ set
+--     'FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT_KHR'.
+--
+-- -   'FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT_KHR' specifies that an
+--     application /can/ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+--     using this format as a source, and that an image of this format
+--     /can/ be used with a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'
+--     @xChromaOffset@ and\/or @yChromaOffset@ of
+--     'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_COSITED_EVEN'.
+--     Otherwise both @xChromaOffset@ and @yChromaOffset@ /must/ be
+--     'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_MIDPOINT'. If
+--     neither 'FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT_KHR' nor
+--     'FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT_KHR' is set, the
+--     application /must/ not define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+--     using this format as a source.
+--
+-- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT_KHR'
+--     specifies that an application /can/ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+--     using this format as a source with @chromaFilter@ set to
+--     'Vulkan.Core10.Enums.Filter.FILTER_LINEAR'.
+--
+-- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT_KHR'
+--     specifies that the format can have different chroma, min, and mag
+--     filters.
+--
+-- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR'
+--     specifies that reconstruction is explicit, as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-chroma-reconstruction>.
+--     If this bit is not present, reconstruction is implicit by default.
+--
+-- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR'
+--     specifies that reconstruction /can/ be forcibly made explicit by
+--     setting
+--     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'::@forceExplicitReconstruction@
+--     to 'Vulkan.Core10.FundamentalTypes.TRUE'. If the format being
+--     queried supports
+--     'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR'
+--     it /must/ also support
+--     'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR'.
+--
+-- -   'FORMAT_FEATURE_2_DISJOINT_BIT_KHR' specifies that a multi-planar
+--     image /can/ have the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
+--     set during image creation. An implementation /must/ not set
+--     'FORMAT_FEATURE_2_DISJOINT_BIT_KHR' for /single-plane formats/.
+--
+-- -   'FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT' specifies that an
+--     image view /can/ be used as a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>.
+--
+-- -   'FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--     specifies that an image view /can/ be used as a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>.
+--     An implementation /must/ not set this feature for formats with
+--     numeric type other than @*UINT@, or set it as a buffer feature.
+--
+-- -   'FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR' specifies
+--     that image views created with this format /can/ be used as
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage storage images>
+--     for read operations without specifying a format.
+--
+-- -   'FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR' specifies
+--     that image views created with this format /can/ be used as
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage storage images>
+--     for write operations without specifying a format.
+--
+-- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR' specifies
+--     that image views created with this format /can/ be used for depth
+--     comparison performed by @OpImage*Dref@ instructions.
+--
+-- The following bits /may/ be set in @bufferFeatures@, specifying that the
+-- features are supported by <VkBuffer.html buffers> or
+-- <VkBufferView.html buffer views> created with the queried
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFormatProperties2'::@format@:
+--
+-- -   'FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT_KHR' specifies that the
+--     format /can/ be used to create a buffer view that /can/ be bound to
+--     a
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
+--     descriptor.
+--
+-- -   'FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT_KHR' specifies that the
+--     format /can/ be used to create a buffer view that /can/ be bound to
+--     a
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+--     descriptor.
+--
+-- -   'FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT_KHR' specifies
+--     that atomic operations are supported on
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+--     with this format.
+--
+-- -   'FORMAT_FEATURE_2_VERTEX_BUFFER_BIT_KHR' specifies that the format
+--     /can/ be used as a vertex attribute format
+--     ('Vulkan.Core10.Pipeline.VertexInputAttributeDescription'::@format@).
+--
+-- -   'FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR'
+--     specifies that the format /can/ be used as the vertex format when
+--     creating an
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure acceleration structure>
+--     ('AccelerationStructureGeometryTrianglesDataKHR'::@vertexFormat@).
+--     This format /can/ also be used as the vertex format in host memory
+--     when doing
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#host-acceleration-structure host acceleration structure>
+--     builds.
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+newtype FormatFeatureFlagBits2KHR = FormatFeatureFlagBits2KHR Flags64
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
+
+-- | 'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR' specifies that an image view
+-- /can/ be
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-sampledimage sampled from>.
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR               = FormatFeatureFlagBits2KHR 0x0000000000000001
+-- | 'FORMAT_FEATURE_2_STORAGE_IMAGE_BIT_KHR' specifies that an image view
+-- /can/ be used as a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage storage image>.
+pattern FORMAT_FEATURE_2_STORAGE_IMAGE_BIT_KHR               = FormatFeatureFlagBits2KHR 0x0000000000000002
+-- | 'FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT_KHR' specifies that an image
+-- view /can/ be used as storage image that supports atomic operations.
+pattern FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT_KHR        = FormatFeatureFlagBits2KHR 0x0000000000000004
+-- | 'FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT_KHR' specifies that the
+-- format /can/ be used to create a buffer view that /can/ be bound to a
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
+-- descriptor.
+pattern FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT_KHR        = FormatFeatureFlagBits2KHR 0x0000000000000008
+-- | 'FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT_KHR' specifies that the
+-- format /can/ be used to create a buffer view that /can/ be bound to a
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+-- descriptor.
+pattern FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT_KHR        = FormatFeatureFlagBits2KHR 0x0000000000000010
+-- | 'FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT_KHR' specifies that
+-- atomic operations are supported on
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+-- with this format.
+pattern FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT_KHR = FormatFeatureFlagBits2KHR 0x0000000000000020
+-- | 'FORMAT_FEATURE_2_VERTEX_BUFFER_BIT_KHR' specifies that the format /can/
+-- be used as a vertex attribute format
+-- ('Vulkan.Core10.Pipeline.VertexInputAttributeDescription'::@format@).
+pattern FORMAT_FEATURE_2_VERTEX_BUFFER_BIT_KHR               = FormatFeatureFlagBits2KHR 0x0000000000000040
+-- | 'FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT_KHR' specifies that an image view
+-- /can/ be used as a framebuffer color attachment and as an input
+-- attachment.
+pattern FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT_KHR            = FormatFeatureFlagBits2KHR 0x0000000000000080
+-- | 'FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT_KHR' specifies that an
+-- image view /can/ be used as a framebuffer color attachment that supports
+-- blending and as an input attachment.
+pattern FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT_KHR      = FormatFeatureFlagBits2KHR 0x0000000000000100
+-- | 'FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR' specifies that an
+-- image view /can/ be used as a framebuffer depth\/stencil attachment and
+-- as an input attachment.
+pattern FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR    = FormatFeatureFlagBits2KHR 0x0000000000000200
+-- | 'FORMAT_FEATURE_2_BLIT_SRC_BIT_KHR' specifies that an image /can/ be
+-- used as @srcImage@ for the
+-- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR' and
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' commands.
+pattern FORMAT_FEATURE_2_BLIT_SRC_BIT_KHR                    = FormatFeatureFlagBits2KHR 0x0000000000000400
+-- | 'FORMAT_FEATURE_2_BLIT_DST_BIT_KHR' specifies that an image /can/ be
+-- used as @dstImage@ for the
+-- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR' and
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' commands.
+pattern FORMAT_FEATURE_2_BLIT_DST_BIT_KHR                    = FormatFeatureFlagBits2KHR 0x0000000000000800
+-- | 'FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT_KHR' specifies that if
+-- 'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR' is also set, an image view
+-- /can/ be used with a sampler that has either of @magFilter@ or
+-- @minFilter@ set to 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR', or
+-- @mipmapMode@ set to
+-- 'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'. If
+-- 'FORMAT_FEATURE_2_BLIT_SRC_BIT_KHR' is also set, an image can be used as
+-- the @srcImage@ to
+-- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR' and
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' with a @filter@ of
+-- 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR'. This bit /must/ only be
+-- exposed for formats that also support the
+-- 'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR' or
+-- 'FORMAT_FEATURE_2_BLIT_SRC_BIT_KHR'.
+--
+-- If the format being queried is a depth\/stencil format, this bit only
+-- specifies that the depth aspect (not the stencil aspect) of an image of
+-- this format supports linear filtering. Where depth comparison is
+-- supported it /may/ be linear filtered whether this bit is present or
+-- not, but where this bit is not present the filtered value /may/ be
+-- computed in an implementation-dependent manner which differs from the
+-- normal rules of linear filtering. The resulting value /must/ be in the
+-- range [0,1] and /should/ be proportional to, or a weighted average of,
+-- the number of comparison passes or failures.
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT_KHR = FormatFeatureFlagBits2KHR 0x0000000000001000
+-- | 'FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT' specifies that
+-- 'Vulkan.Core10.Handles.Image' /can/ be used with a sampler that has
+-- either of @magFilter@ or @minFilter@ set to
+-- 'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT', or be the
+-- source image for a blit with @filter@ set to
+-- 'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT'. This bit
+-- /must/ only be exposed for formats that also support the
+-- 'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR'. If the format being queried is
+-- a depth\/stencil format, this only specifies that the depth aspect is
+-- cubic filterable.
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT  = FormatFeatureFlagBits2KHR 0x0000000000002000
+-- | 'FORMAT_FEATURE_2_TRANSFER_SRC_BIT_KHR' specifies that an image /can/ be
+-- used as a source image for
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies copy commands>.
+pattern FORMAT_FEATURE_2_TRANSFER_SRC_BIT_KHR                = FormatFeatureFlagBits2KHR 0x0000000000004000
+-- | 'FORMAT_FEATURE_2_TRANSFER_DST_BIT_KHR' specifies that an image /can/ be
+-- used as a destination image for
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies copy commands>
+-- and
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#clears clear commands>.
+pattern FORMAT_FEATURE_2_TRANSFER_DST_BIT_KHR                = FormatFeatureFlagBits2KHR 0x0000000000008000
+-- | 'FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT_KHR' specifies
+-- 'Vulkan.Core10.Handles.Image' /can/ be used as a sampled image with a
+-- min or max
+-- 'Vulkan.Core12.Enums.SamplerReductionMode.SamplerReductionMode'. This
+-- bit /must/ only be exposed for formats that also support the
+-- 'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR'.
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT_KHR = FormatFeatureFlagBits2KHR 0x0000000000010000
+-- | 'FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT_KHR' specifies that an
+-- application /can/ define a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+-- using this format as a source, and that an image of this format /can/ be
+-- used with a
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'
+-- @xChromaOffset@ and\/or @yChromaOffset@ of
+-- 'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_MIDPOINT'. Otherwise
+-- both @xChromaOffset@ and @yChromaOffset@ /must/ be
+-- 'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_COSITED_EVEN'. If a
+-- format does not incorporate chroma downsampling (it is not a “422” or
+-- “420” format) but the implementation supports sampler Y′CBCR conversion
+-- for this format, the implementation /must/ set
+-- 'FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT_KHR'.
+pattern FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT_KHR     = FormatFeatureFlagBits2KHR 0x0000000000020000
+-- | 'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT_KHR'
+-- specifies that an application /can/ define a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+-- using this format as a source with @chromaFilter@ set to
+-- 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR'.
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT_KHR =
+  FormatFeatureFlagBits2KHR 0x0000000000040000
+-- | 'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT_KHR'
+-- specifies that the format can have different chroma, min, and mag
+-- filters.
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT_KHR =
+  FormatFeatureFlagBits2KHR 0x0000000000080000
+-- | 'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR'
+-- specifies that reconstruction is explicit, as described in
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-chroma-reconstruction>.
+-- If this bit is not present, reconstruction is implicit by default.
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR =
+  FormatFeatureFlagBits2KHR 0x0000000000100000
+-- | 'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR'
+-- specifies that reconstruction /can/ be forcibly made explicit by setting
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'::@forceExplicitReconstruction@
+-- to 'Vulkan.Core10.FundamentalTypes.TRUE'. If the format being queried
+-- supports
+-- 'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR'
+-- it /must/ also support
+-- 'FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR'.
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR =
+  FormatFeatureFlagBits2KHR 0x0000000000200000
+-- | 'FORMAT_FEATURE_2_DISJOINT_BIT_KHR' specifies that a multi-planar image
+-- /can/ have the
+-- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT' set
+-- during image creation. An implementation /must/ not set
+-- 'FORMAT_FEATURE_2_DISJOINT_BIT_KHR' for /single-plane formats/.
+pattern FORMAT_FEATURE_2_DISJOINT_BIT_KHR                             = FormatFeatureFlagBits2KHR 0x0000000000400000
+-- | 'FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT_KHR' specifies that an
+-- application /can/ define a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+-- using this format as a source, and that an image of this format /can/ be
+-- used with a
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'
+-- @xChromaOffset@ and\/or @yChromaOffset@ of
+-- 'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_COSITED_EVEN'.
+-- Otherwise both @xChromaOffset@ and @yChromaOffset@ /must/ be
+-- 'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_MIDPOINT'. If
+-- neither 'FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT_KHR' nor
+-- 'FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT_KHR' is set, the
+-- application /must/ not define a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+-- using this format as a source.
+pattern FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT_KHR               = FormatFeatureFlagBits2KHR 0x0000000000800000
+-- | 'FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR' specifies that
+-- image views created with this format /can/ be used as
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage storage images>
+-- for read operations without specifying a format.
+pattern FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR          = FormatFeatureFlagBits2KHR 0x0000000080000000
+-- | 'FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR' specifies that
+-- image views created with this format /can/ be used as
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage storage images>
+-- for write operations without specifying a format.
+pattern FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR         = FormatFeatureFlagBits2KHR 0x0000000100000000
+-- | 'FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR' specifies that
+-- image views created with this format /can/ be used for depth comparison
+-- performed by @OpImage*Dref@ instructions.
+pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR       = FormatFeatureFlagBits2KHR 0x0000000200000000
+-- | 'FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR' specifies
+-- that an image view /can/ be used as a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>.
+-- An implementation /must/ not set this feature for formats with numeric
+-- type other than @*UINT@, or set it as a buffer feature.
+pattern FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR     = FormatFeatureFlagBits2KHR 0x0000000040000000
+-- | 'FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT' specifies that an image
+-- view /can/ be used as a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>.
+pattern FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT                 = FormatFeatureFlagBits2KHR 0x0000000001000000
+-- | 'FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR'
+-- specifies that the format /can/ be used as the vertex format when
+-- creating an
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure acceleration structure>
+-- ('AccelerationStructureGeometryTrianglesDataKHR'::@vertexFormat@). This
+-- format /can/ also be used as the vertex format in host memory when doing
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#host-acceleration-structure host acceleration structure>
+-- builds.
+pattern FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR = FormatFeatureFlagBits2KHR 0x0000000020000000
+
+conNameFormatFeatureFlagBits2KHR :: String
+conNameFormatFeatureFlagBits2KHR = "FormatFeatureFlagBits2KHR"
+
+enumPrefixFormatFeatureFlagBits2KHR :: String
+enumPrefixFormatFeatureFlagBits2KHR = "FORMAT_FEATURE_2_"
+
+showTableFormatFeatureFlagBits2KHR :: [(FormatFeatureFlagBits2KHR, String)]
+showTableFormatFeatureFlagBits2KHR =
+  [ (FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT_KHR              , "SAMPLED_IMAGE_BIT_KHR")
+  , (FORMAT_FEATURE_2_STORAGE_IMAGE_BIT_KHR              , "STORAGE_IMAGE_BIT_KHR")
+  , (FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT_KHR       , "STORAGE_IMAGE_ATOMIC_BIT_KHR")
+  , (FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT_KHR       , "UNIFORM_TEXEL_BUFFER_BIT_KHR")
+  , (FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT_KHR       , "STORAGE_TEXEL_BUFFER_BIT_KHR")
+  , (FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT_KHR, "STORAGE_TEXEL_BUFFER_ATOMIC_BIT_KHR")
+  , (FORMAT_FEATURE_2_VERTEX_BUFFER_BIT_KHR              , "VERTEX_BUFFER_BIT_KHR")
+  , (FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT_KHR           , "COLOR_ATTACHMENT_BIT_KHR")
+  , (FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT_KHR     , "COLOR_ATTACHMENT_BLEND_BIT_KHR")
+  , (FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR   , "DEPTH_STENCIL_ATTACHMENT_BIT_KHR")
+  , (FORMAT_FEATURE_2_BLIT_SRC_BIT_KHR                   , "BLIT_SRC_BIT_KHR")
+  , (FORMAT_FEATURE_2_BLIT_DST_BIT_KHR                   , "BLIT_DST_BIT_KHR")
+  , (FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT_KHR, "SAMPLED_IMAGE_FILTER_LINEAR_BIT_KHR")
+  , (FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT , "SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT")
+  , (FORMAT_FEATURE_2_TRANSFER_SRC_BIT_KHR               , "TRANSFER_SRC_BIT_KHR")
+  , (FORMAT_FEATURE_2_TRANSFER_DST_BIT_KHR               , "TRANSFER_DST_BIT_KHR")
+  , (FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT_KHR, "SAMPLED_IMAGE_FILTER_MINMAX_BIT_KHR")
+  , (FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT_KHR    , "MIDPOINT_CHROMA_SAMPLES_BIT_KHR")
+  , ( FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT_KHR
+    , "SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT_KHR"
+    )
+  , ( FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT_KHR
+    , "SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT_KHR"
+    )
+  , ( FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR
+    , "SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR"
+    )
+  , ( FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR
+    , "SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR"
+    )
+  , (FORMAT_FEATURE_2_DISJOINT_BIT_KHR                            , "DISJOINT_BIT_KHR")
+  , (FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT_KHR              , "COSITED_CHROMA_SAMPLES_BIT_KHR")
+  , (FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR         , "STORAGE_READ_WITHOUT_FORMAT_BIT_KHR")
+  , (FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR        , "STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR")
+  , (FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR      , "SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR")
+  , (FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR    , "FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR")
+  , (FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT                , "FRAGMENT_DENSITY_MAP_BIT_EXT")
+  , (FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR, "ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR")
+  ]
+
+instance Show FormatFeatureFlagBits2KHR where
+  showsPrec = enumShowsPrec enumPrefixFormatFeatureFlagBits2KHR
+                            showTableFormatFeatureFlagBits2KHR
+                            conNameFormatFeatureFlagBits2KHR
+                            (\(FormatFeatureFlagBits2KHR x) -> x)
+                            (\x -> showString "0x" . showHex x)
+
+instance Read FormatFeatureFlagBits2KHR where
+  readPrec = enumReadPrec enumPrefixFormatFeatureFlagBits2KHR
+                          showTableFormatFeatureFlagBits2KHR
+                          conNameFormatFeatureFlagBits2KHR
+                          FormatFeatureFlagBits2KHR
+
+
+type KHR_ACCELERATION_STRUCTURE_SPEC_VERSION = 13
 
 -- No documentation found for TopLevel "VK_KHR_ACCELERATION_STRUCTURE_SPEC_VERSION"
 pattern KHR_ACCELERATION_STRUCTURE_SPEC_VERSION :: forall a . Integral a => a
-pattern KHR_ACCELERATION_STRUCTURE_SPEC_VERSION = 11
+pattern KHR_ACCELERATION_STRUCTURE_SPEC_VERSION = 13
 
 
 type KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME = "VK_KHR_acceleration_structure"

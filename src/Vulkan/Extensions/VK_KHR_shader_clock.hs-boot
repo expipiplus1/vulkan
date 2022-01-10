@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Aaron Hagan
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_shader_clock:%20&body=@ahagan%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shader_clock] @ahagan%0A<<Here describe the issue or question you have about the VK_KHR_shader_clock extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -61,9 +61,9 @@
 -- 'Vulkan.Core10.Handles.Device'.
 --
 -- When using GLSL source-based shading languages, the
--- @clockRealtime@*@EXT@() timing functions map to the @OpReadClockKHR@
+-- @clockRealtime*EXT@() timing functions map to the @OpReadClockKHR@
 -- instruction with a scope of 'Vulkan.Core10.Handles.Device', and the
--- @clock@*@ARB@() timing functions map to the @OpReadClockKHR@ instruction
+-- @clock*ARB@() timing functions map to the @OpReadClockKHR@ instruction
 -- with a scope of @Subgroup@.
 --
 -- == New Structures
@@ -94,11 +94,11 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceShaderClockFeaturesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_clock Vulkan Specification>

@@ -29,7 +29,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_get_physical_device_properties2:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_get_physical_device_properties2] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_KHR_get_physical_device_properties2 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -142,14 +142,14 @@
 -- >     // Get features with a hypothetical future extension.
 -- >     VkHypotheticalExtensionFeaturesKHR hypotheticalFeatures =
 -- >     {
--- >         VK_STRUCTURE_TYPE_HYPOTHETICAL_FEATURES_KHR,                            // sType
--- >         NULL,                                                                   // pNext
+-- >         VK_STRUCTURE_TYPE_HYPOTHETICAL_FEATURES_KHR,                // sType
+-- >         NULL,                                                       // pNext
 -- >     };
 -- >
 -- >     VkPhysicalDeviceFeatures2KHR features =
 -- >     {
--- >         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR,                       // sType
--- >         &hypotheticalFeatures,                                                  // pNext
+-- >         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR,           // sType
+-- >         &hypotheticalFeatures,                                      // pNext
 -- >     };
 -- >
 -- >     // After this call, features and hypotheticalFeatures have been filled out.
@@ -160,14 +160,14 @@
 -- >     // Enable some features:
 -- >     VkHypotheticalExtensionFeaturesKHR enabledHypotheticalFeatures =
 -- >     {
--- >         VK_STRUCTURE_TYPE_HYPOTHETICAL_FEATURES_KHR,                            // sType
--- >         NULL,                                                                   // pNext
+-- >         VK_STRUCTURE_TYPE_HYPOTHETICAL_FEATURES_KHR,                // sType
+-- >         NULL,                                                       // pNext
 -- >     };
 -- >
 -- >     VkPhysicalDeviceFeatures2KHR enabledFeatures =
 -- >     {
--- >         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR,                       // sType
--- >         &enabledHypotheticalFeatures,                                           // pNext
+-- >         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR,           // sType
+-- >         &enabledHypotheticalFeatures,                               // pNext
 -- >     };
 -- >
 -- >     enabledFeatures.features.xyz = VK_TRUE;
@@ -175,11 +175,11 @@
 -- >
 -- >     VkDeviceCreateInfo deviceCreateInfo =
 -- >     {
--- >         VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,                                   // sType
--- >         &enabledFeatures,                                                       // pNext
+-- >         VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,                       // sType
+-- >         &enabledFeatures,                                           // pNext
 -- >         ...
--- >         NULL,                                                                   // pEnabledFeatures
--- >     }
+-- >         NULL,                                                       // pEnabledFeatures
+-- >     };
 -- >
 -- >     VkDevice device;
 -- >     vkCreateDevice(physicalDevice, &deviceCreateInfo, NULL, &device);
@@ -195,7 +195,7 @@
 --     -   Added ability for applications to use the physical-device
 --         components of device extensions before vkCreateDevice is called.
 --
--- = See Also
+-- == See Also
 --
 -- 'FormatProperties2KHR', 'ImageFormatProperties2KHR',
 -- 'PhysicalDeviceFeatures2KHR', 'PhysicalDeviceImageFormatInfo2KHR',
@@ -209,7 +209,7 @@
 -- 'getPhysicalDeviceQueueFamilyProperties2KHR',
 -- 'getPhysicalDeviceSparseImageFormatProperties2KHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_physical_device_properties2 Vulkan Specification>

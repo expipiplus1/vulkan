@@ -39,7 +39,7 @@ module OpenXR.Extensions.XR_KHR_android_create_instance  ( InstanceCreateInfoAnd
                                                          , pattern KHR_ANDROID_CREATE_INSTANCE_EXTENSION_NAME
                                                          ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import OpenXR.CStruct (FromCStruct)
@@ -76,9 +76,9 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_INSTANCE_CREATE_INF
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrInstanceCreateInfoAndroidKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'InstanceCreateInfoAndroidKHR'
+-- -   #VUID-XrInstanceCreateInfoAndroidKHR-extension-notenabled# The
+--     @XR_KHR_android_create_instance@ extension /must/ be enabled prior
+--     to using 'InstanceCreateInfoAndroidKHR'
 --
 -- -   #VUID-XrInstanceCreateInfoAndroidKHR-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_INSTANCE_CREATE_INFO_ANDROID_KHR'
@@ -114,7 +114,7 @@ deriving instance Generic (InstanceCreateInfoAndroidKHR)
 deriving instance Show InstanceCreateInfoAndroidKHR
 
 instance ToCStruct InstanceCreateInfoAndroidKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p InstanceCreateInfoAndroidKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_INSTANCE_CREATE_INFO_ANDROID_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

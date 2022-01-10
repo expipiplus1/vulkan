@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Qun Lin
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_shader_explicit_vertex_parameter:%20&body=@linqun%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_shader_explicit_vertex_parameter] @linqun%0A<<Here describe the issue or question you have about the VK_AMD_shader_explicit_vertex_parameter extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -38,6 +38,9 @@
 --
 --     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_shader_explicit_vertex_parameter.html SPV_AMD_shader_explicit_vertex_parameter>
+--
+--     -   This extension provides API support for
+--         <https://www.khronos.org/registry/OpenGL/extensions/AMD/AMD_shader_explicit_vertex_parameter.txt GL_AMD_shader_explicit_vertex_parameter>
 --
 -- [__Contributors__]
 --
@@ -70,11 +73,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- No cross-references are available
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_shader_explicit_vertex_parameter Vulkan Specification>

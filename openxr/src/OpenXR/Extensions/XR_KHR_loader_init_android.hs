@@ -21,7 +21,7 @@
 --
 -- -   Requires OpenXR 1.0
 --
--- -   Requires @@
+-- -   Requires @XR_KHR_loader_init@
 --
 -- = See Also
 --
@@ -43,7 +43,7 @@ module OpenXR.Extensions.XR_KHR_loader_init_android  ( LoaderInitInfoAndroidKHR(
                                                      , LoaderInitInfoBaseHeaderKHR(..)
                                                      ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import OpenXR.CStruct (FromCStruct)
@@ -70,9 +70,9 @@ import OpenXR.Extensions.XR_KHR_loader_init (LoaderInitInfoBaseHeaderKHR(..))
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrLoaderInitInfoAndroidKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'LoaderInitInfoAndroidKHR'
+-- -   #VUID-XrLoaderInitInfoAndroidKHR-extension-notenabled# The
+--     @XR_KHR_loader_init_android@ extension /must/ be enabled prior to
+--     using 'LoaderInitInfoAndroidKHR'
 --
 -- -   #VUID-XrLoaderInitInfoAndroidKHR-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_LOADER_INIT_INFO_ANDROID_KHR'
@@ -109,7 +109,7 @@ instance IsLoaderInitInfoKHR LoaderInitInfoAndroidKHR where
   toLoaderInitInfoBaseHeaderKHR LoaderInitInfoAndroidKHR{} = LoaderInitInfoBaseHeaderKHR{type' = TYPE_LOADER_INIT_INFO_ANDROID_KHR}
 
 instance ToCStruct LoaderInitInfoAndroidKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p LoaderInitInfoAndroidKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_LOADER_INIT_INFO_ANDROID_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

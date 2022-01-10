@@ -9,7 +9,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_external_memory  ( ExternalMemoryImage
                                                            , pattern QUEUE_FAMILY_EXTERNAL
                                                            ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -41,14 +41,15 @@ import Vulkan.Core10.APIConstants (pattern QUEUE_FAMILY_EXTERNAL)
 --
 -- Note
 --
--- A 'ExternalMemoryImageCreateInfo' structure with a non-zero @handleType@
--- field must be included in the creation parameters for an image that will
--- be bound to memory that is either exported or imported.
+-- A 'ExternalMemoryImageCreateInfo' structure with a non-zero
+-- @handleTypes@ field must be included in the creation parameters for an
+-- image that will be bound to memory that is either exported or imported.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExternalMemoryImageCreateInfo = ExternalMemoryImageCreateInfo
@@ -68,7 +69,7 @@ deriving instance Generic (ExternalMemoryImageCreateInfo)
 deriving instance Show ExternalMemoryImageCreateInfo
 
 instance ToCStruct ExternalMemoryImageCreateInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExternalMemoryImageCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -113,6 +114,7 @@ instance Zero ExternalMemoryImageCreateInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExternalMemoryBufferCreateInfo = ExternalMemoryBufferCreateInfo
@@ -132,7 +134,7 @@ deriving instance Generic (ExternalMemoryBufferCreateInfo)
 deriving instance Show ExternalMemoryBufferCreateInfo
 
 instance ToCStruct ExternalMemoryBufferCreateInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExternalMemoryBufferCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -185,6 +187,7 @@ instance Zero ExternalMemoryBufferCreateInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExportMemoryAllocateInfo = ExportMemoryAllocateInfo
@@ -201,7 +204,7 @@ deriving instance Generic (ExportMemoryAllocateInfo)
 deriving instance Show ExportMemoryAllocateInfo
 
 instance ToCStruct ExportMemoryAllocateInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExportMemoryAllocateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

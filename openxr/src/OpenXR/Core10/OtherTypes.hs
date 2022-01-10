@@ -26,7 +26,7 @@ module OpenXR.Core10.OtherTypes  ( Vector4f(..)
                                  ) where
 
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
 import Foreign.Ptr (nullPtr)
@@ -73,7 +73,7 @@ import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_composition_layer_cylinder (Compo
 import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_composition_layer_depth (CompositionLayerDepthInfoKHR)
 import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_composition_layer_equirect2 (CompositionLayerEquirect2KHR)
 import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_composition_layer_equirect (CompositionLayerEquirectKHR)
-import OpenXR.Core10.Enums.CompositionLayerFlags (CompositionLayerFlags)
+import OpenXR.Core10.Enums.CompositionLayerFlagBits (CompositionLayerFlags)
 import OpenXR.Core10.FundamentalTypes (Duration)
 import {-# SOURCE #-} OpenXR.Extensions.XR_FB_display_refresh_rate (EventDataDisplayRefreshRateChangedFB)
 import {-# SOURCE #-} OpenXR.Extensions.XR_EXTX_overlay (EventDataMainSessionVisibilityChangedEXTX)
@@ -155,7 +155,7 @@ deriving instance Generic (Vector4f)
 deriving instance Show Vector4f
 
 instance ToCStruct Vector4f where
-  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Vector4f{..} f = do
     poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (x))
     poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (y))
@@ -225,7 +225,7 @@ deriving instance Generic (Color4f)
 deriving instance Show Color4f
 
 instance ToCStruct Color4f where
-  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Color4f{..} f = do
     poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (r))
     poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (g))
@@ -308,7 +308,7 @@ deriving instance Generic (Fovf)
 deriving instance Show Fovf
 
 instance ToCStruct Fovf where
-  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Fovf{..} f = do
     poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (angleLeft))
     poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (angleRight))
@@ -384,7 +384,7 @@ deriving instance Generic (SwapchainSubImage)
 deriving instance Show SwapchainSubImage
 
 instance ToCStruct SwapchainSubImage where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainSubImage{..} f = do
     poke ((p `plusPtr` 0 :: Ptr (Ptr Swapchain_T))) (swapchain)
     poke ((p `plusPtr` 8 :: Ptr Rect2Di)) (imageRect)
@@ -438,7 +438,7 @@ instance Zero SwapchainSubImage where
 --
 -- = See Also
 --
--- 'OpenXR.Core10.Enums.CompositionLayerFlags.CompositionLayerFlags',
+-- 'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlags',
 -- 'OpenXR.Core10.DisplayTiming.FrameEndInfo',
 -- 'OpenXR.Extensions.XR_MSFT_secondary_view_configuration.SecondaryViewConfigurationLayerInfoMSFT',
 -- 'OpenXR.Core10.Handles.Space',
@@ -467,12 +467,12 @@ data CompositionLayerBaseHeader (es :: [Type]) = CompositionLayerBaseHeader
     -- 'OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias.CompositionLayerColorScaleBiasKHR'
     next :: Chain es
   , -- | @layerFlags@ is a bitmask of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrCompositionLayerFlagBits XrCompositionLayerFlagBits>
+    -- 'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlagBits'
     -- describing flags to apply to the layer.
     --
     -- #VUID-XrCompositionLayerBaseHeader-layerFlags-parameter# @layerFlags@
     -- /must/ be @0@ or a valid combination of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrCompositionLayerFlagBits XrCompositionLayerFlagBits>
+    -- 'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlagBits'
     -- values
     layerFlags :: CompositionLayerFlags
   , -- | @space@ is the 'OpenXR.Core10.Handles.Space' in which the layer will be
@@ -490,7 +490,7 @@ deriving instance Show (Chain es) => Show (CompositionLayerBaseHeader es)
 
 instance Extensible CompositionLayerBaseHeader where
   extensibleTypeName = "CompositionLayerBaseHeader"
-  setNext x next = x{next = next}
+  setNext CompositionLayerBaseHeader{..} next' = CompositionLayerBaseHeader{next = next', ..}
   getNext CompositionLayerBaseHeader{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends CompositionLayerBaseHeader e => b) -> Maybe b
   extends _ f
@@ -521,7 +521,7 @@ instance Inheritable (CompositionLayerBaseHeader '[]) where
           Nothing
 
 instance (Extendss CompositionLayerBaseHeader es, PokeChain es) => ToCStruct (CompositionLayerBaseHeader es) where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CompositionLayerBaseHeader{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (type')
     next'' <- fmap castPtr . ContT $ withChain (next)
@@ -613,7 +613,7 @@ deriving instance Show (Chain es) => Show (CompositionLayerProjectionView es)
 
 instance Extensible CompositionLayerProjectionView where
   extensibleTypeName = "CompositionLayerProjectionView"
-  setNext x next = x{next = next}
+  setNext CompositionLayerProjectionView{..} next' = CompositionLayerProjectionView{next = next', ..}
   getNext CompositionLayerProjectionView{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends CompositionLayerProjectionView e => b) -> Maybe b
   extends _ f
@@ -621,7 +621,7 @@ instance Extensible CompositionLayerProjectionView where
     | otherwise = Nothing
 
 instance (Extendss CompositionLayerProjectionView es, PokeChain es) => ToCStruct (CompositionLayerProjectionView es) where
-  withCStruct x f = allocaBytesAligned 96 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 96 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CompositionLayerProjectionView{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_COMPOSITION_LAYER_PROJECTION_VIEW)
     next'' <- fmap castPtr . ContT $ withChain (next)
@@ -687,7 +687,7 @@ instance es ~ '[] => Zero (CompositionLayerProjectionView es) where
 --
 -- -   #VUID-XrCompositionLayerProjection-layerFlags-parameter#
 --     @layerFlags@ /must/ be @0@ or a valid combination of
---     <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrCompositionLayerFlagBits XrCompositionLayerFlagBits>
+--     'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlagBits'
 --     values
 --
 -- -   #VUID-XrCompositionLayerProjection-space-parameter# @space@ /must/
@@ -703,12 +703,12 @@ instance es ~ '[] => Zero (CompositionLayerProjectionView es) where
 -- = See Also
 --
 -- 'CompositionLayerBaseHeader',
--- 'OpenXR.Core10.Enums.CompositionLayerFlags.CompositionLayerFlags',
+-- 'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlags',
 -- 'CompositionLayerProjectionView', 'OpenXR.Core10.Handles.Space',
 -- 'OpenXR.Core10.Enums.StructureType.StructureType', 'SwapchainSubImage'
 data CompositionLayerProjection = CompositionLayerProjection
   { -- | @layerFlags@ is a bitmask of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrCompositionLayerFlagBits XrCompositionLayerFlagBits>
+    -- 'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlagBits'
     -- describing flags to apply to the layer.
     layerFlags :: CompositionLayerFlags
   , -- | @space@ is the 'OpenXR.Core10.Handles.Space' in which the @pose@ of each
@@ -729,14 +729,14 @@ instance IsCompositionLayer CompositionLayerProjection where
   toCompositionLayerBaseHeader CompositionLayerProjection{..} = CompositionLayerBaseHeader{type' = TYPE_COMPOSITION_LAYER_PROJECTION, next = (), ..}
 
 instance ToCStruct CompositionLayerProjection where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CompositionLayerProjection{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_COMPOSITION_LAYER_PROJECTION)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr CompositionLayerFlags)) (layerFlags)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Space_T))) (space)
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (views)) :: Word32))
-    pViews' <- ContT $ allocaBytesAligned @(CompositionLayerProjectionView _) ((Data.Vector.length (views)) * 96) 8
+    pViews' <- ContT $ allocaBytes @(CompositionLayerProjectionView _) ((Data.Vector.length (views)) * 96)
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pViews' `plusPtr` (96 * (i)) :: Ptr (CompositionLayerProjectionView _))) (e) . ($ ())) (views)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr (CompositionLayerProjectionView _)))) (pViews')
     lift $ f
@@ -791,19 +791,19 @@ instance Zero CompositionLayerProjection where
 -- = See Also
 --
 -- 'CompositionLayerBaseHeader',
--- 'OpenXR.Core10.Enums.CompositionLayerFlags.CompositionLayerFlags',
+-- 'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlags',
 -- 'OpenXR.Core10.FundamentalTypes.Extent2Df',
 -- 'OpenXR.Core10.Enums.EyeVisibility.EyeVisibility',
 -- 'OpenXR.Core10.Space.Posef', 'OpenXR.Core10.Handles.Space',
 -- 'OpenXR.Core10.Enums.StructureType.StructureType', 'SwapchainSubImage'
 data CompositionLayerQuad = CompositionLayerQuad
   { -- | @layerFlags@ is a bitmask of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrCompositionLayerFlagBits XrCompositionLayerFlagBits>
+    -- 'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlagBits'
     -- describing flags to apply to the layer.
     --
     -- #VUID-XrCompositionLayerQuad-layerFlags-parameter# @layerFlags@ /must/
     -- be @0@ or a valid combination of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrCompositionLayerFlagBits XrCompositionLayerFlagBits>
+    -- 'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlagBits'
     -- values
     layerFlags :: CompositionLayerFlags
   , -- | @space@ is the 'OpenXR.Core10.Handles.Space' in which the @pose@ of the
@@ -840,7 +840,7 @@ instance IsCompositionLayer CompositionLayerQuad where
   toCompositionLayerBaseHeader CompositionLayerQuad{..} = CompositionLayerBaseHeader{type' = TYPE_COMPOSITION_LAYER_QUAD, next = (), ..}
 
 instance ToCStruct CompositionLayerQuad where
-  withCStruct x f = allocaBytesAligned 112 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 112 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CompositionLayerQuad{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_COMPOSITION_LAYER_QUAD)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -934,7 +934,7 @@ instance IsHaptic HapticVibration where
   toHapticBaseHeader HapticVibration{} = HapticBaseHeader{type' = TYPE_HAPTIC_VIBRATION}
 
 instance ToCStruct HapticVibration where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HapticVibration{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_HAPTIC_VIBRATION)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1040,7 +1040,7 @@ instance Inheritable EventDataBaseHeader where
           Nothing
 
 instance ToCStruct EventDataBaseHeader where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p EventDataBaseHeader{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (type')
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1100,7 +1100,7 @@ instance IsEventData EventDataEventsLost where
   toEventDataBaseHeader EventDataEventsLost{} = EventDataBaseHeader{type' = TYPE_EVENT_DATA_EVENTS_LOST}
 
 instance ToCStruct EventDataEventsLost where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p EventDataEventsLost{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_EVENT_DATA_EVENTS_LOST)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1179,7 +1179,7 @@ instance IsEventData EventDataInstanceLossPending where
   toEventDataBaseHeader EventDataInstanceLossPending{} = EventDataBaseHeader{type' = TYPE_EVENT_DATA_INSTANCE_LOSS_PENDING}
 
 instance ToCStruct EventDataInstanceLossPending where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p EventDataInstanceLossPending{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_EVENT_DATA_INSTANCE_LOSS_PENDING)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1256,7 +1256,7 @@ instance IsEventData EventDataSessionStateChanged where
   toEventDataBaseHeader EventDataSessionStateChanged{} = EventDataBaseHeader{type' = TYPE_EVENT_DATA_SESSION_STATE_CHANGED}
 
 instance ToCStruct EventDataSessionStateChanged where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p EventDataSessionStateChanged{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_EVENT_DATA_SESSION_STATE_CHANGED)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1349,7 +1349,7 @@ instance IsEventData EventDataReferenceSpaceChangePending where
   toEventDataBaseHeader EventDataReferenceSpaceChangePending{} = EventDataBaseHeader{type' = TYPE_EVENT_DATA_REFERENCE_SPACE_CHANGE_PENDING}
 
 instance ToCStruct EventDataReferenceSpaceChangePending where
-  withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p EventDataReferenceSpaceChangePending{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_EVENT_DATA_REFERENCE_SPACE_CHANGE_PENDING)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1439,7 +1439,7 @@ instance IsEventData EventDataInteractionProfileChanged where
   toEventDataBaseHeader EventDataInteractionProfileChanged{} = EventDataBaseHeader{type' = TYPE_EVENT_DATA_INTERACTION_PROFILE_CHANGED}
 
 instance ToCStruct EventDataInteractionProfileChanged where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p EventDataInteractionProfileChanged{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_EVENT_DATA_INTERACTION_PROFILE_CHANGED)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

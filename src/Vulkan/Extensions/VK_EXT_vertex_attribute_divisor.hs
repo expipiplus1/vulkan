@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Vikram Kushwaha
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_vertex_attribute_divisor:%20&body=@vkushwaha%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_vertex_attribute_divisor] @vkushwaha%0A<<Here describe the issue or question you have about the VK_EXT_vertex_attribute_divisor extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -150,14 +150,14 @@
 --     -   Add a physical device features structure to query\/enable this
 --         feature.
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceVertexAttributeDivisorFeaturesEXT',
 -- 'PhysicalDeviceVertexAttributeDivisorPropertiesEXT',
 -- 'PipelineVertexInputDivisorStateCreateInfoEXT',
 -- 'VertexInputBindingDivisorDescriptionEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_vertex_attribute_divisor Vulkan Specification>
@@ -174,7 +174,7 @@ module Vulkan.Extensions.VK_EXT_vertex_attribute_divisor  ( VertexInputBindingDi
                                                           , pattern EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME
                                                           ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -212,8 +212,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = Description
 --
--- If this structure is not used to define a divisor value for an attribute
--- then the divisor has a logical default value of 1.
+-- If this structure is not used to define a divisor value for an
+-- attribute, then the divisor has a logical default value of 1.
 --
 -- == Valid Usage
 --
@@ -242,6 +242,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_vertex_attribute_divisor VK_EXT_vertex_attribute_divisor>,
 -- 'PipelineVertexInputDivisorStateCreateInfoEXT'
 data VertexInputBindingDivisorDescriptionEXT = VertexInputBindingDivisorDescriptionEXT
   { -- | @binding@ is the binding number for which the divisor is specified.
@@ -250,7 +251,7 @@ data VertexInputBindingDivisorDescriptionEXT = VertexInputBindingDivisorDescript
     -- value of the vertex attribute when instanced rendering is enabled. For
     -- example, if the divisor is N, the same vertex attribute will be applied
     -- to N successive instances before moving on to the next vertex attribute.
-    -- The maximum value of divisor is implementation dependent and can be
+    -- The maximum value of @divisor@ is implementation-dependent and can be
     -- queried using
     -- 'PhysicalDeviceVertexAttributeDivisorPropertiesEXT'::@maxVertexAttribDivisor@.
     -- A value of @0@ /can/ be used for the divisor if the
@@ -266,7 +267,7 @@ deriving instance Generic (VertexInputBindingDivisorDescriptionEXT)
 deriving instance Show VertexInputBindingDivisorDescriptionEXT
 
 instance ToCStruct VertexInputBindingDivisorDescriptionEXT where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p VertexInputBindingDivisorDescriptionEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (binding)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (divisor)
@@ -304,12 +305,13 @@ instance Zero VertexInputBindingDivisorDescriptionEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_vertex_attribute_divisor VK_EXT_vertex_attribute_divisor>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'VertexInputBindingDivisorDescriptionEXT'
 data PipelineVertexInputDivisorStateCreateInfoEXT = PipelineVertexInputDivisorStateCreateInfoEXT
   { -- | @pVertexBindingDivisors@ is a pointer to an array of
-    -- 'VertexInputBindingDivisorDescriptionEXT' structures, which specifies
-    -- the divisor value for each binding.
+    -- 'VertexInputBindingDivisorDescriptionEXT' structures specifying the
+    -- divisor value for each binding.
     --
     -- #VUID-VkPipelineVertexInputDivisorStateCreateInfoEXT-pVertexBindingDivisors-parameter#
     -- @pVertexBindingDivisors@ /must/ be a valid pointer to an array of
@@ -323,12 +325,12 @@ deriving instance Generic (PipelineVertexInputDivisorStateCreateInfoEXT)
 deriving instance Show PipelineVertexInputDivisorStateCreateInfoEXT
 
 instance ToCStruct PipelineVertexInputDivisorStateCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineVertexInputDivisorStateCreateInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (vertexBindingDivisors)) :: Word32))
-    pPVertexBindingDivisors' <- ContT $ allocaBytesAligned @VertexInputBindingDivisorDescriptionEXT ((Data.Vector.length (vertexBindingDivisors)) * 8) 4
+    pPVertexBindingDivisors' <- ContT $ allocaBytes @VertexInputBindingDivisorDescriptionEXT ((Data.Vector.length (vertexBindingDivisors)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPVertexBindingDivisors' `plusPtr` (8 * (i)) :: Ptr VertexInputBindingDivisorDescriptionEXT) (e)) (vertexBindingDivisors)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr VertexInputBindingDivisorDescriptionEXT))) (pPVertexBindingDivisors')
     lift $ f
@@ -356,22 +358,21 @@ instance Zero PipelineVertexInputDivisorStateCreateInfoEXT where
 -- describing max value of vertex attribute divisor that can be supported
 -- by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceVertexAttributeDivisorPropertiesEXT'
--- structure describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceVertexAttributeDivisorPropertiesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_vertex_attribute_divisor VK_EXT_vertex_attribute_divisor>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceVertexAttributeDivisorPropertiesEXT = PhysicalDeviceVertexAttributeDivisorPropertiesEXT
   { -- | #limits-maxVertexAttribDivisor# @maxVertexAttribDivisor@ is the maximum
@@ -385,7 +386,7 @@ deriving instance Generic (PhysicalDeviceVertexAttributeDivisorPropertiesEXT)
 deriving instance Show PhysicalDeviceVertexAttributeDivisorPropertiesEXT
 
 instance ToCStruct PhysicalDeviceVertexAttributeDivisorPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceVertexAttributeDivisorPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -419,20 +420,27 @@ instance Zero PhysicalDeviceVertexAttributeDivisorPropertiesEXT where
 -- | VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT - Structure describing
 -- if fetching of vertex attribute may be repeated for instanced rendering
 --
+-- = Members
+--
+-- This structure describes the following features:
+--
 -- = Description
 --
 -- If the 'PhysicalDeviceVertexAttributeDivisorFeaturesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating the implementation-dependent
--- behavior. 'PhysicalDeviceVertexAttributeDivisorFeaturesEXT' /can/ also
--- be included in @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to enable the feature.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceVertexAttributeDivisorFeaturesEXT' /can/ also
+-- be used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
+-- to selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_vertex_attribute_divisor VK_EXT_vertex_attribute_divisor>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceVertexAttributeDivisorFeaturesEXT = PhysicalDeviceVertexAttributeDivisorFeaturesEXT
@@ -452,7 +460,7 @@ deriving instance Generic (PhysicalDeviceVertexAttributeDivisorFeaturesEXT)
 deriving instance Show PhysicalDeviceVertexAttributeDivisorFeaturesEXT
 
 instance ToCStruct PhysicalDeviceVertexAttributeDivisorFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceVertexAttributeDivisorFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

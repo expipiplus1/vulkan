@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Craig Stout
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_FUCHSIA_imagepipe_surface:%20&body=@cdotstout%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_FUCHSIA_imagepipe_surface] @cdotstout%0A<<Here describe the issue or question you have about the VK_FUCHSIA_imagepipe_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -79,12 +79,12 @@
 --
 --     -   Initial draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'ImagePipeSurfaceCreateFlagsFUCHSIA',
 -- 'ImagePipeSurfaceCreateInfoFUCHSIA', 'createImagePipeSurfaceFUCHSIA'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_imagepipe_surface Vulkan Specification>
@@ -108,7 +108,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -150,6 +150,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateImagePipeSurfaceFUCHSIA))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Enums.Result (Result)
@@ -203,6 +204,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_imagepipe_surface VK_FUCHSIA_imagepipe_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'ImagePipeSurfaceCreateInfoFUCHSIA', 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
@@ -220,7 +222,7 @@ createImagePipeSurfaceFUCHSIA :: forall io
                                  ("allocator" ::: Maybe AllocationCallbacks)
                               -> io (SurfaceKHR)
 createImagePipeSurfaceFUCHSIA instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateImagePipeSurfaceFUCHSIAPtr = pVkCreateImagePipeSurfaceFUCHSIA (instanceCmds (instance' :: Instance))
+  let vkCreateImagePipeSurfaceFUCHSIAPtr = pVkCreateImagePipeSurfaceFUCHSIA (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateImagePipeSurfaceFUCHSIAPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateImagePipeSurfaceFUCHSIA is null" Nothing Nothing
   let vkCreateImagePipeSurfaceFUCHSIA' = mkVkCreateImagePipeSurfaceFUCHSIA vkCreateImagePipeSurfaceFUCHSIAPtr
@@ -242,6 +244,7 @@ createImagePipeSurfaceFUCHSIA instance' createInfo allocator = liftIO . evalCont
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_imagepipe_surface VK_FUCHSIA_imagepipe_surface>,
 -- 'ImagePipeSurfaceCreateFlagsFUCHSIA',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createImagePipeSurfaceFUCHSIA'
@@ -254,7 +257,7 @@ data ImagePipeSurfaceCreateInfoFUCHSIA = ImagePipeSurfaceCreateInfoFUCHSIA
   , -- | @imagePipeHandle@ is a @zx_handle_t@ referring to the ImagePipe to
     -- associate with the surface.
     --
-    -- #VUID-VkImagePipeSurfaceCreateInfoFUCHSIA-imagePipeHandle-00000#
+    -- #VUID-VkImagePipeSurfaceCreateInfoFUCHSIA-imagePipeHandle-04863#
     -- @imagePipeHandle@ /must/ be a valid @zx_handle_t@
     imagePipeHandle :: Zx_handle_t
   }
@@ -265,7 +268,7 @@ deriving instance Generic (ImagePipeSurfaceCreateInfoFUCHSIA)
 deriving instance Show ImagePipeSurfaceCreateInfoFUCHSIA
 
 instance ToCStruct ImagePipeSurfaceCreateInfoFUCHSIA where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImagePipeSurfaceCreateInfoFUCHSIA{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGEPIPE_SURFACE_CREATE_INFO_FUCHSIA)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -308,6 +311,7 @@ instance Zero ImagePipeSurfaceCreateInfoFUCHSIA where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_imagepipe_surface VK_FUCHSIA_imagepipe_surface>,
 -- 'ImagePipeSurfaceCreateInfoFUCHSIA'
 newtype ImagePipeSurfaceCreateFlagsFUCHSIA = ImagePipeSurfaceCreateFlagsFUCHSIA Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

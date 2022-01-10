@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_corner_sampled_image:%20&body=@dgkoch%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_corner_sampled_image] @dgkoch%0A<<Here describe the issue or question you have about the VK_NV_corner_sampled_image extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -102,7 +102,7 @@
 --
 -- 1.  What should this extension be named?
 --
---     DISCUSSION: While naming this extension, we chose the most
+--     __DISCUSSION__: While naming this extension, we chose the most
 --     distinctive aspect of the image organization and referred to such
 --     images as “corner-sampled images”. As a result, we decided to name
 --     the extension NV_corner_sampled_image.
@@ -110,26 +110,26 @@
 -- 2.  Do we need a format feature flag so formats can advertise if they
 --     support corner-sampling?
 --
---     DISCUSSION: Currently NVIDIA supports this for all 2D and 3D
---     formats, but not for cubemaps or depth-stencil formats. A format
+--     __DISCUSSION__: Currently NVIDIA supports this for all 2D and 3D
+--     formats, but not for cube maps or depth-stencil formats. A format
 --     feature might be useful if other vendors would only support this on
 --     some formats.
 --
 -- 3.  Do integer texel coordinates have a different range for
 --     corner-sampled images?
 --
---     RESOLVED: No, these are unchanged.
+--     __RESOLVED__: No, these are unchanged.
 --
 -- 4.  Do unnormalized sampler coordinates work with corner-sampled images?
 --     Are there any functional differences?
 --
---     RESOLVED: Yes they work. Unnormalized coordinates are treated as
---     already scaled for corner-sample usage.
+--     __RESOLVED__: Yes. Unnormalized coordinates are treated as already
+--     scaled for corner-sample usage.
 --
 -- 5.  Should we have a diagram in the “Image Operations” chapter
 --     demonstrating different texel sampling locations?
 --
---     UNRESOLVED: Probaby, but later.
+--     __UNRESOLVED__: Probaby, but later.
 --
 -- == Version History
 --
@@ -141,11 +141,11 @@
 --
 --     -   ???
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceCornerSampledImageFeaturesNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_corner_sampled_image Vulkan Specification>
@@ -159,7 +159,7 @@ module Vulkan.Extensions.VK_NV_corner_sampled_image  ( PhysicalDeviceCornerSampl
                                                      , pattern NV_CORNER_SAMPLED_IMAGE_EXTENSION_NAME
                                                      ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -186,23 +186,25 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceCornerSampledImageFeaturesNV'
--- structure describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceCornerSampledImageFeaturesNV' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceCornerSampledImageFeaturesNV' /can/ also be included in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- features.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceCornerSampledImageFeaturesNV' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_corner_sampled_image VK_NV_corner_sampled_image>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCornerSampledImageFeaturesNV = PhysicalDeviceCornerSampledImageFeaturesNV
@@ -220,7 +222,7 @@ deriving instance Generic (PhysicalDeviceCornerSampledImageFeaturesNV)
 deriving instance Show PhysicalDeviceCornerSampledImageFeaturesNV
 
 instance ToCStruct PhysicalDeviceCornerSampledImageFeaturesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceCornerSampledImageFeaturesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

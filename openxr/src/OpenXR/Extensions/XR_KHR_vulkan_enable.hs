@@ -56,7 +56,7 @@ import qualified OpenXR.VulkanTypes (PhysicalDevice_T)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -93,6 +93,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import OpenXR.NamedType ((:::))
 import OpenXR.Core10.Handles (Instance)
 import OpenXR.Core10.Handles (Instance(..))
+import OpenXR.Core10.Handles (Instance(Instance))
 import OpenXR.Dynamic (InstanceCmds(pXrGetVulkanDeviceExtensionsKHR))
 import OpenXR.Dynamic (InstanceCmds(pXrGetVulkanGraphicsDeviceKHR))
 import OpenXR.Dynamic (InstanceCmds(pXrGetVulkanGraphicsRequirementsKHR))
@@ -148,8 +149,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrGetVulkanInstanceExtensionsKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
+-- -   #VUID-xrGetVulkanInstanceExtensionsKHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable@ extension /must/ be enabled prior to calling
 --     'getVulkanInstanceExtensionsKHR'
 --
 -- -   #VUID-xrGetVulkanInstanceExtensionsKHR-instance-parameter#
@@ -197,7 +198,7 @@ getVulkanInstanceExtensionsKHR :: forall io
                                   SystemId
                                -> io (("buffer" ::: ByteString))
 getVulkanInstanceExtensionsKHR instance' systemId = liftIO . evalContT $ do
-  let xrGetVulkanInstanceExtensionsKHRPtr = pXrGetVulkanInstanceExtensionsKHR (instanceCmds (instance' :: Instance))
+  let xrGetVulkanInstanceExtensionsKHRPtr = pXrGetVulkanInstanceExtensionsKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetVulkanInstanceExtensionsKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetVulkanInstanceExtensionsKHR is null" Nothing Nothing
   let xrGetVulkanInstanceExtensionsKHR' = mkXrGetVulkanInstanceExtensionsKHR xrGetVulkanInstanceExtensionsKHRPtr
@@ -250,8 +251,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrGetVulkanDeviceExtensionsKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
+-- -   #VUID-xrGetVulkanDeviceExtensionsKHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable@ extension /must/ be enabled prior to calling
 --     'getVulkanDeviceExtensionsKHR'
 --
 -- -   #VUID-xrGetVulkanDeviceExtensionsKHR-instance-parameter# @instance@
@@ -299,7 +300,7 @@ getVulkanDeviceExtensionsKHR :: forall io
                                 SystemId
                              -> io (("buffer" ::: ByteString))
 getVulkanDeviceExtensionsKHR instance' systemId = liftIO . evalContT $ do
-  let xrGetVulkanDeviceExtensionsKHRPtr = pXrGetVulkanDeviceExtensionsKHR (instanceCmds (instance' :: Instance))
+  let xrGetVulkanDeviceExtensionsKHRPtr = pXrGetVulkanDeviceExtensionsKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetVulkanDeviceExtensionsKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetVulkanDeviceExtensionsKHR is null" Nothing Nothing
   let xrGetVulkanDeviceExtensionsKHR' = mkXrGetVulkanDeviceExtensionsKHR xrGetVulkanDeviceExtensionsKHRPtr
@@ -338,8 +339,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrGetVulkanGraphicsDeviceKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
+-- -   #VUID-xrGetVulkanGraphicsDeviceKHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable@ extension /must/ be enabled prior to calling
 --     'getVulkanGraphicsDeviceKHR'
 --
 -- -   #VUID-xrGetVulkanGraphicsDeviceKHR-instance-parameter# @instance@
@@ -388,7 +389,7 @@ getVulkanGraphicsDeviceKHR :: forall io
                               ("vkInstance" ::: Ptr OpenXR.VulkanTypes.Instance_T)
                            -> io (("vkPhysicalDevice" ::: Ptr OpenXR.VulkanTypes.PhysicalDevice_T))
 getVulkanGraphicsDeviceKHR instance' systemId vkInstance = liftIO . evalContT $ do
-  let xrGetVulkanGraphicsDeviceKHRPtr = pXrGetVulkanGraphicsDeviceKHR (instanceCmds (instance' :: Instance))
+  let xrGetVulkanGraphicsDeviceKHRPtr = pXrGetVulkanGraphicsDeviceKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetVulkanGraphicsDeviceKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetVulkanGraphicsDeviceKHR is null" Nothing Nothing
   let xrGetVulkanGraphicsDeviceKHR' = mkXrGetVulkanGraphicsDeviceKHR xrGetVulkanGraphicsDeviceKHRPtr
@@ -425,7 +426,7 @@ foreign import ccall
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrGetVulkanGraphicsRequirementsKHR-extension-notenabled# The
---     @@ extension /must/ be enabled prior to calling
+--     @XR_KHR_vulkan_enable@ extension /must/ be enabled prior to calling
 --     'getVulkanGraphicsRequirementsKHR'
 --
 -- -   #VUID-xrGetVulkanGraphicsRequirementsKHR-instance-parameter#
@@ -470,7 +471,7 @@ getVulkanGraphicsRequirementsKHR :: forall io
                                     SystemId
                                  -> io (GraphicsRequirementsVulkanKHR)
 getVulkanGraphicsRequirementsKHR instance' systemId = liftIO . evalContT $ do
-  let xrGetVulkanGraphicsRequirementsKHRPtr = pXrGetVulkanGraphicsRequirementsKHR (instanceCmds (instance' :: Instance))
+  let xrGetVulkanGraphicsRequirementsKHRPtr = pXrGetVulkanGraphicsRequirementsKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetVulkanGraphicsRequirementsKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetVulkanGraphicsRequirementsKHR is null" Nothing Nothing
   let xrGetVulkanGraphicsRequirementsKHR' = mkXrGetVulkanGraphicsRequirementsKHR xrGetVulkanGraphicsRequirementsKHRPtr
@@ -508,8 +509,8 @@ getVulkanGraphicsRequirementsKHR instance' systemId = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsBindingVulkanKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrGraphicsBindingVulkanKHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable@ extension /must/ be enabled prior to using
 --     'GraphicsBindingVulkanKHR'
 --
 -- -   #VUID-XrGraphicsBindingVulkanKHR-type-type# @type@ /must/ be
@@ -552,7 +553,7 @@ deriving instance Generic (GraphicsBindingVulkanKHR)
 deriving instance Show GraphicsBindingVulkanKHR
 
 instance ToCStruct GraphicsBindingVulkanKHR where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsBindingVulkanKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_BINDING_VULKAN_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -626,8 +627,9 @@ instance Zero GraphicsBindingVulkanKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrSwapchainImageVulkanKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using 'SwapchainImageVulkanKHR'
+-- -   #VUID-XrSwapchainImageVulkanKHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable@ extension /must/ be enabled prior to using
+--     'SwapchainImageVulkanKHR'
 --
 -- -   #VUID-XrSwapchainImageVulkanKHR-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_SWAPCHAIN_IMAGE_VULKAN_KHR'
@@ -656,7 +658,7 @@ instance IsSwapchainImage SwapchainImageVulkanKHR where
   toSwapchainImageBaseHeader SwapchainImageVulkanKHR{} = SwapchainImageBaseHeader{type' = TYPE_SWAPCHAIN_IMAGE_VULKAN_KHR}
 
 instance ToCStruct SwapchainImageVulkanKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainImageVulkanKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SWAPCHAIN_IMAGE_VULKAN_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -699,8 +701,8 @@ instance Zero SwapchainImageVulkanKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsRequirementsVulkanKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrGraphicsRequirementsVulkanKHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable@ extension /must/ be enabled prior to using
 --     'GraphicsRequirementsVulkanKHR'
 --
 -- -   #VUID-XrGraphicsRequirementsVulkanKHR-type-type# @type@ /must/ be
@@ -735,7 +737,7 @@ deriving instance Generic (GraphicsRequirementsVulkanKHR)
 deriving instance Show GraphicsRequirementsVulkanKHR
 
 instance ToCStruct GraphicsRequirementsVulkanKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsRequirementsVulkanKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_REQUIREMENTS_VULKAN_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Rex Xu
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_texture_gather_bias_lod:%20&body=@amdrexu%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_texture_gather_bias_lod] @amdrexu%0A<<Here describe the issue or question you have about the VK_AMD_texture_gather_bias_lod extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -40,6 +40,9 @@
 --
 --     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_texture_gather_bias_lod.html SPV_AMD_texture_gather_bias_lod>
+--
+--     -   This extension provides API support for
+--         <https://www.khronos.org/registry/OpenGL/extensions/AMD/AMD_texture_gather_bias_lod.txt GL_AMD_texture_gather_bias_lod>
 --
 -- [__Contributors__]
 --
@@ -138,11 +141,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'TextureLODGatherFormatPropertiesAMD'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_texture_gather_bias_lod Vulkan Specification>
@@ -156,7 +159,7 @@ module Vulkan.Extensions.VK_AMD_texture_gather_bias_lod  ( TextureLODGatherForma
                                                          , pattern AMD_TEXTURE_GATHER_BIAS_LOD_EXTENSION_NAME
                                                          ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -186,6 +189,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_TEXTURE_L
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_texture_gather_bias_lod VK_AMD_texture_gather_bias_lod>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data TextureLODGatherFormatPropertiesAMD = TextureLODGatherFormatPropertiesAMD
@@ -201,7 +205,7 @@ deriving instance Generic (TextureLODGatherFormatPropertiesAMD)
 deriving instance Show TextureLODGatherFormatPropertiesAMD
 
 instance ToCStruct TextureLODGatherFormatPropertiesAMD where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p TextureLODGatherFormatPropertiesAMD{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

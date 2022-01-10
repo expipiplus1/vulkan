@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_get_display_properties2:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_get_display_properties2] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_get_display_properties2 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -105,16 +105,16 @@
 -- __RESOLVED__:
 --
 -- -   'getPhysicalDeviceDisplayProperties2KHR': No. The only current input
---     is a 'Vulkan.Core10.Handles.PhysicalDevice'. Other inputs wouldn’t
+--     is a 'Vulkan.Core10.Handles.PhysicalDevice'. Other inputs would not
 --     make sense.
 --
 -- -   'getPhysicalDeviceDisplayPlaneProperties2KHR': No. The only current
 --     input is a 'Vulkan.Core10.Handles.PhysicalDevice'. Other inputs
---     wouldn’t make sense.
+--     would not make sense.
 --
 -- -   'getDisplayModeProperties2KHR': No. The only current inputs are a
 --     'Vulkan.Core10.Handles.PhysicalDevice' and a
---     'Vulkan.Extensions.Handles.DisplayModeKHR'. Other inputs wouldn’t
+--     'Vulkan.Extensions.Handles.DisplayModeKHR'. Other inputs would not
 --     make sense.
 --
 -- 3) Should additional display query functions be extended?
@@ -131,7 +131,7 @@
 --
 --     -   Initial draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'DisplayModeProperties2KHR', 'DisplayPlaneCapabilities2KHR',
 -- 'DisplayPlaneInfo2KHR', 'DisplayPlaneProperties2KHR',
@@ -140,7 +140,7 @@
 -- 'getPhysicalDeviceDisplayPlaneProperties2KHR',
 -- 'getPhysicalDeviceDisplayProperties2KHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_display_properties2 Vulkan Specification>
@@ -177,7 +177,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -224,6 +224,7 @@ import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceDisplayPlaneProperties2K
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceDisplayProperties2KHR))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -293,6 +294,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_display_properties2 VK_KHR_get_display_properties2>,
 -- 'DisplayProperties2KHR', 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceDisplayProperties2KHR :: forall io
                                         . (MonadIO io)
@@ -300,7 +302,7 @@ getPhysicalDeviceDisplayProperties2KHR :: forall io
                                           PhysicalDevice
                                        -> io (Result, ("properties" ::: Vector DisplayProperties2KHR))
 getPhysicalDeviceDisplayProperties2KHR physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceDisplayProperties2KHRPtr = pVkGetPhysicalDeviceDisplayProperties2KHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceDisplayProperties2KHRPtr = pVkGetPhysicalDeviceDisplayProperties2KHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceDisplayProperties2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceDisplayProperties2KHR is null" Nothing Nothing
   let vkGetPhysicalDeviceDisplayProperties2KHR' = mkVkGetPhysicalDeviceDisplayProperties2KHR vkGetPhysicalDeviceDisplayProperties2KHRPtr
@@ -366,6 +368,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_display_properties2 VK_KHR_get_display_properties2>,
 -- 'DisplayPlaneProperties2KHR', 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceDisplayPlaneProperties2KHR :: forall io
                                              . (MonadIO io)
@@ -373,7 +376,7 @@ getPhysicalDeviceDisplayPlaneProperties2KHR :: forall io
                                                PhysicalDevice
                                             -> io (Result, ("properties" ::: Vector DisplayPlaneProperties2KHR))
 getPhysicalDeviceDisplayPlaneProperties2KHR physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceDisplayPlaneProperties2KHRPtr = pVkGetPhysicalDeviceDisplayPlaneProperties2KHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceDisplayPlaneProperties2KHRPtr = pVkGetPhysicalDeviceDisplayPlaneProperties2KHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceDisplayPlaneProperties2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceDisplayPlaneProperties2KHR is null" Nothing Nothing
   let vkGetPhysicalDeviceDisplayPlaneProperties2KHR' = mkVkGetPhysicalDeviceDisplayPlaneProperties2KHR vkGetPhysicalDeviceDisplayPlaneProperties2KHRPtr
@@ -444,6 +447,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_display_properties2 VK_KHR_get_display_properties2>,
 -- 'Vulkan.Extensions.Handles.DisplayKHR', 'DisplayModeProperties2KHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getDisplayModeProperties2KHR :: forall io
@@ -454,7 +458,7 @@ getDisplayModeProperties2KHR :: forall io
                                 DisplayKHR
                              -> io (Result, ("properties" ::: Vector DisplayModeProperties2KHR))
 getDisplayModeProperties2KHR physicalDevice display = liftIO . evalContT $ do
-  let vkGetDisplayModeProperties2KHRPtr = pVkGetDisplayModeProperties2KHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetDisplayModeProperties2KHRPtr = pVkGetDisplayModeProperties2KHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetDisplayModeProperties2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDisplayModeProperties2KHR is null" Nothing Nothing
   let vkGetDisplayModeProperties2KHR' = mkVkGetDisplayModeProperties2KHR vkGetDisplayModeProperties2KHRPtr
@@ -503,6 +507,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_display_properties2 VK_KHR_get_display_properties2>,
 -- 'DisplayPlaneCapabilities2KHR', 'DisplayPlaneInfo2KHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getDisplayPlaneCapabilities2KHR :: forall io
@@ -523,7 +528,7 @@ getDisplayPlaneCapabilities2KHR :: forall io
                                    DisplayPlaneInfo2KHR
                                 -> io (DisplayPlaneCapabilities2KHR)
 getDisplayPlaneCapabilities2KHR physicalDevice displayPlaneInfo = liftIO . evalContT $ do
-  let vkGetDisplayPlaneCapabilities2KHRPtr = pVkGetDisplayPlaneCapabilities2KHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetDisplayPlaneCapabilities2KHRPtr = pVkGetDisplayPlaneCapabilities2KHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetDisplayPlaneCapabilities2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDisplayPlaneCapabilities2KHR is null" Nothing Nothing
   let vkGetDisplayPlaneCapabilities2KHR' = mkVkGetDisplayPlaneCapabilities2KHR vkGetDisplayPlaneCapabilities2KHRPtr
@@ -542,6 +547,7 @@ getDisplayPlaneCapabilities2KHR physicalDevice displayPlaneInfo = liftIO . evalC
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_display_properties2 VK_KHR_get_display_properties2>,
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayPropertiesKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceDisplayProperties2KHR'
@@ -556,7 +562,7 @@ deriving instance Generic (DisplayProperties2KHR)
 deriving instance Show DisplayProperties2KHR
 
 instance ToCStruct DisplayProperties2KHR where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplayProperties2KHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_PROPERTIES_2_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -588,6 +594,7 @@ instance Zero DisplayProperties2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_display_properties2 VK_KHR_get_display_properties2>,
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayPlanePropertiesKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceDisplayPlaneProperties2KHR'
@@ -602,7 +609,7 @@ deriving instance Generic (DisplayPlaneProperties2KHR)
 deriving instance Show DisplayPlaneProperties2KHR
 
 instance ToCStruct DisplayPlaneProperties2KHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplayPlaneProperties2KHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_PLANE_PROPERTIES_2_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -640,6 +647,7 @@ instance Zero DisplayPlaneProperties2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_display_properties2 VK_KHR_get_display_properties2>,
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayModePropertiesKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getDisplayModeProperties2KHR'
@@ -654,7 +662,7 @@ deriving instance Generic (DisplayModeProperties2KHR)
 deriving instance Show DisplayModeProperties2KHR
 
 instance ToCStruct DisplayModeProperties2KHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplayModeProperties2KHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -717,6 +725,7 @@ instance Zero DisplayModeProperties2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_display_properties2 VK_KHR_get_display_properties2>,
 -- 'Vulkan.Extensions.Handles.DisplayModeKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getDisplayPlaneCapabilities2KHR'
@@ -734,7 +743,7 @@ deriving instance Generic (DisplayPlaneInfo2KHR)
 deriving instance Show DisplayPlaneInfo2KHR
 
 instance ToCStruct DisplayPlaneInfo2KHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplayPlaneInfo2KHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_PLANE_INFO_2_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -776,6 +785,7 @@ instance Zero DisplayPlaneInfo2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_display_properties2 VK_KHR_get_display_properties2>,
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayPlaneCapabilitiesKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getDisplayPlaneCapabilities2KHR'
@@ -791,7 +801,7 @@ deriving instance Generic (DisplayPlaneCapabilities2KHR)
 deriving instance Show DisplayPlaneCapabilities2KHR
 
 instance ToCStruct DisplayPlaneCapabilities2KHR where
-  withCStruct x f = allocaBytesAligned 88 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 88 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplayPlaneCapabilities2KHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_PLANE_CAPABILITIES_2_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

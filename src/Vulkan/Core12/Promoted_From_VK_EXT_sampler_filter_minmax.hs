@@ -8,7 +8,7 @@ module Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax  ( PhysicalDevic
                                                                  , SamplerReductionMode(..)
                                                                  ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -38,17 +38,15 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- | VkPhysicalDeviceSamplerFilterMinmaxProperties - Structure describing
 -- sampler filter minmax limits that can be supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceSamplerFilterMinmaxProperties'
--- structure describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceSamplerFilterMinmaxProperties' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- If @filterMinmaxSingleComponentFormats@ is
 -- 'Vulkan.Core10.FundamentalTypes.TRUE', the following formats /must/
@@ -56,7 +54,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT'
 -- feature with 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', if
 -- they support
--- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_BIT'.
+-- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_BIT':
 --
 -- If the format is a depth\/stencil format, this bit only specifies that
 -- the depth aspect (not the stencil aspect) of an image of this format
@@ -78,6 +76,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sampler_filter_minmax VK_EXT_sampler_filter_minmax>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceSamplerFilterMinmaxProperties = PhysicalDeviceSamplerFilterMinmaxProperties
@@ -98,7 +98,7 @@ deriving instance Generic (PhysicalDeviceSamplerFilterMinmaxProperties)
 deriving instance Show PhysicalDeviceSamplerFilterMinmaxProperties
 
 instance ToCStruct PhysicalDeviceSamplerFilterMinmaxProperties where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceSamplerFilterMinmaxProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -140,7 +140,7 @@ instance Zero PhysicalDeviceSamplerFilterMinmaxProperties where
 --
 -- If the @pNext@ chain of 'Vulkan.Core10.Sampler.SamplerCreateInfo'
 -- includes a 'SamplerReductionModeCreateInfo' structure, then that
--- structure includes a mode that controls how texture filtering combines
+-- structure includes a mode controlling how texture filtering combines
 -- texel values.
 --
 -- If this structure is not present, @reductionMode@ is considered to be
@@ -150,6 +150,8 @@ instance Zero PhysicalDeviceSamplerFilterMinmaxProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sampler_filter_minmax VK_EXT_sampler_filter_minmax>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core12.Enums.SamplerReductionMode.SamplerReductionMode',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SamplerReductionModeCreateInfo = SamplerReductionModeCreateInfo
@@ -168,7 +170,7 @@ deriving instance Generic (SamplerReductionModeCreateInfo)
 deriving instance Show SamplerReductionModeCreateInfo
 
 instance ToCStruct SamplerReductionModeCreateInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SamplerReductionModeCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

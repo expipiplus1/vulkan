@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Craig Stout
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_FUCHSIA_imagepipe_surface:%20&body=@cdotstout%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_FUCHSIA_imagepipe_surface] @cdotstout%0A<<Here describe the issue or question you have about the VK_FUCHSIA_imagepipe_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -79,22 +79,25 @@
 --
 --     -   Initial draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'ImagePipeSurfaceCreateFlagsFUCHSIA',
 -- 'ImagePipeSurfaceCreateInfoFUCHSIA', 'createImagePipeSurfaceFUCHSIA'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_imagepipe_surface Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface  (ImagePipeSurfaceCreateInfoFUCHSIA) where
+module Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface  ( ImagePipeSurfaceCreateInfoFUCHSIA
+                                                       , Zx_handle_t
+                                                       ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Word (Word32)
 import Data.Kind (Type)
 
 data ImagePipeSurfaceCreateInfoFUCHSIA
@@ -103,4 +106,7 @@ instance ToCStruct ImagePipeSurfaceCreateInfoFUCHSIA
 instance Show ImagePipeSurfaceCreateInfoFUCHSIA
 
 instance FromCStruct ImagePipeSurfaceCreateInfoFUCHSIA
+
+
+type Zx_handle_t = Word32
 

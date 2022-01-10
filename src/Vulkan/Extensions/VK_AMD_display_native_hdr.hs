@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Matthaeus G. Chajdas
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_display_native_hdr:%20&body=@anteru%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_display_native_hdr] @anteru%0A<<Here describe the issue or question you have about the VK_AMD_display_native_hdr extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -112,12 +112,12 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'DisplayNativeHdrSurfaceCapabilitiesAMD',
 -- 'SwapchainDisplayNativeHdrCreateInfoAMD', 'setLocalDimmingAMD'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_display_native_hdr Vulkan Specification>
@@ -138,7 +138,7 @@ module Vulkan.Extensions.VK_AMD_display_native_hdr  ( setLocalDimmingAMD
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -168,6 +168,7 @@ import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkSetLocalDimmingAMD))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -206,6 +207,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_display_native_hdr VK_AMD_display_native_hdr>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32', 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
 setLocalDimmingAMD :: forall io
@@ -219,7 +221,7 @@ setLocalDimmingAMD :: forall io
                       ("localDimmingEnable" ::: Bool)
                    -> io ()
 setLocalDimmingAMD device swapChain localDimmingEnable = liftIO $ do
-  let vkSetLocalDimmingAMDPtr = pVkSetLocalDimmingAMD (deviceCmds (device :: Device))
+  let vkSetLocalDimmingAMDPtr = pVkSetLocalDimmingAMD (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkSetLocalDimmingAMDPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetLocalDimmingAMD is null" Nothing Nothing
   let vkSetLocalDimmingAMD' = mkVkSetLocalDimmingAMD vkSetLocalDimmingAMDPtr
@@ -234,6 +236,7 @@ setLocalDimmingAMD device swapChain localDimmingEnable = liftIO $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_display_native_hdr VK_AMD_display_native_hdr>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DisplayNativeHdrSurfaceCapabilitiesAMD = DisplayNativeHdrSurfaceCapabilitiesAMD
@@ -251,7 +254,7 @@ deriving instance Generic (DisplayNativeHdrSurfaceCapabilitiesAMD)
 deriving instance Show DisplayNativeHdrSurfaceCapabilitiesAMD
 
 instance ToCStruct DisplayNativeHdrSurfaceCapabilitiesAMD where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplayNativeHdrSurfaceCapabilitiesAMD{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_NATIVE_HDR_SURFACE_CAPABILITIES_AMD)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -309,6 +312,7 @@ instance Zero DisplayNativeHdrSurfaceCapabilitiesAMD where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_display_native_hdr VK_AMD_display_native_hdr>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SwapchainDisplayNativeHdrCreateInfoAMD = SwapchainDisplayNativeHdrCreateInfoAMD
@@ -322,7 +326,7 @@ deriving instance Generic (SwapchainDisplayNativeHdrCreateInfoAMD)
 deriving instance Show SwapchainDisplayNativeHdrCreateInfoAMD
 
 instance ToCStruct SwapchainDisplayNativeHdrCreateInfoAMD where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainDisplayNativeHdrCreateInfoAMD{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SWAPCHAIN_DISPLAY_NATIVE_HDR_CREATE_INFO_AMD)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

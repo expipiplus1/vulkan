@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_line_rasterization:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_line_rasterization] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_EXT_line_rasterization extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -103,9 +103,8 @@
 -- == Issues
 --
 -- > (1) Do we need to support Bresenham-style and smooth lines with more than
--- >     one rasterization sample? i.e. the equivalent of
--- >     glDisable(GL_MULTISAMPLE) in OpenGL when the framebuffer has more than
--- >     one sample?
+-- > one rasterization sample? i.e. the equivalent of glDisable(GL_MULTISAMPLE)
+-- > in OpenGL when the framebuffer has more than one sample?
 --
 -- > RESOLVED: Yes.
 -- > For simplicity, Bresenham line rasterization carries forward a few
@@ -118,14 +117,14 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'LineRasterizationModeEXT',
 -- 'PhysicalDeviceLineRasterizationFeaturesEXT',
 -- 'PhysicalDeviceLineRasterizationPropertiesEXT',
 -- 'PipelineRasterizationLineStateCreateInfoEXT', 'cmdSetLineStippleEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_line_rasterization Vulkan Specification>
@@ -153,7 +152,7 @@ import Vulkan.Internal.Utils (enumShowsPrec)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -189,6 +188,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetLineStippleEXT))
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -202,7 +202,19 @@ foreign import ccall
   "dynamic" mkVkCmdSetLineStippleEXT
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word16 -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word16 -> IO ()
 
--- | vkCmdSetLineStippleEXT - Set the dynamic line width state
+-- | vkCmdSetLineStippleEXT - Set line stipple dynamically for a command
+-- buffer
+--
+-- = Description
+--
+-- This command sets the line stipple state for subsequent drawing commands
+-- when the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_EXT' set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'PipelineRasterizationLineStateCreateInfoEXT'::@lineStippleFactor@ and
+-- 'PipelineRasterizationLineStateCreateInfoEXT'::@lineStipplePattern@
+-- values used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -234,15 +246,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_line_rasterization VK_EXT_line_rasterization>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetLineStippleEXT :: forall io
                       . (MonadIO io)
@@ -257,7 +270,7 @@ cmdSetLineStippleEXT :: forall io
                         ("lineStipplePattern" ::: Word16)
                      -> io ()
 cmdSetLineStippleEXT commandBuffer lineStippleFactor lineStipplePattern = liftIO $ do
-  let vkCmdSetLineStippleEXTPtr = pVkCmdSetLineStippleEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetLineStippleEXTPtr = pVkCmdSetLineStippleEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetLineStippleEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetLineStippleEXT is null" Nothing Nothing
   let vkCmdSetLineStippleEXT' = mkVkCmdSetLineStippleEXT vkCmdSetLineStippleEXTPtr
@@ -270,23 +283,25 @@ cmdSetLineStippleEXT commandBuffer lineStippleFactor lineStipplePattern = liftIO
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceLineRasterizationFeaturesEXT'
--- structure describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceLineRasterizationFeaturesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceLineRasterizationFeaturesEXT' /can/ also be included in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- the feature.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceLineRasterizationFeaturesEXT' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_line_rasterization VK_EXT_line_rasterization>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceLineRasterizationFeaturesEXT = PhysicalDeviceLineRasterizationFeaturesEXT
@@ -328,7 +343,7 @@ deriving instance Generic (PhysicalDeviceLineRasterizationFeaturesEXT)
 deriving instance Show PhysicalDeviceLineRasterizationFeaturesEXT
 
 instance ToCStruct PhysicalDeviceLineRasterizationFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceLineRasterizationFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -382,22 +397,21 @@ instance Zero PhysicalDeviceLineRasterizationFeaturesEXT where
 -- | VkPhysicalDeviceLineRasterizationPropertiesEXT - Structure describing
 -- line rasterization properties supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceLineRasterizationPropertiesEXT'
--- structure describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceLineRasterizationPropertiesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_line_rasterization VK_EXT_line_rasterization>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceLineRasterizationPropertiesEXT = PhysicalDeviceLineRasterizationPropertiesEXT
   { -- | #limits-lineSubPixelPrecisionBits# @lineSubPixelPrecisionBits@ is the
@@ -412,7 +426,7 @@ deriving instance Generic (PhysicalDeviceLineRasterizationPropertiesEXT)
 deriving instance Show PhysicalDeviceLineRasterizationPropertiesEXT
 
 instance ToCStruct PhysicalDeviceLineRasterizationPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceLineRasterizationPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -445,6 +459,11 @@ instance Zero PhysicalDeviceLineRasterizationPropertiesEXT where
 
 -- | VkPipelineRasterizationLineStateCreateInfoEXT - Structure specifying
 -- parameters of a newly created pipeline line rasterization state
+--
+-- = Description
+--
+-- If @stippledLineEnable@ is 'Vulkan.Core10.FundamentalTypes.FALSE', the
+-- values of @lineStippleFactor@ and @lineStipplePattern@ are ignored.
 --
 -- == Valid Usage
 --
@@ -508,6 +527,7 @@ instance Zero PhysicalDeviceLineRasterizationPropertiesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_line_rasterization VK_EXT_line_rasterization>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32', 'LineRasterizationModeEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineRasterizationLineStateCreateInfoEXT = PipelineRasterizationLineStateCreateInfoEXT
@@ -531,7 +551,7 @@ deriving instance Generic (PipelineRasterizationLineStateCreateInfoEXT)
 deriving instance Show PipelineRasterizationLineStateCreateInfoEXT
 
 instance ToCStruct PipelineRasterizationLineStateCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineRasterizationLineStateCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -578,6 +598,7 @@ instance Zero PipelineRasterizationLineStateCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_line_rasterization VK_EXT_line_rasterization>,
 -- 'PipelineRasterizationLineStateCreateInfoEXT'
 newtype LineRasterizationModeEXT = LineRasterizationModeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)

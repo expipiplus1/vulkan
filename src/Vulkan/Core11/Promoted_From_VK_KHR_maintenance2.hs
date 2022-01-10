@@ -13,7 +13,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_maintenance2  ( InputAttachmentAspectR
                                                         , TessellationDomainOrigin(..)
                                                         ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -56,10 +56,20 @@ import Vulkan.Core11.Enums.TessellationDomainOrigin (TessellationDomainOrigin(..
 -- | VkInputAttachmentAspectReference - Structure specifying a subpass\/input
 -- attachment pair and an aspect mask that /can/ be read.
 --
+-- = Description
+--
+-- This structure specifies an aspect mask for a specific input attachment
+-- of a specific subpass in the render pass.
+--
+-- @subpass@ and @inputAttachmentIndex@ index into the render pass as:
+--
+-- > pCreateInfo->pSubpasses[subpass].pInputAttachments[inputAttachmentIndex]
+--
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
 -- 'RenderPassInputAttachmentAspectCreateInfo'
 data InputAttachmentAspectReference = InputAttachmentAspectReference
@@ -78,7 +88,7 @@ data InputAttachmentAspectReference = InputAttachmentAspectReference
     --
     -- #VUID-VkInputAttachmentAspectReference-aspectMask-02250# @aspectMask@
     -- /must/ not include @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any
-    -- index @i@
+    -- index /i/
     --
     -- #VUID-VkInputAttachmentAspectReference-aspectMask-parameter#
     -- @aspectMask@ /must/ be a valid combination of
@@ -95,7 +105,7 @@ deriving instance Generic (InputAttachmentAspectReference)
 deriving instance Show InputAttachmentAspectReference
 
 instance ToCStruct InputAttachmentAspectReference where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p InputAttachmentAspectReference{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (subpass)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (inputAttachmentIndex)
@@ -135,6 +145,10 @@ instance Zero InputAttachmentAspectReference where
 --
 -- = Description
 --
+-- To specify which aspects of an input attachment /can/ be read, add a
+-- 'RenderPassInputAttachmentAspectCreateInfo' structure to the @pNext@
+-- chain of the 'Vulkan.Core10.Pass.RenderPassCreateInfo' structure:
+--
 -- An application /can/ access any aspect of an input attachment that does
 -- not have a specified aspect mask in the @pAspectReferences@ array.
 -- Otherwise, an application /must/ not access aspect(s) of an input
@@ -144,6 +158,7 @@ instance Zero InputAttachmentAspectReference where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'InputAttachmentAspectReference',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data RenderPassInputAttachmentAspectCreateInfo = RenderPassInputAttachmentAspectCreateInfo
@@ -163,12 +178,12 @@ deriving instance Generic (RenderPassInputAttachmentAspectCreateInfo)
 deriving instance Show RenderPassInputAttachmentAspectCreateInfo
 
 instance ToCStruct RenderPassInputAttachmentAspectCreateInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RenderPassInputAttachmentAspectCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (aspectReferences)) :: Word32))
-    pPAspectReferences' <- ContT $ allocaBytesAligned @InputAttachmentAspectReference ((Data.Vector.length (aspectReferences)) * 12) 4
+    pPAspectReferences' <- ContT $ allocaBytes @InputAttachmentAspectReference ((Data.Vector.length (aspectReferences)) * 12)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPAspectReferences' `plusPtr` (12 * (i)) :: Ptr InputAttachmentAspectReference) (e)) (aspectReferences)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr InputAttachmentAspectReference))) (pPAspectReferences')
     lift $ f
@@ -195,22 +210,21 @@ instance Zero RenderPassInputAttachmentAspectCreateInfo where
 -- | VkPhysicalDevicePointClippingProperties - Structure describing the point
 -- clipping behavior supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDevicePointClippingProperties' structure
--- describe the following implementation-dependent limit:
---
 -- = Description
 --
 -- If the 'PhysicalDevicePointClippingProperties' structure is included in
--- the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Enums.PointClippingBehavior.PointClippingBehavior',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePointClippingProperties = PhysicalDevicePointClippingProperties
@@ -225,7 +239,7 @@ deriving instance Generic (PhysicalDevicePointClippingProperties)
 deriving instance Show PhysicalDevicePointClippingProperties
 
 instance ToCStruct PhysicalDevicePointClippingProperties where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDevicePointClippingProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -270,12 +284,13 @@ instance Zero PhysicalDevicePointClippingProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImageViewUsageCreateInfo = ImageViewUsageCreateInfo
-  { -- | @usage@ is a bitmask describing the allowed usages of the image view.
-    -- See 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' for a
-    -- description of the supported bits.
+  { -- | @usage@ is a bitmask of
+    -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' specifying
+    -- allowed usages of the image view.
     --
     -- #VUID-VkImageViewUsageCreateInfo-usage-parameter# @usage@ /must/ be a
     -- valid combination of
@@ -291,7 +306,7 @@ deriving instance Generic (ImageViewUsageCreateInfo)
 deriving instance Show ImageViewUsageCreateInfo
 
 instance ToCStruct ImageViewUsageCreateInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageViewUsageCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -331,13 +346,14 @@ instance Zero ImageViewUsageCreateInfo where
 -- included in the @pNext@ chain of
 -- 'Vulkan.Core10.Pipeline.PipelineTessellationStateCreateInfo', it
 -- controls the origin of the tessellation domain. If this structure is not
--- present, it is as if @domainOrigin@ were
+-- present, it is as if @domainOrigin@ was
 -- 'Vulkan.Core11.Enums.TessellationDomainOrigin.TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT'.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Core11.Enums.TessellationDomainOrigin.TessellationDomainOrigin'
 data PipelineTessellationDomainOriginStateCreateInfo = PipelineTessellationDomainOriginStateCreateInfo
@@ -357,7 +373,7 @@ deriving instance Generic (PipelineTessellationDomainOriginStateCreateInfo)
 deriving instance Show PipelineTessellationDomainOriginStateCreateInfo
 
 instance ToCStruct PipelineTessellationDomainOriginStateCreateInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineTessellationDomainOriginStateCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

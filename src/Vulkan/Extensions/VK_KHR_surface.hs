@@ -24,10 +24,10 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_surface:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_surface] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_surface extension>> >
 --
 --     -   Ian Elliott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_surface:%20&body=@ianelliottus%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_surface] @ianelliottus%0A<<Here describe the issue or question you have about the VK_KHR_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -165,16 +165,16 @@
 -- 'Vulkan.Core10.Handles.Device' (and therefore on enabled extensions and
 -- features) for the queries, Vulkan was released only with the
 -- 'Vulkan.Core10.Handles.PhysicalDevice' versions. Many cases can be
--- resolved by a Valid Usage. And\\or by a separate @pNext@ chain version
--- of the query struct specific to a given extension or parameters, via
--- extensible versions of the queries:
+-- resolved by a Valid Usage statement, and\/or by a separate @pNext@ chain
+-- version of the query struct specific to a given extension or parameters,
+-- via extensible versions of the queries:
+-- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.getPhysicalDeviceSurfacePresentModes2EXT',
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceCapabilities2KHR',
--- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceFormats2KHR',
 -- and
--- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.getPhysicalDeviceSurfacePresentModes2EXT'.
+-- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceFormats2KHR'.
 --
--- 3) Should Vulkan include support Xlib or XCB as the API for accessing
--- the X Window System platform?
+-- 3) Should Vulkan support Xlib or XCB as the API for accessing the X
+-- Window System platform?
 --
 -- __RESOLVED__: Both. XCB is a more modern and efficient API, but Xlib
 -- usage is deeply ingrained in many applications and likely will remain in
@@ -262,9 +262,9 @@
 --     -   Added error section describing when each error is expected to be
 --         reported.
 --
---     -   Replaced the term \"queue node index\" with \"queue family
---         index\" in the spec as that is the agreed term to be used in the
---         latest version of the core header and spec.
+--     -   Replaced the term “queue node index” with “queue family index”
+--         in the spec as that is the agreed term to be used in the latest
+--         version of the core header and spec.
 --
 --     -   Replaced bool32_t with VkBool32.
 --
@@ -278,7 +278,7 @@
 --         functions, etc. This makes it compliant with the proposed
 --         standard for Vulkan extensions.
 --
---     -   Switched from \"revision\" to \"version\", including use of the
+--     -   Switched from “revision” to “version”, including use of the
 --         VK_MAKE_VERSION macro in the header file.
 --
 --     -   Did miscellaneous cleanup, etc.
@@ -287,7 +287,7 @@
 --     from James Jones)
 --
 --     -   Moved the surface transform enums here from VK_WSI_swapchain so
---         they could be re-used by VK_WSI_display.
+--         they could be reused by VK_WSI_display.
 --
 -- -   Revision 16, 2015-09-01 (James Jones)
 --
@@ -354,7 +354,7 @@
 --     -   A note was added at the beginning of the example code, stating
 --         that it will be removed from future versions of the appendix.
 --
--- = See Also
+-- == See Also
 --
 -- 'ColorSpaceKHR', 'CompositeAlphaFlagBitsKHR', 'CompositeAlphaFlagsKHR',
 -- 'PresentModeKHR', 'SurfaceCapabilitiesKHR', 'SurfaceFormatKHR',
@@ -364,7 +364,7 @@
 -- 'getPhysicalDeviceSurfacePresentModesKHR',
 -- 'getPhysicalDeviceSurfaceSupportKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface Vulkan Specification>
@@ -437,7 +437,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -490,6 +490,7 @@ import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkDestroySurfaceKHR))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceSurfaceCapabilitiesKHR))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceSurfaceFormatsKHR))
@@ -498,6 +499,7 @@ import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceSurfaceSupportKHR))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -559,6 +561,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance', 'Vulkan.Extensions.Handles.SurfaceKHR'
 destroySurfaceKHR :: forall io
@@ -573,7 +576,7 @@ destroySurfaceKHR :: forall io
                      ("allocator" ::: Maybe AllocationCallbacks)
                   -> io ()
 destroySurfaceKHR instance' surface allocator = liftIO . evalContT $ do
-  let vkDestroySurfaceKHRPtr = pVkDestroySurfaceKHR (instanceCmds (instance' :: Instance))
+  let vkDestroySurfaceKHRPtr = pVkDestroySurfaceKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkDestroySurfaceKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroySurfaceKHR is null" Nothing Nothing
   let vkDestroySurfaceKHR' = mkVkDestroySurfaceKHR vkDestroySurfaceKHRPtr
@@ -636,6 +639,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
@@ -649,7 +653,7 @@ getPhysicalDeviceSurfaceSupportKHR :: forall io
                                       SurfaceKHR
                                    -> io (("supported" ::: Bool))
 getPhysicalDeviceSurfaceSupportKHR physicalDevice queueFamilyIndex surface = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceSurfaceSupportKHRPtr = pVkGetPhysicalDeviceSurfaceSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceSurfaceSupportKHRPtr = pVkGetPhysicalDeviceSurfaceSupportKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceSurfaceSupportKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSurfaceSupportKHR is null" Nothing Nothing
   let vkGetPhysicalDeviceSurfaceSupportKHR' = mkVkGetPhysicalDeviceSurfaceSupportKHR vkGetPhysicalDeviceSurfaceSupportKHRPtr
@@ -668,6 +672,13 @@ foreign import ccall
   :: FunPtr (Ptr PhysicalDevice_T -> SurfaceKHR -> Ptr SurfaceCapabilitiesKHR -> IO Result) -> Ptr PhysicalDevice_T -> SurfaceKHR -> Ptr SurfaceCapabilitiesKHR -> IO Result
 
 -- | vkGetPhysicalDeviceSurfaceCapabilitiesKHR - Query surface capabilities
+--
+-- == Valid Usage
+--
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilitiesKHR-surface-06211#
+--     @surface@ /must/ be supported by @physicalDevice@, as reported by
+--     'getPhysicalDeviceSurfaceSupportKHR' or an equivalent
+--     platform-specific mechanism
 --
 -- == Valid Usage (Implicit)
 --
@@ -704,6 +715,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'SurfaceCapabilitiesKHR',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
 getPhysicalDeviceSurfaceCapabilitiesKHR :: forall io
@@ -716,7 +728,7 @@ getPhysicalDeviceSurfaceCapabilitiesKHR :: forall io
                                            SurfaceKHR
                                         -> io (SurfaceCapabilitiesKHR)
 getPhysicalDeviceSurfaceCapabilitiesKHR physicalDevice surface = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceSurfaceCapabilitiesKHRPtr = pVkGetPhysicalDeviceSurfaceCapabilitiesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceSurfaceCapabilitiesKHRPtr = pVkGetPhysicalDeviceSurfaceCapabilitiesKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceSurfaceCapabilitiesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSurfaceCapabilitiesKHR is null" Nothing Nothing
   let vkGetPhysicalDeviceSurfaceCapabilitiesKHR' = mkVkGetPhysicalDeviceSurfaceCapabilitiesKHR vkGetPhysicalDeviceSurfaceCapabilitiesKHRPtr
@@ -746,12 +758,10 @@ foreign import ccall
 -- return the variable is overwritten with the number of structures
 -- actually written to @pSurfaceFormats@. If the value of
 -- @pSurfaceFormatCount@ is less than the number of format pairs supported,
--- at most @pSurfaceFormatCount@ structures will be written. If
--- @pSurfaceFormatCount@ is smaller than the number of format pairs
--- supported for the given @surface@,
+-- at most @pSurfaceFormatCount@ structures will be written, and
 -- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS' to indicate that not all the
--- available values were returned.
+-- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
+-- available format pairs were returned.
 --
 -- The number of format pairs supported /must/ be greater than or equal to
 -- 1. @pSurfaceFormats@ /must/ not contain an entry whose value for
@@ -768,7 +778,7 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkGetPhysicalDeviceSurfaceFormatsKHR-surface-02739# @surface@
+-- -   #VUID-vkGetPhysicalDeviceSurfaceFormatsKHR-surface-06211# @surface@
 --     /must/ be supported by @physicalDevice@, as reported by
 --     'getPhysicalDeviceSurfaceSupportKHR' or an equivalent
 --     platform-specific mechanism
@@ -815,6 +825,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'SurfaceFormatKHR',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
 getPhysicalDeviceSurfaceFormatsKHR :: forall io
@@ -827,7 +838,7 @@ getPhysicalDeviceSurfaceFormatsKHR :: forall io
                                       SurfaceKHR
                                    -> io (Result, ("surfaceFormats" ::: Vector SurfaceFormatKHR))
 getPhysicalDeviceSurfaceFormatsKHR physicalDevice surface = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceSurfaceFormatsKHRPtr = pVkGetPhysicalDeviceSurfaceFormatsKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceSurfaceFormatsKHRPtr = pVkGetPhysicalDeviceSurfaceFormatsKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceSurfaceFormatsKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSurfaceFormatsKHR is null" Nothing Nothing
   let vkGetPhysicalDeviceSurfaceFormatsKHR' = mkVkGetPhysicalDeviceSurfaceFormatsKHR vkGetPhysicalDeviceSurfaceFormatsKHRPtr
@@ -864,11 +875,17 @@ foreign import ccall
 -- return the variable is overwritten with the number of values actually
 -- written to @pPresentModes@. If the value of @pPresentModeCount@ is less
 -- than the number of presentation modes supported, at most
--- @pPresentModeCount@ values will be written. If @pPresentModeCount@ is
--- smaller than the number of presentation modes supported for the given
--- @surface@, 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
--- instead of 'Vulkan.Core10.Enums.Result.SUCCESS' to indicate that not all
--- the available values were returned.
+-- @pPresentModeCount@ values will be written, and
+-- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
+-- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
+-- available modes were returned.
+--
+-- == Valid Usage
+--
+-- -   #VUID-vkGetPhysicalDeviceSurfacePresentModesKHR-surface-06211#
+--     @surface@ /must/ be supported by @physicalDevice@, as reported by
+--     'getPhysicalDeviceSurfaceSupportKHR' or an equivalent
+--     platform-specific mechanism
 --
 -- == Valid Usage (Implicit)
 --
@@ -911,6 +928,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'PresentModeKHR',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
 getPhysicalDeviceSurfacePresentModesKHR :: forall io
@@ -923,7 +941,7 @@ getPhysicalDeviceSurfacePresentModesKHR :: forall io
                                            SurfaceKHR
                                         -> io (Result, ("presentModes" ::: Vector PresentModeKHR))
 getPhysicalDeviceSurfacePresentModesKHR physicalDevice surface = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceSurfacePresentModesKHRPtr = pVkGetPhysicalDeviceSurfacePresentModesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceSurfacePresentModesKHRPtr = pVkGetPhysicalDeviceSurfacePresentModesKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceSurfacePresentModesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSurfacePresentModesKHR is null" Nothing Nothing
   let vkGetPhysicalDeviceSurfacePresentModesKHR' = mkVkGetPhysicalDeviceSurfacePresentModesKHR vkGetPhysicalDeviceSurfacePresentModesKHRPtr
@@ -964,6 +982,7 @@ pattern COLORSPACE_SRGB_NONLINEAR_KHR = COLOR_SPACE_SRGB_NONLINEAR_KHR
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'CompositeAlphaFlagsKHR', 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceCapabilities2KHR',
@@ -1025,8 +1044,8 @@ data SurfaceCapabilitiesKHR = SurfaceCapabilitiesKHR
     -- 'PRESENT_MODE_MAILBOX_KHR', 'PRESENT_MODE_FIFO_KHR' or
     -- 'PRESENT_MODE_FIFO_RELAXED_KHR' for the surface on the specified device.
     -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
-    -- /must/ be included in the set but implementations /may/ support
-    -- additional usages.
+    -- /must/ be included in the set. Implementations /may/ support additional
+    -- usages.
     supportedUsageFlags :: ImageUsageFlags
   }
   deriving (Typeable)
@@ -1036,7 +1055,7 @@ deriving instance Generic (SurfaceCapabilitiesKHR)
 deriving instance Show SurfaceCapabilitiesKHR
 
 instance ToCStruct SurfaceCapabilitiesKHR where
-  withCStruct x f = allocaBytesAligned 52 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 52 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SurfaceCapabilitiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (minImageCount)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (maxImageCount)
@@ -1058,7 +1077,10 @@ instance ToCStruct SurfaceCapabilitiesKHR where
     poke ((p `plusPtr` 16 :: Ptr Extent2D)) (zero)
     poke ((p `plusPtr` 24 :: Ptr Extent2D)) (zero)
     poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 36 :: Ptr SurfaceTransformFlagsKHR)) (zero)
     poke ((p `plusPtr` 40 :: Ptr SurfaceTransformFlagBitsKHR)) (zero)
+    poke ((p `plusPtr` 44 :: Ptr CompositeAlphaFlagsKHR)) (zero)
+    poke ((p `plusPtr` 48 :: Ptr ImageUsageFlags)) (zero)
     f
 
 instance FromCStruct SurfaceCapabilitiesKHR where
@@ -1101,6 +1123,7 @@ instance Zero SurfaceCapabilitiesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'ColorSpaceKHR', 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceFormat2KHR',
 -- 'getPhysicalDeviceSurfaceFormatsKHR'
@@ -1119,7 +1142,7 @@ deriving instance Generic (SurfaceFormatKHR)
 deriving instance Show SurfaceFormatKHR
 
 instance ToCStruct SurfaceFormatKHR where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SurfaceFormatKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Format)) (format)
     poke ((p `plusPtr` 4 :: Ptr ColorSpaceKHR)) (colorSpace)
@@ -1150,7 +1173,7 @@ instance Zero SurfaceFormatKHR where
            zero
 
 
--- | VkPresentModeKHR - presentation mode supported for a surface
+-- | VkPresentModeKHR - Presentation mode supported for a surface
 --
 -- = Description
 --
@@ -1189,6 +1212,7 @@ instance Zero SurfaceFormatKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.getPhysicalDeviceSurfacePresentModes2EXT',
 -- 'getPhysicalDeviceSurfacePresentModesKHR'
@@ -1290,7 +1314,7 @@ instance Read PresentModeKHR where
   readPrec = enumReadPrec enumPrefixPresentModeKHR showTablePresentModeKHR conNamePresentModeKHR PresentModeKHR
 
 
--- | VkColorSpaceKHR - supported color space of the presentation engine
+-- | VkColorSpaceKHR - Supported color space of the presentation engine
 --
 -- = Description
 --
@@ -1377,7 +1401,7 @@ instance Read PresentModeKHR where
 --   \end{cases}
 -- \end{aligned}\]
 --
--- where L is the linear value of a color channel and E is the encoded
+-- where L is the linear value of a color component and E is the encoded
 -- value (as stored in the image in memory).
 --
 -- Note
@@ -1386,6 +1410,7 @@ instance Read PresentModeKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'SurfaceFormatKHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
 newtype ColorSpaceKHR = ColorSpaceKHR Int32
@@ -1502,7 +1527,7 @@ instance Read ColorSpaceKHR where
 
 type CompositeAlphaFlagsKHR = CompositeAlphaFlagBitsKHR
 
--- | VkCompositeAlphaFlagBitsKHR - alpha compositing modes supported on a
+-- | VkCompositeAlphaFlagBitsKHR - Alpha compositing modes supported on a
 -- device
 --
 -- = Description
@@ -1511,29 +1536,30 @@ type CompositeAlphaFlagsKHR = CompositeAlphaFlagBitsKHR
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'CompositeAlphaFlagsKHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
 newtype CompositeAlphaFlagBitsKHR = CompositeAlphaFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'COMPOSITE_ALPHA_OPAQUE_BIT_KHR': The alpha channel, if it exists, of
+-- | 'COMPOSITE_ALPHA_OPAQUE_BIT_KHR': The alpha component, if it exists, of
 -- the images is ignored in the compositing process. Instead, the image is
 -- treated as if it has a constant alpha of 1.0.
 pattern COMPOSITE_ALPHA_OPAQUE_BIT_KHR          = CompositeAlphaFlagBitsKHR 0x00000001
--- | 'COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR': The alpha channel, if it
+-- | 'COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR': The alpha component, if it
 -- exists, of the images is respected in the compositing process. The
--- non-alpha channels of the image are expected to already be multiplied by
--- the alpha channel by the application.
+-- non-alpha components of the image are expected to already be multiplied
+-- by the alpha component by the application.
 pattern COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR  = CompositeAlphaFlagBitsKHR 0x00000002
--- | 'COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR': The alpha channel, if it
+-- | 'COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR': The alpha component, if it
 -- exists, of the images is respected in the compositing process. The
--- non-alpha channels of the image are not expected to already be
--- multiplied by the alpha channel by the application; instead, the
--- compositor will multiply the non-alpha channels of the image by the
--- alpha channel during compositing.
+-- non-alpha components of the image are not expected to already be
+-- multiplied by the alpha component by the application; instead, the
+-- compositor will multiply the non-alpha components of the image by the
+-- alpha component during compositing.
 pattern COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR = CompositeAlphaFlagBitsKHR 0x00000004
 -- | 'COMPOSITE_ALPHA_INHERIT_BIT_KHR': The way in which the presentation
--- engine treats the alpha channel in the images is unknown to the Vulkan
+-- engine treats the alpha component in the images is unknown to the Vulkan
 -- API. Instead, the application is responsible for setting the composite
 -- alpha blending mode using native window system commands. If the
 -- application does not set the blending mode using native window system
@@ -1570,11 +1596,12 @@ instance Read CompositeAlphaFlagBitsKHR where
 
 type SurfaceTransformFlagsKHR = SurfaceTransformFlagBitsKHR
 
--- | VkSurfaceTransformFlagBitsKHR - presentation transforms supported on a
+-- | VkSurfaceTransformFlagBitsKHR - Presentation transforms supported on a
 -- device
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'Vulkan.Extensions.VK_QCOM_render_pass_transform.CommandBufferInheritanceRenderPassTransformInfoQCOM',
 -- 'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM',
 -- 'Vulkan.Extensions.VK_KHR_display.DisplaySurfaceCreateInfoKHR',

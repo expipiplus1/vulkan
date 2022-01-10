@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_display_swapchain:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_display_swapchain] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_display_swapchain extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -85,7 +85,7 @@
 -- already complex enough.
 --
 -- 2) Should the @srcRect@ and @dstRect@ parameters be specified as part of
--- the present command, or at swapchain creation time?
+-- the presentation command, or at swapchain creation time?
 --
 -- __RESOLVED__: As part of the presentation command. This allows moving
 -- and scaling the image on the screen without the need to respecify the
@@ -149,7 +149,7 @@
 --         functions, etc. This makes it compliant with the proposed
 --         standard for Vulkan extensions.
 --
---     -   Switched from \"revision\" to \"version\", including use of the
+--     -   Switched from “revision” to “version”, including use of the
 --         VK_MAKE_VERSION macro in the header file.
 --
 -- -   Revision 3, 2015-09-01 (James Jones)
@@ -159,7 +159,7 @@
 -- -   Revision 4, 2015-09-08 (James Jones)
 --
 --     -   Allow creating multiple swap chains that share the same images
---         using a single call to vkCreateSwapChainKHR().
+--         using a single call to vkCreateSwapchainKHR().
 --
 -- -   Revision 5, 2015-09-10 (Alon Or-bach)
 --
@@ -192,11 +192,11 @@
 --     -   Removed the sample code and noted it has been integrated into
 --         the official Vulkan SDK cube demo.
 --
--- = See Also
+-- == See Also
 --
 -- 'DisplayPresentInfoKHR', 'createSharedSwapchainsKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display_swapchain Vulkan Specification>

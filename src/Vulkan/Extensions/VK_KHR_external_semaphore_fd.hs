@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_external_semaphore_fd:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_external_semaphore_fd] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_external_semaphore_fd extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -95,12 +95,12 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'ImportSemaphoreFdInfoKHR', 'SemaphoreGetFdInfoKHR',
 -- 'getSemaphoreFdKHR', 'importSemaphoreFdKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_fd Vulkan Specification>
@@ -121,7 +121,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -159,6 +159,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetSemaphoreFdKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkImportSemaphoreFdKHR))
 import Vulkan.Core10.Handles (Device_T)
@@ -217,6 +218,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_fd VK_KHR_external_semaphore_fd>,
 -- 'Vulkan.Core10.Handles.Device', 'SemaphoreGetFdInfoKHR'
 getSemaphoreFdKHR :: forall io
                    . (MonadIO io)
@@ -234,7 +236,7 @@ getSemaphoreFdKHR :: forall io
                      SemaphoreGetFdInfoKHR
                   -> io (("fd" ::: Int32))
 getSemaphoreFdKHR device getFdInfo = liftIO . evalContT $ do
-  let vkGetSemaphoreFdKHRPtr = pVkGetSemaphoreFdKHR (deviceCmds (device :: Device))
+  let vkGetSemaphoreFdKHRPtr = pVkGetSemaphoreFdKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetSemaphoreFdKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSemaphoreFdKHR is null" Nothing Nothing
   let vkGetSemaphoreFdKHR' = mkVkGetSemaphoreFdKHR vkGetSemaphoreFdKHRPtr
@@ -280,6 +282,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_fd VK_KHR_external_semaphore_fd>,
 -- 'Vulkan.Core10.Handles.Device', 'ImportSemaphoreFdInfoKHR'
 importSemaphoreFdKHR :: forall io
                       . (MonadIO io)
@@ -297,7 +300,7 @@ importSemaphoreFdKHR :: forall io
                         ImportSemaphoreFdInfoKHR
                      -> io ()
 importSemaphoreFdKHR device importSemaphoreFdInfo = liftIO . evalContT $ do
-  let vkImportSemaphoreFdKHRPtr = pVkImportSemaphoreFdKHR (deviceCmds (device :: Device))
+  let vkImportSemaphoreFdKHRPtr = pVkImportSemaphoreFdKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkImportSemaphoreFdKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkImportSemaphoreFdKHR is null" Nothing Nothing
   let vkImportSemaphoreFdKHR' = mkVkImportSemaphoreFdKHR vkImportSemaphoreFdKHRPtr
@@ -403,6 +406,7 @@ importSemaphoreFdKHR device importSemaphoreFdInfo = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_fd VK_KHR_external_semaphore_fd>,
 -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits',
 -- 'Vulkan.Core10.Handles.Semaphore',
 -- 'Vulkan.Core11.Enums.SemaphoreImportFlagBits.SemaphoreImportFlags',
@@ -416,7 +420,9 @@ data ImportSemaphoreFdInfoKHR = ImportSemaphoreFdInfoKHR
     -- specifying additional parameters for the semaphore payload import
     -- operation.
     flags :: SemaphoreImportFlags
-  , -- | @handleType@ specifies the type of @fd@.
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'
+    -- value specifying the type of @fd@.
     handleType :: ExternalSemaphoreHandleTypeFlagBits
   , -- | @fd@ is the external handle to import.
     fd :: Int32
@@ -428,7 +434,7 @@ deriving instance Generic (ImportSemaphoreFdInfoKHR)
 deriving instance Show ImportSemaphoreFdInfoKHR
 
 instance ToCStruct ImportSemaphoreFdInfoKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImportSemaphoreFdInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMPORT_SEMAPHORE_FD_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -541,13 +547,16 @@ instance Zero ImportSemaphoreFdInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_fd VK_KHR_external_semaphore_fd>,
 -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits',
 -- 'Vulkan.Core10.Handles.Semaphore',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'getSemaphoreFdKHR'
 data SemaphoreGetFdInfoKHR = SemaphoreGetFdInfoKHR
   { -- | @semaphore@ is the semaphore from which state will be exported.
     semaphore :: Semaphore
-  , -- | @handleType@ is the type of handle requested.
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'
+    -- value specifying the type of handle requested.
     handleType :: ExternalSemaphoreHandleTypeFlagBits
   }
   deriving (Typeable, Eq)
@@ -557,7 +566,7 @@ deriving instance Generic (SemaphoreGetFdInfoKHR)
 deriving instance Show SemaphoreGetFdInfoKHR
 
 instance ToCStruct SemaphoreGetFdInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SemaphoreGetFdInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

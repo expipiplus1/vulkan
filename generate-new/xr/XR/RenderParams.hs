@@ -15,7 +15,7 @@ import           Data.Text.Extra                ( lowerCaseFirst
                                                 )
 import           Data.Text.Extra               as T
                                                 ( (<+>) )
-import           Data.Text.Prettyprint.Doc      ( pretty )
+import           Prettyprinter                  ( pretty )
 import           Data.Vector                    ( Vector
                                                 , generateM
                                                 )
@@ -71,7 +71,8 @@ renderParams handles = r
     , camelPrefix                    = "Xr"
     , lowerPrefix                    = "xr"
     , upperPrefix                    = "XR"
-    , flagsTypeName                  = "XrFlags64"
+    , flagsTypeName                  = "XrFlags32" -- doesn't exist
+    , flags64TypeName                = "XrFlags64"
     , alwaysQualifiedNames           = vulkanHaskellNames vulkanParams
     , extraNewtypes                  = vulkanNewtypes vulkanParams
     , mkIdiomaticType                =

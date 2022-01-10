@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Matthew Rusch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_private_data:%20&body=@mattruschnv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_private_data] @mattruschnv%0A<<Here describe the issue or question you have about the VK_EXT_private_data extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -119,7 +119,7 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'DevicePrivateDataCreateInfoEXT',
 -- 'PhysicalDevicePrivateDataFeaturesEXT',
@@ -129,7 +129,7 @@
 -- 'createPrivateDataSlotEXT', 'destroyPrivateDataSlotEXT',
 -- 'getPrivateDataEXT', 'setPrivateDataEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data Vulkan Specification>
@@ -159,7 +159,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -204,6 +204,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreatePrivateDataSlotEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyPrivateDataSlotEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkGetPrivateDataEXT))
@@ -268,6 +269,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data VK_EXT_private_data>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'PrivateDataSlotCreateInfoEXT',
 -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT'
@@ -284,7 +286,7 @@ createPrivateDataSlotEXT :: forall io
                             ("allocator" ::: Maybe AllocationCallbacks)
                          -> io (PrivateDataSlotEXT)
 createPrivateDataSlotEXT device createInfo allocator = liftIO . evalContT $ do
-  let vkCreatePrivateDataSlotEXTPtr = pVkCreatePrivateDataSlotEXT (deviceCmds (device :: Device))
+  let vkCreatePrivateDataSlotEXTPtr = pVkCreatePrivateDataSlotEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreatePrivateDataSlotEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreatePrivateDataSlotEXT is null" Nothing Nothing
   let vkCreatePrivateDataSlotEXT' = mkVkCreatePrivateDataSlotEXT vkCreatePrivateDataSlotEXTPtr
@@ -358,6 +360,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data VK_EXT_private_data>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT'
@@ -374,7 +377,7 @@ destroyPrivateDataSlotEXT :: forall io
                              ("allocator" ::: Maybe AllocationCallbacks)
                           -> io ()
 destroyPrivateDataSlotEXT device privateDataSlot allocator = liftIO . evalContT $ do
-  let vkDestroyPrivateDataSlotEXTPtr = pVkDestroyPrivateDataSlotEXT (deviceCmds (device :: Device))
+  let vkDestroyPrivateDataSlotEXTPtr = pVkDestroyPrivateDataSlotEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyPrivateDataSlotEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyPrivateDataSlotEXT is null" Nothing Nothing
   let vkDestroyPrivateDataSlotEXT' = mkVkDestroyPrivateDataSlotEXT vkDestroyPrivateDataSlotEXTPtr
@@ -406,6 +409,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data VK_EXT_private_data>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core10.Enums.ObjectType.ObjectType',
 -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT'
@@ -445,7 +449,7 @@ setPrivateDataEXT :: forall io
                      ("data" ::: Word64)
                   -> io ()
 setPrivateDataEXT device objectType objectHandle privateDataSlot data' = liftIO $ do
-  let vkSetPrivateDataEXTPtr = pVkSetPrivateDataEXT (deviceCmds (device :: Device))
+  let vkSetPrivateDataEXTPtr = pVkSetPrivateDataEXT (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkSetPrivateDataEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetPrivateDataEXT is null" Nothing Nothing
   let vkSetPrivateDataEXT' = mkVkSetPrivateDataEXT vkSetPrivateDataEXTPtr
@@ -477,6 +481,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data VK_EXT_private_data>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core10.Enums.ObjectType.ObjectType',
 -- 'Vulkan.Extensions.Handles.PrivateDataSlotEXT'
@@ -511,7 +516,7 @@ getPrivateDataEXT :: forall io
                      PrivateDataSlotEXT
                   -> io (("data" ::: Word64))
 getPrivateDataEXT device objectType objectHandle privateDataSlot = liftIO . evalContT $ do
-  let vkGetPrivateDataEXTPtr = pVkGetPrivateDataEXT (deviceCmds (device :: Device))
+  let vkGetPrivateDataEXTPtr = pVkGetPrivateDataEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetPrivateDataEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPrivateDataEXT is null" Nothing Nothing
   let vkGetPrivateDataEXT' = mkVkGetPrivateDataEXT vkGetPrivateDataEXTPtr
@@ -527,6 +532,7 @@ getPrivateDataEXT device objectType objectHandle privateDataSlot = liftIO . eval
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data VK_EXT_private_data>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DevicePrivateDataCreateInfoEXT = DevicePrivateDataCreateInfoEXT
   { -- | @privateDataSlotRequestCount@ is the amount of slots to reserve.
@@ -538,7 +544,7 @@ deriving instance Generic (DevicePrivateDataCreateInfoEXT)
 deriving instance Show DevicePrivateDataCreateInfoEXT
 
 instance ToCStruct DevicePrivateDataCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DevicePrivateDataCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -576,6 +582,7 @@ instance Zero DevicePrivateDataCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data VK_EXT_private_data>,
 -- 'PrivateDataSlotCreateFlagsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createPrivateDataSlotEXT'
@@ -593,7 +600,7 @@ deriving instance Generic (PrivateDataSlotCreateInfoEXT)
 deriving instance Show PrivateDataSlotCreateInfoEXT
 
 instance ToCStruct PrivateDataSlotCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PrivateDataSlotCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PRIVATE_DATA_SLOT_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -629,22 +636,25 @@ instance Zero PrivateDataSlotCreateInfoEXT where
 --
 -- = Members
 --
--- The members of the 'PhysicalDevicePrivateDataFeaturesEXT' structure
--- describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDevicePrivateDataFeaturesEXT' structure is included in
--- the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDevicePrivateDataFeaturesEXT' /can/ also be used in the @pNext@
--- chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the features.
+-- the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDevicePrivateDataFeaturesEXT' /can/ also be used in
+-- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data VK_EXT_private_data>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePrivateDataFeaturesEXT = PhysicalDevicePrivateDataFeaturesEXT
@@ -659,7 +669,7 @@ deriving instance Generic (PhysicalDevicePrivateDataFeaturesEXT)
 deriving instance Show PhysicalDevicePrivateDataFeaturesEXT
 
 instance ToCStruct PhysicalDevicePrivateDataFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDevicePrivateDataFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -697,6 +707,7 @@ type PrivateDataSlotCreateFlagsEXT = PrivateDataSlotCreateFlagBitsEXT
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data VK_EXT_private_data>,
 -- 'PrivateDataSlotCreateFlagsEXT'
 newtype PrivateDataSlotCreateFlagBitsEXT = PrivateDataSlotCreateFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Lionel Landwerlin
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_INTEL_performance_query:%20&body=@llandwerlin%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_INTEL_performance_query] @llandwerlin%0A<<Here describe the issue or question you have about the VK_INTEL_performance_query extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -97,6 +97,8 @@
 --
 -- -   Extending 'Vulkan.Core10.Query.QueryPoolCreateInfo':
 --
+--     -   'QueryPoolCreateInfoINTEL'
+--
 --     -   'QueryPoolPerformanceQueryCreateInfoINTEL'
 --
 -- == New Unions
@@ -140,6 +142,8 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PERFORMANCE_OVERRIDE_INFO_INTEL'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PERFORMANCE_STREAM_MARKER_INFO_INTEL'
+--
+--     -   'STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL'
 --
@@ -287,7 +291,7 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'InitializePerformanceApiInfoINTEL',
 -- 'PerformanceConfigurationAcquireInfoINTEL',
@@ -306,7 +310,7 @@
 -- 'releasePerformanceConfigurationINTEL',
 -- 'uninitializePerformanceApiINTEL'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query Vulkan Specification>

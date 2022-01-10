@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_dedicated_allocation:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_dedicated_allocation] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_NV_dedicated_allocation extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -162,13 +162,13 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'DedicatedAllocationBufferCreateInfoNV',
 -- 'DedicatedAllocationImageCreateInfoNV',
 -- 'DedicatedAllocationMemoryAllocateInfoNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_dedicated_allocation Vulkan Specification>
@@ -184,7 +184,7 @@ module Vulkan.Extensions.VK_NV_dedicated_allocation  ( DedicatedAllocationImageC
                                                      , pattern NV_DEDICATED_ALLOCATION_EXTENSION_NAME
                                                      ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -238,6 +238,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEDICATED
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_dedicated_allocation VK_NV_dedicated_allocation>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DedicatedAllocationImageCreateInfoNV = DedicatedAllocationImageCreateInfoNV
@@ -251,7 +252,7 @@ deriving instance Generic (DedicatedAllocationImageCreateInfoNV)
 deriving instance Show DedicatedAllocationImageCreateInfoNV
 
 instance ToCStruct DedicatedAllocationImageCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DedicatedAllocationImageCreateInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -289,6 +290,7 @@ instance Zero DedicatedAllocationImageCreateInfoNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_dedicated_allocation VK_NV_dedicated_allocation>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DedicatedAllocationBufferCreateInfoNV = DedicatedAllocationBufferCreateInfoNV
@@ -302,7 +304,7 @@ deriving instance Generic (DedicatedAllocationBufferCreateInfoNV)
 deriving instance Show DedicatedAllocationBufferCreateInfoNV
 
 instance ToCStruct DedicatedAllocationBufferCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DedicatedAllocationBufferCreateInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -403,6 +405,7 @@ instance Zero DedicatedAllocationBufferCreateInfoNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_dedicated_allocation VK_NV_dedicated_allocation>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DedicatedAllocationMemoryAllocateInfoNV = DedicatedAllocationMemoryAllocateInfoNV
@@ -420,7 +423,7 @@ deriving instance Generic (DedicatedAllocationMemoryAllocateInfoNV)
 deriving instance Show DedicatedAllocationMemoryAllocateInfoNV
 
 instance ToCStruct DedicatedAllocationMemoryAllocateInfoNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DedicatedAllocationMemoryAllocateInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

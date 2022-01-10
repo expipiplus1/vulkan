@@ -21,7 +21,7 @@ module Bespoke
 import qualified Data.List.Extra               as List
 import qualified Data.Map                      as Map
 import qualified Data.Text                     as T
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector.Extra             as V
 import           Foreign.C.Types
@@ -70,7 +70,20 @@ forbiddenConstants :: [CName]
 forbiddenConstants = ["VK_TRUE", "VK_FALSE", "XR_TRUE", "XR_FALSE"]
 
 forceDisabledExtensions :: [ByteString]
-forceDisabledExtensions = ["XR_EXT_conformance_automation"]
+forceDisabledExtensions =
+  [ "XR_EXT_conformance_automation"
+    -- Video extensions will make it into the xml registry it seems, disable
+    -- them until then.
+  , "VK_EXT_video_decode_h264"
+  , "VK_EXT_video_encode_h264"
+  , "VK_EXT_video_decode_h265"
+  , "VK_EXT_video_encode_h265"
+  , "VK_KHR_video_decode_queue"
+  , "VK_KHR_video_encode_queue"
+  , "VK_KHR_video_queue"
+    -- Unresolved queries in Vulkan-Docs
+  -- , "VK_HUAWEI_subpass_shading" -- https://github.com/KhronosGroup/Vulkan-Docs/issues/1564
+  ]
 
 ----------------------------------------------------------------
 -- Module assignments
@@ -142,6 +155,7 @@ bespokeSchemes spec =
     <> [accelerationStructureGeometry]
     <> [buildingAccelerationStructures]
     <> openXRSchemes
+    <> [cuLaunchSchemes]
 
 baseInOut :: BespokeScheme
 baseInOut = BespokeScheme $ \case
@@ -405,7 +419,7 @@ difficultLengths =
             tellImport ''CChar
             tellImport ''Word32
             tellImportWithAll ''ContT
-            tellImport 'allocaBytesAligned
+            tellImport 'allocaBytes
             tellImport 'lift
             tellQualImport 'BS.length
             tellImport 'copyBytes
@@ -425,9 +439,8 @@ difficultLengths =
                       , "-- Otherwise allocate and copy the bytes"
                       , "else" <+> doBlock
                         [ "let len =" <+> len
-                        , "mem <- ContT $ allocaBytesAligned @Word32"
+                        , "mem <- ContT $ allocaBytes @Word32"
                         <+> "len"
-                        <+> "4"
                         , "lift $ copyBytes mem (castPtr @CChar @Word32"
                         <+> maybeAligned
                         <>  ")"
@@ -533,7 +546,13 @@ difficultLengths =
 -- (lower bits) one is written and not doing anything for the second one.
 bitfields :: BespokeScheme
 bitfields = BespokeScheme $ \case
-  "VkAccelerationStructureInstanceKHR" -> \case
+  "VkAccelerationStructureInstanceKHR" -> rtFields
+  "VkAccelerationStructureSRTMotionInstanceNV" -> rtFields
+  "VkAccelerationStructureMatrixMotionInstanceNV" -> rtFields
+  _ -> const Nothing
+ where
+  rtFields :: Marshalable a => a -> Maybe (MarshalScheme a)
+  rtFields = \case
     p
       | "instanceCustomIndex" <- name p -> Just $ bitfieldMaster p ("mask", 8)
       | "mask" <- name p -> Just $ bitfieldSlave 24 p
@@ -541,8 +560,6 @@ bitfields = BespokeScheme $ \case
       $ bitfieldMaster p ("flags", 8)
       | "flags" <- name p -> Just $ bitfieldSlave 24 p
     _ -> Nothing
-  _ -> const Nothing
- where
   peekBitfield
     :: (HasRenderElem r, HasErr r, HasSpecInfo r, HasRenderParams r)
     => CName
@@ -770,6 +787,7 @@ bespokeSizes t =
         , ("VkFlags"        , (4, 4))
         , ("VkDeviceSize"   , (8, 8))
         , ("VkDeviceAddress", (8, 8))
+        , ("VkRemoteAddressNV", (8, 8))
         ]
         <> (fst <$> concat
              [win32 @'[Input RenderParams], x11Shared, x11, xcb2, zircon, ggp]
@@ -856,18 +874,25 @@ bespokeZeroCStruct = flip
   ]
 
 bespokeElements
-  :: (HasErr r, HasRenderParams r) => SpecFlavor -> Vector (Sem r RenderElement)
-bespokeElements = \case
-  SpecVk ->
+  :: forall t r
+   . (HasErr r, HasRenderParams r, HasSpecInfo r)
+  => Spec t
+  -> Vector (Sem r RenderElement)
+bespokeElements Spec {..} = case specHeaderVersion of
+  VkVersion v ->
     fromList
       $  shared
       <> [ baseType "VkSampleMask"    ''Word32
          , baseType "VkFlags"         ''Word32
+         , baseType "VkFlags64"       ''Word64
          , baseType "VkDeviceSize"    ''Word64
          , baseType "VkDeviceAddress" ''Word64
          ]
       <> wsiTypes SpecVk
-  SpecXr ->
+      <> [ extensionBaseType "VkRemoteAddressNV" (Ptr NonConst Void)
+         | v >= 184
+         ]
+  XrVersion{} ->
     fromList
       $  shared
       <> [ baseType "XrFlags64"  ''Word64
@@ -876,7 +901,8 @@ bespokeElements = \case
          ]
       <> wsiTypes SpecXr
       <> [resultMatchers]
-  where shared = fromList [namedType, nullHandle, boolConversion]
+ where
+  shared = [namedType, nullHandle, boolConversion] :: [Sem r RenderElement]
 
 boolConversion :: HasRenderParams r => Sem r RenderElement
 boolConversion = genRe "Bool conversion" $ do
@@ -902,8 +928,9 @@ boolConversion = genRe "Bool conversion" $ do
 wsiTypes
   :: (HasErr r, HasRenderParams r) => SpecFlavor -> [Sem r RenderElement]
 wsiTypes = \case
-  SpecVk -> (snd <$> concat [win32, x11Shared, x11, xcb2, zircon, ggp])
-    <> concat [win32', xcb1, waylandShared, wayland, metal, android, directfb]
+  SpecVk ->
+    (snd <$> concat [win32, x11Shared, x11, xcb2, zircon, ggp]) <> concat
+      [win32', xcb1, waylandShared, wayland, metal, android, directfb, screen]
   SpecXr -> (snd <$> concat [win32Xr, x11Shared, xcb2Xr, egl, gl, d3d])
     <> concat [win32Xr', xcb1, waylandShared, d3d', jni, timespec]
 
@@ -924,6 +951,20 @@ baseType n t = fmap identicalBoot . genRe ("base type " <> unCName n) $ do
   tDoc <- renderType (ConT t)
   tellDocWithHaddock $ \getDoc ->
     vsep [getDoc (TopLevel n), "type" <+> pretty n' <+> "=" <+> tDoc]
+
+extensionBaseType
+  :: (HasRenderParams r, HasErr r, HasSpecInfo r)
+  => CName
+  -> CType
+  -> Sem r RenderElement
+extensionBaseType n t =
+  fmap identicalBoot . genRe ("extension base type " <> unCName n) $ do
+    RenderParams {..} <- input
+    let n' = mkTyName n
+    tellExport (EType n')
+    tDoc <- renderType =<< cToHsType DoPreserve t
+    tellDocWithHaddock $ \getDoc ->
+      vsep [getDoc (TopLevel n), "type" <+> pretty n' <+> "=" <+> tDoc]
 
 ----------------------------------------------------------------
 -- Base Vulkan stuff
@@ -1055,6 +1096,9 @@ android = [voidData "AHardwareBuffer", voidData "ANativeWindow"]
 directfb :: HasRenderParams r => [Sem r RenderElement]
 directfb = [voidData "IDirectFB", voidData "IDirectFBSurface"]
 
+screen :: HasRenderParams r => [Sem r RenderElement]
+screen = [voidData "_screen_window", voidData "screen_context"]
+
 ----------------------------------------------------------------
 -- OpenXR platform stuff
 ----------------------------------------------------------------
@@ -1145,6 +1189,19 @@ openXRSchemes =
 
       _ -> const Nothing
   ]
+
+----------------------------------------------------------------
+-- Culaunch
+----------------------------------------------------------------
+
+cuLaunchSchemes :: BespokeScheme
+cuLaunchSchemes =
+   BespokeScheme $ \case
+      "VkCuLaunchInfoNVX" -> \case
+        a | "pParams" <- name a -> Just (Vector NotNullable VoidPtr)
+        a | "pExtras" <- name a -> Just (Vector NotNullable VoidPtr)
+        _                       -> Nothing
+      _ -> const Nothing
 
 ----------------------------------------------------------------
 -- Helpers

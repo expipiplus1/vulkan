@@ -84,13 +84,13 @@
 --
 -- 2) 'ViSurfaceCreateInfoNN'::@pWindow@ is intended to store an
 -- @nn@::@vi@::@NativeWindowHandle@, but its declared type is a bare
--- @void@* to store the window handle. Why the discrepancy?
+-- @void*@ to store the window handle. Why the discrepancy?
 --
 -- __RESOLVED__: It is for C compatibility. The definition for the VI
 -- native window handle type is defined inside the @nn@::@vi@ C++
 -- namespace. This prevents its use in C source files.
--- @nn@::@vi@::@NativeWindowHandle@ is always defined to be @void@*, so
--- this extension uses @void@* to match.
+-- @nn@::@vi@::@NativeWindowHandle@ is always defined to be @void*@, so
+-- this extension uses @void*@ to match.
 --
 -- == Version History
 --
@@ -98,11 +98,11 @@
 --
 --     -   Initial draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'ViSurfaceCreateFlagsNN', 'ViSurfaceCreateInfoNN', 'createViSurfaceNN'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NN_vi_surface Vulkan Specification>
@@ -125,7 +125,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -166,6 +166,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateViSurfaceNN))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Enums.Result (Result)
@@ -235,6 +236,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NN_vi_surface VK_NN_vi_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR', 'ViSurfaceCreateInfoNN'
@@ -251,7 +253,7 @@ createViSurfaceNN :: forall io
                      ("allocator" ::: Maybe AllocationCallbacks)
                   -> io (SurfaceKHR)
 createViSurfaceNN instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateViSurfaceNNPtr = pVkCreateViSurfaceNN (instanceCmds (instance' :: Instance))
+  let vkCreateViSurfaceNNPtr = pVkCreateViSurfaceNN (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateViSurfaceNNPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateViSurfaceNN is null" Nothing Nothing
   let vkCreateViSurfaceNN' = mkVkCreateViSurfaceNN vkCreateViSurfaceNNPtr
@@ -273,6 +275,7 @@ createViSurfaceNN instance' createInfo allocator = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NN_vi_surface VK_NN_vi_surface>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'ViSurfaceCreateFlagsNN', 'createViSurfaceNN'
 data ViSurfaceCreateInfoNN = ViSurfaceCreateInfoNN
@@ -294,7 +297,7 @@ deriving instance Generic (ViSurfaceCreateInfoNN)
 deriving instance Show ViSurfaceCreateInfoNN
 
 instance ToCStruct ViSurfaceCreateInfoNN where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ViSurfaceCreateInfoNN{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -337,6 +340,7 @@ instance Zero ViSurfaceCreateInfoNN where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NN_vi_surface VK_NN_vi_surface>,
 -- 'ViSurfaceCreateInfoNN'
 newtype ViSurfaceCreateFlagsNN = ViSurfaceCreateFlagsNN Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

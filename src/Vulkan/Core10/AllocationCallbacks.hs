@@ -2,7 +2,7 @@
 -- No documentation found for Chapter "AllocationCallbacks"
 module Vulkan.Core10.AllocationCallbacks  (AllocationCallbacks(..)) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
@@ -50,14 +50,18 @@ import Vulkan.Core10.FuncPointers (PFN_vkReallocationFunction)
 -- 'Vulkan.Core10.FuncPointers.PFN_vkInternalAllocationNotification',
 -- 'Vulkan.Core10.FuncPointers.PFN_vkInternalFreeNotification',
 -- 'Vulkan.Core10.FuncPointers.PFN_vkReallocationFunction',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Memory.allocateMemory',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.createAccelerationStructureKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.createAccelerationStructureNV',
 -- 'Vulkan.Extensions.VK_KHR_android_surface.createAndroidSurfaceKHR',
 -- 'Vulkan.Core10.Buffer.createBuffer',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.createBufferCollectionFUCHSIA',
 -- 'Vulkan.Core10.BufferView.createBufferView',
 -- 'Vulkan.Core10.CommandPool.createCommandPool',
 -- 'Vulkan.Core10.Pipeline.createComputePipelines',
+-- 'Vulkan.Extensions.VK_NVX_binary_import.createCuFunctionNVX',
+-- 'Vulkan.Extensions.VK_NVX_binary_import.createCuModuleNVX',
 -- 'Vulkan.Extensions.VK_EXT_debug_report.createDebugReportCallbackEXT',
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.createDebugUtilsMessengerEXT',
 -- 'Vulkan.Extensions.VK_KHR_deferred_host_operations.createDeferredOperationKHR',
@@ -93,6 +97,7 @@ import Vulkan.Core10.FuncPointers (PFN_vkReallocationFunction)
 -- 'Vulkan.Core10.Sampler.createSampler',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.createSamplerYcbcrConversion',
 -- 'Vulkan.Extensions.VK_KHR_sampler_ycbcr_conversion.createSamplerYcbcrConversionKHR',
+-- 'Vulkan.Extensions.VK_QNX_screen_surface.createScreenSurfaceQNX',
 -- 'Vulkan.Core10.QueueSemaphore.createSemaphore',
 -- 'Vulkan.Core10.Shader.createShaderModule',
 -- 'Vulkan.Extensions.VK_KHR_display_swapchain.createSharedSwapchainsKHR',
@@ -100,6 +105,8 @@ import Vulkan.Core10.FuncPointers (PFN_vkReallocationFunction)
 -- 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR',
 -- 'Vulkan.Extensions.VK_EXT_validation_cache.createValidationCacheEXT',
 -- 'Vulkan.Extensions.VK_NN_vi_surface.createViSurfaceNN',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCreateVideoSessionKHR vkCreateVideoSessionKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCreateVideoSessionParametersKHR vkCreateVideoSessionParametersKHR>,
 -- 'Vulkan.Extensions.VK_KHR_wayland_surface.createWaylandSurfaceKHR',
 -- 'Vulkan.Extensions.VK_KHR_win32_surface.createWin32SurfaceKHR',
 -- 'Vulkan.Extensions.VK_KHR_xcb_surface.createXcbSurfaceKHR',
@@ -107,8 +114,11 @@ import Vulkan.Core10.FuncPointers (PFN_vkReallocationFunction)
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.destroyAccelerationStructureKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.destroyAccelerationStructureNV',
 -- 'Vulkan.Core10.Buffer.destroyBuffer',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.destroyBufferCollectionFUCHSIA',
 -- 'Vulkan.Core10.BufferView.destroyBufferView',
 -- 'Vulkan.Core10.CommandPool.destroyCommandPool',
+-- 'Vulkan.Extensions.VK_NVX_binary_import.destroyCuFunctionNVX',
+-- 'Vulkan.Extensions.VK_NVX_binary_import.destroyCuModuleNVX',
 -- 'Vulkan.Extensions.VK_EXT_debug_report.destroyDebugReportCallbackEXT',
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.destroyDebugUtilsMessengerEXT',
 -- 'Vulkan.Extensions.VK_KHR_deferred_host_operations.destroyDeferredOperationKHR',
@@ -137,6 +147,8 @@ import Vulkan.Core10.FuncPointers (PFN_vkReallocationFunction)
 -- 'Vulkan.Extensions.VK_KHR_surface.destroySurfaceKHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.destroySwapchainKHR',
 -- 'Vulkan.Extensions.VK_EXT_validation_cache.destroyValidationCacheEXT',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkDestroyVideoSessionKHR vkDestroyVideoSessionKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkDestroyVideoSessionParametersKHR vkDestroyVideoSessionParametersKHR>,
 -- 'Vulkan.Core10.Memory.freeMemory',
 -- 'Vulkan.Extensions.VK_EXT_display_control.registerDeviceEventEXT',
 -- 'Vulkan.Extensions.VK_EXT_display_control.registerDisplayEventEXT'
@@ -177,7 +189,7 @@ deriving instance Generic (AllocationCallbacks)
 deriving instance Show AllocationCallbacks
 
 instance ToCStruct AllocationCallbacks where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AllocationCallbacks{..} f = do
     poke ((p `plusPtr` 0 :: Ptr (Ptr ()))) (userData)
     poke ((p `plusPtr` 8 :: Ptr PFN_vkAllocationFunction)) (pfnAllocation)

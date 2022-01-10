@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Lionel Landwerlin
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_INTEL_performance_query:%20&body=@llandwerlin%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_INTEL_performance_query] @llandwerlin%0A<<Here describe the issue or question you have about the VK_INTEL_performance_query extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -97,6 +97,8 @@
 --
 -- -   Extending 'Vulkan.Core10.Query.QueryPoolCreateInfo':
 --
+--     -   'QueryPoolCreateInfoINTEL'
+--
 --     -   'QueryPoolPerformanceQueryCreateInfoINTEL'
 --
 -- == New Unions
@@ -140,6 +142,8 @@
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PERFORMANCE_OVERRIDE_INFO_INTEL'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PERFORMANCE_STREAM_MARKER_INFO_INTEL'
+--
+--     -   'STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL'
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL'
 --
@@ -287,7 +291,7 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'InitializePerformanceApiInfoINTEL',
 -- 'PerformanceConfigurationAcquireInfoINTEL',
@@ -306,7 +310,7 @@
 -- 'releasePerformanceConfigurationINTEL',
 -- 'uninitializePerformanceApiINTEL'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query Vulkan Specification>
@@ -367,7 +371,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -419,9 +423,11 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkAcquirePerformanceConfigurationINTEL))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetPerformanceMarkerINTEL))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetPerformanceOverrideINTEL))
@@ -436,6 +442,7 @@ import Vulkan.Extensions.Handles (PerformanceConfigurationINTEL)
 import Vulkan.Extensions.Handles (PerformanceConfigurationINTEL(..))
 import Vulkan.Core10.Handles (Queue)
 import Vulkan.Core10.Handles (Queue(..))
+import Vulkan.Core10.Handles (Queue(Queue))
 import Vulkan.Core10.Handles (Queue_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -473,6 +480,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.Handles.Device', 'InitializePerformanceApiInfoINTEL'
 initializePerformanceApiINTEL :: forall io
                                . (MonadIO io)
@@ -490,7 +498,7 @@ initializePerformanceApiINTEL :: forall io
                                  ("initializeInfo" ::: InitializePerformanceApiInfoINTEL)
                               -> io ()
 initializePerformanceApiINTEL device initializeInfo = liftIO . evalContT $ do
-  let vkInitializePerformanceApiINTELPtr = pVkInitializePerformanceApiINTEL (deviceCmds (device :: Device))
+  let vkInitializePerformanceApiINTELPtr = pVkInitializePerformanceApiINTEL (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkInitializePerformanceApiINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkInitializePerformanceApiINTEL is null" Nothing Nothing
   let vkInitializePerformanceApiINTEL' = mkVkInitializePerformanceApiINTEL vkInitializePerformanceApiINTELPtr
@@ -513,6 +521,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.Handles.Device'
 uninitializePerformanceApiINTEL :: forall io
                                  . (MonadIO io)
@@ -523,7 +532,7 @@ uninitializePerformanceApiINTEL :: forall io
                                    Device
                                 -> io ()
 uninitializePerformanceApiINTEL device = liftIO $ do
-  let vkUninitializePerformanceApiINTELPtr = pVkUninitializePerformanceApiINTEL (deviceCmds (device :: Device))
+  let vkUninitializePerformanceApiINTELPtr = pVkUninitializePerformanceApiINTEL (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkUninitializePerformanceApiINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkUninitializePerformanceApiINTEL is null" Nothing Nothing
   let vkUninitializePerformanceApiINTEL' = mkVkUninitializePerformanceApiINTEL vkUninitializePerformanceApiINTELPtr
@@ -575,13 +584,13 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- |                                                                                                                            |                                                                                                                        | Transfer                                                                                                              |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- |                                                                                                                            |                                                                                                                        | Transfer                                                                                                              |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- == Return Codes
 --
@@ -597,6 +606,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'PerformanceMarkerInfoINTEL'
 cmdSetPerformanceMarkerINTEL :: forall io
                               . (MonadIO io)
@@ -606,7 +616,7 @@ cmdSetPerformanceMarkerINTEL :: forall io
                                 PerformanceMarkerInfoINTEL
                              -> io ()
 cmdSetPerformanceMarkerINTEL commandBuffer markerInfo = liftIO . evalContT $ do
-  let vkCmdSetPerformanceMarkerINTELPtr = pVkCmdSetPerformanceMarkerINTEL (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetPerformanceMarkerINTELPtr = pVkCmdSetPerformanceMarkerINTEL (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetPerformanceMarkerINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetPerformanceMarkerINTEL is null" Nothing Nothing
   let vkCmdSetPerformanceMarkerINTEL' = mkVkCmdSetPerformanceMarkerINTEL vkCmdSetPerformanceMarkerINTELPtr
@@ -654,13 +664,13 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- |                                                                                                                            |                                                                                                                        | Transfer                                                                                                              |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- |                                                                                                                            |                                                                                                                        | Transfer                                                                                                              |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- == Return Codes
 --
@@ -676,6 +686,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'PerformanceStreamMarkerInfoINTEL'
 cmdSetPerformanceStreamMarkerINTEL :: forall io
@@ -686,7 +697,7 @@ cmdSetPerformanceStreamMarkerINTEL :: forall io
                                       PerformanceStreamMarkerInfoINTEL
                                    -> io ()
 cmdSetPerformanceStreamMarkerINTEL commandBuffer markerInfo = liftIO . evalContT $ do
-  let vkCmdSetPerformanceStreamMarkerINTELPtr = pVkCmdSetPerformanceStreamMarkerINTEL (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetPerformanceStreamMarkerINTELPtr = pVkCmdSetPerformanceStreamMarkerINTEL (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetPerformanceStreamMarkerINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetPerformanceStreamMarkerINTEL is null" Nothing Nothing
   let vkCmdSetPerformanceStreamMarkerINTEL' = mkVkCmdSetPerformanceStreamMarkerINTEL vkCmdSetPerformanceStreamMarkerINTELPtr
@@ -741,13 +752,13 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- |                                                                                                                            |                                                                                                                        | Transfer                                                                                                              |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- |                                                                                                                            |                                                                                                                        | Transfer                                                                                                              |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- == Return Codes
 --
@@ -763,6 +774,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'PerformanceOverrideInfoINTEL'
 cmdSetPerformanceOverrideINTEL :: forall io
                                 . (MonadIO io)
@@ -773,7 +785,7 @@ cmdSetPerformanceOverrideINTEL :: forall io
                                   PerformanceOverrideInfoINTEL
                                -> io ()
 cmdSetPerformanceOverrideINTEL commandBuffer overrideInfo = liftIO . evalContT $ do
-  let vkCmdSetPerformanceOverrideINTELPtr = pVkCmdSetPerformanceOverrideINTEL (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetPerformanceOverrideINTELPtr = pVkCmdSetPerformanceOverrideINTEL (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetPerformanceOverrideINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetPerformanceOverrideINTEL is null" Nothing Nothing
   let vkCmdSetPerformanceOverrideINTEL' = mkVkCmdSetPerformanceOverrideINTEL vkCmdSetPerformanceOverrideINTELPtr
@@ -806,6 +818,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'PerformanceConfigurationAcquireInfoINTEL',
 -- 'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL'
@@ -827,7 +840,7 @@ acquirePerformanceConfigurationINTEL :: forall io
                                         PerformanceConfigurationAcquireInfoINTEL
                                      -> io (PerformanceConfigurationINTEL)
 acquirePerformanceConfigurationINTEL device acquireInfo = liftIO . evalContT $ do
-  let vkAcquirePerformanceConfigurationINTELPtr = pVkAcquirePerformanceConfigurationINTEL (deviceCmds (device :: Device))
+  let vkAcquirePerformanceConfigurationINTELPtr = pVkAcquirePerformanceConfigurationINTEL (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkAcquirePerformanceConfigurationINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquirePerformanceConfigurationINTEL is null" Nothing Nothing
   let vkAcquirePerformanceConfigurationINTEL' = mkVkAcquirePerformanceConfigurationINTEL vkAcquirePerformanceConfigurationINTELPtr
@@ -888,6 +901,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL'
 releasePerformanceConfigurationINTEL :: forall io
@@ -899,7 +913,7 @@ releasePerformanceConfigurationINTEL :: forall io
                                         PerformanceConfigurationINTEL
                                      -> io ()
 releasePerformanceConfigurationINTEL device configuration = liftIO $ do
-  let vkReleasePerformanceConfigurationINTELPtr = pVkReleasePerformanceConfigurationINTEL (deviceCmds (device :: Device))
+  let vkReleasePerformanceConfigurationINTELPtr = pVkReleasePerformanceConfigurationINTEL (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkReleasePerformanceConfigurationINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkReleasePerformanceConfigurationINTEL is null" Nothing Nothing
   let vkReleasePerformanceConfigurationINTEL' = mkVkReleasePerformanceConfigurationINTEL vkReleasePerformanceConfigurationINTELPtr
@@ -933,11 +947,11 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | -                                                                                                                          | -                                                                                                                      | Any                                                                                                                   | -                                                                                                                                   |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | -                                                                                                                          | -                                                                                                                      | Any                                                                                                                   |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- == Return Codes
 --
@@ -953,6 +967,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Extensions.Handles.PerformanceConfigurationINTEL',
 -- 'Vulkan.Core10.Handles.Queue'
 queueSetPerformanceConfigurationINTEL :: forall io
@@ -963,7 +978,7 @@ queueSetPerformanceConfigurationINTEL :: forall io
                                          PerformanceConfigurationINTEL
                                       -> io ()
 queueSetPerformanceConfigurationINTEL queue configuration = liftIO $ do
-  let vkQueueSetPerformanceConfigurationINTELPtr = pVkQueueSetPerformanceConfigurationINTEL (deviceCmds (queue :: Queue))
+  let vkQueueSetPerformanceConfigurationINTELPtr = pVkQueueSetPerformanceConfigurationINTEL (case queue of Queue{deviceCmds} -> deviceCmds)
   unless (vkQueueSetPerformanceConfigurationINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueSetPerformanceConfigurationINTEL is null" Nothing Nothing
   let vkQueueSetPerformanceConfigurationINTEL' = mkVkQueueSetPerformanceConfigurationINTEL vkQueueSetPerformanceConfigurationINTELPtr
@@ -995,6 +1010,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.Handles.Device', 'PerformanceParameterTypeINTEL',
 -- 'PerformanceValueINTEL'
 getPerformanceParameterINTEL :: forall io
@@ -1011,7 +1027,7 @@ getPerformanceParameterINTEL :: forall io
                                 PerformanceParameterTypeINTEL
                              -> io (PerformanceValueINTEL)
 getPerformanceParameterINTEL device parameter = liftIO . evalContT $ do
-  let vkGetPerformanceParameterINTELPtr = pVkGetPerformanceParameterINTEL (deviceCmds (device :: Device))
+  let vkGetPerformanceParameterINTELPtr = pVkGetPerformanceParameterINTEL (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetPerformanceParameterINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPerformanceParameterINTEL is null" Nothing Nothing
   let vkGetPerformanceParameterINTEL' = mkVkGetPerformanceParameterINTEL vkGetPerformanceParameterINTELPtr
@@ -1040,6 +1056,7 @@ pattern STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO_INTEL = STRUCTURE_TYPE_QUERY_POOL_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'PerformanceValueDataINTEL', 'PerformanceValueTypeINTEL',
 -- 'getPerformanceParameterINTEL'
 data PerformanceValueINTEL = PerformanceValueINTEL
@@ -1057,7 +1074,7 @@ deriving instance Generic (PerformanceValueINTEL)
 deriving instance Show PerformanceValueINTEL
 
 instance ToCStruct PerformanceValueINTEL where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PerformanceValueINTEL{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr PerformanceValueTypeINTEL)) (type')
     ContT $ pokeCStruct ((p `plusPtr` 8 :: Ptr PerformanceValueDataINTEL)) (data') . ($ ())
@@ -1089,6 +1106,7 @@ instance Zero PerformanceValueINTEL where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'initializePerformanceApiINTEL'
 data InitializePerformanceApiInfoINTEL = InitializePerformanceApiInfoINTEL
@@ -1101,7 +1119,7 @@ deriving instance Generic (InitializePerformanceApiInfoINTEL)
 deriving instance Show InitializePerformanceApiInfoINTEL
 
 instance ToCStruct InitializePerformanceApiInfoINTEL where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p InitializePerformanceApiInfoINTEL{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_INITIALIZE_PERFORMANCE_API_INFO_INTEL)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1147,6 +1165,7 @@ instance Zero InitializePerformanceApiInfoINTEL where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'QueryPoolSamplingModeINTEL',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data QueryPoolPerformanceQueryCreateInfoINTEL = QueryPoolPerformanceQueryCreateInfoINTEL
@@ -1164,7 +1183,7 @@ deriving instance Generic (QueryPoolPerformanceQueryCreateInfoINTEL)
 deriving instance Show QueryPoolPerformanceQueryCreateInfoINTEL
 
 instance ToCStruct QueryPoolPerformanceQueryCreateInfoINTEL where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p QueryPoolPerformanceQueryCreateInfoINTEL{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_QUERY_CREATE_INFO_INTEL)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1201,6 +1220,7 @@ instance Zero QueryPoolPerformanceQueryCreateInfoINTEL where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'cmdSetPerformanceMarkerINTEL'
 data PerformanceMarkerInfoINTEL = PerformanceMarkerInfoINTEL
@@ -1214,7 +1234,7 @@ deriving instance Generic (PerformanceMarkerInfoINTEL)
 deriving instance Show PerformanceMarkerInfoINTEL
 
 instance ToCStruct PerformanceMarkerInfoINTEL where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PerformanceMarkerInfoINTEL{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PERFORMANCE_MARKER_INFO_INTEL)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1266,6 +1286,7 @@ instance Zero PerformanceMarkerInfoINTEL where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'cmdSetPerformanceStreamMarkerINTEL'
 data PerformanceStreamMarkerInfoINTEL = PerformanceStreamMarkerInfoINTEL
@@ -1279,7 +1300,7 @@ deriving instance Generic (PerformanceStreamMarkerInfoINTEL)
 deriving instance Show PerformanceStreamMarkerInfoINTEL
 
 instance ToCStruct PerformanceStreamMarkerInfoINTEL where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PerformanceStreamMarkerInfoINTEL{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PERFORMANCE_STREAM_MARKER_INFO_INTEL)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1310,12 +1331,13 @@ instance Zero PerformanceStreamMarkerInfoINTEL where
            zero
 
 
--- | VkPerformanceOverrideInfoINTEL - Performance override info
+-- | VkPerformanceOverrideInfoINTEL - Performance override information
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32', 'PerformanceOverrideTypeINTEL',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'cmdSetPerformanceOverrideINTEL'
@@ -1337,7 +1359,7 @@ deriving instance Generic (PerformanceOverrideInfoINTEL)
 deriving instance Show PerformanceOverrideInfoINTEL
 
 instance ToCStruct PerformanceOverrideInfoINTEL where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PerformanceOverrideInfoINTEL{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PERFORMANCE_OVERRIDE_INFO_INTEL)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1383,6 +1405,7 @@ instance Zero PerformanceOverrideInfoINTEL where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'PerformanceConfigurationTypeINTEL',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'acquirePerformanceConfigurationINTEL'
@@ -1400,7 +1423,7 @@ deriving instance Generic (PerformanceConfigurationAcquireInfoINTEL)
 deriving instance Show PerformanceConfigurationAcquireInfoINTEL
 
 instance ToCStruct PerformanceConfigurationAcquireInfoINTEL where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PerformanceConfigurationAcquireInfoINTEL{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PERFORMANCE_CONFIGURATION_ACQUIRE_INFO_INTEL)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1440,7 +1463,7 @@ data PerformanceValueDataINTEL
   deriving (Show)
 
 instance ToCStruct PerformanceValueDataINTEL where
-  withCStruct x f = allocaBytesAligned 8 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct :: Ptr PerformanceValueDataINTEL -> PerformanceValueDataINTEL -> IO a -> IO a
   pokeCStruct p = (. const) . runContT .  \case
     Value32 v -> lift $ poke (castPtr @_ @Word32 p) (v)
@@ -1475,6 +1498,7 @@ peekPerformanceValueDataINTEL tag p = case tag of
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'PerformanceConfigurationAcquireInfoINTEL'
 newtype PerformanceConfigurationTypeINTEL = PerformanceConfigurationTypeINTEL Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -1514,6 +1538,7 @@ instance Read PerformanceConfigurationTypeINTEL where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'QueryPoolPerformanceQueryCreateInfoINTEL'
 newtype QueryPoolSamplingModeINTEL = QueryPoolSamplingModeINTEL Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -1552,6 +1577,7 @@ instance Read QueryPoolSamplingModeINTEL where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'PerformanceOverrideInfoINTEL'
 newtype PerformanceOverrideTypeINTEL = PerformanceOverrideTypeINTEL Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -1596,6 +1622,7 @@ instance Read PerformanceOverrideTypeINTEL where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'getPerformanceParameterINTEL'
 newtype PerformanceParameterTypeINTEL = PerformanceParameterTypeINTEL Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -1640,6 +1667,7 @@ instance Read PerformanceParameterTypeINTEL where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'PerformanceValueINTEL'
 newtype PerformanceValueTypeINTEL = PerformanceValueTypeINTEL Int32
   deriving newtype (Eq, Ord, Storable, Zero)

@@ -7,7 +7,7 @@ module Haskell.Name
 where
 
 import           Data.Text
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import           Relude
 import           Text.InterpolatedString.Perl6
 

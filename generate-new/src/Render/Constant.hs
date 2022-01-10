@@ -1,7 +1,7 @@
 {-# language TemplateHaskellQuotes #-}
 module Render.Constant where
 
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import           Language.Haskell.TH.Syntax
 import           Polysemy
 import           Polysemy.Input

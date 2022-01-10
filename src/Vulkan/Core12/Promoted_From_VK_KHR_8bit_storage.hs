@@ -4,7 +4,7 @@ module Vulkan.Core12.Promoted_From_VK_KHR_8bit_storage  ( PhysicalDevice8BitStor
                                                         , StructureType(..)
                                                         ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -29,10 +29,28 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- | VkPhysicalDevice8BitStorageFeatures - Structure describing features
 -- supported by VK_KHR_8bit_storage
 --
+-- = Members
+--
+-- This structure describes the following features:
+--
+-- = Description
+--
+-- If the 'PhysicalDevice8BitStorageFeatures' structure is included in the
+-- @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDevice8BitStorageFeatures' /can/ also be used in the
+-- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively
+-- enable these features.
+--
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_8bit_storage VK_KHR_8bit_storage>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevice8BitStorageFeatures = PhysicalDevice8BitStorageFeatures
@@ -46,12 +64,11 @@ data PhysicalDevice8BitStorageFeatures = PhysicalDevice8BitStorageFeatures
     storageBuffer8BitAccess :: Bool
   , -- | #extension-features-uniformAndStorageBuffer8BitAccess#
     -- @uniformAndStorageBuffer8BitAccess@ indicates whether objects in the
-    -- @Uniform@ storage class with the @Block@ decoration and in the
-    -- @StorageBuffer@, @ShaderRecordBufferKHR@, or @PhysicalStorageBuffer@
-    -- storage class with the same decoration /can/ have 8-bit integer members.
-    -- If this feature is not enabled, 8-bit integer members /must/ not be used
-    -- in such objects. This also indicates whether shader modules /can/
-    -- declare the @UniformAndStorageBuffer8BitAccess@ capability.
+    -- @Uniform@ storage class with the @Block@ decoration /can/ have 8-bit
+    -- integer members. If this feature is not enabled, 8-bit integer members
+    -- /must/ not be used in such objects. This also indicates whether shader
+    -- modules /can/ declare the @UniformAndStorageBuffer8BitAccess@
+    -- capability.
     uniformAndStorageBuffer8BitAccess :: Bool
   , -- | #extension-features-storagePushConstant8# @storagePushConstant8@
     -- indicates whether objects in the @PushConstant@ storage class /can/ have
@@ -67,7 +84,7 @@ deriving instance Generic (PhysicalDevice8BitStorageFeatures)
 deriving instance Show PhysicalDevice8BitStorageFeatures
 
 instance ToCStruct PhysicalDevice8BitStorageFeatures where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDevice8BitStorageFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

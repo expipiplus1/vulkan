@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Bill Licea-Kane
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_filter_cubic:%20&body=@wwlk%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_filter_cubic] @wwlk%0A<<Here describe the issue or question you have about the VK_EXT_filter_cubic extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -114,12 +114,12 @@
 --
 --     -   Initial version
 --
--- = See Also
+-- == See Also
 --
 -- 'FilterCubicImageViewImageFormatPropertiesEXT',
 -- 'PhysicalDeviceImageViewImageFormatInfoEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_filter_cubic Vulkan Specification>
@@ -136,7 +136,7 @@ module Vulkan.Extensions.VK_EXT_filter_cubic  ( pattern FILTER_CUBIC_EXT
                                               , pattern EXT_FILTER_CUBIC_EXTENSION_NAME
                                               ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -178,6 +178,7 @@ pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT = FORMAT_FEATURE_SAMPL
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_filter_cubic VK_EXT_filter_cubic>,
 -- 'Vulkan.Core10.Enums.ImageViewType.ImageViewType',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceImageViewImageFormatInfoEXT = PhysicalDeviceImageViewImageFormatInfoEXT
@@ -195,7 +196,7 @@ deriving instance Generic (PhysicalDeviceImageViewImageFormatInfoEXT)
 deriving instance Show PhysicalDeviceImageViewImageFormatInfoEXT
 
 instance ToCStruct PhysicalDeviceImageViewImageFormatInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceImageViewImageFormatInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -249,6 +250,7 @@ instance Zero PhysicalDeviceImageViewImageFormatInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_filter_cubic VK_EXT_filter_cubic>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data FilterCubicImageViewImageFormatPropertiesEXT = FilterCubicImageViewImageFormatPropertiesEXT
@@ -268,7 +270,7 @@ deriving instance Generic (FilterCubicImageViewImageFormatPropertiesEXT)
 deriving instance Show FilterCubicImageViewImageFormatPropertiesEXT
 
 instance ToCStruct FilterCubicImageViewImageFormatPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FilterCubicImageViewImageFormatPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

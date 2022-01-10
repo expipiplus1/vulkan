@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Courtney Goeltzenleuchter
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_hdr_metadata:%20&body=@courtney-g%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_hdr_metadata] @courtney-g%0A<<Here describe the issue or question you have about the VK_EXT_hdr_metadata extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -47,7 +47,7 @@
 -- and CTA (Consumer Technology Association) 861.3 metadata to a swapchain.
 -- The metadata includes the color primaries, white point, and luminance
 -- range of the reference monitor, which all together define the color
--- volume that contains all the possible colors the reference monitor can
+-- volume containing all the possible colors the reference monitor can
 -- produce. The reference monitor is the display where creative work is
 -- done and creative intent is established. To preserve such creative
 -- intent as much as possible and achieve consistent color reproduction on
@@ -106,11 +106,11 @@
 --
 --     -   Correct implicit validity for VkHdrMetadataEXT structure
 --
--- = See Also
+-- == See Also
 --
 -- 'HdrMetadataEXT', 'XYColorEXT', 'setHdrMetadataEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_hdr_metadata Vulkan Specification>
@@ -130,7 +130,7 @@ module Vulkan.Extensions.VK_EXT_hdr_metadata  ( setHdrMetadataEXT
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -167,6 +167,7 @@ import Data.Vector (Vector)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkSetHdrMetadataEXT))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -181,7 +182,7 @@ foreign import ccall
   "dynamic" mkVkSetHdrMetadataEXT
   :: FunPtr (Ptr Device_T -> Word32 -> Ptr SwapchainKHR -> Ptr HdrMetadataEXT -> IO ()) -> Ptr Device_T -> Word32 -> Ptr SwapchainKHR -> Ptr HdrMetadataEXT -> IO ()
 
--- | vkSetHdrMetadataEXT - function to set Hdr metadata
+-- | vkSetHdrMetadataEXT - Set Hdr metadata
 --
 -- == Valid Usage (Implicit)
 --
@@ -205,6 +206,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_hdr_metadata VK_EXT_hdr_metadata>,
 -- 'Vulkan.Core10.Handles.Device', 'HdrMetadataEXT',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
 setHdrMetadataEXT :: forall io
@@ -219,25 +221,26 @@ setHdrMetadataEXT :: forall io
                      ("metadata" ::: Vector HdrMetadataEXT)
                   -> io ()
 setHdrMetadataEXT device swapchains metadata = liftIO . evalContT $ do
-  let vkSetHdrMetadataEXTPtr = pVkSetHdrMetadataEXT (deviceCmds (device :: Device))
+  let vkSetHdrMetadataEXTPtr = pVkSetHdrMetadataEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkSetHdrMetadataEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetHdrMetadataEXT is null" Nothing Nothing
   let vkSetHdrMetadataEXT' = mkVkSetHdrMetadataEXT vkSetHdrMetadataEXTPtr
   let pSwapchainsLength = Data.Vector.length $ (swapchains)
   lift $ unless ((Data.Vector.length $ (metadata)) == pSwapchainsLength) $
     throwIO $ IOError Nothing InvalidArgument "" "pMetadata and pSwapchains must have the same length" Nothing Nothing
-  pPSwapchains <- ContT $ allocaBytesAligned @SwapchainKHR ((Data.Vector.length (swapchains)) * 8) 8
+  pPSwapchains <- ContT $ allocaBytes @SwapchainKHR ((Data.Vector.length (swapchains)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPSwapchains `plusPtr` (8 * (i)) :: Ptr SwapchainKHR) (e)) (swapchains)
-  pPMetadata <- ContT $ allocaBytesAligned @HdrMetadataEXT ((Data.Vector.length (metadata)) * 64) 8
+  pPMetadata <- ContT $ allocaBytes @HdrMetadataEXT ((Data.Vector.length (metadata)) * 64)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPMetadata `plusPtr` (64 * (i)) :: Ptr HdrMetadataEXT) (e)) (metadata)
   lift $ traceAroundEvent "vkSetHdrMetadataEXT" (vkSetHdrMetadataEXT' (deviceHandle (device)) ((fromIntegral pSwapchainsLength :: Word32)) (pPSwapchains) (pPMetadata))
   pure $ ()
 
 
--- | VkXYColorEXT - structure to specify X,Y chromaticity coordinates
+-- | VkXYColorEXT - Specify X,Y chromaticity coordinates
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_hdr_metadata VK_EXT_hdr_metadata>,
 -- 'HdrMetadataEXT'
 data XYColorEXT = XYColorEXT
   { -- No documentation found for Nested "VkXYColorEXT" "x"
@@ -252,7 +255,7 @@ deriving instance Generic (XYColorEXT)
 deriving instance Show XYColorEXT
 
 instance ToCStruct XYColorEXT where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p XYColorEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (x))
     poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (y))
@@ -283,7 +286,7 @@ instance Zero XYColorEXT where
            zero
 
 
--- | VkHdrMetadataEXT - structure to specify Hdr metadata
+-- | VkHdrMetadataEXT - Specify Hdr metadata
 --
 -- == Valid Usage (Implicit)
 --
@@ -293,6 +296,7 @@ instance Zero XYColorEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_hdr_metadata VK_EXT_hdr_metadata>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'XYColorEXT',
 -- 'setHdrMetadataEXT'
 data HdrMetadataEXT = HdrMetadataEXT
@@ -325,7 +329,7 @@ deriving instance Generic (HdrMetadataEXT)
 deriving instance Show HdrMetadataEXT
 
 instance ToCStruct HdrMetadataEXT where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HdrMetadataEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_HDR_METADATA_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

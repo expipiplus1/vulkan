@@ -29,7 +29,7 @@
 -- [__Contact__]
 --
 --     -   Tobias Hector
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_bind_memory2:%20&body=@tobski%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_bind_memory2] @tobski%0A<<Here describe the issue or question you have about the VK_KHR_bind_memory2 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -101,12 +101,12 @@
 --
 --     -   Pulled bind memory functions into their own extension
 --
--- = See Also
+-- == See Also
 --
 -- 'BindBufferMemoryInfoKHR', 'BindImageMemoryInfoKHR',
 -- 'bindBufferMemory2KHR', 'bindImageMemory2KHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_bind_memory2 Vulkan Specification>

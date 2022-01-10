@@ -20,16 +20,17 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 type RenderPassCreateFlags = RenderPassCreateFlagBits
 
 -- | VkRenderPassCreateFlagBits - Bitmask specifying additional properties of
--- a renderpass
+-- a render pass
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'RenderPassCreateFlags'
 newtype RenderPassCreateFlagBits = RenderPassCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM' specifies that the created
--- renderpass is compatible with
+-- render pass is compatible with
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vertexpostproc-renderpass-transform render pass transform>.
 pattern RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM = RenderPassCreateFlagBits 0x00000002
 

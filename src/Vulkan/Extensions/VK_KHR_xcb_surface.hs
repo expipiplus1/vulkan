@@ -26,10 +26,10 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_xcb_surface:%20&body=@critsec%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_xcb_surface] @critsec%0A<<Here describe the issue or question you have about the VK_KHR_xcb_surface extension>> >
 --
 --     -   Ian Elliott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_xcb_surface:%20&body=@ianelliottus%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_xcb_surface] @ianelliottus%0A<<Here describe the issue or question you have about the VK_KHR_xcb_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -133,15 +133,15 @@
 --     -   Added presentation support query for an (xcb_connection_t*,
 --         xcb_visualid_t) pair.
 --
---     -   Removed \"root\" parameter from CreateXcbSurfaceKHR(), as it is
+--     -   Removed “root” parameter from CreateXcbSurfaceKHR(), as it is
 --         redundant when a window on the same screen is specified as well.
 --
 --     -   Adjusted wording of issue #1 and added agreed upon resolution.
 --
 -- -   Revision 3, 2015-10-14 (Ian Elliott)
 --
---     -   Removed \"root\" parameter from CreateXcbSurfaceKHR() in one
---         more place.
+--     -   Removed “root” parameter from CreateXcbSurfaceKHR() in one more
+--         place.
 --
 -- -   Revision 4, 2015-10-26 (Ian Elliott)
 --
@@ -156,12 +156,12 @@
 --     -   Updated the surface create function to take a pCreateInfo
 --         structure.
 --
--- = See Also
+-- == See Also
 --
 -- 'XcbSurfaceCreateFlagsKHR', 'XcbSurfaceCreateInfoKHR',
 -- 'createXcbSurfaceKHR', 'getPhysicalDeviceXcbPresentationSupportKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_xcb_surface Vulkan Specification>
@@ -188,7 +188,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -233,11 +233,13 @@ import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateXcbSurfaceKHR))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceXcbPresentationSupportKHR))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -288,6 +290,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_xcb_surface VK_KHR_xcb_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR', 'XcbSurfaceCreateInfoKHR'
@@ -304,7 +307,7 @@ createXcbSurfaceKHR :: forall io
                        ("allocator" ::: Maybe AllocationCallbacks)
                     -> io (SurfaceKHR)
 createXcbSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateXcbSurfaceKHRPtr = pVkCreateXcbSurfaceKHR (instanceCmds (instance' :: Instance))
+  let vkCreateXcbSurfaceKHRPtr = pVkCreateXcbSurfaceKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateXcbSurfaceKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateXcbSurfaceKHR is null" Nothing Nothing
   let vkCreateXcbSurfaceKHR' = mkVkCreateXcbSurfaceKHR vkCreateXcbSurfaceKHRPtr
@@ -338,6 +341,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_xcb_surface VK_KHR_xcb_surface>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceXcbPresentationSupportKHR :: forall io
                                             . (MonadIO io)
@@ -364,7 +368,7 @@ getPhysicalDeviceXcbPresentationSupportKHR :: forall io
                                               ("visual_id" ::: Xcb_visualid_t)
                                            -> io (Bool)
 getPhysicalDeviceXcbPresentationSupportKHR physicalDevice queueFamilyIndex connection visual_id = liftIO $ do
-  let vkGetPhysicalDeviceXcbPresentationSupportKHRPtr = pVkGetPhysicalDeviceXcbPresentationSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceXcbPresentationSupportKHRPtr = pVkGetPhysicalDeviceXcbPresentationSupportKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   unless (vkGetPhysicalDeviceXcbPresentationSupportKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceXcbPresentationSupportKHR is null" Nothing Nothing
   let vkGetPhysicalDeviceXcbPresentationSupportKHR' = mkVkGetPhysicalDeviceXcbPresentationSupportKHR vkGetPhysicalDeviceXcbPresentationSupportKHRPtr
@@ -379,6 +383,7 @@ getPhysicalDeviceXcbPresentationSupportKHR physicalDevice queueFamilyIndex conne
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_xcb_surface VK_KHR_xcb_surface>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'XcbSurfaceCreateFlagsKHR', 'createXcbSurfaceKHR'
 data XcbSurfaceCreateInfoKHR = XcbSurfaceCreateInfoKHR
@@ -405,7 +410,7 @@ deriving instance Generic (XcbSurfaceCreateInfoKHR)
 deriving instance Show XcbSurfaceCreateInfoKHR
 
 instance ToCStruct XcbSurfaceCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p XcbSurfaceCreateInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -452,6 +457,7 @@ instance Zero XcbSurfaceCreateInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_xcb_surface VK_KHR_xcb_surface>,
 -- 'XcbSurfaceCreateInfoKHR'
 newtype XcbSurfaceCreateFlagsKHR = XcbSurfaceCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

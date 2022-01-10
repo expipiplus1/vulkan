@@ -15,7 +15,7 @@
 --     159
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -32,12 +32,12 @@
 -- [__Contact__]
 --
 --     -   Chad Versace
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_image_drm_format_modifier:%20&body=@chadversary%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_image_drm_format_modifier] @chadversary%0A<<Here describe the issue or question you have about the VK_EXT_image_drm_format_modifier extension>> >
 --
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2018-08-29
+--     2021-09-30
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -67,9 +67,9 @@
 -- graphics, video, and display APIs.
 --
 -- Its functionality closely overlaps with
--- @EGL_EXT_image_dma_buf_import_modifiers@<VK_EXT_image_drm_format_modifier-fn2.html 2>\<\/link>^
+-- @EGL_EXT_image_dma_buf_import_modifiers@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn2 2>^
 -- and
--- @EGL_MESA_image_dma_buf_export@<VK_EXT_image_drm_format_modifier-fn3.html 3>\<\/link>^.
+-- @EGL_MESA_image_dma_buf_export@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn3 3>^.
 -- Unlike the EGL extensions, this extension does not require the use of a
 -- specific handle type (such as a dma_buf) for external memory and
 -- provides more explicit control of image creation.
@@ -250,33 +250,33 @@
 -- == Prior Art
 --
 -- Extension
--- @EGL_EXT_image_dma_buf_import@<VK_EXT_image_drm_format_modifier-fn1.html 1>\<\/link>^
+-- @EGL_EXT_image_dma_buf_import@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn1 1>^
 -- introduced the ability to create an @EGLImage@ by importing for each
 -- plane a dma_buf, offset, and row pitch.
 --
 -- Later, extension
--- @EGL_EXT_image_dma_buf_import_modifiers@<VK_EXT_image_drm_format_modifier-fn2.html 2>\<\/link>^
+-- @EGL_EXT_image_dma_buf_import_modifiers@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn2 2>^
 -- introduced the ability to query which combination of formats and
 -- /modifiers/ the implementation supports and to specify /modifiers/
 -- during creation of the @EGLImage@.
 --
 -- Extension
--- @EGL_MESA_image_dma_buf_export@<VK_EXT_image_drm_format_modifier-fn3.html 3>\<\/link>^
+-- @EGL_MESA_image_dma_buf_export@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn3 3>^
 -- is the inverse of @EGL_EXT_image_dma_buf_import_modifiers@.
 --
 -- The Linux kernel modesetting API (KMS), when configuring the display’s
 -- framebuffer with @struct
--- drm_mode_fb_cmd2@<VK_EXT_image_drm_format_modifier-fn4.html 4>\<\/link>^,
+-- drm_mode_fb_cmd2@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn4 4>^,
 -- allows one to specify the frambuffer’s /modifier/ as well as a per-plane
 -- memory handle, offset, and row pitch.
 --
 -- GBM, a graphics buffer manager for Linux, allows creation of a @gbm_bo@
 -- (that is, a graphics /buffer object/) by importing data similar to that
 -- in
--- @EGL_EXT_image_dma_buf_import_modifiers@<VK_EXT_image_drm_format_modifier-fn1.html 1>\<\/link>^;
+-- @EGL_EXT_image_dma_buf_import_modifiers@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn1 1>^;
 -- and symmetrically allows exporting the same data from the @gbm_bo@. See
 -- the references to /modifier/ and /plane/ in
--- @gbm.h@<VK_EXT_image_drm_format_modifier-fn5.html 5>\<\/link>^.
+-- @gbm.h@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn5 5>^.
 --
 -- == New Commands
 --
@@ -303,6 +303,17 @@
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2':
 --
 --     -   'PhysicalDeviceImageDrmFormatModifierInfoEXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- is supported:
+--
+-- -   'DrmFormatModifierProperties2EXT'
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.FormatProperties2':
+--
+--     -   'DrmFormatModifierPropertiesList2EXT'
 --
 -- == New Enum Constants
 --
@@ -341,6 +352,14 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_2_EXT'
+--
 -- == Issues
 --
 -- 1) Should this extension define a single DRM format modifier per
@@ -352,10 +371,10 @@
 -- 'Vulkan.Core10.Handles.Image'.
 --
 -- __DISCUSSION__: Prior art, such as
--- @EGL_EXT_image_dma_buf_import_modifiers@<VK_EXT_image_drm_format_modifier-fn2.html 2>\<\/link>^,
--- @struct drm_mode_fb_cmd2@<VK_EXT_image_drm_format_modifier-fn4.html 4>\<\/link>^,
+-- @EGL_EXT_image_dma_buf_import_modifiers@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn2 2>^,
+-- @struct drm_mode_fb_cmd2@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn4 4>^,
 -- and @struct
--- gbm_import_fd_modifier_data@<VK_EXT_image_drm_format_modifier-fn5.html 5>\<\/link>^,
+-- gbm_import_fd_modifier_data@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn5 5>^,
 -- allows defining one /modifier/ per plane. However, developers of the GBM
 -- and kernel APIs concede it was a mistake. Beginning in Linux 4.10, the
 -- kernel requires that the application provide the same DRM format
@@ -378,10 +397,10 @@
 -- /must/ be 0.
 --
 -- __DISCUSSION__: Prior art, such as
--- @EGL_EXT_image_dma_buf_import_modifiers@<VK_EXT_image_drm_format_modifier-fn2.html 2>\<\/link>^,
--- @struct drm_mode_fb_cmd2@<VK_EXT_image_drm_format_modifier-fn4.html 4>\<\/link>^,
+-- @EGL_EXT_image_dma_buf_import_modifiers@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn2 2>^,
+-- @struct drm_mode_fb_cmd2@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn4 4>^,
 -- and @struct
--- gbm_import_fd_modifier_data@<VK_EXT_image_drm_format_modifier-fn5.html 5>\<\/link>^,
+-- gbm_import_fd_modifier_data@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn5 5>^,
 -- omits from the API the size of each plane. Instead, the APIs infer each
 -- plane’s size from the import parameters, which include the image’s pixel
 -- format and a dma_buf, offset, and row pitch for each plane.
@@ -510,7 +529,11 @@
 --
 --     -   First stable revision
 --
--- = See Also
+-- -   Revision 2, 2021-09-30 (Jon Leech)
+--
+--     -   Add interaction with @VK_KHR_format_feature_flags2@ to @vk.xml@
+--
+-- == See Also
 --
 -- 'DrmFormatModifierPropertiesEXT', 'DrmFormatModifierPropertiesListEXT',
 -- 'ImageDrmFormatModifierExplicitCreateInfoEXT',
@@ -519,7 +542,7 @@
 -- 'PhysicalDeviceImageDrmFormatModifierInfoEXT',
 -- 'getImageDrmFormatModifierPropertiesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier Vulkan Specification>
@@ -533,16 +556,21 @@ module Vulkan.Extensions.VK_EXT_image_drm_format_modifier  ( getImageDrmFormatMo
                                                            , ImageDrmFormatModifierListCreateInfoEXT(..)
                                                            , ImageDrmFormatModifierExplicitCreateInfoEXT(..)
                                                            , ImageDrmFormatModifierPropertiesEXT(..)
+                                                           , DrmFormatModifierPropertiesList2EXT(..)
+                                                           , DrmFormatModifierProperties2EXT(..)
                                                            , EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION
                                                            , pattern EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION
                                                            , EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME
                                                            , pattern EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME
+                                                           , FormatFeatureFlagBits2KHR(..)
+                                                           , FormatFeatureFlags2KHR
+                                                           , Flags64
                                                            ) where
 
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -578,9 +606,11 @@ import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageDrmFormatModifierPropertiesEXT))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.Enums.FormatFeatureFlagBits (FormatFeatureFlags)
+import Vulkan.Extensions.VK_KHR_acceleration_structure (FormatFeatureFlags2KHR)
 import Vulkan.Core10.Handles (Image)
 import Vulkan.Core10.Handles (Image(..))
 import Vulkan.Core10.Enums.Result (Result)
@@ -589,12 +619,16 @@ import Vulkan.Core10.Enums.SharingMode (SharingMode)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Image (SubresourceLayout)
 import Vulkan.Exception (VulkanException(..))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_2_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Vulkan.Core10.FundamentalTypes (Flags64)
+import Vulkan.Extensions.VK_KHR_acceleration_structure (FormatFeatureFlagBits2KHR(..))
+import Vulkan.Extensions.VK_KHR_acceleration_structure (FormatFeatureFlags2KHR)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -617,6 +651,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier VK_EXT_image_drm_format_modifier>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image',
 -- 'ImageDrmFormatModifierPropertiesEXT'
 getImageDrmFormatModifierPropertiesEXT :: forall io
@@ -640,7 +675,7 @@ getImageDrmFormatModifierPropertiesEXT :: forall io
                                           Image
                                        -> io (ImageDrmFormatModifierPropertiesEXT)
 getImageDrmFormatModifierPropertiesEXT device image = liftIO . evalContT $ do
-  let vkGetImageDrmFormatModifierPropertiesEXTPtr = pVkGetImageDrmFormatModifierPropertiesEXT (deviceCmds (device :: Device))
+  let vkGetImageDrmFormatModifierPropertiesEXTPtr = pVkGetImageDrmFormatModifierPropertiesEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetImageDrmFormatModifierPropertiesEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageDrmFormatModifierPropertiesEXT is null" Nothing Nothing
   let vkGetImageDrmFormatModifierPropertiesEXT' = mkVkGetImageDrmFormatModifierPropertiesEXT vkGetImageDrmFormatModifierPropertiesEXTPtr
@@ -671,14 +706,15 @@ getImageDrmFormatModifierPropertiesEXT device image = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier VK_EXT_image_drm_format_modifier>,
 -- 'DrmFormatModifierPropertiesEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DrmFormatModifierPropertiesListEXT = DrmFormatModifierPropertiesListEXT
   { -- | @drmFormatModifierCount@ is an inout parameter related to the number of
     -- modifiers compatible with the @format@, as described below.
     drmFormatModifierCount :: Word32
-  , -- | @pDrmFormatModifierProperties@ is either @NULL@ or an array of
-    -- 'DrmFormatModifierPropertiesEXT' structures.
+  , -- | @pDrmFormatModifierProperties@ is either @NULL@ or a pointer to an array
+    -- of 'DrmFormatModifierPropertiesEXT' structures.
     drmFormatModifierProperties :: Ptr DrmFormatModifierPropertiesEXT
   }
   deriving (Typeable, Eq)
@@ -688,7 +724,7 @@ deriving instance Generic (DrmFormatModifierPropertiesListEXT)
 deriving instance Show DrmFormatModifierPropertiesListEXT
 
 instance ToCStruct DrmFormatModifierPropertiesListEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DrmFormatModifierPropertiesListEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -738,23 +774,23 @@ instance Zero DrmFormatModifierPropertiesListEXT where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
 -- Y′CBCR formats). In
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags', each
--- @VK_IMAGE_ASPECT_MEMORY_PLANE@//i/_BIT_EXT represents a _memory plane/
--- and each @VK_IMAGE_ASPECT_PLANE@//i/_BIT a _format plane/.
+-- @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ represents a /memory plane/ and
+-- each @VK_IMAGE_ASPECT_PLANE_i_BIT@ a /format plane/.
 --
 -- An image’s set of /format planes/ is an ordered partition of the image’s
--- __content__ into separable groups of format channels. The ordered
+-- __content__ into separable groups of format components. The ordered
 -- partition is encoded in the name of each
 -- 'Vulkan.Core10.Enums.Format.Format'. For example,
 -- 'Vulkan.Core10.Enums.Format.FORMAT_G8_B8R8_2PLANE_420_UNORM' contains
--- two /format planes/; the first plane contains the green channel and the
--- second plane contains the blue channel and red channel. If the format
--- name does not contain @PLANE@, then the format contains a single plane;
--- for example, 'Vulkan.Core10.Enums.Format.FORMAT_R8G8B8A8_UNORM'. Some
--- commands, such as
+-- two /format planes/; the first plane contains the green component and
+-- the second plane contains the blue component and red component. If the
+-- format name does not contain @PLANE@, then the format contains a single
+-- plane; for example, 'Vulkan.Core10.Enums.Format.FORMAT_R8G8B8A8_UNORM'.
+-- Some commands, such as
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyBufferToImage', do not
--- operate on all format channels in the image, but instead operate only on
--- the /format planes/ explicitly chosen by the application and operate on
--- each /format plane/ independently.
+-- operate on all format components in the image, but instead operate only
+-- on the /format planes/ explicitly chosen by the application and operate
+-- on each /format plane/ independently.
 --
 -- An image’s set of /memory planes/ is an ordered partition of the image’s
 -- __memory__ rather than the image’s __content__. Each /memory plane/ is a
@@ -790,9 +826,9 @@ instance Zero DrmFormatModifierPropertiesListEXT where
 -- implementation, the implementation /may/ store the image’s content in 3
 -- adjacent /memory planes/ where each /memory plane/ corresponds exactly
 -- to a /format plane/. However, the implementation /may/ also store the
--- image’s content in a single /memory plane/ where all format channels are
--- combined using an implementation-private block-compressed format; or the
--- implementation /may/ store the image’s content in a collection of 7
+-- image’s content in a single /memory plane/ where all format components
+-- are combined using an implementation-private block-compressed format; or
+-- the implementation /may/ store the image’s content in a collection of 7
 -- adjacent /memory planes/ using an implementation-private sharding
 -- technique. Because the image is non-linear and non-disjoint, the
 -- implementation has much freedom when choosing the image’s placement in
@@ -805,6 +841,7 @@ instance Zero DrmFormatModifierPropertiesListEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier VK_EXT_image_drm_format_modifier>,
 -- 'DrmFormatModifierPropertiesListEXT',
 -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlags'
 data DrmFormatModifierPropertiesEXT = DrmFormatModifierPropertiesEXT
@@ -828,7 +865,7 @@ deriving instance Generic (DrmFormatModifierPropertiesEXT)
 deriving instance Show DrmFormatModifierPropertiesEXT
 
 instance ToCStruct DrmFormatModifierPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DrmFormatModifierPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word64)) (drmFormatModifier)
     poke ((p `plusPtr` 8 :: Ptr Word32)) (drmFormatModifierPlaneCount)
@@ -910,6 +947,7 @@ instance Zero DrmFormatModifierPropertiesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier VK_EXT_image_drm_format_modifier>,
 -- 'Vulkan.Core10.Enums.SharingMode.SharingMode',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceImageDrmFormatModifierInfoEXT = PhysicalDeviceImageDrmFormatModifierInfoEXT
@@ -921,9 +959,9 @@ data PhysicalDeviceImageDrmFormatModifierInfoEXT = PhysicalDeviceImageDrmFormatM
   , -- | @sharingMode@ specifies how the image will be accessed by multiple queue
     -- families.
     sharingMode :: SharingMode
-  , -- | @pQueueFamilyIndices@ is a list of queue families that will access the
-    -- image (ignored if @sharingMode@ is not
-    -- 'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT').
+  , -- | @pQueueFamilyIndices@ is a pointer to an array of queue families that
+    -- will access the image. It is ignored if @sharingMode@ is not
+    -- 'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT'.
     queueFamilyIndices :: Vector Word32
   }
   deriving (Typeable)
@@ -933,14 +971,14 @@ deriving instance Generic (PhysicalDeviceImageDrmFormatModifierInfoEXT)
 deriving instance Show PhysicalDeviceImageDrmFormatModifierInfoEXT
 
 instance ToCStruct PhysicalDeviceImageDrmFormatModifierInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceImageDrmFormatModifierInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word64)) (drmFormatModifier)
     lift $ poke ((p `plusPtr` 24 :: Ptr SharingMode)) (sharingMode)
     lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (queueFamilyIndices)) :: Word32))
-    pPQueueFamilyIndices' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (queueFamilyIndices)) * 4) 4
+    pPQueueFamilyIndices' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (queueFamilyIndices)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPQueueFamilyIndices' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (queueFamilyIndices)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr Word32))) (pPQueueFamilyIndices')
     lift $ f
@@ -997,6 +1035,7 @@ instance Zero PhysicalDeviceImageDrmFormatModifierInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier VK_EXT_image_drm_format_modifier>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImageDrmFormatModifierListCreateInfoEXT = ImageDrmFormatModifierListCreateInfoEXT
   { -- | @pDrmFormatModifiers@ is a pointer to an array of /Linux DRM format
@@ -1009,12 +1048,12 @@ deriving instance Generic (ImageDrmFormatModifierListCreateInfoEXT)
 deriving instance Show ImageDrmFormatModifierListCreateInfoEXT
 
 instance ToCStruct ImageDrmFormatModifierListCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageDrmFormatModifierListCreateInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (drmFormatModifiers)) :: Word32))
-    pPDrmFormatModifiers' <- ContT $ allocaBytesAligned @Word64 ((Data.Vector.length (drmFormatModifiers)) * 8) 8
+    pPDrmFormatModifiers' <- ContT $ allocaBytes @Word64 ((Data.Vector.length (drmFormatModifiers)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPDrmFormatModifiers' `plusPtr` (8 * (i)) :: Ptr Word64) (e)) (drmFormatModifiers)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word64))) (pPDrmFormatModifiers')
     lift $ f
@@ -1102,6 +1141,7 @@ instance Zero ImageDrmFormatModifierListCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier VK_EXT_image_drm_format_modifier>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Core10.Image.SubresourceLayout'
 data ImageDrmFormatModifierExplicitCreateInfoEXT = ImageDrmFormatModifierExplicitCreateInfoEXT
@@ -1120,13 +1160,13 @@ deriving instance Generic (ImageDrmFormatModifierExplicitCreateInfoEXT)
 deriving instance Show ImageDrmFormatModifierExplicitCreateInfoEXT
 
 instance ToCStruct ImageDrmFormatModifierExplicitCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageDrmFormatModifierExplicitCreateInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word64)) (drmFormatModifier)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (planeLayouts)) :: Word32))
-    pPPlaneLayouts' <- ContT $ allocaBytesAligned @SubresourceLayout ((Data.Vector.length (planeLayouts)) * 40) 8
+    pPPlaneLayouts' <- ContT $ allocaBytes @SubresourceLayout ((Data.Vector.length (planeLayouts)) * 40)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPPlaneLayouts' `plusPtr` (40 * (i)) :: Ptr SubresourceLayout) (e)) (planeLayouts)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr SubresourceLayout))) (pPPlaneLayouts')
     lift $ f
@@ -1172,6 +1212,7 @@ instance Zero ImageDrmFormatModifierExplicitCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier VK_EXT_image_drm_format_modifier>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getImageDrmFormatModifierPropertiesEXT'
 data ImageDrmFormatModifierPropertiesEXT = ImageDrmFormatModifierPropertiesEXT
@@ -1185,7 +1226,7 @@ deriving instance Generic (ImageDrmFormatModifierPropertiesEXT)
 deriving instance Show ImageDrmFormatModifierPropertiesEXT
 
 instance ToCStruct ImageDrmFormatModifierPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageDrmFormatModifierPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1216,11 +1257,153 @@ instance Zero ImageDrmFormatModifierPropertiesEXT where
            zero
 
 
-type EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION = 1
+-- | VkDrmFormatModifierPropertiesList2EXT - Structure specifying the list of
+-- DRM format modifiers supported for a format
+--
+-- = Description
+--
+-- If @pDrmFormatModifierProperties@ is @NULL@, the number of modifiers
+-- compatible with the queried @format@ is returned in
+-- @drmFormatModifierCount@. Otherwise, the application /must/ set
+-- @drmFormatModifierCount@ to the length of the array
+-- @pDrmFormatModifierProperties@; the function will write at most
+-- @drmFormatModifierCount@ elements to the array, and will return in
+-- @drmFormatModifierCount@ the number of elements written.
+--
+-- Among the elements in array @pDrmFormatModifierProperties@, each
+-- returned @drmFormatModifier@ /must/ be unique.
+--
+-- Among the elements in array @pDrmFormatModifierProperties@, the bits
+-- reported in @drmFormatModifierTilingFeatures@ /must/ include the bits
+-- reported in the corresponding element of
+-- 'DrmFormatModifierPropertiesListEXT'::@pDrmFormatModifierProperties@.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier VK_EXT_image_drm_format_modifier>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>,
+-- 'DrmFormatModifierProperties2EXT',
+-- 'Vulkan.Core10.Enums.StructureType.StructureType'
+data DrmFormatModifierPropertiesList2EXT = DrmFormatModifierPropertiesList2EXT
+  { -- | @drmFormatModifierCount@ is an inout parameter related to the number of
+    -- modifiers compatible with the @format@, as described below.
+    drmFormatModifierCount :: Word32
+  , -- | @pDrmFormatModifierProperties@ is either @NULL@ or a pointer to an array
+    -- of 'DrmFormatModifierProperties2EXT' structures.
+    drmFormatModifierProperties :: Ptr DrmFormatModifierProperties2EXT
+  }
+  deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DrmFormatModifierPropertiesList2EXT)
+#endif
+deriving instance Show DrmFormatModifierPropertiesList2EXT
+
+instance ToCStruct DrmFormatModifierPropertiesList2EXT where
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p DrmFormatModifierPropertiesList2EXT{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_2_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (drmFormatModifierCount)
+    poke ((p `plusPtr` 24 :: Ptr (Ptr DrmFormatModifierProperties2EXT))) (drmFormatModifierProperties)
+    f
+  cStructSize = 32
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_2_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    f
+
+instance FromCStruct DrmFormatModifierPropertiesList2EXT where
+  peekCStruct p = do
+    drmFormatModifierCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
+    pDrmFormatModifierProperties <- peek @(Ptr DrmFormatModifierProperties2EXT) ((p `plusPtr` 24 :: Ptr (Ptr DrmFormatModifierProperties2EXT)))
+    pure $ DrmFormatModifierPropertiesList2EXT
+             drmFormatModifierCount pDrmFormatModifierProperties
+
+instance Storable DrmFormatModifierPropertiesList2EXT where
+  sizeOf ~_ = 32
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero DrmFormatModifierPropertiesList2EXT where
+  zero = DrmFormatModifierPropertiesList2EXT
+           zero
+           zero
+
+
+-- | VkDrmFormatModifierProperties2EXT - Structure specifying properties of a
+-- format when combined with a DRM format modifier
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier VK_EXT_image_drm_format_modifier>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>,
+-- 'DrmFormatModifierPropertiesList2EXT',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.FormatFeatureFlags2KHR'
+data DrmFormatModifierProperties2EXT = DrmFormatModifierProperties2EXT
+  { -- | @drmFormatModifier@ is a /Linux DRM format modifier/.
+    drmFormatModifier :: Word64
+  , -- | @drmFormatModifierPlaneCount@ is the number of /memory planes/ in any
+    -- image created with @format@ and @drmFormatModifier@. An image’s /memory
+    -- planecount/ is distinct from its /format planecount/, as explained
+    -- below.
+    drmFormatModifierPlaneCount :: Word32
+  , -- | @drmFormatModifierTilingFeatures@ is a bitmask of
+    -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.FormatFeatureFlagBits2KHR'
+    -- that are supported by any image created with @format@ and
+    -- @drmFormatModifier@.
+    drmFormatModifierTilingFeatures :: FormatFeatureFlags2KHR
+  }
+  deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DrmFormatModifierProperties2EXT)
+#endif
+deriving instance Show DrmFormatModifierProperties2EXT
+
+instance ToCStruct DrmFormatModifierProperties2EXT where
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p DrmFormatModifierProperties2EXT{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr Word64)) (drmFormatModifier)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (drmFormatModifierPlaneCount)
+    poke ((p `plusPtr` 16 :: Ptr FormatFeatureFlags2KHR)) (drmFormatModifierTilingFeatures)
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr Word64)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 16 :: Ptr FormatFeatureFlags2KHR)) (zero)
+    f
+
+instance FromCStruct DrmFormatModifierProperties2EXT where
+  peekCStruct p = do
+    drmFormatModifier <- peek @Word64 ((p `plusPtr` 0 :: Ptr Word64))
+    drmFormatModifierPlaneCount <- peek @Word32 ((p `plusPtr` 8 :: Ptr Word32))
+    drmFormatModifierTilingFeatures <- peek @FormatFeatureFlags2KHR ((p `plusPtr` 16 :: Ptr FormatFeatureFlags2KHR))
+    pure $ DrmFormatModifierProperties2EXT
+             drmFormatModifier drmFormatModifierPlaneCount drmFormatModifierTilingFeatures
+
+instance Storable DrmFormatModifierProperties2EXT where
+  sizeOf ~_ = 24
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero DrmFormatModifierProperties2EXT where
+  zero = DrmFormatModifierProperties2EXT
+           zero
+           zero
+           zero
+
+
+type EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION"
 pattern EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION :: forall a . Integral a => a
-pattern EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION = 1
+pattern EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION = 2
 
 
 type EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME = "VK_EXT_image_drm_format_modifier"

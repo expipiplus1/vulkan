@@ -15,7 +15,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -61,6 +61,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreatePipelineCache))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyPipelineCache))
 import Vulkan.Dynamic (DeviceCmds(pVkGetPipelineCacheData))
@@ -153,6 +154,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.PipelineCache',
 -- 'PipelineCacheCreateInfo'
@@ -169,7 +171,7 @@ createPipelineCache :: forall io
                        ("allocator" ::: Maybe AllocationCallbacks)
                     -> io (PipelineCache)
 createPipelineCache device createInfo allocator = liftIO . evalContT $ do
-  let vkCreatePipelineCachePtr = pVkCreatePipelineCache (deviceCmds (device :: Device))
+  let vkCreatePipelineCachePtr = pVkCreatePipelineCache (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreatePipelineCachePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreatePipelineCache is null" Nothing Nothing
   let vkCreatePipelineCache' = mkVkCreatePipelineCache vkCreatePipelineCachePtr
@@ -242,6 +244,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.PipelineCache'
 destroyPipelineCache :: forall io
@@ -256,7 +259,7 @@ destroyPipelineCache :: forall io
                         ("allocator" ::: Maybe AllocationCallbacks)
                      -> io ()
 destroyPipelineCache device pipelineCache allocator = liftIO . evalContT $ do
-  let vkDestroyPipelineCachePtr = pVkDestroyPipelineCache (deviceCmds (device :: Device))
+  let vkDestroyPipelineCachePtr = pVkDestroyPipelineCache (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyPipelineCachePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyPipelineCache is null" Nothing Nothing
   let vkDestroyPipelineCache' = mkVkDestroyPipelineCache vkDestroyPipelineCachePtr
@@ -283,60 +286,24 @@ foreign import ccall
 -- Otherwise, @pDataSize@ /must/ point to a variable set by the user to the
 -- size of the buffer, in bytes, pointed to by @pData@, and on return the
 -- variable is overwritten with the amount of data actually written to
--- @pData@.
+-- @pData@. If @pDataSize@ is less than the maximum size that /can/ be
+-- retrieved by the pipeline cache, at most @pDataSize@ bytes will be
+-- written to @pData@, and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be
+-- returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate
+-- that not all of the pipeline cache was returned.
 --
--- If @pDataSize@ is less than the maximum size that /can/ be retrieved by
--- the pipeline cache, at most @pDataSize@ bytes will be written to
--- @pData@, and 'getPipelineCacheData' will return
--- 'Vulkan.Core10.Enums.Result.INCOMPLETE'. Any data written to @pData@ is
--- valid and /can/ be provided as the @pInitialData@ member of the
--- 'PipelineCacheCreateInfo' structure passed to 'createPipelineCache'.
+-- Any data written to @pData@ is valid and /can/ be provided as the
+-- @pInitialData@ member of the 'PipelineCacheCreateInfo' structure passed
+-- to 'createPipelineCache'.
 --
 -- Two calls to 'getPipelineCacheData' with the same parameters /must/
 -- retrieve the same data unless a command that modifies the contents of
 -- the cache is called between them.
 --
--- Applications /can/ store the data retrieved from the pipeline cache, and
--- use these data, possibly in a future run of the application, to populate
--- new pipeline cache objects. The results of pipeline compiles, however,
--- /may/ depend on the vendor ID, device ID, driver version, and other
--- details of the device. To enable applications to detect when previously
--- retrieved data is incompatible with the device, the initial bytes
--- written to @pData@ /must/ be a header consisting of the following
--- members:
---
--- +--------+----------------------------------------+------------------------------------------------------------------------------------+
--- | Offset | Size                                   | Meaning                                                                            |
--- +========+========================================+====================================================================================+
--- | 0      | 4                                      | length in bytes of the entire pipeline cache header written as a stream of bytes,  |
--- |        |                                        | with the least significant byte first                                              |
--- +--------+----------------------------------------+------------------------------------------------------------------------------------+
--- | 4      | 4                                      | a 'Vulkan.Core10.Enums.PipelineCacheHeaderVersion.PipelineCacheHeaderVersion'      |
--- |        |                                        | value written as a stream of bytes, with the least significant byte first          |
--- +--------+----------------------------------------+------------------------------------------------------------------------------------+
--- | 8      | 4                                      | a vendor ID equal to                                                               |
--- |        |                                        | 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@vendorID@ written  |
--- |        |                                        | as a stream of bytes, with the least significant byte first                        |
--- +--------+----------------------------------------+------------------------------------------------------------------------------------+
--- | 12     | 4                                      | a device ID equal to                                                               |
--- |        |                                        | 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@deviceID@ written  |
--- |        |                                        | as a stream of bytes, with the least significant byte first                        |
--- +--------+----------------------------------------+------------------------------------------------------------------------------------+
--- | 16     | 'Vulkan.Core10.APIConstants.UUID_SIZE' | a pipeline cache ID equal to                                                       |
--- |        |                                        | 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@pipelineCacheUUID@ |
--- +--------+----------------------------------------+------------------------------------------------------------------------------------+
---
--- Layout for pipeline cache header version
--- 'Vulkan.Core10.Enums.PipelineCacheHeaderVersion.PIPELINE_CACHE_HEADER_VERSION_ONE'
---
--- The first four bytes encode the length of the entire pipeline cache
--- header, in bytes. This value includes all fields in the header including
--- the pipeline cache version field and the size of the length field.
---
--- The next four bytes encode the pipeline cache version, as described for
--- 'Vulkan.Core10.Enums.PipelineCacheHeaderVersion.PipelineCacheHeaderVersion'.
--- A consumer of the pipeline cache /should/ use the cache version to
--- interpret the remainder of the cache header.
+-- The initial bytes written to @pData@ /must/ be a header as described in
+-- the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipelines-cache-header Pipeline Cache Header>
+-- section.
 --
 -- If @pDataSize@ is less than what is necessary to store this header,
 -- nothing will be written to @pData@ and zero will be written to
@@ -377,6 +344,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.PipelineCache'
 getPipelineCacheData :: forall io
                       . (MonadIO io)
@@ -386,7 +354,7 @@ getPipelineCacheData :: forall io
                         PipelineCache
                      -> io (Result, ("data" ::: ByteString))
 getPipelineCacheData device pipelineCache = liftIO . evalContT $ do
-  let vkGetPipelineCacheDataPtr = pVkGetPipelineCacheData (deviceCmds (device :: Device))
+  let vkGetPipelineCacheDataPtr = pVkGetPipelineCacheData (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetPipelineCacheDataPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPipelineCacheData is null" Nothing Nothing
   let vkGetPipelineCacheData' = mkVkGetPipelineCacheData vkGetPipelineCacheDataPtr
@@ -416,7 +384,7 @@ foreign import ccall
 --
 -- Note
 --
--- The details of the merge operation are implementation dependent, but
+-- The details of the merge operation are implementation-dependent, but
 -- implementations /should/ merge the contents of the specified pipelines
 -- and prune duplicate entries.
 --
@@ -465,6 +433,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.PipelineCache'
 mergePipelineCaches :: forall io
                      . (MonadIO io)
@@ -478,11 +447,11 @@ mergePipelineCaches :: forall io
                        ("srcCaches" ::: Vector PipelineCache)
                     -> io ()
 mergePipelineCaches device dstCache srcCaches = liftIO . evalContT $ do
-  let vkMergePipelineCachesPtr = pVkMergePipelineCaches (deviceCmds (device :: Device))
+  let vkMergePipelineCachesPtr = pVkMergePipelineCaches (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkMergePipelineCachesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkMergePipelineCaches is null" Nothing Nothing
   let vkMergePipelineCaches' = mkVkMergePipelineCaches vkMergePipelineCachesPtr
-  pPSrcCaches <- ContT $ allocaBytesAligned @PipelineCache ((Data.Vector.length (srcCaches)) * 8) 8
+  pPSrcCaches <- ContT $ allocaBytes @PipelineCache ((Data.Vector.length (srcCaches)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPSrcCaches `plusPtr` (8 * (i)) :: Ptr PipelineCache) (e)) (srcCaches)
   r <- lift $ traceAroundEvent "vkMergePipelineCaches" (vkMergePipelineCaches' (deviceHandle (device)) (dstCache) ((fromIntegral (Data.Vector.length $ (srcCaches)) :: Word32)) (pPSrcCaches))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -527,6 +496,7 @@ mergePipelineCaches device dstCache srcCaches = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PipelineCacheCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createPipelineCache'
 data PipelineCacheCreateInfo = PipelineCacheCreateInfo
@@ -550,7 +520,7 @@ deriving instance Generic (PipelineCacheCreateInfo)
 deriving instance Show PipelineCacheCreateInfo
 
 instance ToCStruct PipelineCacheCreateInfo where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineCacheCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

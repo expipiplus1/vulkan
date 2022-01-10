@@ -13,7 +13,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
@@ -53,6 +53,7 @@ import Vulkan.Core10.Handles (Buffer)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkBindBufferMemory2))
 import Vulkan.Dynamic (DeviceCmds(pVkBindImageMemory2))
 import Vulkan.Core10.Handles (DeviceMemory)
@@ -107,6 +108,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'BindBufferMemoryInfo', 'Vulkan.Core10.Handles.Device'
 bindBufferMemory2 :: forall io
                    . (MonadIO io)
@@ -124,11 +126,11 @@ bindBufferMemory2 :: forall io
                      ("bindInfos" ::: Vector (SomeStruct BindBufferMemoryInfo))
                   -> io ()
 bindBufferMemory2 device bindInfos = liftIO . evalContT $ do
-  let vkBindBufferMemory2Ptr = pVkBindBufferMemory2 (deviceCmds (device :: Device))
+  let vkBindBufferMemory2Ptr = pVkBindBufferMemory2 (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkBindBufferMemory2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBindBufferMemory2 is null" Nothing Nothing
   let vkBindBufferMemory2' = mkVkBindBufferMemory2 vkBindBufferMemory2Ptr
-  pPBindInfos <- ContT $ allocaBytesAligned @(BindBufferMemoryInfo _) ((Data.Vector.length (bindInfos)) * 40) 8
+  pPBindInfos <- ContT $ allocaBytes @(BindBufferMemoryInfo _) ((Data.Vector.length (bindInfos)) * 40)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPBindInfos `plusPtr` (40 * (i)) :: Ptr (BindBufferMemoryInfo _))) (e) . ($ ())) (bindInfos)
   r <- lift $ traceAroundEvent "vkBindBufferMemory2" (vkBindBufferMemory2' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (bindInfos)) :: Word32)) (forgetExtensions (pPBindInfos)))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -151,9 +153,9 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkBindImageMemory2-pBindInfos-02858# If any
---     'BindImageMemoryInfo'::image was created with
+--     'BindImageMemoryInfo'::@image@ was created with
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
---     then all planes of 'BindImageMemoryInfo'::image /must/ be bound
+--     then all planes of 'BindImageMemoryInfo'::@image@ /must/ be bound
 --     individually in separate @pBindInfos@
 --
 -- -   #VUID-vkBindImageMemory2-pBindInfos-04006# @pBindInfos@ /must/ not
@@ -185,6 +187,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'BindImageMemoryInfo', 'Vulkan.Core10.Handles.Device'
 bindImageMemory2 :: forall io
                   . (MonadIO io)
@@ -195,11 +198,11 @@ bindImageMemory2 :: forall io
                     ("bindInfos" ::: Vector (SomeStruct BindImageMemoryInfo))
                  -> io ()
 bindImageMemory2 device bindInfos = liftIO . evalContT $ do
-  let vkBindImageMemory2Ptr = pVkBindImageMemory2 (deviceCmds (device :: Device))
+  let vkBindImageMemory2Ptr = pVkBindImageMemory2 (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkBindImageMemory2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBindImageMemory2 is null" Nothing Nothing
   let vkBindImageMemory2' = mkVkBindImageMemory2 vkBindImageMemory2Ptr
-  pPBindInfos <- ContT $ allocaBytesAligned @(BindImageMemoryInfo _) ((Data.Vector.length (bindInfos)) * 40) 8
+  pPBindInfos <- ContT $ allocaBytes @(BindImageMemoryInfo _) ((Data.Vector.length (bindInfos)) * 40)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPBindInfos `plusPtr` (40 * (i)) :: Ptr (BindImageMemoryInfo _))) (e) . ($ ())) (bindInfos)
   r <- lift $ traceAroundEvent "vkBindImageMemory2" (vkBindImageMemory2' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (bindInfos)) :: Word32)) (forgetExtensions (pPBindInfos)))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -242,11 +245,11 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --     @memoryOffset@
 --
 -- -   #VUID-VkBindBufferMemoryInfo-buffer-01444# If @buffer@ requires a
---     dedicated allocation(as reported by
+--     dedicated allocation (as reported by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2'
 --     in
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'::requiresDedicatedAllocation
---     for @buffer@), @memory@ /must/ have been created with
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'::@requiresDedicatedAllocation@
+--     for @buffer@), @memory@ /must/ have been allocated with
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@
 --     equal to @buffer@
 --
@@ -261,25 +264,25 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@,
 --     and @memoryOffset@ /must/ be zero
 --
--- -   #VUID-VkBindBufferMemoryInfo-None-01898# If buffer was created with
---     the
+-- -   #VUID-VkBindBufferMemoryInfo-None-01898# If @buffer@ was created
+--     with the
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
 --     bit set, the buffer /must/ be bound to a memory object allocated
 --     with a memory type that reports
 --     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
 --
--- -   #VUID-VkBindBufferMemoryInfo-None-01899# If buffer was created with
---     the
+-- -   #VUID-VkBindBufferMemoryInfo-None-01899# If @buffer@ was created
+--     with the
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
 --     bit not set, the buffer /must/ not be bound to a memory object
---     created with a memory type that reports
+--     allocated with a memory type that reports
 --     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
 --
 -- -   #VUID-VkBindBufferMemoryInfo-buffer-01038# If @buffer@ was created
 --     with
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV'::@dedicatedAllocation@
 --     equal to 'Vulkan.Core10.FundamentalTypes.TRUE', @memory@ /must/ have
---     been created with
+--     been allocated with
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::@buffer@
 --     equal to a buffer handle created with identical creation parameters
 --     to @buffer@ and @memoryOffset@ /must/ be zero
@@ -291,7 +294,7 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
 --     when @buffer@ was created
 --
--- -   #VUID-VkBindBufferMemoryInfo-memory-02985# If @memory@ was created
+-- -   #VUID-VkBindBufferMemoryInfo-memory-02985# If @memory@ was allocated
 --     by a memory import operation, that is not
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
 --     with a non-@NULL@ @buffer@ value, the external handle type of the
@@ -299,7 +302,7 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
 --     when @buffer@ was created
 --
--- -   #VUID-VkBindBufferMemoryInfo-memory-02986# If @memory@ was created
+-- -   #VUID-VkBindBufferMemoryInfo-memory-02986# If @memory@ was allocated
 --     with the
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
 --     memory import operation with a non-@NULL@ @buffer@ value,
@@ -315,6 +318,14 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --     bit set, @memory@ /must/ have been allocated with the
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
 --     bit set
+--
+-- -   #VUID-VkBindBufferMemoryInfo-buffer-06408# If @buffer@ was created
+--     with
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionBufferCreateInfoFUCHSIA'
+--     chained to 'Vulkan.Core10.Buffer.BufferCreateInfo'::@pNext@,
+--     @memory@ /must/ be allocated with a
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImportMemoryBufferCollectionFUCHSIA'
+--     chained to 'Vulkan.Core10.Memory.MemoryAllocateInfo'::@pNext@
 --
 -- -   #VUID-VkBindBufferMemoryInfo-pNext-01605# If the @pNext@ chain
 --     includes a
@@ -347,6 +358,7 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'bindBufferMemory2',
@@ -374,7 +386,7 @@ deriving instance Show (Chain es) => Show (BindBufferMemoryInfo es)
 
 instance Extensible BindBufferMemoryInfo where
   extensibleTypeName = "BindBufferMemoryInfo"
-  setNext x next = x{next = next}
+  setNext BindBufferMemoryInfo{..} next' = BindBufferMemoryInfo{next = next', ..}
   getNext BindBufferMemoryInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BindBufferMemoryInfo e => b) -> Maybe b
   extends _ f
@@ -382,7 +394,7 @@ instance Extensible BindBufferMemoryInfo where
     | otherwise = Nothing
 
 instance (Extendss BindBufferMemoryInfo es, PokeChain es) => ToCStruct (BindBufferMemoryInfo es) where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindBufferMemoryInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -438,7 +450,7 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     dedicated allocation (as reported by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
 --     in
---     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'::requiresDedicatedAllocation
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'::@requiresDedicatedAllocation@
 --     for @image@), @memory@ /must/ have been created with
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
 --     equal to @image@
@@ -684,6 +696,7 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Handles.Image',
@@ -712,7 +725,7 @@ deriving instance Show (Chain es) => Show (BindImageMemoryInfo es)
 
 instance Extensible BindImageMemoryInfo where
   extensibleTypeName = "BindImageMemoryInfo"
-  setNext x next = x{next = next}
+  setNext BindImageMemoryInfo{..} next' = BindImageMemoryInfo{next = next', ..}
   getNext BindImageMemoryInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BindImageMemoryInfo e => b) -> Maybe b
   extends _ f
@@ -722,7 +735,7 @@ instance Extensible BindImageMemoryInfo where
     | otherwise = Nothing
 
 instance (Extendss BindImageMemoryInfo es, PokeChain es) => ToCStruct (BindImageMemoryInfo es) where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindImageMemoryInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)

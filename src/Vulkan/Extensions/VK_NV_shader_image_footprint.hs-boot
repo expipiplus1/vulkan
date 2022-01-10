@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Pat Brown
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_shader_image_footprint:%20&body=@nvpbrown%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_shader_image_footprint] @nvpbrown%0A<<Here describe the issue or question you have about the VK_NV_shader_image_footprint extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -104,7 +104,7 @@
 --
 -- When using SPIR-V generated from the OpenGL Shading Language, the new
 -- instruction will be generated from code using the new
--- @textureFootprint@*NV built-in functions from the
+-- @textureFootprint*NV@ built-in functions from the
 -- @GL_NV_shader_texture_footprint@ shading language extension.
 --
 -- == New Structures
@@ -255,11 +255,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceShaderImageFootprintFeaturesNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shader_image_footprint Vulkan Specification>

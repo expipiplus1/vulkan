@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_draw_indirect_count:%20&body=@drakos-amd%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_draw_indirect_count] @drakos-amd%0A<<Here describe the issue or question you have about the VK_AMD_draw_indirect_count extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -40,8 +40,7 @@
 --
 -- [__Interactions and External Dependencies__]
 --
---     -   Promoted to
---         <VK_KHR_draw_indirect_count.html VK_KHR_draw_indirect_count>
+--     -   Promoted to @VK_KHR_draw_indirect_count@
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -60,10 +59,10 @@
 --
 -- == Description
 --
--- This extension allows an application to source the number of draw calls
--- for indirect draw calls from a buffer. This enables applications to
--- generate arbitrary amounts of draw commands and execute them without
--- host intervention.
+-- This extension allows an application to source the number of draws for
+-- indirect drawing commands from a buffer. This enables applications to
+-- generate an arbitrary number of drawing commands and execute them
+-- without host intervention.
 --
 -- == Promotion to @VK_KHR_draw_indirect_count@
 --
@@ -94,11 +93,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'cmdDrawIndexedIndirectCountAMD', 'cmdDrawIndirectCountAMD'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_draw_indirect_count Vulkan Specification>

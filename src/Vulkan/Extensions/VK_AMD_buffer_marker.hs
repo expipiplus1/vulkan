@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_buffer_marker:%20&body=@drakos-amd%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_buffer_marker] @drakos-amd%0A<<Here describe the issue or question you have about the VK_AMD_buffer_marker extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -75,11 +75,11 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'cmdWriteBufferMarkerAMD'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_buffer_marker Vulkan Specification>
@@ -110,6 +110,7 @@ import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Handles (Buffer(..))
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdWriteBufferMarkerAMD))
 import Vulkan.Core10.FundamentalTypes (DeviceSize)
@@ -201,7 +202,12 @@ foreign import ccall
 -- -   #VUID-vkCmdWriteBufferMarkerAMD-pipelineStage-04081# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature is not enabled, @pipelineStage@ /must/ not be
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
+--     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
+--
+-- -   #VUID-vkCmdWriteBufferMarkerAMD-synchronization2-06489# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @pipelineStage@ /must/ not be
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_NONE_KHR'
 --
 -- -   #VUID-vkCmdWriteBufferMarkerAMD-dstOffset-01798# @dstOffset@ /must/
 --     be less than or equal to the size of @dstBuffer@ minus @4@
@@ -224,8 +230,8 @@ foreign import ccall
 --     @commandBuffer@ /must/ be a valid
 --     'Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   #VUID-vkCmdWriteBufferMarkerAMD-pipelineStage-parameter#
---     @pipelineStage@ /must/ be a valid
+-- -   #VUID-vkCmdWriteBufferMarkerAMD-pipelineStage-parameter# If
+--     @pipelineStage@ is not @0@, @pipelineStage@ /must/ be a valid
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
 --     value
 --
@@ -256,16 +262,17 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Transfer                                                                                                              | Transfer                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |                                                                                                                                     |
--- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Transfer                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |
+-- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_buffer_marker VK_AMD_buffer_marker>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
@@ -274,10 +281,10 @@ cmdWriteBufferMarkerAMD :: forall io
                         => -- | @commandBuffer@ is the command buffer into which the command will be
                            -- recorded.
                            CommandBuffer
-                        -> -- | @pipelineStage@ is one of the
-                           -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
-                           -- values, specifying the pipeline stage whose completion triggers the
-                           -- marker write.
+                        -> -- | @pipelineStage@ is a
+                           -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits' value
+                           -- specifying the pipeline stage whose completion triggers the marker
+                           -- write.
                            PipelineStageFlagBits
                         -> -- | @dstBuffer@ is the buffer where the marker will be written to.
                            ("dstBuffer" ::: Buffer)
@@ -288,7 +295,7 @@ cmdWriteBufferMarkerAMD :: forall io
                            ("marker" ::: Word32)
                         -> io ()
 cmdWriteBufferMarkerAMD commandBuffer pipelineStage dstBuffer dstOffset marker = liftIO $ do
-  let vkCmdWriteBufferMarkerAMDPtr = pVkCmdWriteBufferMarkerAMD (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdWriteBufferMarkerAMDPtr = pVkCmdWriteBufferMarkerAMD (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdWriteBufferMarkerAMDPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWriteBufferMarkerAMD is null" Nothing Nothing
   let vkCmdWriteBufferMarkerAMD' = mkVkCmdWriteBufferMarkerAMD vkCmdWriteBufferMarkerAMDPtr

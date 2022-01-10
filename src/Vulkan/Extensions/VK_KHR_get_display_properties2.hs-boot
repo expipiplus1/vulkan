@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_get_display_properties2:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_get_display_properties2] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_get_display_properties2 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -105,16 +105,16 @@
 -- __RESOLVED__:
 --
 -- -   'getPhysicalDeviceDisplayProperties2KHR': No. The only current input
---     is a 'Vulkan.Core10.Handles.PhysicalDevice'. Other inputs wouldn’t
+--     is a 'Vulkan.Core10.Handles.PhysicalDevice'. Other inputs would not
 --     make sense.
 --
 -- -   'getPhysicalDeviceDisplayPlaneProperties2KHR': No. The only current
 --     input is a 'Vulkan.Core10.Handles.PhysicalDevice'. Other inputs
---     wouldn’t make sense.
+--     would not make sense.
 --
 -- -   'getDisplayModeProperties2KHR': No. The only current inputs are a
 --     'Vulkan.Core10.Handles.PhysicalDevice' and a
---     'Vulkan.Extensions.Handles.DisplayModeKHR'. Other inputs wouldn’t
+--     'Vulkan.Extensions.Handles.DisplayModeKHR'. Other inputs would not
 --     make sense.
 --
 -- 3) Should additional display query functions be extended?
@@ -131,7 +131,7 @@
 --
 --     -   Initial draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'DisplayModeProperties2KHR', 'DisplayPlaneCapabilities2KHR',
 -- 'DisplayPlaneInfo2KHR', 'DisplayPlaneProperties2KHR',
@@ -140,7 +140,7 @@
 -- 'getPhysicalDeviceDisplayPlaneProperties2KHR',
 -- 'getPhysicalDeviceDisplayProperties2KHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_display_properties2 Vulkan Specification>

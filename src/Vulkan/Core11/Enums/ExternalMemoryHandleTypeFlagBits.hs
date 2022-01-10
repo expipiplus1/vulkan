@@ -8,6 +8,8 @@ module Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits  ( ExternalMemoryHan
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT
+                                                                                               , EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV
+                                                                                               , EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT
                                                                                                , EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID
@@ -63,6 +65,10 @@ type ExternalMemoryHandleTypeFlags = ExternalMemoryHandleTypeFlagBits
 -- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID' | No restriction                                                                                             | No restriction                                                                                             |
 -- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
+-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA'              | No restriction                                                                                             | No restriction                                                                                             |
+-- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
+-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV'                 | No restriction                                                                                             | No restriction                                                                                             |
+-- +-------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+
 --
 -- External memory handle types compatibility
 --
@@ -89,17 +95,22 @@ type ExternalMemoryHandleTypeFlags = ExternalMemoryHandleTypeFlagBits
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'ExternalMemoryHandleTypeFlags',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_fd.ImportMemoryFdInfoKHR',
 -- 'Vulkan.Extensions.VK_EXT_external_memory_host.ImportMemoryHostPointerInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_win32.ImportMemoryWin32HandleInfoKHR',
+-- 'Vulkan.Extensions.VK_FUCHSIA_external_memory.ImportMemoryZirconHandleInfoFUCHSIA',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_fd.MemoryGetFdInfoKHR',
+-- 'Vulkan.Extensions.VK_NV_external_memory_rdma.MemoryGetRemoteAddressInfoNV',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_win32.MemoryGetWin32HandleInfoKHR',
+-- 'Vulkan.Extensions.VK_FUCHSIA_external_memory.MemoryGetZirconHandleInfoFUCHSIA',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceExternalBufferInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceExternalImageFormatInfo',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_fd.getMemoryFdPropertiesKHR',
 -- 'Vulkan.Extensions.VK_EXT_external_memory_host.getMemoryHostPointerPropertiesEXT',
--- 'Vulkan.Extensions.VK_KHR_external_memory_win32.getMemoryWin32HandlePropertiesKHR'
+-- 'Vulkan.Extensions.VK_KHR_external_memory_win32.getMemoryWin32HandlePropertiesKHR',
+-- 'Vulkan.Extensions.VK_FUCHSIA_external_memory.getMemoryZirconHandlePropertiesFUCHSIA'
 newtype ExternalMemoryHandleTypeFlagBits = ExternalMemoryHandleTypeFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
@@ -122,7 +133,7 @@ pattern EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT                    = Extern
 -- share handle that has only limited valid usage outside of Vulkan and
 -- other compatible APIs. It is not compatible with any native APIs. It
 -- does not own a reference to the underlying memory resource represented
--- its Vulkan memory object, and will therefore become invalid when all
+-- by its Vulkan memory object, and will therefore become invalid when all
 -- Vulkan memory objects associated with it are destroyed.
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT                = ExternalMemoryHandleTypeFlagBits 0x00000004
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT' specifies an NT handle
@@ -147,6 +158,13 @@ pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT                      = Extern
 -- 12 committed resource. It owns a reference to the memory used by the
 -- Direct3D resource.
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT                  = ExternalMemoryHandleTypeFlagBits 0x00000040
+-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV' is a handle to an
+-- allocation accessible by remote devices. It owns a reference to the
+-- underlying memory resource represented by its Vulkan memory object.
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV                 = ExternalMemoryHandleTypeFlagBits 0x00001000
+-- | 'EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA' is a Zircon handle
+-- to a virtual memory object.
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA              = ExternalMemoryHandleTypeFlagBits 0x00000800
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT'
 -- specifies a host pointer to /host mapped foreign memory/. It does not
 -- own a reference to the underlying memory resource, and will therefore
@@ -185,6 +203,8 @@ showTableExternalMemoryHandleTypeFlagBits =
   , (EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT              , "D3D11_TEXTURE_KMT_BIT")
   , (EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT                     , "D3D12_HEAP_BIT")
   , (EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT                 , "D3D12_RESOURCE_BIT")
+  , (EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV                , "RDMA_ADDRESS_BIT_NV")
+  , (EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA             , "ZIRCON_VMO_BIT_FUCHSIA")
   , (EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT , "HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT")
   , (EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT            , "HOST_ALLOCATION_BIT_EXT")
   , (EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID, "ANDROID_HARDWARE_BUFFER_BIT_ANDROID")

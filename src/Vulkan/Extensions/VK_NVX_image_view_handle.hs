@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Eric Werness
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NVX_image_view_handle:%20&body=@ewerness%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NVX_image_view_handle] @ewerness-nv%0A<<Here describe the issue or question you have about the VK_NVX_image_view_handle extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -79,12 +79,12 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'ImageViewAddressPropertiesNVX', 'ImageViewHandleInfoNVX',
 -- 'getImageViewAddressNVX', 'getImageViewHandleNVX'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_image_view_handle Vulkan Specification>
@@ -104,7 +104,7 @@ module Vulkan.Extensions.VK_NVX_image_view_handle  ( getImageViewHandleNVX
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -135,6 +135,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Core10.Enums.DescriptorType (DescriptorType)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Core10.FundamentalTypes (DeviceAddress)
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageViewAddressNVX))
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageViewHandleNVX))
@@ -164,6 +165,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_image_view_handle VK_NVX_image_view_handle>,
 -- 'Vulkan.Core10.Handles.Device', 'ImageViewHandleInfoNVX'
 getImageViewHandleNVX :: forall io
                        . (MonadIO io)
@@ -179,7 +181,7 @@ getImageViewHandleNVX :: forall io
                          ImageViewHandleInfoNVX
                       -> io (Word32)
 getImageViewHandleNVX device info = liftIO . evalContT $ do
-  let vkGetImageViewHandleNVXPtr = pVkGetImageViewHandleNVX (deviceCmds (device :: Device))
+  let vkGetImageViewHandleNVXPtr = pVkGetImageViewHandleNVX (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetImageViewHandleNVXPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageViewHandleNVX is null" Nothing Nothing
   let vkGetImageViewHandleNVX' = mkVkGetImageViewHandleNVX vkGetImageViewHandleNVXPtr
@@ -211,6 +213,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_image_view_handle VK_NVX_image_view_handle>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.ImageView',
 -- 'ImageViewAddressPropertiesNVX'
 getImageViewAddressNVX :: forall io
@@ -230,7 +233,7 @@ getImageViewAddressNVX :: forall io
                           ImageView
                        -> io (ImageViewAddressPropertiesNVX)
 getImageViewAddressNVX device imageView = liftIO . evalContT $ do
-  let vkGetImageViewAddressNVXPtr = pVkGetImageViewAddressNVX (deviceCmds (device :: Device))
+  let vkGetImageViewAddressNVXPtr = pVkGetImageViewAddressNVX (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetImageViewAddressNVXPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageViewAddressNVX is null" Nothing Nothing
   let vkGetImageViewAddressNVX' = mkVkGetImageViewAddressNVX vkGetImageViewAddressNVXPtr
@@ -298,6 +301,7 @@ getImageViewAddressNVX device imageView = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_image_view_handle VK_NVX_image_view_handle>,
 -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType',
 -- 'Vulkan.Core10.Handles.ImageView', 'Vulkan.Core10.Handles.Sampler',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -318,7 +322,7 @@ deriving instance Generic (ImageViewHandleInfoNVX)
 deriving instance Show ImageViewHandleInfoNVX
 
 instance ToCStruct ImageViewHandleInfoNVX where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageViewHandleInfoNVX{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -363,6 +367,7 @@ instance Zero ImageViewHandleInfoNVX where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_image_view_handle VK_NVX_image_view_handle>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceAddress',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -380,7 +385,7 @@ deriving instance Generic (ImageViewAddressPropertiesNVX)
 deriving instance Show ImageViewAddressPropertiesNVX
 
 instance ToCStruct ImageViewAddressPropertiesNVX where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageViewAddressPropertiesNVX{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

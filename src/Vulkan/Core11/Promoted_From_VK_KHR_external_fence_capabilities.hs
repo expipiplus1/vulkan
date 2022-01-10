@@ -13,7 +13,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_external_fence_capabilities  ( getPhys
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -44,6 +44,7 @@ import Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits (ExternalFenceHandleT
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceExternalFenceProperties))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES))
@@ -67,6 +68,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'ExternalFenceProperties', 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceExternalFenceInfo'
 getPhysicalDeviceExternalFenceProperties :: forall io
@@ -88,7 +90,7 @@ getPhysicalDeviceExternalFenceProperties :: forall io
                                             PhysicalDeviceExternalFenceInfo
                                          -> io (ExternalFenceProperties)
 getPhysicalDeviceExternalFenceProperties physicalDevice externalFenceInfo = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceExternalFencePropertiesPtr = pVkGetPhysicalDeviceExternalFenceProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceExternalFencePropertiesPtr = pVkGetPhysicalDeviceExternalFenceProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceExternalFencePropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceExternalFenceProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceExternalFenceProperties' = mkVkGetPhysicalDeviceExternalFenceProperties vkGetPhysicalDeviceExternalFencePropertiesPtr
@@ -119,6 +121,7 @@ getPhysicalDeviceExternalFenceProperties physicalDevice externalFenceInfo = lift
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceExternalFenceProperties',
@@ -126,7 +129,7 @@ getPhysicalDeviceExternalFenceProperties physicalDevice externalFenceInfo = lift
 data PhysicalDeviceExternalFenceInfo = PhysicalDeviceExternalFenceInfo
   { -- | @handleType@ is a
     -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
-    -- value indicating an external fence handle type for which capabilities
+    -- value specifying an external fence handle type for which capabilities
     -- will be returned.
     --
     -- #VUID-VkPhysicalDeviceExternalFenceInfo-handleType-parameter#
@@ -141,7 +144,7 @@ deriving instance Generic (PhysicalDeviceExternalFenceInfo)
 deriving instance Show PhysicalDeviceExternalFenceInfo
 
 instance ToCStruct PhysicalDeviceExternalFenceInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceExternalFenceInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -184,6 +187,7 @@ instance Zero PhysicalDeviceExternalFenceInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits.ExternalFenceFeatureFlags',
 -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -212,7 +216,7 @@ deriving instance Generic (ExternalFenceProperties)
 deriving instance Show ExternalFenceProperties
 
 instance ToCStruct ExternalFenceProperties where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExternalFenceProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -15,7 +15,7 @@ module Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing  ( PhysicalDeviceD
                                                                , DescriptorBindingFlags
                                                                ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -63,23 +63,26 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceDescriptorIndexingFeatures' structure
--- describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceDescriptorIndexingFeatures' structure is included
--- in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceDescriptorIndexingFeatures' /can/ also be included in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- features.
+-- in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceDescriptorIndexingFeatures' /can/ also be used
+-- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_indexing VK_EXT_descriptor_indexing>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDescriptorIndexingFeatures = PhysicalDeviceDescriptorIndexingFeatures
@@ -273,7 +276,7 @@ deriving instance Generic (PhysicalDeviceDescriptorIndexingFeatures)
 deriving instance Show PhysicalDeviceDescriptorIndexingFeatures
 
 instance ToCStruct PhysicalDeviceDescriptorIndexingFeatures where
-  withCStruct x f = allocaBytesAligned 96 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 96 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceDescriptorIndexingFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -384,22 +387,22 @@ instance Zero PhysicalDeviceDescriptorIndexingFeatures where
 -- descriptor indexing properties that can be supported by an
 -- implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceDescriptorIndexingProperties'
--- structure describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceDescriptorIndexingProperties' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_indexing VK_EXT_descriptor_indexing>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDescriptorIndexingProperties = PhysicalDeviceDescriptorIndexingProperties
@@ -595,7 +598,7 @@ deriving instance Generic (PhysicalDeviceDescriptorIndexingProperties)
 deriving instance Show PhysicalDeviceDescriptorIndexingProperties
 
 instance ToCStruct PhysicalDeviceDescriptorIndexingProperties where
-  withCStruct x f = allocaBytesAligned 112 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 112 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceDescriptorIndexingProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -868,6 +871,8 @@ instance Zero PhysicalDeviceDescriptorIndexingProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_indexing VK_EXT_descriptor_indexing>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DescriptorBindingFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DescriptorSetLayoutBindingFlagsCreateInfo = DescriptorSetLayoutBindingFlagsCreateInfo
@@ -882,12 +887,12 @@ deriving instance Generic (DescriptorSetLayoutBindingFlagsCreateInfo)
 deriving instance Show DescriptorSetLayoutBindingFlagsCreateInfo
 
 instance ToCStruct DescriptorSetLayoutBindingFlagsCreateInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorSetLayoutBindingFlagsCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (bindingFlags)) :: Word32))
-    pPBindingFlags' <- ContT $ allocaBytesAligned @DescriptorBindingFlags ((Data.Vector.length (bindingFlags)) * 4) 4
+    pPBindingFlags' <- ContT $ allocaBytes @DescriptorBindingFlags ((Data.Vector.length (bindingFlags)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPBindingFlags' `plusPtr` (4 * (i)) :: Ptr DescriptorBindingFlags) (e)) (bindingFlags)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorBindingFlags))) (pPBindingFlags')
     lift $ f
@@ -955,6 +960,8 @@ instance Zero DescriptorSetLayoutBindingFlagsCreateInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_indexing VK_EXT_descriptor_indexing>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DescriptorSetVariableDescriptorCountAllocateInfo = DescriptorSetVariableDescriptorCountAllocateInfo
   { -- | @pDescriptorCounts@ is a pointer to an array of descriptor counts, with
@@ -969,12 +976,12 @@ deriving instance Generic (DescriptorSetVariableDescriptorCountAllocateInfo)
 deriving instance Show DescriptorSetVariableDescriptorCountAllocateInfo
 
 instance ToCStruct DescriptorSetVariableDescriptorCountAllocateInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorSetVariableDescriptorCountAllocateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (descriptorCounts)) :: Word32))
-    pPDescriptorCounts' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (descriptorCounts)) * 4) 4
+    pPDescriptorCounts' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (descriptorCounts)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorCounts' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (descriptorCounts)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word32))) (pPDescriptorCounts')
     lift $ f
@@ -1004,12 +1011,16 @@ instance Zero DescriptorSetVariableDescriptorCountAllocateInfo where
 --
 -- = Description
 --
--- If the create info includes a variable-sized descriptor, then
--- @supported@ is determined assuming the requested size of the
--- variable-sized descriptor, and @maxVariableDescriptorCount@ is set to
--- the maximum size of that descriptor that /can/ be successfully created
--- (which is greater than or equal to the requested size passed in). If the
--- create info does not include a variable-sized descriptor or if the
+-- If the 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo'
+-- structure specified in
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.getDescriptorSetLayoutSupport'::@pCreateInfo@
+-- includes a variable-sized descriptor, then @supported@ is determined
+-- assuming the requested size of the variable-sized descriptor, and
+-- @maxVariableDescriptorCount@ is set to the maximum size of that
+-- descriptor that /can/ be successfully created (which is greater than or
+-- equal to the requested size passed in). If the
+-- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo' structure
+-- does not include a variable-sized descriptor, or if the
 -- 'PhysicalDeviceDescriptorIndexingFeatures'::@descriptorBindingVariableDescriptorCount@
 -- feature is not enabled, then @maxVariableDescriptorCount@ is set to
 -- zero. For the purposes of this command, a variable-sized descriptor
@@ -1023,6 +1034,8 @@ instance Zero DescriptorSetVariableDescriptorCountAllocateInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_indexing VK_EXT_descriptor_indexing>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DescriptorSetVariableDescriptorCountLayoutSupport = DescriptorSetVariableDescriptorCountLayoutSupport
   { -- | @maxVariableDescriptorCount@ indicates the maximum number of descriptors
@@ -1040,7 +1053,7 @@ deriving instance Generic (DescriptorSetVariableDescriptorCountLayoutSupport)
 deriving instance Show DescriptorSetVariableDescriptorCountLayoutSupport
 
 instance ToCStruct DescriptorSetVariableDescriptorCountLayoutSupport where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorSetVariableDescriptorCountLayoutSupport{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

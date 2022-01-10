@@ -10,7 +10,7 @@ module OpenXR.Core10.Haptics  ( applyHapticFeedback
 import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
@@ -49,6 +49,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.CStruct.Extends (SomeChild)
 import OpenXR.CStruct.Extends (SomeChild(..))
@@ -136,7 +137,7 @@ applyHapticFeedback :: forall a io
                        ("hapticFeedback" ::: a)
                     -> io (Result)
 applyHapticFeedback session hapticActionInfo hapticFeedback = liftIO . evalContT $ do
-  let xrApplyHapticFeedbackPtr = pXrApplyHapticFeedback (instanceCmds (session :: Session))
+  let xrApplyHapticFeedbackPtr = pXrApplyHapticFeedback (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrApplyHapticFeedbackPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrApplyHapticFeedback is null" Nothing Nothing
   let xrApplyHapticFeedback' = mkXrApplyHapticFeedback xrApplyHapticFeedbackPtr
@@ -212,7 +213,7 @@ stopHapticFeedback :: forall io
                       HapticActionInfo
                    -> io (Result)
 stopHapticFeedback session hapticActionInfo = liftIO . evalContT $ do
-  let xrStopHapticFeedbackPtr = pXrStopHapticFeedback (instanceCmds (session :: Session))
+  let xrStopHapticFeedbackPtr = pXrStopHapticFeedback (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrStopHapticFeedbackPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrStopHapticFeedback is null" Nothing Nothing
   let xrStopHapticFeedback' = mkXrStopHapticFeedback xrStopHapticFeedbackPtr
@@ -264,7 +265,7 @@ instance Inheritable HapticBaseHeader where
           Nothing
 
 instance ToCStruct HapticBaseHeader where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HapticBaseHeader{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (type')
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -336,7 +337,7 @@ deriving instance Generic (HapticActionInfo)
 deriving instance Show HapticActionInfo
 
 instance ToCStruct HapticActionInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HapticActionInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_HAPTIC_ACTION_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

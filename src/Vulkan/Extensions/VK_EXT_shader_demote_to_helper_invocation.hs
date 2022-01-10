@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_shader_demote_to_helper_invocation:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_shader_demote_to_helper_invocation] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_EXT_shader_demote_to_helper_invocation extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -41,6 +41,9 @@
 --     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_demote_to_helper_invocation.html SPV_EXT_demote_to_helper_invocation>
 --
+--     -   This extension provides API support for
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_demote_to_helper_invocation.txt GL_EXT_demote_to_helper_invocation>
+--
 -- [__Contributors__]
 --
 --     -   Jeff Bolz, NVIDIA
@@ -50,13 +53,13 @@
 -- This extension adds Vulkan support for the
 -- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_demote_to_helper_invocation.html SPV_EXT_demote_to_helper_invocation>
 -- SPIR-V extension. That SPIR-V extension provides a new instruction
--- @OpDemoteToHelperInvocationEXT@ allowing shaders to \"demote\" a
--- fragment shader invocation to behave like a helper invocation for its
--- duration. The demoted invocation will have no further side effects and
--- will not output to the framebuffer, but remains active and can
--- participate in computing derivatives and in
+-- @OpDemoteToHelperInvocationEXT@ allowing shaders to “demote” a fragment
+-- shader invocation to behave like a helper invocation for its duration.
+-- The demoted invocation will have no further side effects and will not
+-- output to the framebuffer, but remains active and can participate in
+-- computing derivatives and in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>.
--- This is a better match for the \"discard\" instruction in HLSL.
+-- This is a better match for the “discard” instruction in HLSL.
 --
 -- == New Structures
 --
@@ -86,11 +89,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_demote_to_helper_invocation Vulkan Specification>
@@ -104,7 +107,7 @@ module Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation  ( PhysicalDe
                                                                     , pattern EXT_SHADER_DEMOTE_TO_HELPER_INVOCATION_EXTENSION_NAME
                                                                     ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -132,24 +135,26 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Members
 --
--- The members of the
--- 'PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT' structure
--- describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT'
--- structure is included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT' /can/ also be
--- included in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to enable the feature.
+-- structure is included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT'
+-- /can/ also be used in the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
+-- features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_demote_to_helper_invocation VK_EXT_shader_demote_to_helper_invocation>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT = PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT
@@ -164,7 +169,7 @@ deriving instance Generic (PhysicalDeviceShaderDemoteToHelperInvocationFeaturesE
 deriving instance Show PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT
 
 instance ToCStruct PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

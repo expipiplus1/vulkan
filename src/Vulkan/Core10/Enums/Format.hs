@@ -187,6 +187,10 @@ module Vulkan.Core10.Enums.Format  (Format( FORMAT_UNDEFINED
                                           , FORMAT_ASTC_12x12_SRGB_BLOCK
                                           , FORMAT_A4B4G4R4_UNORM_PACK16_EXT
                                           , FORMAT_A4R4G4B4_UNORM_PACK16_EXT
+                                          , FORMAT_G16_B16R16_2PLANE_444_UNORM_EXT
+                                          , FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16_EXT
+                                          , FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16_EXT
+                                          , FORMAT_G8_B8R8_2PLANE_444_UNORM_EXT
                                           , FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT
                                           , FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT
                                           , FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT
@@ -259,11 +263,14 @@ import GHC.Show (Show(showsPrec))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryTrianglesDataKHR',
+-- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferFormatProperties2ANDROID',
 -- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferFormatPropertiesANDROID',
 -- 'Vulkan.Core10.Pass.AttachmentDescription',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentDescription2',
 -- 'Vulkan.Core10.BufferView.BufferViewCreateInfo',
+-- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfoKHR',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentImageInfo',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.GeometryTrianglesNV',
 -- 'Vulkan.Core10.Image.ImageCreateInfo',
@@ -272,11 +279,15 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core10.ImageView.ImageViewCreateInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceSparseImageFormatInfo2',
+-- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo',
 -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceFormatKHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR',
 -- 'Vulkan.Core10.Pipeline.VertexInputAttributeDescription',
+-- 'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.VertexInputAttributeDescription2EXT',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoFormatPropertiesKHR VkVideoFormatPropertiesKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoSessionCreateInfoKHR VkVideoSessionCreateInfoKHR>,
 -- 'Vulkan.Extensions.VK_NV_external_memory_capabilities.getPhysicalDeviceExternalImageFormatPropertiesNV',
 -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFormatProperties2',
@@ -837,13 +848,13 @@ pattern FORMAT_E5B9G9R9_UFLOAT_PACK32             = Format 123
 pattern FORMAT_D16_UNORM                          = Format 124
 -- | 'FORMAT_X8_D24_UNORM_PACK32' specifies a two-component, 32-bit format
 -- that has 24 unsigned normalized bits in the depth component and,
--- optionally:, 8 bits that are unused.
+-- /optionally/, 8 bits that are unused.
 pattern FORMAT_X8_D24_UNORM_PACK32                = Format 125
 -- | 'FORMAT_D32_SFLOAT' specifies a one-component, 32-bit signed
--- floating-point format that has 32-bits in the depth component.
+-- floating-point format that has 32 bits in the depth component.
 pattern FORMAT_D32_SFLOAT                         = Format 126
 -- | 'FORMAT_S8_UINT' specifies a one-component, 8-bit unsigned integer
--- format that has 8-bits in the stencil component.
+-- format that has 8 bits in the stencil component.
 pattern FORMAT_S8_UINT                            = Format 127
 -- | 'FORMAT_D16_UNORM_S8_UINT' specifies a two-component, 24-bit format that
 -- has 16 unsigned normalized bits in the depth component and 8 unsigned
@@ -855,7 +866,7 @@ pattern FORMAT_D16_UNORM_S8_UINT                  = Format 128
 pattern FORMAT_D24_UNORM_S8_UINT                  = Format 129
 -- | 'FORMAT_D32_SFLOAT_S8_UINT' specifies a two-component format that has 32
 -- signed float bits in the depth component and 8 unsigned integer bits in
--- the stencil component. There are optionally: 24-bits that are unused.
+-- the stencil component. There are /optionally/ 24 bits that are unused.
 pattern FORMAT_D32_SFLOAT_S8_UINT                 = Format 130
 -- | 'FORMAT_BC1_RGB_UNORM_BLOCK' specifies a three-component,
 -- block-compressed format where each 64-bit compressed texel block encodes
@@ -1119,6 +1130,61 @@ pattern FORMAT_A4B4G4R4_UNORM_PACK16_EXT          = Format 1000340001
 -- 12..15, a 4-bit R component in bits 8..11, a 4-bit G component in bits
 -- 4..7, and a 4-bit B component in bits 0..3.
 pattern FORMAT_A4R4G4B4_UNORM_PACK16_EXT          = Format 1000340000
+-- | 'FORMAT_G16_B16R16_2PLANE_444_UNORM_EXT' specifies an unsigned
+-- normalized /multi-planar format/ that has a 16-bit G component in each
+-- 16-bit word of plane 0, and a two-component, 32-bit BR plane 1
+-- consisting of a 16-bit B component in the word in bytes 0..1, and a
+-- 16-bit R component in the word in bytes 2..3. Both planes have the same
+-- dimensions and each R, G and B component contributes to a single texel.
+-- The location of each plane when this image is in linear layout can be
+-- determined via 'Vulkan.Core10.Image.getImageSubresourceLayout', using
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
+-- the G plane, and
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
+-- the BR plane.
+pattern FORMAT_G16_B16R16_2PLANE_444_UNORM_EXT    = Format 1000330003
+-- | 'FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16_EXT' specifies an
+-- unsigned normalized /multi-planar format/ that has a 12-bit G component
+-- in the top 12 bits of each 16-bit word of plane 0, and a two-component,
+-- 32-bit BR plane 1 consisting of a 12-bit B component in the top 12 bits
+-- of the word in bytes 0..1, and a 12-bit R component in the top 12 bits
+-- of the word in bytes 2..3, the bottom 4 bits of each word unused. Both
+-- planes have the same dimensions and each R, G and B component
+-- contributes to a single texel. The location of each plane when this
+-- image is in linear layout can be determined via
+-- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
+-- the G plane, and
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
+-- the BR plane.
+pattern FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16_EXT = Format 1000330002
+-- | 'FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16_EXT' specifies an
+-- unsigned normalized /multi-planar format/ that has a 10-bit G component
+-- in the top 10 bits of each 16-bit word of plane 0, and a two-component,
+-- 32-bit BR plane 1 consisting of a 10-bit B component in the top 10 bits
+-- of the word in bytes 0..1, and a 10-bit R component in the top 10 bits
+-- of the word in bytes 2..3, the bottom 6 bits of each word unused. Both
+-- planes have the same dimensions and each R, G and B component
+-- contributes to a single texel. The location of each plane when this
+-- image is in linear layout can be determined via
+-- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
+-- the G plane, and
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
+-- the BR plane.
+pattern FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16_EXT = Format 1000330001
+-- | 'FORMAT_G8_B8R8_2PLANE_444_UNORM_EXT' specifies an unsigned normalized
+-- /multi-planar format/ that has an 8-bit G component in plane 0, and a
+-- two-component, 16-bit BR plane 1 consisting of an 8-bit B component in
+-- byte 0 and an 8-bit R component in byte 1. Both planes have the same
+-- dimensions and each R, G and B component contributes to a single texel.
+-- The location of each plane when this image is in linear layout can be
+-- determined via 'Vulkan.Core10.Image.getImageSubresourceLayout', using
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
+-- the G plane, and
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
+-- the BR plane.
+pattern FORMAT_G8_B8R8_2PLANE_444_UNORM_EXT       = Format 1000330000
 -- | 'FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT' specifies a four-component, ASTC
 -- compressed format where each 128-bit compressed texel block encodes a
 -- 12×12 rectangle of signed floating-point RGBA texel data.
@@ -1229,14 +1295,14 @@ pattern FORMAT_G16_B16_R16_3PLANE_444_UNORM       = Format 1000156033
 -- /multi-planar format/ that has a 16-bit G component in each 16-bit word
 -- of plane 0, and a two-component, 32-bit BR plane 1 consisting of a
 -- 16-bit B component in the word in bytes 0..1, and a 16-bit R component
--- in the word in bytes 2..3. The horizontal dimensions of the BR plane is
+-- in the word in bytes 2..3. The horizontal dimension of the BR plane is
 -- halved relative to the image dimensions, and each R and B value is
 -- shared with the G components for which
--- \(\left\lfloor i_G \times 0.5 \right\rfloor = i_B =
--- i_R\). The location of each plane when this image is in linear layout
--- can be determined via 'Vulkan.Core10.Image.getImageSubresourceLayout',
--- using 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
--- for the G plane, and
+-- \(\left\lfloor i_G \times 0.5 \right\rfloor = i_B = i_R\). The location
+-- of each plane when this image is in linear layout can be determined via
+-- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
+-- the G plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the BR plane. This format only supports images with a width that is a
 -- multiple of two.
@@ -1263,7 +1329,7 @@ pattern FORMAT_G16_B16_R16_3PLANE_422_UNORM       = Format 1000156031
 -- of plane 0, and a two-component, 32-bit BR plane 1 consisting of a
 -- 16-bit B component in the word in bytes 0..1, and a 16-bit R component
 -- in the word in bytes 2..3. The horizontal and vertical dimensions of the
--- BR plane is halved relative to the image dimensions, and each R and B
+-- BR plane are halved relative to the image dimensions, and each R and B
 -- value is shared with the G components for which
 -- \(\left\lfloor i_G \times 0.5
 -- \right\rfloor = i_B = i_R\) and \(\left\lfloor j_G \times 0.5
@@ -1344,14 +1410,14 @@ pattern FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16 = Format 1000156026
 -- top 12 bits of each 16-bit word of plane 0, and a two-component, 32-bit
 -- BR plane 1 consisting of a 12-bit B component in the top 12 bits of the
 -- word in bytes 0..1, and a 12-bit R component in the top 12 bits of the
--- word in bytes 2..3, the bottom 4 bits of each word unused. The
--- horizontal dimensions of the BR plane is halved relative to the image
+-- word in bytes 2..3, with the bottom 4 bits of each word unused. The
+-- horizontal dimension of the BR plane is halved relative to the image
 -- dimensions, and each R and B value is shared with the G components for
--- which \(\left\lfloor i_G \times 0.5 \right\rfloor = i_B =
--- i_R\). The location of each plane when this image is in linear layout
--- can be determined via 'Vulkan.Core10.Image.getImageSubresourceLayout',
--- using 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
--- for the G plane, and
+-- which \(\left\lfloor i_G \times 0.5 \right\rfloor = i_B = i_R\). The
+-- location of each plane when this image is in linear layout can be
+-- determined via 'Vulkan.Core10.Image.getImageSubresourceLayout', using
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
+-- the G plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the BR plane. This format only supports images with a width that is a
 -- multiple of two.
@@ -1380,9 +1446,9 @@ pattern FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16 = Format 1000156024
 -- top 12 bits of each 16-bit word of plane 0, and a two-component, 32-bit
 -- BR plane 1 consisting of a 12-bit B component in the top 12 bits of the
 -- word in bytes 0..1, and a 12-bit R component in the top 12 bits of the
--- word in bytes 2..3, the bottom 4 bits of each word unused. The
--- horizontal and vertical dimensions of the BR plane is halved relative to
--- the image dimensions, and each R and B value is shared with the G
+-- word in bytes 2..3, with the bottom 4 bits of each word unused. The
+-- horizontal and vertical dimensions of the BR plane are halved relative
+-- to the image dimensions, and each R and B value is shared with the G
 -- components for which \(\left\lfloor i_G \times 0.5
 -- \right\rfloor = i_B = i_R\) and \(\left\lfloor j_G \times 0.5
 -- \right\rfloor = j_B = j_R\). The location of each plane when this image
@@ -1486,14 +1552,14 @@ pattern FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16 = Format 1000156016
 -- top 10 bits of each 16-bit word of plane 0, and a two-component, 32-bit
 -- BR plane 1 consisting of a 10-bit B component in the top 10 bits of the
 -- word in bytes 0..1, and a 10-bit R component in the top 10 bits of the
--- word in bytes 2..3, the bottom 6 bits of each word unused. The
--- horizontal dimensions of the BR plane is halved relative to the image
+-- word in bytes 2..3, with the bottom 6 bits of each word unused. The
+-- horizontal dimension of the BR plane is halved relative to the image
 -- dimensions, and each R and B value is shared with the G components for
--- which \(\left\lfloor i_G \times 0.5 \right\rfloor = i_B =
--- i_R\). The location of each plane when this image is in linear layout
--- can be determined via 'Vulkan.Core10.Image.getImageSubresourceLayout',
--- using 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
--- for the G plane, and
+-- which \(\left\lfloor i_G \times 0.5 \right\rfloor = i_B = i_R\). The
+-- location of each plane when this image is in linear layout can be
+-- determined via 'Vulkan.Core10.Image.getImageSubresourceLayout', using
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
+-- the G plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the BR plane. This format only supports images with a width that is a
 -- multiple of two.
@@ -1522,9 +1588,9 @@ pattern FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16 = Format 1000156014
 -- top 10 bits of each 16-bit word of plane 0, and a two-component, 32-bit
 -- BR plane 1 consisting of a 10-bit B component in the top 10 bits of the
 -- word in bytes 0..1, and a 10-bit R component in the top 10 bits of the
--- word in bytes 2..3, the bottom 6 bits of each word unused. The
--- horizontal and vertical dimensions of the BR plane is halved relative to
--- the image dimensions, and each R and B value is shared with the G
+-- word in bytes 2..3, with the bottom 6 bits of each word unused. The
+-- horizontal and vertical dimensions of the BR plane are halved relative
+-- to the image dimensions, and each R and B value is shared with the G
 -- components for which \(\left\lfloor i_G \times 0.5
 -- \right\rfloor = i_B = i_R\) and \(\left\lfloor j_G \times 0.5
 -- \right\rfloor = j_B = j_R\). The location of each plane when this image
@@ -1624,14 +1690,14 @@ pattern FORMAT_G8_B8_R8_3PLANE_444_UNORM          = Format 1000156006
 -- | 'FORMAT_G8_B8R8_2PLANE_422_UNORM' specifies an unsigned normalized
 -- /multi-planar format/ that has an 8-bit G component in plane 0, and a
 -- two-component, 16-bit BR plane 1 consisting of an 8-bit B component in
--- byte 0 and an 8-bit R component in byte 1. The horizontal dimensions of
+-- byte 0 and an 8-bit R component in byte 1. The horizontal dimension of
 -- the BR plane is halved relative to the image dimensions, and each R and
 -- B value is shared with the G components for which
--- \(\left\lfloor i_G \times 0.5 \right\rfloor = i_B =
--- i_R\). The location of each plane when this image is in linear layout
--- can be determined via 'Vulkan.Core10.Image.getImageSubresourceLayout',
--- using 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
--- for the G plane, and
+-- \(\left\lfloor i_G \times 0.5 \right\rfloor = i_B = i_R\). The location
+-- of each plane when this image is in linear layout can be determined via
+-- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
+-- the G plane, and
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
 -- the BR plane. This format only supports images with a width that is a
 -- multiple of two.
@@ -1656,7 +1722,7 @@ pattern FORMAT_G8_B8_R8_3PLANE_422_UNORM          = Format 1000156004
 -- /multi-planar format/ that has an 8-bit G component in plane 0, and a
 -- two-component, 16-bit BR plane 1 consisting of an 8-bit B component in
 -- byte 0 and an 8-bit R component in byte 1. The horizontal and vertical
--- dimensions of the BR plane is halved relative to the image dimensions,
+-- dimensions of the BR plane are halved relative to the image dimensions,
 -- and each R and B value is shared with the G components for which
 -- \(\left\lfloor i_G \times 0.5
 -- \right\rfloor = i_B = i_R\) and \(\left\lfloor j_G \times 0.5
@@ -1900,6 +1966,10 @@ pattern FORMAT_G8B8G8R8_422_UNORM                 = Format 1000156000
              FORMAT_ASTC_12x12_SRGB_BLOCK,
              FORMAT_A4B4G4R4_UNORM_PACK16_EXT,
              FORMAT_A4R4G4B4_UNORM_PACK16_EXT,
+             FORMAT_G16_B16R16_2PLANE_444_UNORM_EXT,
+             FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16_EXT,
+             FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16_EXT,
+             FORMAT_G8_B8R8_2PLANE_444_UNORM_EXT,
              FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT,
              FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT,
              FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT,
@@ -2152,6 +2222,10 @@ showTableFormat =
   , (FORMAT_ASTC_12x12_SRGB_BLOCK             , "ASTC_12x12_SRGB_BLOCK")
   , (FORMAT_A4B4G4R4_UNORM_PACK16_EXT         , "A4B4G4R4_UNORM_PACK16_EXT")
   , (FORMAT_A4R4G4B4_UNORM_PACK16_EXT         , "A4R4G4B4_UNORM_PACK16_EXT")
+  , (FORMAT_G16_B16R16_2PLANE_444_UNORM_EXT   , "G16_B16R16_2PLANE_444_UNORM_EXT")
+  , (FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16_EXT, "G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16_EXT")
+  , (FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16_EXT, "G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16_EXT")
+  , (FORMAT_G8_B8R8_2PLANE_444_UNORM_EXT      , "G8_B8R8_2PLANE_444_UNORM_EXT")
   , (FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT       , "ASTC_12x12_SFLOAT_BLOCK_EXT")
   , (FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT       , "ASTC_12x10_SFLOAT_BLOCK_EXT")
   , (FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT       , "ASTC_10x10_SFLOAT_BLOCK_EXT")

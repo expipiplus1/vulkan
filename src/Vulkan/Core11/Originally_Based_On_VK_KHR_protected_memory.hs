@@ -24,7 +24,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.IO (throwIO)
@@ -57,6 +57,7 @@ import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetDeviceQueue2))
 import Vulkan.Core10.Enums.DeviceQueueCreateFlagBits (DeviceQueueCreateFlags)
 import Vulkan.Core10.Handles (Device_T)
@@ -94,6 +95,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Device', 'DeviceQueueInfo2',
 -- 'Vulkan.Core10.Handles.Queue'
 getDeviceQueue2 :: forall io
@@ -104,14 +106,14 @@ getDeviceQueue2 :: forall io
                    -- 'Vulkan.Core10.Handles.Device' handle
                    Device
                 -> -- | @pQueueInfo@ is a pointer to a 'DeviceQueueInfo2' structure, describing
-                   -- the parameters used to create the device queue.
+                   -- parameters of the device queue to be retrieved.
                    --
                    -- #VUID-vkGetDeviceQueue2-pQueueInfo-parameter# @pQueueInfo@ /must/ be a
                    -- valid pointer to a valid 'DeviceQueueInfo2' structure
                    DeviceQueueInfo2
                 -> io (Queue)
 getDeviceQueue2 device queueInfo = liftIO . evalContT $ do
-  let cmds = deviceCmds (device :: Device)
+  let cmds = case device of Device{deviceCmds} -> deviceCmds
   let vkGetDeviceQueue2Ptr = pVkGetDeviceQueue2 cmds
   lift $ unless (vkGetDeviceQueue2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceQueue2 is null" Nothing Nothing
@@ -126,19 +128,11 @@ getDeviceQueue2 device queueInfo = liftIO . evalContT $ do
 -- | VkProtectedSubmitInfo - Structure indicating whether the submission is
 -- protected
 --
--- == Valid Usage
---
--- -   #VUID-VkProtectedSubmitInfo-protectedSubmit-01816# If the protected
---     memory feature is not enabled, @protectedSubmit@ /must/ not be
---     'Vulkan.Core10.FundamentalTypes.TRUE'
---
 -- == Valid Usage (Implicit)
---
--- -   #VUID-VkProtectedSubmitInfo-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO'
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ProtectedSubmitInfo = ProtectedSubmitInfo
@@ -156,7 +150,7 @@ deriving instance Generic (ProtectedSubmitInfo)
 deriving instance Show ProtectedSubmitInfo
 
 instance ToCStruct ProtectedSubmitInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ProtectedSubmitInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -190,17 +184,27 @@ instance Zero ProtectedSubmitInfo where
 -- | VkPhysicalDeviceProtectedMemoryFeatures - Structure describing protected
 -- memory features that can be supported by an implementation
 --
+-- = Members
+--
+-- This structure describes the following feature:
+--
 -- = Description
 --
 -- If the 'PhysicalDeviceProtectedMemoryFeatures' structure is included in
--- the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with a value indicating whether the feature is supported.
+-- the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceProtectedMemoryFeatures' /can/ also be used in
+-- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceProtectedMemoryFeatures = PhysicalDeviceProtectedMemoryFeatures
@@ -214,7 +218,7 @@ deriving instance Generic (PhysicalDeviceProtectedMemoryFeatures)
 deriving instance Show PhysicalDeviceProtectedMemoryFeatures
 
 instance ToCStruct PhysicalDeviceProtectedMemoryFeatures where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceProtectedMemoryFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -251,23 +255,32 @@ instance Zero PhysicalDeviceProtectedMemoryFeatures where
 -- = Description
 --
 -- If the 'PhysicalDeviceProtectedMemoryProperties' structure is included
--- in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with a value indicating the implementation-dependent
--- behavior.
+-- in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceProtectedMemoryProperties = PhysicalDeviceProtectedMemoryProperties
-  { -- | @protectedNoFault@ specifies the behavior of the implementation when
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-access-rules protected memory access rules>
-    -- are broken. If @protectedNoFault@ is
-    -- 'Vulkan.Core10.FundamentalTypes.TRUE', breaking those rules will not
-    -- result in process termination or device loss.
+  { -- | #extension-limits-protectedNoFault# @protectedNoFault@ specifies how an
+    -- implementation behaves when an application attempts to write to
+    -- unprotected memory in a protected queue operation, read from protected
+    -- memory in an unprotected queue operation, or perform a query in a
+    -- protected queue operation. If this limit is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE', such writes will be discarded or
+    -- have undefined values written, reads and queries will return undefined
+    -- values. If this limit is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- applications /must/ not perform these operations. See
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-access-rules>
+    -- for more information.
     protectedNoFault :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -276,7 +289,7 @@ deriving instance Generic (PhysicalDeviceProtectedMemoryProperties)
 deriving instance Show PhysicalDeviceProtectedMemoryProperties
 
 instance ToCStruct PhysicalDeviceProtectedMemoryProperties where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceProtectedMemoryProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -314,7 +327,7 @@ instance Zero PhysicalDeviceProtectedMemoryProperties where
 --
 -- The queue returned by 'getDeviceQueue2' /must/ have the same @flags@
 -- value from this structure as that used at device creation time in a
--- 'Vulkan.Core10.Device.DeviceQueueCreateInfo' instance. If no matching
+-- 'Vulkan.Core10.Device.DeviceQueueCreateInfo' structure. If no matching
 -- @flags@ were specified at device creation time, then the handle returned
 -- in @pQueue@ /must/ be @NULL@.
 --
@@ -322,12 +335,18 @@ instance Zero PhysicalDeviceProtectedMemoryProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DeviceQueueCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'getDeviceQueue2'
 data DeviceQueueInfo2 = DeviceQueueInfo2
   { -- | @flags@ is a
     -- 'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DeviceQueueCreateFlags'
     -- value indicating the flags used to create the device queue.
+    --
+    -- #VUID-VkDeviceQueueInfo2-flags-06225# @flags@ /must/ be equal to
+    -- 'Vulkan.Core10.Device.DeviceQueueCreateInfo'::@flags@ for a
+    -- 'Vulkan.Core10.Device.DeviceQueueCreateInfo' structure for the queue
+    -- family indicated by @queueFamilyIndex@ when @device@ was created
     --
     -- #VUID-VkDeviceQueueInfo2-flags-parameter# @flags@ /must/ be a valid
     -- combination of
@@ -345,12 +364,9 @@ data DeviceQueueInfo2 = DeviceQueueInfo2
     -- retrieve.
     --
     -- #VUID-VkDeviceQueueInfo2-queueIndex-01843# @queueIndex@ /must/ be less
-    -- than the number of queues created for the specified queue family index
-    -- and
-    -- 'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DeviceQueueCreateFlags'
-    -- member @flags@ equal to this @flags@ value when @device@ was created,
-    -- via the @queueCount@ member of the
-    -- 'Vulkan.Core10.Device.DeviceQueueCreateInfo' structure
+    -- than 'Vulkan.Core10.Device.DeviceQueueCreateInfo'::@queueCount@ for the
+    -- corresponding queue family and flags indicated by @queueFamilyIndex@ and
+    -- @flags@ when @device@ was created
     queueIndex :: Word32
   }
   deriving (Typeable, Eq)
@@ -360,7 +376,7 @@ deriving instance Generic (DeviceQueueInfo2)
 deriving instance Show DeviceQueueInfo2
 
 instance ToCStruct DeviceQueueInfo2 where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceQueueInfo2{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

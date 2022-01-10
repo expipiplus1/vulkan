@@ -44,7 +44,7 @@ module OpenXR.Extensions.XR_KHR_loader_init  ( initializeLoaderKHR
 import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import Foreign.Ptr (castFunPtr)
@@ -123,8 +123,8 @@ initializeLoaderKHR loaderInitInfo = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrLoaderInitInfoBaseHeaderKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrLoaderInitInfoBaseHeaderKHR-extension-notenabled# The
+--     @XR_KHR_loader_init@ extension /must/ be enabled prior to using
 --     'LoaderInitInfoBaseHeaderKHR'
 --
 -- -   #VUID-XrLoaderInitInfoBaseHeaderKHR-type-type# @type@ /must/ be
@@ -167,7 +167,7 @@ instance Inheritable LoaderInitInfoBaseHeaderKHR where
           Nothing
 
 instance ToCStruct LoaderInitInfoBaseHeaderKHR where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p LoaderInitInfoBaseHeaderKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (type')
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

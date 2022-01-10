@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Eric Werness
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_ray_tracing:%20&body=@ewerness%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_ray_tracing] @ewerness-nv%0A<<Here describe the issue or question you have about the VK_NV_ray_tracing extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -430,7 +430,7 @@
 --     -   update to use InstanceId instead of InstanceIndex as
 --         implemented.
 --
--- = See Also
+-- == See Also
 --
 -- 'Vulkan.Core10.APIConstants.SHADER_UNUSED_NV', 'AabbPositionsNV',
 -- 'AccelerationStructureCreateInfoNV', 'AccelerationStructureInfoNV',
@@ -458,7 +458,7 @@
 -- 'getAccelerationStructureMemoryRequirementsNV',
 -- 'getRayTracingShaderGroupHandlesNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing Vulkan Specification>
@@ -564,6 +564,7 @@ module Vulkan.Extensions.VK_NV_ray_tracing  ( compileDeferredNV
                                             , GeometryTypeKHR(..)
                                             , RayTracingShaderGroupTypeKHR(..)
                                             , MemoryRequirements2KHR
+                                            , pattern GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR
                                             , SHADER_UNUSED_KHR
                                             , pattern SHADER_UNUSED_KHR
                                             ) where
@@ -576,7 +577,7 @@ import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Foldable (traverse_)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -644,11 +645,13 @@ import Vulkan.Extensions.VK_KHR_acceleration_structure (BuildAccelerationStructu
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Extensions.VK_KHR_acceleration_structure (CopyAccelerationStructureModeKHR)
 import Vulkan.Extensions.VK_KHR_acceleration_structure (CopyAccelerationStructureModeKHR(..))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkBindAccelerationStructureMemoryNV))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBuildAccelerationStructureNV))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdCopyAccelerationStructureNV))
@@ -723,8 +726,7 @@ import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagsKHR
 import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagBitsKHR(GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR))
 import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagsKHR)
 import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagBitsKHR(GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR))
-import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagsKHR)
-import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagBitsKHR(GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR))
+import Vulkan.Extensions.VK_KHR_acceleration_structure (pattern GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR)
 import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryFlagsKHR)
 import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryFlagBitsKHR(GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR))
 import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryFlagsKHR)
@@ -783,6 +785,7 @@ import Vulkan.Extensions.VK_KHR_get_memory_requirements2 (MemoryRequirements2KHR
 import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (RayTracingShaderGroupTypeKHR(..))
 import Vulkan.Core10.APIConstants (SHADER_UNUSED_KHR)
 import Vulkan.Extensions.VK_KHR_acceleration_structure (TransformMatrixKHR(..))
+import Vulkan.Extensions.VK_KHR_acceleration_structure (pattern GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR)
 import Vulkan.Core10.APIConstants (pattern SHADER_UNUSED_KHR)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -807,6 +810,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Pipeline'
 compileDeferredNV :: forall io
                    . (MonadIO io)
@@ -837,7 +841,7 @@ compileDeferredNV :: forall io
                      ("shader" ::: Word32)
                   -> io ()
 compileDeferredNV device pipeline shader = liftIO $ do
-  let vkCompileDeferredNVPtr = pVkCompileDeferredNV (deviceCmds (device :: Device))
+  let vkCompileDeferredNVPtr = pVkCompileDeferredNV (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkCompileDeferredNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCompileDeferredNV is null" Nothing Nothing
   let vkCompileDeferredNV' = mkVkCompileDeferredNV vkCompileDeferredNVPtr
@@ -857,10 +861,10 @@ foreign import ccall
 --
 -- = Description
 --
--- Similar to other objects in Vulkan, the acceleration structure creation
--- merely creates an object with a specific “shape” as specified by the
--- information in 'AccelerationStructureInfoNV' and @compactedSize@ in
--- @pCreateInfo@. Populating the data in the object after allocating and
+-- Similarly to other objects in Vulkan, the acceleration structure
+-- creation merely creates an object with a specific “shape” as specified
+-- by the information in 'AccelerationStructureInfoNV' and @compactedSize@
+-- in @pCreateInfo@. Populating the data in the object after allocating and
 -- binding memory is done with 'cmdBuildAccelerationStructureNV' and
 -- 'cmdCopyAccelerationStructureNV'.
 --
@@ -897,6 +901,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'AccelerationStructureCreateInfoNV',
 -- 'Vulkan.Extensions.Handles.AccelerationStructureNV',
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
@@ -915,7 +920,7 @@ createAccelerationStructureNV :: forall io
                                  ("allocator" ::: Maybe AllocationCallbacks)
                               -> io (AccelerationStructureNV)
 createAccelerationStructureNV device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateAccelerationStructureNVPtr = pVkCreateAccelerationStructureNV (deviceCmds (device :: Device))
+  let vkCreateAccelerationStructureNVPtr = pVkCreateAccelerationStructureNV (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateAccelerationStructureNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateAccelerationStructureNV is null" Nothing Nothing
   let vkCreateAccelerationStructureNV' = mkVkCreateAccelerationStructureNV vkCreateAccelerationStructureNVPtr
@@ -996,6 +1001,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'Vulkan.Extensions.Handles.AccelerationStructureNV',
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device'
@@ -1011,7 +1017,7 @@ destroyAccelerationStructureNV :: forall io
                                   ("allocator" ::: Maybe AllocationCallbacks)
                                -> io ()
 destroyAccelerationStructureNV device accelerationStructure allocator = liftIO . evalContT $ do
-  let vkDestroyAccelerationStructureNVPtr = pVkDestroyAccelerationStructureNV (deviceCmds (device :: Device))
+  let vkDestroyAccelerationStructureNVPtr = pVkDestroyAccelerationStructureNV (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyAccelerationStructureNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyAccelerationStructureNV is null" Nothing Nothing
   let vkDestroyAccelerationStructureNV' = mkVkDestroyAccelerationStructureNV vkDestroyAccelerationStructureNVPtr
@@ -1036,6 +1042,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'AccelerationStructureMemoryRequirementsInfoNV',
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.MemoryRequirements2KHR'
@@ -1047,8 +1054,9 @@ getAccelerationStructureMemoryRequirementsNV :: forall a io
                                                 -- #VUID-vkGetAccelerationStructureMemoryRequirementsNV-device-parameter#
                                                 -- @device@ /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                                 Device
-                                             -> -- | @pInfo@ specifies the acceleration structure to get memory requirements
-                                                -- for.
+                                             -> -- | @pInfo@ is a pointer to a
+                                                -- 'AccelerationStructureMemoryRequirementsInfoNV' structure specifying the
+                                                -- acceleration structure to get memory requirements for.
                                                 --
                                                 -- #VUID-vkGetAccelerationStructureMemoryRequirementsNV-pInfo-parameter#
                                                 -- @pInfo@ /must/ be a valid pointer to a valid
@@ -1056,7 +1064,7 @@ getAccelerationStructureMemoryRequirementsNV :: forall a io
                                                 AccelerationStructureMemoryRequirementsInfoNV
                                              -> io (MemoryRequirements2KHR a)
 getAccelerationStructureMemoryRequirementsNV device info = liftIO . evalContT $ do
-  let vkGetAccelerationStructureMemoryRequirementsNVPtr = pVkGetAccelerationStructureMemoryRequirementsNV (deviceCmds (device :: Device))
+  let vkGetAccelerationStructureMemoryRequirementsNVPtr = pVkGetAccelerationStructureMemoryRequirementsNV (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetAccelerationStructureMemoryRequirementsNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetAccelerationStructureMemoryRequirementsNV is null" Nothing Nothing
   let vkGetAccelerationStructureMemoryRequirementsNV' = mkVkGetAccelerationStructureMemoryRequirementsNV vkGetAccelerationStructureMemoryRequirementsNVPtr
@@ -1090,6 +1098,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'BindAccelerationStructureMemoryInfoNV', 'Vulkan.Core10.Handles.Device'
 bindAccelerationStructureMemoryNV :: forall io
                                    . (MonadIO io)
@@ -1109,11 +1118,11 @@ bindAccelerationStructureMemoryNV :: forall io
                                      ("bindInfos" ::: Vector BindAccelerationStructureMemoryInfoNV)
                                   -> io ()
 bindAccelerationStructureMemoryNV device bindInfos = liftIO . evalContT $ do
-  let vkBindAccelerationStructureMemoryNVPtr = pVkBindAccelerationStructureMemoryNV (deviceCmds (device :: Device))
+  let vkBindAccelerationStructureMemoryNVPtr = pVkBindAccelerationStructureMemoryNV (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkBindAccelerationStructureMemoryNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBindAccelerationStructureMemoryNV is null" Nothing Nothing
   let vkBindAccelerationStructureMemoryNV' = mkVkBindAccelerationStructureMemoryNV vkBindAccelerationStructureMemoryNVPtr
-  pPBindInfos <- ContT $ allocaBytesAligned @BindAccelerationStructureMemoryInfoNV ((Data.Vector.length (bindInfos)) * 56) 8
+  pPBindInfos <- ContT $ allocaBytes @BindAccelerationStructureMemoryInfoNV ((Data.Vector.length (bindInfos)) * 56)
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBindInfos `plusPtr` (56 * (i)) :: Ptr BindAccelerationStructureMemoryInfoNV) (e) . ($ ())) (bindInfos)
   r <- lift $ traceAroundEvent "vkBindAccelerationStructureMemoryNV" (vkBindAccelerationStructureMemoryNV' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (bindInfos)) :: Word32)) (pPBindInfos))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -1150,10 +1159,15 @@ foreign import ccall
 --     or
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR'
 --
+-- -   #VUID-vkCmdCopyAccelerationStructureNV-src-04963# The source
+--     acceleration structure @src@ /must/ have been constructed prior to
+--     the execution of this command
+--
 -- -   #VUID-vkCmdCopyAccelerationStructureNV-src-03411# If @mode@ is
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR',
---     @src@ /must/ have been built with
+--     @src@ /must/ have been constructed with
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR'
+--     in the build
 --
 -- -   #VUID-vkCmdCopyAccelerationStructureNV-buffer-03718# The @buffer@
 --     used to create @src@ /must/ be bound to device memory
@@ -1206,15 +1220,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'Vulkan.Extensions.Handles.AccelerationStructureNV',
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.CopyAccelerationStructureModeKHR'
@@ -1233,7 +1248,7 @@ cmdCopyAccelerationStructureNV :: forall io
                                   CopyAccelerationStructureModeKHR
                                -> io ()
 cmdCopyAccelerationStructureNV commandBuffer dst src mode = liftIO $ do
-  let vkCmdCopyAccelerationStructureNVPtr = pVkCmdCopyAccelerationStructureNV (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyAccelerationStructureNVPtr = pVkCmdCopyAccelerationStructureNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdCopyAccelerationStructureNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyAccelerationStructureNV is null" Nothing Nothing
   let vkCmdCopyAccelerationStructureNV' = mkVkCmdCopyAccelerationStructureNV vkCmdCopyAccelerationStructureNVPtr
@@ -1279,14 +1294,18 @@ foreign import ccall
 --     to a single 'Vulkan.Core10.Handles.DeviceMemory' object via
 --     'bindAccelerationStructureMemoryNV'
 --
--- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesNV-accelerationStructures-03431#
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesNV-pAccelerationStructures-04958#
+--     All acceleration structures in @pAccelerationStructures@ /must/ have
+--     been built prior to the execution of this command
+--
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesNV-pAccelerationStructures-06215#
 --     All acceleration structures in @pAccelerationStructures@ /must/ have
 --     been built with
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR'
 --     if @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV'
 --
--- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesNV-queryType-03432#
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesNV-queryType-06216#
 --     @queryType@ /must/ be
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV'
 --
@@ -1339,15 +1358,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'Vulkan.Extensions.Handles.AccelerationStructureNV',
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.Handles.QueryPool',
@@ -1370,11 +1390,11 @@ cmdWriteAccelerationStructuresPropertiesNV :: forall io
                                               ("firstQuery" ::: Word32)
                                            -> io ()
 cmdWriteAccelerationStructuresPropertiesNV commandBuffer accelerationStructures queryType queryPool firstQuery = liftIO . evalContT $ do
-  let vkCmdWriteAccelerationStructuresPropertiesNVPtr = pVkCmdWriteAccelerationStructuresPropertiesNV (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdWriteAccelerationStructuresPropertiesNVPtr = pVkCmdWriteAccelerationStructuresPropertiesNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdWriteAccelerationStructuresPropertiesNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWriteAccelerationStructuresPropertiesNV is null" Nothing Nothing
   let vkCmdWriteAccelerationStructuresPropertiesNV' = mkVkCmdWriteAccelerationStructuresPropertiesNV vkCmdWriteAccelerationStructuresPropertiesNVPtr
-  pPAccelerationStructures <- ContT $ allocaBytesAligned @AccelerationStructureNV ((Data.Vector.length (accelerationStructures)) * 8) 8
+  pPAccelerationStructures <- ContT $ allocaBytes @AccelerationStructureNV ((Data.Vector.length (accelerationStructures)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPAccelerationStructures `plusPtr` (8 * (i)) :: Ptr AccelerationStructureNV) (e)) (accelerationStructures)
   lift $ traceAroundEvent "vkCmdWriteAccelerationStructuresPropertiesNV" (vkCmdWriteAccelerationStructuresPropertiesNV' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (accelerationStructures)) :: Word32)) (pPAccelerationStructures) (queryType) (queryPool) (firstQuery))
   pure $ ()
@@ -1424,9 +1444,10 @@ foreign import ccall
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-vkCmdBuildAccelerationStructureNV-update-02490# If @update@ is
---     'Vulkan.Core10.FundamentalTypes.TRUE', @src@ /must/ have been built
---     before with 'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV' set
---     in 'AccelerationStructureInfoNV'::@flags@
+--     'Vulkan.Core10.FundamentalTypes.TRUE', @src@ /must/ have previously
+--     been constructed with
+--     'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV' set in
+--     'AccelerationStructureInfoNV'::@flags@ in the original build
 --
 -- -   #VUID-vkCmdBuildAccelerationStructureNV-update-02491# If @update@ is
 --     'Vulkan.Core10.FundamentalTypes.FALSE', the @size@ member of the
@@ -1536,15 +1557,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'AccelerationStructureInfoNV',
 -- 'Vulkan.Extensions.Handles.AccelerationStructureNV',
 -- 'Vulkan.Core10.FundamentalTypes.Bool32', 'Vulkan.Core10.Handles.Buffer',
@@ -1582,7 +1604,7 @@ cmdBuildAccelerationStructureNV :: forall io
                                    ("scratchOffset" ::: DeviceSize)
                                 -> io ()
 cmdBuildAccelerationStructureNV commandBuffer info instanceData instanceOffset update dst src scratch scratchOffset = liftIO . evalContT $ do
-  let vkCmdBuildAccelerationStructureNVPtr = pVkCmdBuildAccelerationStructureNV (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBuildAccelerationStructureNVPtr = pVkCmdBuildAccelerationStructureNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBuildAccelerationStructureNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBuildAccelerationStructureNV is null" Nothing Nothing
   let vkCmdBuildAccelerationStructureNV' = mkVkCmdBuildAccelerationStructureNV vkCmdBuildAccelerationStructureNVPtr
@@ -1616,6 +1638,24 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdTraceRaysNV-mipmapMode-04770# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdTraceRaysNV-None-06479# If a
+--     'Vulkan.Core10.Handles.ImageView' is sampled with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-depth-compare-operation depth comparison>,
+--     the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR'
 --
 -- -   #VUID-vkCmdTraceRaysNV-None-02691# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
@@ -1665,6 +1705,22 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
+-- -   #VUID-vkCmdTraceRaysNV-OpTypeImage-06423# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being written as a storage image
+--     or storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--
+-- -   #VUID-vkCmdTraceRaysNV-OpTypeImage-06424# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
+--     storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--
 -- -   #VUID-vkCmdTraceRaysNV-None-02697# For each set /n/ that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
 --     pipeline bind point used by this command, a descriptor set /must/
@@ -1674,7 +1730,9 @@ foreign import ccall
 --     the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdTraceRaysNV-None-02698# For each push constant that is
+-- -   #VUID-vkCmdTraceRaysNV-maintenance4-06425# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
+--     feature is not enabled, then for each push constant that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
 --     pipeline bind point used by this command, a push constant value
 --     /must/ have been set for the same pipeline bind point, with a
@@ -1696,9 +1754,10 @@ foreign import ccall
 -- -   #VUID-vkCmdTraceRaysNV-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set for @commandBuffer@, and done so after any
---     previously bound pipeline with the corresponding state not specified
---     as dynamic
+--     /must/ have been set or inherited (if the
+--     @VK_NV_inherited_viewport_scissor@ extension is enabled) for
+--     @commandBuffer@, and done so after any previously bound pipeline
+--     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdTraceRaysNV-None-02859# There /must/ not have been any
 --     calls to dynamic state setting commands for any state not specified
@@ -1753,7 +1812,9 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdTraceRaysNV-commandBuffer-02707# If @commandBuffer@ is an
---     unprotected command buffer, any resource accessed by the
+--     unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be a protected resource
 --
@@ -1761,41 +1822,41 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     image view’s format
 --
 -- -   #VUID-vkCmdTraceRaysNV-OpImageWrite-04469# If a
 --     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     buffer view’s format
 --
 -- -   #VUID-vkCmdTraceRaysNV-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdTraceRaysNV-SampledType-04471# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdTraceRaysNV-SampledType-04472# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdTraceRaysNV-SampledType-04473# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdTraceRaysNV-sparseImageInt64Atomics-04474# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
@@ -1804,7 +1865,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdTraceRaysNV-sparseImageInt64Atomics-04475# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
@@ -1813,18 +1874,18 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdTraceRaysNV-None-03429# Any shader group handle
 --     referenced by this call /must/ have been queried from the currently
---     bound ray tracing shader pipeline
+--     bound ray tracing pipeline
 --
 -- -   #VUID-vkCmdTraceRaysNV-commandBuffer-04624# @commandBuffer@ /must/
 --     not be a protected command buffer
 --
 -- -   #VUID-vkCmdTraceRaysNV-maxRecursionDepth-03625# This command /must/
---     not cause a trace ray instruction to be executed from a shader
---     invocation with a
+--     not cause a pipeline trace ray instruction to be executed from a
+--     shader invocation with a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-tracing-recursion-depth recursion depth>
 --     greater than the value of @maxRecursionDepth@ used to create the
 --     bound ray tracing pipeline
@@ -1973,15 +2034,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 cmdTraceRaysNV :: forall io
@@ -2034,7 +2096,7 @@ cmdTraceRaysNV :: forall io
                   ("depth" ::: Word32)
                -> io ()
 cmdTraceRaysNV commandBuffer raygenShaderBindingTableBuffer raygenShaderBindingOffset missShaderBindingTableBuffer missShaderBindingOffset missShaderBindingStride hitShaderBindingTableBuffer hitShaderBindingOffset hitShaderBindingStride callableShaderBindingTableBuffer callableShaderBindingOffset callableShaderBindingStride width height depth = liftIO $ do
-  let vkCmdTraceRaysNVPtr = pVkCmdTraceRaysNV (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdTraceRaysNVPtr = pVkCmdTraceRaysNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdTraceRaysNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdTraceRaysNV is null" Nothing Nothing
   let vkCmdTraceRaysNV' = mkVkCmdTraceRaysNV vkCmdTraceRaysNVPtr
@@ -2066,6 +2128,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'Vulkan.Extensions.Handles.AccelerationStructureNV',
 -- 'Vulkan.Core10.Handles.Device'
 getAccelerationStructureHandleNV :: forall io
@@ -2107,7 +2170,7 @@ getAccelerationStructureHandleNV :: forall io
                                     ("data" ::: Ptr ())
                                  -> io ()
 getAccelerationStructureHandleNV device accelerationStructure dataSize data' = liftIO $ do
-  let vkGetAccelerationStructureHandleNVPtr = pVkGetAccelerationStructureHandleNV (deviceCmds (device :: Device))
+  let vkGetAccelerationStructureHandleNVPtr = pVkGetAccelerationStructureHandleNV (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetAccelerationStructureHandleNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetAccelerationStructureHandleNV is null" Nothing Nothing
   let vkGetAccelerationStructureHandleNV' = mkVkGetAccelerationStructureHandleNV vkGetAccelerationStructureHandleNVPtr
@@ -2200,6 +2263,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Pipeline',
 -- 'Vulkan.Core10.Handles.PipelineCache', 'RayTracingPipelineCreateInfoNV'
@@ -2222,11 +2286,11 @@ createRayTracingPipelinesNV :: forall io
                                ("allocator" ::: Maybe AllocationCallbacks)
                             -> io (Result, ("pipelines" ::: Vector Pipeline))
 createRayTracingPipelinesNV device pipelineCache createInfos allocator = liftIO . evalContT $ do
-  let vkCreateRayTracingPipelinesNVPtr = pVkCreateRayTracingPipelinesNV (deviceCmds (device :: Device))
+  let vkCreateRayTracingPipelinesNVPtr = pVkCreateRayTracingPipelinesNV (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateRayTracingPipelinesNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateRayTracingPipelinesNV is null" Nothing Nothing
   let vkCreateRayTracingPipelinesNV' = mkVkCreateRayTracingPipelinesNV vkCreateRayTracingPipelinesNVPtr
-  pPCreateInfos <- ContT $ allocaBytesAligned @(RayTracingPipelineCreateInfoNV _) ((Data.Vector.length (createInfos)) * 80) 8
+  pPCreateInfos <- ContT $ allocaBytes @(RayTracingPipelineCreateInfoNV _) ((Data.Vector.length (createInfos)) * 80)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPCreateInfos `plusPtr` (80 * (i)) :: Ptr (RayTracingPipelineCreateInfoNV _))) (e) . ($ ())) (createInfos)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -2447,6 +2511,7 @@ getRayTracingShaderGroupHandlesNV = getRayTracingShaderGroupHandlesKHR
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'RayTracingPipelineCreateInfoNV',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingShaderGroupTypeKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -2487,7 +2552,7 @@ deriving instance Generic (RayTracingShaderGroupCreateInfoNV)
 deriving instance Show RayTracingShaderGroupCreateInfoNV
 
 instance ToCStruct RayTracingShaderGroupCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RayTracingShaderGroupCreateInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -2600,7 +2665,7 @@ instance Zero RayTracingShaderGroupCreateInfoNV where
 --     or
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT'
 --
--- -   #VUID-VkRayTracingPipelineCreateInfoNV-stage-03425# The @stage@
+-- -   #VUID-VkRayTracingPipelineCreateInfoNV-stage-06232# The @stage@
 --     member of at least one element of @pStages@ /must/ be
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_RAYGEN_BIT_KHR'
 --
@@ -2639,6 +2704,10 @@ instance Zero RayTracingShaderGroupCreateInfoNV where
 -- -   #VUID-VkRayTracingPipelineCreateInfoNV-flags-03588# @flags@ /must/
 --     not include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR'
+--
+-- -   #VUID-VkRayTracingPipelineCreateInfoNV-flags-04948# @flags@ /must/
+--     not include
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV'
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoNV-flags-02957# @flags@ /must/
 --     not include both
@@ -2689,6 +2758,7 @@ instance Zero RayTracingShaderGroupCreateInfoNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'Vulkan.Core10.Handles.Pipeline',
 -- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlags',
 -- 'Vulkan.Core10.Handles.PipelineLayout',
@@ -2703,13 +2773,15 @@ data RayTracingPipelineCreateInfoNV (es :: [Type]) = RayTracingPipelineCreateInf
     -- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
     -- specifying how the pipeline will be generated.
     flags :: PipelineCreateFlags
-  , -- | @pStages@ is an array of size @stageCount@ structures of type
-    -- 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo' describing the
-    -- set of the shader stages to be included in the ray tracing pipeline.
+  , -- | @pStages@ is a pointer to an array of
+    -- 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo' structures
+    -- specifying the set of the shader stages to be included in the ray
+    -- tracing pipeline.
     stages :: Vector (SomeStruct PipelineShaderStageCreateInfo)
-  , -- | @pGroups@ is an array of size @groupCount@ structures of type
-    -- 'RayTracingShaderGroupCreateInfoNV' describing the set of the shader
-    -- stages to be included in each shader group in the ray tracing pipeline.
+  , -- | @pGroups@ is a pointer to an array of
+    -- 'RayTracingShaderGroupCreateInfoNV' structures describing the set of the
+    -- shader stages to be included in each shader group in the ray tracing
+    -- pipeline.
     groups :: Vector RayTracingShaderGroupCreateInfoNV
   , -- | @maxRecursionDepth@ is the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-tracing-recursion-depth maximum recursion depth>
@@ -2732,7 +2804,7 @@ deriving instance Show (Chain es) => Show (RayTracingPipelineCreateInfoNV es)
 
 instance Extensible RayTracingPipelineCreateInfoNV where
   extensibleTypeName = "RayTracingPipelineCreateInfoNV"
-  setNext x next = x{next = next}
+  setNext RayTracingPipelineCreateInfoNV{..} next' = RayTracingPipelineCreateInfoNV{next = next', ..}
   getNext RayTracingPipelineCreateInfoNV{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RayTracingPipelineCreateInfoNV e => b) -> Maybe b
   extends _ f
@@ -2740,18 +2812,18 @@ instance Extensible RayTracingPipelineCreateInfoNV where
     | otherwise = Nothing
 
 instance (Extendss RayTracingPipelineCreateInfoNV es, PokeChain es) => ToCStruct (RayTracingPipelineCreateInfoNV es) where
-  withCStruct x f = allocaBytesAligned 80 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 80 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RayTracingPipelineCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_NV)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (stages)) :: Word32))
-    pPStages' <- ContT $ allocaBytesAligned @(PipelineShaderStageCreateInfo _) ((Data.Vector.length (stages)) * 48) 8
+    pPStages' <- ContT $ allocaBytes @(PipelineShaderStageCreateInfo _) ((Data.Vector.length (stages)) * 48)
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPStages' `plusPtr` (48 * (i)) :: Ptr (PipelineShaderStageCreateInfo _))) (e) . ($ ())) (stages)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr (PipelineShaderStageCreateInfo _)))) (pPStages')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (groups)) :: Word32))
-    pPGroups' <- ContT $ allocaBytesAligned @RayTracingShaderGroupCreateInfoNV ((Data.Vector.length (groups)) * 40) 8
+    pPGroups' <- ContT $ allocaBytes @RayTracingShaderGroupCreateInfoNV ((Data.Vector.length (groups)) * 40)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPGroups' `plusPtr` (40 * (i)) :: Ptr RayTracingShaderGroupCreateInfoNV) (e)) (groups)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr RayTracingShaderGroupCreateInfoNV))) (pPGroups')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (maxRecursionDepth)
@@ -2890,6 +2962,7 @@ instance es ~ '[] => Zero (RayTracingPipelineCreateInfoNV es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'Vulkan.Core10.Handles.Buffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.Format.Format', 'GeometryDataNV',
@@ -2932,7 +3005,7 @@ deriving instance Generic (GeometryTrianglesNV)
 deriving instance Show GeometryTrianglesNV
 
 instance ToCStruct GeometryTrianglesNV where
-  withCStruct x f = allocaBytesAligned 96 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 96 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GeometryTrianglesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GEOMETRY_TRIANGLES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3032,6 +3105,7 @@ instance Zero GeometryTrianglesNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'Vulkan.Core10.Handles.Buffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize', 'GeometryDataNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -3052,7 +3126,7 @@ deriving instance Generic (GeometryAABBNV)
 deriving instance Show GeometryAABBNV
 
 instance ToCStruct GeometryAABBNV where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GeometryAABBNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GEOMETRY_AABB_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3101,6 +3175,7 @@ instance Zero GeometryAABBNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'GeometryAABBNV', 'GeometryNV', 'GeometryTrianglesNV'
 data GeometryDataNV = GeometryDataNV
   { -- | @triangles@ contains triangle data if 'GeometryNV'::@geometryType@ is
@@ -3123,7 +3198,7 @@ deriving instance Generic (GeometryDataNV)
 deriving instance Show GeometryDataNV
 
 instance ToCStruct GeometryDataNV where
-  withCStruct x f = allocaBytesAligned 136 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 136 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GeometryDataNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr GeometryTrianglesNV)) (triangles)
     poke ((p `plusPtr` 96 :: Ptr GeometryAABBNV)) (aabbs)
@@ -3161,6 +3236,7 @@ instance Zero GeometryDataNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'AccelerationStructureInfoNV', 'GeometryDataNV',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.GeometryFlagsKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.GeometryTypeKHR',
@@ -3199,7 +3275,7 @@ deriving instance Generic (GeometryNV)
 deriving instance Show GeometryNV
 
 instance ToCStruct GeometryNV where
-  withCStruct x f = allocaBytesAligned 168 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 168 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GeometryNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_GEOMETRY_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3311,6 +3387,7 @@ instance Zero GeometryNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'AccelerationStructureCreateInfoNV', 'AccelerationStructureTypeNV',
 -- 'BuildAccelerationStructureFlagsNV', 'GeometryNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -3337,7 +3414,7 @@ deriving instance Generic (AccelerationStructureInfoNV)
 deriving instance Show AccelerationStructureInfoNV
 
 instance ToCStruct AccelerationStructureInfoNV where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3345,7 +3422,7 @@ instance ToCStruct AccelerationStructureInfoNV where
     lift $ poke ((p `plusPtr` 20 :: Ptr BuildAccelerationStructureFlagsNV)) (flags)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (instanceCount)
     lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (geometries)) :: Word32))
-    pPGeometries' <- ContT $ allocaBytesAligned @GeometryNV ((Data.Vector.length (geometries)) * 168) 8
+    pPGeometries' <- ContT $ allocaBytes @GeometryNV ((Data.Vector.length (geometries)) * 168)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPGeometries' `plusPtr` (168 * (i)) :: Ptr GeometryNV) (e)) (geometries)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr GeometryNV))) (pPGeometries')
     lift $ f
@@ -3399,6 +3476,7 @@ instance Zero AccelerationStructureInfoNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'AccelerationStructureInfoNV',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -3419,7 +3497,7 @@ deriving instance Generic (AccelerationStructureCreateInfoNV)
 deriving instance Show AccelerationStructureCreateInfoNV
 
 instance ToCStruct AccelerationStructureCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3512,6 +3590,7 @@ instance Zero AccelerationStructureCreateInfoNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'Vulkan.Extensions.Handles.AccelerationStructureNV',
 -- 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
@@ -3540,7 +3619,7 @@ deriving instance Generic (BindAccelerationStructureMemoryInfoNV)
 deriving instance Show BindAccelerationStructureMemoryInfoNV
 
 instance ToCStruct BindAccelerationStructureMemoryInfoNV where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindAccelerationStructureMemoryInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3548,7 +3627,7 @@ instance ToCStruct BindAccelerationStructureMemoryInfoNV where
     lift $ poke ((p `plusPtr` 24 :: Ptr DeviceMemory)) (memory)
     lift $ poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (memoryOffset)
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (deviceIndices)) :: Word32))
-    pPDeviceIndices' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (deviceIndices)) * 4) 4
+    pPDeviceIndices' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (deviceIndices)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPDeviceIndices' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (deviceIndices)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr Word32))) (pPDeviceIndices')
     lift $ f
@@ -3582,7 +3661,7 @@ instance Zero BindAccelerationStructureMemoryInfoNV where
 
 
 -- | VkWriteDescriptorSetAccelerationStructureNV - Structure specifying
--- acceleration structure descriptor info
+-- acceleration structure descriptor information
 --
 -- == Valid Usage
 --
@@ -3618,10 +3697,13 @@ instance Zero BindAccelerationStructureMemoryInfoNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'Vulkan.Extensions.Handles.AccelerationStructureNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data WriteDescriptorSetAccelerationStructureNV = WriteDescriptorSetAccelerationStructureNV
-  { -- | @pAccelerationStructures@ are the acceleration structures to update.
+  { -- | @pAccelerationStructures@ is a pointer to an array of
+    -- 'Vulkan.Extensions.Handles.AccelerationStructureNV' structures
+    -- specifying the acceleration structures to update.
     accelerationStructures :: Vector AccelerationStructureNV }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -3630,12 +3712,12 @@ deriving instance Generic (WriteDescriptorSetAccelerationStructureNV)
 deriving instance Show WriteDescriptorSetAccelerationStructureNV
 
 instance ToCStruct WriteDescriptorSetAccelerationStructureNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p WriteDescriptorSetAccelerationStructureNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (accelerationStructures)) :: Word32))
-    pPAccelerationStructures' <- ContT $ allocaBytesAligned @AccelerationStructureNV ((Data.Vector.length (accelerationStructures)) * 8) 8
+    pPAccelerationStructures' <- ContT $ allocaBytes @AccelerationStructureNV ((Data.Vector.length (accelerationStructures)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPAccelerationStructures' `plusPtr` (8 * (i)) :: Ptr AccelerationStructureNV) (e)) (accelerationStructures)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr AccelerationStructureNV))) (pPAccelerationStructures')
     lift $ f
@@ -3666,6 +3748,7 @@ instance Zero WriteDescriptorSetAccelerationStructureNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'AccelerationStructureMemoryRequirementsTypeNV',
 -- 'Vulkan.Extensions.Handles.AccelerationStructureNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -3700,7 +3783,7 @@ deriving instance Generic (AccelerationStructureMemoryRequirementsInfoNV)
 deriving instance Show AccelerationStructureMemoryRequirementsInfoNV
 
 instance ToCStruct AccelerationStructureMemoryRequirementsInfoNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureMemoryRequirementsInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3740,10 +3823,18 @@ instance Zero AccelerationStructureMemoryRequirementsInfoNV where
 --
 -- = Description
 --
+-- Due to the fact that the geometry, instance, and triangle counts are
+-- specified at acceleration structure creation as 32-bit values,
+-- @maxGeometryCount@, @maxInstanceCount@, and @maxTriangleCount@ /must/
+-- not exceed 232-1.
+--
 -- If the 'PhysicalDeviceRayTracingPropertiesNV' structure is included in
--- the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- Limits specified by this structure /must/ match those specified with the
 -- same name in
@@ -3755,9 +3846,10 @@ instance Zero AccelerationStructureMemoryRequirementsInfoNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceRayTracingPropertiesNV = PhysicalDeviceRayTracingPropertiesNV
-  { -- | @shaderGroupHandleSize@ size in bytes of the shader header.
+  { -- | @shaderGroupHandleSize@ is the size in bytes of the shader header.
     shaderGroupHandleSize :: Word32
   , -- | #limits-maxRecursionDepth# @maxRecursionDepth@ is the maximum number of
     -- levels of recursion allowed in a trace command.
@@ -3788,7 +3880,7 @@ deriving instance Generic (PhysicalDeviceRayTracingPropertiesNV)
 deriving instance Show PhysicalDeviceRayTracingPropertiesNV
 
 instance ToCStruct PhysicalDeviceRayTracingPropertiesNV where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceRayTracingPropertiesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3852,6 +3944,7 @@ instance Zero PhysicalDeviceRayTracingPropertiesNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'AccelerationStructureMemoryRequirementsInfoNV'
 newtype AccelerationStructureMemoryRequirementsTypeNV = AccelerationStructureMemoryRequirementsTypeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)

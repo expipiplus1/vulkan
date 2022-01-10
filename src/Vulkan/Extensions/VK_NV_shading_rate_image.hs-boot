@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Pat Brown
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_shading_rate_image:%20&body=@nvpbrown%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_shading_rate_image] @nvpbrown%0A<<Here describe the issue or question you have about the VK_NV_shading_rate_image extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -142,7 +142,7 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits':
 --
---     -   'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV'
+--     -   'ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV'
 --
 -- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
 --
@@ -152,17 +152,17 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.ImageLayout.ImageLayout':
 --
---     -   'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV'
+--     -   'IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits':
 --
---     -   'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV'
+--     -   'IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits':
 --
---     -   'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
+--     -   'PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -201,15 +201,15 @@
 -- perform such a query, it could instead just set its own order, also
 -- using custom per-pixel sample locations if required.
 --
--- (2) For the pipeline stage
--- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV',
+-- (2) For the pipeline stage 'PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV',
 -- should we specify a precise location in the pipeline the shading rate
 -- image is accessed (after geometry shading, but before the early fragment
 -- tests) or leave it under-specified in case there are other
 -- implementations that access the image in a different pipeline location?
 --
 -- __RESOLVED__ We are specifying the pipeline stage to be between the
--- final stage used for vertex processing
+-- final
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>
 -- ('Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT')
 -- and before the first stage used for fragment processing
 -- ('Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT'),
@@ -240,7 +240,7 @@
 -- that this same problem also exists for multisampling with single-pixel
 -- fragments, but is less severe because it only affects certain samples of
 -- a pixel and such bright\/dark samples may be averaged with other samples
--- that don’t have a similar problem.
+-- that do not have a similar problem.
 --
 -- == Version History
 --
@@ -256,7 +256,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'CoarseSampleLocationNV', 'CoarseSampleOrderCustomNV',
 -- 'CoarseSampleOrderTypeNV', 'PhysicalDeviceShadingRateImageFeaturesNV',
@@ -267,7 +267,7 @@
 -- 'cmdBindShadingRateImageNV', 'cmdSetCoarseSampleOrderNV',
 -- 'cmdSetViewportShadingRatePaletteNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image Vulkan Specification>

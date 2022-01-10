@@ -12,36 +12,18 @@ jobs:
 
     strategy:
       matrix:
-        ghc: ['8.10.2', '8.8.4', '8.6.5']
+        ghc: ['9.0', '8.10', '8.8']
         os: [ubuntu-20.04, macOS-latest, windows-latest]
-        exclude:
-          # https://github.com/haskell/cabal/issues/6421
-          - ghc: 8.10.2
-            os: macOS-latest
-          # ghc: loadArchive: Failed reading header from `/Users/runner/work/vulkan/vulkan/dist-newstyle/build/x86_64-osx/ghc-8.6.5/vulkan-3.8.3/build/Vulkan'
-          # ghc: panic! (the 'impossible' happened)
-          #   (GHC version 8.6.5 for x86_64-apple-darwin):
-          # 	loadArchive "/Users/runner/work/vulkan/vulkan/dist-newstyle/build/x86_64-osx/ghc-8.6.5/vulkan-3.8.3/build/Vulkan": failed
-          - ghc: 8.6.5
-            os: macOS-latest
-          - os: windows-latest
-            ghc: '8.10.2'
-        include:
-          # https://github.com/actions/setup-haskell/issues/49
-          - os: windows-latest
-            ghc: '8.10.2.2'
       fail-fast: false
 
     steps:
     - uses: actions/checkout@v2
       with:
         submodules: 'recursive'
-    - uses: actions/setup-haskell@v1
+    - uses: haskell/actions/setup@v1
       id: setup-haskell
       with:
         ghc-version: ${{ matrix.ghc }}
-        # Work around https://github.com/polysemy-research/polysemy/issues/390
-        cabal-version: '3.0.0.0'
 
     - uses: actions/cache@v2
       with:
@@ -105,22 +87,10 @@ jobs:
       run: |
         sed -ibak '/openxr/d' cabal.project
 
-    - name: Remove examples for 8.6.5
-      run: |
-        sed -ibak '/examples/d' cabal.project
-      if: matrix.ghc == '8.6.5'
-
-    - name: Remove generator for all but 8.10.3
+    - name: Remove generator for all but 8.10 and 9.0
       run: |
         sed -ibak '/generate-new/d' cabal.project
-      if: matrix.ghc != '8.10.3'
-
-    # Because of https://github.com/actions/setup-haskell/issues/43 we can't
-    # set the cabal version correctly
-    - name: Remove generator for OS X
-      run: |
-        sed -ibak '/generate-new/d' cabal.project
-      if: matrix.os == 'macOS-latest'
+      if: matrix.ghc != '8.10' || matrix.ghc != '9.0'
 
     - run: cabal update
 
@@ -147,7 +117,8 @@ jobs:
 
     - name: Build vulkan-examples
       run: cabal build --enable-tests --enable-benchmarks vulkan-examples
-      if: matrix.ghc != '8.6.5'
+
+    - run: cabal check
 
     - name: Build documentation
       run: |
@@ -163,22 +134,17 @@ jobs:
       matrix:
         os: [ubuntu-20.04, macOS-latest, windows-latest]
         stack-args: ['--flag vulkan:generic-instances --flag VulkanMemoryAllocator:generic-instances --flag vulkan-examples:-raytracing --flag vulkan-examples:-have-shaderc --system-ghc']
-        exclude:
-          # https://github.com/actions/setup-haskell/issues/49
-          - os: windows-latest
-          # https://github.com/haskell/cabal/issues/6421
-          - os: macOS-latest
       fail-fast: false
 
     steps:
     - uses: actions/checkout@v2
       with:
         submodules: 'recursive'
-    - uses: actions/setup-haskell@v1
+    - uses: haskell/actions/setup@v1
       with:
         stack-version: 'latest'
         enable-stack: true
-        ghc-version: '8.10.2'
+        ghc-version: '8.10'
 
     - name: Cache stack things
       uses: actions/cache@v2
@@ -255,30 +221,81 @@ jobs:
 
   nix:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        ghc: ['null', '"ghc901"']
+      fail-fast: false
+
     steps:
     - uses: actions/checkout@v2
       with:
         submodules: 'recursive'
-    - uses: cachix/install-nix-action@v12
+    - uses: cachix/install-nix-action@v16
       with:
         nix_path: nixpkgs=channel:nixos-unstable
-    - uses: cachix/cachix-action@v7
+    - uses: cachix/cachix-action@v10
+      with:
+        name: vulkan-haskell
+        signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
+
+    - run: nix-build --arg compiler '${{ matrix.ghc }}' -A vulkan
+    - run: nix-build --arg compiler '${{ matrix.ghc }}' -A VulkanMemoryAllocator
+    - run: nix-build --arg compiler '${{ matrix.ghc }}' -A vulkan-utils
+    - run: nix-build --arg compiler '${{ matrix.ghc }}' -A openxr
+    - run: nix-build --arg compiler '${{ matrix.ghc }}' ./nix/haskell-packages.nix --arg openxrNoVulkan true -A openxr
+    - run: nix-build --arg compiler '${{ matrix.ghc }}' -A vulkan-examples
+    - run: nix-build --arg compiler '${{ matrix.ghc }}' nix/release.nix
+    - run: nix-build --arg compiler '${{ matrix.ghc }}' nix/release.nix -A docs
+    - run: nix-build --arg compiler '${{ matrix.ghc }}' nix/release.nix -A docs-combined
+    - run: XDG_DATA_DIRS=$(mktemp -d) nix-shell --arg compiler '${{ matrix.ghc }}' examples --run 'ghc-pkg list'
+
+  nix-sdist:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+    - uses: cachix/install-nix-action@v16
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+    - uses: cachix/cachix-action@v10
+      with:
+        name: vulkan-haskell
+        signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
+
+    - run: nix-build nix/release.nix -A sdistTest
+
+  nix-generator:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+    - uses: cachix/install-nix-action@v16
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+    - uses: cachix/cachix-action@v10
       with:
         name: vulkan-haskell
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
 
     - run: nix-build -A generate-new
-    - run: nix-build -A vulkan
-    - run: nix-build -A VulkanMemoryAllocator
-    - run: nix-build -A vulkan-utils
-    - run: nix-build -A openxr
-    - run: nix-build ./nix/haskell-packages.nix --arg openxrNoVulkan true -A openxr
-    - run: nix-build -A vulkan-examples
-    - run: nix-build nix/release.nix
-    - run: nix-build nix/release.nix -A docs
-    - run: nix-build nix/release.nix -A sdistTest
-    - run: nix-build nix/release.nix -A docs-combined
-    - run: XDG_DATA_DIRS=$(mktemp -d) nix-shell examples --run 'ghc-pkg list'
+
+  nix-shell-profiling:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+    - uses: cachix/install-nix-action@v16
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+    - uses: cachix/cachix-action@v10
+      with:
+        name: vulkan-haskell
+        signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
+
     - run: XDG_DATA_DIRS=$(mktemp -d) nix-shell examples --arg buildProfiling true --run 'ghc-pkg list'
 
   shellcheck:
@@ -295,4 +312,3 @@ jobs:
           --exclude generate-new/Vulkan-Docs \
           --exclude generate-new/OpenXR-Docs \
           --exec shellcheck
-

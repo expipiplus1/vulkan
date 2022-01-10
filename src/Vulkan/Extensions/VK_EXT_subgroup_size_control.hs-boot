@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Neil Henning
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_subgroup_size_control:%20&body=@sheredom%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_subgroup_size_control] @sheredom%0A<<Here describe the issue or question you have about the VK_EXT_subgroup_size_control extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -76,20 +76,20 @@
 -- enable that pipeline to vary its subgroup size. If enabled, any
 -- @SubgroupSize@ decorated variables in the SPIR-V shader modules provided
 -- to pipeline creation /may/ vary between the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-min-subgroup-size minimum>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-minSubgroupSize minimum>
 -- and
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroup-size maximum>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxSubgroupSize maximum>
 -- subgroup sizes.
 --
 -- An implementation is also optionally allowed to support specifying a
 -- required subgroup size for a given pipeline stage. Implementations
 -- advertise which
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-required-subgroup-size-stages stages support a required subgroup size>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-requiredSubgroupSizeStages stages support a required subgroup size>,
 -- and any pipeline of a supported stage can be passed a
 -- 'PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT' structure to set
 -- the subgroup size for that shader stage of the pipeline. For compute
 -- shaders, this requires the developer to query the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroups-per-workgroup maxComputeWorkgroupSubgroups>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxComputeWorkgroupSubgroups maxComputeWorkgroupSubgroups>
 -- and ensure that:
 --
 -- \[s = { WorkGroupSize.x \times WorkGroupSize.y \times WorkgroupSize.z \leq SubgroupSize \times maxComputeWorkgroupSubgroups }\]
@@ -148,13 +148,13 @@
 --     -   Add the missing 'PhysicalDeviceSubgroupSizeControlFeaturesEXT'
 --         for querying subgroup size control features.
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceSubgroupSizeControlFeaturesEXT',
 -- 'PhysicalDeviceSubgroupSizeControlPropertiesEXT',
 -- 'PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_subgroup_size_control Vulkan Specification>

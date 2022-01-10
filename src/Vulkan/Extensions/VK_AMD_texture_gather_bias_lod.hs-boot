@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Rex Xu
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_texture_gather_bias_lod:%20&body=@amdrexu%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_texture_gather_bias_lod] @amdrexu%0A<<Here describe the issue or question you have about the VK_AMD_texture_gather_bias_lod extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -40,6 +40,9 @@
 --
 --     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_texture_gather_bias_lod.html SPV_AMD_texture_gather_bias_lod>
+--
+--     -   This extension provides API support for
+--         <https://www.khronos.org/registry/OpenGL/extensions/AMD/AMD_texture_gather_bias_lod.txt GL_AMD_texture_gather_bias_lod>
 --
 -- [__Contributors__]
 --
@@ -138,11 +141,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'TextureLODGatherFormatPropertiesAMD'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_texture_gather_bias_lod Vulkan Specification>

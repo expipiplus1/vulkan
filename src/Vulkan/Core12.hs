@@ -52,7 +52,7 @@ import Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
 import Vulkan.Core12.Promoted_From_VK_KHR_uniform_buffer_standard_layout
 import Vulkan.Core12.Promoted_From_VK_KHR_vulkan_memory_model
 import Vulkan.CStruct.Utils (FixedArray)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Data.ByteString (packCString)
@@ -95,14 +95,14 @@ import Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
 import Vulkan.Core10.APIConstants (UUID_SIZE)
-import Vulkan.Version (pattern MAKE_VERSION)
+import Vulkan.Version (pattern MAKE_API_VERSION)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_PROPERTIES))
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
 pattern API_VERSION_1_2 :: Word32
-pattern API_VERSION_1_2 = MAKE_VERSION 1 2 0
+pattern API_VERSION_1_2 = MAKE_API_VERSION 1 2 0
 
 
 -- | VkPhysicalDeviceVulkan11Features - Structure describing the Vulkan 1.1
@@ -110,22 +110,25 @@ pattern API_VERSION_1_2 = MAKE_VERSION 1 2 0
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceVulkan11Features' structure describe
--- the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceVulkan11Features' structure is included in the
--- @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceVulkan11Features' /can/ also be used in the @pNext@ chain
--- of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the features.
+-- @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceVulkan11Features' /can/ also be used in the
+-- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively
+-- enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceVulkan11Features = PhysicalDeviceVulkan11Features
@@ -139,13 +142,11 @@ data PhysicalDeviceVulkan11Features = PhysicalDeviceVulkan11Features
     storageBuffer16BitAccess :: Bool
   , -- | #features-uniformAndStorageBuffer16BitAccess#
     -- @uniformAndStorageBuffer16BitAccess@ specifies whether objects in the
-    -- @Uniform@ storage class with the @Block@ decoration and in the
-    -- @StorageBuffer@, @ShaderRecordBufferKHR@, or @PhysicalStorageBuffer@
-    -- storage class with the same decoration /can/ have 16-bit integer and
-    -- 16-bit floating-point members. If this feature is not enabled, 16-bit
-    -- integer or 16-bit floating-point members /must/ not be used in such
-    -- objects. This also specifies whether shader modules /can/ declare the
-    -- @UniformAndStorageBuffer16BitAccess@ capability.
+    -- @Uniform@ storage class with the @Block@ decoration /can/ have 16-bit
+    -- integer and 16-bit floating-point members. If this feature is not
+    -- enabled, 16-bit integer or 16-bit floating-point members /must/ not be
+    -- used in such objects. This also specifies whether shader modules /can/
+    -- declare the @UniformAndStorageBuffer16BitAccess@ capability.
     uniformAndStorageBuffer16BitAccess :: Bool
   , -- | #features-storagePushConstant16# @storagePushConstant16@ specifies
     -- whether objects in the @PushConstant@ storage class /can/ have 16-bit
@@ -202,7 +203,10 @@ data PhysicalDeviceVulkan11Features = PhysicalDeviceVulkan11Features
     -- Y′CBCR conversion /must/ not be used.
     samplerYcbcrConversion :: Bool
   , -- | #features-shaderDrawParameters# @shaderDrawParameters@ specifies whether
-    -- shader draw parameters are supported.
+    -- the implementation supports the SPIR-V @DrawParameters@ capability. When
+    -- this feature is not enabled, shader modules /must/ not declare the
+    -- @SPV_KHR_shader_draw_parameters@ extension or the @DrawParameters@
+    -- capability.
     shaderDrawParameters :: Bool
   }
   deriving (Typeable, Eq)
@@ -212,7 +216,7 @@ deriving instance Generic (PhysicalDeviceVulkan11Features)
 deriving instance Show PhysicalDeviceVulkan11Features
 
 instance ToCStruct PhysicalDeviceVulkan11Features where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceVulkan11Features{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -292,8 +296,18 @@ instance Zero PhysicalDeviceVulkan11Features where
 --
 -- = Description
 --
--- The members of 'PhysicalDeviceVulkan11Properties' /must/ have the same
--- values as the corresponding members of
+-- If the 'PhysicalDeviceVulkan11Properties' structure is included in the
+-- @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
+--
+-- These properties correspond to Vulkan 1.1 functionality.
+--
+-- The members of 'PhysicalDeviceVulkan11Properties' have the same values
+-- as the corresponding members of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceIDProperties',
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_subgroup.PhysicalDeviceSubgroupProperties',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.PhysicalDevicePointClippingProperties',
@@ -306,6 +320,7 @@ instance Zero PhysicalDeviceVulkan11Features where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core11.Enums.PointClippingBehavior.PointClippingBehavior',
@@ -381,11 +396,17 @@ data PhysicalDeviceVulkan11Properties = PhysicalDeviceVulkan11Properties
     -- drawing command recorded within a subpass of a multiview render pass
     -- instance.
     maxMultiviewInstanceIndex :: Word32
-  , -- | @protectedNoFault@ specifies the behavior of the implementation when
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-access-rules protected memory access rules>
-    -- are broken. If @protectedNoFault@ is
-    -- 'Vulkan.Core10.FundamentalTypes.TRUE', breaking those rules will not
-    -- result in process termination or device loss.
+  , -- | #limits-protectedNoFault# @protectedNoFault@ specifies how an
+    -- implementation behaves when an application attempts to write to
+    -- unprotected memory in a protected queue operation, read from protected
+    -- memory in an unprotected queue operation, or perform a query in a
+    -- protected queue operation. If this limit is
+    -- 'Vulkan.Core10.FundamentalTypes.TRUE', such writes will be discarded or
+    -- have undefined values written, reads and queries will return undefined
+    -- values. If this limit is 'Vulkan.Core10.FundamentalTypes.FALSE',
+    -- applications /must/ not perform these operations. See
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-access-rules ???>
+    -- for more information.
     protectedNoFault :: Bool
   , -- | #limits-maxPerSetDescriptors# @maxPerSetDescriptors@ is a maximum number
     -- of descriptors (summed over all descriptor types) in a single descriptor
@@ -407,7 +428,7 @@ deriving instance Generic (PhysicalDeviceVulkan11Properties)
 deriving instance Show PhysicalDeviceVulkan11Properties
 
 instance ToCStruct PhysicalDeviceVulkan11Properties where
-  withCStruct x f = allocaBytesAligned 112 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 112 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceVulkan11Properties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -499,10 +520,14 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceVulkan12Features' structure describe
--- the following features:
+-- This structure describes the following features:
 --
 -- = Description
+--
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
 --
 -- -   #features-samplerMirrorClampToEdge# @samplerMirrorClampToEdge@
 --     indicates whether the implementation supports the
@@ -529,13 +554,11 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --
 -- -   #features-uniformAndStorageBuffer8BitAccess#
 --     @uniformAndStorageBuffer8BitAccess@ indicates whether objects in the
---     @Uniform@ storage class with the @Block@ decoration and in the
---     @StorageBuffer@, @ShaderRecordBufferKHR@, or @PhysicalStorageBuffer@
---     storage class with the same decoration /can/ have 8-bit integer
---     members. If this feature is not enabled, 8-bit integer members
---     /must/ not be used in such objects. This also indicates whether
---     shader modules /can/ declare the @UniformAndStorageBuffer8BitAccess@
---     capability.
+--     @Uniform@ storage class with the @Block@ decoration /can/ have 8-bit
+--     integer members. If this feature is not enabled, 8-bit integer
+--     members /must/ not be used in such objects. This also indicates
+--     whether shader modules /can/ declare the
+--     @UniformAndStorageBuffer8BitAccess@ capability.
 --
 -- -   #features-storagePushConstant8# @storagePushConstant8@ indicates
 --     whether objects in the @PushConstant@ storage class /can/ have 8-bit
@@ -805,13 +828,13 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources-standard-layout Standard Buffer Layout>.
 --
 -- -   #features-subgroup-extended-types# @shaderSubgroupExtendedTypes@ is
---     a boolean that specifies whether subgroup operations can use 8-bit
+--     a boolean specifying whether subgroup operations can use 8-bit
 --     integer, 16-bit integer, 64-bit integer, 16-bit floating-point, and
 --     vectors of these types in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>
 --     with
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>if
---     the implementation supports the types.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>,
+--     if the implementation supports the types.
 --
 -- -   #features-separateDepthStencilLayouts# @separateDepthStencilLayouts@
 --     indicates whether the implementation supports a
@@ -899,11 +922,14 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     constants.
 --
 -- If the 'PhysicalDeviceVulkan12Features' structure is included in the
--- @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceVulkan12Features' /can/ also be used in the @pNext@ chain
--- of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the features.
+-- @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceVulkan12Features' /can/ also be used in the
+-- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively
+-- enable these features.
 --
 -- == Valid Usage (Implicit)
 --
@@ -913,6 +939,7 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceVulkan12Features = PhysicalDeviceVulkan12Features
@@ -1018,7 +1045,7 @@ deriving instance Generic (PhysicalDeviceVulkan12Features)
 deriving instance Show PhysicalDeviceVulkan12Features
 
 instance ToCStruct PhysicalDeviceVulkan12Features where
-  withCStruct x f = allocaBytesAligned 208 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 208 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceVulkan12Features{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1238,6 +1265,16 @@ instance Zero PhysicalDeviceVulkan12Features where
 --
 -- = Description
 --
+-- If the 'PhysicalDeviceVulkan12Properties' structure is included in the
+-- @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
+--
+-- These properties correspond to Vulkan 1.2 functionality.
+--
 -- The members of 'PhysicalDeviceVulkan12Properties' /must/ have the same
 -- values as the corresponding members of
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.PhysicalDeviceDriverProperties',
@@ -1252,6 +1289,7 @@ instance Zero PhysicalDeviceVulkan12Features where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.ConformanceVersion',
 -- 'Vulkan.Core12.Enums.DriverId.DriverId',
@@ -1627,7 +1665,7 @@ deriving instance Generic (PhysicalDeviceVulkan12Properties)
 deriving instance Show PhysicalDeviceVulkan12Properties
 
 instance ToCStruct PhysicalDeviceVulkan12Properties where
-  withCStruct x f = allocaBytesAligned 736 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 736 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceVulkan12Properties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

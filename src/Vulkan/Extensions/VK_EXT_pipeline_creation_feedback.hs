@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Jean-Francois Roy
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_pipeline_creation_feedback:%20&body=@jfroy%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_pipeline_creation_feedback] @jfroy%0A<<Here describe the issue or question you have about the VK_EXT_pipeline_creation_feedback extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -102,13 +102,13 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'PipelineCreationFeedbackCreateInfoEXT', 'PipelineCreationFeedbackEXT',
 -- 'PipelineCreationFeedbackFlagBitsEXT',
 -- 'PipelineCreationFeedbackFlagsEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_creation_feedback Vulkan Specification>
@@ -131,7 +131,7 @@ module Vulkan.Extensions.VK_EXT_pipeline_creation_feedback  ( PipelineCreationFe
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showString)
@@ -172,6 +172,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_creation_feedback VK_EXT_pipeline_creation_feedback>,
 -- 'PipelineCreationFeedbackCreateInfoEXT',
 -- 'PipelineCreationFeedbackFlagBitsEXT',
 -- 'PipelineCreationFeedbackFlagsEXT'
@@ -190,7 +191,7 @@ deriving instance Generic (PipelineCreationFeedbackEXT)
 deriving instance Show PipelineCreationFeedbackEXT
 
 instance ToCStruct PipelineCreationFeedbackEXT where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineCreationFeedbackEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr PipelineCreationFeedbackFlagsEXT)) (flags)
     poke ((p `plusPtr` 8 :: Ptr Word64)) (duration)
@@ -298,6 +299,7 @@ instance Zero PipelineCreationFeedbackEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_creation_feedback VK_EXT_pipeline_creation_feedback>,
 -- 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
 -- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
 -- 'PipelineCreationFeedbackEXT',
@@ -323,7 +325,7 @@ deriving instance Generic (PipelineCreationFeedbackCreateInfoEXT)
 deriving instance Show PipelineCreationFeedbackCreateInfoEXT
 
 instance ToCStruct PipelineCreationFeedbackCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineCreationFeedbackCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -369,6 +371,7 @@ type PipelineCreationFeedbackFlagsEXT = PipelineCreationFeedbackFlagBitsEXT
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_creation_feedback VK_EXT_pipeline_creation_feedback>,
 -- 'PipelineCreationFeedbackCreateInfoEXT', 'PipelineCreationFeedbackEXT',
 -- 'PipelineCreationFeedbackFlagsEXT'
 newtype PipelineCreationFeedbackFlagBitsEXT = PipelineCreationFeedbackFlagBitsEXT Flags

@@ -15,11 +15,13 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 
--- | VkShaderFloatControlsIndependence - Enum specifying whether, and how,
+-- | VkShaderFloatControlsIndependence - Bitmask specifying whether, and how,
 -- shader float controls can be set separately
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_float_controls VK_KHR_shader_float_controls>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_shader_float_controls.PhysicalDeviceFloatControlsProperties',
 -- 'Vulkan.Core12.PhysicalDeviceVulkan12Properties'
 newtype ShaderFloatControlsIndependence = ShaderFloatControlsIndependence Int32

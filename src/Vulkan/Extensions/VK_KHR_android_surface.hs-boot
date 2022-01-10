@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_android_surface:%20&body=@critsec%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_android_surface] @critsec%0A<<Here describe the issue or question you have about the VK_KHR_android_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -147,12 +147,12 @@
 --     -   Moved VK_ERROR_NATIVE_WINDOW_IN_USE_KHR from the
 --         VK_KHR_android_surface to the VK_KHR_surface extension.
 --
--- = See Also
+-- == See Also
 --
 -- 'ANativeWindow', 'AndroidSurfaceCreateFlagsKHR',
 -- 'AndroidSurfaceCreateInfoKHR', 'createAndroidSurfaceKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_android_surface Vulkan Specification>

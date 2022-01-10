@@ -48,6 +48,8 @@ brackets marshaledCommands = context "brackets" $ do
     , autoBracket' BracketBookend "vmaBeginDefragmentationPass" "vmaEndDefragmentationPass" "vmaUseDefragmentationPass"
     , autoBracket' BracketCPS "vmaCreateBuffer" "vmaDestroyBuffer" "vmaWithBuffer"
     , autoBracket' BracketCPS "vmaCreateImage"  "vmaDestroyImage"  "vmaWithImage"
+    , autoBracket' BracketCPS "vmaCreateVirtualBlock"  "vmaDestroyVirtualBlock"  "vmaWithVirtualBlock"
+    , autoBracket' BracketCPS "vmaVirtualAllocate"  "vmaVirtualFree"       "vmaWithVirtualAllocation"
     ]
   fromList <$> traverseV (renderBracket paramName) bs
 

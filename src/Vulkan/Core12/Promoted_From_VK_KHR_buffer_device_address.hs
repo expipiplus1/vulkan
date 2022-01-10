@@ -21,7 +21,7 @@ module Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address  ( getBufferOpaq
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -53,6 +53,7 @@ import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Core10.FundamentalTypes (DeviceAddress)
 import Vulkan.Dynamic (DeviceCmds(pVkGetBufferDeviceAddress))
 import Vulkan.Dynamic (DeviceCmds(pVkGetBufferOpaqueCaptureAddress))
@@ -114,6 +115,8 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'BufferDeviceAddressInfo', 'Vulkan.Core10.Handles.Device'
 getBufferOpaqueCaptureAddress :: forall io
                                . (MonadIO io)
@@ -124,7 +127,7 @@ getBufferOpaqueCaptureAddress :: forall io
                                  BufferDeviceAddressInfo
                               -> io (Word64)
 getBufferOpaqueCaptureAddress device info = liftIO . evalContT $ do
-  let vkGetBufferOpaqueCaptureAddressPtr = pVkGetBufferOpaqueCaptureAddress (deviceCmds (device :: Device))
+  let vkGetBufferOpaqueCaptureAddressPtr = pVkGetBufferOpaqueCaptureAddress (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetBufferOpaqueCaptureAddressPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetBufferOpaqueCaptureAddress is null" Nothing Nothing
   let vkGetBufferOpaqueCaptureAddress' = mkVkGetBufferOpaqueCaptureAddress vkGetBufferOpaqueCaptureAddressPtr
@@ -188,6 +191,8 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'BufferDeviceAddressInfo', 'Vulkan.Core10.Handles.Device'
 getBufferDeviceAddress :: forall io
                         . (MonadIO io)
@@ -198,7 +203,7 @@ getBufferDeviceAddress :: forall io
                           BufferDeviceAddressInfo
                        -> io (DeviceAddress)
 getBufferDeviceAddress device info = liftIO . evalContT $ do
-  let vkGetBufferDeviceAddressPtr = pVkGetBufferDeviceAddress (deviceCmds (device :: Device))
+  let vkGetBufferDeviceAddressPtr = pVkGetBufferDeviceAddress (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetBufferDeviceAddressPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetBufferDeviceAddress is null" Nothing Nothing
   let vkGetBufferDeviceAddress' = mkVkGetBufferDeviceAddress vkGetBufferDeviceAddressPtr
@@ -254,6 +259,8 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.Device', 'DeviceMemoryOpaqueCaptureAddressInfo'
 getDeviceMemoryOpaqueCaptureAddress :: forall io
                                      . (MonadIO io)
@@ -264,7 +271,7 @@ getDeviceMemoryOpaqueCaptureAddress :: forall io
                                        DeviceMemoryOpaqueCaptureAddressInfo
                                     -> io (Word64)
 getDeviceMemoryOpaqueCaptureAddress device info = liftIO . evalContT $ do
-  let vkGetDeviceMemoryOpaqueCaptureAddressPtr = pVkGetDeviceMemoryOpaqueCaptureAddress (deviceCmds (device :: Device))
+  let vkGetDeviceMemoryOpaqueCaptureAddressPtr = pVkGetDeviceMemoryOpaqueCaptureAddress (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDeviceMemoryOpaqueCaptureAddressPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceMemoryOpaqueCaptureAddress is null" Nothing Nothing
   let vkGetDeviceMemoryOpaqueCaptureAddress' = mkVkGetDeviceMemoryOpaqueCaptureAddress vkGetDeviceMemoryOpaqueCaptureAddressPtr
@@ -278,8 +285,7 @@ getDeviceMemoryOpaqueCaptureAddress device info = liftIO . evalContT $ do
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceBufferDeviceAddressFeatures' structure
--- describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
@@ -292,17 +298,21 @@ getDeviceMemoryOpaqueCaptureAddress device info = liftIO . evalContT $ do
 -- See 'getBufferDeviceAddress' for more information.
 --
 -- If the 'PhysicalDeviceBufferDeviceAddressFeatures' structure is included
--- in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceBufferDeviceAddressFeatures' /can/ also be included in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- features.
+-- in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceBufferDeviceAddressFeatures' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceBufferDeviceAddressFeatures = PhysicalDeviceBufferDeviceAddressFeatures
@@ -331,7 +341,7 @@ deriving instance Generic (PhysicalDeviceBufferDeviceAddressFeatures)
 deriving instance Show PhysicalDeviceBufferDeviceAddressFeatures
 
 instance ToCStruct PhysicalDeviceBufferDeviceAddressFeatures where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceBufferDeviceAddressFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -398,6 +408,7 @@ instance Zero PhysicalDeviceBufferDeviceAddressFeatures where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.Buffer',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getBufferDeviceAddress',
@@ -415,7 +426,7 @@ deriving instance Generic (BufferDeviceAddressInfo)
 deriving instance Show BufferDeviceAddressInfo
 
 instance ToCStruct BufferDeviceAddressInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferDeviceAddressInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -489,6 +500,8 @@ instance Zero BufferDeviceAddressInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data BufferOpaqueCaptureAddressCreateInfo = BufferOpaqueCaptureAddressCreateInfo
   { -- | @opaqueCaptureAddress@ is the opaque capture address requested for the
@@ -501,7 +514,7 @@ deriving instance Generic (BufferOpaqueCaptureAddressCreateInfo)
 deriving instance Show BufferOpaqueCaptureAddressCreateInfo
 
 instance ToCStruct BufferOpaqueCaptureAddressCreateInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferOpaqueCaptureAddressCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_OPAQUE_CAPTURE_ADDRESS_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -547,7 +560,7 @@ instance Zero BufferOpaqueCaptureAddressCreateInfo where
 --
 -- In most cases, it is expected that a non-zero @opaqueAddress@ is an
 -- address retrieved from 'getDeviceMemoryOpaqueCaptureAddress' on an
--- identically created memory allocation. If this is not the case, it
+-- identically created memory allocation. If this is not the case, it is
 -- likely that
 -- 'Vulkan.Core10.Enums.Result.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS' errors
 -- will occur.
@@ -563,6 +576,8 @@ instance Zero BufferOpaqueCaptureAddressCreateInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data MemoryOpaqueCaptureAddressAllocateInfo = MemoryOpaqueCaptureAddressAllocateInfo
   { -- | @opaqueCaptureAddress@ is the opaque capture address requested for the
@@ -575,7 +590,7 @@ deriving instance Generic (MemoryOpaqueCaptureAddressAllocateInfo)
 deriving instance Show MemoryOpaqueCaptureAddressAllocateInfo
 
 instance ToCStruct MemoryOpaqueCaptureAddressAllocateInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryOpaqueCaptureAddressAllocateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -613,6 +628,8 @@ instance Zero MemoryOpaqueCaptureAddressAllocateInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address VK_KHR_buffer_device_address>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getDeviceMemoryOpaqueCaptureAddress',
@@ -634,7 +651,7 @@ deriving instance Generic (DeviceMemoryOpaqueCaptureAddressInfo)
 deriving instance Show DeviceMemoryOpaqueCaptureAddressInfo
 
 instance ToCStruct DeviceMemoryOpaqueCaptureAddressInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceMemoryOpaqueCaptureAddressInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

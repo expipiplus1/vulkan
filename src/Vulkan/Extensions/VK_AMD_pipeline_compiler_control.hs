@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Matthaeus G. Chajdas
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_pipeline_compiler_control:%20&body=@anteru%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_pipeline_compiler_control] @anteru%0A<<Here describe the issue or question you have about the VK_AMD_pipeline_compiler_control extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -47,8 +47,8 @@
 -- == Description
 --
 -- This extension introduces 'PipelineCompilerControlCreateInfoAMD'
--- structure that can be chained to a pipeline’s create info to specify
--- additional flags that affect pipeline compilation.
+-- structure that can be chained to a pipeline’s creation information to
+-- specify additional flags that affect pipeline compilation.
 --
 -- == New Structures
 --
@@ -89,12 +89,12 @@
 --
 --     -   Initial revision.
 --
--- = See Also
+-- == See Also
 --
 -- 'PipelineCompilerControlCreateInfoAMD',
 -- 'PipelineCompilerControlFlagBitsAMD', 'PipelineCompilerControlFlagsAMD'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_pipeline_compiler_control Vulkan Specification>
@@ -112,7 +112,7 @@ module Vulkan.Extensions.VK_AMD_pipeline_compiler_control  ( PipelineCompilerCon
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showString)
@@ -146,6 +146,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_pipeline_compiler_control VK_AMD_pipeline_compiler_control>,
 -- 'PipelineCompilerControlFlagsAMD',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineCompilerControlCreateInfoAMD = PipelineCompilerControlCreateInfoAMD
@@ -163,7 +164,7 @@ deriving instance Generic (PipelineCompilerControlCreateInfoAMD)
 deriving instance Show PipelineCompilerControlCreateInfoAMD
 
 instance ToCStruct PipelineCompilerControlCreateInfoAMD where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineCompilerControlCreateInfoAMD{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_COMPILER_CONTROL_CREATE_INFO_AMD)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -200,6 +201,7 @@ type PipelineCompilerControlFlagsAMD = PipelineCompilerControlFlagBitsAMD
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_pipeline_compiler_control VK_AMD_pipeline_compiler_control>,
 -- 'PipelineCompilerControlFlagsAMD'
 newtype PipelineCompilerControlFlagBitsAMD = PipelineCompilerControlFlagBitsAMD Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

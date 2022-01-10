@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Mark Young
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_debug_utils:%20&body=@marky-lunarg%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_debug_utils] @marky-lunarg%0A<<Here describe the issue or question you have about the VK_EXT_debug_utils extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -216,11 +216,7 @@
 -- application /can/ link a 'DebugUtilsMessengerCreateInfoEXT' structure to
 -- the @pNext@ element of the
 -- 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo' structure given
--- to 'Vulkan.Core10.DeviceInitialization.createInstance'. This callback is
--- only valid for the duration of the
--- 'Vulkan.Core10.DeviceInitialization.createInstance' and the
--- 'Vulkan.Core10.DeviceInitialization.destroyInstance' call. Use
--- 'createDebugUtilsMessengerEXT' to create persistent callback objects.
+-- to 'Vulkan.Core10.DeviceInitialization.createInstance'.
 --
 -- Example uses: Create three callback objects. One will log errors and
 -- warnings to the debug console using Windows @OutputDebugString@. The
@@ -235,7 +231,7 @@
 -- >     PFN_vkCreateDebugUtilsMessengerEXT pfnCreateDebugUtilsMessengerEXT = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
 -- >     PFN_vkDestroyDebugUtilsMessengerEXT pfnDestroyDebugUtilsMessengerEXT = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
 -- >
--- >     VkDebugUtilsMessengeCreateInfoEXT callback1 = {
+-- >     VkDebugUtilsMessengerCreateInfoEXT callback1 = {
 -- >             VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,  // sType
 -- >             NULL,                                                     // pNext
 -- >             0,                                                        // flags
@@ -252,7 +248,7 @@
 -- >     }
 -- >
 -- >     callback1.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
--- >     callback1.pfnCallback = myDebugBreak;
+-- >     callback1.pfnUserCallback = myDebugBreak;
 -- >     callback1.pUserData = NULL;
 -- >     res = pfnCreateDebugUtilsMessengerEXT(instance, &callback1, NULL, &cb2);
 -- >     if (res != VK_SUCCESS) {
@@ -300,7 +296,7 @@
 -- >         VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT, // sType
 -- >         NULL,                                               // pNext
 -- >         VK_OBJECT_TYPE_IMAGE,                               // objectType
--- >         (uint64_t)image,                                    // object
+-- >         (uint64_t)image,                                    // objectHandle
 -- >         "Brick Diffuse Texture",                            // pObjectName
 -- >     };
 -- >
@@ -427,8 +423,8 @@
 -- statements, it may take a while before the new functionality is fully
 -- exposed.
 --
--- 3) If the validation layers won’t expose the new functionality
--- immediately, then what’s the point of this extension?
+-- 3) If the validation layers will not expose the new functionality
+-- immediately, then what is the point of this extension?
 --
 -- __RESOLVED__: We needed a replacement for @VK_EXT_debug_report@ because
 -- the 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT'
@@ -444,9 +440,9 @@
 -- related. If we did split up the extension, where would the structures
 -- and enums live, and how would you define that the device behavior in the
 -- instance extension is really only valid if the device extension is
--- enabled, and the functionality is passed in. It’s cleaner to just define
--- this all as an instance extension, plus it allows the application to
--- enable all debug functionality provided with one enable string during
+-- enabled, and the functionality is passed in. It is cleaner to just
+-- define this all as an instance extension, plus it allows the application
+-- to enable all debug functionality provided with one enable string during
 -- 'Vulkan.Core10.DeviceInitialization.createInstance'.
 --
 -- == Version History
@@ -463,7 +459,7 @@
 --         in for @pObjectName@ in 'DebugUtilsObjectNameInfoEXT', because
 --         the loader and various drivers support @NULL@ already.
 --
--- = See Also
+-- == See Also
 --
 -- 'PFN_vkDebugUtilsMessengerCallbackEXT', 'DebugUtilsLabelEXT',
 -- 'DebugUtilsMessageSeverityFlagBitsEXT',
@@ -480,7 +476,7 @@
 -- 'setDebugUtilsObjectNameEXT', 'setDebugUtilsObjectTagEXT',
 -- 'submitDebugUtilsMessageEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils Vulkan Specification>
@@ -536,7 +532,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (maybePeek)
@@ -598,11 +594,13 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Extensions.Handles (DebugUtilsMessengerEXT)
 import Vulkan.Extensions.Handles (DebugUtilsMessengerEXT(..))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBeginDebugUtilsLabelEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdEndDebugUtilsLabelEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdInsertDebugUtilsLabelEXT))
@@ -615,6 +613,7 @@ import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateDebugUtilsMessengerEXT))
 import Vulkan.Dynamic (InstanceCmds(pVkDestroyDebugUtilsMessengerEXT))
 import Vulkan.Dynamic (InstanceCmds(pVkSubmitDebugUtilsMessageEXT))
@@ -622,6 +621,7 @@ import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Enums.ObjectType (ObjectType)
 import Vulkan.Core10.Handles (Queue)
 import Vulkan.Core10.Handles (Queue(..))
+import Vulkan.Core10.Handles (Queue(Queue))
 import Vulkan.Core10.Handles (Queue_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -681,6 +681,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsObjectNameInfoEXT', 'Vulkan.Core10.Handles.Device'
 setDebugUtilsObjectNameEXT :: forall io
                             . (MonadIO io)
@@ -691,7 +692,7 @@ setDebugUtilsObjectNameEXT :: forall io
                               DebugUtilsObjectNameInfoEXT
                            -> io ()
 setDebugUtilsObjectNameEXT device nameInfo = liftIO . evalContT $ do
-  let vkSetDebugUtilsObjectNameEXTPtr = pVkSetDebugUtilsObjectNameEXT (deviceCmds (device :: Device))
+  let vkSetDebugUtilsObjectNameEXTPtr = pVkSetDebugUtilsObjectNameEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkSetDebugUtilsObjectNameEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetDebugUtilsObjectNameEXT is null" Nothing Nothing
   let vkSetDebugUtilsObjectNameEXT' = mkVkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXTPtr
@@ -737,6 +738,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsObjectTagInfoEXT', 'Vulkan.Core10.Handles.Device'
 setDebugUtilsObjectTagEXT :: forall io
                            . (MonadIO io)
@@ -747,7 +749,7 @@ setDebugUtilsObjectTagEXT :: forall io
                              DebugUtilsObjectTagInfoEXT
                           -> io ()
 setDebugUtilsObjectTagEXT device tagInfo = liftIO . evalContT $ do
-  let vkSetDebugUtilsObjectTagEXTPtr = pVkSetDebugUtilsObjectTagEXT (deviceCmds (device :: Device))
+  let vkSetDebugUtilsObjectTagEXTPtr = pVkSetDebugUtilsObjectTagEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkSetDebugUtilsObjectTagEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetDebugUtilsObjectTagEXT is null" Nothing Nothing
   let vkSetDebugUtilsObjectTagEXT' = mkVkSetDebugUtilsObjectTagEXT vkSetDebugUtilsObjectTagEXTPtr
@@ -769,14 +771,15 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | -                                                                                                                          | -                                                                                                                      | Any                                                                                                                   | -                                                                                                                                   |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | -                                                                                                                          | -                                                                                                                      | Any                                                                                                                   |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsLabelEXT', 'Vulkan.Core10.Handles.Queue'
 queueBeginDebugUtilsLabelEXT :: forall io
                               . (MonadIO io)
@@ -793,7 +796,7 @@ queueBeginDebugUtilsLabelEXT :: forall io
                                 ("labelInfo" ::: DebugUtilsLabelEXT)
                              -> io ()
 queueBeginDebugUtilsLabelEXT queue labelInfo = liftIO . evalContT $ do
-  let vkQueueBeginDebugUtilsLabelEXTPtr = pVkQueueBeginDebugUtilsLabelEXT (deviceCmds (queue :: Queue))
+  let vkQueueBeginDebugUtilsLabelEXTPtr = pVkQueueBeginDebugUtilsLabelEXT (case queue of Queue{deviceCmds} -> deviceCmds)
   lift $ unless (vkQueueBeginDebugUtilsLabelEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueBeginDebugUtilsLabelEXT is null" Nothing Nothing
   let vkQueueBeginDebugUtilsLabelEXT' = mkVkQueueBeginDebugUtilsLabelEXT vkQueueBeginDebugUtilsLabelEXTPtr
@@ -831,14 +834,15 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | -                                                                                                                          | -                                                                                                                      | Any                                                                                                                   | -                                                                                                                                   |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | -                                                                                                                          | -                                                                                                                      | Any                                                                                                                   |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'Vulkan.Core10.Handles.Queue'
 queueEndDebugUtilsLabelEXT :: forall io
                             . (MonadIO io)
@@ -846,7 +850,7 @@ queueEndDebugUtilsLabelEXT :: forall io
                               Queue
                            -> io ()
 queueEndDebugUtilsLabelEXT queue = liftIO $ do
-  let vkQueueEndDebugUtilsLabelEXTPtr = pVkQueueEndDebugUtilsLabelEXT (deviceCmds (queue :: Queue))
+  let vkQueueEndDebugUtilsLabelEXTPtr = pVkQueueEndDebugUtilsLabelEXT (case queue of Queue{deviceCmds} -> deviceCmds)
   unless (vkQueueEndDebugUtilsLabelEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueEndDebugUtilsLabelEXT is null" Nothing Nothing
   let vkQueueEndDebugUtilsLabelEXT' = mkVkQueueEndDebugUtilsLabelEXT vkQueueEndDebugUtilsLabelEXTPtr
@@ -867,14 +871,15 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | -                                                                                                                          | -                                                                                                                      | Any                                                                                                                   | -                                                                                                                                   |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | -                                                                                                                          | -                                                                                                                      | Any                                                                                                                   |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsLabelEXT', 'Vulkan.Core10.Handles.Queue'
 queueInsertDebugUtilsLabelEXT :: forall io
                                . (MonadIO io)
@@ -891,7 +896,7 @@ queueInsertDebugUtilsLabelEXT :: forall io
                                  ("labelInfo" ::: DebugUtilsLabelEXT)
                               -> io ()
 queueInsertDebugUtilsLabelEXT queue labelInfo = liftIO . evalContT $ do
-  let vkQueueInsertDebugUtilsLabelEXTPtr = pVkQueueInsertDebugUtilsLabelEXT (deviceCmds (queue :: Queue))
+  let vkQueueInsertDebugUtilsLabelEXTPtr = pVkQueueInsertDebugUtilsLabelEXT (case queue of Queue{deviceCmds} -> deviceCmds)
   lift $ unless (vkQueueInsertDebugUtilsLabelEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueInsertDebugUtilsLabelEXT is null" Nothing Nothing
   let vkQueueInsertDebugUtilsLabelEXT' = mkVkQueueInsertDebugUtilsLabelEXT vkQueueInsertDebugUtilsLabelEXTPtr
@@ -938,15 +943,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'DebugUtilsLabelEXT'
 cmdBeginDebugUtilsLabelEXT :: forall io
                             . (MonadIO io)
@@ -958,7 +964,7 @@ cmdBeginDebugUtilsLabelEXT :: forall io
                               ("labelInfo" ::: DebugUtilsLabelEXT)
                            -> io ()
 cmdBeginDebugUtilsLabelEXT commandBuffer labelInfo = liftIO . evalContT $ do
-  let vkCmdBeginDebugUtilsLabelEXTPtr = pVkCmdBeginDebugUtilsLabelEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBeginDebugUtilsLabelEXTPtr = pVkCmdBeginDebugUtilsLabelEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBeginDebugUtilsLabelEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginDebugUtilsLabelEXT is null" Nothing Nothing
   let vkCmdBeginDebugUtilsLabelEXT' = mkVkCmdBeginDebugUtilsLabelEXT vkCmdBeginDebugUtilsLabelEXTPtr
@@ -993,6 +999,17 @@ foreign import ccall
 -- the linear series of submissions to a single queue, the calls to
 -- 'cmdBeginDebugUtilsLabelEXT' and 'cmdEndDebugUtilsLabelEXT' /must/ be
 -- matched and balanced.
+--
+-- There /can/ be problems reporting command buffer debug labels during the
+-- recording process because command buffers /may/ be recorded out of
+-- sequence with the resulting execution order. Since the recording order
+-- /may/ be different, a solitary command buffer /may/ have an inconsistent
+-- view of the debug label regions by itself. Therefore, if an issue occurs
+-- during the recording of a command buffer, and the environment requires
+-- returning debug labels, the implementation /may/ return only those
+-- labels it is aware of. This is true even if the implementation is aware
+-- of only the debug labels within the command buffer being actively
+-- recorded.
 --
 -- == Valid Usage
 --
@@ -1032,15 +1049,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdEndDebugUtilsLabelEXT :: forall io
                           . (MonadIO io)
@@ -1049,7 +1067,7 @@ cmdEndDebugUtilsLabelEXT :: forall io
                             CommandBuffer
                          -> io ()
 cmdEndDebugUtilsLabelEXT commandBuffer = liftIO $ do
-  let vkCmdEndDebugUtilsLabelEXTPtr = pVkCmdEndDebugUtilsLabelEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdEndDebugUtilsLabelEXTPtr = pVkCmdEndDebugUtilsLabelEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdEndDebugUtilsLabelEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndDebugUtilsLabelEXT is null" Nothing Nothing
   let vkCmdEndDebugUtilsLabelEXT' = mkVkCmdEndDebugUtilsLabelEXT vkCmdEndDebugUtilsLabelEXTPtr
@@ -1095,15 +1113,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'DebugUtilsLabelEXT'
 cmdInsertDebugUtilsLabelEXT :: forall io
                              . (MonadIO io)
@@ -1114,7 +1133,7 @@ cmdInsertDebugUtilsLabelEXT :: forall io
                                ("labelInfo" ::: DebugUtilsLabelEXT)
                             -> io ()
 cmdInsertDebugUtilsLabelEXT commandBuffer labelInfo = liftIO . evalContT $ do
-  let vkCmdInsertDebugUtilsLabelEXTPtr = pVkCmdInsertDebugUtilsLabelEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdInsertDebugUtilsLabelEXTPtr = pVkCmdInsertDebugUtilsLabelEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdInsertDebugUtilsLabelEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdInsertDebugUtilsLabelEXT is null" Nothing Nothing
   let vkCmdInsertDebugUtilsLabelEXT' = mkVkCmdInsertDebugUtilsLabelEXT vkCmdInsertDebugUtilsLabelEXTPtr
@@ -1166,6 +1185,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'DebugUtilsMessengerCreateInfoEXT',
 -- 'Vulkan.Extensions.Handles.DebugUtilsMessengerEXT',
@@ -1184,7 +1204,7 @@ createDebugUtilsMessengerEXT :: forall io
                                 ("allocator" ::: Maybe AllocationCallbacks)
                              -> io (DebugUtilsMessengerEXT)
 createDebugUtilsMessengerEXT instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateDebugUtilsMessengerEXTPtr = pVkCreateDebugUtilsMessengerEXT (instanceCmds (instance' :: Instance))
+  let vkCreateDebugUtilsMessengerEXTPtr = pVkCreateDebugUtilsMessengerEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateDebugUtilsMessengerEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDebugUtilsMessengerEXT is null" Nothing Nothing
   let vkCreateDebugUtilsMessengerEXT' = mkVkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessengerEXTPtr
@@ -1261,6 +1281,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Extensions.Handles.DebugUtilsMessengerEXT',
 -- 'Vulkan.Core10.Handles.Instance'
@@ -1280,7 +1301,7 @@ destroyDebugUtilsMessengerEXT :: forall io
                                  ("allocator" ::: Maybe AllocationCallbacks)
                               -> io ()
 destroyDebugUtilsMessengerEXT instance' messenger allocator = liftIO . evalContT $ do
-  let vkDestroyDebugUtilsMessengerEXTPtr = pVkDestroyDebugUtilsMessengerEXT (instanceCmds (instance' :: Instance))
+  let vkDestroyDebugUtilsMessengerEXTPtr = pVkDestroyDebugUtilsMessengerEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkDestroyDebugUtilsMessengerEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyDebugUtilsMessengerEXT is null" Nothing Nothing
   let vkDestroyDebugUtilsMessengerEXT' = mkVkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXTPtr
@@ -1335,14 +1356,15 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsMessageSeverityFlagBitsEXT', 'DebugUtilsMessageTypeFlagsEXT',
 -- 'DebugUtilsMessengerCallbackDataEXT', 'Vulkan.Core10.Handles.Instance'
 submitDebugUtilsMessageEXT :: forall io
                             . (MonadIO io)
                            => -- | @instance@ is the debug stream’s 'Vulkan.Core10.Handles.Instance'.
                               Instance
-                           -> -- | @messageSeverity@ is the 'DebugUtilsMessageSeverityFlagBitsEXT' severity
-                              -- of this event\/message.
+                           -> -- | @messageSeverity@ is a 'DebugUtilsMessageSeverityFlagBitsEXT' value
+                              -- specifying the severity of this event\/message.
                               DebugUtilsMessageSeverityFlagBitsEXT
                            -> -- | @messageTypes@ is a bitmask of 'DebugUtilsMessageTypeFlagBitsEXT'
                               -- specifying which type of event(s) to identify with this message.
@@ -1352,7 +1374,7 @@ submitDebugUtilsMessageEXT :: forall io
                               DebugUtilsMessengerCallbackDataEXT
                            -> io ()
 submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData = liftIO . evalContT $ do
-  let vkSubmitDebugUtilsMessageEXTPtr = pVkSubmitDebugUtilsMessageEXT (instanceCmds (instance' :: Instance))
+  let vkSubmitDebugUtilsMessageEXTPtr = pVkSubmitDebugUtilsMessageEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkSubmitDebugUtilsMessageEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSubmitDebugUtilsMessageEXT is null" Nothing Nothing
   let vkSubmitDebugUtilsMessageEXT' = mkVkSubmitDebugUtilsMessageEXT vkSubmitDebugUtilsMessageEXTPtr
@@ -1404,6 +1426,7 @@ submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData =
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsMessengerCallbackDataEXT',
 -- 'Vulkan.Core10.Enums.ObjectType.ObjectType',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -1425,7 +1448,7 @@ deriving instance Generic (DebugUtilsObjectNameInfoEXT)
 deriving instance Show DebugUtilsObjectNameInfoEXT
 
 instance ToCStruct DebugUtilsObjectNameInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DebugUtilsObjectNameInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1474,6 +1497,7 @@ instance Zero DebugUtilsObjectNameInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'Vulkan.Core10.Enums.ObjectType.ObjectType',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'setDebugUtilsObjectTagEXT'
@@ -1516,7 +1540,7 @@ deriving instance Generic (DebugUtilsObjectTagInfoEXT)
 deriving instance Show DebugUtilsObjectTagInfoEXT
 
 instance ToCStruct DebugUtilsObjectTagInfoEXT where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DebugUtilsObjectTagInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_TAG_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1569,6 +1593,7 @@ instance Zero DebugUtilsObjectTagInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsMessengerCallbackDataEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'cmdBeginDebugUtilsLabelEXT', 'cmdInsertDebugUtilsLabelEXT',
@@ -1593,7 +1618,7 @@ deriving instance Generic (DebugUtilsLabelEXT)
 deriving instance Show DebugUtilsLabelEXT
 
 instance ToCStruct DebugUtilsLabelEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DebugUtilsLabelEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1685,6 +1710,7 @@ instance Zero DebugUtilsLabelEXT where
 -- = See Also
 --
 -- 'PFN_vkDebugUtilsMessengerCallbackEXT',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsMessageSeverityFlagsEXT', 'DebugUtilsMessageTypeFlagsEXT',
 -- 'DebugUtilsMessengerCreateFlagsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -1736,7 +1762,7 @@ deriving instance Generic (DebugUtilsMessengerCreateInfoEXT)
 deriving instance Show DebugUtilsMessengerCreateInfoEXT
 
 instance ToCStruct DebugUtilsMessengerCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DebugUtilsMessengerCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1852,6 +1878,7 @@ instance Zero DebugUtilsMessengerCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsLabelEXT', 'DebugUtilsMessengerCallbackDataFlagsEXT',
 -- 'DebugUtilsObjectNameInfoEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -1898,7 +1925,7 @@ deriving instance Generic (DebugUtilsMessengerCallbackDataEXT)
 deriving instance Show DebugUtilsMessengerCallbackDataEXT
 
 instance ToCStruct DebugUtilsMessengerCallbackDataEXT where
-  withCStruct x f = allocaBytesAligned 96 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 96 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DebugUtilsMessengerCallbackDataEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1911,15 +1938,15 @@ instance ToCStruct DebugUtilsMessengerCallbackDataEXT where
     pMessage'' <- ContT $ useAsCString (message)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr CChar))) pMessage''
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (queueLabels)) :: Word32))
-    pPQueueLabels' <- ContT $ allocaBytesAligned @DebugUtilsLabelEXT ((Data.Vector.length (queueLabels)) * 40) 8
+    pPQueueLabels' <- ContT $ allocaBytes @DebugUtilsLabelEXT ((Data.Vector.length (queueLabels)) * 40)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPQueueLabels' `plusPtr` (40 * (i)) :: Ptr DebugUtilsLabelEXT) (e) . ($ ())) (queueLabels)
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr DebugUtilsLabelEXT))) (pPQueueLabels')
     lift $ poke ((p `plusPtr` 64 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (cmdBufLabels)) :: Word32))
-    pPCmdBufLabels' <- ContT $ allocaBytesAligned @DebugUtilsLabelEXT ((Data.Vector.length (cmdBufLabels)) * 40) 8
+    pPCmdBufLabels' <- ContT $ allocaBytes @DebugUtilsLabelEXT ((Data.Vector.length (cmdBufLabels)) * 40)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPCmdBufLabels' `plusPtr` (40 * (i)) :: Ptr DebugUtilsLabelEXT) (e) . ($ ())) (cmdBufLabels)
     lift $ poke ((p `plusPtr` 72 :: Ptr (Ptr DebugUtilsLabelEXT))) (pPCmdBufLabels')
     lift $ poke ((p `plusPtr` 80 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (objects)) :: Word32))
-    pPObjects' <- ContT $ allocaBytesAligned @DebugUtilsObjectNameInfoEXT ((Data.Vector.length (objects)) * 40) 8
+    pPObjects' <- ContT $ allocaBytes @DebugUtilsObjectNameInfoEXT ((Data.Vector.length (objects)) * 40)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPObjects' `plusPtr` (40 * (i)) :: Ptr DebugUtilsObjectNameInfoEXT) (e) . ($ ())) (objects)
     lift $ poke ((p `plusPtr` 88 :: Ptr (Ptr DebugUtilsObjectNameInfoEXT))) (pPObjects')
     lift $ f
@@ -1972,6 +1999,7 @@ instance Zero DebugUtilsMessengerCallbackDataEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsMessengerCreateInfoEXT'
 newtype DebugUtilsMessengerCreateFlagsEXT = DebugUtilsMessengerCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -2010,6 +2038,7 @@ instance Read DebugUtilsMessengerCreateFlagsEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsMessengerCallbackDataEXT'
 newtype DebugUtilsMessengerCallbackDataFlagsEXT = DebugUtilsMessengerCallbackDataFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -2044,8 +2073,27 @@ type DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagBitsEXT
 -- | VkDebugUtilsMessageSeverityFlagBitsEXT - Bitmask specifying which
 -- severities of events cause a debug messenger callback
 --
+-- = Description
+--
+-- Note
+--
+-- The values of 'DebugUtilsMessageSeverityFlagBitsEXT' are sorted based on
+-- severity. The higher the flag value, the more severe the message. This
+-- allows for simple boolean operation comparisons when looking at
+-- 'DebugUtilsMessageSeverityFlagBitsEXT' values.
+--
+-- For example:
+--
+-- >     if (messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
+-- >         // Do something for warnings and errors
+-- >     }
+--
+-- In addition, space has been left between the enums to allow for later
+-- addition of new severities in between the existing values.
+--
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsMessageSeverityFlagsEXT', 'submitDebugUtilsMessageEXT'
 newtype DebugUtilsMessageSeverityFlagBitsEXT = DebugUtilsMessageSeverityFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -2105,6 +2153,7 @@ type DebugUtilsMessageTypeFlagsEXT = DebugUtilsMessageTypeFlagBitsEXT
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsMessageTypeFlagsEXT'
 newtype DebugUtilsMessageTypeFlagBitsEXT = DebugUtilsMessageTypeFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -2158,16 +2207,20 @@ type FN_vkDebugUtilsMessengerCallbackEXT = DebugUtilsMessageSeverityFlagBitsEXT 
 --
 -- = Description
 --
--- The callback /must/ not call 'destroyDebugUtilsMessengerEXT'.
---
 -- The callback returns a 'Vulkan.Core10.FundamentalTypes.Bool32', which is
 -- interpreted in a layer-specified manner. The application /should/ always
 -- return 'Vulkan.Core10.FundamentalTypes.FALSE'. The
 -- 'Vulkan.Core10.FundamentalTypes.TRUE' value is reserved for use in layer
 -- development.
 --
+-- == Valid Usage
+--
+-- -   #VUID-PFN_vkDebugUtilsMessengerCallbackEXT-None-04769# The callback
+--     /must/ not make calls to any Vulkan commands
+--
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsMessengerCreateInfoEXT'
 type PFN_vkDebugUtilsMessengerCallbackEXT = FunPtr FN_vkDebugUtilsMessengerCallbackEXT
 

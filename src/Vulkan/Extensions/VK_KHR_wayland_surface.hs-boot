@@ -26,10 +26,10 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_wayland_surface:%20&body=@critsec%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_wayland_surface] @critsec%0A<<Here describe the issue or question you have about the VK_KHR_wayland_surface extension>> >
 --
 --     -   Ian Elliott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_wayland_surface:%20&body=@ianelliottus%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_wayland_surface] @ianelliottus%0A<<Here describe the issue or question you have about the VK_KHR_wayland_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -147,7 +147,7 @@
 --
 --     -   Adjusted wording of issue #1 to match the agreed-upon solution.
 --
---     -   Renamed \"window\" parameters to \"surface\" to match Wayland
+--     -   Renamed “window” parameters to “surface” to match Wayland
 --         conventions.
 --
 -- -   Revision 3, 2015-10-26 (Ian Elliott)
@@ -173,13 +173,13 @@
 --         'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' and the
 --         Wayland requests sent to the compositor.
 --
--- = See Also
+-- == See Also
 --
 -- 'WaylandSurfaceCreateFlagsKHR', 'WaylandSurfaceCreateInfoKHR',
 -- 'createWaylandSurfaceKHR',
 -- 'getPhysicalDeviceWaylandPresentationSupportKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_wayland_surface Vulkan Specification>

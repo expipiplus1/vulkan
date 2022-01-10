@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Eric Werness
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_clip_space_w_scaling:%20&body=@ewerness-nv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_clip_space_w_scaling] @ewerness-nv%0A<<Here describe the issue or question you have about the VK_NV_clip_space_w_scaling extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -191,12 +191,12 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PipelineViewportWScalingStateCreateInfoNV', 'ViewportWScalingNV',
 -- 'cmdSetViewportWScalingNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_clip_space_w_scaling Vulkan Specification>
@@ -215,7 +215,7 @@ module Vulkan.Extensions.VK_NV_clip_space_w_scaling  ( cmdSetViewportWScalingNV
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -258,6 +258,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetViewportWScalingNV))
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -269,14 +270,23 @@ foreign import ccall
   "dynamic" mkVkCmdSetViewportWScalingNV
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr ViewportWScalingNV -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr ViewportWScalingNV -> IO ()
 
--- | vkCmdSetViewportWScalingNV - Set the viewport W scaling on a command
--- buffer
+-- | vkCmdSetViewportWScalingNV - Set the viewport W scaling dynamically for
+-- a command buffer
 --
 -- = Description
 --
 -- The viewport parameters taken from element i of @pViewportWScalings@
 -- replace the current state for the viewport index @firstViewport@ + i,
 -- for i in [0, @viewportCount@).
+--
+-- This command sets the viewport __W__ scaling for subsequent drawing
+-- commands when the graphics pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_NV'
+-- set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'PipelineViewportWScalingStateCreateInfoNV'::@pViewportWScalings@ values
+-- used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -317,15 +327,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_clip_space_w_scaling VK_NV_clip_space_w_scaling>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'ViewportWScalingNV'
 cmdSetViewportWScalingNV :: forall io
                           . (MonadIO io)
@@ -340,11 +351,11 @@ cmdSetViewportWScalingNV :: forall io
                             ("viewportWScalings" ::: Vector ViewportWScalingNV)
                          -> io ()
 cmdSetViewportWScalingNV commandBuffer firstViewport viewportWScalings = liftIO . evalContT $ do
-  let vkCmdSetViewportWScalingNVPtr = pVkCmdSetViewportWScalingNV (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetViewportWScalingNVPtr = pVkCmdSetViewportWScalingNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetViewportWScalingNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetViewportWScalingNV is null" Nothing Nothing
   let vkCmdSetViewportWScalingNV' = mkVkCmdSetViewportWScalingNV vkCmdSetViewportWScalingNVPtr
-  pPViewportWScalings <- ContT $ allocaBytesAligned @ViewportWScalingNV ((Data.Vector.length (viewportWScalings)) * 8) 4
+  pPViewportWScalings <- ContT $ allocaBytes @ViewportWScalingNV ((Data.Vector.length (viewportWScalings)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPViewportWScalings `plusPtr` (8 * (i)) :: Ptr ViewportWScalingNV) (e)) (viewportWScalings)
   lift $ traceAroundEvent "vkCmdSetViewportWScalingNV" (vkCmdSetViewportWScalingNV' (commandBufferHandle (commandBuffer)) (firstViewport) ((fromIntegral (Data.Vector.length $ (viewportWScalings)) :: Word32)) (pPViewportWScalings))
   pure $ ()
@@ -354,6 +365,7 @@ cmdSetViewportWScalingNV commandBuffer firstViewport viewportWScalings = liftIO 
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_clip_space_w_scaling VK_NV_clip_space_w_scaling>,
 -- 'PipelineViewportWScalingStateCreateInfoNV', 'cmdSetViewportWScalingNV'
 data ViewportWScalingNV = ViewportWScalingNV
   { -- | @xcoeff@ and @ycoeff@ are the viewport’s W scaling factor for x and y
@@ -369,7 +381,7 @@ deriving instance Generic (ViewportWScalingNV)
 deriving instance Show ViewportWScalingNV
 
 instance ToCStruct ViewportWScalingNV where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ViewportWScalingNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (xcoeff))
     poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (ycoeff))
@@ -407,6 +419,7 @@ instance Zero ViewportWScalingNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_clip_space_w_scaling VK_NV_clip_space_w_scaling>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'ViewportWScalingNV'
 data PipelineViewportWScalingStateCreateInfoNV = PipelineViewportWScalingStateCreateInfoNV
@@ -433,7 +446,7 @@ deriving instance Generic (PipelineViewportWScalingStateCreateInfoNV)
 deriving instance Show PipelineViewportWScalingStateCreateInfoNV
 
 instance ToCStruct PipelineViewportWScalingStateCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineViewportWScalingStateCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -449,7 +462,7 @@ instance ToCStruct PipelineViewportWScalingStateCreateInfoNV where
     pViewportWScalings'' <- if Data.Vector.null (viewportWScalings)
       then pure nullPtr
       else do
-        pPViewportWScalings <- ContT $ allocaBytesAligned @ViewportWScalingNV (((Data.Vector.length (viewportWScalings))) * 8) 4
+        pPViewportWScalings <- ContT $ allocaBytes @ViewportWScalingNV (((Data.Vector.length (viewportWScalings))) * 8)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPViewportWScalings `plusPtr` (8 * (i)) :: Ptr ViewportWScalingNV) (e)) ((viewportWScalings))
         pure $ pPViewportWScalings
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ViewportWScalingNV))) pViewportWScalings''

@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Matthew Rusch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_private_data:%20&body=@mattruschnv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_private_data] @mattruschnv%0A<<Here describe the issue or question you have about the VK_EXT_private_data extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -119,7 +119,7 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'DevicePrivateDataCreateInfoEXT',
 -- 'PhysicalDevicePrivateDataFeaturesEXT',
@@ -129,7 +129,7 @@
 -- 'createPrivateDataSlotEXT', 'destroyPrivateDataSlotEXT',
 -- 'getPrivateDataEXT', 'setPrivateDataEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data Vulkan Specification>

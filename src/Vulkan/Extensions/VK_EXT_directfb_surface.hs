@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Nicolas Caramelli
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_directfb_surface:%20&body=@caramelli%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_directfb_surface] @caramelli%0A<<Here describe the issue or question you have about the VK_EXT_directfb_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -78,13 +78,13 @@
 --
 --     -   Initial version
 --
--- = See Also
+-- == See Also
 --
 -- 'DirectFBSurfaceCreateFlagsEXT', 'DirectFBSurfaceCreateInfoEXT',
 -- 'createDirectFBSurfaceEXT',
 -- 'getPhysicalDeviceDirectFBPresentationSupportEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_directfb_surface Vulkan Specification>
@@ -110,7 +110,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -155,11 +155,13 @@ import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateDirectFBSurfaceEXT))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceDirectFBPresentationSupportEXT))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -212,6 +214,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_directfb_surface VK_EXT_directfb_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'DirectFBSurfaceCreateInfoEXT', 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
@@ -228,7 +231,7 @@ createDirectFBSurfaceEXT :: forall io
                             ("allocator" ::: Maybe AllocationCallbacks)
                          -> io (SurfaceKHR)
 createDirectFBSurfaceEXT instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateDirectFBSurfaceEXTPtr = pVkCreateDirectFBSurfaceEXT (instanceCmds (instance' :: Instance))
+  let vkCreateDirectFBSurfaceEXTPtr = pVkCreateDirectFBSurfaceEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateDirectFBSurfaceEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDirectFBSurfaceEXT is null" Nothing Nothing
   let vkCreateDirectFBSurfaceEXT' = mkVkCreateDirectFBSurfaceEXT vkCreateDirectFBSurfaceEXTPtr
@@ -262,6 +265,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_directfb_surface VK_EXT_directfb_surface>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceDirectFBPresentationSupportEXT :: forall io
                                                  . (MonadIO io)
@@ -286,7 +290,7 @@ getPhysicalDeviceDirectFBPresentationSupportEXT :: forall io
                                                    ("dfb" ::: Ptr IDirectFB)
                                                 -> io (Bool)
 getPhysicalDeviceDirectFBPresentationSupportEXT physicalDevice queueFamilyIndex dfb = liftIO $ do
-  let vkGetPhysicalDeviceDirectFBPresentationSupportEXTPtr = pVkGetPhysicalDeviceDirectFBPresentationSupportEXT (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceDirectFBPresentationSupportEXTPtr = pVkGetPhysicalDeviceDirectFBPresentationSupportEXT (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   unless (vkGetPhysicalDeviceDirectFBPresentationSupportEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceDirectFBPresentationSupportEXT is null" Nothing Nothing
   let vkGetPhysicalDeviceDirectFBPresentationSupportEXT' = mkVkGetPhysicalDeviceDirectFBPresentationSupportEXT vkGetPhysicalDeviceDirectFBPresentationSupportEXTPtr
@@ -301,6 +305,7 @@ getPhysicalDeviceDirectFBPresentationSupportEXT physicalDevice queueFamilyIndex 
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_directfb_surface VK_EXT_directfb_surface>,
 -- 'DirectFBSurfaceCreateFlagsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createDirectFBSurfaceEXT'
@@ -328,7 +333,7 @@ deriving instance Generic (DirectFBSurfaceCreateInfoEXT)
 deriving instance Show DirectFBSurfaceCreateInfoEXT
 
 instance ToCStruct DirectFBSurfaceCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DirectFBSurfaceCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DIRECTFB_SURFACE_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -375,6 +380,7 @@ instance Zero DirectFBSurfaceCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_directfb_surface VK_EXT_directfb_surface>,
 -- 'DirectFBSurfaceCreateInfoEXT'
 newtype DirectFBSurfaceCreateFlagsEXT = DirectFBSurfaceCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

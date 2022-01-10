@@ -33,12 +33,12 @@ module VulkanMemoryAllocator  ( createAllocator
                               , withMemoryForImage
                               , freeMemory
                               , freeMemoryPages
-                              , resizeAllocation
                               , getAllocationInfo
                               , touchAllocation
                               , setAllocationUserData
                               , createLostAllocation
                               , withLostAllocation
+                              , getAllocationMemoryProperties
                               , mapMemory
                               , withMappedMemory
                               , unmapMemory
@@ -60,10 +60,24 @@ module VulkanMemoryAllocator  ( createAllocator
                               , bindImageMemory2
                               , createBuffer
                               , withBuffer
+                              , createBufferWithAlignment
                               , destroyBuffer
                               , createImage
                               , withImage
                               , destroyImage
+                              , createVirtualBlock
+                              , withVirtualBlock
+                              , destroyVirtualBlock
+                              , isVirtualBlockEmpty
+                              , getVirtualAllocationInfo
+                              , virtualAllocate
+                              , withVirtualAllocation
+                              , virtualFree
+                              , clearVirtualBlock
+                              , setVirtualAllocationUserData
+                              , calculateVirtualBlockStats
+                              , buildVirtualBlockStatsString
+                              , freeVirtualBlockStatsString
                               , Allocator(..)
                               , PFN_vmaAllocateDeviceMemoryFunction
                               , FN_vmaAllocateDeviceMemoryFunction
@@ -142,6 +156,24 @@ module VulkanMemoryAllocator  ( createAllocator
                               , DefragmentationPassInfo(..)
                               , DefragmentationInfo(..)
                               , DefragmentationStats(..)
+                              , VirtualBlockCreateFlags
+                              , VirtualBlockCreateFlagBits( VIRTUAL_BLOCK_CREATE_LINEAR_ALGORITHM_BIT
+                                                          , VIRTUAL_BLOCK_CREATE_BUDDY_ALGORITHM_BIT
+                                                          , VIRTUAL_BLOCK_CREATE_ALGORITHM_MASK
+                                                          , ..
+                                                          )
+                              , VirtualBlockCreateInfo(..)
+                              , VirtualAllocationCreateFlags
+                              , VirtualAllocationCreateFlagBits( VIRTUAL_ALLOCATION_CREATE_UPPER_ADDRESS_BIT
+                                                               , VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT
+                                                               , VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT
+                                                               , VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT
+                                                               , VIRTUAL_ALLOCATION_CREATE_STRATEGY_MASK
+                                                               , ..
+                                                               )
+                              , VirtualAllocationCreateInfo(..)
+                              , VirtualAllocationInfo(..)
+                              , VirtualBlock(..)
                               ) where
 
 import Vulkan (AllocationCallbacks)
@@ -156,6 +188,7 @@ import Vulkan (CommandBuffer_T)
 import Vulkan (DeviceMemory)
 import Vulkan (DeviceSize)
 import Vulkan (Device_T)
+import Vulkan (ExternalMemoryHandleTypeFlagsKHR)
 import Vulkan (Flags)
 import Vulkan (Image)
 import Vulkan (ImageCreateInfo)
@@ -184,7 +217,7 @@ import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (maybePeek)
@@ -472,6 +505,8 @@ foreign import ccall
 -- __Parameters__
 --
 -- +-----------+-----------+-----------------------------------------------+
+-- |           | allocator |                                               |
+-- +-----------+-----------+-----------------------------------------------+
 -- | out       | pBudget   | Must point to array with number of elements   |
 -- |           |           | at least equal to number of memory heaps in   |
 -- |           |           | physical device used.                         |
@@ -503,13 +538,18 @@ foreign import ccall
   "vmaBuildStatsString" ffiVmaBuildStatsString
   :: Allocator -> Ptr (Ptr CChar) -> Bool32 -> IO ()
 
--- | Builds and returns statistics as string in JSON format.
+-- | Builds and returns statistics as a null-terminated string in JSON
+-- format.
 --
 -- __Parameters__
 --
 -- +-----------+---------------+-----------------------------------------------+
+-- |           | allocator     |                                               |
+-- +-----------+---------------+-----------------------------------------------+
 -- | out       | ppStatsString | Must be freed using 'freeStatsString'         |
 -- |           |               | function.                                     |
+-- +-----------+---------------+-----------------------------------------------+
+-- |           | detailedMap   |                                               |
 -- +-----------+---------------+-----------------------------------------------+
 buildStatsString :: forall io
                   . (MonadIO io)
@@ -831,9 +871,9 @@ foreign import ccall
 -- -   @VK_SUCCESS@ - corruption detection has been performed and
 --     succeeded.
 --
--- -   @VK_ERROR_VALIDATION_FAILED_EXT@ - corruption detection has been
---     performed and found memory corruptions around one of the
---     allocations. @VMA_ASSERT@ is also fired in that case.
+-- -   @VK_ERROR_UNKNOWN@ - corruption detection has been performed and
+--     found memory corruptions around one of the allocations. @VMA_ASSERT@
+--     is also fired in that case.
 --
 -- -   Other value: Error returned by Vulkan, e.g. memory mapping failure.
 checkPoolCorruption :: forall io
@@ -915,13 +955,19 @@ foreign import ccall
 --
 -- __Parameters__
 --
--- +-----------+-----------------+-----------------------------------------------+
--- | out       | pAllocation     | Handle to allocated memory.                   |
--- +-----------+-----------------+-----------------------------------------------+
--- | out       | pAllocationInfo | Optional. Information about allocated memory. |
--- |           |                 | It can be later fetched using function        |
--- |           |                 | 'getAllocationInfo'.                          |
--- +-----------+-----------------+-----------------------------------------------+
+-- +-----------+-----------------------+-----------------------------------------------+
+-- |           | allocator             |                                               |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- |           | pVkMemoryRequirements |                                               |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- |           | pCreateInfo           |                                               |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- | out       | pAllocation           | Handle to allocated memory.                   |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- | out       | pAllocationInfo       | Optional. Information about allocated memory. |
+-- |           |                       | It can be later fetched using function        |
+-- |           |                       | 'getAllocationInfo'.                          |
+-- +-----------+-----------------------+-----------------------------------------------+
 --
 -- You should free the memory using 'freeMemory' or 'freeMemoryPages'.
 --
@@ -1014,9 +1060,9 @@ allocateMemoryPages :: forall io
                        ("createInfo" ::: Vector AllocationCreateInfo)
                     -> io (("allocations" ::: Vector Allocation), ("allocationInfo" ::: Vector AllocationInfo))
 allocateMemoryPages allocator vkMemoryRequirements createInfo = liftIO . evalContT $ do
-  pPVkMemoryRequirements <- ContT $ allocaBytesAligned @MemoryRequirements ((Data.Vector.length (vkMemoryRequirements)) * 24) 8
+  pPVkMemoryRequirements <- ContT $ allocaBytes @MemoryRequirements ((Data.Vector.length (vkMemoryRequirements)) * 24)
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPVkMemoryRequirements `plusPtr` (24 * (i)) :: Ptr MemoryRequirements) (e) . ($ ())) (vkMemoryRequirements)
-  pPCreateInfo <- ContT $ allocaBytesAligned @AllocationCreateInfo ((Data.Vector.length (createInfo)) * 48) 8
+  pPCreateInfo <- ContT $ allocaBytes @AllocationCreateInfo ((Data.Vector.length (createInfo)) * 48)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPCreateInfo `plusPtr` (48 * (i)) :: Ptr AllocationCreateInfo) (e)) (createInfo)
   let pVkMemoryRequirementsLength = Data.Vector.length $ (vkMemoryRequirements)
   lift $ unless ((Data.Vector.length $ (createInfo)) == pVkMemoryRequirementsLength) $
@@ -1053,6 +1099,12 @@ foreign import ccall
 
 -- | __Parameters__
 --
+-- +-----------+-----------------+-----------------------------------------------+
+-- |           | allocator       |                                               |
+-- +-----------+-----------------+-----------------------------------------------+
+-- |           | buffer          |                                               |
+-- +-----------+-----------------+-----------------------------------------------+
+-- |           | pCreateInfo     |                                               |
 -- +-----------+-----------------+-----------------------------------------------+
 -- | out       | pAllocation     | Handle to allocated memory.                   |
 -- +-----------+-----------------+-----------------------------------------------+
@@ -1187,40 +1239,10 @@ freeMemoryPages :: forall io
                    ("allocations" ::: Vector Allocation)
                 -> io ()
 freeMemoryPages allocator allocations = liftIO . evalContT $ do
-  pPAllocations <- ContT $ allocaBytesAligned @Allocation ((Data.Vector.length (allocations)) * 8) 8
+  pPAllocations <- ContT $ allocaBytes @Allocation ((Data.Vector.length (allocations)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPAllocations `plusPtr` (8 * (i)) :: Ptr Allocation) (e)) (allocations)
   lift $ traceAroundEvent "vmaFreeMemoryPages" ((ffiVmaFreeMemoryPages) (allocator) ((fromIntegral (Data.Vector.length $ (allocations)) :: CSize)) (pPAllocations))
   pure $ ()
-
-
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "vmaResizeAllocation" ffiVmaResizeAllocation
-  :: Allocator -> Allocation -> DeviceSize -> IO Result
-
--- | Deprecated.
---
--- /Deprecated/
---
--- In version 2.2.0 it used to try to change allocation\'s size without
--- moving or reallocating it. In current version it returns @VK_SUCCESS@
--- only if @newSize@ equals current allocation\'s size. Otherwise returns
--- @VK_ERROR_OUT_OF_POOL_MEMORY@, indicating that allocation\'s size could
--- not be changed.
-resizeAllocation :: forall io
-                  . (MonadIO io)
-                 => -- No documentation found for Nested "vmaResizeAllocation" "allocator"
-                    Allocator
-                 -> -- No documentation found for Nested "vmaResizeAllocation" "allocation"
-                    Allocation
-                 -> -- No documentation found for Nested "vmaResizeAllocation" "newSize"
-                    ("newSize" ::: DeviceSize)
-                 -> io ()
-resizeAllocation allocator allocation newSize = liftIO $ do
-  r <- traceAroundEvent "vmaResizeAllocation" ((ffiVmaResizeAllocation) (allocator) (allocation) (newSize))
-  when (r < SUCCESS) (throwIO (VulkanException r))
 
 
 foreign import ccall
@@ -1276,7 +1298,7 @@ foreign import ccall
 --
 -- If the allocation has been created with
 -- 'ALLOCATION_CREATE_CAN_BECOME_LOST_BIT' flag, this function returns
--- @VK_TRUE@ if it\'s not in lost state, so it can still be used. It then
+-- @VK_TRUE@ if it is not in lost state, so it can still be used. It then
 -- also atomically \"touches\" the allocation - marks it as used in current
 -- frame, so that you can be sure it won\'t become lost in current frame or
 -- next @frameInUseCount@ frames.
@@ -1381,6 +1403,31 @@ foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
+  "vmaGetAllocationMemoryProperties" ffiVmaGetAllocationMemoryProperties
+  :: Allocator -> Allocation -> Ptr MemoryPropertyFlags -> IO ()
+
+-- | Given an allocation, returns Property Flags of its memory type.
+--
+-- This is just a convenience function. Same information can be obtained
+-- using 'getAllocationInfo' + 'getMemoryProperties'.
+getAllocationMemoryProperties :: forall io
+                               . (MonadIO io)
+                              => -- No documentation found for Nested "vmaGetAllocationMemoryProperties" "allocator"
+                                 Allocator
+                              -> -- No documentation found for Nested "vmaGetAllocationMemoryProperties" "allocation"
+                                 Allocation
+                              -> io (MemoryPropertyFlags)
+getAllocationMemoryProperties allocator allocation = liftIO . evalContT $ do
+  pPFlags <- ContT $ bracket (callocBytes @MemoryPropertyFlags 4) free
+  lift $ traceAroundEvent "vmaGetAllocationMemoryProperties" ((ffiVmaGetAllocationMemoryProperties) (allocator) (allocation) (pPFlags))
+  pFlags <- lift $ peek @MemoryPropertyFlags pPFlags
+  pure $ (pFlags)
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
   "vmaMapMemory" ffiVmaMapMemory
   :: Allocator -> Allocation -> Ptr (Ptr ()) -> IO Result
 
@@ -1389,7 +1436,7 @@ foreign import ccall
 -- Maps memory represented by given allocation to make it accessible to CPU
 -- code. When succeeded, @*ppData@ contains pointer to first byte of this
 -- memory. If the allocation is part of bigger @VkDeviceMemory@ block, the
--- pointer is correctly offseted to the beginning of region assigned to
+-- pointer is correctly offsetted to the beginning of region assigned to
 -- this particular allocation.
 --
 -- Mapping is internally reference-counted and synchronized, so despite raw
@@ -1634,18 +1681,18 @@ flushAllocations allocator allocations offsets sizes = liftIO . evalContT $ do
   let sizesLength = Data.Vector.length $ (sizes)
   lift $ unless (fromIntegral sizesLength == allocationsLength || sizesLength == 0) $
     throwIO $ IOError Nothing InvalidArgument "" "sizes and allocations must have the same length" Nothing Nothing
-  pAllocations <- ContT $ allocaBytesAligned @Allocation ((Data.Vector.length (allocations)) * 8) 8
+  pAllocations <- ContT $ allocaBytes @Allocation ((Data.Vector.length (allocations)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pAllocations `plusPtr` (8 * (i)) :: Ptr Allocation) (e)) (allocations)
   offsets' <- if Data.Vector.null (offsets)
     then pure nullPtr
     else do
-      pOffsets <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (offsets))) * 8) 8
+      pOffsets <- ContT $ allocaBytes @DeviceSize (((Data.Vector.length (offsets))) * 8)
       lift $ Data.Vector.imapM_ (\i e -> poke (pOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((offsets))
       pure $ pOffsets
   sizes' <- if Data.Vector.null (sizes)
     then pure nullPtr
     else do
-      pSizes <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (sizes))) * 8) 8
+      pSizes <- ContT $ allocaBytes @DeviceSize (((Data.Vector.length (sizes))) * 8)
       lift $ Data.Vector.imapM_ (\i e -> poke (pSizes `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((sizes))
       pure $ pSizes
   r <- lift $ traceAroundEvent "vmaFlushAllocations" ((ffiVmaFlushAllocations) (allocator) ((fromIntegral allocationsLength :: Word32)) (pAllocations) offsets' sizes')
@@ -1706,18 +1753,18 @@ invalidateAllocations allocator allocations offsets sizes = liftIO . evalContT $
   let sizesLength = Data.Vector.length $ (sizes)
   lift $ unless (fromIntegral sizesLength == allocationsLength || sizesLength == 0) $
     throwIO $ IOError Nothing InvalidArgument "" "sizes and allocations must have the same length" Nothing Nothing
-  pAllocations <- ContT $ allocaBytesAligned @Allocation ((Data.Vector.length (allocations)) * 8) 8
+  pAllocations <- ContT $ allocaBytes @Allocation ((Data.Vector.length (allocations)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pAllocations `plusPtr` (8 * (i)) :: Ptr Allocation) (e)) (allocations)
   offsets' <- if Data.Vector.null (offsets)
     then pure nullPtr
     else do
-      pOffsets <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (offsets))) * 8) 8
+      pOffsets <- ContT $ allocaBytes @DeviceSize (((Data.Vector.length (offsets))) * 8)
       lift $ Data.Vector.imapM_ (\i e -> poke (pOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((offsets))
       pure $ pOffsets
   sizes' <- if Data.Vector.null (sizes)
     then pure nullPtr
     else do
-      pSizes <- ContT $ allocaBytesAligned @DeviceSize (((Data.Vector.length (sizes))) * 8) 8
+      pSizes <- ContT $ allocaBytes @DeviceSize (((Data.Vector.length (sizes))) * 8)
       lift $ Data.Vector.imapM_ (\i e -> poke (pSizes `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((sizes))
       pure $ pSizes
   r <- lift $ traceAroundEvent "vmaInvalidateAllocations" ((ffiVmaInvalidateAllocations) (allocator) ((fromIntegral allocationsLength :: Word32)) (pAllocations) offsets' sizes')
@@ -1737,6 +1784,8 @@ foreign import ccall
 -- __Parameters__
 --
 -- +----------------+--------------------------------------------------------+
+-- | allocator      |                                                        |
+-- +----------------+--------------------------------------------------------+
 -- | memoryTypeBits | Bit mask, where each bit set means that a memory type  |
 -- |                | with that index should be checked.                     |
 -- +----------------+--------------------------------------------------------+
@@ -1754,9 +1803,9 @@ foreign import ccall
 -- -   @VK_SUCCESS@ - corruption detection has been performed and
 --     succeeded.
 --
--- -   @VK_ERROR_VALIDATION_FAILED_EXT@ - corruption detection has been
---     performed and found memory corruptions around one of the
---     allocations. @VMA_ASSERT@ is also fired in that case.
+-- -   @VK_ERROR_UNKNOWN@ - corruption detection has been performed and
+--     found memory corruptions around one of the allocations. @VMA_ASSERT@
+--     is also fired in that case.
 --
 -- -   Other value: Error returned by Vulkan, e.g. memory mapping failure.
 checkCorruption :: forall io
@@ -1953,6 +2002,8 @@ foreign import ccall
 -- __Parameters__
 --
 -- +-----------+-----------------------+-----------------------------------------------+
+-- |           | allocator             |                                               |
+-- +-----------+-----------------------+-----------------------------------------------+
 -- |           | pAllocations          | Array of allocations that can be moved during |
 -- |           |                       | this compation.                               |
 -- +-----------+-----------------------+-----------------------------------------------+
@@ -2029,7 +2080,7 @@ defragment :: forall io
               ("defragmentationInfo" ::: Maybe DefragmentationInfo)
            -> io (("allocationsChanged" ::: Vector Bool), DefragmentationStats)
 defragment allocator allocations defragmentationInfo = liftIO . evalContT $ do
-  pPAllocations <- ContT $ allocaBytesAligned @Allocation ((Data.Vector.length (allocations)) * 8) 8
+  pPAllocations <- ContT $ allocaBytes @Allocation ((Data.Vector.length (allocations)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPAllocations `plusPtr` (8 * (i)) :: Ptr Allocation) (e)) (allocations)
   pPAllocationsChanged <- ContT $ bracket (callocBytes @Bool32 ((fromIntegral ((fromIntegral (Data.Vector.length $ (allocations)) :: CSize))) * 4)) free
   pDefragmentationInfo <- case (defragmentationInfo) of
@@ -2091,9 +2142,15 @@ foreign import ccall
 -- __Parameters__
 --
 -- +-----------------------+--------------------------------------------------------+
+-- | allocator             |                                                        |
+-- +-----------------------+--------------------------------------------------------+
+-- | allocation            |                                                        |
+-- +-----------------------+--------------------------------------------------------+
 -- | allocationLocalOffset | Additional offset to be added while binding, relative  |
--- |                       | to the beginnig of the @allocation@. Normally it       |
+-- |                       | to the beginning of the @allocation@. Normally it      |
 -- |                       | should be 0.                                           |
+-- +-----------------------+--------------------------------------------------------+
+-- | buffer                |                                                        |
 -- +-----------------------+--------------------------------------------------------+
 -- | pNext                 | A chain of structures to be attached to                |
 -- |                       | @VkBindBufferMemoryInfoKHR@ structure used internally. |
@@ -2171,9 +2228,15 @@ foreign import ccall
 -- __Parameters__
 --
 -- +-----------------------+--------------------------------------------------------+
+-- | allocator             |                                                        |
+-- +-----------------------+--------------------------------------------------------+
+-- | allocation            |                                                        |
+-- +-----------------------+--------------------------------------------------------+
 -- | allocationLocalOffset | Additional offset to be added while binding, relative  |
--- |                       | to the beginnig of the @allocation@. Normally it       |
+-- |                       | to the beginning of the @allocation@. Normally it      |
 -- |                       | should be 0.                                           |
+-- +-----------------------+--------------------------------------------------------+
+-- | image                 |                                                        |
 -- +-----------------------+--------------------------------------------------------+
 -- | pNext                 | A chain of structures to be attached to                |
 -- |                       | @VkBindImageMemoryInfoKHR@ structure used internally.  |
@@ -2214,15 +2277,21 @@ foreign import ccall
 
 -- | __Parameters__
 --
--- +-----------+-----------------+-----------------------------------------------+
--- | out       | pBuffer         | Buffer that was created.                      |
--- +-----------+-----------------+-----------------------------------------------+
--- | out       | pAllocation     | Allocation that was created.                  |
--- +-----------+-----------------+-----------------------------------------------+
--- | out       | pAllocationInfo | Optional. Information about allocated memory. |
--- |           |                 | It can be later fetched using function        |
--- |           |                 | 'getAllocationInfo'.                          |
--- +-----------+-----------------+-----------------------------------------------+
+-- +-----------+-----------------------+-----------------------------------------------+
+-- |           | allocator             |                                               |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- |           | pBufferCreateInfo     |                                               |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- |           | pAllocationCreateInfo |                                               |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- | out       | pBuffer               | Buffer that was created.                      |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- | out       | pAllocation           | Allocation that was created.                  |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- | out       | pAllocationInfo       | Optional. Information about allocated memory. |
+-- |           |                       | It can be later fetched using function        |
+-- |           |                       | 'getAllocationInfo'.                          |
+-- +-----------+-----------------------+-----------------------------------------------+
 --
 -- This function automatically:
 --
@@ -2290,6 +2359,44 @@ withBuffer :: forall a io r . (Extendss BufferCreateInfo a, PokeChain a, MonadIO
 withBuffer allocator pBufferCreateInfo pAllocationCreateInfo b =
   b (createBuffer allocator pBufferCreateInfo pAllocationCreateInfo)
     (\(o0, o1, _) -> destroyBuffer allocator o0 o1)
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaCreateBufferWithAlignment" ffiVmaCreateBufferWithAlignment
+  :: Allocator -> Ptr (SomeStruct BufferCreateInfo) -> Ptr AllocationCreateInfo -> DeviceSize -> Ptr Buffer -> Ptr Allocation -> Ptr AllocationInfo -> IO Result
+
+-- | Creates a buffer with additional minimum alignment.
+--
+-- Similar to 'createBuffer' but provides additional parameter
+-- @minAlignment@ which allows to specify custom, minimum alignment to be
+-- used when placing the buffer inside a larger memory block, which may be
+-- needed e.g. for interop with OpenGL.
+createBufferWithAlignment :: forall a io
+                           . (Extendss BufferCreateInfo a, PokeChain a, MonadIO io)
+                          => -- No documentation found for Nested "vmaCreateBufferWithAlignment" "allocator"
+                             Allocator
+                          -> -- No documentation found for Nested "vmaCreateBufferWithAlignment" "pBufferCreateInfo"
+                             (BufferCreateInfo a)
+                          -> -- No documentation found for Nested "vmaCreateBufferWithAlignment" "pAllocationCreateInfo"
+                             AllocationCreateInfo
+                          -> -- No documentation found for Nested "vmaCreateBufferWithAlignment" "minAlignment"
+                             ("minAlignment" ::: DeviceSize)
+                          -> io (Buffer, Allocation, AllocationInfo)
+createBufferWithAlignment allocator bufferCreateInfo allocationCreateInfo minAlignment = liftIO . evalContT $ do
+  pBufferCreateInfo <- ContT $ withCStruct (bufferCreateInfo)
+  pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
+  pPBuffer <- ContT $ bracket (callocBytes @Buffer 8) free
+  pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
+  pPAllocationInfo <- ContT (withZeroCStruct @AllocationInfo)
+  r <- lift $ traceAroundEvent "vmaCreateBufferWithAlignment" ((ffiVmaCreateBufferWithAlignment) (allocator) (forgetExtensions pBufferCreateInfo) pAllocationCreateInfo (minAlignment) (pPBuffer) (pPAllocation) (pPAllocationInfo))
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pBuffer <- lift $ peek @Buffer pPBuffer
+  pAllocation <- lift $ peek @Allocation pPAllocation
+  pAllocationInfo <- lift $ peekCStruct @AllocationInfo pPAllocationInfo
+  pure $ (pBuffer, pAllocation, pAllocationInfo)
 
 
 foreign import ccall
@@ -2391,6 +2498,309 @@ destroyImage :: forall io
              -> io ()
 destroyImage allocator image allocation = liftIO $ do
   traceAroundEvent "vmaDestroyImage" ((ffiVmaDestroyImage) (allocator) (image) (allocation))
+  pure $ ()
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaCreateVirtualBlock" ffiVmaCreateVirtualBlock
+  :: Ptr VirtualBlockCreateInfo -> Ptr VirtualBlock -> IO Result
+
+-- | Creates new 'VirtualBlock' object.
+--
+-- __Parameters__
+--
+-- +-----------+---------------+-----------------------------------------------+
+-- |           | pCreateInfo   | Parameters for creation.                      |
+-- +-----------+---------------+-----------------------------------------------+
+-- | out       | pVirtualBlock | Returned virtual block object or @VMA_NULL@   |
+-- |           |               | if creation failed.                           |
+-- +-----------+---------------+-----------------------------------------------+
+createVirtualBlock :: forall io
+                    . (MonadIO io)
+                   => -- No documentation found for Nested "vmaCreateVirtualBlock" "pCreateInfo"
+                      VirtualBlockCreateInfo
+                   -> io (VirtualBlock)
+createVirtualBlock createInfo = liftIO . evalContT $ do
+  pCreateInfo <- ContT $ withCStruct (createInfo)
+  pPVirtualBlock <- ContT $ bracket (callocBytes @VirtualBlock 8) free
+  r <- lift $ traceAroundEvent "vmaCreateVirtualBlock" ((ffiVmaCreateVirtualBlock) pCreateInfo (pPVirtualBlock))
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pVirtualBlock <- lift $ peek @VirtualBlock pPVirtualBlock
+  pure $ (pVirtualBlock)
+
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createVirtualBlock' and 'destroyVirtualBlock'
+--
+-- To ensure that 'destroyVirtualBlock' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
+--
+withVirtualBlock :: forall io r . MonadIO io => VirtualBlockCreateInfo -> (io VirtualBlock -> (VirtualBlock -> io ()) -> r) -> r
+withVirtualBlock pCreateInfo b =
+  b (createVirtualBlock pCreateInfo)
+    (\(o0) -> destroyVirtualBlock o0)
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaDestroyVirtualBlock" ffiVmaDestroyVirtualBlock
+  :: VirtualBlock -> IO ()
+
+-- | Destroys 'VirtualBlock' object.
+--
+-- Please note that you should consciously handle virtual allocations that
+-- could remain unfreed in the block. You should either free them
+-- individually using 'virtualFree' or call 'clearVirtualBlock' if you are
+-- sure this is what you want. If you do neither, an assert is called.
+--
+-- If you keep pointers to some additional metadata associated with your
+-- virtual allocations in their @pUserData@, don\'t forget to free them.
+destroyVirtualBlock :: forall io
+                     . (MonadIO io)
+                    => -- No documentation found for Nested "vmaDestroyVirtualBlock" "virtualBlock"
+                       VirtualBlock
+                    -> io ()
+destroyVirtualBlock virtualBlock = liftIO $ do
+  traceAroundEvent "vmaDestroyVirtualBlock" ((ffiVmaDestroyVirtualBlock) (virtualBlock))
+  pure $ ()
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaIsVirtualBlockEmpty" ffiVmaIsVirtualBlockEmpty
+  :: VirtualBlock -> IO Bool32
+
+-- | Returns true of the 'VirtualBlock' is empty - contains 0 virtual
+-- allocations and has all its space available for new allocations.
+isVirtualBlockEmpty :: forall io
+                     . (MonadIO io)
+                    => -- No documentation found for Nested "vmaIsVirtualBlockEmpty" "virtualBlock"
+                       VirtualBlock
+                    -> io (Bool)
+isVirtualBlockEmpty virtualBlock = liftIO $ do
+  r <- traceAroundEvent "vmaIsVirtualBlockEmpty" ((ffiVmaIsVirtualBlockEmpty) (virtualBlock))
+  pure $ ((bool32ToBool r))
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaGetVirtualAllocationInfo" ffiVmaGetVirtualAllocationInfo
+  :: VirtualBlock -> DeviceSize -> Ptr VirtualAllocationInfo -> IO ()
+
+-- | Returns information about a specific virtual allocation within a virtual
+-- block, like its size and @pUserData@ pointer.
+getVirtualAllocationInfo :: forall io
+                          . (MonadIO io)
+                         => -- No documentation found for Nested "vmaGetVirtualAllocationInfo" "virtualBlock"
+                            VirtualBlock
+                         -> -- No documentation found for Nested "vmaGetVirtualAllocationInfo" "offset"
+                            ("offset" ::: DeviceSize)
+                         -> io (("virtualAllocInfo" ::: VirtualAllocationInfo))
+getVirtualAllocationInfo virtualBlock offset = liftIO . evalContT $ do
+  pPVirtualAllocInfo <- ContT (withZeroCStruct @VirtualAllocationInfo)
+  lift $ traceAroundEvent "vmaGetVirtualAllocationInfo" ((ffiVmaGetVirtualAllocationInfo) (virtualBlock) (offset) (pPVirtualAllocInfo))
+  pVirtualAllocInfo <- lift $ peekCStruct @VirtualAllocationInfo pPVirtualAllocInfo
+  pure $ (pVirtualAllocInfo)
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaVirtualAllocate" ffiVmaVirtualAllocate
+  :: VirtualBlock -> Ptr VirtualAllocationCreateInfo -> Ptr DeviceSize -> IO Result
+
+-- | Allocates new virtual allocation inside given 'VirtualBlock'.
+--
+-- There is no handle type for a virtual allocation. Virtual allocations
+-- within a specific virtual block are uniquely identified by their
+-- offsets.
+--
+-- If the allocation fails due to not enough free space available,
+-- @VK_ERROR_OUT_OF_DEVICE_MEMORY@ is returned (despite the function
+-- doesn\'t ever allocate actual GPU memory).
+virtualAllocate :: forall io
+                 . (MonadIO io)
+                => -- No documentation found for Nested "vmaVirtualAllocate" "virtualBlock"
+                   VirtualBlock
+                -> -- No documentation found for Nested "vmaVirtualAllocate" "pCreateInfo"
+                   VirtualAllocationCreateInfo
+                -> io (("offset" ::: DeviceSize))
+virtualAllocate virtualBlock createInfo = liftIO . evalContT $ do
+  pCreateInfo <- ContT $ withCStruct (createInfo)
+  pPOffset <- ContT $ bracket (callocBytes @DeviceSize 8) free
+  r <- lift $ traceAroundEvent "vmaVirtualAllocate" ((ffiVmaVirtualAllocate) (virtualBlock) pCreateInfo (pPOffset))
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pOffset <- lift $ peek @DeviceSize pPOffset
+  pure $ (pOffset)
+
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'virtualAllocate' and 'virtualFree'
+--
+-- To ensure that 'virtualFree' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
+--
+withVirtualAllocation :: forall io r . MonadIO io => VirtualBlock -> VirtualAllocationCreateInfo -> (io DeviceSize -> (DeviceSize -> io ()) -> r) -> r
+withVirtualAllocation virtualBlock pCreateInfo b =
+  b (virtualAllocate virtualBlock pCreateInfo)
+    (\(o0) -> virtualFree virtualBlock o0)
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaVirtualFree" ffiVmaVirtualFree
+  :: VirtualBlock -> DeviceSize -> IO ()
+
+-- | Frees virtual allocation inside given 'VirtualBlock'.
+virtualFree :: forall io
+             . (MonadIO io)
+            => -- No documentation found for Nested "vmaVirtualFree" "virtualBlock"
+               VirtualBlock
+            -> -- No documentation found for Nested "vmaVirtualFree" "offset"
+               ("offset" ::: DeviceSize)
+            -> io ()
+virtualFree virtualBlock offset = liftIO $ do
+  traceAroundEvent "vmaVirtualFree" ((ffiVmaVirtualFree) (virtualBlock) (offset))
+  pure $ ()
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaClearVirtualBlock" ffiVmaClearVirtualBlock
+  :: VirtualBlock -> IO ()
+
+-- | Frees all virtual allocations inside given 'VirtualBlock'.
+--
+-- You must either call this function or free each virtual allocation
+-- individually with 'virtualFree' before destroying a virtual block.
+-- Otherwise, an assert is called.
+--
+-- If you keep pointer to some additional metadata associated with your
+-- virtual allocation in its @pUserData@, don\'t forget to free it as well.
+clearVirtualBlock :: forall io
+                   . (MonadIO io)
+                  => -- No documentation found for Nested "vmaClearVirtualBlock" "virtualBlock"
+                     VirtualBlock
+                  -> io ()
+clearVirtualBlock virtualBlock = liftIO $ do
+  traceAroundEvent "vmaClearVirtualBlock" ((ffiVmaClearVirtualBlock) (virtualBlock))
+  pure $ ()
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaSetVirtualAllocationUserData" ffiVmaSetVirtualAllocationUserData
+  :: VirtualBlock -> DeviceSize -> Ptr () -> IO ()
+
+-- | Changes custom pointer associated with given virtual allocation.
+setVirtualAllocationUserData :: forall io
+                              . (MonadIO io)
+                             => -- No documentation found for Nested "vmaSetVirtualAllocationUserData" "virtualBlock"
+                                VirtualBlock
+                             -> -- No documentation found for Nested "vmaSetVirtualAllocationUserData" "offset"
+                                ("offset" ::: DeviceSize)
+                             -> -- No documentation found for Nested "vmaSetVirtualAllocationUserData" "pUserData"
+                                ("userData" ::: Ptr ())
+                             -> io ()
+setVirtualAllocationUserData virtualBlock offset userData = liftIO $ do
+  traceAroundEvent "vmaSetVirtualAllocationUserData" ((ffiVmaSetVirtualAllocationUserData) (virtualBlock) (offset) (userData))
+  pure $ ()
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaCalculateVirtualBlockStats" ffiVmaCalculateVirtualBlockStats
+  :: VirtualBlock -> Ptr StatInfo -> IO ()
+
+-- | Calculates and returns statistics about virtual allocations and memory
+-- usage in given 'VirtualBlock'.
+calculateVirtualBlockStats :: forall io
+                            . (MonadIO io)
+                           => -- No documentation found for Nested "vmaCalculateVirtualBlockStats" "virtualBlock"
+                              VirtualBlock
+                           -> io (StatInfo)
+calculateVirtualBlockStats virtualBlock = liftIO . evalContT $ do
+  pPStatInfo <- ContT (withZeroCStruct @StatInfo)
+  lift $ traceAroundEvent "vmaCalculateVirtualBlockStats" ((ffiVmaCalculateVirtualBlockStats) (virtualBlock) (pPStatInfo))
+  pStatInfo <- lift $ peekCStruct @StatInfo pPStatInfo
+  pure $ (pStatInfo)
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaBuildVirtualBlockStatsString" ffiVmaBuildVirtualBlockStatsString
+  :: VirtualBlock -> Ptr (Ptr CChar) -> Bool32 -> IO ()
+
+-- | Builds and returns a null-terminated string in JSON format with
+-- information about given 'VirtualBlock'.
+--
+-- __Parameters__
+--
+-- +-----------+---------------+-----------------------------------------------+
+-- |           | virtualBlock  | Virtual block.                                |
+-- +-----------+---------------+-----------------------------------------------+
+-- | out       | ppStatsString | Returned string.                              |
+-- +-----------+---------------+-----------------------------------------------+
+-- |           | detailedMap   | Pass @VK_FALSE@ to only obtain statistics as  |
+-- |           |               | returned by 'calculateVirtualBlockStats'.     |
+-- |           |               | Pass @VK_TRUE@ to also obtain full list of    |
+-- |           |               | allocations and free spaces.                  |
+-- +-----------+---------------+-----------------------------------------------+
+--
+-- Returned string must be freed using 'freeVirtualBlockStatsString'.
+buildVirtualBlockStatsString :: forall io
+                              . (MonadIO io)
+                             => -- No documentation found for Nested "vmaBuildVirtualBlockStatsString" "virtualBlock"
+                                VirtualBlock
+                             -> -- No documentation found for Nested "vmaBuildVirtualBlockStatsString" "detailedMap"
+                                ("detailedMap" ::: Bool)
+                             -> io (("statsString" ::: Ptr CChar))
+buildVirtualBlockStatsString virtualBlock detailedMap = liftIO . evalContT $ do
+  pPpStatsString <- ContT $ bracket (callocBytes @(Ptr CChar) 8) free
+  lift $ traceAroundEvent "vmaBuildVirtualBlockStatsString" ((ffiVmaBuildVirtualBlockStatsString) (virtualBlock) (pPpStatsString) (boolToBool32 (detailedMap)))
+  ppStatsString <- lift $ peek @(Ptr CChar) pPpStatsString
+  pure $ (ppStatsString)
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaFreeVirtualBlockStatsString" ffiVmaFreeVirtualBlockStatsString
+  :: VirtualBlock -> Ptr CChar -> IO ()
+
+-- | Frees a string returned by 'buildVirtualBlockStatsString'.
+freeVirtualBlockStatsString :: forall io
+                             . (MonadIO io)
+                            => -- No documentation found for Nested "vmaFreeVirtualBlockStatsString" "virtualBlock"
+                               VirtualBlock
+                            -> -- No documentation found for Nested "vmaFreeVirtualBlockStatsString" "pStatsString"
+                               ("statsString" ::: Ptr CChar)
+                            -> io ()
+freeVirtualBlockStatsString virtualBlock statsString = liftIO $ do
+  traceAroundEvent "vmaFreeVirtualBlockStatsString" ((ffiVmaFreeVirtualBlockStatsString) (virtualBlock) (statsString))
   pure $ ()
 
 
@@ -2555,7 +2965,7 @@ deriving instance Generic (DeviceMemoryCallbacks)
 deriving instance Show DeviceMemoryCallbacks
 
 instance ToCStruct DeviceMemoryCallbacks where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceMemoryCallbacks{..} f = do
     poke ((p `plusPtr` 0 :: Ptr PFN_vmaAllocateDeviceMemoryFunction)) (pfnAllocate)
     poke ((p `plusPtr` 8 :: Ptr PFN_vmaFreeDeviceMemoryFunction)) (pfnFree)
@@ -2602,10 +3012,10 @@ pattern ALLOCATOR_CREATE_EXTERNALLY_SYNCHRONIZED_BIT    = AllocatorCreateFlagBit
 -- | Enables usage of VK_KHR_dedicated_allocation extension.
 --
 -- The flag works only if /VmaAllocatorCreateInfo::vulkanApiVersion/
--- @== VK_API_VERSION_1_0@. When it\'s @VK_API_VERSION_1_1@, the flag is
+-- @== VK_API_VERSION_1_0@. When it is @VK_API_VERSION_1_1@, the flag is
 -- ignored because the extension has been promoted to Vulkan 1.1.
 --
--- Using this extenion will automatically allocate dedicated blocks of
+-- Using this extension will automatically allocate dedicated blocks of
 -- memory for some buffers and images instead of suballocating place for
 -- them out of bigger memory blocks (as if you explicitly used
 -- 'ALLOCATION_CREATE_DEDICATED_MEMORY_BIT' flag) when it is recommended by
@@ -2629,7 +3039,7 @@ pattern ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT   = AllocatorCreateFlagBit
 -- | Enables usage of VK_KHR_bind_memory2 extension.
 --
 -- The flag works only if /VmaAllocatorCreateInfo::vulkanApiVersion/
--- @== VK_API_VERSION_1_0@. When it\'s @VK_API_VERSION_1_1@, the flag is
+-- @== VK_API_VERSION_1_0@. When it is @VK_API_VERSION_1_1@, the flag is
 -- ignored because the extension has been promoted to Vulkan 1.1.
 --
 -- You may set this flag only if you found out that this device extension
@@ -2794,15 +3204,21 @@ data VulkanFunctions = VulkanFunctions
     vkDestroyImage :: PFN_vkDestroyImage
   , 
     vkCmdCopyBuffer :: PFN_vkCmdCopyBuffer
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkGetBufferMemoryRequirements2KHR"
+  , -- | Fetch \"vkGetBufferMemoryRequirements2\" on Vulkan >= 1.1, fetch
+    -- \"vkGetBufferMemoryRequirements2KHR\" when using
+    -- VK_KHR_dedicated_allocation extension.
     vkGetBufferMemoryRequirements2KHR :: PFN_vkGetBufferMemoryRequirements2KHR
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkGetImageMemoryRequirements2KHR"
+  , -- | Fetch \"vkGetImageMemoryRequirements 2\" on Vulkan >= 1.1, fetch
+    -- \"vkGetImageMemoryRequirements2KHR\" when using
+    -- VK_KHR_dedicated_allocation extension.
     vkGetImageMemoryRequirements2KHR :: PFN_vkGetImageMemoryRequirements2KHR
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkBindBufferMemory2KHR"
+  , -- | Fetch \"vkBindBufferMemory2\" on Vulkan >= 1.1, fetch
+    -- \"vkBindBufferMemory2KHR\" when using VK_KHR_bind_memory2 extension.
     vkBindBufferMemory2KHR :: PFN_vkBindBufferMemory2KHR
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkBindImageMemory2KHR"
+  , -- | Fetch \"vkBindImageMemory2\" on Vulkan >= 1.1, fetch
+    -- \"vkBindImageMemory2KHR\" when using VK_KHR_bind_memory2 extension.
     vkBindImageMemory2KHR :: PFN_vkBindImageMemory2KHR
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkGetPhysicalDeviceMemoryProperties2KHR"
+  , 
     vkGetPhysicalDeviceMemoryProperties2KHR :: PFN_vkGetPhysicalDeviceMemoryProperties2KHR
   }
   deriving (Typeable, Eq)
@@ -2812,7 +3228,7 @@ deriving instance Generic (VulkanFunctions)
 deriving instance Show VulkanFunctions
 
 instance ToCStruct VulkanFunctions where
-  withCStruct x f = allocaBytesAligned 176 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 176 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p VulkanFunctions{..} f = do
     poke ((p `plusPtr` 0 :: Ptr PFN_vkGetPhysicalDeviceProperties)) (vkGetPhysicalDeviceProperties)
     poke ((p `plusPtr` 8 :: Ptr PFN_vkGetPhysicalDeviceMemoryProperties)) (vkGetPhysicalDeviceMemoryProperties)
@@ -2954,7 +3370,7 @@ deriving instance Generic (RecordSettings)
 deriving instance Show RecordSettings
 
 instance ToCStruct RecordSettings where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RecordSettings{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr RecordFlags)) (flags)
     pFilePath'' <- ContT $ useAsCString (filePath)
@@ -3083,6 +3499,18 @@ data AllocatorCreateInfo = AllocatorCreateInfo
     -- supported by the current implementation. Leaving it initialized to zero
     -- is equivalent to @VK_API_VERSION_1_0@.
     vulkanApiVersion :: Word32
+  , -- | Either null or a pointer to an array of external memory handle types for
+    -- each Vulkan memory type.
+    --
+    -- If not NULL, it must be a pointer to an array of
+    -- @VkPhysicalDeviceMemoryProperties::memoryTypeCount@ elements, defining
+    -- external memory handle types of particular Vulkan memory type, to be
+    -- passed using @VkExportMemoryAllocateInfoKHR@.
+    --
+    -- Any of the elements may be equal to 0, which means not to use
+    -- @VkExportMemoryAllocateInfoKHR@ on this memory type. This is also the
+    -- default in case of @pTypeExternalMemoryHandleTypes@ = NULL.
+    typeExternalMemoryHandleTypes :: Ptr ExternalMemoryHandleTypeFlagsKHR
   }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -3091,7 +3519,7 @@ deriving instance Generic (AllocatorCreateInfo)
 deriving instance Show AllocatorCreateInfo
 
 instance ToCStruct AllocatorCreateInfo where
-  withCStruct x f = allocaBytesAligned 96 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 104 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AllocatorCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr AllocatorCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr PhysicalDevice_T))) (physicalDevice)
@@ -3117,8 +3545,9 @@ instance ToCStruct AllocatorCreateInfo where
     lift $ poke ((p `plusPtr` 72 :: Ptr (Ptr RecordSettings))) pRecordSettings''
     lift $ poke ((p `plusPtr` 80 :: Ptr (Ptr Instance_T))) (instance')
     lift $ poke ((p `plusPtr` 88 :: Ptr Word32)) (vulkanApiVersion)
+    lift $ poke ((p `plusPtr` 96 :: Ptr (Ptr ExternalMemoryHandleTypeFlagsKHR))) (typeExternalMemoryHandleTypes)
     lift $ f
-  cStructSize = 96
+  cStructSize = 104
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr AllocatorCreateFlags)) (zero)
@@ -3148,8 +3577,9 @@ instance FromCStruct AllocatorCreateInfo where
     pRecordSettings' <- maybePeek (\j -> peekCStruct @RecordSettings (j)) pRecordSettings
     instance' <- peek @(Ptr Instance_T) ((p `plusPtr` 80 :: Ptr (Ptr Instance_T)))
     vulkanApiVersion <- peek @Word32 ((p `plusPtr` 88 :: Ptr Word32))
+    pTypeExternalMemoryHandleTypes <- peek @(Ptr ExternalMemoryHandleTypeFlagsKHR) ((p `plusPtr` 96 :: Ptr (Ptr ExternalMemoryHandleTypeFlagsKHR)))
     pure $ AllocatorCreateInfo
-             flags physicalDevice device preferredLargeHeapBlockSize pAllocationCallbacks' pDeviceMemoryCallbacks' frameInUseCount pHeapSizeLimit pVulkanFunctions' pRecordSettings' instance' vulkanApiVersion
+             flags physicalDevice device preferredLargeHeapBlockSize pAllocationCallbacks' pDeviceMemoryCallbacks' frameInUseCount pHeapSizeLimit pVulkanFunctions' pRecordSettings' instance' vulkanApiVersion pTypeExternalMemoryHandleTypes
 
 instance Zero AllocatorCreateInfo where
   zero = AllocatorCreateInfo
@@ -3163,6 +3593,7 @@ instance Zero AllocatorCreateInfo where
            zero
            Nothing
            Nothing
+           zero
            zero
            zero
 
@@ -3194,7 +3625,7 @@ deriving instance Generic (AllocatorInfo)
 deriving instance Show AllocatorInfo
 
 instance ToCStruct AllocatorInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AllocatorInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr (Ptr Instance_T))) (instance')
     poke ((p `plusPtr` 8 :: Ptr (Ptr PhysicalDevice_T))) (physicalDevice)
@@ -3263,7 +3694,7 @@ deriving instance Generic (StatInfo)
 deriving instance Show StatInfo
 
 instance ToCStruct StatInfo where
-  withCStruct x f = allocaBytesAligned 80 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 80 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p StatInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (blockCount)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (allocationCount)
@@ -3370,7 +3801,7 @@ deriving instance Generic (Stats)
 deriving instance Show Stats
 
 instance ToCStruct Stats where
-  withCStruct x f = allocaBytesAligned 3920 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 3920 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Stats{..} f = do
     unless ((Data.Vector.length $ (memoryType)) <= MAX_MEMORY_TYPES) $
       throwIO $ IOError Nothing InvalidArgument "" "memoryType is too long, a maximum of MAX_MEMORY_TYPES elements are allowed" Nothing Nothing
@@ -3452,7 +3883,7 @@ deriving instance Generic (Budget)
 deriving instance Show Budget
 
 instance ToCStruct Budget where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Budget{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (blockBytes)
     poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (allocationBytes)
@@ -3830,7 +4261,7 @@ deriving instance Generic (AllocationCreateInfo)
 deriving instance Show AllocationCreateInfo
 
 instance ToCStruct AllocationCreateInfo where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AllocationCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr AllocationCreateFlags)) (flags)
     poke ((p `plusPtr` 4 :: Ptr MemoryUsage)) (usage)
@@ -3923,8 +4354,6 @@ pattern POOL_CREATE_IGNORE_BUFFER_IMAGE_GRANULARITY_BIT = PoolCreateFlagBits 0x0
 --
 -- When using this flag, you must specify
 -- /VmaPoolCreateInfo::maxBlockCount/ == 1 (or 0 for default).
---
--- For more details, see /Linear allocation algorithm/.
 pattern POOL_CREATE_LINEAR_ALGORITHM_BIT                = PoolCreateFlagBits 0x00000004
 -- | Enables alternative, buddy allocation algorithm in this pool.
 --
@@ -3932,9 +4361,8 @@ pattern POOL_CREATE_LINEAR_ALGORITHM_BIT                = PoolCreateFlagBits 0x0
 -- and a half of its parent\'s size. Comparing to default algorithm, this
 -- one provides faster allocation and deallocation and decreased external
 -- fragmentation, at the expense of more memory wasted (internal
--- fragmentation).
---
--- For more details, see /Buddy allocation algorithm/.
+-- fragmentation). For details, see documentation chapter /Buddy allocation
+-- algorithm/.
 pattern POOL_CREATE_BUDDY_ALGORITHM_BIT                 = PoolCreateFlagBits 0x00000008
 -- | Bit mask to extract only @ALGORITHM@ bits from entire set of flags.
 pattern POOL_CREATE_ALGORITHM_MASK                      = PoolCreateFlagBits 0x0000000c
@@ -4018,15 +4446,37 @@ data PoolCreateInfo = PoolCreateInfo
     -- used during creation of the 'Allocator' object. Otherwise, this variable
     -- is ignored.
     priority :: Float
+  , -- | Additional minimum alignment to be used for all allocations created from
+    -- this pool. Can be 0.
+    --
+    -- Leave 0 (default) not to impose any additional alignment. If not 0, it
+    -- must be a power of two. It can be useful in cases where alignment
+    -- returned by Vulkan by functions like @vkGetBufferMemoryRequirements@ is
+    -- not enough, e.g. when doing interop with OpenGL.
+    minAllocationAlignment :: DeviceSize
+  , -- | Additional @pNext@ chain to be attached to @VkMemoryAllocateInfo@ used
+    -- for every allocation made by this pool. Optional.
+    --
+    -- Optional, can be null. If not null, it must point to a @pNext@ chain of
+    -- structures that can be attached to @VkMemoryAllocateInfo@. It can be
+    -- useful for special needs such as adding @VkExportMemoryAllocateInfoKHR@.
+    -- Structures pointed by this member must remain alive and unchanged for
+    -- the whole lifetime of the custom pool.
+    --
+    -- Please note that some structures, e.g.
+    -- @VkMemoryPriorityAllocateInfoEXT@, @VkMemoryDedicatedAllocateInfoKHR@,
+    -- can be attached automatically by this library when using other, more
+    -- convenient of its features.
+    memoryAllocateNext :: Ptr ()
   }
-  deriving (Typeable, Eq)
+  deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
 deriving instance Generic (PoolCreateInfo)
 #endif
 deriving instance Show PoolCreateInfo
 
 instance ToCStruct PoolCreateInfo where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PoolCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (memoryTypeIndex)
     poke ((p `plusPtr` 4 :: Ptr PoolCreateFlags)) (flags)
@@ -4035,8 +4485,10 @@ instance ToCStruct PoolCreateInfo where
     poke ((p `plusPtr` 24 :: Ptr CSize)) (CSize (maxBlockCount))
     poke ((p `plusPtr` 32 :: Ptr Word32)) (frameInUseCount)
     poke ((p `plusPtr` 36 :: Ptr CFloat)) (CFloat (priority))
+    poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (minAllocationAlignment)
+    poke ((p `plusPtr` 48 :: Ptr (Ptr ()))) (memoryAllocateNext)
     f
-  cStructSize = 40
+  cStructSize = 56
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
@@ -4046,6 +4498,7 @@ instance ToCStruct PoolCreateInfo where
     poke ((p `plusPtr` 24 :: Ptr CSize)) (CSize (zero))
     poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 36 :: Ptr CFloat)) (CFloat (zero))
+    poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (zero)
     f
 
 instance FromCStruct PoolCreateInfo where
@@ -4057,17 +4510,21 @@ instance FromCStruct PoolCreateInfo where
     maxBlockCount <- peek @CSize ((p `plusPtr` 24 :: Ptr CSize))
     frameInUseCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
     priority <- peek @CFloat ((p `plusPtr` 36 :: Ptr CFloat))
+    minAllocationAlignment <- peek @DeviceSize ((p `plusPtr` 40 :: Ptr DeviceSize))
+    pMemoryAllocateNext <- peek @(Ptr ()) ((p `plusPtr` 48 :: Ptr (Ptr ())))
     pure $ PoolCreateInfo
-             memoryTypeIndex flags blockSize (coerce @CSize @Word64 minBlockCount) (coerce @CSize @Word64 maxBlockCount) frameInUseCount (coerce @CFloat @Float priority)
+             memoryTypeIndex flags blockSize (coerce @CSize @Word64 minBlockCount) (coerce @CSize @Word64 maxBlockCount) frameInUseCount (coerce @CFloat @Float priority) minAllocationAlignment pMemoryAllocateNext
 
 instance Storable PoolCreateInfo where
-  sizeOf ~_ = 40
+  sizeOf ~_ = 56
   alignment ~_ = 8
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero PoolCreateInfo where
   zero = PoolCreateInfo
+           zero
+           zero
            zero
            zero
            zero
@@ -4109,7 +4566,7 @@ deriving instance Generic (PoolStats)
 deriving instance Show PoolStats
 
 instance ToCStruct PoolStats where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PoolStats{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (size)
     poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (unusedSize)
@@ -4254,7 +4711,7 @@ deriving instance Generic (AllocationInfo)
 deriving instance Show AllocationInfo
 
 instance ToCStruct AllocationInfo where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AllocationInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (memoryType)
     poke ((p `plusPtr` 8 :: Ptr DeviceMemory)) (deviceMemory)
@@ -4424,16 +4881,16 @@ deriving instance Generic (DefragmentationInfo2)
 deriving instance Show DefragmentationInfo2
 
 instance ToCStruct DefragmentationInfo2 where
-  withCStruct x f = allocaBytesAligned 80 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 80 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DefragmentationInfo2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr DefragmentationFlags)) (flags)
     lift $ poke ((p `plusPtr` 4 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (allocations)) :: Word32))
-    pPAllocations' <- ContT $ allocaBytesAligned @Allocation ((Data.Vector.length (allocations)) * 8) 8
+    pPAllocations' <- ContT $ allocaBytes @Allocation ((Data.Vector.length (allocations)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPAllocations' `plusPtr` (8 * (i)) :: Ptr Allocation) (e)) (allocations)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr Allocation))) (pPAllocations')
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr Bool32))) (allocationsChanged)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (pools)) :: Word32))
-    pPPools' <- ContT $ allocaBytesAligned @Pool ((Data.Vector.length (pools)) * 8) 8
+    pPPools' <- ContT $ allocaBytes @Pool ((Data.Vector.length (pools)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPPools' `plusPtr` (8 * (i)) :: Ptr Pool) (e)) (pools)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr Pool))) (pPPools')
     lift $ poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (maxCpuBytesToMove)
@@ -4499,7 +4956,7 @@ deriving instance Generic (DefragmentationPassMoveInfo)
 deriving instance Show DefragmentationPassMoveInfo
 
 instance ToCStruct DefragmentationPassMoveInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DefragmentationPassMoveInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Allocation)) (allocation)
     poke ((p `plusPtr` 8 :: Ptr DeviceMemory)) (memory)
@@ -4552,7 +5009,7 @@ deriving instance Generic (DefragmentationPassInfo)
 deriving instance Show DefragmentationPassInfo
 
 instance ToCStruct DefragmentationPassInfo where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DefragmentationPassInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (moveCount)
     poke ((p `plusPtr` 8 :: Ptr (Ptr DefragmentationPassMoveInfo))) (moves)
@@ -4610,7 +5067,7 @@ deriving instance Generic (DefragmentationInfo)
 deriving instance Show DefragmentationInfo
 
 instance ToCStruct DefragmentationInfo where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DefragmentationInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (maxBytesToMove)
     poke ((p `plusPtr` 8 :: Ptr Word32)) (maxAllocationsToMove)
@@ -4664,7 +5121,7 @@ deriving instance Generic (DefragmentationStats)
 deriving instance Show DefragmentationStats
 
 instance ToCStruct DefragmentationStats where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DefragmentationStats{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (bytesMoved)
     poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (bytesFreed)
@@ -4701,4 +5158,305 @@ instance Zero DefragmentationStats where
            zero
            zero
            zero
+
+
+type VirtualBlockCreateFlags = VirtualBlockCreateFlagBits
+
+-- | Flags to be passed as /VmaVirtualBlockCreateInfo::flags/.
+newtype VirtualBlockCreateFlagBits = VirtualBlockCreateFlagBits Flags
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
+
+-- | Enables alternative, linear allocation algorithm in this virtual block.
+--
+-- Specify this flag to enable linear allocation algorithm, which always
+-- creates new allocations after last one and doesn\'t reuse space from
+-- allocations freed in between. It trades memory consumption for
+-- simplified algorithm and data structure, which has better performance
+-- and uses less memory for metadata.
+--
+-- By using this flag, you can achieve behavior of free-at-once, stack,
+-- ring buffer, and double stack. For details, see documentation chapter
+-- /Linear allocation algorithm/.
+pattern VIRTUAL_BLOCK_CREATE_LINEAR_ALGORITHM_BIT = VirtualBlockCreateFlagBits 0x00000001
+-- | Enables alternative, buddy allocation algorithm in this virtual block.
+--
+-- It operates on a tree of blocks, each having size that is a power of two
+-- and a half of its parent\'s size. Comparing to default algorithm, this
+-- one provides faster allocation and deallocation and decreased external
+-- fragmentation, at the expense of more memory wasted (internal
+-- fragmentation). For details, see documentation chapter /Buddy allocation
+-- algorithm/.
+pattern VIRTUAL_BLOCK_CREATE_BUDDY_ALGORITHM_BIT  = VirtualBlockCreateFlagBits 0x00000002
+-- | Bit mask to extract only @ALGORITHM@ bits from entire set of flags.
+pattern VIRTUAL_BLOCK_CREATE_ALGORITHM_MASK       = VirtualBlockCreateFlagBits 0x00000003
+
+conNameVirtualBlockCreateFlagBits :: String
+conNameVirtualBlockCreateFlagBits = "VirtualBlockCreateFlagBits"
+
+enumPrefixVirtualBlockCreateFlagBits :: String
+enumPrefixVirtualBlockCreateFlagBits = "VIRTUAL_BLOCK_CREATE_"
+
+showTableVirtualBlockCreateFlagBits :: [(VirtualBlockCreateFlagBits, String)]
+showTableVirtualBlockCreateFlagBits =
+  [ (VIRTUAL_BLOCK_CREATE_LINEAR_ALGORITHM_BIT, "LINEAR_ALGORITHM_BIT")
+  , (VIRTUAL_BLOCK_CREATE_BUDDY_ALGORITHM_BIT , "BUDDY_ALGORITHM_BIT")
+  , (VIRTUAL_BLOCK_CREATE_ALGORITHM_MASK      , "ALGORITHM_MASK")
+  ]
+
+instance Show VirtualBlockCreateFlagBits where
+  showsPrec = enumShowsPrec enumPrefixVirtualBlockCreateFlagBits
+                            showTableVirtualBlockCreateFlagBits
+                            conNameVirtualBlockCreateFlagBits
+                            (\(VirtualBlockCreateFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
+
+instance Read VirtualBlockCreateFlagBits where
+  readPrec = enumReadPrec enumPrefixVirtualBlockCreateFlagBits
+                          showTableVirtualBlockCreateFlagBits
+                          conNameVirtualBlockCreateFlagBits
+                          VirtualBlockCreateFlagBits
+
+
+-- | VmaVirtualBlockCreateInfo
+--
+-- Parameters of created 'VirtualBlock' object to be passed to
+-- 'createVirtualBlock'.
+data VirtualBlockCreateInfo = VirtualBlockCreateInfo
+  { -- | Total size of the virtual block.
+    --
+    -- Sizes can be expressed in bytes or any units you want as long as you are
+    -- consistent in using them. For example, if you allocate from some array
+    -- of structures, 1 can mean single instance of entire structure.
+    size :: DeviceSize
+  , -- | Use combination of 'VirtualBlockCreateFlagBits'.
+    flags :: VirtualBlockCreateFlagBits
+  , -- | Custom CPU memory allocation callbacks. Optional.
+    --
+    -- Optional, can be null. When specified, they will be used for all
+    -- CPU-side memory allocations.
+    allocationCallbacks :: Maybe AllocationCallbacks
+  }
+  deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (VirtualBlockCreateInfo)
+#endif
+deriving instance Show VirtualBlockCreateInfo
+
+instance ToCStruct VirtualBlockCreateInfo where
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p VirtualBlockCreateInfo{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (size)
+    lift $ poke ((p `plusPtr` 8 :: Ptr VirtualBlockCreateFlagBits)) (flags)
+    pAllocationCallbacks'' <- case (allocationCallbacks) of
+      Nothing -> pure nullPtr
+      Just j -> ContT $ withCStruct (j)
+    lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr AllocationCallbacks))) pAllocationCallbacks''
+    lift $ f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr VirtualBlockCreateFlagBits)) (zero)
+    f
+
+instance FromCStruct VirtualBlockCreateInfo where
+  peekCStruct p = do
+    size <- peek @DeviceSize ((p `plusPtr` 0 :: Ptr DeviceSize))
+    flags <- peek @VirtualBlockCreateFlagBits ((p `plusPtr` 8 :: Ptr VirtualBlockCreateFlagBits))
+    pAllocationCallbacks <- peek @(Ptr AllocationCallbacks) ((p `plusPtr` 16 :: Ptr (Ptr AllocationCallbacks)))
+    pAllocationCallbacks' <- maybePeek (\j -> peekCStruct @AllocationCallbacks (j)) pAllocationCallbacks
+    pure $ VirtualBlockCreateInfo
+             size flags pAllocationCallbacks'
+
+instance Zero VirtualBlockCreateInfo where
+  zero = VirtualBlockCreateInfo
+           zero
+           zero
+           Nothing
+
+
+type VirtualAllocationCreateFlags = VirtualAllocationCreateFlagBits
+
+-- | Flags to be passed as /VmaVirtualAllocationCreateInfo::flags/.
+newtype VirtualAllocationCreateFlagBits = VirtualAllocationCreateFlagBits Flags
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
+
+-- | Allocation will be created from upper stack in a double stack pool.
+--
+-- This flag is only allowed for virtual blocks created with
+-- 'VIRTUAL_BLOCK_CREATE_LINEAR_ALGORITHM_BIT' flag.
+pattern VIRTUAL_ALLOCATION_CREATE_UPPER_ADDRESS_BIT              = VirtualAllocationCreateFlagBits 0x00000040
+-- | Allocation strategy that tries to minimize memory usage.
+pattern VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT        = VirtualAllocationCreateFlagBits 0x00010000
+-- | Allocation strategy that tries to minimize allocation time.
+pattern VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT          = VirtualAllocationCreateFlagBits 0x00040000
+-- | Allocation strategy that tries to minimize memory fragmentation.
+pattern VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT = VirtualAllocationCreateFlagBits 0x00020000
+-- | A bit mask to extract only @STRATEGY@ bits from entire set of flags.
+--
+-- These stategy flags are binary compatible with equivalent flags in
+-- 'AllocationCreateFlagBits'.
+pattern VIRTUAL_ALLOCATION_CREATE_STRATEGY_MASK                  = VirtualAllocationCreateFlagBits 0x00070000
+
+conNameVirtualAllocationCreateFlagBits :: String
+conNameVirtualAllocationCreateFlagBits = "VirtualAllocationCreateFlagBits"
+
+enumPrefixVirtualAllocationCreateFlagBits :: String
+enumPrefixVirtualAllocationCreateFlagBits = "VIRTUAL_ALLOCATION_CREATE_"
+
+showTableVirtualAllocationCreateFlagBits :: [(VirtualAllocationCreateFlagBits, String)]
+showTableVirtualAllocationCreateFlagBits =
+  [ (VIRTUAL_ALLOCATION_CREATE_UPPER_ADDRESS_BIT             , "UPPER_ADDRESS_BIT")
+  , (VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT       , "STRATEGY_MIN_MEMORY_BIT")
+  , (VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT         , "STRATEGY_MIN_TIME_BIT")
+  , (VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT, "STRATEGY_MIN_FRAGMENTATION_BIT")
+  , (VIRTUAL_ALLOCATION_CREATE_STRATEGY_MASK                 , "STRATEGY_MASK")
+  ]
+
+instance Show VirtualAllocationCreateFlagBits where
+  showsPrec = enumShowsPrec enumPrefixVirtualAllocationCreateFlagBits
+                            showTableVirtualAllocationCreateFlagBits
+                            conNameVirtualAllocationCreateFlagBits
+                            (\(VirtualAllocationCreateFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
+
+instance Read VirtualAllocationCreateFlagBits where
+  readPrec = enumReadPrec enumPrefixVirtualAllocationCreateFlagBits
+                          showTableVirtualAllocationCreateFlagBits
+                          conNameVirtualAllocationCreateFlagBits
+                          VirtualAllocationCreateFlagBits
+
+
+-- | VmaVirtualAllocationCreateInfo
+--
+-- Parameters of created virtual allocation to be passed to
+-- 'virtualAllocate'.
+data VirtualAllocationCreateInfo = VirtualAllocationCreateInfo
+  { -- | Size of the allocation.
+    --
+    -- Cannot be zero.
+    size :: DeviceSize
+  , -- | Required alignment of the allocation. Optional.
+    --
+    -- Must be power of two. Special value 0 has the same meaning as 1 - means
+    -- no special alignment is required, so allocation can start at any offset.
+    alignment :: DeviceSize
+  , -- | Use combination of 'VirtualAllocationCreateFlagBits'.
+    flags :: VirtualAllocationCreateFlags
+  , -- | Custom pointer to be associated with the allocation. Optional.
+    --
+    -- It can be any value and can be used for user-defined purposes. It can be
+    -- fetched or changed later.
+    userData :: Ptr ()
+  }
+  deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (VirtualAllocationCreateInfo)
+#endif
+deriving instance Show VirtualAllocationCreateInfo
+
+instance ToCStruct VirtualAllocationCreateInfo where
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p VirtualAllocationCreateInfo{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (size)
+    poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (alignment)
+    poke ((p `plusPtr` 16 :: Ptr VirtualAllocationCreateFlags)) (flags)
+    poke ((p `plusPtr` 24 :: Ptr (Ptr ()))) (userData)
+    f
+  cStructSize = 32
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (zero)
+    poke ((p `plusPtr` 16 :: Ptr VirtualAllocationCreateFlags)) (zero)
+    f
+
+instance FromCStruct VirtualAllocationCreateInfo where
+  peekCStruct p = do
+    size <- peek @DeviceSize ((p `plusPtr` 0 :: Ptr DeviceSize))
+    alignment <- peek @DeviceSize ((p `plusPtr` 8 :: Ptr DeviceSize))
+    flags <- peek @VirtualAllocationCreateFlags ((p `plusPtr` 16 :: Ptr VirtualAllocationCreateFlags))
+    pUserData <- peek @(Ptr ()) ((p `plusPtr` 24 :: Ptr (Ptr ())))
+    pure $ VirtualAllocationCreateInfo
+             size alignment flags pUserData
+
+instance Storable VirtualAllocationCreateInfo where
+  sizeOf ~_ = 32
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero VirtualAllocationCreateInfo where
+  zero = VirtualAllocationCreateInfo
+           zero
+           zero
+           zero
+           zero
+
+
+-- | VmaVirtualAllocationInfo
+--
+-- Parameters of an existing virtual allocation, returned by
+-- 'getVirtualAllocationInfo'.
+data VirtualAllocationInfo = VirtualAllocationInfo
+  { -- | Size of the allocation.
+    --
+    -- Same value as passed in /VmaVirtualAllocationCreateInfo::size/.
+    size :: DeviceSize
+  , -- | Custom pointer associated with the allocation.
+    --
+    -- Same value as passed in /VmaVirtualAllocationCreateInfo::pUserData/ or
+    -- to 'setVirtualAllocationUserData'.
+    userData :: Ptr ()
+  }
+  deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (VirtualAllocationInfo)
+#endif
+deriving instance Show VirtualAllocationInfo
+
+instance ToCStruct VirtualAllocationInfo where
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p VirtualAllocationInfo{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (size)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (userData)
+    f
+  cStructSize = 16
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (zero)
+    f
+
+instance FromCStruct VirtualAllocationInfo where
+  peekCStruct p = do
+    size <- peek @DeviceSize ((p `plusPtr` 0 :: Ptr DeviceSize))
+    pUserData <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    pure $ VirtualAllocationInfo
+             size pUserData
+
+instance Storable VirtualAllocationInfo where
+  sizeOf ~_ = 16
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero VirtualAllocationInfo where
+  zero = VirtualAllocationInfo
+           zero
+           zero
+
+
+-- | VmaVirtualBlock
+--
+-- Handle to a virtual block object that allows to use core allocation
+-- algorithm without allocating any real GPU memory.
+--
+-- Fill in 'VirtualBlockCreateInfo' structure and Use 'createVirtualBlock'
+-- to create it. Use 'destroyVirtualBlock' to destroy it. For more
+-- information, see documentation chapter /Virtual allocator/.
+newtype VirtualBlock = VirtualBlock Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance Show VirtualBlock where
+  showsPrec p (VirtualBlock x) = showParen (p >= 11) (showString "VirtualBlock 0x" . showHex x)
 

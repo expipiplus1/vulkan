@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Baldur Karlsson
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_shader_non_semantic_info:%20&body=@baldurk%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shader_non_semantic_info] @baldurk%0A<<Here describe the issue or question you have about the VK_KHR_shader_non_semantic_info extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -60,11 +60,11 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- No cross-references are available
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_non_semantic_info Vulkan Specification>

@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Alon Or-bach
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_shared_presentable_image:%20&body=@alonorbach%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shared_presentable_image] @alonorbach%0A<<Here describe the issue or question you have about the VK_KHR_shared_presentable_image extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -205,11 +205,11 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'SharedPresentSurfaceCapabilitiesKHR', 'getSwapchainStatusKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shared_presentable_image Vulkan Specification>
@@ -229,7 +229,7 @@ module Vulkan.Extensions.VK_KHR_shared_presentable_image  ( getSwapchainStatusKH
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -255,6 +255,7 @@ import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetSwapchainStatusKHR))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
@@ -317,6 +318,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shared_presentable_image VK_KHR_shared_presentable_image>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Extensions.Handles.SwapchainKHR'
 getSwapchainStatusKHR :: forall io
                        . (MonadIO io)
@@ -326,7 +328,7 @@ getSwapchainStatusKHR :: forall io
                          SwapchainKHR
                       -> io (Result)
 getSwapchainStatusKHR device swapchain = liftIO $ do
-  let vkGetSwapchainStatusKHRPtr = pVkGetSwapchainStatusKHR (deviceCmds (device :: Device))
+  let vkGetSwapchainStatusKHRPtr = pVkGetSwapchainStatusKHR (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetSwapchainStatusKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSwapchainStatusKHR is null" Nothing Nothing
   let vkGetSwapchainStatusKHR' = mkVkGetSwapchainStatusKHR vkGetSwapchainStatusKHRPtr
@@ -335,13 +337,14 @@ getSwapchainStatusKHR device swapchain = liftIO $ do
   pure $ (r)
 
 
--- | VkSharedPresentSurfaceCapabilitiesKHR - structure describing
+-- | VkSharedPresentSurfaceCapabilitiesKHR - Structure describing
 -- capabilities of a surface for shared presentation
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shared_presentable_image VK_KHR_shared_presentable_image>,
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SharedPresentSurfaceCapabilitiesKHR = SharedPresentSurfaceCapabilitiesKHR
@@ -365,7 +368,7 @@ deriving instance Generic (SharedPresentSurfaceCapabilitiesKHR)
 deriving instance Show SharedPresentSurfaceCapabilitiesKHR
 
 instance ToCStruct SharedPresentSurfaceCapabilitiesKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SharedPresentSurfaceCapabilitiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -93,7 +93,9 @@ import GHC.Show (Show(showsPrec))
 --
 -- = See Also
 --
--- 'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo'
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
+-- 'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo',
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
 newtype LogicOp = LogicOp Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 

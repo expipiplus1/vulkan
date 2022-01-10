@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Pat Brown
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_fragment_shader_barycentric:%20&body=@nvpbrown%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_fragment_shader_barycentric] @nvpbrown%0A<<Here describe the issue or question you have about the VK_NV_fragment_shader_barycentric extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -159,7 +159,7 @@
 --
 -- __RESOLVED__: The SPIR-V extension for this feature chose to mirror the
 -- behavior of the GLSL extension, which provides two built-in variables.
--- Additionally, it’s not clear that its a good idea (or even legal) to
+-- Additionally, it is not clear that its a good idea (or even legal) to
 -- have two variables using the “same attribute”, but with different
 -- interpolation modifiers.
 --
@@ -169,11 +169,11 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceFragmentShaderBarycentricFeaturesNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_fragment_shader_barycentric Vulkan Specification>

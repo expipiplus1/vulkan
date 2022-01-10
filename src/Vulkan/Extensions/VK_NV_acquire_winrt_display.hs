@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Juliano
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_acquire_winrt_display:%20&body=@jjuliano%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_acquire_winrt_display] @jjuliano%0A<<Here describe the issue or question you have about the VK_NV_acquire_winrt_display extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -107,7 +107,7 @@
 -- The X11 acquire command does need to accept a platform-specific
 -- parameter. This could be handled by adding to a platform-independent
 -- acquire command a params struct to which platform-dependent types can be
--- chained by pNext pointer.
+-- chained by @pNext@ pointer.
 --
 -- The prevailing opinion is that it would be odd to create a second
 -- platform-independent function that is used on the Windows 10 platform,
@@ -159,11 +159,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'acquireWinrtDisplayNV', 'getWinrtDisplayNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_acquire_winrt_display Vulkan Specification>
@@ -206,6 +206,7 @@ import Vulkan.Dynamic (InstanceCmds(pVkAcquireWinrtDisplayNV))
 import Vulkan.Dynamic (InstanceCmds(pVkGetWinrtDisplayNV))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -272,6 +273,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_acquire_winrt_display VK_NV_acquire_winrt_display>,
 -- 'Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 acquireWinrtDisplayNV :: forall io
@@ -291,7 +293,7 @@ acquireWinrtDisplayNV :: forall io
                          DisplayKHR
                       -> io ()
 acquireWinrtDisplayNV physicalDevice display = liftIO $ do
-  let vkAcquireWinrtDisplayNVPtr = pVkAcquireWinrtDisplayNV (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkAcquireWinrtDisplayNVPtr = pVkAcquireWinrtDisplayNV (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   unless (vkAcquireWinrtDisplayNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireWinrtDisplayNV is null" Nothing Nothing
   let vkAcquireWinrtDisplayNV' = mkVkAcquireWinrtDisplayNV vkAcquireWinrtDisplayNVPtr
@@ -332,6 +334,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_acquire_winrt_display VK_NV_acquire_winrt_display>,
 -- 'Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getWinrtDisplayNV :: forall io
@@ -356,7 +359,7 @@ getWinrtDisplayNV :: forall io
                      ("deviceRelativeId" ::: Word32)
                   -> io (DisplayKHR)
 getWinrtDisplayNV physicalDevice deviceRelativeId = liftIO . evalContT $ do
-  let vkGetWinrtDisplayNVPtr = pVkGetWinrtDisplayNV (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetWinrtDisplayNVPtr = pVkGetWinrtDisplayNV (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetWinrtDisplayNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetWinrtDisplayNV is null" Nothing Nothing
   let vkGetWinrtDisplayNV' = mkVkGetWinrtDisplayNV vkGetWinrtDisplayNVPtr

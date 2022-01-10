@@ -12,7 +12,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -48,6 +48,7 @@ import Vulkan.Core10.Handles (BufferView(..))
 import Vulkan.Core10.Enums.BufferViewCreateFlags (BufferViewCreateFlags)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateBufferView))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyBufferView))
 import Vulkan.Core10.FundamentalTypes (DeviceSize)
@@ -99,6 +100,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.BufferView', 'BufferViewCreateInfo',
 -- 'Vulkan.Core10.Handles.Device'
@@ -107,7 +109,7 @@ createBufferView :: forall io
                  => -- | @device@ is the logical device that creates the buffer view.
                     Device
                  -> -- | @pCreateInfo@ is a pointer to a 'BufferViewCreateInfo' structure
-                    -- containing parameters to be used to create the buffer.
+                    -- containing parameters to be used to create the buffer view.
                     BufferViewCreateInfo
                  -> -- | @pAllocator@ controls host memory allocation as described in the
                     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
@@ -115,7 +117,7 @@ createBufferView :: forall io
                     ("allocator" ::: Maybe AllocationCallbacks)
                  -> io (BufferView)
 createBufferView device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateBufferViewPtr = pVkCreateBufferView (deviceCmds (device :: Device))
+  let vkCreateBufferViewPtr = pVkCreateBufferView (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateBufferViewPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateBufferView is null" Nothing Nothing
   let vkCreateBufferView' = mkVkCreateBufferView vkCreateBufferViewPtr
@@ -190,6 +192,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.BufferView', 'Vulkan.Core10.Handles.Device'
 destroyBufferView :: forall io
@@ -204,7 +207,7 @@ destroyBufferView :: forall io
                      ("allocator" ::: Maybe AllocationCallbacks)
                   -> io ()
 destroyBufferView device bufferView allocator = liftIO . evalContT $ do
-  let vkDestroyBufferViewPtr = pVkDestroyBufferView (deviceCmds (device :: Device))
+  let vkDestroyBufferViewPtr = pVkDestroyBufferView (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyBufferViewPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyBufferView is null" Nothing Nothing
   let vkDestroyBufferView' = mkVkDestroyBufferView vkDestroyBufferViewPtr
@@ -336,6 +339,7 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Buffer',
 -- 'Vulkan.Core10.Enums.BufferViewCreateFlags.BufferViewCreateFlags',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
@@ -369,7 +373,7 @@ deriving instance Generic (BufferViewCreateInfo)
 deriving instance Show BufferViewCreateInfo
 
 instance ToCStruct BufferViewCreateInfo where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferViewCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

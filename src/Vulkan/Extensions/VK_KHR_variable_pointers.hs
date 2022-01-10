@@ -33,7 +33,7 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_variable_pointers:%20&body=@critsec%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_variable_pointers] @critsec%0A<<Here describe the issue or question you have about the VK_KHR_variable_pointers extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -111,6 +111,8 @@
 --
 --     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES_KHR'
 --
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES_KHR'
+--
 -- == New SPIR-V Capabilities
 --
 -- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-VariablePointers VariablePointers>
@@ -145,12 +147,12 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceVariablePointerFeaturesKHR',
 -- 'PhysicalDeviceVariablePointersFeaturesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_variable_pointers Vulkan Specification>

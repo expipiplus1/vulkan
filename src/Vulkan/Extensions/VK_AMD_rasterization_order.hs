@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_rasterization_order:%20&body=@drakos-amd%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_rasterization_order] @drakos-amd%0A<<Here describe the issue or question you have about the VK_AMD_rasterization_order extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -129,7 +129,7 @@
 -- using the new relaxed mode?
 --
 -- __RESOLVED__: No. In this case the rasterization order is completely
--- implementation dependent, but in practice it is expected to partially
+-- implementation-dependent, but in practice it is expected to partially
 -- still follow the order of incoming primitives.
 --
 -- 4) Does the new relaxed rasterization order have any adverse effect on
@@ -152,12 +152,12 @@
 --
 --     -   Initial draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'PipelineRasterizationStateRasterizationOrderAMD',
 -- 'RasterizationOrderAMD'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_rasterization_order Vulkan Specification>
@@ -177,7 +177,7 @@ module Vulkan.Extensions.VK_AMD_rasterization_order  ( PipelineRasterizationStat
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showsPrec)
@@ -214,6 +214,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_rasterization_order VK_AMD_rasterization_order>,
 -- 'RasterizationOrderAMD',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineRasterizationStateRasterizationOrderAMD = PipelineRasterizationStateRasterizationOrderAMD
@@ -230,7 +231,7 @@ deriving instance Generic (PipelineRasterizationStateRasterizationOrderAMD)
 deriving instance Show PipelineRasterizationStateRasterizationOrderAMD
 
 instance ToCStruct PipelineRasterizationStateRasterizationOrderAMD where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineRasterizationStateRasterizationOrderAMD{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -266,6 +267,7 @@ instance Zero PipelineRasterizationStateRasterizationOrderAMD where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_rasterization_order VK_AMD_rasterization_order>,
 -- 'PipelineRasterizationStateRasterizationOrderAMD'
 newtype RasterizationOrderAMD = RasterizationOrderAMD Int32
   deriving newtype (Eq, Ord, Storable, Zero)

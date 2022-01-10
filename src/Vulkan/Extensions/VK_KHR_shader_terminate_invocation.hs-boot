@@ -26,7 +26,9 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_shader_terminate_invocation:%20&body=@critsec%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shader_terminate_invocation] @critsec%0A<<Here describe the issue or question you have about the VK_KHR_shader_terminate_invocation extension>> >
+--
+-- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
 --     2020-08-11
@@ -62,12 +64,11 @@
 -- previously executed instructions will have observable effects. The
 -- @OpTerminateInvocation@ instruction, along with the
 -- @OpDemoteToHelperInvocation@ instruction from the
--- <VK_EXT_shader_demote_to_helper_invocation.html VK_EXT_shader_demote_to_helper_invocation>
--- extension, together replace the @OpKill@ instruction, which could behave
--- like either of these instructions. @OpTerminateInvocation@ provides the
--- behavior required by the GLSL @discard@ statement, and should be used
--- when available by GLSL compilers and applications that need the GLSL
--- @discard@ behavior.
+-- @VK_EXT_shader_demote_to_helper_invocation@ extension, together replace
+-- the @OpKill@ instruction, which could behave like either of these
+-- instructions. @OpTerminateInvocation@ provides the behavior required by
+-- the GLSL @discard@ statement, and should be used when available by GLSL
+-- compilers and applications that need the GLSL @discard@ behavior.
 --
 -- == New Structures
 --
@@ -91,11 +92,11 @@
 --
 -- -   Revision 1, 2020-08-11 (Jesse Hall)
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceShaderTerminateInvocationFeaturesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_terminate_invocation Vulkan Specification>

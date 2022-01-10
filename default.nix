@@ -15,8 +15,12 @@ let
 
   packages = p:
     with p;
-    [ vulkan vulkan-utils VulkanMemoryAllocator vulkan-examples openxr ]
-    ++ pkgs.lib.optional (p.ghc.version == "8.10.4") generate-new;
+    if compiler == "ghcHEAD" then [
+      (pkgs.haskell.lib.dontCheck vulkan)
+      (pkgs.haskell.lib.dontCheck VulkanMemoryAllocator)
+    ] else
+      [ vulkan vulkan-utils VulkanMemoryAllocator vulkan-examples openxr ]
+      ++ pkgs.lib.optional (p.ghc.version == "8.10.7") generate-new;
 
 in if forShell then
   haskellPackages.shellFor {

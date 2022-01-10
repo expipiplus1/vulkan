@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Cort Stratton
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_validation_cache:%20&body=@cdwfs%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_validation_cache] @cdwfs%0A<<Here describe the issue or question you have about the VK_EXT_validation_cache extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -106,7 +106,7 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'ShaderModuleValidationCacheCreateInfoEXT',
 -- 'ValidationCacheCreateFlagsEXT', 'ValidationCacheCreateInfoEXT',
@@ -115,7 +115,7 @@
 -- 'destroyValidationCacheEXT', 'getValidationCacheDataEXT',
 -- 'mergeValidationCachesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache Vulkan Specification>
@@ -146,7 +146,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -202,6 +202,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateValidationCacheEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyValidationCacheEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkGetValidationCacheDataEXT))
@@ -287,6 +288,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache VK_EXT_validation_cache>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'ValidationCacheCreateInfoEXT',
 -- 'Vulkan.Extensions.Handles.ValidationCacheEXT'
@@ -303,7 +305,7 @@ createValidationCacheEXT :: forall io
                             ("allocator" ::: Maybe AllocationCallbacks)
                          -> io (ValidationCacheEXT)
 createValidationCacheEXT device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateValidationCacheEXTPtr = pVkCreateValidationCacheEXT (deviceCmds (device :: Device))
+  let vkCreateValidationCacheEXTPtr = pVkCreateValidationCacheEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateValidationCacheEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateValidationCacheEXT is null" Nothing Nothing
   let vkCreateValidationCacheEXT' = mkVkCreateValidationCacheEXT vkCreateValidationCacheEXTPtr
@@ -377,6 +379,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache VK_EXT_validation_cache>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.Handles.ValidationCacheEXT'
@@ -393,7 +396,7 @@ destroyValidationCacheEXT :: forall io
                              ("allocator" ::: Maybe AllocationCallbacks)
                           -> io ()
 destroyValidationCacheEXT device validationCache allocator = liftIO . evalContT $ do
-  let vkDestroyValidationCacheEXTPtr = pVkDestroyValidationCacheEXT (deviceCmds (device :: Device))
+  let vkDestroyValidationCacheEXTPtr = pVkDestroyValidationCacheEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyValidationCacheEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyValidationCacheEXT is null" Nothing Nothing
   let vkDestroyValidationCacheEXT' = mkVkDestroyValidationCacheEXT vkDestroyValidationCacheEXTPtr
@@ -420,15 +423,16 @@ foreign import ccall
 -- @pDataSize@. Otherwise, @pDataSize@ /must/ point to a variable set by
 -- the user to the size of the buffer, in bytes, pointed to by @pData@, and
 -- on return the variable is overwritten with the amount of data actually
--- written to @pData@.
+-- written to @pData@. If @pDataSize@ is less than the maximum size that
+-- /can/ be retrieved by the validation cache, at most @pDataSize@ bytes
+-- will be written to @pData@, and 'getValidationCacheDataEXT' will return
+-- 'Vulkan.Core10.Enums.Result.INCOMPLETE' instead of
+-- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all of the
+-- validation cache was returned.
 --
--- If @pDataSize@ is less than the maximum size that /can/ be retrieved by
--- the validation cache, at most @pDataSize@ bytes will be written to
--- @pData@, and 'getValidationCacheDataEXT' will return
--- 'Vulkan.Core10.Enums.Result.INCOMPLETE'. Any data written to @pData@ is
--- valid and /can/ be provided as the @pInitialData@ member of the
--- 'ValidationCacheCreateInfoEXT' structure passed to
--- 'createValidationCacheEXT'.
+-- Any data written to @pData@ is valid and /can/ be provided as the
+-- @pInitialData@ member of the 'ValidationCacheCreateInfoEXT' structure
+-- passed to 'createValidationCacheEXT'.
 --
 -- Two calls to 'getValidationCacheDataEXT' with the same parameters /must/
 -- retrieve the same data unless a command that modifies the contents of
@@ -513,6 +517,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache VK_EXT_validation_cache>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.Handles.ValidationCacheEXT'
 getValidationCacheDataEXT :: forall io
@@ -523,7 +528,7 @@ getValidationCacheDataEXT :: forall io
                              ValidationCacheEXT
                           -> io (Result, ("data" ::: ByteString))
 getValidationCacheDataEXT device validationCache = liftIO . evalContT $ do
-  let vkGetValidationCacheDataEXTPtr = pVkGetValidationCacheDataEXT (deviceCmds (device :: Device))
+  let vkGetValidationCacheDataEXTPtr = pVkGetValidationCacheDataEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetValidationCacheDataEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetValidationCacheDataEXT is null" Nothing Nothing
   let vkGetValidationCacheDataEXT' = mkVkGetValidationCacheDataEXT vkGetValidationCacheDataEXTPtr
@@ -554,7 +559,7 @@ foreign import ccall
 --
 -- Note
 --
--- The details of the merge operation are implementation dependent, but
+-- The details of the merge operation are implementation-dependent, but
 -- implementations /should/ merge the contents of the specified validation
 -- caches and prune duplicate entries.
 --
@@ -604,6 +609,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache VK_EXT_validation_cache>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.Handles.ValidationCacheEXT'
 mergeValidationCachesEXT :: forall io
@@ -618,11 +624,11 @@ mergeValidationCachesEXT :: forall io
                             ("srcCaches" ::: Vector ValidationCacheEXT)
                          -> io ()
 mergeValidationCachesEXT device dstCache srcCaches = liftIO . evalContT $ do
-  let vkMergeValidationCachesEXTPtr = pVkMergeValidationCachesEXT (deviceCmds (device :: Device))
+  let vkMergeValidationCachesEXTPtr = pVkMergeValidationCachesEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkMergeValidationCachesEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkMergeValidationCachesEXT is null" Nothing Nothing
   let vkMergeValidationCachesEXT' = mkVkMergeValidationCachesEXT vkMergeValidationCachesEXTPtr
-  pPSrcCaches <- ContT $ allocaBytesAligned @ValidationCacheEXT ((Data.Vector.length (srcCaches)) * 8) 8
+  pPSrcCaches <- ContT $ allocaBytes @ValidationCacheEXT ((Data.Vector.length (srcCaches)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPSrcCaches `plusPtr` (8 * (i)) :: Ptr ValidationCacheEXT) (e)) (srcCaches)
   r <- lift $ traceAroundEvent "vkMergeValidationCachesEXT" (vkMergeValidationCachesEXT' (deviceHandle (device)) (dstCache) ((fromIntegral (Data.Vector.length $ (srcCaches)) :: Word32)) (pPSrcCaches))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -659,6 +665,7 @@ mergeValidationCachesEXT device dstCache srcCaches = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache VK_EXT_validation_cache>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'ValidationCacheCreateFlagsEXT', 'createValidationCacheEXT'
 data ValidationCacheCreateInfoEXT = ValidationCacheCreateInfoEXT
@@ -680,7 +687,7 @@ deriving instance Generic (ValidationCacheCreateInfoEXT)
 deriving instance Show ValidationCacheCreateInfoEXT
 
 instance ToCStruct ValidationCacheCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ValidationCacheCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -724,6 +731,7 @@ instance Zero ValidationCacheCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache VK_EXT_validation_cache>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Extensions.Handles.ValidationCacheEXT'
 data ShaderModuleValidationCacheCreateInfoEXT = ShaderModuleValidationCacheCreateInfoEXT
@@ -743,7 +751,7 @@ deriving instance Generic (ShaderModuleValidationCacheCreateInfoEXT)
 deriving instance Show ShaderModuleValidationCacheCreateInfoEXT
 
 instance ToCStruct ShaderModuleValidationCacheCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ShaderModuleValidationCacheCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -783,6 +791,7 @@ instance Zero ShaderModuleValidationCacheCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache VK_EXT_validation_cache>,
 -- 'ValidationCacheCreateInfoEXT'
 newtype ValidationCacheCreateFlagsEXT = ValidationCacheCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -816,6 +825,7 @@ instance Read ValidationCacheCreateFlagsEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache VK_EXT_validation_cache>,
 -- 'createValidationCacheEXT', 'getValidationCacheDataEXT'
 newtype ValidationCacheHeaderVersionEXT = ValidationCacheHeaderVersionEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)

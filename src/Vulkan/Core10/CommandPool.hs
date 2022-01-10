@@ -16,7 +16,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -54,6 +54,7 @@ import Vulkan.Core10.Enums.CommandPoolResetFlagBits (CommandPoolResetFlagBits(..
 import Vulkan.Core10.Enums.CommandPoolResetFlagBits (CommandPoolResetFlags)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateCommandPool))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyCommandPool))
 import Vulkan.Dynamic (DeviceCmds(pVkResetCommandPool))
@@ -115,6 +116,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.CommandPool', 'CommandPoolCreateInfo',
 -- 'Vulkan.Core10.Handles.Device'
@@ -131,7 +133,7 @@ createCommandPool :: forall io
                      ("allocator" ::: Maybe AllocationCallbacks)
                   -> io (CommandPool)
 createCommandPool device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateCommandPoolPtr = pVkCreateCommandPool (deviceCmds (device :: Device))
+  let vkCreateCommandPoolPtr = pVkCreateCommandPool (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateCommandPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateCommandPool is null" Nothing Nothing
   let vkCreateCommandPool' = mkVkCreateCommandPool vkCreateCommandPoolPtr
@@ -220,6 +222,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.CommandPool', 'Vulkan.Core10.Handles.Device'
 destroyCommandPool :: forall io
@@ -234,7 +237,7 @@ destroyCommandPool :: forall io
                       ("allocator" ::: Maybe AllocationCallbacks)
                    -> io ()
 destroyCommandPool device commandPool allocator = liftIO . evalContT $ do
-  let vkDestroyCommandPoolPtr = pVkDestroyCommandPool (deviceCmds (device :: Device))
+  let vkDestroyCommandPoolPtr = pVkDestroyCommandPool (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyCommandPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyCommandPool is null" Nothing Nothing
   let vkDestroyCommandPool' = mkVkDestroyCommandPool vkDestroyCommandPoolPtr
@@ -308,6 +311,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandPool',
 -- 'Vulkan.Core10.Enums.CommandPoolResetFlagBits.CommandPoolResetFlags',
 -- 'Vulkan.Core10.Handles.Device'
@@ -323,7 +327,7 @@ resetCommandPool :: forall io
                     CommandPoolResetFlags
                  -> io ()
 resetCommandPool device commandPool flags = liftIO $ do
-  let vkResetCommandPoolPtr = pVkResetCommandPool (deviceCmds (device :: Device))
+  let vkResetCommandPoolPtr = pVkResetCommandPool (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkResetCommandPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetCommandPool is null" Nothing Nothing
   let vkResetCommandPool' = mkVkResetCommandPool vkResetCommandPoolPtr
@@ -355,6 +359,7 @@ resetCommandPool device commandPool flags = liftIO $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.CommandPoolCreateFlagBits.CommandPoolCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createCommandPool'
 data CommandPoolCreateInfo = CommandPoolCreateInfo
@@ -376,7 +381,7 @@ deriving instance Generic (CommandPoolCreateInfo)
 deriving instance Show CommandPoolCreateInfo
 
 instance ToCStruct CommandPoolCreateInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CommandPoolCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

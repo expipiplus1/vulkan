@@ -39,6 +39,8 @@ type DescriptorBindingFlags = DescriptorBindingFlagBits
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_indexing VK_EXT_descriptor_indexing>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'DescriptorBindingFlags'
 newtype DescriptorBindingFlagBits = DescriptorBindingFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -82,13 +84,13 @@ pattern DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT             = DescriptorBindingFl
 -- binding. This /must/ only be used for the last binding in the descriptor
 -- set layout (i.e. the binding with the largest value of @binding@). For
 -- the purposes of counting against limits such as @maxDescriptorSet@* and
--- @maxPerStageDescriptor@*, the full value of @descriptorCount@ is counted
--- , except for descriptor bindings with a descriptor type of
+-- @maxPerStageDescriptor@*, the full value of @descriptorCount@ is
+-- counted, except for descriptor bindings with a descriptor type of
 -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
 -- where @descriptorCount@ specifies the upper bound on the byte size of
 -- the binding, thus it counts against the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxInlineUniformBlockSize maxInlineUniformBlockSize>
--- limit instead. .
+-- limit instead.
 pattern DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT   = DescriptorBindingFlagBits 0x00000008
 
 conNameDescriptorBindingFlagBits :: String

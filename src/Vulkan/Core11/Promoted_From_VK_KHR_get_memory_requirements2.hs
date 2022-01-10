@@ -16,7 +16,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.IO (throwIO)
@@ -55,6 +55,7 @@ import Vulkan.Core10.Handles (Buffer)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetBufferMemoryRequirements2))
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageMemoryRequirements2))
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageSparseMemoryRequirements2))
@@ -93,6 +94,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'BufferMemoryRequirementsInfo2', 'Vulkan.Core10.Handles.Device',
 -- 'MemoryRequirements2'
 getBufferMemoryRequirements2 :: forall a io
@@ -110,7 +112,7 @@ getBufferMemoryRequirements2 :: forall a io
                                 BufferMemoryRequirementsInfo2
                              -> io (MemoryRequirements2 a)
 getBufferMemoryRequirements2 device info = liftIO . evalContT $ do
-  let vkGetBufferMemoryRequirements2Ptr = pVkGetBufferMemoryRequirements2 (deviceCmds (device :: Device))
+  let vkGetBufferMemoryRequirements2Ptr = pVkGetBufferMemoryRequirements2 (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetBufferMemoryRequirements2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetBufferMemoryRequirements2 is null" Nothing Nothing
   let vkGetBufferMemoryRequirements2' = mkVkGetBufferMemoryRequirements2 vkGetBufferMemoryRequirements2Ptr
@@ -135,6 +137,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Device', 'ImageMemoryRequirementsInfo2',
 -- 'MemoryRequirements2'
 getImageMemoryRequirements2 :: forall a b io
@@ -152,7 +155,7 @@ getImageMemoryRequirements2 :: forall a b io
                                (ImageMemoryRequirementsInfo2 a)
                             -> io (MemoryRequirements2 b)
 getImageMemoryRequirements2 device info = liftIO . evalContT $ do
-  let vkGetImageMemoryRequirements2Ptr = pVkGetImageMemoryRequirements2 (deviceCmds (device :: Device))
+  let vkGetImageMemoryRequirements2Ptr = pVkGetImageMemoryRequirements2 (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetImageMemoryRequirements2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageMemoryRequirements2 is null" Nothing Nothing
   let vkGetImageMemoryRequirements2' = mkVkGetImageMemoryRequirements2 vkGetImageMemoryRequirements2Ptr
@@ -195,6 +198,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Device', 'ImageSparseMemoryRequirementsInfo2',
 -- 'SparseImageMemoryRequirements2'
 getImageSparseMemoryRequirements2 :: forall io
@@ -206,7 +210,7 @@ getImageSparseMemoryRequirements2 :: forall io
                                      ImageSparseMemoryRequirementsInfo2
                                   -> io (("sparseMemoryRequirements" ::: Vector SparseImageMemoryRequirements2))
 getImageSparseMemoryRequirements2 device info = liftIO . evalContT $ do
-  let vkGetImageSparseMemoryRequirements2Ptr = pVkGetImageSparseMemoryRequirements2 (deviceCmds (device :: Device))
+  let vkGetImageSparseMemoryRequirements2Ptr = pVkGetImageSparseMemoryRequirements2 (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetImageSparseMemoryRequirements2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageSparseMemoryRequirements2 is null" Nothing Nothing
   let vkGetImageSparseMemoryRequirements2' = mkVkGetImageSparseMemoryRequirements2 vkGetImageSparseMemoryRequirements2Ptr
@@ -229,6 +233,7 @@ getImageSparseMemoryRequirements2 device info = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Buffer',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getBufferMemoryRequirements2',
@@ -246,7 +251,7 @@ deriving instance Generic (BufferMemoryRequirementsInfo2)
 deriving instance Show BufferMemoryRequirementsInfo2
 
 instance ToCStruct BufferMemoryRequirementsInfo2 where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferMemoryRequirementsInfo2{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -337,6 +342,7 @@ instance Zero BufferMemoryRequirementsInfo2 where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getImageMemoryRequirements2',
@@ -355,7 +361,7 @@ deriving instance Show (Chain es) => Show (ImageMemoryRequirementsInfo2 es)
 
 instance Extensible ImageMemoryRequirementsInfo2 where
   extensibleTypeName = "ImageMemoryRequirementsInfo2"
-  setNext x next = x{next = next}
+  setNext ImageMemoryRequirementsInfo2{..} next' = ImageMemoryRequirementsInfo2{next = next', ..}
   getNext ImageMemoryRequirementsInfo2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageMemoryRequirementsInfo2 e => b) -> Maybe b
   extends _ f
@@ -363,7 +369,7 @@ instance Extensible ImageMemoryRequirementsInfo2 where
     | otherwise = Nothing
 
 instance (Extendss ImageMemoryRequirementsInfo2 es, PokeChain es) => ToCStruct (ImageMemoryRequirementsInfo2 es) where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageMemoryRequirementsInfo2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -399,6 +405,7 @@ instance es ~ '[] => Zero (ImageMemoryRequirementsInfo2 es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getImageSparseMemoryRequirements2',
@@ -416,7 +423,7 @@ deriving instance Generic (ImageSparseMemoryRequirementsInfo2)
 deriving instance Show ImageSparseMemoryRequirementsInfo2
 
 instance ToCStruct ImageSparseMemoryRequirementsInfo2 where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageSparseMemoryRequirementsInfo2{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -463,10 +470,14 @@ instance Zero ImageSparseMemoryRequirementsInfo2 where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.MemoryManagement.MemoryRequirements',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoGetMemoryPropertiesKHR VkVideoGetMemoryPropertiesKHR>,
 -- 'getBufferMemoryRequirements2',
 -- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2KHR',
+-- 'Vulkan.Extensions.VK_KHR_maintenance4.getDeviceBufferMemoryRequirementsKHR',
+-- 'Vulkan.Extensions.VK_KHR_maintenance4.getDeviceImageMemoryRequirementsKHR',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.getGeneratedCommandsMemoryRequirementsNV',
 -- 'getImageMemoryRequirements2',
 -- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.getImageMemoryRequirements2KHR'
@@ -486,7 +497,7 @@ deriving instance Show (Chain es) => Show (MemoryRequirements2 es)
 
 instance Extensible MemoryRequirements2 where
   extensibleTypeName = "MemoryRequirements2"
-  setNext x next = x{next = next}
+  setNext MemoryRequirements2{..} next' = MemoryRequirements2{next = next', ..}
   getNext MemoryRequirements2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends MemoryRequirements2 e => b) -> Maybe b
   extends _ f
@@ -494,7 +505,7 @@ instance Extensible MemoryRequirements2 where
     | otherwise = Nothing
 
 instance (Extendss MemoryRequirements2 es, PokeChain es) => ToCStruct (MemoryRequirements2 es) where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryRequirements2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -530,8 +541,10 @@ instance es ~ '[] => Zero (MemoryRequirements2 es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryRequirements',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'Vulkan.Extensions.VK_KHR_maintenance4.getDeviceImageSparseMemoryRequirementsKHR',
 -- 'getImageSparseMemoryRequirements2',
 -- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.getImageSparseMemoryRequirements2KHR'
 data SparseImageMemoryRequirements2 = SparseImageMemoryRequirements2
@@ -546,7 +559,7 @@ deriving instance Generic (SparseImageMemoryRequirements2)
 deriving instance Show SparseImageMemoryRequirements2
 
 instance ToCStruct SparseImageMemoryRequirements2 where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SparseImageMemoryRequirements2{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

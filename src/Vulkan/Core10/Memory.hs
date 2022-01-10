@@ -19,7 +19,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -60,6 +60,7 @@ import Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation (DedicatedAllocationMemoryAllocateInfoNV)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkAllocateMemory))
 import Vulkan.Dynamic (DeviceCmds(pVkFlushMappedMemoryRanges))
 import Vulkan.Dynamic (DeviceCmds(pVkFreeMemory))
@@ -79,10 +80,12 @@ import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer (ImportAndroidHardwareBufferInfoANDROID)
+import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_buffer_collection (ImportMemoryBufferCollectionFUCHSIA)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_fd (ImportMemoryFdInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_external_memory_host (ImportMemoryHostPointerInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_win32 (ImportMemoryWin32HandleInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_win32 (ImportMemoryWin32HandleInfoNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_external_memory (ImportMemoryZirconHandleInfoFUCHSIA)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_group (MemoryAllocateFlagsInfo)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation (MemoryDedicatedAllocateInfo)
 import Vulkan.Core10.Enums.MemoryMapFlags (MemoryMapFlags)
@@ -124,9 +127,9 @@ foreign import ccall
 -- When memory is allocated, its contents are undefined with the following
 -- constraint:
 --
--- -   The contents of unprotected memory /must/ not be a function of data
---     protected memory objects, even if those memory objects were
---     previously freed.
+-- -   The contents of unprotected memory /must/ not be a function of the
+--     contents of data protected memory objects, even if those memory
+--     objects were previously freed.
 --
 -- Note
 --
@@ -150,6 +153,23 @@ foreign import ccall
 -- rely on the use of the returned error code in order to identify when the
 -- limit is reached.
 --
+-- Note
+--
+-- Many protected memory implementations involve complex hardware and
+-- system software support, and often have additional and much lower limits
+-- on the number of simultaneous protected memory allocations (from memory
+-- types with the
+-- 'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
+-- property) than for non-protected memory allocations. These limits can be
+-- system-wide, and depend on a variety of factors outside of the Vulkan
+-- implementation, so they cannot be queried in Vulkan. Applications
+-- /should/ use as few allocations as possible from such memory types by
+-- suballocating aggressively, and be prepared for allocation failure even
+-- when there is apparently plenty of capacity remaining in the memory
+-- heap. As a guideline, the Vulkan conformance test suite requires that at
+-- least 80 minimum-size allocations can exist concurrently when no other
+-- uses of protected memory are active in the system.
+--
 -- Some platforms /may/ have a limit on the maximum size of a single
 -- allocation. For example, certain systems /may/ fail to create
 -- allocations with a size greater than or equal to 4GB. Such a limit is
@@ -164,13 +184,36 @@ foreign import ccall
 -- into other heaps. The overallocation behavior /can/ be specified through
 -- the @VK_AMD_memory_overallocation_behavior@ extension.
 --
+-- If the
+-- 'Vulkan.Extensions.VK_EXT_pageable_device_local_memory.PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT'::@pageableDeviceLocalMemory@
+-- feature is enabled, memory allocations made from a heap that includes
+-- 'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_DEVICE_LOCAL_BIT' in
+-- 'Vulkan.Core10.DeviceInitialization.MemoryHeap'::@flags@ /may/ be
+-- transparently moved to host-local memory allowing multiple applications
+-- to share device-local memory. If there is no space left in device-local
+-- memory when this new allocation is made, other allocations /may/ be
+-- moved out transparently to make room. The operating system will
+-- determine which allocations to move to device-local memory or host-local
+-- memory based on platform-specific criteria. To help the operating system
+-- make good choices, the application /should/ set the appropriate memory
+-- priority with
+-- 'Vulkan.Extensions.VK_EXT_memory_priority.MemoryPriorityAllocateInfoEXT'
+-- and adjust it as necessary with
+-- 'Vulkan.Extensions.VK_EXT_pageable_device_local_memory.setDeviceMemoryPriorityEXT'.
+-- Higher priority allocations will moved to device-local memory first.
+--
+-- Memory allocations made on heaps without the
+-- 'Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_DEVICE_LOCAL_BIT'
+-- property will not be transparently promoted to device-local memory by
+-- the operating system.
+--
 -- == Valid Usage
 --
 -- -   #VUID-vkAllocateMemory-pAllocateInfo-01713#
 --     @pAllocateInfo->allocationSize@ /must/ be less than or equal to
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'::@memoryHeaps@[memindex].size
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'::@memoryHeaps@[@memindex@].@size@
 --     where @memindex@ =
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'::@memoryTypes@[pAllocateInfo->memoryTypeIndex].heapIndex
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'::@memoryTypes@[@pAllocateInfo->memoryTypeIndex@].@heapIndex@
 --     as returned by
 --     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceMemoryProperties'
 --     for the 'Vulkan.Core10.Handles.PhysicalDevice' that @device@ was
@@ -193,7 +236,7 @@ foreign import ccall
 -- -   #VUID-vkAllocateMemory-maxMemoryAllocationCount-04101# There /must/
 --     be less than
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxMemoryAllocationCount@
---     device memory allocations currently allocated on the device.
+--     device memory allocations currently allocated on the device
 --
 -- == Valid Usage (Implicit)
 --
@@ -228,6 +271,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'MemoryAllocateInfo'
@@ -236,7 +280,7 @@ allocateMemory :: forall a io
                => -- | @device@ is the logical device that owns the memory.
                   Device
                -> -- | @pAllocateInfo@ is a pointer to a 'MemoryAllocateInfo' structure
-                  -- describing parameters of the allocation. A successful returned
+                  -- describing parameters of the allocation. A successfully returned
                   -- allocation /must/ use the requested parameters — no substitution is
                   -- permitted by the implementation.
                   (MemoryAllocateInfo a)
@@ -246,7 +290,7 @@ allocateMemory :: forall a io
                   ("allocator" ::: Maybe AllocationCallbacks)
                -> io (DeviceMemory)
 allocateMemory device allocateInfo allocator = liftIO . evalContT $ do
-  let vkAllocateMemoryPtr = pVkAllocateMemory (deviceCmds (device :: Device))
+  let vkAllocateMemoryPtr = pVkAllocateMemory (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkAllocateMemoryPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAllocateMemory is null" Nothing Nothing
   let vkAllocateMemory' = mkVkAllocateMemory vkAllocateMemoryPtr
@@ -286,15 +330,15 @@ foreign import ccall
 -- = Description
 --
 -- Before freeing a memory object, an application /must/ ensure the memory
--- object is no longer in use by the device—​for example by command buffers
--- in the /pending state/. Memory /can/ be freed whilst still bound to
--- resources, but those resources /must/ not be used afterwards. Freeing a
--- memory object releases the reference it held, if any, to its payload. If
--- there are still any bound images or buffers, the memory object’s payload
--- /may/ not be immediately released by the implementation, but /must/ be
--- released by the time all bound images and buffers have been destroyed.
--- Once all references to a payload are released, it is returned to the
--- heap from which it was allocated.
+-- object is no longer in use by the device — for example by command
+-- buffers in the /pending state/. Memory /can/ be freed whilst still bound
+-- to resources, but those resources /must/ not be used afterwards. Freeing
+-- a memory object releases the reference it held, if any, to its payload.
+-- If there are still any bound images or buffers, the memory object’s
+-- payload /may/ not be immediately released by the implementation, but
+-- /must/ be released by the time all bound images and buffers have been
+-- destroyed. Once all references to a payload are released, it is returned
+-- to the heap from which it was allocated.
 --
 -- How memory objects are bound to Images and Buffers is described in
 -- detail in the
@@ -339,6 +383,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory'
 freeMemory :: forall io
@@ -353,7 +398,7 @@ freeMemory :: forall io
               ("allocator" ::: Maybe AllocationCallbacks)
            -> io ()
 freeMemory device memory allocator = liftIO . evalContT $ do
-  let vkFreeMemoryPtr = pVkFreeMemory (deviceCmds (device :: Device))
+  let vkFreeMemoryPtr = pVkFreeMemory (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkFreeMemoryPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkFreeMemory is null" Nothing Nothing
   let vkFreeMemory' = mkVkFreeMemory vkFreeMemoryPtr
@@ -480,6 +525,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.MemoryMapFlags.MemoryMapFlags'
@@ -501,7 +547,7 @@ mapMemory :: forall io
              MemoryMapFlags
           -> io (("data" ::: Ptr ()))
 mapMemory device memory offset size flags = liftIO . evalContT $ do
-  let vkMapMemoryPtr = pVkMapMemory (deviceCmds (device :: Device))
+  let vkMapMemoryPtr = pVkMapMemory (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkMapMemoryPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkMapMemory is null" Nothing Nothing
   let vkMapMemory' = mkVkMapMemory vkMapMemoryPtr
@@ -556,6 +602,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory'
 unmapMemory :: forall io
              . (MonadIO io)
@@ -565,7 +612,7 @@ unmapMemory :: forall io
                DeviceMemory
             -> io ()
 unmapMemory device memory = liftIO $ do
-  let vkUnmapMemoryPtr = pVkUnmapMemory (deviceCmds (device :: Device))
+  let vkUnmapMemoryPtr = pVkUnmapMemory (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkUnmapMemoryPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkUnmapMemory is null" Nothing Nothing
   let vkUnmapMemory' = mkVkUnmapMemory vkUnmapMemoryPtr
@@ -626,6 +673,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device', 'MappedMemoryRange'
 flushMappedMemoryRanges :: forall io
                          . (MonadIO io)
@@ -643,11 +691,11 @@ flushMappedMemoryRanges :: forall io
                            ("memoryRanges" ::: Vector MappedMemoryRange)
                         -> io ()
 flushMappedMemoryRanges device memoryRanges = liftIO . evalContT $ do
-  let vkFlushMappedMemoryRangesPtr = pVkFlushMappedMemoryRanges (deviceCmds (device :: Device))
+  let vkFlushMappedMemoryRangesPtr = pVkFlushMappedMemoryRanges (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkFlushMappedMemoryRangesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkFlushMappedMemoryRanges is null" Nothing Nothing
   let vkFlushMappedMemoryRanges' = mkVkFlushMappedMemoryRanges vkFlushMappedMemoryRangesPtr
-  pPMemoryRanges <- ContT $ allocaBytesAligned @MappedMemoryRange ((Data.Vector.length (memoryRanges)) * 40) 8
+  pPMemoryRanges <- ContT $ allocaBytes @MappedMemoryRange ((Data.Vector.length (memoryRanges)) * 40)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPMemoryRanges `plusPtr` (40 * (i)) :: Ptr MappedMemoryRange) (e)) (memoryRanges)
   r <- lift $ traceAroundEvent "vkFlushMappedMemoryRanges" (vkFlushMappedMemoryRanges' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (memoryRanges)) :: Word32)) (pPMemoryRanges))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -698,6 +746,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device', 'MappedMemoryRange'
 invalidateMappedMemoryRanges :: forall io
                               . (MonadIO io)
@@ -715,11 +764,11 @@ invalidateMappedMemoryRanges :: forall io
                                 ("memoryRanges" ::: Vector MappedMemoryRange)
                              -> io ()
 invalidateMappedMemoryRanges device memoryRanges = liftIO . evalContT $ do
-  let vkInvalidateMappedMemoryRangesPtr = pVkInvalidateMappedMemoryRanges (deviceCmds (device :: Device))
+  let vkInvalidateMappedMemoryRangesPtr = pVkInvalidateMappedMemoryRanges (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkInvalidateMappedMemoryRangesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkInvalidateMappedMemoryRanges is null" Nothing Nothing
   let vkInvalidateMappedMemoryRanges' = mkVkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRangesPtr
-  pPMemoryRanges <- ContT $ allocaBytesAligned @MappedMemoryRange ((Data.Vector.length (memoryRanges)) * 40) 8
+  pPMemoryRanges <- ContT $ allocaBytes @MappedMemoryRange ((Data.Vector.length (memoryRanges)) * 40)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPMemoryRanges `plusPtr` (40 * (i)) :: Ptr MappedMemoryRange) (e)) (memoryRanges)
   r <- lift $ traceAroundEvent "vkInvalidateMappedMemoryRanges" (vkInvalidateMappedMemoryRanges' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (memoryRanges)) :: Word32)) (pPMemoryRanges))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -748,6 +797,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize'
 getDeviceMemoryCommitment :: forall io
@@ -771,7 +821,7 @@ getDeviceMemoryCommitment :: forall io
                              DeviceMemory
                           -> io (("committedMemoryInBytes" ::: DeviceSize))
 getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
-  let vkGetDeviceMemoryCommitmentPtr = pVkGetDeviceMemoryCommitment (deviceCmds (device :: Device))
+  let vkGetDeviceMemoryCommitmentPtr = pVkGetDeviceMemoryCommitment (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDeviceMemoryCommitmentPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceMemoryCommitment is null" Nothing Nothing
   let vkGetDeviceMemoryCommitment' = mkVkGetDeviceMemoryCommitment vkGetDeviceMemoryCommitmentPtr
@@ -795,7 +845,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 -- @pNext@ chain includes one of the following structures:
 --
 -- -   'Vulkan.Extensions.VK_KHR_external_memory_win32.ImportMemoryWin32HandleInfoKHR'
---     with non-zero @handleType@ value
+--     with a non-zero @handleType@ value
 --
 -- -   'Vulkan.Extensions.VK_KHR_external_memory_fd.ImportMemoryFdInfoKHR'
 --     with a non-zero @handleType@ value
@@ -805,6 +855,11 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --
 -- -   'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
 --     with a non-@NULL@ @buffer@ value
+--
+-- -   'Vulkan.Extensions.VK_FUCHSIA_external_memory.ImportMemoryZirconHandleInfoFUCHSIA'
+--     with a non-zero @handleType@ value
+--
+-- -   'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImportMemoryBufferCollectionFUCHSIA'
 --
 -- If the parameters define an import operation and the external handle
 -- type is
@@ -837,10 +892,11 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 -- possible.
 --
 -- Importing memory /must/ not increase overall heap usage within a system.
--- However, they /must/ affect the following per-process values: *
--- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.PhysicalDeviceMaintenance3Properties'::@maxMemoryAllocationCount@
--- *
--- 'Vulkan.Extensions.VK_EXT_memory_budget.PhysicalDeviceMemoryBudgetPropertiesEXT'::@heapUsage@
+-- However, it /must/ affect the following per-process values:
+--
+-- -   'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.PhysicalDeviceMaintenance3Properties'::@maxMemoryAllocationCount@
+--
+-- -   'Vulkan.Extensions.VK_EXT_memory_budget.PhysicalDeviceMemoryBudgetPropertiesEXT'::@heapUsage@
 --
 -- When performing a memory import operation, it is the responsibility of
 -- the application to ensure the external handles and their associated
@@ -855,6 +911,86 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Enums.Result.ERROR_INVALID_EXTERNAL_HANDLE'.
 --
 -- == Valid Usage
+--
+-- -   #VUID-VkMemoryAllocateInfo-buffer-06380# If the parameters define an
+--     import operation from an
+--     'Vulkan.Extensions.Handles.BufferCollectionFUCHSIA', and
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@
+--     is present and non-NULL,
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImportMemoryBufferCollectionFUCHSIA'::@collection@
+--     and
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImportMemoryBufferCollectionFUCHSIA'::@index@
+--     must match
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionBufferCreateInfoFUCHSIA'::@collection@
+--     and
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionBufferCreateInfoFUCHSIA'::@index@,
+--     respectively, of the
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionBufferCreateInfoFUCHSIA'
+--     structure used to create the
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@
+--
+-- -   #VUID-VkMemoryAllocateInfo-image-06381# If the parameters define an
+--     import operation from an
+--     'Vulkan.Extensions.Handles.BufferCollectionFUCHSIA', and
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
+--     is present and non-NULL,
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImportMemoryBufferCollectionFUCHSIA'::@collection@
+--     and
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImportMemoryBufferCollectionFUCHSIA'::@index@
+--     must match
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionImageCreateInfoFUCHSIA'::@collection@
+--     and
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionImageCreateInfoFUCHSIA'::@index@,
+--     respectively, of the
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionImageCreateInfoFUCHSIA'
+--     structure used to create the
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
+--
+-- -   #VUID-VkMemoryAllocateInfo-allocationSize-06382# If the parameters
+--     define an import operation from an
+--     'Vulkan.Extensions.Handles.BufferCollectionFUCHSIA',
+--     @allocationSize@ /must/ match
+--     'Vulkan.Core10.MemoryManagement.MemoryRequirements'::@size@ value
+--     retrieved by
+--     'Vulkan.Core10.MemoryManagement.getImageMemoryRequirements' or
+--     'Vulkan.Core10.MemoryManagement.getBufferMemoryRequirements' for
+--     image-based or buffer-based collections respectively
+--
+-- -   #VUID-VkMemoryAllocateInfo-pNext-06383# If the parameters define an
+--     import operation from an
+--     'Vulkan.Extensions.Handles.BufferCollectionFUCHSIA', the @pNext@
+--     chain /must/ include a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     structure with either its @image@ or @buffer@ field set to a value
+--     other than 'Vulkan.Core10.APIConstants.NULL_HANDLE'.
+--
+-- -   #VUID-VkMemoryAllocateInfo-image-06384# If the parameters define an
+--     import operation from an
+--     'Vulkan.Extensions.Handles.BufferCollectionFUCHSIA' and
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
+--     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the @image@ /must/
+--     be created with a
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionImageCreateInfoFUCHSIA'
+--     structure chained to its
+--     'Vulkan.Core10.Image.ImageCreateInfo'::@pNext@ pointer
+--
+-- -   #VUID-VkMemoryAllocateInfo-buffer-06385# If the parameters define an
+--     import operation from an
+--     'Vulkan.Extensions.Handles.BufferCollectionFUCHSIA' and
+--     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@
+--     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the @buffer@ /must/
+--     be created with a
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionBufferCreateInfoFUCHSIA'
+--     structure chained to its
+--     'Vulkan.Core10.Buffer.BufferCreateInfo'::@pNext@ pointer
+--
+-- -   #VUID-VkMemoryAllocateInfo-memoryTypeIndex-06386# If the parameters
+--     define an import operation from an
+--     'Vulkan.Extensions.Handles.BufferCollectionFUCHSIA',
+--     @memoryTypeIndex@ /must/ be from
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionPropertiesFUCHSIA'
+--     as retrieved by
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.getBufferCollectionPropertiesFUCHSIA'.
 --
 -- -   #VUID-VkMemoryAllocateInfo-pNext-00639# If the @pNext@ chain
 --     includes a
@@ -872,7 +1008,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     or
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'
 --     structure with either its @image@ or @buffer@ member set to a value
---     other than 'Vulkan.Core10.APIConstants.NULL_HANDLE'.
+--     other than 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-VkMemoryAllocateInfo-pNext-00640# If the @pNext@ chain
 --     includes a
@@ -893,23 +1029,23 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 -- -   #VUID-VkMemoryAllocateInfo-allocationSize-01742# If the parameters
 --     define an import operation, the external handle specified was
 --     created by the Vulkan API, and the external handle type is
---     'Vulkan.Extensions.VK_KHR_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR',
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT',
 --     then the values of @allocationSize@ and @memoryTypeIndex@ /must/
---     match those specified when the payload being imported was created.
+--     match those specified when the payload being imported was created
 --
 -- -   #VUID-VkMemoryAllocateInfo-None-00643# If the parameters define an
 --     import operation and the external handle specified was created by
 --     the Vulkan API, the device mask specified by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo'
---     /must/ match that specified when the payload being imported was
---     allocated.
+--     /must/ match the mask specified when the payload being imported was
+--     allocated
 --
 -- -   #VUID-VkMemoryAllocateInfo-None-00644# If the parameters define an
 --     import operation and the external handle specified was created by
 --     the Vulkan API, the list of physical devices that comprise the
 --     logical device passed to 'allocateMemory' /must/ match the list of
 --     physical devices that comprise the logical device on which the
---     payload was originally allocated.
+--     payload was originally allocated
 --
 -- -   #VUID-VkMemoryAllocateInfo-memoryTypeIndex-00645# If the parameters
 --     define an import operation and the external handle is an NT handle
@@ -920,17 +1056,17 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 -- -   #VUID-VkMemoryAllocateInfo-allocationSize-01743# If the parameters
 --     define an import operation, the external handle was created by the
 --     Vulkan API, and the external handle type is
---     'Vulkan.Extensions.VK_KHR_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR'
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT'
 --     or
---     'Vulkan.Extensions.VK_KHR_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR',
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT',
 --     then the values of @allocationSize@ and @memoryTypeIndex@ /must/
---     match those specified when the payload being imported was created.
+--     match those specified when the payload being imported was created
 --
 -- -   #VUID-VkMemoryAllocateInfo-allocationSize-00647# If the parameters
 --     define an import operation and the external handle type is
 --     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT',
 --     @allocationSize@ /must/ match the size specified when creating the
---     Direct3D 12 heap from which the payload was extracted.
+--     Direct3D 12 heap from which the payload was extracted
 --
 -- -   #VUID-VkMemoryAllocateInfo-memoryTypeIndex-00648# If the parameters
 --     define an import operation and the external handle is a POSIX file
@@ -1109,6 +1245,23 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.MemoryOpaqueCaptureAddressAllocateInfo'::@opaqueCaptureAddress@
 --     /must/ be zero
 --
+-- -   #VUID-VkMemoryAllocateInfo-None-04749# If the parameters define an
+--     import operation and the external handle type is
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA',
+--     the value of @memoryTypeIndex@ /must/ be an index identifying a
+--     memory type from the @memoryTypeBits@ field of the
+--     'Vulkan.Extensions.VK_FUCHSIA_external_memory.MemoryZirconHandlePropertiesFUCHSIA'
+--     structure populated by a call to
+--     'Vulkan.Extensions.VK_FUCHSIA_external_memory.getMemoryZirconHandlePropertiesFUCHSIA'
+--
+-- -   #VUID-VkMemoryAllocateInfo-allocationSize-04750# If the parameters
+--     define an import operation and the external handle type is
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA',
+--     the value of @allocationSize@ /must/ be greater than @0@ and /must/
+--     be less than or equal to the size of the VMO as determined by
+--     @zx_vmo_get_size@(@handle@) where @handle@ is the VMO handle to the
+--     imported external memory
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkMemoryAllocateInfo-sType-sType# @sType@ /must/ be
@@ -1123,10 +1276,12 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_KHR_external_memory_win32.ExportMemoryWin32HandleInfoKHR',
 --     'Vulkan.Extensions.VK_NV_external_memory_win32.ExportMemoryWin32HandleInfoNV',
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID',
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImportMemoryBufferCollectionFUCHSIA',
 --     'Vulkan.Extensions.VK_KHR_external_memory_fd.ImportMemoryFdInfoKHR',
 --     'Vulkan.Extensions.VK_EXT_external_memory_host.ImportMemoryHostPointerInfoEXT',
 --     'Vulkan.Extensions.VK_KHR_external_memory_win32.ImportMemoryWin32HandleInfoKHR',
 --     'Vulkan.Extensions.VK_NV_external_memory_win32.ImportMemoryWin32HandleInfoNV',
+--     'Vulkan.Extensions.VK_FUCHSIA_external_memory.ImportMemoryZirconHandleInfoFUCHSIA',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.MemoryOpaqueCaptureAddressAllocateInfo',
@@ -1138,17 +1293,18 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'allocateMemory'
 data MemoryAllocateInfo (es :: [Type]) = MemoryAllocateInfo
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
-  , -- | @allocationSize@ is the size of the allocation in bytes
+  , -- | @allocationSize@ is the size of the allocation in bytes.
     allocationSize :: DeviceSize
   , -- | @memoryTypeIndex@ is an index identifying a memory type from the
     -- @memoryTypes@ array of the
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'
-    -- structure
+    -- structure.
     memoryTypeIndex :: Word32
   }
   deriving (Typeable)
@@ -1159,10 +1315,11 @@ deriving instance Show (Chain es) => Show (MemoryAllocateInfo es)
 
 instance Extensible MemoryAllocateInfo where
   extensibleTypeName = "MemoryAllocateInfo"
-  setNext x next = x{next = next}
+  setNext MemoryAllocateInfo{..} next' = MemoryAllocateInfo{next = next', ..}
   getNext MemoryAllocateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends MemoryAllocateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @ImportMemoryBufferCollectionFUCHSIA = Just f
     | Just Refl <- eqT @e @MemoryOpaqueCaptureAddressAllocateInfo = Just f
     | Just Refl <- eqT @e @MemoryPriorityAllocateInfoEXT = Just f
     | Just Refl <- eqT @e @ImportAndroidHardwareBufferInfoANDROID = Just f
@@ -1170,6 +1327,7 @@ instance Extensible MemoryAllocateInfo where
     | Just Refl <- eqT @e @MemoryDedicatedAllocateInfo = Just f
     | Just Refl <- eqT @e @MemoryAllocateFlagsInfo = Just f
     | Just Refl <- eqT @e @ImportMemoryFdInfoKHR = Just f
+    | Just Refl <- eqT @e @ImportMemoryZirconHandleInfoFUCHSIA = Just f
     | Just Refl <- eqT @e @ExportMemoryWin32HandleInfoKHR = Just f
     | Just Refl <- eqT @e @ImportMemoryWin32HandleInfoKHR = Just f
     | Just Refl <- eqT @e @ExportMemoryAllocateInfo = Just f
@@ -1180,7 +1338,7 @@ instance Extensible MemoryAllocateInfo where
     | otherwise = Nothing
 
 instance (Extendss MemoryAllocateInfo es, PokeChain es) => ToCStruct (MemoryAllocateInfo es) where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryAllocateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1230,15 +1388,16 @@ instance es ~ '[] => Zero (MemoryAllocateInfo es) where
 --     'Vulkan.Core10.APIConstants.WHOLE_SIZE', @offset@ /must/ be within
 --     the currently mapped range of @memory@
 --
--- -   #VUID-VkMappedMemoryRange-size-01389# If @size@ is equal to
---     'Vulkan.Core10.APIConstants.WHOLE_SIZE', the end of the current
---     mapping of @memory@ /must/ be a multiple of
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@nonCoherentAtomSize@
---     bytes from the beginning of the memory object
---
 -- -   #VUID-VkMappedMemoryRange-offset-00687# @offset@ /must/ be a
 --     multiple of
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@nonCoherentAtomSize@
+--
+-- -   #VUID-VkMappedMemoryRange-size-01389# If @size@ is equal to
+--     'Vulkan.Core10.APIConstants.WHOLE_SIZE', the end of the current
+--     mapping of @memory@ /must/ either be a multiple of
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@nonCoherentAtomSize@
+--     bytes from the beginning of the memory object, or be equal to the
+--     end of the memory object
 --
 -- -   #VUID-VkMappedMemoryRange-size-01390# If @size@ is not equal to
 --     'Vulkan.Core10.APIConstants.WHOLE_SIZE', @size@ /must/ either be a
@@ -1258,6 +1417,7 @@ instance es ~ '[] => Zero (MemoryAllocateInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -1280,7 +1440,7 @@ deriving instance Generic (MappedMemoryRange)
 deriving instance Show MappedMemoryRange
 
 instance ToCStruct MappedMemoryRange where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MappedMemoryRange{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MAPPED_MEMORY_RANGE)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -10,7 +10,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -56,6 +56,7 @@ import Vulkan.Core10.APIConstants (MAX_DESCRIPTION_SIZE)
 import Vulkan.Core10.APIConstants (MAX_EXTENSION_NAME_SIZE)
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -79,11 +80,10 @@ foreign import ccall
 -- the @pProperties@ array, and on return the variable is overwritten with
 -- the number of structures actually written to @pProperties@. If
 -- @pPropertyCount@ is less than the number of layer properties available,
--- at most @pPropertyCount@ structures will be written. If @pPropertyCount@
--- is smaller than the number of layers available,
+-- at most @pPropertyCount@ structures will be written, and
 -- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
 -- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
--- available layer properties were returned.
+-- available properties were returned.
 --
 -- The list of available layers may change at any time due to actions
 -- outside of the Vulkan implementation, so two calls to
@@ -120,6 +120,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'LayerProperties'
 enumerateInstanceLayerProperties :: forall io
                                   . (MonadIO io)
@@ -160,11 +161,10 @@ foreign import ccall
 -- the @pProperties@ array, and on return the variable is overwritten with
 -- the number of structures actually written to @pProperties@. If
 -- @pPropertyCount@ is less than the number of layer properties available,
--- at most @pPropertyCount@ structures will be written. If @pPropertyCount@
--- is smaller than the number of layers available,
+-- at most @pPropertyCount@ structures will be written, and
 -- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
 -- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
--- available layer properties were returned.
+-- available properties were returned.
 --
 -- The list of layers enumerated by 'enumerateDeviceLayerProperties' /must/
 -- be exactly the sequence of layers enabled for the instance. The members
@@ -202,6 +202,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'LayerProperties', 'Vulkan.Core10.Handles.PhysicalDevice'
 enumerateDeviceLayerProperties :: forall io
                                 . (MonadIO io)
@@ -209,7 +210,7 @@ enumerateDeviceLayerProperties :: forall io
                                   PhysicalDevice
                                -> io (Result, ("properties" ::: Vector LayerProperties))
 enumerateDeviceLayerProperties physicalDevice = liftIO . evalContT $ do
-  let vkEnumerateDeviceLayerPropertiesPtr = pVkEnumerateDeviceLayerProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkEnumerateDeviceLayerPropertiesPtr = pVkEnumerateDeviceLayerProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkEnumerateDeviceLayerPropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkEnumerateDeviceLayerProperties is null" Nothing Nothing
   let vkEnumerateDeviceLayerProperties' = mkVkEnumerateDeviceLayerProperties vkEnumerateDeviceLayerPropertiesPtr
@@ -231,6 +232,7 @@ enumerateDeviceLayerProperties physicalDevice = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'enumerateDeviceLayerProperties', 'enumerateInstanceLayerProperties'
 data LayerProperties = LayerProperties
   { -- | @layerName@ is an array of
@@ -260,7 +262,7 @@ deriving instance Generic (LayerProperties)
 deriving instance Show LayerProperties
 
 instance ToCStruct LayerProperties where
-  withCStruct x f = allocaBytesAligned 520 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 520 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p LayerProperties{..} f = do
     pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 0 :: Ptr (FixedArray MAX_EXTENSION_NAME_SIZE CChar))) (layerName)
     poke ((p `plusPtr` 256 :: Ptr Word32)) (specVersion)

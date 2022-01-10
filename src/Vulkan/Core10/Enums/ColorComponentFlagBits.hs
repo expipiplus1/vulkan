@@ -30,8 +30,14 @@ type ColorComponentFlags = ColorComponentFlagBits
 -- The color write mask operation is applied regardless of whether blending
 -- is enabled.
 --
+-- The color write mask operation is applied only if
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-color-write-enable Color Write Enable>
+-- is enabled for the respective attachment. Otherwise the color write mask
+-- is ignored and writes to all components of the attachment are disabled.
+--
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'ColorComponentFlags'
 newtype ColorComponentFlagBits = ColorComponentFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

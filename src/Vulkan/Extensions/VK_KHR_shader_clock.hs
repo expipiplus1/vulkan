@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Aaron Hagan
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_shader_clock:%20&body=@ahagan%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shader_clock] @ahagan%0A<<Here describe the issue or question you have about the VK_KHR_shader_clock extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -61,9 +61,9 @@
 -- 'Vulkan.Core10.Handles.Device'.
 --
 -- When using GLSL source-based shading languages, the
--- @clockRealtime@*@EXT@() timing functions map to the @OpReadClockKHR@
+-- @clockRealtime*EXT@() timing functions map to the @OpReadClockKHR@
 -- instruction with a scope of 'Vulkan.Core10.Handles.Device', and the
--- @clock@*@ARB@() timing functions map to the @OpReadClockKHR@ instruction
+-- @clock*ARB@() timing functions map to the @OpReadClockKHR@ instruction
 -- with a scope of @Subgroup@.
 --
 -- == New Structures
@@ -94,11 +94,11 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceShaderClockFeaturesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_clock Vulkan Specification>
@@ -112,7 +112,7 @@ module Vulkan.Extensions.VK_KHR_shader_clock  ( PhysicalDeviceShaderClockFeature
                                               , pattern KHR_SHADER_CLOCK_EXTENSION_NAME
                                               ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -137,20 +137,27 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- | VkPhysicalDeviceShaderClockFeaturesKHR - Structure describing features
 -- supported by VK_KHR_shader_clock
 --
+-- = Members
+--
+-- This structure describes the following features:
+--
 -- = Description
 --
 -- If the 'PhysicalDeviceShaderClockFeaturesKHR' structure is included in
--- the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceShaderClockFeaturesKHR' can also be included in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the
--- features.
+-- the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceShaderClockFeaturesKHR' /can/ also be used in
+-- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_clock VK_KHR_shader_clock>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderClockFeaturesKHR = PhysicalDeviceShaderClockFeaturesKHR
@@ -168,7 +175,7 @@ deriving instance Generic (PhysicalDeviceShaderClockFeaturesKHR)
 deriving instance Show PhysicalDeviceShaderClockFeaturesKHR
 
 instance ToCStruct PhysicalDeviceShaderClockFeaturesKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShaderClockFeaturesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CLOCK_FEATURES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

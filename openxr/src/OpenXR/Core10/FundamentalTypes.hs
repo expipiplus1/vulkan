@@ -20,7 +20,7 @@ module OpenXR.Core10.FundamentalTypes  ( boolToBool32
 import OpenXR.Internal.Utils (enumReadPrec)
 import OpenXR.Internal.Utils (enumShowsPrec)
 import Data.Bool (bool)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showsPrec)
 import Data.Coerce (coerce)
@@ -82,7 +82,7 @@ deriving instance Generic (Offset2Df)
 deriving instance Show Offset2Df
 
 instance ToCStruct Offset2Df where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Offset2Df{..} f = do
     poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (x))
     poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (y))
@@ -142,7 +142,7 @@ deriving instance Generic (Extent2Df)
 deriving instance Show Extent2Df
 
 instance ToCStruct Extent2Df where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Extent2Df{..} f = do
     poke ((p `plusPtr` 0 :: Ptr CFloat)) (CFloat (width))
     poke ((p `plusPtr` 4 :: Ptr CFloat)) (CFloat (height))
@@ -198,7 +198,7 @@ deriving instance Generic (Rect2Df)
 deriving instance Show Rect2Df
 
 instance ToCStruct Rect2Df where
-  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Rect2Df{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Offset2Df)) (offset)
     poke ((p `plusPtr` 8 :: Ptr Extent2Df)) (extent)
@@ -255,7 +255,7 @@ deriving instance Generic (Offset2Di)
 deriving instance Show Offset2Di
 
 instance ToCStruct Offset2Di where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Offset2Di{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Int32)) (x)
     poke ((p `plusPtr` 4 :: Ptr Int32)) (y)
@@ -314,7 +314,7 @@ deriving instance Generic (Extent2Di)
 deriving instance Show Extent2Di
 
 instance ToCStruct Extent2Di where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Extent2Di{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Int32)) (width)
     poke ((p `plusPtr` 4 :: Ptr Int32)) (height)
@@ -371,7 +371,7 @@ deriving instance Generic (Rect2Di)
 deriving instance Show Rect2Di
 
 instance ToCStruct Rect2Di where
-  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Rect2Di{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Offset2Di)) (offset)
     poke ((p `plusPtr` 8 :: Ptr Extent2Di)) (extent)
@@ -475,13 +475,13 @@ instance Read Bool32 where
 --
 -- = See Also
 --
--- 'OpenXR.Core10.Enums.CompositionLayerFlags.CompositionLayerFlags',
--- 'OpenXR.Core10.Enums.InstanceCreateFlags.InstanceCreateFlags',
--- 'OpenXR.Core10.Enums.SessionCreateFlags.SessionCreateFlags',
--- 'OpenXR.Core10.Enums.SpaceLocationFlags.SpaceLocationFlags',
--- 'OpenXR.Core10.Enums.SwapchainCreateFlags.SwapchainCreateFlags',
--- 'OpenXR.Core10.Enums.SwapchainUsageFlags.SwapchainUsageFlags',
--- 'OpenXR.Core10.Enums.ViewStateFlags.ViewStateFlags'
+-- 'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlags',
+-- 'OpenXR.Core10.Enums.InstanceCreateFlagBits.InstanceCreateFlags',
+-- 'OpenXR.Core10.Enums.SessionCreateFlagBits.SessionCreateFlags',
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SpaceLocationFlags',
+-- 'OpenXR.Core10.Enums.SwapchainCreateFlagBits.SwapchainCreateFlags',
+-- 'OpenXR.Core10.Enums.SwapchainUsageFlagBits.SwapchainUsageFlags',
+-- 'OpenXR.Core10.Enums.ViewStateFlagBits.ViewStateFlags'
 type Flags64 = Word64
 
 

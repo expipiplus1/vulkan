@@ -39,7 +39,7 @@ module OpenXR.Extensions.XR_KHR_composition_layer_cube  ( CompositionLayerCubeKH
                                                         , pattern KHR_COMPOSITION_LAYER_CUBE_EXTENSION_NAME
                                                         ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import OpenXR.CStruct (FromCStruct)
@@ -58,7 +58,7 @@ import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
 import Data.Kind (Type)
 import OpenXR.Core10.OtherTypes (CompositionLayerBaseHeader(..))
-import OpenXR.Core10.Enums.CompositionLayerFlags (CompositionLayerFlags)
+import OpenXR.Core10.Enums.CompositionLayerFlagBits (CompositionLayerFlags)
 import OpenXR.Core10.Enums.EyeVisibility (EyeVisibility)
 import OpenXR.Core10.OtherTypes (IsCompositionLayer(..))
 import OpenXR.Core10.Space (Quaternionf)
@@ -80,8 +80,9 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_COMPOSITION_LAYER_C
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrCompositionLayerCubeKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using 'CompositionLayerCubeKHR'
+-- -   #VUID-XrCompositionLayerCubeKHR-extension-notenabled# The
+--     @XR_KHR_composition_layer_cube@ extension /must/ be enabled prior to
+--     using 'CompositionLayerCubeKHR'
 --
 -- -   #VUID-XrCompositionLayerCubeKHR-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_COMPOSITION_LAYER_CUBE_KHR'
@@ -92,7 +93,7 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_COMPOSITION_LAYER_C
 --
 -- -   #VUID-XrCompositionLayerCubeKHR-layerFlags-parameter# @layerFlags@
 --     /must/ be @0@ or a valid combination of
---     <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrCompositionLayerFlagBits XrCompositionLayerFlagBits>
+--     'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlagBits'
 --     values
 --
 -- -   #VUID-XrCompositionLayerCubeKHR-space-parameter# @space@ /must/ be a
@@ -112,7 +113,7 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_COMPOSITION_LAYER_C
 -- = See Also
 --
 -- 'OpenXR.Core10.OtherTypes.CompositionLayerBaseHeader',
--- 'OpenXR.Core10.Enums.CompositionLayerFlags.CompositionLayerFlags',
+-- 'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlags',
 -- 'OpenXR.Core10.Enums.EyeVisibility.EyeVisibility',
 -- 'OpenXR.Core10.DisplayTiming.FrameEndInfo',
 -- 'OpenXR.Core10.Space.Quaternionf', 'OpenXR.Core10.Handles.Space',
@@ -145,7 +146,7 @@ instance IsCompositionLayer CompositionLayerCubeKHR where
   toCompositionLayerBaseHeader CompositionLayerCubeKHR{..} = CompositionLayerBaseHeader{type' = TYPE_COMPOSITION_LAYER_CUBE_KHR, next = (), ..}
 
 instance ToCStruct CompositionLayerCubeKHR where
-  withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CompositionLayerCubeKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_COMPOSITION_LAYER_CUBE_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

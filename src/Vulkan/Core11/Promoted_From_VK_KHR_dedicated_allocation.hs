@@ -5,7 +5,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation  ( MemoryDedicate
                                                                 , StructureType(..)
                                                                 ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -35,93 +35,68 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = Description
 --
--- When the implementation sets @requiresDedicatedAllocation@ to
--- 'Vulkan.Core10.FundamentalTypes.TRUE', it /must/ also set
--- @prefersDedicatedAllocation@ to 'Vulkan.Core10.FundamentalTypes.TRUE'.
---
--- If the 'MemoryDedicatedRequirements' structure is included in the
--- @pNext@ chain of the
+-- To determine the dedicated allocation requirements of a buffer or image
+-- resource, add a 'MemoryDedicatedRequirements' structure to the @pNext@
+-- chain of the
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'
--- structure passed as the @pMemoryRequirements@ parameter of a
+-- structure passed as the @pMemoryRequirements@ parameter of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2'
--- call, @requiresDedicatedAllocation@ /may/ be
--- 'Vulkan.Core10.FundamentalTypes.TRUE' under one of the following
--- conditions:
+-- or
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2',
+-- respectively.
 --
--- -   The @pNext@ chain of 'Vulkan.Core10.Buffer.BufferCreateInfo' for the
---     call to 'Vulkan.Core10.Buffer.createBuffer' used to create the
---     buffer being queried included a
+-- Constraints on the values returned for buffer resources are:
+--
+-- -   @requiresDedicatedAllocation@ /may/ be
+--     'Vulkan.Core10.FundamentalTypes.TRUE' if the @pNext@ chain of
+--     'Vulkan.Core10.Buffer.BufferCreateInfo' for the call to
+--     'Vulkan.Core10.Buffer.createBuffer' used to create the buffer being
+--     queried included a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'
 --     structure, and any of the handle types specified in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
 --     requires dedicated allocation, as reported by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.getPhysicalDeviceExternalBufferProperties'
 --     in
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'::@externalMemoryProperties.externalMemoryFeatures@,
---     the @requiresDedicatedAllocation@ field will be set to
+--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'::@externalMemoryProperties.externalMemoryFeatures@.
+--     Otherwise, @requiresDedicatedAllocation@ will be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'.
+--
+-- -   When the implementation sets @requiresDedicatedAllocation@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', it /must/ also set
+--     @prefersDedicatedAllocation@ to
 --     'Vulkan.Core10.FundamentalTypes.TRUE'.
 --
--- In all other cases, @requiresDedicatedAllocation@ /must/ be set to
--- 'Vulkan.Core10.FundamentalTypes.FALSE' by the implementation whenever a
--- 'MemoryDedicatedRequirements' structure is included in the @pNext@ chain
--- of the
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'
--- structure passed to a call to
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2'.
+-- -   If
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT'
+--     was set in 'Vulkan.Core10.Buffer.BufferCreateInfo'::@flags@ when
+--     @buffer@ was created, then both @prefersDedicatedAllocation@ and
+--     @requiresDedicatedAllocation@ will be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'.
 --
--- If the 'MemoryDedicatedRequirements' structure is included in the
--- @pNext@ chain of the
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'
--- structure passed as the @pMemoryRequirements@ parameter of a
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2'
--- call and
--- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT'
--- was set in 'Vulkan.Core10.Buffer.BufferCreateInfo'::@flags@ when
--- @buffer@ was created then the implementation /must/ set both
--- @prefersDedicatedAllocation@ and @requiresDedicatedAllocation@ to
--- 'Vulkan.Core10.FundamentalTypes.FALSE'.
+-- Constraints on the values returned for image resources are:
 --
--- If the 'MemoryDedicatedRequirements' structure is included in the
--- @pNext@ chain of the
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'
--- structure passed as the @pMemoryRequirements@ parameter of a
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
--- call, @requiresDedicatedAllocation@ /may/ be
--- 'Vulkan.Core10.FundamentalTypes.TRUE' under one of the following
--- conditions:
---
--- -   The @pNext@ chain of 'Vulkan.Core10.Image.ImageCreateInfo' for the
---     call to 'Vulkan.Core10.Image.createImage' used to create the image
---     being queried included a
+-- -   @requiresDedicatedAllocation@ /may/ be
+--     'Vulkan.Core10.FundamentalTypes.TRUE' if the @pNext@ chain of
+--     'Vulkan.Core10.Image.ImageCreateInfo' for the call to
+--     'Vulkan.Core10.Image.createImage' used to create the image being
+--     queried included a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'
 --     structure, and any of the handle types specified in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
 --     requires dedicated allocation, as reported by
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --     in
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'::@externalMemoryProperties.externalMemoryFeatures@,
---     the @requiresDedicatedAllocation@ field will be set to
---     'Vulkan.Core10.FundamentalTypes.TRUE'.
+--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'::@externalMemoryProperties.externalMemoryFeatures@.
+--     Otherwise, @requiresDedicatedAllocation@ will be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'.
 --
--- In all other cases, @requiresDedicatedAllocation@ /must/ be set to
--- 'Vulkan.Core10.FundamentalTypes.FALSE' by the implementation whenever a
--- 'MemoryDedicatedRequirements' structure is included in the @pNext@ chain
--- of the
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'
--- structure passed to a call to
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'.
---
--- If the 'MemoryDedicatedRequirements' structure is included in the
--- @pNext@ chain of the
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'
--- structure passed as the @pMemoryRequirements@ parameter of a
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
--- call and
--- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT'
--- was set in 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ when @image@
--- was created then the implementation /must/ set both
--- @prefersDedicatedAllocation@ and @requiresDedicatedAllocation@ to
--- 'Vulkan.Core10.FundamentalTypes.FALSE'.
+-- -   If
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT'
+--     was set in 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ when
+--     @image@ was created, then both @prefersDedicatedAllocation@ and
+--     @requiresDedicatedAllocation@ will be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -130,6 +105,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data MemoryDedicatedRequirements = MemoryDedicatedRequirements
@@ -149,7 +125,7 @@ deriving instance Generic (MemoryDedicatedRequirements)
 deriving instance Show MemoryDedicatedRequirements
 
 instance ToCStruct MemoryDedicatedRequirements where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryDedicatedRequirements{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -277,6 +253,24 @@ instance Zero MemoryDedicatedRequirements where
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
 --     set in 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@
 --
+-- -   #VUID-VkMemoryDedicatedAllocateInfo-image-04751# If @image@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' and
+--     'Vulkan.Core10.Memory.MemoryAllocateInfo' defines a memory import
+--     operation with handle type
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA',
+--     the memory being imported /must/ also be a dedicated image
+--     allocation and @image@ /must/ be identical to the image associated
+--     with the imported memory
+--
+-- -   #VUID-VkMemoryDedicatedAllocateInfo-buffer-04752# If @buffer@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' and
+--     'Vulkan.Core10.Memory.MemoryAllocateInfo' defines a memory import
+--     operation with handle type
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA',
+--     the memory being imported /must/ also be a dedicated buffer
+--     allocation and @buffer@ /must/ be identical to the buffer associated
+--     with the imported memory
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkMemoryDedicatedAllocateInfo-sType-sType# @sType@ /must/ be
@@ -297,6 +291,7 @@ instance Zero MemoryDedicatedRequirements where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data MemoryDedicatedAllocateInfo = MemoryDedicatedAllocateInfo
@@ -314,7 +309,7 @@ deriving instance Generic (MemoryDedicatedAllocateInfo)
 deriving instance Show MemoryDedicatedAllocateInfo
 
 instance ToCStruct MemoryDedicatedAllocateInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryDedicatedAllocateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

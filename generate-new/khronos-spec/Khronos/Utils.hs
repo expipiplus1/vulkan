@@ -16,14 +16,15 @@ extensionPatterns :: HasRenderParams r => Text -> Sem r (HName, HName)
 extensionPatterns p = do
   RenderParams {..} <- input
   let patternPrefix = if
-        | p == "VK_KHR_maintenance2"
-        -> "VK_KHR_MAINTENANCE2"
-        | p == "VK_NV_viewport_array2"
-        -> "VK_NV_VIEWPORT_ARRAY2"
         | p == "VK_EXT_swapchain_colorspace"
         -> "EXT_SWAPCHAIN_COLOR_SPACE"
-        | "2" `T.isSuffixOf` p && not ("32" `T.isSuffixOf` p)
-        -> T.toUpper (T.init p) <> "_2"
+        | Just v <- readMaybe @Int [T.last p]
+        , not ("16" `T.isSuffixOf` p)
+        , not ("32" `T.isSuffixOf` p)
+        , not ("64" `T.isSuffixOf` p)
+        , not ("int8" `T.isSuffixOf` p)
+        , not ('_' == p `T.index` (T.length p - 2))
+        -> T.toUpper (T.init p) <> "_" <> T.pack (show v)
         | otherwise
         -> T.toUpper p
       nameName    = CName $ patternPrefix <> "_EXTENSION_NAME"
@@ -33,11 +34,11 @@ extensionPatterns p = do
 versionDoc
   :: (HasRenderParams r, HasRenderElem r, HasErr r) => Version -> Sem r (Doc ())
 versionDoc v = do
-  tellImport (ConName "MAKE_VERSION")
+  tellImport (ConName "MAKE_API_VERSION")
   (ma, mi, pa) <- case versionBranch v of
     [ma]         -> pure (ma, 0, 0)
     [ma, mi]     -> pure (ma, mi, 0)
     [ma, mi, pa] -> pure (ma, mi, pa)
     []           -> throw "Version branch has no components"
     _            -> throw "Version branch has more than three components"
-  pure $ "MAKE_VERSION" <+> hsep (viaShow <$> [ma, mi, pa])
+  pure $ "MAKE_API_VERSION" <+> hsep (viaShow <$> [ma, mi, pa])

@@ -47,6 +47,7 @@ type ExternalFenceHandleTypeFlags = ExternalFenceHandleTypeFlagBits
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'ExternalFenceHandleTypeFlags',
 -- 'Vulkan.Extensions.VK_KHR_external_fence_fd.FenceGetFdInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_external_fence_win32.FenceGetWin32HandleInfoKHR',

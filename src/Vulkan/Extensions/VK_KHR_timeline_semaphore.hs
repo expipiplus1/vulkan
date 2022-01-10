@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   Jason Ekstrand
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_timeline_semaphore:%20&body=@jekstrand%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_timeline_semaphore] @jekstrand%0A<<Here describe the issue or question you have about the VK_KHR_timeline_semaphore extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -184,9 +184,9 @@
 --
 -- 2) What type of payload the new synchronization primitive has?
 --
--- __RESOLVED__: A 64-bit unsigned integer that can only be set to
--- monotonically increasing values by signal operations and is not changed
--- by wait operations.
+-- __RESOLVED__: A 64-bit unsigned integer that can only be set to strictly
+-- increasing values by signal operations and is not changed by wait
+-- operations.
 --
 -- 3) Does the new synchronization primitive have the same
 -- signal-before-wait requirement as the existing semaphores do?
@@ -197,7 +197,7 @@
 --
 -- 4) Does the new synchronization primitive allow resetting its payload?
 --
--- __RESOLVED__: No, allowing the payload value to \"go backwards\" is
+-- __RESOLVED__: No, allowing the payload value to “go backwards” is
 -- problematic. Applications looking for reset behavior should create a new
 -- instance of the sychronization primitive instead.
 --
@@ -220,7 +220,7 @@
 -- presentation and swapchain image acquisition operations?
 --
 -- __RESOLVED__: Some implementations may have problems with supporting
--- that directly, thus it’s not allowed in this extension.
+-- that directly, thus it is not allowed in this extension.
 --
 -- 8) Do we want to support external sharing of the new synchronization
 -- primitive type?
@@ -271,7 +271,7 @@
 --
 --     -   Added an initialValue parameter to timeline semaphore creation
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceTimelineSemaphoreFeaturesKHR',
 -- 'PhysicalDeviceTimelineSemaphorePropertiesKHR',
@@ -280,7 +280,7 @@
 -- 'SemaphoreWaitInfoKHR', 'TimelineSemaphoreSubmitInfoKHR',
 -- 'getSemaphoreCounterValueKHR', 'signalSemaphoreKHR', 'waitSemaphoresKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore Vulkan Specification>

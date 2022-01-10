@@ -17,7 +17,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -56,6 +56,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Handles (Buffer(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_buffer_collection (BufferCollectionBufferCreateInfoFUCHSIA)
 import Vulkan.Core10.Enums.BufferCreateFlagBits (BufferCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_buffer_device_address (BufferDeviceAddressCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (BufferOpaqueCaptureAddressCreateInfo)
@@ -64,6 +65,7 @@ import Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation (DedicatedAllocationBufferCreateInfoNV)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateBuffer))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyBuffer))
 import Vulkan.Core10.FundamentalTypes (DeviceSize)
@@ -109,6 +111,15 @@ foreign import ccall
 --     resources on the device to exceed
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@sparseAddressSpaceSize@
 --
+-- -   #VUID-vkCreateBuffer-pNext-06387# If using the
+--     'Vulkan.Core10.Handles.Buffer' for an import operation from a
+--     'Vulkan.Extensions.Handles.BufferCollectionFUCHSIA' where a
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionBufferCreateInfoFUCHSIA'
+--     has been chained to @pNext@, @pCreateInfo@ /must/ match the
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferConstraintsInfoFUCHSIA'::@createInfo@
+--     used when setting the constraints on the buffer collection with
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.setBufferCollectionBufferConstraintsFUCHSIA'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCreateBuffer-device-parameter# @device@ /must/ be a valid
@@ -140,6 +151,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Buffer', 'BufferCreateInfo',
 -- 'Vulkan.Core10.Handles.Device'
@@ -156,7 +168,7 @@ createBuffer :: forall a io
                 ("allocator" ::: Maybe AllocationCallbacks)
              -> io (Buffer)
 createBuffer device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateBufferPtr = pVkCreateBuffer (deviceCmds (device :: Device))
+  let vkCreateBufferPtr = pVkCreateBuffer (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateBuffer is null" Nothing Nothing
   let vkCreateBuffer' = mkVkCreateBuffer vkCreateBufferPtr
@@ -230,6 +242,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Buffer', 'Vulkan.Core10.Handles.Device'
 destroyBuffer :: forall io
@@ -244,7 +257,7 @@ destroyBuffer :: forall io
                  ("allocator" ::: Maybe AllocationCallbacks)
               -> io ()
 destroyBuffer device buffer allocator = liftIO . evalContT $ do
-  let vkDestroyBufferPtr = pVkDestroyBuffer (deviceCmds (device :: Device))
+  let vkDestroyBufferPtr = pVkDestroyBuffer (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyBuffer is null" Nothing Nothing
   let vkDestroyBuffer' = mkVkDestroyBuffer vkDestroyBufferPtr
@@ -357,6 +370,10 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddressCaptureReplayEXT ::bufferDeviceAddressCaptureReplay>
 --     feature /must/ be enabled
 --
+-- -   #VUID-VkBufferCreateInfo-size-06409# @size@ /must/ be less than or
+--     equal to
+--     'Vulkan.Extensions.VK_KHR_maintenance4.PhysicalDeviceMaintenance4PropertiesKHR'::@maxBufferSize@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkBufferCreateInfo-sType-sType# @sType@ /must/ be
@@ -365,11 +382,18 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 -- -   #VUID-VkBufferCreateInfo-pNext-pNext# Each @pNext@ member of any
 --     structure (including this one) in the @pNext@ chain /must/ be either
 --     @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionBufferCreateInfoFUCHSIA',
 --     'Vulkan.Extensions.VK_EXT_buffer_device_address.BufferDeviceAddressCreateInfoEXT',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.BufferOpaqueCaptureAddressCreateInfo',
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV',
+--     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo',
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264ProfileEXT VkVideoDecodeH264ProfileEXT>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH265ProfileEXT VkVideoDecodeH265ProfileEXT>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264ProfileEXT VkVideoEncodeH264ProfileEXT>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265ProfileEXT VkVideoEncodeH265ProfileEXT>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileKHR VkVideoProfileKHR>,
 --     or
---     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfilesKHR VkVideoProfilesKHR>
 --
 -- -   #VUID-VkBufferCreateInfo-sType-unique# The @sType@ value of each
 --     struct in the @pNext@ chain /must/ be unique
@@ -391,8 +415,11 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferConstraintsInfoFUCHSIA',
 -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlags',
 -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlags',
+-- 'Vulkan.Extensions.VK_KHR_maintenance4.DeviceBufferMemoryRequirementsKHR',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.SharingMode.SharingMode',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createBuffer'
@@ -413,9 +440,9 @@ data BufferCreateInfo (es :: [Type]) = BufferCreateInfo
     -- specifying the sharing mode of the buffer when it will be accessed by
     -- multiple queue families.
     sharingMode :: SharingMode
-  , -- | @pQueueFamilyIndices@ is a list of queue families that will access this
-    -- buffer (ignored if @sharingMode@ is not
-    -- 'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT').
+  , -- | @pQueueFamilyIndices@ is a pointer to an array of queue families that
+    -- will access this buffer. It is ignored if @sharingMode@ is not
+    -- 'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT'.
     queueFamilyIndices :: Vector Word32
   }
   deriving (Typeable)
@@ -426,10 +453,11 @@ deriving instance Show (Chain es) => Show (BufferCreateInfo es)
 
 instance Extensible BufferCreateInfo where
   extensibleTypeName = "BufferCreateInfo"
-  setNext x next = x{next = next}
+  setNext BufferCreateInfo{..} next' = BufferCreateInfo{next = next', ..}
   getNext BufferCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BufferCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @BufferCollectionBufferCreateInfoFUCHSIA = Just f
     | Just Refl <- eqT @e @BufferDeviceAddressCreateInfoEXT = Just f
     | Just Refl <- eqT @e @BufferOpaqueCaptureAddressCreateInfo = Just f
     | Just Refl <- eqT @e @ExternalMemoryBufferCreateInfo = Just f
@@ -437,7 +465,7 @@ instance Extensible BufferCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss BufferCreateInfo es, PokeChain es) => ToCStruct (BufferCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -447,7 +475,7 @@ instance (Extendss BufferCreateInfo es, PokeChain es) => ToCStruct (BufferCreate
     lift $ poke ((p `plusPtr` 32 :: Ptr BufferUsageFlags)) (usage)
     lift $ poke ((p `plusPtr` 36 :: Ptr SharingMode)) (sharingMode)
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (queueFamilyIndices)) :: Word32))
-    pPQueueFamilyIndices' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (queueFamilyIndices)) * 4) 4
+    pPQueueFamilyIndices' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (queueFamilyIndices)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPQueueFamilyIndices' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (queueFamilyIndices)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr Word32))) (pPQueueFamilyIndices')
     lift $ f

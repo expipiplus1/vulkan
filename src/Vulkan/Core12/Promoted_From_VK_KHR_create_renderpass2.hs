@@ -20,7 +20,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (maybePeek)
@@ -74,10 +74,12 @@ import Vulkan.Core10.Enums.AttachmentStoreOp (AttachmentStoreOp)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Core10.Enums.DependencyFlagBits (DependencyFlags)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBeginRenderPass2))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdEndRenderPass2))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdNextSubpass2))
@@ -167,6 +169,8 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 VK_KHR_create_renderpass2>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.RenderPass',
 -- 'RenderPassCreateInfo2'
@@ -183,7 +187,7 @@ createRenderPass2 :: forall a io
                      ("allocator" ::: Maybe AllocationCallbacks)
                   -> io (RenderPass)
 createRenderPass2 device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateRenderPass2Ptr = pVkCreateRenderPass2 (deviceCmds (device :: Device))
+  let vkCreateRenderPass2Ptr = pVkCreateRenderPass2 (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateRenderPass2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateRenderPass2 is null" Nothing Nothing
   let vkCreateRenderPass2' = mkVkCreateRenderPass2 vkCreateRenderPass2Ptr
@@ -316,8 +320,8 @@ foreign import ccall
 --     have been created with a @usage@ value including
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
 --
--- -   #VUID-vkCmdBeginRenderPass2-initialLayout-03100# If any of the
---     @initialLayout@ members of the
+-- -   #VUID-vkCmdBeginRenderPass2-initialLayout-03100# If the
+--     @initialLayout@ member of any of the
 --     'Vulkan.Core10.Pass.AttachmentDescription' structures specified when
 --     creating the render pass specified in the @renderPass@ member of
 --     @pRenderPassBegin@ is not
@@ -326,9 +330,17 @@ foreign import ccall
 --     corresponding attachment image subresource of the framebuffer
 --     specified in the @framebuffer@ member of @pRenderPassBegin@
 --
--- -   #VUID-vkCmdBeginRenderPass2-srcStageMask-03101# The @srcStageMask@
---     and @dstStageMask@ members of any element of the @pDependencies@
---     member of 'Vulkan.Core10.Pass.RenderPassCreateInfo' used to create
+-- -   #VUID-vkCmdBeginRenderPass2-srcStageMask-06453# The @srcStageMask@
+--     members of any element of the @pDependencies@ member of
+--     'Vulkan.Core10.Pass.RenderPassCreateInfo' used to create
+--     @renderPass@ /must/ be supported by the capabilities of the queue
+--     family identified by the @queueFamilyIndex@ member of the
+--     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' used to create the
+--     command pool which @commandBuffer@ was allocated from
+--
+-- -   #VUID-vkCmdBeginRenderPass2-dstStageMask-06454# The @dstStageMask@
+--     members of any element of the @pDependencies@ member of
+--     'Vulkan.Core10.Pass.RenderPassCreateInfo' used to create
 --     @renderPass@ /must/ be supported by the capabilities of the queue
 --     family identified by the @queueFamilyIndex@ member of the
 --     'Vulkan.Core10.CommandPool.CommandPoolCreateInfo' used to create the
@@ -380,14 +392,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              | Graphics                                                                                                                            |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 VK_KHR_create_renderpass2>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo',
 -- 'SubpassBeginInfo'
@@ -406,7 +420,7 @@ cmdBeginRenderPass2 :: forall a io
                        SubpassBeginInfo
                     -> io ()
 cmdBeginRenderPass2 commandBuffer renderPassBegin subpassBeginInfo = liftIO . evalContT $ do
-  let vkCmdBeginRenderPass2Ptr = pVkCmdBeginRenderPass2 (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBeginRenderPass2Ptr = pVkCmdBeginRenderPass2 (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBeginRenderPass2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginRenderPass2 is null" Nothing Nothing
   let vkCmdBeginRenderPass2' = mkVkCmdBeginRenderPass2 vkCmdBeginRenderPass2Ptr
@@ -486,14 +500,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              | Graphics                                                                                                                            |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 VK_KHR_create_renderpass2>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'SubpassBeginInfo',
 -- 'SubpassEndInfo'
 cmdNextSubpass2 :: forall io
@@ -509,7 +525,7 @@ cmdNextSubpass2 :: forall io
                    SubpassEndInfo
                 -> io ()
 cmdNextSubpass2 commandBuffer subpassBeginInfo subpassEndInfo = liftIO . evalContT $ do
-  let vkCmdNextSubpass2Ptr = pVkCmdNextSubpass2 (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdNextSubpass2Ptr = pVkCmdNextSubpass2 (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdNextSubpass2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdNextSubpass2 is null" Nothing Nothing
   let vkCmdNextSubpass2' = mkVkCmdNextSubpass2 vkCmdNextSubpass2Ptr
@@ -542,6 +558,10 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdEndRenderPass2-None-02352# This command /must/ not be
 --     recorded when transform feedback is active
+--
+-- -   #VUID-vkCmdEndRenderPass2-None-06171# The current render pass
+--     instance /must/ not have been begun with
+--     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
 --
 -- == Valid Usage (Implicit)
 --
@@ -577,14 +597,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              | Graphics                                                                                                                            |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 VK_KHR_create_renderpass2>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'SubpassEndInfo'
 cmdEndRenderPass2 :: forall io
                    . (MonadIO io)
@@ -596,7 +618,7 @@ cmdEndRenderPass2 :: forall io
                      SubpassEndInfo
                   -> io ()
 cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
-  let vkCmdEndRenderPass2Ptr = pVkCmdEndRenderPass2 (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdEndRenderPass2Ptr = pVkCmdEndRenderPass2 (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdEndRenderPass2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndRenderPass2 is null" Nothing Nothing
   let vkCmdEndRenderPass2' = mkVkCmdEndRenderPass2 vkCmdEndRenderPass2Ptr
@@ -620,21 +642,25 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
 -- @initialLayout@ and @finalLayout@ /can/ be set to a layout that only
 -- specifies the layout of the depth aspect.
 --
--- If @format@ is a depth\/stencil format, and @initialLayout@ only
--- specifies the initial layout of the depth aspect of the attachment, the
--- initial layout of the stencil aspect is specified by the
--- @stencilInitialLayout@ member of a
+-- If the @pNext@ chain includes a
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
--- structure included in the @pNext@ chain. Otherwise, @initialLayout@
--- describes the initial layout for all relevant image aspects.
+-- structure, then the @stencilInitialLayout@ and @stencilFinalLayout@
+-- members specify the initial and final layouts of the stencil aspect of a
+-- depth\/stencil format, and @initialLayout@ and @finalLayout@ only apply
+-- to the depth aspect. For depth-only formats, the
+-- 'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
+-- structure is ignored. For stencil-only formats, the initial and final
+-- layouts of the stencil aspect are taken from the
+-- 'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
+-- structure if present, or @initialLayout@ and @finalLayout@ if not
+-- present.
 --
--- If @format@ is a depth\/stencil format, and @finalLayout@ only specifies
--- the final layout of the depth aspect of the attachment, the final layout
--- of the stencil aspect is specified by the @stencilFinalLayout@ member of
--- a
+-- If @format@ is a depth\/stencil format, and either @initialLayout@ or
+-- @finalLayout@ does not specify a layout for the stencil aspect, then the
+-- application /must/ specify the initial and final layouts of the stencil
+-- aspect by including a
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
--- structure included in the @pNext@ chain. Otherwise, @finalLayout@
--- describes the final layout for all relevant image aspects.
+-- structure in the @pNext@ chain.
 --
 -- == Valid Usage
 --
@@ -801,6 +827,8 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 VK_KHR_create_renderpass2>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.AttachmentDescriptionFlags',
 -- 'Vulkan.Core10.Enums.AttachmentLoadOp.AttachmentLoadOp',
 -- 'Vulkan.Core10.Enums.AttachmentStoreOp.AttachmentStoreOp',
@@ -818,8 +846,9 @@ data AttachmentDescription2 (es :: [Type]) = AttachmentDescription2
   , -- | @format@ is a 'Vulkan.Core10.Enums.Format.Format' value specifying the
     -- format of the image that will be used for the attachment.
     format :: Format
-  , -- | @samples@ is the number of samples of the image as defined in
-    -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'.
+  , -- | @samples@ is a
+    -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
+    -- specifying the number of samples of the image.
     samples :: SampleCountFlagBits
   , -- | @loadOp@ is a 'Vulkan.Core10.Enums.AttachmentLoadOp.AttachmentLoadOp'
     -- value specifying how the contents of color and depth components of the
@@ -855,7 +884,7 @@ deriving instance Show (Chain es) => Show (AttachmentDescription2 es)
 
 instance Extensible AttachmentDescription2 where
   extensibleTypeName = "AttachmentDescription2"
-  setNext x next = x{next = next}
+  setNext AttachmentDescription2{..} next' = AttachmentDescription2{next = next', ..}
   getNext AttachmentDescription2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends AttachmentDescription2 e => b) -> Maybe b
   extends _ f
@@ -863,7 +892,7 @@ instance Extensible AttachmentDescription2 where
     | otherwise = Nothing
 
 instance (Extendss AttachmentDescription2 es, PokeChain es) => ToCStruct (AttachmentDescription2 es) where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AttachmentDescription2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -968,6 +997,43 @@ instance es ~ '[] => Zero (AttachmentDescription2 es) where
 --     or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL',
 --
+-- -   #VUID-VkAttachmentReference2-attachment-04754# If @attachment@ is
+--     not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', and the format
+--     of the referenced attachment is a color format, @layout@ /must/ not
+--     be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkAttachmentReference2-attachment-04755# If @attachment@ is
+--     not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', and the format
+--     of the referenced attachment is a depth\/stencil format which
+--     includes both depth and stencil aspects, and @layout@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
+--     the @pNext@ chain /must/ include a
+--     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentReferenceStencilLayout'
+--     structure
+--
+-- -   #VUID-VkAttachmentReference2-attachment-04756# If @attachment@ is
+--     not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', and the format
+--     of the referenced attachment is a depth\/stencil format which
+--     includes only the depth aspect, @layout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkAttachmentReference2-attachment-04757# If @attachment@ is
+--     not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', and the format
+--     of the referenced attachment is a depth\/stencil format which
+--     includes only the stencil aspect, @layout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkAttachmentReference2-sType-sType# @sType@ /must/ be
@@ -985,6 +1051,8 @@ instance es ~ '[] => Zero (AttachmentDescription2 es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 VK_KHR_create_renderpass2>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateAttachmentInfoKHR',
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
@@ -995,8 +1063,7 @@ data AttachmentReference2 (es :: [Type]) = AttachmentReference2
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
   , -- | @attachment@ is either an integer value identifying an attachment at the
-    -- corresponding index in
-    -- 'Vulkan.Core10.Pass.RenderPassCreateInfo'::@pAttachments@, or
+    -- corresponding index in 'RenderPassCreateInfo2'::@pAttachments@, or
     -- 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' to signify that this
     -- attachment is not used.
     attachment :: Word32
@@ -1015,7 +1082,7 @@ deriving instance Show (Chain es) => Show (AttachmentReference2 es)
 
 instance Extensible AttachmentReference2 where
   extensibleTypeName = "AttachmentReference2"
-  setNext x next = x{next = next}
+  setNext AttachmentReference2{..} next' = AttachmentReference2{next = next', ..}
   getNext AttachmentReference2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends AttachmentReference2 e => b) -> Maybe b
   extends _ f
@@ -1023,7 +1090,7 @@ instance Extensible AttachmentReference2 where
     | otherwise = Nothing
 
 instance (Extendss AttachmentReference2 es, PokeChain es) => ToCStruct (AttachmentReference2 es) where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AttachmentReference2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1073,18 +1140,21 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_multiview.RenderPassMultiviewCreateInfo'::@pViewMasks@
 -- has on each corresponding subpass.
 --
--- If an instance of
+-- If a
 -- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateAttachmentInfoKHR'
--- is included in the @pNext@ chain, @pFragmentShadingRateAttachment@ is
--- not @NULL@, and its @attachment@ member is not
--- 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', the identified
--- attachment defines a fragment shading rate attachment for that subpass.
+-- structure is included in the @pNext@ chain,
+-- @pFragmentShadingRateAttachment@ is not @NULL@, and its @attachment@
+-- member is not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', the
+-- identified attachment defines a fragment shading rate attachment for
+-- that subpass.
 --
 -- == Valid Usage
 --
--- -   #VUID-VkSubpassDescription2-pipelineBindPoint-03062#
+-- -   #VUID-VkSubpassDescription2-pipelineBindPoint-04953#
 --     @pipelineBindPoint@ /must/ be
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+--     or
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI'
 --
 -- -   #VUID-VkSubpassDescription2-colorAttachmentCount-03063#
 --     @colorAttachmentCount@ /must/ be less than or equal to
@@ -1176,8 +1246,8 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', they /must/ have the
 --     same sample count
 --
--- -   #VUID-VkSubpassDescription2-attachment-03073# The @attachment@
---     member of any element of @pPreserveAttachments@ /must/ not be
+-- -   #VUID-VkSubpassDescription2-attachment-03073# Each element of
+--     @pPreserveAttachments@ /must/ not be
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
 --
 -- -   #VUID-VkSubpassDescription2-pPreserveAttachments-03074# Any given
@@ -1185,8 +1255,8 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     any other member of the subpass description
 --
 -- -   #VUID-VkSubpassDescription2-layout-02528# If any attachment is used
---     by more than one 'Vulkan.Core10.Pass.AttachmentReference' member,
---     then each use /must/ use the same @layout@
+--     by more than one 'AttachmentReference2' member, then each use /must/
+--     use the same @layout@
 --
 -- -   #VUID-VkSubpassDescription2-None-04439# Attachments /must/ follow
 --     the
@@ -1219,7 +1289,7 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     member of any element of @pInputAttachments@ is not
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', then the
 --     @aspectMask@ member /must/ not include
---     @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any index @i@
+--     @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any index /i/
 --
 -- -   #VUID-VkSubpassDescription2-pDepthStencilAttachment-04440# An
 --     attachment /must/ not be used in both @pDepthStencilAttachment@ and
@@ -1276,6 +1346,8 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 VK_KHR_create_renderpass2>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'AttachmentReference2',
 -- 'Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint',
 -- 'RenderPassCreateInfo2',
@@ -1299,13 +1371,13 @@ data SubpassDescription2 (es :: [Type]) = SubpassDescription2
     -- structures defining the input attachments for this subpass and their
     -- layouts.
     inputAttachments :: Vector (SomeStruct AttachmentReference2)
-  , -- | @pColorAttachments@ is a pointer to an array of 'AttachmentReference2'
-    -- structures defining the color attachments for this subpass and their
-    -- layouts.
-    colorAttachments :: Vector (SomeStruct AttachmentReference2)
-  , -- | @pResolveAttachments@ is an optional array of @colorAttachmentCount@
-    -- 'AttachmentReference2' structures defining the resolve attachments for
+  , -- | @pColorAttachments@ is a pointer to an array of @colorAttachmentCount@
+    -- 'AttachmentReference2' structures defining the color attachments for
     -- this subpass and their layouts.
+    colorAttachments :: Vector (SomeStruct AttachmentReference2)
+  , -- | @pResolveAttachments@ is @NULL@ or a pointer to an array of
+    -- @colorAttachmentCount@ 'AttachmentReference2' structures defining the
+    -- resolve attachments for this subpass and their layouts.
     resolveAttachments :: Vector (SomeStruct AttachmentReference2)
   , -- | @pDepthStencilAttachment@ is a pointer to a 'AttachmentReference2'
     -- structure specifying the depth\/stencil attachment for this subpass and
@@ -1325,7 +1397,7 @@ deriving instance Show (Chain es) => Show (SubpassDescription2 es)
 
 instance Extensible SubpassDescription2 where
   extensibleTypeName = "SubpassDescription2"
-  setNext x next = x{next = next}
+  setNext SubpassDescription2{..} next' = SubpassDescription2{next = next', ..}
   getNext SubpassDescription2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SubpassDescription2 e => b) -> Maybe b
   extends _ f
@@ -1334,7 +1406,7 @@ instance Extensible SubpassDescription2 where
     | otherwise = Nothing
 
 instance (Extendss SubpassDescription2 es, PokeChain es) => ToCStruct (SubpassDescription2 es) where
-  withCStruct x f = allocaBytesAligned 88 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 88 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SubpassDescription2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1343,7 +1415,7 @@ instance (Extendss SubpassDescription2 es, PokeChain es) => ToCStruct (SubpassDe
     lift $ poke ((p `plusPtr` 20 :: Ptr PipelineBindPoint)) (pipelineBindPoint)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (viewMask)
     lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (inputAttachments)) :: Word32))
-    pPInputAttachments' <- ContT $ allocaBytesAligned @(AttachmentReference2 _) ((Data.Vector.length (inputAttachments)) * 32) 8
+    pPInputAttachments' <- ContT $ allocaBytes @(AttachmentReference2 _) ((Data.Vector.length (inputAttachments)) * 32)
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPInputAttachments' `plusPtr` (32 * (i)) :: Ptr (AttachmentReference2 _))) (e) . ($ ())) (inputAttachments)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr (AttachmentReference2 _)))) (pPInputAttachments')
     let pColorAttachmentsLength = Data.Vector.length $ (colorAttachments)
@@ -1351,13 +1423,13 @@ instance (Extendss SubpassDescription2 es, PokeChain es) => ToCStruct (SubpassDe
     lift $ unless (fromIntegral pResolveAttachmentsLength == pColorAttachmentsLength || pResolveAttachmentsLength == 0) $
       throwIO $ IOError Nothing InvalidArgument "" "pResolveAttachments and pColorAttachments must have the same length" Nothing Nothing
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) ((fromIntegral pColorAttachmentsLength :: Word32))
-    pPColorAttachments' <- ContT $ allocaBytesAligned @(AttachmentReference2 _) ((Data.Vector.length (colorAttachments)) * 32) 8
+    pPColorAttachments' <- ContT $ allocaBytes @(AttachmentReference2 _) ((Data.Vector.length (colorAttachments)) * 32)
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPColorAttachments' `plusPtr` (32 * (i)) :: Ptr (AttachmentReference2 _))) (e) . ($ ())) (colorAttachments)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr (AttachmentReference2 _)))) (pPColorAttachments')
     pResolveAttachments'' <- if Data.Vector.null (resolveAttachments)
       then pure nullPtr
       else do
-        pPResolveAttachments <- ContT $ allocaBytesAligned @(AttachmentReference2 _) (((Data.Vector.length (resolveAttachments))) * 32) 8
+        pPResolveAttachments <- ContT $ allocaBytes @(AttachmentReference2 _) (((Data.Vector.length (resolveAttachments))) * 32)
         Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPResolveAttachments `plusPtr` (32 * (i)) :: Ptr (AttachmentReference2 _))) (e) . ($ ())) ((resolveAttachments))
         pure $ pPResolveAttachments
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr (AttachmentReference2 _)))) pResolveAttachments''
@@ -1366,7 +1438,7 @@ instance (Extendss SubpassDescription2 es, PokeChain es) => ToCStruct (SubpassDe
       Just j -> ContT @_ @_ @(Ptr (AttachmentReference2 '[])) $ \cont -> withSomeCStruct @AttachmentReference2 (j) (cont . castPtr)
     lift $ poke ((p `plusPtr` 64 :: Ptr (Ptr (AttachmentReference2 _)))) pDepthStencilAttachment''
     lift $ poke ((p `plusPtr` 72 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (preserveAttachments)) :: Word32))
-    pPPreserveAttachments' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (preserveAttachments)) * 4) 4
+    pPPreserveAttachments' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (preserveAttachments)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPPreserveAttachments' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (preserveAttachments)
     lift $ poke ((p `plusPtr` 80 :: Ptr (Ptr Word32))) (pPPreserveAttachments')
     lift $ f
@@ -1429,38 +1501,106 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_multiview.RenderPassMultiviewCreateInfo'::@pViewOffsets@
 -- has on each corresponding subpass dependency.
 --
--- If an instance of
--- 'Vulkan.Extensions.VK_KHR_synchronization2.MemoryBarrier2KHR' is
--- included in the @pNext@ chain, @srcStageMask@, @dstStageMask@,
--- @srcAccessMask@, and @dstAccessMask@ parameters are ignored. The
--- synchronization and access scopes instead are defined by the parameters
--- of 'Vulkan.Extensions.VK_KHR_synchronization2.MemoryBarrier2KHR'.
+-- If a 'Vulkan.Extensions.VK_KHR_synchronization2.MemoryBarrier2KHR'
+-- structure is included in the @pNext@ chain, @srcStageMask@,
+-- @dstStageMask@, @srcAccessMask@, and @dstAccessMask@ parameters are
+-- ignored. The synchronization and access scopes instead are defined by
+-- the parameters of
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.MemoryBarrier2KHR'.
 --
 -- == Valid Usage
 --
--- -   #VUID-VkSubpassDependency2-srcStageMask-03080# If the
+-- -   #VUID-VkSubpassDependency2-srcStageMask-04090# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
 --
--- -   #VUID-VkSubpassDependency2-dstStageMask-03081# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
---     feature is not enabled, @dstStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
---
--- -   #VUID-VkSubpassDependency2-srcStageMask-03082# If the
+-- -   #VUID-VkSubpassDependency2-srcStageMask-04091# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
 --     or
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
 --
--- -   #VUID-VkSubpassDependency2-dstStageMask-03083# If the
+-- -   #VUID-VkSubpassDependency2-srcStageMask-04092# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-conditionalRendering conditional rendering>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT'
+--
+-- -   #VUID-VkSubpassDependency2-srcStageMask-04093# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMap fragment density map>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
+--
+-- -   #VUID-VkSubpassDependency2-srcStageMask-04094# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-transformFeedback transform feedback>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT'
+--
+-- -   #VUID-VkSubpassDependency2-srcStageMask-04095# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV'
+--
+-- -   #VUID-VkSubpassDependency2-srcStageMask-04096# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader task shaders>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
+--
+-- -   #VUID-VkSubpassDependency2-srcStageMask-04097# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
+--     feature is not enabled, @srcStageMask@ /must/ not contain
+--     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
+--
+-- -   #VUID-VkSubpassDependency2-srcStageMask-03937# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @srcStageMask@ /must/ not be @0@
+--
+-- -   #VUID-VkSubpassDependency2-dstStageMask-04090# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
+--
+-- -   #VUID-VkSubpassDependency2-dstStageMask-04091# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
 --     or
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
+--
+-- -   #VUID-VkSubpassDependency2-dstStageMask-04092# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-conditionalRendering conditional rendering>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT'
+--
+-- -   #VUID-VkSubpassDependency2-dstStageMask-04093# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMap fragment density map>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
+--
+-- -   #VUID-VkSubpassDependency2-dstStageMask-04094# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-transformFeedback transform feedback>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT'
+--
+-- -   #VUID-VkSubpassDependency2-dstStageMask-04095# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV'
+--
+-- -   #VUID-VkSubpassDependency2-dstStageMask-04096# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader task shaders>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
+--
+-- -   #VUID-VkSubpassDependency2-dstStageMask-04097# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
+--     feature is not enabled, @dstStageMask@ /must/ not contain
+--     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
+--
+-- -   #VUID-VkSubpassDependency2-dstStageMask-03937# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @dstStageMask@ /must/ not be @0@
 --
 -- -   #VUID-VkSubpassDependency2-srcSubpass-03084# @srcSubpass@ /must/ be
 --     less than or equal to @dstSubpass@, unless one of them is
@@ -1519,26 +1659,6 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 --     'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_VIEW_LOCAL_BIT',
 --     @viewOffset@ /must/ be @0@
 --
--- -   #VUID-VkSubpassDependency2-srcStageMask-02103# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
---     feature is not enabled, @srcStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV'
---
--- -   #VUID-VkSubpassDependency2-srcStageMask-02104# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader task shaders>
---     feature is not enabled, @srcStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
---
--- -   #VUID-VkSubpassDependency2-dstStageMask-02105# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
---     feature is not enabled, @dstStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV'
---
--- -   #VUID-VkSubpassDependency2-dstStageMask-02106# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader task shaders>
---     feature is not enabled, @dstStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
---
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkSubpassDependency2-sType-sType# @sType@ /must/ be
@@ -1575,6 +1695,8 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 VK_KHR_create_renderpass2>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlags',
 -- 'Vulkan.Core10.Enums.DependencyFlagBits.DependencyFlags',
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlags',
@@ -1622,7 +1744,7 @@ deriving instance Show (Chain es) => Show (SubpassDependency2 es)
 
 instance Extensible SubpassDependency2 where
   extensibleTypeName = "SubpassDependency2"
-  setNext x next = x{next = next}
+  setNext SubpassDependency2{..} next' = SubpassDependency2{next = next', ..}
   getNext SubpassDependency2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SubpassDependency2 e => b) -> Maybe b
   extends _ f
@@ -1630,7 +1752,7 @@ instance Extensible SubpassDependency2 where
     | otherwise = Nothing
 
 instance (Extendss SubpassDependency2 es, PokeChain es) => ToCStruct (SubpassDependency2 es) where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SubpassDependency2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1729,8 +1851,23 @@ instance es ~ '[] => Zero (SubpassDependency2 es) where
 --     member of any element of @pInputAttachments@, @pColorAttachments@,
 --     @pResolveAttachments@ or @pDepthStencilAttachment@, or any element
 --     of @pPreserveAttachments@ in any given element of @pSubpasses@ is
---     not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', it /must/ be
---     less than @attachmentCount@
+--     not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', then it /must/
+--     be less than @attachmentCount@
+--
+-- -   #VUID-VkRenderPassCreateInfo2-fragmentDensityMapAttachment-06472# If
+--     the pNext chain includes a
+--     'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderPassFragmentDensityMapCreateInfoEXT'
+--     structure and the @fragmentDensityMapAttachment@ member is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', then @attachment@
+--     /must/ be less than @attachmentCount@
+--
+-- -   #VUID-VkRenderPassCreateInfo2-pSubpasses-06473# If the @pSubpasses@
+--     pNext chain includes a
+--     'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.SubpassDescriptionDepthStencilResolve'
+--     structure and the @pDepthStencilResolveAttachment@ member is not
+--     @NULL@ and does not have the value
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', then @attachment@
+--     /must/ be less than @attachmentCount@
 --
 -- -   #VUID-VkRenderPassCreateInfo2-pAttachments-02522# For any member of
 --     @pAttachments@ with a @loadOp@ equal to
@@ -1830,6 +1967,38 @@ instance es ~ '[] => Zero (SubpassDependency2 es) where
 --     contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
+-- -   #VUID-VkRenderPassCreateInfo2-rasterizationSamples-04905# If the
+--     pipeline is being created with fragment shader state, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_render_pass_shader_resolve VK_QCOM_render_pass_shader_resolve>
+--     extension is enabled, and if subpass has any input attachments, and
+--     if the subpass description contains
+--     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM',
+--     then the sample count of the input attachments /must/ equal
+--     @rasterizationSamples@
+--
+-- -   #VUID-VkRenderPassCreateInfo2-sampleShadingEnable-04906# If the
+--     pipeline is being created with fragment shader state, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_render_pass_shader_resolve VK_QCOM_render_pass_shader_resolve>
+--     extension is enabled, and if the subpass description contains
+--     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM',
+--     then @sampleShadingEnable@ /must/ be false
+--
+-- -   #VUID-VkRenderPassCreateInfo2-flags-04907# If @flags@ includes
+--     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM',
+--     and if @pResolveAttachments@ is not @NULL@, then each resolve
+--     attachment /must/ be 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
+--
+-- -   #VUID-VkRenderPassCreateInfo2-flags-04908# If @flags@ includes
+--     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM',
+--     and if @pDepthStencilResolveAttachment@ is not @NULL@, then the
+--     depth\/stencil resolve attachment /must/ be
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
+--
+-- -   #VUID-VkRenderPassCreateInfo2-flags-04909# If @flags@ includes
+--     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM',
+--     then the subpass /must/ be the last subpass in a subpass dependency
+--     chain
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkRenderPassCreateInfo2-sType-sType# @sType@ /must/ be
@@ -1871,6 +2040,8 @@ instance es ~ '[] => Zero (SubpassDependency2 es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 VK_KHR_create_renderpass2>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'AttachmentDescription2',
 -- 'Vulkan.Core10.Enums.RenderPassCreateFlagBits.RenderPassCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'SubpassDependency2',
@@ -1904,7 +2075,7 @@ deriving instance Show (Chain es) => Show (RenderPassCreateInfo2 es)
 
 instance Extensible RenderPassCreateInfo2 where
   extensibleTypeName = "RenderPassCreateInfo2"
-  setNext x next = x{next = next}
+  setNext RenderPassCreateInfo2{..} next' = RenderPassCreateInfo2{next = next', ..}
   getNext RenderPassCreateInfo2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RenderPassCreateInfo2 e => b) -> Maybe b
   extends _ f
@@ -1912,26 +2083,26 @@ instance Extensible RenderPassCreateInfo2 where
     | otherwise = Nothing
 
 instance (Extendss RenderPassCreateInfo2 es, PokeChain es) => ToCStruct (RenderPassCreateInfo2 es) where
-  withCStruct x f = allocaBytesAligned 80 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 80 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RenderPassCreateInfo2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr RenderPassCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (attachments)) :: Word32))
-    pPAttachments' <- ContT $ allocaBytesAligned @(AttachmentDescription2 _) ((Data.Vector.length (attachments)) * 56) 8
+    pPAttachments' <- ContT $ allocaBytes @(AttachmentDescription2 _) ((Data.Vector.length (attachments)) * 56)
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPAttachments' `plusPtr` (56 * (i)) :: Ptr (AttachmentDescription2 _))) (e) . ($ ())) (attachments)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr (AttachmentDescription2 _)))) (pPAttachments')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (subpasses)) :: Word32))
-    pPSubpasses' <- ContT $ allocaBytesAligned @(SubpassDescription2 _) ((Data.Vector.length (subpasses)) * 88) 8
+    pPSubpasses' <- ContT $ allocaBytes @(SubpassDescription2 _) ((Data.Vector.length (subpasses)) * 88)
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPSubpasses' `plusPtr` (88 * (i)) :: Ptr (SubpassDescription2 _))) (e) . ($ ())) (subpasses)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr (SubpassDescription2 _)))) (pPSubpasses')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (dependencies)) :: Word32))
-    pPDependencies' <- ContT $ allocaBytesAligned @(SubpassDependency2 _) ((Data.Vector.length (dependencies)) * 48) 8
+    pPDependencies' <- ContT $ allocaBytes @(SubpassDependency2 _) ((Data.Vector.length (dependencies)) * 48)
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPDependencies' `plusPtr` (48 * (i)) :: Ptr (SubpassDependency2 _))) (e) . ($ ())) (dependencies)
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr (SubpassDependency2 _)))) (pPDependencies')
     lift $ poke ((p `plusPtr` 64 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (correlatedViewMasks)) :: Word32))
-    pPCorrelatedViewMasks' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (correlatedViewMasks)) * 4) 4
+    pPCorrelatedViewMasks' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (correlatedViewMasks)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPCorrelatedViewMasks' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (correlatedViewMasks)
     lift $ poke ((p `plusPtr` 72 :: Ptr (Ptr Word32))) (pPCorrelatedViewMasks')
     lift $ f
@@ -1973,12 +2144,14 @@ instance es ~ '[] => Zero (RenderPassCreateInfo2 es) where
            mempty
 
 
--- | VkSubpassBeginInfo - Structure specifying subpass begin info
+-- | VkSubpassBeginInfo - Structure specifying subpass begin information
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 VK_KHR_create_renderpass2>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Core10.Enums.SubpassContents.SubpassContents',
 -- 'cmdBeginRenderPass2',
@@ -1999,7 +2172,7 @@ deriving instance Generic (SubpassBeginInfo)
 deriving instance Show SubpassBeginInfo
 
 instance ToCStruct SubpassBeginInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SubpassBeginInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBPASS_BEGIN_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -2030,12 +2203,14 @@ instance Zero SubpassBeginInfo where
            zero
 
 
--- | VkSubpassEndInfo - Structure specifying subpass end info
+-- | VkSubpassEndInfo - Structure specifying subpass end information
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 VK_KHR_create_renderpass2>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'cmdEndRenderPass2',
 -- 'Vulkan.Extensions.VK_KHR_create_renderpass2.cmdEndRenderPass2KHR',
 -- 'cmdNextSubpass2',
@@ -2049,7 +2224,7 @@ deriving instance Generic (SubpassEndInfo)
 deriving instance Show SubpassEndInfo
 
 instance ToCStruct SubpassEndInfo where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SubpassEndInfo f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBPASS_END_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

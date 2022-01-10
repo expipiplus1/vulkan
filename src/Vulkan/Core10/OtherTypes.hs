@@ -3,6 +3,7 @@
 module Vulkan.Core10.OtherTypes  ( MemoryBarrier(..)
                                  , BufferMemoryBarrier(..)
                                  , ImageMemoryBarrier(..)
+                                 , PipelineCacheHeaderVersionOne(..)
                                  , DrawIndirectCommand(..)
                                  , DrawIndexedIndirectCommand(..)
                                  , DispatchIndirectCommand(..)
@@ -12,8 +13,9 @@ module Vulkan.Core10.OtherTypes  ( MemoryBarrier(..)
                                  , VendorId(..)
                                  ) where
 
+import Vulkan.CStruct.Utils (FixedArray)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Ptr (castPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -34,8 +36,12 @@ import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
+import Data.Word (Word8)
+import Data.ByteString (ByteString)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
+import Vulkan.CStruct.Utils (peekByteStringFromSizedVectorPtr)
+import Vulkan.CStruct.Utils (pokeFixedLengthByteString)
 import Vulkan.Core10.Enums.AccessFlagBits (AccessFlags)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.CStruct.Extends (Chain)
@@ -48,10 +54,12 @@ import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
 import Vulkan.Core10.ImageView (ImageSubresourceRange)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
+import Vulkan.Core10.Enums.PipelineCacheHeaderVersion (PipelineCacheHeaderVersion)
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (SampleLocationsInfoEXT)
 import Vulkan.Core10.Enums.StructureType (StructureType)
+import Vulkan.Core10.APIConstants (UUID_SIZE)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MEMORY_BARRIER))
@@ -79,6 +87,7 @@ import Vulkan.Core10.Enums.VendorId (VendorId(..))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdPipelineBarrier',
@@ -108,7 +117,7 @@ deriving instance Generic (MemoryBarrier)
 deriving instance Show MemoryBarrier
 
 instance ToCStruct MemoryBarrier where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryBarrier{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_BARRIER)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -207,9 +216,10 @@ instance Zero MemoryBarrier where
 --     with a sharing mode of
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not equal, and
---     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is a special
---     queue family values reserved for external memory transfers, the
---     other /must/ be 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
+--     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is one of the
+--     special queue family values reserved for external memory transfers,
+--     the other /must/ be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
 --
 -- -   #VUID-VkBufferMemoryBarrier-buffer-04089# If @buffer@ was created
 --     with a sharing mode of
@@ -239,6 +249,7 @@ instance Zero MemoryBarrier where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlags',
 -- 'Vulkan.Core10.Handles.Buffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
@@ -279,7 +290,7 @@ deriving instance Generic (BufferMemoryBarrier)
 deriving instance Show BufferMemoryBarrier
 
 instance ToCStruct BufferMemoryBarrier where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferMemoryBarrier{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -583,7 +594,7 @@ instance Zero BufferMemoryBarrier where
 --     @image@ /must/ have been created with
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
 --     or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL'
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   #VUID-VkImageMemoryBarrier-srcQueueFamilyIndex-03939# If
 --     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
@@ -603,9 +614,9 @@ instance Zero BufferMemoryBarrier where
 --     or @oldLayout@ and @newLayout@ define an
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
 --     and @oldLayout@ or @newLayout@ is
---     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR'
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR'
 --     then @image@ /must/ have been created with
---     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --     set
 --
 -- -   #VUID-VkImageMemoryBarrier-image-01671# If @image@ has a
@@ -655,9 +666,10 @@ instance Zero BufferMemoryBarrier where
 --     a sharing mode of
 --     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not equal, and
---     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is a special
---     queue family values reserved for external memory transfers, the
---     other /must/ be 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
+--     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is one of the
+--     special queue family values reserved for external memory transfers,
+--     the other /must/ be
+--     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
 --
 -- -   #VUID-VkImageMemoryBarrier-image-04072# If @image@ was created with
 --     a sharing mode of
@@ -702,6 +714,7 @@ instance Zero BufferMemoryBarrier where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlags',
 -- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
@@ -747,7 +760,7 @@ deriving instance Show (Chain es) => Show (ImageMemoryBarrier es)
 
 instance Extensible ImageMemoryBarrier where
   extensibleTypeName = "ImageMemoryBarrier"
-  setNext x next = x{next = next}
+  setNext ImageMemoryBarrier{..} next' = ImageMemoryBarrier{next = next', ..}
   getNext ImageMemoryBarrier{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageMemoryBarrier e => b) -> Maybe b
   extends _ f
@@ -755,7 +768,7 @@ instance Extensible ImageMemoryBarrier where
     | otherwise = Nothing
 
 instance (Extendss ImageMemoryBarrier es, PokeChain es) => ToCStruct (ImageMemoryBarrier es) where
-  withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageMemoryBarrier{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -813,7 +826,113 @@ instance es ~ '[] => Zero (ImageMemoryBarrier es) where
            zero
 
 
--- | VkDrawIndirectCommand - Structure specifying a draw indirect command
+-- | VkPipelineCacheHeaderVersionOne - Structure describing the layout of the
+-- pipeline cache header
+--
+-- = Description
+--
+-- Unlike most structures declared by the Vulkan API, all fields of this
+-- structure are written with the least significant byte first, regardless
+-- of host byte-order.
+--
+-- The C language specification does not define the packing of structure
+-- members. This layout assumes tight structure member packing, with
+-- members laid out in the order listed in the structure, and the intended
+-- size of the structure is 32 bytes. If a compiler produces code that
+-- diverges from that pattern, applications /must/ employ another method to
+-- set values at the correct offsets.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
+-- 'Vulkan.Core10.Enums.PipelineCacheHeaderVersion.PipelineCacheHeaderVersion'
+data PipelineCacheHeaderVersionOne = PipelineCacheHeaderVersionOne
+  { -- | @headerSize@ is the length in bytes of the pipeline cache header.
+    --
+    -- #VUID-VkPipelineCacheHeaderVersionOne-headerSize-04967# @headerSize@
+    -- /must/ be 32
+    headerSize :: Word32
+  , -- | @headerVersion@ is a
+    -- 'Vulkan.Core10.Enums.PipelineCacheHeaderVersion.PipelineCacheHeaderVersion'
+    -- enum value specifying the version of the header. A consumer of the
+    -- pipeline cache /should/ use the cache version to interpret the remainder
+    -- of the cache header.
+    --
+    -- #VUID-VkPipelineCacheHeaderVersionOne-headerVersion-04968#
+    -- @headerVersion@ /must/ be
+    -- 'Vulkan.Core10.Enums.PipelineCacheHeaderVersion.PIPELINE_CACHE_HEADER_VERSION_ONE'
+    --
+    -- #VUID-VkPipelineCacheHeaderVersionOne-headerVersion-parameter#
+    -- @headerVersion@ /must/ be a valid
+    -- 'Vulkan.Core10.Enums.PipelineCacheHeaderVersion.PipelineCacheHeaderVersion'
+    -- value
+    headerVersion :: PipelineCacheHeaderVersion
+  , -- | @vendorID@ is the
+    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@vendorID@
+    -- of the implementation.
+    vendorID :: Word32
+  , -- | @deviceID@ is the
+    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@deviceID@
+    -- of the implementation.
+    deviceID :: Word32
+  , -- | @pipelineCacheUUID@ is the
+    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceProperties'::@pipelineCacheUUID@
+    -- of the implementation.
+    pipelineCacheUUID :: ByteString
+  }
+  deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (PipelineCacheHeaderVersionOne)
+#endif
+deriving instance Show PipelineCacheHeaderVersionOne
+
+instance ToCStruct PipelineCacheHeaderVersionOne where
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p PipelineCacheHeaderVersionOne{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr Word32)) (headerSize)
+    poke ((p `plusPtr` 4 :: Ptr PipelineCacheHeaderVersion)) (headerVersion)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (vendorID)
+    poke ((p `plusPtr` 12 :: Ptr Word32)) (deviceID)
+    pokeFixedLengthByteString ((p `plusPtr` 16 :: Ptr (FixedArray UUID_SIZE Word8))) (pipelineCacheUUID)
+    f
+  cStructSize = 32
+  cStructAlignment = 4
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 4 :: Ptr PipelineCacheHeaderVersion)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 12 :: Ptr Word32)) (zero)
+    pokeFixedLengthByteString ((p `plusPtr` 16 :: Ptr (FixedArray UUID_SIZE Word8))) (mempty)
+    f
+
+instance FromCStruct PipelineCacheHeaderVersionOne where
+  peekCStruct p = do
+    headerSize <- peek @Word32 ((p `plusPtr` 0 :: Ptr Word32))
+    headerVersion <- peek @PipelineCacheHeaderVersion ((p `plusPtr` 4 :: Ptr PipelineCacheHeaderVersion))
+    vendorID <- peek @Word32 ((p `plusPtr` 8 :: Ptr Word32))
+    deviceID <- peek @Word32 ((p `plusPtr` 12 :: Ptr Word32))
+    pipelineCacheUUID <- peekByteStringFromSizedVectorPtr ((p `plusPtr` 16 :: Ptr (FixedArray UUID_SIZE Word8)))
+    pure $ PipelineCacheHeaderVersionOne
+             headerSize headerVersion vendorID deviceID pipelineCacheUUID
+
+instance Storable PipelineCacheHeaderVersionOne where
+  sizeOf ~_ = 32
+  alignment ~_ = 4
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero PipelineCacheHeaderVersionOne where
+  zero = PipelineCacheHeaderVersionOne
+           zero
+           zero
+           zero
+           zero
+           mempty
+
+
+-- | VkDrawIndirectCommand - Structure specifying a indirect drawing command
 --
 -- = Description
 --
@@ -834,6 +953,7 @@ instance es ~ '[] => Zero (ImageMemoryBarrier es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdDrawIndirect'
 data DrawIndirectCommand = DrawIndirectCommand
   { -- | @vertexCount@ is the number of vertices to draw.
@@ -852,7 +972,7 @@ deriving instance Generic (DrawIndirectCommand)
 deriving instance Show DrawIndirectCommand
 
 instance ToCStruct DrawIndirectCommand where
-  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DrawIndirectCommand{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (vertexCount)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (instanceCount)
@@ -891,8 +1011,8 @@ instance Zero DrawIndirectCommand where
            zero
 
 
--- | VkDrawIndexedIndirectCommand - Structure specifying a draw indexed
--- indirect command
+-- | VkDrawIndexedIndirectCommand - Structure specifying a indexed indirect
+-- drawing command
 --
 -- = Description
 --
@@ -921,6 +1041,7 @@ instance Zero DrawIndirectCommand where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdDrawIndexedIndirect'
 data DrawIndexedIndirectCommand = DrawIndexedIndirectCommand
   { -- | @indexCount@ is the number of vertices to draw.
@@ -942,7 +1063,7 @@ deriving instance Generic (DrawIndexedIndirectCommand)
 deriving instance Show DrawIndexedIndirectCommand
 
 instance ToCStruct DrawIndexedIndirectCommand where
-  withCStruct x f = allocaBytesAligned 20 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 20 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DrawIndexedIndirectCommand{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (indexCount)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (instanceCount)
@@ -985,7 +1106,7 @@ instance Zero DrawIndexedIndirectCommand where
            zero
 
 
--- | VkDispatchIndirectCommand - Structure specifying a dispatch indirect
+-- | VkDispatchIndirectCommand - Structure specifying a indirect dispatching
 -- command
 --
 -- = Description
@@ -998,6 +1119,7 @@ instance Zero DrawIndexedIndirectCommand where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdDispatchIndirect'
 data DispatchIndirectCommand = DispatchIndirectCommand
   { -- | @x@ is the number of local workgroups to dispatch in the X dimension.
@@ -1026,7 +1148,7 @@ deriving instance Generic (DispatchIndirectCommand)
 deriving instance Show DispatchIndirectCommand
 
 instance ToCStruct DispatchIndirectCommand where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DispatchIndirectCommand{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (x)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (y)

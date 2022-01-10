@@ -29,7 +29,7 @@
 -- [__Contact__]
 --
 --     -   Michael Worcester
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_maintenance2:%20&body=@michaelworcester%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_maintenance2] @michaelworcester%0A<<Here describe the issue or question you have about the VK_KHR_maintenance2 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -135,6 +135,10 @@
 --
 -- -   'KHR_MAINTENANCE2_SPEC_VERSION'
 --
+-- -   'KHR_MAINTENANCE_2_EXTENSION_NAME'
+--
+-- -   'KHR_MAINTENANCE_2_SPEC_VERSION'
+--
 -- -   Extending
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits':
 --
@@ -205,7 +209,7 @@
 -- >         ...
 -- >         .pNext = &specifyAspects,
 -- >         ...
--- >     }
+-- >     };
 -- >
 -- >     vkCreateRenderPass(...);
 --
@@ -224,7 +228,7 @@
 --
 -- -   Revision 1, 2017-04-28
 --
--- = See Also
+-- == See Also
 --
 -- 'ImageViewUsageCreateInfoKHR', 'InputAttachmentAspectReferenceKHR',
 -- 'PhysicalDevicePointClippingPropertiesKHR',
@@ -233,14 +237,16 @@
 -- 'RenderPassInputAttachmentAspectCreateInfoKHR',
 -- 'TessellationDomainOriginKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_maintenance2 Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_KHR_maintenance2  ( pattern IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR
+module Vulkan.Extensions.VK_KHR_maintenance2  ( pattern KHR_MAINTENANCE2_SPEC_VERSION
+                                              , pattern KHR_MAINTENANCE2_EXTENSION_NAME
+                                              , pattern IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR
                                               , pattern IMAGE_CREATE_EXTENDED_USAGE_BIT_KHR
                                               , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES_KHR
                                               , pattern STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO_KHR
@@ -259,10 +265,10 @@ module Vulkan.Extensions.VK_KHR_maintenance2  ( pattern IMAGE_CREATE_BLOCK_TEXEL
                                               , PhysicalDevicePointClippingPropertiesKHR
                                               , ImageViewUsageCreateInfoKHR
                                               , PipelineTessellationDomainOriginStateCreateInfoKHR
-                                              , KHR_MAINTENANCE2_SPEC_VERSION
-                                              , pattern KHR_MAINTENANCE2_SPEC_VERSION
-                                              , KHR_MAINTENANCE2_EXTENSION_NAME
-                                              , pattern KHR_MAINTENANCE2_EXTENSION_NAME
+                                              , KHR_MAINTENANCE_2_SPEC_VERSION
+                                              , pattern KHR_MAINTENANCE_2_SPEC_VERSION
+                                              , KHR_MAINTENANCE_2_EXTENSION_NAME
+                                              , pattern KHR_MAINTENANCE_2_EXTENSION_NAME
                                               ) where
 
 import Data.String (IsString)
@@ -287,6 +293,14 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO))
 import Vulkan.Core11.Enums.TessellationDomainOrigin (TessellationDomainOrigin(TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT))
 import Vulkan.Core11.Enums.TessellationDomainOrigin (TessellationDomainOrigin(TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT))
+-- No documentation found for TopLevel "VK_KHR_MAINTENANCE2_SPEC_VERSION"
+pattern KHR_MAINTENANCE2_SPEC_VERSION = KHR_MAINTENANCE_2_SPEC_VERSION
+
+
+-- No documentation found for TopLevel "VK_KHR_MAINTENANCE2_EXTENSION_NAME"
+pattern KHR_MAINTENANCE2_EXTENSION_NAME = KHR_MAINTENANCE_2_EXTENSION_NAME
+
+
 -- No documentation found for TopLevel "VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR"
 pattern IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR = IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT
 
@@ -363,16 +377,16 @@ type ImageViewUsageCreateInfoKHR = ImageViewUsageCreateInfo
 type PipelineTessellationDomainOriginStateCreateInfoKHR = PipelineTessellationDomainOriginStateCreateInfo
 
 
-type KHR_MAINTENANCE2_SPEC_VERSION = 1
+type KHR_MAINTENANCE_2_SPEC_VERSION = 1
 
--- No documentation found for TopLevel "VK_KHR_MAINTENANCE2_SPEC_VERSION"
-pattern KHR_MAINTENANCE2_SPEC_VERSION :: forall a . Integral a => a
-pattern KHR_MAINTENANCE2_SPEC_VERSION = 1
+-- No documentation found for TopLevel "VK_KHR_MAINTENANCE_2_SPEC_VERSION"
+pattern KHR_MAINTENANCE_2_SPEC_VERSION :: forall a . Integral a => a
+pattern KHR_MAINTENANCE_2_SPEC_VERSION = 1
 
 
-type KHR_MAINTENANCE2_EXTENSION_NAME = "VK_KHR_maintenance2"
+type KHR_MAINTENANCE_2_EXTENSION_NAME = "VK_KHR_maintenance2"
 
--- No documentation found for TopLevel "VK_KHR_MAINTENANCE2_EXTENSION_NAME"
-pattern KHR_MAINTENANCE2_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
-pattern KHR_MAINTENANCE2_EXTENSION_NAME = "VK_KHR_maintenance2"
+-- No documentation found for TopLevel "VK_KHR_MAINTENANCE_2_EXTENSION_NAME"
+pattern KHR_MAINTENANCE_2_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern KHR_MAINTENANCE_2_EXTENSION_NAME = "VK_KHR_maintenance2"
 

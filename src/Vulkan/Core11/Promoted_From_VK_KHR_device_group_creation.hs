@@ -15,7 +15,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -56,6 +56,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkEnumeratePhysicalDeviceGroups))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.APIConstants (MAX_DEVICE_GROUP_SIZE)
@@ -93,10 +94,9 @@ foreign import ccall
 -- actually written to @pPhysicalDeviceGroupProperties@. If
 -- @pPhysicalDeviceGroupCount@ is less than the number of device groups
 -- available, at most @pPhysicalDeviceGroupCount@ structures will be
--- written. If @pPhysicalDeviceGroupCount@ is smaller than the number of
--- device groups available, 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be
--- returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate
--- that not all the available device groups were returned.
+-- written, and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
+-- instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not
+-- all the available device groups were returned.
 --
 -- Every physical device /must/ be in exactly one device group.
 --
@@ -134,6 +134,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Instance', 'PhysicalDeviceGroupProperties'
 enumeratePhysicalDeviceGroups :: forall io
                                . (MonadIO io)
@@ -142,7 +143,7 @@ enumeratePhysicalDeviceGroups :: forall io
                                  Instance
                               -> io (Result, ("physicalDeviceGroupProperties" ::: Vector PhysicalDeviceGroupProperties))
 enumeratePhysicalDeviceGroups instance' = liftIO . evalContT $ do
-  let vkEnumeratePhysicalDeviceGroupsPtr = pVkEnumeratePhysicalDeviceGroups (instanceCmds (instance' :: Instance))
+  let vkEnumeratePhysicalDeviceGroupsPtr = pVkEnumeratePhysicalDeviceGroups (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkEnumeratePhysicalDeviceGroupsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkEnumeratePhysicalDeviceGroups is null" Nothing Nothing
   let vkEnumeratePhysicalDeviceGroups' = mkVkEnumeratePhysicalDeviceGroups vkEnumeratePhysicalDeviceGroupsPtr
@@ -167,6 +168,7 @@ enumeratePhysicalDeviceGroups instance' = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -198,7 +200,7 @@ deriving instance Generic (PhysicalDeviceGroupProperties)
 deriving instance Show PhysicalDeviceGroupProperties
 
 instance ToCStruct PhysicalDeviceGroupProperties where
-  withCStruct x f = allocaBytesAligned 288 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 288 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceGroupProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -284,6 +286,7 @@ instance Zero PhysicalDeviceGroupProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceGroupDeviceCreateInfo = DeviceGroupDeviceCreateInfo
@@ -297,12 +300,12 @@ deriving instance Generic (DeviceGroupDeviceCreateInfo)
 deriving instance Show DeviceGroupDeviceCreateInfo
 
 instance ToCStruct DeviceGroupDeviceCreateInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceGroupDeviceCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (physicalDevices)) :: Word32))
-    pPPhysicalDevices' <- ContT $ allocaBytesAligned @(Ptr PhysicalDevice_T) ((Data.Vector.length (physicalDevices)) * 8) 8
+    pPPhysicalDevices' <- ContT $ allocaBytes @(Ptr PhysicalDevice_T) ((Data.Vector.length (physicalDevices)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPPhysicalDevices' `plusPtr` (8 * (i)) :: Ptr (Ptr PhysicalDevice_T)) (e)) (physicalDevices)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr (Ptr PhysicalDevice_T)))) (pPPhysicalDevices')
     lift $ f

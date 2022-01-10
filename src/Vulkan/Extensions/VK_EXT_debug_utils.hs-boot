@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Mark Young
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_debug_utils:%20&body=@marky-lunarg%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_debug_utils] @marky-lunarg%0A<<Here describe the issue or question you have about the VK_EXT_debug_utils extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -216,11 +216,7 @@
 -- application /can/ link a 'DebugUtilsMessengerCreateInfoEXT' structure to
 -- the @pNext@ element of the
 -- 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo' structure given
--- to 'Vulkan.Core10.DeviceInitialization.createInstance'. This callback is
--- only valid for the duration of the
--- 'Vulkan.Core10.DeviceInitialization.createInstance' and the
--- 'Vulkan.Core10.DeviceInitialization.destroyInstance' call. Use
--- 'createDebugUtilsMessengerEXT' to create persistent callback objects.
+-- to 'Vulkan.Core10.DeviceInitialization.createInstance'.
 --
 -- Example uses: Create three callback objects. One will log errors and
 -- warnings to the debug console using Windows @OutputDebugString@. The
@@ -235,7 +231,7 @@
 -- >     PFN_vkCreateDebugUtilsMessengerEXT pfnCreateDebugUtilsMessengerEXT = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
 -- >     PFN_vkDestroyDebugUtilsMessengerEXT pfnDestroyDebugUtilsMessengerEXT = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
 -- >
--- >     VkDebugUtilsMessengeCreateInfoEXT callback1 = {
+-- >     VkDebugUtilsMessengerCreateInfoEXT callback1 = {
 -- >             VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,  // sType
 -- >             NULL,                                                     // pNext
 -- >             0,                                                        // flags
@@ -252,7 +248,7 @@
 -- >     }
 -- >
 -- >     callback1.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
--- >     callback1.pfnCallback = myDebugBreak;
+-- >     callback1.pfnUserCallback = myDebugBreak;
 -- >     callback1.pUserData = NULL;
 -- >     res = pfnCreateDebugUtilsMessengerEXT(instance, &callback1, NULL, &cb2);
 -- >     if (res != VK_SUCCESS) {
@@ -300,7 +296,7 @@
 -- >         VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT, // sType
 -- >         NULL,                                               // pNext
 -- >         VK_OBJECT_TYPE_IMAGE,                               // objectType
--- >         (uint64_t)image,                                    // object
+-- >         (uint64_t)image,                                    // objectHandle
 -- >         "Brick Diffuse Texture",                            // pObjectName
 -- >     };
 -- >
@@ -427,8 +423,8 @@
 -- statements, it may take a while before the new functionality is fully
 -- exposed.
 --
--- 3) If the validation layers won’t expose the new functionality
--- immediately, then what’s the point of this extension?
+-- 3) If the validation layers will not expose the new functionality
+-- immediately, then what is the point of this extension?
 --
 -- __RESOLVED__: We needed a replacement for @VK_EXT_debug_report@ because
 -- the 'Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT'
@@ -444,9 +440,9 @@
 -- related. If we did split up the extension, where would the structures
 -- and enums live, and how would you define that the device behavior in the
 -- instance extension is really only valid if the device extension is
--- enabled, and the functionality is passed in. It’s cleaner to just define
--- this all as an instance extension, plus it allows the application to
--- enable all debug functionality provided with one enable string during
+-- enabled, and the functionality is passed in. It is cleaner to just
+-- define this all as an instance extension, plus it allows the application
+-- to enable all debug functionality provided with one enable string during
 -- 'Vulkan.Core10.DeviceInitialization.createInstance'.
 --
 -- == Version History
@@ -463,7 +459,7 @@
 --         in for @pObjectName@ in 'DebugUtilsObjectNameInfoEXT', because
 --         the loader and various drivers support @NULL@ already.
 --
--- = See Also
+-- == See Also
 --
 -- 'PFN_vkDebugUtilsMessengerCallbackEXT', 'DebugUtilsLabelEXT',
 -- 'DebugUtilsMessageSeverityFlagBitsEXT',
@@ -480,7 +476,7 @@
 -- 'setDebugUtilsObjectNameEXT', 'setDebugUtilsObjectTagEXT',
 -- 'submitDebugUtilsMessageEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils Vulkan Specification>

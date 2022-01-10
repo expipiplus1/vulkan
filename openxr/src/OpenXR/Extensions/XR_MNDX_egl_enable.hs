@@ -43,7 +43,7 @@ module OpenXR.Extensions.XR_MNDX_egl_enable  ( GraphicsBindingEGLMNDX(..)
                                              , EGLContext
                                              ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import OpenXR.CStruct (FromCStruct)
@@ -88,8 +88,9 @@ import OpenXR.Extensions.XR_KHR_opengl_es_enable (EGLDisplay)
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsBindingEGLMNDX-extension-notenabled# The @@
---     extension /must/ be enabled prior to using 'GraphicsBindingEGLMNDX'
+-- -   #VUID-XrGraphicsBindingEGLMNDX-extension-notenabled# The
+--     @XR_MNDX_egl_enable@ extension /must/ be enabled prior to using
+--     'GraphicsBindingEGLMNDX'
 --
 -- -   #VUID-XrGraphicsBindingEGLMNDX-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_GRAPHICS_BINDING_EGL_MNDX'
@@ -136,7 +137,7 @@ deriving instance Generic (GraphicsBindingEGLMNDX)
 deriving instance Show GraphicsBindingEGLMNDX
 
 instance ToCStruct GraphicsBindingEGLMNDX where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsBindingEGLMNDX{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_BINDING_EGL_MNDX)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

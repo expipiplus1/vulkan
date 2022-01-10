@@ -21,7 +21,7 @@
 --
 -- -   Requires OpenXR 1.0
 --
--- -   Requires @@
+-- -   Requires @XR_EXT_hand_tracking@
 --
 -- = See Also
 --
@@ -67,7 +67,7 @@ import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -108,6 +108,7 @@ import OpenXR.Core10.Space (destroySpace)
 import OpenXR.Core10.FundamentalTypes (Bool32)
 import OpenXR.Extensions.Handles (HandTrackerEXT)
 import OpenXR.Extensions.Handles (HandTrackerEXT(..))
+import OpenXR.Extensions.Handles (HandTrackerEXT(HandTrackerEXT))
 import OpenXR.Extensions.Handles (HandTrackerEXT_T)
 import OpenXR.Dynamic (InstanceCmds(pXrCreateHandMeshSpaceMSFT))
 import OpenXR.Dynamic (InstanceCmds(pXrUpdateHandMeshMSFT))
@@ -158,17 +159,21 @@ foreign import ccall
 -- hand mesh space may be not locatable when the hand is outside of the
 -- tracking range, or if focus is removed from the application. In these
 -- cases, the runtime /must/ not set the
--- @XR_SPACE_LOCATION_POSITION_VALID_BIT@ and
--- @XR_SPACE_LOCATION_ORIENTATION_VALID_BIT@ bits on calls to
--- 'OpenXR.Core10.Space.locateSpace' with the hand mesh space, and the
--- application /should/ avoid using the returned poses or query for hand
--- mesh data.
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_VALID_BIT'
+-- and
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_ORIENTATION_VALID_BIT'
+-- bits on calls to 'OpenXR.Core10.Space.locateSpace' with the hand mesh
+-- space, and the application /should/ avoid using the returned poses or
+-- query for hand mesh data.
 --
 -- If the underlying 'OpenXR.Extensions.Handles.HandTrackerEXT' is
 -- destroyed, the runtime /must/ continue to support
 -- 'OpenXR.Core10.Space.locateSpace' using the hand mesh space, and it
--- /must/ return space location with @XR_SPACE_LOCATION_POSITION_VALID_BIT@
--- and @XR_SPACE_LOCATION_ORIENTATION_VALID_BIT@ unset.
+-- /must/ return space location with
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_POSITION_VALID_BIT'
+-- and
+-- 'OpenXR.Core10.Enums.SpaceLocationFlagBits.SPACE_LOCATION_ORIENTATION_VALID_BIT'
+-- unset.
 --
 -- The application /may/ create a mesh space for the reference hand by
 -- setting @handPoseType@ to 'HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT'.
@@ -177,9 +182,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrCreateHandMeshSpaceMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
---     'createHandMeshSpaceMSFT'
+-- -   #VUID-xrCreateHandMeshSpaceMSFT-extension-notenabled# The
+--     @XR_MSFT_hand_tracking_mesh@ extension /must/ be enabled prior to
+--     calling 'createHandMeshSpaceMSFT'
 --
 -- -   #VUID-xrCreateHandMeshSpaceMSFT-handTracker-parameter# @handTracker@
 --     /must/ be a valid 'OpenXR.Extensions.Handles.HandTrackerEXT' handle
@@ -233,7 +238,7 @@ createHandMeshSpaceMSFT :: forall io
                            HandMeshSpaceCreateInfoMSFT
                         -> io (Result, Space)
 createHandMeshSpaceMSFT handTracker createInfo = liftIO . evalContT $ do
-  let cmds = instanceCmds (handTracker :: HandTrackerEXT)
+  let cmds = case handTracker of HandTrackerEXT{instanceCmds} -> instanceCmds
   let xrCreateHandMeshSpaceMSFTPtr = pXrCreateHandMeshSpaceMSFT cmds
   lift $ unless (xrCreateHandMeshSpaceMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateHandMeshSpaceMSFT is null" Nothing Nothing
@@ -286,8 +291,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrUpdateHandMeshMSFT-extension-notenabled# The @@ extension
---     /must/ be enabled prior to calling 'updateHandMeshMSFT'
+-- -   #VUID-xrUpdateHandMeshMSFT-extension-notenabled# The
+--     @XR_MSFT_hand_tracking_mesh@ extension /must/ be enabled prior to
+--     calling 'updateHandMeshMSFT'
 --
 -- -   #VUID-xrUpdateHandMeshMSFT-handTracker-parameter# @handTracker@
 --     /must/ be a valid 'OpenXR.Extensions.Handles.HandTrackerEXT' handle
@@ -341,7 +347,7 @@ updateHandMeshMSFT :: forall io
                       HandMeshUpdateInfoMSFT
                    -> io (Result, HandMeshMSFT)
 updateHandMeshMSFT handTracker updateInfo = liftIO . evalContT $ do
-  let xrUpdateHandMeshMSFTPtr = pXrUpdateHandMeshMSFT (instanceCmds (handTracker :: HandTrackerEXT))
+  let xrUpdateHandMeshMSFTPtr = pXrUpdateHandMeshMSFT (case handTracker of HandTrackerEXT{instanceCmds} -> instanceCmds)
   lift $ unless (xrUpdateHandMeshMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrUpdateHandMeshMSFT is null" Nothing Nothing
   let xrUpdateHandMeshMSFT' = mkXrUpdateHandMeshMSFT xrUpdateHandMeshMSFTPtr
@@ -358,9 +364,9 @@ updateHandMeshMSFT handTracker updateInfo = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrHandMeshSpaceCreateInfoMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'HandMeshSpaceCreateInfoMSFT'
+-- -   #VUID-XrHandMeshSpaceCreateInfoMSFT-extension-notenabled# The
+--     @XR_MSFT_hand_tracking_mesh@ extension /must/ be enabled prior to
+--     using 'HandMeshSpaceCreateInfoMSFT'
 --
 -- -   #VUID-XrHandMeshSpaceCreateInfoMSFT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_HAND_MESH_SPACE_CREATE_INFO_MSFT'
@@ -395,7 +401,7 @@ deriving instance Generic (HandMeshSpaceCreateInfoMSFT)
 deriving instance Show HandMeshSpaceCreateInfoMSFT
 
 instance ToCStruct HandMeshSpaceCreateInfoMSFT where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HandMeshSpaceCreateInfoMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_HAND_MESH_SPACE_CREATE_INFO_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -453,8 +459,9 @@ instance Zero HandMeshSpaceCreateInfoMSFT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrHandMeshUpdateInfoMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using 'HandMeshUpdateInfoMSFT'
+-- -   #VUID-XrHandMeshUpdateInfoMSFT-extension-notenabled# The
+--     @XR_MSFT_hand_tracking_mesh@ extension /must/ be enabled prior to
+--     using 'HandMeshUpdateInfoMSFT'
 --
 -- -   #VUID-XrHandMeshUpdateInfoMSFT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_HAND_MESH_UPDATE_INFO_MSFT'
@@ -488,7 +495,7 @@ deriving instance Generic (HandMeshUpdateInfoMSFT)
 deriving instance Show HandMeshUpdateInfoMSFT
 
 instance ToCStruct HandMeshUpdateInfoMSFT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HandMeshUpdateInfoMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_HAND_MESH_UPDATE_INFO_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -557,8 +564,9 @@ instance Zero HandMeshUpdateInfoMSFT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrHandMeshMSFT-extension-notenabled# The @@ extension /must/
---     be enabled prior to using 'HandMeshMSFT'
+-- -   #VUID-XrHandMeshMSFT-extension-notenabled# The
+--     @XR_MSFT_hand_tracking_mesh@ extension /must/ be enabled prior to
+--     using 'HandMeshMSFT'
 --
 -- -   #VUID-XrHandMeshMSFT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_HAND_MESH_MSFT'
@@ -605,7 +613,7 @@ deriving instance Generic (HandMeshMSFT)
 deriving instance Show HandMeshMSFT
 
 instance ToCStruct HandMeshMSFT where
-  withCStruct x f = allocaBytesAligned 80 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 80 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HandMeshMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_HAND_MESH_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -714,8 +722,9 @@ instance Zero HandMeshMSFT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrHandMeshIndexBufferMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using 'HandMeshIndexBufferMSFT'
+-- -   #VUID-XrHandMeshIndexBufferMSFT-extension-notenabled# The
+--     @XR_MSFT_hand_tracking_mesh@ extension /must/ be enabled prior to
+--     using 'HandMeshIndexBufferMSFT'
 --
 -- -   #VUID-XrHandMeshIndexBufferMSFT-indices-parameter# @indices@ /must/
 --     be a pointer to an array of @indexCapacityInput@ @uint32_t@ values
@@ -748,7 +757,7 @@ deriving instance Generic (HandMeshIndexBufferMSFT)
 deriving instance Show HandMeshIndexBufferMSFT
 
 instance ToCStruct HandMeshIndexBufferMSFT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HandMeshIndexBufferMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (indexBufferKey)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (indexCapacityInput)
@@ -837,9 +846,9 @@ instance Zero HandMeshIndexBufferMSFT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrHandMeshVertexBufferMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'HandMeshVertexBufferMSFT'
+-- -   #VUID-XrHandMeshVertexBufferMSFT-extension-notenabled# The
+--     @XR_MSFT_hand_tracking_mesh@ extension /must/ be enabled prior to
+--     using 'HandMeshVertexBufferMSFT'
 --
 -- -   #VUID-XrHandMeshVertexBufferMSFT-vertices-parameter# @vertices@
 --     /must/ be a pointer to an array of @vertexCapacityInput@
@@ -877,7 +886,7 @@ deriving instance Generic (HandMeshVertexBufferMSFT)
 deriving instance Show HandMeshVertexBufferMSFT
 
 instance ToCStruct HandMeshVertexBufferMSFT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HandMeshVertexBufferMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Time)) (vertexUpdateTime)
     poke ((p `plusPtr` 8 :: Ptr Word32)) (vertexCapacityInput)
@@ -918,8 +927,9 @@ instance Zero HandMeshVertexBufferMSFT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrHandMeshVertexMSFT-extension-notenabled# The @@ extension
---     /must/ be enabled prior to using 'HandMeshVertexMSFT'
+-- -   #VUID-XrHandMeshVertexMSFT-extension-notenabled# The
+--     @XR_MSFT_hand_tracking_mesh@ extension /must/ be enabled prior to
+--     using 'HandMeshVertexMSFT'
 --
 -- = See Also
 --
@@ -940,7 +950,7 @@ deriving instance Generic (HandMeshVertexMSFT)
 deriving instance Show HandMeshVertexMSFT
 
 instance ToCStruct HandMeshVertexMSFT where
-  withCStruct x f = allocaBytesAligned 24 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HandMeshVertexMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Vector3f)) (position)
     poke ((p `plusPtr` 12 :: Ptr Vector3f)) (normal)
@@ -997,8 +1007,8 @@ instance Zero HandMeshVertexMSFT where
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrSystemHandTrackingMeshPropertiesMSFT-extension-notenabled#
---     The @@ extension /must/ be enabled prior to using
---     'SystemHandTrackingMeshPropertiesMSFT'
+--     The @XR_MSFT_hand_tracking_mesh@ extension /must/ be enabled prior
+--     to using 'SystemHandTrackingMeshPropertiesMSFT'
 --
 -- -   #VUID-XrSystemHandTrackingMeshPropertiesMSFT-type-type# @type@
 --     /must/ be
@@ -1031,7 +1041,7 @@ deriving instance Generic (SystemHandTrackingMeshPropertiesMSFT)
 deriving instance Show SystemHandTrackingMeshPropertiesMSFT
 
 instance ToCStruct SystemHandTrackingMeshPropertiesMSFT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SystemHandTrackingMeshPropertiesMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SYSTEM_HAND_TRACKING_MESH_PROPERTIES_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1075,8 +1085,9 @@ instance Zero SystemHandTrackingMeshPropertiesMSFT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrHandPoseTypeInfoMSFT-extension-notenabled# The @@ extension
---     /must/ be enabled prior to using 'HandPoseTypeInfoMSFT'
+-- -   #VUID-XrHandPoseTypeInfoMSFT-extension-notenabled# The
+--     @XR_MSFT_hand_tracking_mesh@ extension /must/ be enabled prior to
+--     using 'HandPoseTypeInfoMSFT'
 --
 -- -   #VUID-XrHandPoseTypeInfoMSFT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_HAND_POSE_TYPE_INFO_MSFT'
@@ -1102,7 +1113,7 @@ deriving instance Generic (HandPoseTypeInfoMSFT)
 deriving instance Show HandPoseTypeInfoMSFT
 
 instance ToCStruct HandPoseTypeInfoMSFT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HandPoseTypeInfoMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_HAND_POSE_TYPE_INFO_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

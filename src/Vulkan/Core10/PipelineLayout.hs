@@ -12,7 +12,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -51,6 +51,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.Handles (DescriptorSetLayout)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreatePipelineLayout))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyPipelineLayout))
 import Vulkan.Core10.Handles (Device_T)
@@ -105,6 +106,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.PipelineLayout',
 -- 'PipelineLayoutCreateInfo'
@@ -121,7 +123,7 @@ createPipelineLayout :: forall io
                         ("allocator" ::: Maybe AllocationCallbacks)
                      -> io (PipelineLayout)
 createPipelineLayout device createInfo allocator = liftIO . evalContT $ do
-  let vkCreatePipelineLayoutPtr = pVkCreatePipelineLayout (deviceCmds (device :: Device))
+  let vkCreatePipelineLayoutPtr = pVkCreatePipelineLayout (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreatePipelineLayoutPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreatePipelineLayout is null" Nothing Nothing
   let vkCreatePipelineLayout' = mkVkCreatePipelineLayout vkCreatePipelineLayoutPtr
@@ -200,6 +202,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.PipelineLayout'
 destroyPipelineLayout :: forall io
@@ -214,7 +217,7 @@ destroyPipelineLayout :: forall io
                          ("allocator" ::: Maybe AllocationCallbacks)
                       -> io ()
 destroyPipelineLayout device pipelineLayout allocator = liftIO . evalContT $ do
-  let vkDestroyPipelineLayoutPtr = pVkDestroyPipelineLayout (deviceCmds (device :: Device))
+  let vkDestroyPipelineLayoutPtr = pVkDestroyPipelineLayout (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyPipelineLayoutPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyPipelineLayout is null" Nothing Nothing
   let vkDestroyPipelineLayout' = mkVkDestroyPipelineLayout vkDestroyPipelineLayoutPtr
@@ -231,6 +234,7 @@ destroyPipelineLayout device pipelineLayout allocator = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'PipelineLayoutCreateInfo',
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags'
 data PushConstantRange = PushConstantRange
@@ -275,7 +279,7 @@ deriving instance Generic (PushConstantRange)
 deriving instance Show PushConstantRange
 
 instance ToCStruct PushConstantRange where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PushConstantRange{..} f = do
     poke ((p `plusPtr` 0 :: Ptr ShaderStageFlags)) (stageFlags)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (offset)
@@ -629,8 +633,8 @@ instance Zero PushConstantRange where
 -- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03572# The total
 --     number of bindings with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR'
---     to any given shader stage across all elements of @pSetLayouts@
---     /must/ be less than or equal to
+--     accessible to any given shader stage across all elements of
+--     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.PhysicalDeviceAccelerationStructurePropertiesKHR'::@maxPerStageDescriptorUpdateAfterBindAccelerationStructures@
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03573# The total
@@ -693,6 +697,7 @@ instance Zero PushConstantRange where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.DescriptorSetLayout',
 -- 'Vulkan.Core10.Enums.PipelineLayoutCreateFlags.PipelineLayoutCreateFlags',
 -- 'PushConstantRange', 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -722,17 +727,17 @@ deriving instance Generic (PipelineLayoutCreateInfo)
 deriving instance Show PipelineLayoutCreateInfo
 
 instance ToCStruct PipelineLayoutCreateInfo where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineLayoutCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineLayoutCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (setLayouts)) :: Word32))
-    pPSetLayouts' <- ContT $ allocaBytesAligned @DescriptorSetLayout ((Data.Vector.length (setLayouts)) * 8) 8
+    pPSetLayouts' <- ContT $ allocaBytes @DescriptorSetLayout ((Data.Vector.length (setLayouts)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPSetLayouts' `plusPtr` (8 * (i)) :: Ptr DescriptorSetLayout) (e)) (setLayouts)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr DescriptorSetLayout))) (pPSetLayouts')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (pushConstantRanges)) :: Word32))
-    pPPushConstantRanges' <- ContT $ allocaBytesAligned @PushConstantRange ((Data.Vector.length (pushConstantRanges)) * 12) 4
+    pPPushConstantRanges' <- ContT $ allocaBytes @PushConstantRange ((Data.Vector.length (pushConstantRanges)) * 12)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPPushConstantRanges' `plusPtr` (12 * (i)) :: Ptr PushConstantRange) (e)) (pushConstantRanges)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr PushConstantRange))) (pPPushConstantRanges')
     lift $ f

@@ -15,16 +15,18 @@
 --     185
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
 --     -   Requires Vulkan 1.0
 --
+--     -   Requires @VK_KHR_get_physical_device_properties2@
+--
 -- [__Contact__]
 --
 --     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_calibrated_timestamps:%20&body=@drakos-amd%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_calibrated_timestamps] @drakos-amd%0A<<Here describe the issue or question you have about the VK_EXT_calibrated_timestamps extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -100,7 +102,7 @@
 -- type. The proposed API chooses the general approach for the sake of
 -- extensibility.
 --
--- 4) Shouldn’t we use CLOCK_MONOTONIC_RAW instead of CLOCK_MONOTONIC?
+-- 4) Should we use CLOCK_MONOTONIC_RAW instead of CLOCK_MONOTONIC?
 --
 -- __RESOLVED__: CLOCK_MONOTONIC is usable in a wider set of situations,
 -- however, it is subject to NTP adjustments so some use cases may prefer
@@ -113,6 +115,12 @@
 -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@timestampPeriod@
 -- makes it possible to calculate future device timestamps as follows:
 --
+-- 6) In what queue are timestamp values in time domain
+-- 'TIME_DOMAIN_DEVICE_EXT' captured by 'getCalibratedTimestampsEXT'?
+--
+-- __RESOLVED__: An implementation supporting this extension will have all
+-- its VkQueue share the same time domain.
+--
 -- > futureTimestamp = calibratedTimestamp + deltaNanoseconds / timestampPeriod
 --
 -- 6) Can the host and device timestamp values drift apart over longer
@@ -120,13 +128,13 @@
 --
 -- __RESOLVED__: Yes, especially as some time domains by definition allow
 -- for that to happen (e.g. CLOCK_MONOTONIC is subject to NTP adjustments).
--- Thus it’s recommended that applications re-calibrate from time to time.
+-- Thus it is recommended that applications re-calibrate from time to time.
 --
 -- 7) Should we add a query for reporting the maximum deviation of the
 -- timestamp values returned by calibrated timestamp queries?
 --
 -- __RESOLVED__: A global query seems inappropriate and difficult to
--- enforce. However, it’s possible to return the maximum deviation any
+-- enforce. However, it is possible to return the maximum deviation any
 -- single calibrated timestamp query can have by sampling one of the time
 -- domains twice as follows:
 --
@@ -140,24 +148,28 @@
 --
 -- __RESOLVED__: Unless the tick of each clock corresponding to the set of
 -- time domains coincides and all clocks can literally be sampled
--- simutaneously, there isn’t really a possibility for the maximum
+-- simutaneously, there is not really a possibility for the maximum
 -- deviation to be zero, so by convention the maximum deviation is always
 -- at least the maximum of the length of the ticks of the set of time
 -- domains calibrated and thus can never be zero.
 --
 -- == Version History
 --
+-- -   Revision 2, 2021-03-16 (Lionel Landwerlin)
+--
+--     -   Specify requirement on device timestamps
+--
 -- -   Revision 1, 2018-10-04 (Daniel Rakos)
 --
 --     -   Internal revisions.
 --
--- = See Also
+-- == See Also
 --
 -- 'CalibratedTimestampInfoEXT', 'TimeDomainEXT',
 -- 'getCalibratedTimestampsEXT',
 -- 'getPhysicalDeviceCalibrateableTimeDomainsEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_calibrated_timestamps Vulkan Specification>
@@ -185,7 +197,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -229,11 +241,13 @@ import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetCalibratedTimestampsEXT))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceCalibrateableTimeDomainsEXT))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -261,11 +275,9 @@ foreign import ccall
 -- values actually written to @pTimeDomains@. If the value of
 -- @pTimeDomainCount@ is less than the number of calibrateable time domains
 -- supported, at most @pTimeDomainCount@ values will be written to
--- @pTimeDomains@. If @pTimeDomainCount@ is smaller than the number of
--- calibrateable time domains supported for the given @physicalDevice@,
--- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS' to indicate that not all the
--- available values were returned.
+-- @pTimeDomains@, and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be
+-- returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate
+-- that not all the available time domains were returned.
 --
 -- == Valid Usage (Implicit)
 --
@@ -297,6 +309,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_calibrated_timestamps VK_EXT_calibrated_timestamps>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'TimeDomainEXT'
 getPhysicalDeviceCalibrateableTimeDomainsEXT :: forall io
                                               . (MonadIO io)
@@ -305,7 +318,7 @@ getPhysicalDeviceCalibrateableTimeDomainsEXT :: forall io
                                                 PhysicalDevice
                                              -> io (Result, ("timeDomains" ::: Vector TimeDomainEXT))
 getPhysicalDeviceCalibrateableTimeDomainsEXT physicalDevice = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceCalibrateableTimeDomainsEXTPtr = pVkGetPhysicalDeviceCalibrateableTimeDomainsEXT (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceCalibrateableTimeDomainsEXTPtr = pVkGetPhysicalDeviceCalibrateableTimeDomainsEXT (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceCalibrateableTimeDomainsEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceCalibrateableTimeDomainsEXT is null" Nothing Nothing
   let vkGetPhysicalDeviceCalibrateableTimeDomainsEXT' = mkVkGetPhysicalDeviceCalibrateableTimeDomainsEXT vkGetPhysicalDeviceCalibrateableTimeDomainsEXTPtr
@@ -364,6 +377,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_calibrated_timestamps VK_EXT_calibrated_timestamps>,
 -- 'CalibratedTimestampInfoEXT', 'Vulkan.Core10.Handles.Device'
 getCalibratedTimestampsEXT :: forall io
                             . (MonadIO io)
@@ -382,11 +396,11 @@ getCalibratedTimestampsEXT :: forall io
                               ("timestampInfos" ::: Vector CalibratedTimestampInfoEXT)
                            -> io (("timestamps" ::: Vector Word64), ("maxDeviation" ::: Word64))
 getCalibratedTimestampsEXT device timestampInfos = liftIO . evalContT $ do
-  let vkGetCalibratedTimestampsEXTPtr = pVkGetCalibratedTimestampsEXT (deviceCmds (device :: Device))
+  let vkGetCalibratedTimestampsEXTPtr = pVkGetCalibratedTimestampsEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetCalibratedTimestampsEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetCalibratedTimestampsEXT is null" Nothing Nothing
   let vkGetCalibratedTimestampsEXT' = mkVkGetCalibratedTimestampsEXT vkGetCalibratedTimestampsEXTPtr
-  pPTimestampInfos <- ContT $ allocaBytesAligned @CalibratedTimestampInfoEXT ((Data.Vector.length (timestampInfos)) * 24) 8
+  pPTimestampInfos <- ContT $ allocaBytes @CalibratedTimestampInfoEXT ((Data.Vector.length (timestampInfos)) * 24)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPTimestampInfos `plusPtr` (24 * (i)) :: Ptr CalibratedTimestampInfoEXT) (e)) (timestampInfos)
   pPTimestamps <- ContT $ bracket (callocBytes @Word64 ((fromIntegral ((fromIntegral (Data.Vector.length $ (timestampInfos)) :: Word32))) * 8)) free
   pPMaxDeviation <- ContT $ bracket (callocBytes @Word64 8) free
@@ -404,6 +418,7 @@ getCalibratedTimestampsEXT device timestampInfos = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_calibrated_timestamps VK_EXT_calibrated_timestamps>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'TimeDomainEXT',
 -- 'getCalibratedTimestampsEXT'
 data CalibratedTimestampInfoEXT = CalibratedTimestampInfoEXT
@@ -424,7 +439,7 @@ deriving instance Generic (CalibratedTimestampInfoEXT)
 deriving instance Show CalibratedTimestampInfoEXT
 
 instance ToCStruct CalibratedTimestampInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CalibratedTimestampInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -459,6 +474,15 @@ instance Zero CalibratedTimestampInfoEXT where
 --
 -- = Description
 --
+-- Note
+--
+-- An implementation supporting @VK_EXT_calibrated_timestamps@ will use the
+-- same time domain for all its 'Vulkan.Core10.Handles.Queue' so that
+-- timestamp values reported for 'TIME_DOMAIN_DEVICE_EXT' can be matched to
+-- any timestamp captured through
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdWriteTimestamp' or
+-- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdWriteTimestamp2KHR' .
+--
 -- > struct timespec tv;
 -- > clock_gettime(CLOCK_MONOTONIC, &tv);
 -- > return tv.tv_nsec + tv.tv_sec*1000000000ull;
@@ -473,6 +497,7 @@ instance Zero CalibratedTimestampInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_calibrated_timestamps VK_EXT_calibrated_timestamps>,
 -- 'CalibratedTimestampInfoEXT',
 -- 'getPhysicalDeviceCalibrateableTimeDomainsEXT'
 newtype TimeDomainEXT = TimeDomainEXT Int32
@@ -535,11 +560,11 @@ instance Read TimeDomainEXT where
   readPrec = enumReadPrec enumPrefixTimeDomainEXT showTableTimeDomainEXT conNameTimeDomainEXT TimeDomainEXT
 
 
-type EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION = 1
+type EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION"
 pattern EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION :: forall a . Integral a => a
-pattern EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION = 1
+pattern EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION = 2
 
 
 type EXT_CALIBRATED_TIMESTAMPS_EXTENSION_NAME = "VK_EXT_calibrated_timestamps"

@@ -26,10 +26,10 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_win32_surface:%20&body=@critsec%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_win32_surface] @critsec%0A<<Here describe the issue or question you have about the VK_KHR_win32_surface extension>> >
 --
 --     -   Ian Elliott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_win32_surface:%20&body=@ianelliottus%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_win32_surface] @ianelliottus%0A<<Here describe the issue or question you have about the VK_KHR_win32_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -167,9 +167,9 @@
 --     object’s pixel format can be set only one time.
 --
 -- -   Creating a 'Vulkan.Extensions.Handles.SwapchainKHR' over a window
---     object can alter the object for the remaining life of its lifetime.
---     Either of the above alterations may occur as a side-effect of
---     'Vulkan.Extensions.Handles.SwapchainKHR'.
+--     object can alter the object for its remaining lifetime. Either of
+--     the above alterations may occur as a side effect of
+--     'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
 --
 -- == Version History
 --
@@ -200,12 +200,12 @@
 --     -   Add issue 2 addressing reuse of a native window object in a
 --         different Graphics API, or by a different Vulkan ICD.
 --
--- = See Also
+-- == See Also
 --
 -- 'Win32SurfaceCreateFlagsKHR', 'Win32SurfaceCreateInfoKHR',
 -- 'createWin32SurfaceKHR', 'getPhysicalDeviceWin32PresentationSupportKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_win32_surface Vulkan Specification>

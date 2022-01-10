@@ -44,6 +44,7 @@ type ExternalMemoryFeatureFlags = ExternalMemoryFeatureFlagBits
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'ExternalMemoryFeatureFlags'
 newtype ExternalMemoryFeatureFlagBits = ExternalMemoryFeatureFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

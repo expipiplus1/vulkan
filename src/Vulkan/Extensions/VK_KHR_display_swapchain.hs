@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_display_swapchain:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_display_swapchain] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_display_swapchain extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -85,7 +85,7 @@
 -- already complex enough.
 --
 -- 2) Should the @srcRect@ and @dstRect@ parameters be specified as part of
--- the present command, or at swapchain creation time?
+-- the presentation command, or at swapchain creation time?
 --
 -- __RESOLVED__: As part of the presentation command. This allows moving
 -- and scaling the image on the screen without the need to respecify the
@@ -149,7 +149,7 @@
 --         functions, etc. This makes it compliant with the proposed
 --         standard for Vulkan extensions.
 --
---     -   Switched from \"revision\" to \"version\", including use of the
+--     -   Switched from “revision” to “version”, including use of the
 --         VK_MAKE_VERSION macro in the header file.
 --
 -- -   Revision 3, 2015-09-01 (James Jones)
@@ -159,7 +159,7 @@
 -- -   Revision 4, 2015-09-08 (James Jones)
 --
 --     -   Allow creating multiple swap chains that share the same images
---         using a single call to vkCreateSwapChainKHR().
+--         using a single call to vkCreateSwapchainKHR().
 --
 -- -   Revision 5, 2015-09-10 (Alon Or-bach)
 --
@@ -192,11 +192,11 @@
 --     -   Removed the sample code and noted it has been integrated into
 --         the official Vulkan SDK cube demo.
 --
--- = See Also
+-- == See Also
 --
 -- 'DisplayPresentInfoKHR', 'createSharedSwapchainsKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display_swapchain Vulkan Specification>
@@ -226,7 +226,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -270,6 +270,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateSharedSwapchainsKHR))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.FundamentalTypes (Rect2D)
@@ -376,6 +377,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display_swapchain VK_KHR_display_swapchain>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR',
@@ -395,11 +397,11 @@ createSharedSwapchainsKHR :: forall io
                              ("allocator" ::: Maybe AllocationCallbacks)
                           -> io (("swapchains" ::: Vector SwapchainKHR))
 createSharedSwapchainsKHR device createInfos allocator = liftIO . evalContT $ do
-  let vkCreateSharedSwapchainsKHRPtr = pVkCreateSharedSwapchainsKHR (deviceCmds (device :: Device))
+  let vkCreateSharedSwapchainsKHRPtr = pVkCreateSharedSwapchainsKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateSharedSwapchainsKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateSharedSwapchainsKHR is null" Nothing Nothing
   let vkCreateSharedSwapchainsKHR' = mkVkCreateSharedSwapchainsKHR vkCreateSharedSwapchainsKHRPtr
-  pPCreateInfos <- ContT $ allocaBytesAligned @(SwapchainCreateInfoKHR _) ((Data.Vector.length (createInfos)) * 104) 8
+  pPCreateInfos <- ContT $ allocaBytes @(SwapchainCreateInfoKHR _) ((Data.Vector.length (createInfos)) * 104)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPCreateInfos `plusPtr` (104 * (i)) :: Ptr (SwapchainCreateInfoKHR _))) (e) . ($ ())) (createInfos)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -434,8 +436,9 @@ createSharedSwapchainsKHR device createInfos allocator = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_KHR_display.DisplayPropertiesKHR' structure
 --     returned by
 --     'Vulkan.Extensions.VK_KHR_display.getPhysicalDeviceDisplayPropertiesKHR'
---     for the display the present operation targets then @persistent@
---     /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     for the display the present operation targets is
+--     'Vulkan.Core10.FundamentalTypes.FALSE', then @persistent@ /must/ be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- == Valid Usage (Implicit)
 --
@@ -444,6 +447,7 @@ createSharedSwapchainsKHR device createInfos allocator = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display_swapchain VK_KHR_display_swapchain>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.FundamentalTypes.Rect2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -456,13 +460,13 @@ data DisplayPresentInfoKHR = DisplayPresentInfoKHR
   , -- | @dstRect@ is a rectangular region within the visible region of the
     -- swapchain’s display mode. If 'DisplayPresentInfoKHR' is not specified,
     -- this region will be assumed to be the entire visible region of the
-    -- visible region of the swapchain’s mode. If the specified rectangle is a
-    -- subset of the display mode’s visible region, content from display planes
-    -- below the swapchain’s plane will be visible outside the rectangle. If
-    -- there are no planes below the swapchain’s, the area outside the
-    -- specified rectangle will be black. If portions of the specified
-    -- rectangle are outside of the display’s visible region, pixels mapping
-    -- only to those portions of the rectangle will be discarded.
+    -- swapchain’s mode. If the specified rectangle is a subset of the display
+    -- mode’s visible region, content from display planes below the swapchain’s
+    -- plane will be visible outside the rectangle. If there are no planes
+    -- below the swapchain’s, the area outside the specified rectangle will be
+    -- black. If portions of the specified rectangle are outside of the
+    -- display’s visible region, pixels mapping only to those portions of the
+    -- rectangle will be discarded.
     dstRect :: Rect2D
   , -- | @persistent@: If this is 'Vulkan.Core10.FundamentalTypes.TRUE', the
     -- display engine will enable buffered mode on displays that support it.
@@ -480,7 +484,7 @@ deriving instance Generic (DisplayPresentInfoKHR)
 deriving instance Show DisplayPresentInfoKHR
 
 instance ToCStruct DisplayPresentInfoKHR where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DisplayPresentInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

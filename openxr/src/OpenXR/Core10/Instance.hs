@@ -24,7 +24,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -91,7 +91,7 @@ import OpenXR.Dynamic (InstanceCmds(pXrGetInstanceProperties))
 import OpenXR.Dynamic (InstanceCmds(pXrPollEvent))
 import OpenXR.Dynamic (InstanceCmds(pXrResultToString))
 import OpenXR.Dynamic (InstanceCmds(pXrStructureTypeToString))
-import OpenXR.Core10.Enums.InstanceCreateFlags (InstanceCreateFlags)
+import OpenXR.Core10.Enums.InstanceCreateFlagBits (InstanceCreateFlags)
 import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_android_create_instance (InstanceCreateInfoAndroidKHR)
 import OpenXR.Core10.Handles (Instance_T)
 import OpenXR.Core10.APIConstants (MAX_API_LAYER_DESCRIPTION_SIZE)
@@ -266,7 +266,7 @@ getInstanceProcAddr :: forall io
                        ("name" ::: ByteString)
                     -> io (PFN_xrVoidFunction)
 getInstanceProcAddr instance' name = liftIO . evalContT $ do
-  let xrGetInstanceProcAddrPtr = pXrGetInstanceProcAddr (instanceCmds (instance' :: Instance))
+  let xrGetInstanceProcAddrPtr = pXrGetInstanceProcAddr (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetInstanceProcAddrPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetInstanceProcAddr is null" Nothing Nothing
   let xrGetInstanceProcAddr' = mkXrGetInstanceProcAddr xrGetInstanceProcAddrPtr
@@ -636,7 +636,7 @@ destroyInstance :: forall io
                    Instance
                 -> io ()
 destroyInstance instance' = liftIO $ do
-  let xrDestroyInstancePtr = pXrDestroyInstance (instanceCmds (instance' :: Instance))
+  let xrDestroyInstancePtr = pXrDestroyInstance (case instance' of Instance{instanceCmds} -> instanceCmds)
   unless (xrDestroyInstancePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrDestroyInstance is null" Nothing Nothing
   let xrDestroyInstance' = mkXrDestroyInstance xrDestroyInstancePtr
@@ -715,7 +715,7 @@ resultToString :: forall io
                   ("value" ::: Result)
                -> io (("buffer" ::: ByteString))
 resultToString instance' value = liftIO . evalContT $ do
-  let xrResultToStringPtr = pXrResultToString (instanceCmds (instance' :: Instance))
+  let xrResultToStringPtr = pXrResultToString (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrResultToStringPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrResultToString is null" Nothing Nothing
   let xrResultToString' = mkXrResultToString xrResultToStringPtr
@@ -797,7 +797,7 @@ structureTypeToString :: forall io
                          ("value" ::: StructureType)
                       -> io (("buffer" ::: ByteString))
 structureTypeToString instance' value = liftIO . evalContT $ do
-  let xrStructureTypeToStringPtr = pXrStructureTypeToString (instanceCmds (instance' :: Instance))
+  let xrStructureTypeToStringPtr = pXrStructureTypeToString (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrStructureTypeToStringPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrStructureTypeToString is null" Nothing Nothing
   let xrStructureTypeToString' = mkXrStructureTypeToString xrStructureTypeToStringPtr
@@ -854,7 +854,7 @@ getInstanceProperties :: forall io
                          Instance
                       -> io (InstanceProperties)
 getInstanceProperties instance' = liftIO . evalContT $ do
-  let xrGetInstancePropertiesPtr = pXrGetInstanceProperties (instanceCmds (instance' :: Instance))
+  let xrGetInstancePropertiesPtr = pXrGetInstanceProperties (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetInstancePropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetInstanceProperties is null" Nothing Nothing
   let xrGetInstanceProperties' = mkXrGetInstanceProperties xrGetInstancePropertiesPtr
@@ -941,7 +941,7 @@ pollEvent :: forall io
              Instance
           -> io (Result, EventDataBuffer)
 pollEvent instance' = liftIO . evalContT $ do
-  let xrPollEventPtr = pXrPollEvent (instanceCmds (instance' :: Instance))
+  let xrPollEventPtr = pXrPollEvent (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrPollEventPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrPollEvent is null" Nothing Nothing
   let xrPollEvent' = mkXrPollEvent xrPollEventPtr
@@ -985,7 +985,7 @@ deriving instance Generic (ApiLayerProperties)
 deriving instance Show ApiLayerProperties
 
 instance ToCStruct ApiLayerProperties where
-  withCStruct x f = allocaBytesAligned 544 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 544 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ApiLayerProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_API_LAYER_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1052,7 +1052,7 @@ deriving instance Generic (ExtensionProperties)
 deriving instance Show ExtensionProperties
 
 instance ToCStruct ExtensionProperties where
-  withCStruct x f = allocaBytesAligned 152 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 152 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExtensionProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_EXTENSION_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1152,7 +1152,7 @@ deriving instance Generic (ApplicationInfo)
 deriving instance Show ApplicationInfo
 
 instance ToCStruct ApplicationInfo where
-  withCStruct x f = allocaBytesAligned 272 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 272 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ApplicationInfo{..} f = do
     pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 0 :: Ptr (FixedArray MAX_APPLICATION_NAME_SIZE CChar))) (applicationName)
     poke ((p `plusPtr` 128 :: Ptr Word32)) (applicationVersion)
@@ -1229,14 +1229,14 @@ instance Zero ApplicationInfo where
 -- = See Also
 --
 -- 'ApplicationInfo',
--- 'OpenXR.Core10.Enums.InstanceCreateFlags.InstanceCreateFlags',
+-- 'OpenXR.Core10.Enums.InstanceCreateFlagBits.InstanceCreateFlags',
 -- 'OpenXR.Core10.Enums.StructureType.StructureType', 'createInstance'
 data InstanceCreateInfo (es :: [Type]) = InstanceCreateInfo
   { -- | @next@ is @NULL@ or a pointer to the next structure in a structure
     -- chain. No such structures are defined in core OpenXR.
     next :: Chain es
   , -- | @createFlags@ is a bitmask of
-    -- 'OpenXR.Core10.Enums.InstanceCreateFlags.InstanceCreateFlags' that
+    -- 'OpenXR.Core10.Enums.InstanceCreateFlagBits.InstanceCreateFlags' that
     -- identifies options that apply to the creation.
     createFlags :: InstanceCreateFlags
   , -- | @applicationInfo@ is an instance of 'ApplicationInfo'. This information
@@ -1262,7 +1262,7 @@ deriving instance Show (Chain es) => Show (InstanceCreateInfo es)
 
 instance Extensible InstanceCreateInfo where
   extensibleTypeName = "InstanceCreateInfo"
-  setNext x next = x{next = next}
+  setNext InstanceCreateInfo{..} next' = InstanceCreateInfo{next = next', ..}
   getNext InstanceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends InstanceCreateInfo e => b) -> Maybe b
   extends _ f
@@ -1271,7 +1271,7 @@ instance Extensible InstanceCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss InstanceCreateInfo es, PokeChain es) => ToCStruct (InstanceCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 328 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 328 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p InstanceCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_INSTANCE_CREATE_INFO)
     next'' <- fmap castPtr . ContT $ withChain (next)
@@ -1279,13 +1279,13 @@ instance (Extendss InstanceCreateInfo es, PokeChain es) => ToCStruct (InstanceCr
     lift $ poke ((p `plusPtr` 16 :: Ptr InstanceCreateFlags)) (createFlags)
     lift $ poke ((p `plusPtr` 24 :: Ptr ApplicationInfo)) (applicationInfo)
     lift $ poke ((p `plusPtr` 296 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (enabledApiLayerNames)) :: Word32))
-    pEnabledApiLayerNames' <- ContT $ allocaBytesAligned @(Ptr CChar) ((Data.Vector.length (enabledApiLayerNames)) * 8) 8
+    pEnabledApiLayerNames' <- ContT $ allocaBytes @(Ptr CChar) ((Data.Vector.length (enabledApiLayerNames)) * 8)
     Data.Vector.imapM_ (\i e -> do
       enabledApiLayerNames'' <- ContT $ useAsCString (e)
       lift $ poke (pEnabledApiLayerNames' `plusPtr` (8 * (i)) :: Ptr (Ptr CChar)) enabledApiLayerNames'') (enabledApiLayerNames)
     lift $ poke ((p `plusPtr` 304 :: Ptr (Ptr (Ptr CChar)))) (pEnabledApiLayerNames')
     lift $ poke ((p `plusPtr` 312 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (enabledExtensionNames)) :: Word32))
-    pEnabledExtensionNames' <- ContT $ allocaBytesAligned @(Ptr CChar) ((Data.Vector.length (enabledExtensionNames)) * 8) 8
+    pEnabledExtensionNames' <- ContT $ allocaBytes @(Ptr CChar) ((Data.Vector.length (enabledExtensionNames)) * 8)
     Data.Vector.imapM_ (\i e -> do
       enabledExtensionNames'' <- ContT $ useAsCString (e)
       lift $ poke (pEnabledExtensionNames' `plusPtr` (8 * (i)) :: Ptr (Ptr CChar)) enabledExtensionNames'') (enabledExtensionNames)
@@ -1348,7 +1348,7 @@ deriving instance Generic (InstanceProperties)
 deriving instance Show InstanceProperties
 
 instance ToCStruct InstanceProperties where
-  withCStruct x f = allocaBytesAligned 152 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 152 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p InstanceProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_INSTANCE_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1402,7 +1402,7 @@ deriving instance Generic (EventDataBuffer)
 deriving instance Show EventDataBuffer
 
 instance ToCStruct EventDataBuffer where
-  withCStruct x f = allocaBytesAligned 4016 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 4016 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p EventDataBuffer{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_EVENT_DATA_BUFFER)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -52,7 +52,7 @@ import OpenXR.Internal.Utils (enumShowsPrec)
 import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -94,6 +94,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.Core10.Enums.StructureType (StructureType)
 import OpenXR.Core10.Input (Vector2f)
@@ -127,8 +128,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrGetVisibilityMaskKHR-extension-notenabled# The @@ extension
---     /must/ be enabled prior to calling 'getVisibilityMaskKHR'
+-- -   #VUID-xrGetVisibilityMaskKHR-extension-notenabled# The
+--     @XR_KHR_visibility_mask@ extension /must/ be enabled prior to
+--     calling 'getVisibilityMaskKHR'
 --
 -- -   #VUID-xrGetVisibilityMaskKHR-session-parameter# @session@ /must/ be
 --     a valid 'OpenXR.Core10.Handles.Session' handle
@@ -191,7 +193,7 @@ getVisibilityMaskKHR :: forall io
                         VisibilityMaskTypeKHR
                      -> io (Result, VisibilityMaskKHR)
 getVisibilityMaskKHR session viewConfigurationType viewIndex visibilityMaskType = liftIO . evalContT $ do
-  let xrGetVisibilityMaskKHRPtr = pXrGetVisibilityMaskKHR (instanceCmds (session :: Session))
+  let xrGetVisibilityMaskKHRPtr = pXrGetVisibilityMaskKHR (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetVisibilityMaskKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetVisibilityMaskKHR is null" Nothing Nothing
   let xrGetVisibilityMaskKHR' = mkXrGetVisibilityMaskKHR xrGetVisibilityMaskKHRPtr
@@ -207,7 +209,7 @@ getVisibilityMaskKHR session viewConfigurationType viewIndex visibilityMaskType 
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrEventDataVisibilityMaskChangedKHR-extension-notenabled# The
---     @@ extension /must/ be enabled prior to using
+--     @XR_KHR_visibility_mask@ extension /must/ be enabled prior to using
 --     'EventDataVisibilityMaskChangedKHR'
 --
 -- -   #VUID-XrEventDataVisibilityMaskChangedKHR-type-type# @type@ /must/
@@ -252,7 +254,7 @@ instance IsEventData EventDataVisibilityMaskChangedKHR where
   toEventDataBaseHeader EventDataVisibilityMaskChangedKHR{} = EventDataBaseHeader{type' = TYPE_EVENT_DATA_VISIBILITY_MASK_CHANGED_KHR}
 
 instance ToCStruct EventDataVisibilityMaskChangedKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p EventDataVisibilityMaskChangedKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_EVENT_DATA_VISIBILITY_MASK_CHANGED_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -330,8 +332,9 @@ instance Zero EventDataVisibilityMaskChangedKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrVisibilityMaskKHR-extension-notenabled# The @@ extension
---     /must/ be enabled prior to using 'VisibilityMaskKHR'
+-- -   #VUID-XrVisibilityMaskKHR-extension-notenabled# The
+--     @XR_KHR_visibility_mask@ extension /must/ be enabled prior to using
+--     'VisibilityMaskKHR'
 --
 -- -   #VUID-XrVisibilityMaskKHR-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_VISIBILITY_MASK_KHR'
@@ -374,7 +377,7 @@ deriving instance Generic (VisibilityMaskKHR)
 deriving instance Show VisibilityMaskKHR
 
 instance ToCStruct VisibilityMaskKHR where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p VisibilityMaskKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VISIBILITY_MASK_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

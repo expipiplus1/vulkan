@@ -4,7 +4,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_16bit_storage  ( PhysicalDevice16BitSt
                                                          , StructureType(..)
                                                          ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -29,10 +29,27 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- | VkPhysicalDevice16BitStorageFeatures - Structure describing features
 -- supported by VK_KHR_16bit_storage
 --
+-- = Members
+--
+-- This structure describes the following features:
+--
+-- = Description
+--
+-- If the 'PhysicalDevice16BitStorageFeatures' structure is included in the
+-- @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDevice16BitStorageFeatures' /can/ also be used in
+-- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
+--
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevice16BitStorageFeatures = PhysicalDevice16BitStorageFeatures
@@ -47,13 +64,11 @@ data PhysicalDevice16BitStorageFeatures = PhysicalDevice16BitStorageFeatures
     storageBuffer16BitAccess :: Bool
   , -- | #extension-features-uniformAndStorageBuffer16BitAccess#
     -- @uniformAndStorageBuffer16BitAccess@ specifies whether objects in the
-    -- @Uniform@ storage class with the @Block@ decoration and in the
-    -- @StorageBuffer@, @ShaderRecordBufferKHR@, or @PhysicalStorageBuffer@
-    -- storage class with the same decoration /can/ have 16-bit integer and
-    -- 16-bit floating-point members. If this feature is not enabled, 16-bit
-    -- integer or 16-bit floating-point members /must/ not be used in such
-    -- objects. This also specifies whether shader modules /can/ declare the
-    -- @UniformAndStorageBuffer16BitAccess@ capability.
+    -- @Uniform@ storage class with the @Block@ decoration /can/ have 16-bit
+    -- integer and 16-bit floating-point members. If this feature is not
+    -- enabled, 16-bit integer or 16-bit floating-point members /must/ not be
+    -- used in such objects. This also specifies whether shader modules /can/
+    -- declare the @UniformAndStorageBuffer16BitAccess@ capability.
     uniformAndStorageBuffer16BitAccess :: Bool
   , -- | #extension-features-storagePushConstant16# @storagePushConstant16@
     -- specifies whether objects in the @PushConstant@ storage class /can/ have
@@ -77,7 +92,7 @@ deriving instance Generic (PhysicalDevice16BitStorageFeatures)
 deriving instance Show PhysicalDevice16BitStorageFeatures
 
 instance ToCStruct PhysicalDevice16BitStorageFeatures where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDevice16BitStorageFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

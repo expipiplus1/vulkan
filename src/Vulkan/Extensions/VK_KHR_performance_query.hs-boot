@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Alon Or-bach
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_performance_query:%20&body=@alonorbach%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_performance_query] @alonorbach%0A<<Here describe the issue or question you have about the VK_KHR_performance_query extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -225,9 +225,9 @@
 -- 10) Should we introduce an indirect mechanism to set the counter pass
 -- index?
 --
--- __RESOLVED__ Specify the counter pass index at submit time instead to
+-- __RESOLVED__ Specify the counter pass index at submit time instead, to
 -- avoid requiring re-recording of command buffers when multiple counter
--- passes needed.
+-- passes are needed.
 --
 -- == Examples
 --
@@ -427,7 +427,7 @@
 -- >   sizeof(VkPerformanceCounterResultKHR),
 -- >   NULL);
 -- >
--- > // recordedCounters is filled with our counters, we'll look at one for posterity
+-- > // recordedCounters is filled with our counters, we will look at one for posterity
 -- > switch (counters[0].storage) {
 -- >   case VK_PERFORMANCE_COUNTER_STORAGE_INT32:
 -- >     // use recordCounters[0].int32 to get at the counter result!
@@ -453,7 +453,7 @@
 --
 -- -   Revision 1, 2019-10-08
 --
--- = See Also
+-- == See Also
 --
 -- 'AcquireProfilingLockFlagBitsKHR', 'AcquireProfilingLockFlagsKHR',
 -- 'AcquireProfilingLockInfoKHR',
@@ -470,7 +470,7 @@
 -- 'getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR',
 -- 'releaseProfilingLockKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query Vulkan Specification>

@@ -29,7 +29,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_shader_draw_parameters:%20&body=@dgkoch%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shader_draw_parameters] @dgkoch%0A<<Here describe the issue or question you have about the VK_KHR_shader_draw_parameters extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -73,14 +73,14 @@
 -- The extension provides access to three additional built-in shader
 -- variables in Vulkan:
 --
--- -   @BaseInstance@, which contains the @firstInstance@ parameter passed
---     to draw commands,
+-- -   @BaseInstance@, containing the @firstInstance@ parameter passed to
+--     drawing commands,
 --
--- -   @BaseVertex@, which contains the @firstVertex@ or @vertexOffset@
---     parameter passed to draw commands, and
+-- -   @BaseVertex@, containing the @firstVertex@ or @vertexOffset@
+--     parameter passed to drawing commands, and
 --
--- -   @DrawIndex@, which contains the index of the draw call currently
---     being processed from an indirect draw call.
+-- -   @DrawIndex@, containing the index of the draw call currently being
+--     processed from an indirect drawing call.
 --
 -- When using GLSL source-based shader languages, the following variables
 -- from @GL_ARB_shader_draw_parameters@ can map to these SPIR-V built-in
@@ -121,7 +121,7 @@
 --
 -- 1) Is this the same functionality as @GL_ARB_shader_draw_parameters@?
 --
--- __RESOLVED__: It’s actually a superset as it also adds in support for
+-- __RESOLVED__: It is actually a superset, as it also adds in support for
 -- arrayed drawing commands.
 --
 -- In GL for @GL_ARB_shader_draw_parameters@, @gl_BaseVertexARB@ holds the
@@ -142,11 +142,11 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- No cross-references are available
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_draw_parameters Vulkan Specification>

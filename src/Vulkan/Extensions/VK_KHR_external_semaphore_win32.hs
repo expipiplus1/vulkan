@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_external_semaphore_win32:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_external_semaphore_win32] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_external_semaphore_win32 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -133,13 +133,13 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'D3D12FenceSubmitInfoKHR', 'ExportSemaphoreWin32HandleInfoKHR',
 -- 'ImportSemaphoreWin32HandleInfoKHR', 'SemaphoreGetWin32HandleInfoKHR',
 -- 'getSemaphoreWin32HandleKHR', 'importSemaphoreWin32HandleKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_win32 Vulkan Specification>
@@ -166,7 +166,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -206,6 +206,7 @@ import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.Extensions.VK_NV_external_memory_win32 (DWORD)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetSemaphoreWin32HandleKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkImportSemaphoreWin32HandleKHR))
 import Vulkan.Core10.Handles (Device_T)
@@ -263,6 +264,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_win32 VK_KHR_external_semaphore_win32>,
 -- 'Vulkan.Core10.Handles.Device', 'SemaphoreGetWin32HandleInfoKHR'
 getSemaphoreWin32HandleKHR :: forall io
                             . (MonadIO io)
@@ -281,7 +283,7 @@ getSemaphoreWin32HandleKHR :: forall io
                               SemaphoreGetWin32HandleInfoKHR
                            -> io (HANDLE)
 getSemaphoreWin32HandleKHR device getWin32HandleInfo = liftIO . evalContT $ do
-  let vkGetSemaphoreWin32HandleKHRPtr = pVkGetSemaphoreWin32HandleKHR (deviceCmds (device :: Device))
+  let vkGetSemaphoreWin32HandleKHRPtr = pVkGetSemaphoreWin32HandleKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetSemaphoreWin32HandleKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSemaphoreWin32HandleKHR is null" Nothing Nothing
   let vkGetSemaphoreWin32HandleKHR' = mkVkGetSemaphoreWin32HandleKHR vkGetSemaphoreWin32HandleKHRPtr
@@ -328,6 +330,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_win32 VK_KHR_external_semaphore_win32>,
 -- 'Vulkan.Core10.Handles.Device', 'ImportSemaphoreWin32HandleInfoKHR'
 importSemaphoreWin32HandleKHR :: forall io
                                . (MonadIO io)
@@ -346,7 +349,7 @@ importSemaphoreWin32HandleKHR :: forall io
                                  ImportSemaphoreWin32HandleInfoKHR
                               -> io ()
 importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = liftIO . evalContT $ do
-  let vkImportSemaphoreWin32HandleKHRPtr = pVkImportSemaphoreWin32HandleKHR (deviceCmds (device :: Device))
+  let vkImportSemaphoreWin32HandleKHRPtr = pVkImportSemaphoreWin32HandleKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkImportSemaphoreWin32HandleKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkImportSemaphoreWin32HandleKHR is null" Nothing Nothing
   let vkImportSemaphoreWin32HandleKHR' = mkVkImportSemaphoreWin32HandleKHR vkImportSemaphoreWin32HandleKHRPtr
@@ -462,6 +465,7 @@ importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = liftIO . e
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_win32 VK_KHR_external_semaphore_win32>,
 -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits',
 -- 'Vulkan.Core10.Handles.Semaphore',
 -- 'Vulkan.Core11.Enums.SemaphoreImportFlagBits.SemaphoreImportFlags',
@@ -475,12 +479,14 @@ data ImportSemaphoreWin32HandleInfoKHR = ImportSemaphoreWin32HandleInfoKHR
     -- specifying additional parameters for the semaphore payload import
     -- operation.
     flags :: SemaphoreImportFlags
-  , -- | @handleType@ specifies the type of @handle@.
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'
+    -- value specifying the type of @handle@.
     handleType :: ExternalSemaphoreHandleTypeFlagBits
-  , -- | @handle@ is the external handle to import, or @NULL@.
+  , -- | @handle@ is @NULL@ or the external handle to import.
     handle :: HANDLE
-  , -- | @name@ is a null-terminated UTF-16 string naming the underlying
-    -- synchronization primitive to import, or @NULL@.
+  , -- | @name@ is @NULL@ or a null-terminated UTF-16 string naming the
+    -- underlying synchronization primitive to import.
     name :: LPCWSTR
   }
   deriving (Typeable, Eq)
@@ -490,7 +496,7 @@ deriving instance Generic (ImportSemaphoreWin32HandleInfoKHR)
 deriving instance Show ImportSemaphoreWin32HandleInfoKHR
 
 instance ToCStruct ImportSemaphoreWin32HandleInfoKHR where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImportSemaphoreWin32HandleInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -541,14 +547,14 @@ instance Zero ImportSemaphoreWin32HandleInfoKHR where
 --
 -- If
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore.ExportSemaphoreCreateInfo'
--- is not present in the same @pNext@ chain, this structure is ignored.
+-- is not included in the same @pNext@ chain, this structure is ignored.
 --
 -- If
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore.ExportSemaphoreCreateInfo'
--- is present in the @pNext@ chain of
+-- is included in the @pNext@ chain of
 -- 'Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo' with a Windows
 -- @handleType@, but either 'ExportSemaphoreWin32HandleInfoKHR' is not
--- present in the @pNext@ chain, or if it is but @pAttributes@ is set to
+-- included in the @pNext@ chain, or if it is but @pAttributes@ is set to
 -- @NULL@, default security descriptor values will be used, and child
 -- processes created by the application will not inherit the handle, as
 -- described in the MSDN documentation for “Synchronization Object Security
@@ -598,6 +604,7 @@ instance Zero ImportSemaphoreWin32HandleInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_win32 VK_KHR_external_semaphore_win32>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExportSemaphoreWin32HandleInfoKHR = ExportSemaphoreWin32HandleInfoKHR
   { -- | @pAttributes@ is a pointer to a Windows
@@ -619,7 +626,7 @@ deriving instance Generic (ExportSemaphoreWin32HandleInfoKHR)
 deriving instance Show ExportSemaphoreWin32HandleInfoKHR
 
 instance ToCStruct ExportSemaphoreWin32HandleInfoKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExportSemaphoreWin32HandleInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -719,6 +726,7 @@ instance Zero ExportSemaphoreWin32HandleInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_win32 VK_KHR_external_semaphore_win32>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data D3D12FenceSubmitInfoKHR = D3D12FenceSubmitInfoKHR
   { -- | @waitSemaphoreValuesCount@ is the number of semaphore wait values
@@ -744,7 +752,7 @@ deriving instance Generic (D3D12FenceSubmitInfoKHR)
 deriving instance Show D3D12FenceSubmitInfoKHR
 
 instance ToCStruct D3D12FenceSubmitInfoKHR where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p D3D12FenceSubmitInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_D3D12_FENCE_SUBMIT_INFO_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -759,7 +767,7 @@ instance ToCStruct D3D12FenceSubmitInfoKHR where
     pWaitSemaphoreValues'' <- if Data.Vector.null (waitSemaphoreValues)
       then pure nullPtr
       else do
-        pPWaitSemaphoreValues <- ContT $ allocaBytesAligned @Word64 (((Data.Vector.length (waitSemaphoreValues))) * 8) 8
+        pPWaitSemaphoreValues <- ContT $ allocaBytes @Word64 (((Data.Vector.length (waitSemaphoreValues))) * 8)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitSemaphoreValues `plusPtr` (8 * (i)) :: Ptr Word64) (e)) ((waitSemaphoreValues))
         pure $ pPWaitSemaphoreValues
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word64))) pWaitSemaphoreValues''
@@ -774,7 +782,7 @@ instance ToCStruct D3D12FenceSubmitInfoKHR where
     pSignalSemaphoreValues'' <- if Data.Vector.null (signalSemaphoreValues)
       then pure nullPtr
       else do
-        pPSignalSemaphoreValues <- ContT $ allocaBytesAligned @Word64 (((Data.Vector.length (signalSemaphoreValues))) * 8) 8
+        pPSignalSemaphoreValues <- ContT $ allocaBytes @Word64 (((Data.Vector.length (signalSemaphoreValues))) * 8)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPSignalSemaphoreValues `plusPtr` (8 * (i)) :: Ptr Word64) (e)) ((signalSemaphoreValues))
         pure $ pPSignalSemaphoreValues
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr Word64))) pSignalSemaphoreValues''
@@ -874,6 +882,7 @@ instance Zero D3D12FenceSubmitInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_win32 VK_KHR_external_semaphore_win32>,
 -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits',
 -- 'Vulkan.Core10.Handles.Semaphore',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -881,7 +890,9 @@ instance Zero D3D12FenceSubmitInfoKHR where
 data SemaphoreGetWin32HandleInfoKHR = SemaphoreGetWin32HandleInfoKHR
   { -- | @semaphore@ is the semaphore from which state will be exported.
     semaphore :: Semaphore
-  , -- | @handleType@ is the type of handle requested.
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.ExternalSemaphoreHandleTypeFlagBits'
+    -- value specifying the type of handle requested.
     handleType :: ExternalSemaphoreHandleTypeFlagBits
   }
   deriving (Typeable, Eq)
@@ -891,7 +902,7 @@ deriving instance Generic (SemaphoreGetWin32HandleInfoKHR)
 deriving instance Show SemaphoreGetWin32HandleInfoKHR
 
 instance ToCStruct SemaphoreGetWin32HandleInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SemaphoreGetWin32HandleInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

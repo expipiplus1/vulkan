@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_geometry_shader_passthrough:%20&body=@dgkoch%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_geometry_shader_passthrough] @dgkoch%0A<<Here describe the issue or question you have about the VK_NV_geometry_shader_passthrough extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -183,7 +183,7 @@
 -- >
 -- > void main()
 -- > {
--- >     // The shader simply computes and writes gl_Layer.  We don't
+-- >     // The shader simply computes and writes gl_Layer.  We do not
 -- >     // loop over three vertices or call EmitVertex().
 -- >     gl_Layer = compute_layer();
 -- > }
@@ -194,11 +194,11 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- No cross-references are available
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_geometry_shader_passthrough Vulkan Specification>

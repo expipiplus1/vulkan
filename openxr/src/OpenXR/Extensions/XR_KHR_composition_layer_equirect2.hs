@@ -39,7 +39,7 @@ module OpenXR.Extensions.XR_KHR_composition_layer_equirect2  ( CompositionLayerE
                                                              , pattern KHR_COMPOSITION_LAYER_EQUIRECT2_EXTENSION_NAME
                                                              ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Data.Coerce (coerce)
@@ -61,7 +61,7 @@ import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import OpenXR.Core10.OtherTypes (CompositionLayerBaseHeader(..))
-import OpenXR.Core10.Enums.CompositionLayerFlags (CompositionLayerFlags)
+import OpenXR.Core10.Enums.CompositionLayerFlagBits (CompositionLayerFlags)
 import OpenXR.Core10.Enums.EyeVisibility (EyeVisibility)
 import OpenXR.Core10.OtherTypes (IsCompositionLayer(..))
 import OpenXR.Core10.Space (Posef)
@@ -84,9 +84,9 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_COMPOSITION_LAYER_E
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrCompositionLayerEquirect2KHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'CompositionLayerEquirect2KHR'
+-- -   #VUID-XrCompositionLayerEquirect2KHR-extension-notenabled# The
+--     @XR_KHR_composition_layer_equirect2@ extension /must/ be enabled
+--     prior to using 'CompositionLayerEquirect2KHR'
 --
 -- -   #VUID-XrCompositionLayerEquirect2KHR-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_COMPOSITION_LAYER_EQUIRECT2_KHR'
@@ -97,7 +97,7 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_COMPOSITION_LAYER_E
 --
 -- -   #VUID-XrCompositionLayerEquirect2KHR-layerFlags-parameter#
 --     @layerFlags@ /must/ be @0@ or a valid combination of
---     <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrCompositionLayerFlagBits XrCompositionLayerFlagBits>
+--     'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlagBits'
 --     values
 --
 -- -   #VUID-XrCompositionLayerEquirect2KHR-space-parameter# @space@ /must/
@@ -114,7 +114,7 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_COMPOSITION_LAYER_E
 -- = See Also
 --
 -- 'OpenXR.Core10.OtherTypes.CompositionLayerBaseHeader',
--- 'OpenXR.Core10.Enums.CompositionLayerFlags.CompositionLayerFlags',
+-- 'OpenXR.Core10.Enums.CompositionLayerFlagBits.CompositionLayerFlags',
 -- 'OpenXR.Core10.Enums.EyeVisibility.EyeVisibility',
 -- 'OpenXR.Core10.DisplayTiming.FrameEndInfo', 'OpenXR.Core10.Space.Posef',
 -- 'OpenXR.Core10.Handles.Space',
@@ -161,7 +161,7 @@ instance IsCompositionLayer CompositionLayerEquirect2KHR where
   toCompositionLayerBaseHeader CompositionLayerEquirect2KHR{..} = CompositionLayerBaseHeader{type' = TYPE_COMPOSITION_LAYER_EQUIRECT2_KHR, next = (), ..}
 
 instance ToCStruct CompositionLayerEquirect2KHR where
-  withCStruct x f = allocaBytesAligned 120 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 120 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CompositionLayerEquirect2KHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_COMPOSITION_LAYER_EQUIRECT2_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

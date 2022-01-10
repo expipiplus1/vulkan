@@ -90,6 +90,11 @@ brackets marshaledCommands handles = context "brackets" $ do
     , cdBracket "DebugUtilsMessengerEXT"
     , cdBracket "DeferredOperationKHR"
     , cdBracket "PrivateDataSlotEXT"
+    -- , cdBracket "VideoSessionKHR"
+    -- , cdBracket "VideoSessionParametersKHR"
+    , cdBracket "CuModuleNVX"
+    , cdBracket "CuFunctionNVX"
+    , cdBracket "BufferCollectionFUCHSIA"
     , pure withCommmandBuffers
     , afBracket "Memory"
     , pure withDescriptorSets
@@ -121,6 +126,7 @@ brackets marshaledCommands handles = context "brackets" $ do
     , cmdBeBracket "RenderPass2"
     , cmdBeBracket "TransformFeedbackEXT"
     , cmdBeBracket "QueryIndexedEXT"
+    , cmdBeBracket "RenderingKHR"
     ]
 
   --

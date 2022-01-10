@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Bill Licea-Kane
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_QCOM_render_pass_store_ops:%20&body=@wwlk%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QCOM_render_pass_store_ops] @wwlk%0A<<Here describe the issue or question you have about the VK_QCOM_render_pass_store_ops extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -37,8 +37,8 @@
 --
 -- == Description
 --
--- Renderpass attachments /can/ be read-only for the duration of a
--- renderpass.
+-- Renderpass attachments /can/ be read-only for the duration of a render
+-- pass.
 --
 -- Examples include input attachments and depth attachments where depth
 -- tests are enabled but depth writes are not enabled.
@@ -48,12 +48,11 @@
 --
 -- This extension adds a new
 -- 'Vulkan.Core10.Enums.AttachmentStoreOp.AttachmentStoreOp'
--- 'Vulkan.Core10.Enums.AttachmentStoreOp.ATTACHMENT_STORE_OP_NONE_QCOM'
--- which specifies that the contents within the render area /may/ not be
--- written to memory, but that the prior contents of the attachment in
--- memory are preserved. However, if any contents were generated within the
--- render area during rendering, the contents of the attachment will be
--- undefined inside the render area.
+-- 'ATTACHMENT_STORE_OP_NONE_QCOM' specifying that the contents within the
+-- render area /may/ not be written to memory, but that the prior contents
+-- of the attachment in memory are preserved. However, if any contents were
+-- generated within the render area during rendering, the contents of the
+-- attachment will be undefined inside the render area.
 --
 -- Note
 --
@@ -62,19 +61,19 @@
 -- force an implementation to assume that the attachment was written and
 -- force an implementation to flush data to memory or to a higher level
 -- cache. The 'Vulkan.Core10.Enums.AttachmentStoreOp.AttachmentStoreOp'
--- 'Vulkan.Core10.Enums.AttachmentStoreOp.ATTACHMENT_STORE_OP_NONE_QCOM'
--- /may/ allow an implementation to assume that the attachment was not
--- written and allow an implementation to avoid such a flush..
+-- 'ATTACHMENT_STORE_OP_NONE_QCOM' /may/ allow an implementation to assume
+-- that the attachment was not written and allow an implementation to avoid
+-- such a flush..
 --
 -- == New Enum Constants
 --
--- -   'QCOM_render_pass_store_ops_EXTENSION_NAME'
+-- -   'QCOM_RENDER_PASS_STORE_OPS_EXTENSION_NAME'
 --
--- -   'QCOM_render_pass_store_ops_SPEC_VERSION'
+-- -   'QCOM_RENDER_PASS_STORE_OPS_SPEC_VERSION'
 --
 -- -   Extending 'Vulkan.Core10.Enums.AttachmentStoreOp.AttachmentStoreOp':
 --
---     -   'Vulkan.Core10.Enums.AttachmentStoreOp.ATTACHMENT_STORE_OP_NONE_QCOM'
+--     -   'ATTACHMENT_STORE_OP_NONE_QCOM'
 --
 -- == Version History
 --
@@ -86,35 +85,40 @@
 --
 --     -   Minor renaming
 --
--- = See Also
+-- == See Also
 --
 -- No cross-references are available
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_render_pass_store_ops Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_QCOM_render_pass_store_ops  ( QCOM_render_pass_store_ops_SPEC_VERSION
-                                                        , pattern QCOM_render_pass_store_ops_SPEC_VERSION
-                                                        , QCOM_render_pass_store_ops_EXTENSION_NAME
-                                                        , pattern QCOM_render_pass_store_ops_EXTENSION_NAME
+module Vulkan.Extensions.VK_QCOM_render_pass_store_ops  ( pattern ATTACHMENT_STORE_OP_NONE_QCOM
+                                                        , QCOM_RENDER_PASS_STORE_OPS_SPEC_VERSION
+                                                        , pattern QCOM_RENDER_PASS_STORE_OPS_SPEC_VERSION
+                                                        , QCOM_RENDER_PASS_STORE_OPS_EXTENSION_NAME
+                                                        , pattern QCOM_RENDER_PASS_STORE_OPS_EXTENSION_NAME
                                                         ) where
 
 import Data.String (IsString)
-
-type QCOM_render_pass_store_ops_SPEC_VERSION = 2
-
--- No documentation found for TopLevel "VK_QCOM_render_pass_store_ops_SPEC_VERSION"
-pattern QCOM_render_pass_store_ops_SPEC_VERSION :: forall a . Integral a => a
-pattern QCOM_render_pass_store_ops_SPEC_VERSION = 2
+import Vulkan.Core10.Enums.AttachmentStoreOp (AttachmentStoreOp(ATTACHMENT_STORE_OP_NONE_KHR))
+-- No documentation found for TopLevel "VK_ATTACHMENT_STORE_OP_NONE_QCOM"
+pattern ATTACHMENT_STORE_OP_NONE_QCOM = ATTACHMENT_STORE_OP_NONE_KHR
 
 
-type QCOM_render_pass_store_ops_EXTENSION_NAME = "VK_QCOM_render_pass_store_ops"
+type QCOM_RENDER_PASS_STORE_OPS_SPEC_VERSION = 2
 
--- No documentation found for TopLevel "VK_QCOM_render_pass_store_ops_EXTENSION_NAME"
-pattern QCOM_render_pass_store_ops_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
-pattern QCOM_render_pass_store_ops_EXTENSION_NAME = "VK_QCOM_render_pass_store_ops"
+-- No documentation found for TopLevel "VK_QCOM_RENDER_PASS_STORE_OPS_SPEC_VERSION"
+pattern QCOM_RENDER_PASS_STORE_OPS_SPEC_VERSION :: forall a . Integral a => a
+pattern QCOM_RENDER_PASS_STORE_OPS_SPEC_VERSION = 2
+
+
+type QCOM_RENDER_PASS_STORE_OPS_EXTENSION_NAME = "VK_QCOM_render_pass_store_ops"
+
+-- No documentation found for TopLevel "VK_QCOM_RENDER_PASS_STORE_OPS_EXTENSION_NAME"
+pattern QCOM_RENDER_PASS_STORE_OPS_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern QCOM_RENDER_PASS_STORE_OPS_EXTENSION_NAME = "VK_QCOM_render_pass_store_ops"
 

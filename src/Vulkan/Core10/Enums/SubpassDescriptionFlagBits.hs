@@ -1,7 +1,10 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "SubpassDescriptionFlagBits"
 module Vulkan.Core10.Enums.SubpassDescriptionFlagBits  ( SubpassDescriptionFlags
-                                                       , SubpassDescriptionFlagBits( SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM
+                                                       , SubpassDescriptionFlagBits( SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM
+                                                                                   , SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM
+                                                                                   , SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_ARM
+                                                                                   , SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM
                                                                                    , SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM
                                                                                    , SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX
                                                                                    , SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX
@@ -37,31 +40,46 @@ type SubpassDescriptionFlags = SubpassDescriptionFlagBits
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'SubpassDescriptionFlags'
 newtype SubpassDescriptionFlagBits = SubpassDescriptionFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
+-- | 'SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM'
+-- specifies that this subpass supports pipelines created with
+-- 'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM'.
+pattern SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM =
+  SubpassDescriptionFlagBits 0x00000040
+-- | 'SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM'
+-- specifies that this subpass supports pipelines created with
+-- 'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM'.
+pattern SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM = SubpassDescriptionFlagBits 0x00000020
+-- | 'SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_ARM'
+-- specifies that this subpass supports pipelines created with
+-- 'Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits.PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_ARM'.
+pattern SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_ARM = SubpassDescriptionFlagBits 0x00000010
 -- | 'SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM' specifies that the subpass
 -- performs shader resolve operations.
-pattern SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM          = SubpassDescriptionFlagBits 0x00000008
+pattern SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM                             = SubpassDescriptionFlagBits 0x00000008
 -- | 'SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM' specifies that the
 -- framebuffer region is the fragment region, that is, the minimum region
 -- dependencies are by pixel rather than by sample, such that any fragment
 -- shader invocation /can/ access any sample associated with that fragment
 -- shader invocation.
-pattern SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM         = SubpassDescriptionFlagBits 0x00000004
+pattern SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM                            = SubpassDescriptionFlagBits 0x00000004
 -- | 'SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX' specifies that
 -- shaders compiled for this subpass use per-view positions which only
 -- differ in value in the x component. Per-view viewport mask /can/ also be
 -- used.
-pattern SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX = SubpassDescriptionFlagBits 0x00000002
+pattern SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX                    = SubpassDescriptionFlagBits 0x00000002
 -- | 'SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX' specifies that shaders
 -- compiled for this subpass write the attributes for all views in a single
--- invocation of each vertex processing stage. All pipelines compiled
--- against a subpass that includes this bit /must/ write per-view
--- attributes to the @*PerViewNV[]@ shader outputs, in addition to the
--- non-per-view (e.g. @Position@) outputs.
-pattern SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX      = SubpassDescriptionFlagBits 0x00000001
+-- invocation of each
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>.
+-- All pipelines compiled against a subpass that includes this bit /must/
+-- write per-view attributes to the @*PerViewNV[]@ shader outputs, in
+-- addition to the non-per-view (e.g. @Position@) outputs.
+pattern SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX                         = SubpassDescriptionFlagBits 0x00000001
 
 conNameSubpassDescriptionFlagBits :: String
 conNameSubpassDescriptionFlagBits = "SubpassDescriptionFlagBits"
@@ -71,7 +89,16 @@ enumPrefixSubpassDescriptionFlagBits = "SUBPASS_DESCRIPTION_"
 
 showTableSubpassDescriptionFlagBits :: [(SubpassDescriptionFlagBits, String)]
 showTableSubpassDescriptionFlagBits =
-  [ (SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM         , "SHADER_RESOLVE_BIT_QCOM")
+  [ ( SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM
+    , "RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM"
+    )
+  , ( SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM
+    , "RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM"
+    )
+  , ( SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_ARM
+    , "RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_ARM"
+    )
+  , (SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM         , "SHADER_RESOLVE_BIT_QCOM")
   , (SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM        , "FRAGMENT_REGION_BIT_QCOM")
   , (SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX, "PER_VIEW_POSITION_X_ONLY_BIT_NVX")
   , (SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX     , "PER_VIEW_ATTRIBUTES_BIT_NVX")

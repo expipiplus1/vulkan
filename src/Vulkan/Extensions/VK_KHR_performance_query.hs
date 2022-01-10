@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Alon Or-bach
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_performance_query:%20&body=@alonorbach%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_performance_query] @alonorbach%0A<<Here describe the issue or question you have about the VK_KHR_performance_query extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -225,9 +225,9 @@
 -- 10) Should we introduce an indirect mechanism to set the counter pass
 -- index?
 --
--- __RESOLVED__ Specify the counter pass index at submit time instead to
+-- __RESOLVED__ Specify the counter pass index at submit time instead, to
 -- avoid requiring re-recording of command buffers when multiple counter
--- passes needed.
+-- passes are needed.
 --
 -- == Examples
 --
@@ -427,7 +427,7 @@
 -- >   sizeof(VkPerformanceCounterResultKHR),
 -- >   NULL);
 -- >
--- > // recordedCounters is filled with our counters, we'll look at one for posterity
+-- > // recordedCounters is filled with our counters, we will look at one for posterity
 -- > switch (counters[0].storage) {
 -- >   case VK_PERFORMANCE_COUNTER_STORAGE_INT32:
 -- >     // use recordCounters[0].int32 to get at the counter result!
@@ -453,7 +453,7 @@
 --
 -- -   Revision 1, 2019-10-08
 --
--- = See Also
+-- == See Also
 --
 -- 'AcquireProfilingLockFlagBitsKHR', 'AcquireProfilingLockFlagsKHR',
 -- 'AcquireProfilingLockInfoKHR',
@@ -470,7 +470,7 @@
 -- 'getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR',
 -- 'releaseProfilingLockKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query Vulkan Specification>
@@ -540,7 +540,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -606,6 +606,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkAcquireProfilingLockKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkReleaseProfilingLockKHR))
 import Vulkan.Core10.Handles (Device_T)
@@ -615,6 +616,7 @@ import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceQueueFamilyPerformanceQu
 import Vulkan.Core10.APIConstants (MAX_DESCRIPTION_SIZE)
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -648,9 +650,10 @@ foreign import ccall
 -- of elements in the @pCounters@, @pCounterDescriptions@, or both arrays
 -- and on return the variable is overwritten with the number of structures
 -- actually written out. If @pCounterCount@ is less than the number of
--- counters available, at most @pCounterCount@ structures will be written
+-- counters available, at most @pCounterCount@ structures will be written,
 -- and 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS'.
+-- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
+-- available counters were returned.
 --
 -- == Valid Usage (Implicit)
 --
@@ -690,6 +693,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'PerformanceCounterDescriptionKHR', 'PerformanceCounterKHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR :: forall io
@@ -702,7 +706,7 @@ enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR :: forall io
                                                                  ("queueFamilyIndex" ::: Word32)
                                                               -> io (Result, ("counters" ::: Vector PerformanceCounterKHR), ("counterDescriptions" ::: Vector PerformanceCounterDescriptionKHR))
 enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR physicalDevice queueFamilyIndex = liftIO . evalContT $ do
-  let vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHRPtr = pVkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHRPtr = pVkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR is null" Nothing Nothing
   let vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR' = mkVkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHRPtr
@@ -747,6 +751,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'QueryPoolPerformanceCreateInfoKHR'
 getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR :: forall io
@@ -768,7 +773,7 @@ getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR :: forall io
                                                          ("performanceQueryCreateInfo" ::: QueryPoolPerformanceCreateInfoKHR)
                                                       -> io (("numPasses" ::: Word32))
 getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR physicalDevice performanceQueryCreateInfo = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHRPtr = pVkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHRPtr = pVkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR is null" Nothing Nothing
   let vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR' = mkVkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHRPtr
@@ -807,6 +812,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'AcquireProfilingLockInfoKHR', 'Vulkan.Core10.Handles.Device'
 acquireProfilingLockKHR :: forall io
                          . (MonadIO io)
@@ -815,15 +821,15 @@ acquireProfilingLockKHR :: forall io
                            -- #VUID-vkAcquireProfilingLockKHR-device-parameter# @device@ /must/ be a
                            -- valid 'Vulkan.Core10.Handles.Device' handle
                            Device
-                        -> -- | @pInfo@ is a pointer to a 'AcquireProfilingLockInfoKHR' structure which
-                           -- contains information about how the profiling is to be acquired.
+                        -> -- | @pInfo@ is a pointer to a 'AcquireProfilingLockInfoKHR' structure
+                           -- containing information about how the profiling is to be acquired.
                            --
                            -- #VUID-vkAcquireProfilingLockKHR-pInfo-parameter# @pInfo@ /must/ be a
                            -- valid pointer to a valid 'AcquireProfilingLockInfoKHR' structure
                            AcquireProfilingLockInfoKHR
                         -> io ()
 acquireProfilingLockKHR device info = liftIO . evalContT $ do
-  let vkAcquireProfilingLockKHRPtr = pVkAcquireProfilingLockKHR (deviceCmds (device :: Device))
+  let vkAcquireProfilingLockKHRPtr = pVkAcquireProfilingLockKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkAcquireProfilingLockKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireProfilingLockKHR is null" Nothing Nothing
   let vkAcquireProfilingLockKHR' = mkVkAcquireProfilingLockKHR vkAcquireProfilingLockKHRPtr
@@ -854,6 +860,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'Vulkan.Core10.Handles.Device'
 releaseProfilingLockKHR :: forall io
                          . (MonadIO io)
@@ -861,7 +868,7 @@ releaseProfilingLockKHR :: forall io
                            Device
                         -> io ()
 releaseProfilingLockKHR device = liftIO $ do
-  let vkReleaseProfilingLockKHRPtr = pVkReleaseProfilingLockKHR (deviceCmds (device :: Device))
+  let vkReleaseProfilingLockKHRPtr = pVkReleaseProfilingLockKHR (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkReleaseProfilingLockKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkReleaseProfilingLockKHR is null" Nothing Nothing
   let vkReleaseProfilingLockKHR' = mkVkReleaseProfilingLockKHR vkReleaseProfilingLockKHRPtr
@@ -892,10 +899,27 @@ pattern PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_KHR = PERFORMANCE_
 -- | VkPhysicalDevicePerformanceQueryFeaturesKHR - Structure describing
 -- performance query support for an implementation
 --
+-- = Members
+--
+-- This structure describes the following features:
+--
+-- = Description
+--
+-- If the 'PhysicalDevicePerformanceQueryFeaturesKHR' structure is included
+-- in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDevicePerformanceQueryFeaturesKHR' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
+--
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePerformanceQueryFeaturesKHR = PhysicalDevicePerformanceQueryFeaturesKHR
@@ -916,7 +940,7 @@ deriving instance Generic (PhysicalDevicePerformanceQueryFeaturesKHR)
 deriving instance Show PhysicalDevicePerformanceQueryFeaturesKHR
 
 instance ToCStruct PhysicalDevicePerformanceQueryFeaturesKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDevicePerformanceQueryFeaturesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_QUERY_FEATURES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -954,20 +978,21 @@ instance Zero PhysicalDevicePerformanceQueryFeaturesKHR where
 -- | VkPhysicalDevicePerformanceQueryPropertiesKHR - Structure describing
 -- performance query properties for an implementation
 --
--- = Members
+-- = Description
 --
--- The members of the 'PhysicalDevicePerformanceQueryPropertiesKHR'
--- structure describe the following implementation-dependent properties:
+-- If the 'PhysicalDevicePerformanceQueryPropertiesKHR' structure is
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
--- If the 'PhysicalDevicePerformanceQueryPropertiesKHR' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent properties.
---
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePerformanceQueryPropertiesKHR = PhysicalDevicePerformanceQueryPropertiesKHR
@@ -982,7 +1007,7 @@ deriving instance Generic (PhysicalDevicePerformanceQueryPropertiesKHR)
 deriving instance Show PhysicalDevicePerformanceQueryPropertiesKHR
 
 instance ToCStruct PhysicalDevicePerformanceQueryPropertiesKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDevicePerformanceQueryPropertiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_QUERY_PROPERTIES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1020,6 +1045,7 @@ instance Zero PhysicalDevicePerformanceQueryPropertiesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'PerformanceCounterScopeKHR', 'PerformanceCounterStorageKHR',
 -- 'PerformanceCounterUnitKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -1046,7 +1072,7 @@ deriving instance Generic (PerformanceCounterKHR)
 deriving instance Show PerformanceCounterKHR
 
 instance ToCStruct PerformanceCounterKHR where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PerformanceCounterKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PERFORMANCE_COUNTER_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1096,6 +1122,7 @@ instance Zero PerformanceCounterKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'PerformanceCounterDescriptionFlagsKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR'
@@ -1123,7 +1150,7 @@ deriving instance Generic (PerformanceCounterDescriptionKHR)
 deriving instance Show PerformanceCounterDescriptionKHR
 
 instance ToCStruct PerformanceCounterDescriptionKHR where
-  withCStruct x f = allocaBytesAligned 792 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 792 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PerformanceCounterDescriptionKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PERFORMANCE_COUNTER_DESCRIPTION_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1200,13 +1227,14 @@ instance Zero PerformanceCounterDescriptionKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR'
 data QueryPoolPerformanceCreateInfoKHR = QueryPoolPerformanceCreateInfoKHR
   { -- | @queueFamilyIndex@ is the queue family index to create this performance
     -- query pool for.
     queueFamilyIndex :: Word32
-  , -- | @pCounterIndices@ is the array of indices into the
+  , -- | @pCounterIndices@ is a pointer to an array of indices into the
     -- 'enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR'::@pCounters@
     -- to enable in this performance query pool.
     counterIndices :: Vector Word32
@@ -1218,13 +1246,13 @@ deriving instance Generic (QueryPoolPerformanceCreateInfoKHR)
 deriving instance Show QueryPoolPerformanceCreateInfoKHR
 
 instance ToCStruct QueryPoolPerformanceCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p QueryPoolPerformanceCreateInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUERY_POOL_PERFORMANCE_CREATE_INFO_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) (queueFamilyIndex)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (counterIndices)) :: Word32))
-    pPCounterIndices' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (counterIndices)) * 4) 4
+    pPCounterIndices' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (counterIndices)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPCounterIndices' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (counterIndices)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word32))) (pPCounterIndices')
     lift $ f
@@ -1262,6 +1290,7 @@ instance Zero QueryPoolPerformanceCreateInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'AcquireProfilingLockFlagsKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'acquireProfilingLockKHR'
@@ -1282,7 +1311,7 @@ deriving instance Generic (AcquireProfilingLockInfoKHR)
 deriving instance Show AcquireProfilingLockInfoKHR
 
 instance ToCStruct AcquireProfilingLockInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AcquireProfilingLockInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACQUIRE_PROFILING_LOCK_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1328,6 +1357,7 @@ instance Zero AcquireProfilingLockInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PerformanceQuerySubmitInfoKHR = PerformanceQuerySubmitInfoKHR
   { -- | @counterPassIndex@ specifies which counter pass index is active.
@@ -1345,7 +1375,7 @@ deriving instance Generic (PerformanceQuerySubmitInfoKHR)
 deriving instance Show PerformanceQuerySubmitInfoKHR
 
 instance ToCStruct PerformanceQuerySubmitInfoKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PerformanceQuerySubmitInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PERFORMANCE_QUERY_SUBMIT_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1386,7 +1416,7 @@ data PerformanceCounterResultKHR
   deriving (Show)
 
 instance ToCStruct PerformanceCounterResultKHR where
-  withCStruct x f = allocaBytesAligned 8 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct :: Ptr PerformanceCounterResultKHR -> PerformanceCounterResultKHR -> IO a -> IO a
   pokeCStruct p = (. const) . runContT .  \case
     Int32Counter v -> lift $ poke (castPtr @_ @Int32 p) (v)
@@ -1408,6 +1438,7 @@ instance Zero PerformanceCounterResultKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'PerformanceCounterKHR'
 newtype PerformanceCounterScopeKHR = PerformanceCounterScopeKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -1458,6 +1489,7 @@ instance Read PerformanceCounterScopeKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'PerformanceCounterKHR'
 newtype PerformanceCounterUnitKHR = PerformanceCounterUnitKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -1546,6 +1578,7 @@ instance Read PerformanceCounterUnitKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'PerformanceCounterKHR'
 newtype PerformanceCounterStorageKHR = PerformanceCounterStorageKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -1612,6 +1645,7 @@ type PerformanceCounterDescriptionFlagsKHR = PerformanceCounterDescriptionFlagBi
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'PerformanceCounterDescriptionFlagsKHR'
 newtype PerformanceCounterDescriptionFlagBitsKHR = PerformanceCounterDescriptionFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -1659,6 +1693,7 @@ type AcquireProfilingLockFlagsKHR = AcquireProfilingLockFlagBitsKHR
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query VK_KHR_performance_query>,
 -- 'AcquireProfilingLockFlagsKHR'
 newtype AcquireProfilingLockFlagBitsKHR = AcquireProfilingLockFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

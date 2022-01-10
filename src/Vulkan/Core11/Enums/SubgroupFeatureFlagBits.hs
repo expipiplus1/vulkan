@@ -27,11 +27,12 @@ import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)
 type SubgroupFeatureFlags = SubgroupFeatureFlagBits
 
--- | VkSubgroupFeatureFlagBits - Enum describing what group operations are
+-- | VkSubgroupFeatureFlagBits - Bitmask describing what group operations are
 -- supported with subgroup scope
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'SubgroupFeatureFlags'
 newtype SubgroupFeatureFlagBits = SubgroupFeatureFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

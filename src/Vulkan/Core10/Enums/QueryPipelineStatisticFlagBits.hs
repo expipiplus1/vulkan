@@ -46,9 +46,10 @@ type QueryPipelineStatisticFlags = QueryPipelineStatisticFlagBits
 -- multiple times, affecting some of the counts.
 --
 -- If a pipeline has @rasterizerDiscardEnable@ enabled, implementations
--- /may/ discard primitives after the final vertex processing stage. As a
--- result, if @rasterizerDiscardEnable@ is enabled, the clipping input and
--- output primitives counters /may/ not be incremented.
+-- /may/ discard primitives after the final
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>.
+-- As a result, if @rasterizerDiscardEnable@ is enabled, the clipping input
+-- and output primitives counters /may/ not be incremented.
 --
 -- When a pipeline statistics query finishes, the result for that query is
 -- marked as available. The application /can/ copy the result to a buffer
@@ -58,6 +59,7 @@ type QueryPipelineStatisticFlags = QueryPipelineStatisticFlagBits
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'QueryPipelineStatisticFlags'
 newtype QueryPipelineStatisticFlagBits = QueryPipelineStatisticFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -127,7 +129,7 @@ pattern QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT                 = Query
 -- that queries managed by the pool will count the number of fragment
 -- shader invocations. The counter’s value is incremented each time the
 -- fragment shader is
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-fragment-execution invoked>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-shader invoked>.
 pattern QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT         = QueryPipelineStatisticFlagBits 0x00000080
 -- | 'QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT'
 -- specifies that queries managed by the pool will count the number of

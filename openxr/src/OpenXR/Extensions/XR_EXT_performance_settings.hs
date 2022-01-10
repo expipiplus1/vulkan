@@ -67,7 +67,7 @@ import OpenXR.Internal.Utils (enumShowsPrec)
 import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -104,6 +104,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.Core10.Enums.StructureType (StructureType)
 import OpenXR.Core10.Enums.Result (Result(SUCCESS))
@@ -121,8 +122,8 @@ foreign import ccall
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrPerfSettingsSetPerformanceLevelEXT-extension-notenabled# The
---     @@ extension /must/ be enabled prior to calling
---     'perfSettingsSetPerformanceLevelEXT'
+--     @XR_EXT_performance_settings@ extension /must/ be enabled prior to
+--     calling 'perfSettingsSetPerformanceLevelEXT'
 --
 -- -   #VUID-xrPerfSettingsSetPerformanceLevelEXT-session-parameter#
 --     @session@ /must/ be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -167,7 +168,7 @@ perfSettingsSetPerformanceLevelEXT :: forall io
                                       PerfSettingsLevelEXT
                                    -> io (Result)
 perfSettingsSetPerformanceLevelEXT session domain level = liftIO $ do
-  let xrPerfSettingsSetPerformanceLevelEXTPtr = pXrPerfSettingsSetPerformanceLevelEXT (instanceCmds (session :: Session))
+  let xrPerfSettingsSetPerformanceLevelEXTPtr = pXrPerfSettingsSetPerformanceLevelEXT (case session of Session{instanceCmds} -> instanceCmds)
   unless (xrPerfSettingsSetPerformanceLevelEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrPerfSettingsSetPerformanceLevelEXT is null" Nothing Nothing
   let xrPerfSettingsSetPerformanceLevelEXT' = mkXrPerfSettingsSetPerformanceLevelEXT xrPerfSettingsSetPerformanceLevelEXTPtr
@@ -180,9 +181,9 @@ perfSettingsSetPerformanceLevelEXT session domain level = liftIO $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrEventDataPerfSettingsEXT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'EventDataPerfSettingsEXT'
+-- -   #VUID-XrEventDataPerfSettingsEXT-extension-notenabled# The
+--     @XR_EXT_performance_settings@ extension /must/ be enabled prior to
+--     using 'EventDataPerfSettingsEXT'
 --
 -- -   #VUID-XrEventDataPerfSettingsEXT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_EVENT_DATA_PERF_SETTINGS_EXT'
@@ -228,7 +229,7 @@ instance IsEventData EventDataPerfSettingsEXT where
   toEventDataBaseHeader EventDataPerfSettingsEXT{} = EventDataBaseHeader{type' = TYPE_EVENT_DATA_PERF_SETTINGS_EXT}
 
 instance ToCStruct EventDataPerfSettingsEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p EventDataPerfSettingsEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_EVENT_DATA_PERF_SETTINGS_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

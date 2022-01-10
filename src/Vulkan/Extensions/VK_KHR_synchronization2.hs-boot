@@ -23,21 +23,21 @@
 --
 --     -   Requires @VK_KHR_get_physical_device_properties2@
 --
---     -   Requires @VK_KHR_create_renderpass2@
---
 -- [__Contact__]
 --
 --     -   Tobias Hector
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_synchronization2:%20&body=@tobski%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_synchronization2] @tobski%0A<<Here describe the issue or question you have about the VK_KHR_synchronization2 extension>> >
 --
 -- == Other Extension Metadata
 --
--- [Last Modified Date]
---     2020-12-03 Interactions and External Dependencies:
+-- [__Last Modified Date__]
+--     2020-12-03
+--
+-- [__Interactions and External Dependencies__]
 --
 --     -   Interacts with @VK_KHR_create_renderpass2@
 --
--- [Contributors]
+-- [__Contributors__]
 --
 --     -   Tobias Hector
 --
@@ -82,10 +82,9 @@
 --
 -- Queue submission has been changed to wrap command buffers and semaphores
 -- in extensible structures, which incorporate changes from Vulkan 1.1,
--- <VK_KHR_device_group.html VK_KHR_device_group>, and
--- <VK_KHR_timeline_semaphore.html VK_KHR_timeline_semaphore>. This also
--- adds a pipeline stage to the semaphore signal operation, mirroring the
--- existing pipeline stage specification for wait operations.
+-- @VK_KHR_device_group@, and @VK_KHR_timeline_semaphore@. This also adds a
+-- pipeline stage to the semaphore signal operation, mirroring the existing
+-- pipeline stage specification for wait operations.
 --
 -- Other miscellaneous changes include:
 --
@@ -123,6 +122,10 @@
 -- -   'MemoryBarrier2KHR' can be chained to
 --     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDependency2',
 --     overriding the original 32-bit stage and access masks.
+--
+-- == New Base Types
+--
+-- -   'Vulkan.Core10.FundamentalTypes.Flags64'
 --
 -- == New Commands
 --
@@ -401,19 +404,19 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'AccessFlagBits2KHR', 'AccessFlags2KHR', 'BufferMemoryBarrier2KHR',
 -- 'CommandBufferSubmitInfoKHR', 'DependencyInfoKHR',
--- 'ImageMemoryBarrier2KHR', 'MemoryBarrier2KHR',
--- 'PhysicalDeviceSynchronization2FeaturesKHR',
+-- 'Vulkan.Core10.FundamentalTypes.Flags64', 'ImageMemoryBarrier2KHR',
+-- 'MemoryBarrier2KHR', 'PhysicalDeviceSynchronization2FeaturesKHR',
 -- 'PipelineStageFlagBits2KHR', 'PipelineStageFlags2KHR',
 -- 'SemaphoreSubmitInfoKHR', 'SubmitFlagBitsKHR', 'SubmitFlagsKHR',
 -- 'SubmitInfo2KHR', 'cmdPipelineBarrier2KHR', 'cmdResetEvent2KHR',
 -- 'cmdSetEvent2KHR', 'cmdWaitEvents2KHR', 'cmdWriteTimestamp2KHR',
 -- 'queueSubmit2KHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 Vulkan Specification>
@@ -431,6 +434,7 @@ module Vulkan.Extensions.VK_KHR_synchronization2  ( BufferMemoryBarrier2KHR
                                                   , SemaphoreSubmitInfoKHR
                                                   , SubmitInfo2KHR
                                                   , PipelineStageFlags2KHR
+                                                  , PipelineStageFlagBits2KHR
                                                   ) where
 
 import Vulkan.CStruct (FromCStruct)
@@ -522,5 +526,7 @@ instance Show (Chain es) => Show (SubmitInfo2KHR es)
 instance (Extendss SubmitInfo2KHR es, PeekChain es) => FromCStruct (SubmitInfo2KHR es)
 
 
-data PipelineStageFlags2KHR
+type PipelineStageFlags2KHR = PipelineStageFlagBits2KHR
+
+data PipelineStageFlagBits2KHR
 

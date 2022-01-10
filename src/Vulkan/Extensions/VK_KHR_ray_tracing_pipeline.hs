@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_ray_tracing_pipeline:%20&body=@dgkoch%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_ray_tracing_pipeline] @dgkoch%0A<<Here describe the issue or question you have about the VK_KHR_ray_tracing_pipeline extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -44,21 +44,19 @@
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_tracing.txt GLSL_EXT_ray_tracing>
 --
 --     -   This extension interacts with
---         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#version-1.2 Vulkan 1.2>
---         and
---         <VK_KHR_vulkan_memory_model.html VK_KHR_vulkan_memory_model>,
---         adding the
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan 1.2>
+--         and @VK_KHR_vulkan_memory_model@, adding the
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shader-call-related shader-call-related>
 --         relation of invocations,
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shader-call-order shader-call-order>
 --         partial order of dynamic instances of instructions, and the
---         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shader-scope-shadercall ShaderCallKHR>
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-shadercall ShaderCallKHR>
 --         scope.
 --
---     -   This extension interacts with
---         <VK_KHR_pipeline_library.html VK_KHR_pipeline_library>, enabling
---         pipeline libraries to be used with ray tracing pipelines and
---         enabling usage of 'RayTracingPipelineInterfaceCreateInfoKHR'.
+--     -   This extension interacts with @VK_KHR_pipeline_library@,
+--         enabling pipeline libraries to be used with ray tracing
+--         pipelines and enabling usage of
+--         'RayTracingPipelineInterfaceCreateInfoKHR'.
 --
 -- [__Contributors__]
 --
@@ -163,7 +161,7 @@
 -- -   A shader binding indirection table to link shader groups with
 --     acceleration structure items
 --
--- -   Trace ray commands which initiates the ray pipeline traversal and
+-- -   Ray tracing commands which initiate the ray pipeline traversal and
 --     invocation of the various new shader domains depending on which
 --     traversal conditions are met
 --
@@ -464,8 +462,7 @@
 --     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DEFER_COMPILE_BIT_NV'
 --
 --     -   'Vulkan.Extensions.VK_NV_ray_tracing.compileDeferredNV' command
---         (replaced with
---         <VK_KHR_deferred_host_operations.html VK_KHR_deferred_host_operations>)
+--         (replaced with @VK_KHR_deferred_host_operations@)
 --
 -- (3) What are the changes between the public provisional
 -- (VK_KHR_ray_tracing v8) release and the internal provisional
@@ -473,8 +470,7 @@
 --
 -- -   Require Vulkan 1.1 and SPIR-V 1.4
 --
--- -   Added interactions with Vulkan 1.2 and
---     <VK_KHR_vulkan_memory_model.html VK_KHR_vulkan_memory_model>
+-- -   Added interactions with Vulkan 1.2 and @VK_KHR_vulkan_memory_model@
 --
 -- -   added creation time capture and replay flags
 --
@@ -491,16 +487,14 @@
 -- -   require the shader binding table buffers to have the
 --     @VK_BUFFER_USAGE_RAY_TRACING_BIT_KHR@ set
 --
--- -   make <VK_KHR_pipeline_library.html VK_KHR_pipeline_library> an
---     interaction instead of required extension
+-- -   make @VK_KHR_pipeline_library@ an interaction instead of required
+--     extension
 --
 -- -   rename the @libraries@ member of 'RayTracingPipelineCreateInfoKHR'
 --     to @pLibraryInfo@ and make it a pointer
 --
--- -   make
---     <VK_KHR_deferred_host_operations.html VK_KHR_deferred_host_operations>
---     an interaction instead of a required extension (later went back on
---     this)
+-- -   make @VK_KHR_deferred_host_operations@ an interaction instead of a
+--     required extension (later went back on this)
 --
 -- -   added explicit stack size management for ray tracing pipelines
 --
@@ -539,8 +533,7 @@
 --         that the implementation can modify such parameters until the
 --         deferred host operation completes
 --
---     -   <VK_KHR_deferred_host_operations.html VK_KHR_deferred_host_operations>
---         is required again
+--     -   @VK_KHR_deferred_host_operations@ is required again
 --
 -- (4) What are the changes between the internal provisional
 -- (VK_KHR_ray_tracing v9) release and the final
@@ -551,14 +544,13 @@
 --     implementation flexibility and decoupling ray query support from ray
 --     pipelines:
 --
---     -   <VK_KHR_acceleration_structure.html VK_KHR_acceleration_structure>
---         (for acceleration structure operations)
+--     -   @VK_KHR_acceleration_structure@ (for acceleration structure
+--         operations)
 --
---     -   <VK_KHR_ray_tracing_pipeline.html VK_KHR_ray_tracing_pipeline>
---         (for ray tracing pipeline and shader stages)
+--     -   @VK_KHR_ray_tracing_pipeline@ (for ray tracing pipeline and
+--         shader stages)
 --
---     -   <VK_KHR_ray_query.html VK_KHR_ray_query> (for ray queries in
---         existing shader stages)
+--     -   @VK_KHR_ray_query@ (for ray queries in existing shader stages)
 --
 -- -   Require @Volatile@ for the following builtins in the ray generation,
 --     closest hit, miss, intersection, and callable shader stages:
@@ -577,9 +569,7 @@
 --         and is required on shader binding table buffers
 --
 --     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_BUFFER_BIT'
---         is used in
---         <VK_KHR_acceleration_structure.html VK_KHR_acceleration_structure>
---         for @scratchData@
+--         is used in @VK_KHR_acceleration_structure@ for @scratchData@
 --
 -- -   rename @maxRecursionDepth@ to @maxRayPipelineRecursionDepth@
 --     (pipeline creation) and @maxRayRecursionDepth@ (limit) to reduce
@@ -602,14 +592,15 @@
 -- with gl_InstanceIndex. Which should be used for Vulkan in this
 -- extension?
 --
--- RESOLVED: This extension uses gl_InstanceID and maps it to @InstanceId@
--- in SPIR-V. It is acknowledged that this is different than other shader
--- stages in Vulkan. There are two main reasons for the difference here:
+-- __RESOLVED__: This extension uses gl_InstanceID and maps it to
+-- @InstanceId@ in SPIR-V. It is acknowledged that this is different than
+-- other shader stages in Vulkan. There are two main reasons for the
+-- difference here:
 --
 -- -   symmetry with gl_PrimitiveID which is also available in these
 --     shaders
 --
--- -   there is no \"baseInstance\" relevant for these shaders, and so ID
+-- -   there is no “baseInstance” relevant for these shaders, and so ID
 --     makes it more obvious that this is zero-based.
 --
 -- == Sample Code
@@ -696,7 +687,7 @@
 --     -   define sync for indirect trace rays and indirect buffer
 --         (#2407,!4208)
 --
--- = See Also
+-- == See Also
 --
 -- 'Vulkan.Core10.APIConstants.SHADER_UNUSED_KHR',
 -- 'PhysicalDeviceRayTracingPipelineFeaturesKHR',
@@ -712,7 +703,7 @@
 -- 'getRayTracingShaderGroupHandlesKHR',
 -- 'getRayTracingShaderGroupStackSizeKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline Vulkan Specification>
@@ -763,7 +754,7 @@ import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Foldable (traverse_)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (maybePeek)
@@ -822,11 +813,13 @@ import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Extensions.Handles (DeferredOperationKHR)
 import Vulkan.Extensions.Handles (DeferredOperationKHR(..))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Core10.FundamentalTypes (DeviceAddress)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetRayTracingPipelineStackSizeKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdTraceRaysIndirectKHR))
@@ -895,6 +888,24 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
 --
+-- -   #VUID-vkCmdTraceRaysKHR-mipmapMode-04770# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdTraceRaysKHR-None-06479# If a
+--     'Vulkan.Core10.Handles.ImageView' is sampled with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-depth-compare-operation depth comparison>,
+--     the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR'
+--
 -- -   #VUID-vkCmdTraceRaysKHR-None-02691# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
 --     operations as a result of this command, then the image view’s
@@ -943,6 +954,22 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
+-- -   #VUID-vkCmdTraceRaysKHR-OpTypeImage-06423# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being written as a storage image
+--     or storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--
+-- -   #VUID-vkCmdTraceRaysKHR-OpTypeImage-06424# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
+--     storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--
 -- -   #VUID-vkCmdTraceRaysKHR-None-02697# For each set /n/ that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
 --     pipeline bind point used by this command, a descriptor set /must/
@@ -952,7 +979,9 @@ foreign import ccall
 --     the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdTraceRaysKHR-None-02698# For each push constant that is
+-- -   #VUID-vkCmdTraceRaysKHR-maintenance4-06425# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
+--     feature is not enabled, then for each push constant that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
 --     pipeline bind point used by this command, a push constant value
 --     /must/ have been set for the same pipeline bind point, with a
@@ -974,9 +1003,10 @@ foreign import ccall
 -- -   #VUID-vkCmdTraceRaysKHR-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set for @commandBuffer@, and done so after any
---     previously bound pipeline with the corresponding state not specified
---     as dynamic
+--     /must/ have been set or inherited (if the
+--     @VK_NV_inherited_viewport_scissor@ extension is enabled) for
+--     @commandBuffer@, and done so after any previously bound pipeline
+--     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdTraceRaysKHR-None-02859# There /must/ not have been any
 --     calls to dynamic state setting commands for any state not specified
@@ -1031,7 +1061,9 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdTraceRaysKHR-commandBuffer-02707# If @commandBuffer@ is
---     an unprotected command buffer, any resource accessed by the
+--     an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be a protected resource
 --
@@ -1039,41 +1071,41 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     image view’s format
 --
 -- -   #VUID-vkCmdTraceRaysKHR-OpImageWrite-04469# If a
 --     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     buffer view’s format
 --
 -- -   #VUID-vkCmdTraceRaysKHR-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdTraceRaysKHR-SampledType-04471# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdTraceRaysKHR-SampledType-04472# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdTraceRaysKHR-SampledType-04473# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdTraceRaysKHR-sparseImageInt64Atomics-04474# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
@@ -1082,7 +1114,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdTraceRaysKHR-sparseImageInt64Atomics-04475# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseImageInt64Atomics sparseImageInt64Atomics>
@@ -1091,11 +1123,11 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdTraceRaysKHR-None-03429# Any shader group handle
 --     referenced by this call /must/ have been queried from the currently
---     bound ray tracing shader pipeline
+--     bound ray tracing pipeline
 --
 -- -   #VUID-vkCmdTraceRaysKHR-maxPipelineRayRecursionDepth-03679# This
 --     command /must/ not cause a shader call instruction to be executed
@@ -1207,7 +1239,7 @@ foreign import ccall
 --     tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR',
 --     the shader group handle identified by @pMissShaderBindingTable@
---     /must/ contain a valid miss shader
+--     /must/ not be set to zero
 --
 -- -   #VUID-vkCmdTraceRaysKHR-flags-03512# If the currently bound ray
 --     tracing pipeline was created with @flags@ that included
@@ -1231,15 +1263,15 @@ foreign import ccall
 --     to zero
 --
 -- -   #VUID-vkCmdTraceRaysKHR-pHitShaderBindingTable-04735# Any non-zero
---     hit group entries in @pHitShaderBindingTable@ accessed by this call
---     from a geometry with a @geometryType@ of
+--     hit shader group entries in @pHitShaderBindingTable@ accessed by
+--     this call from a geometry with a @geometryType@ of
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_TYPE_TRIANGLES_KHR'
 --     /must/ have been created with
 --     'RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR'
 --
 -- -   #VUID-vkCmdTraceRaysKHR-pHitShaderBindingTable-04736# Any non-zero
---     hit group entries in @pHitShaderBindingTable@ accessed by this call
---     from a geometry with a @geometryType@ of
+--     hit shader group entries in @pHitShaderBindingTable@ accessed by
+--     this call from a geometry with a @geometryType@ of
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_TYPE_AABBS_KHR'
 --     /must/ have been created with
 --     'RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR'
@@ -1312,15 +1344,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'StridedDeviceAddressRegionKHR'
 cmdTraceRaysKHR :: forall io
                  . (MonadIO io)
@@ -1347,7 +1380,7 @@ cmdTraceRaysKHR :: forall io
                    ("depth" ::: Word32)
                 -> io ()
 cmdTraceRaysKHR commandBuffer raygenShaderBindingTable missShaderBindingTable hitShaderBindingTable callableShaderBindingTable width height depth = liftIO . evalContT $ do
-  let vkCmdTraceRaysKHRPtr = pVkCmdTraceRaysKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdTraceRaysKHRPtr = pVkCmdTraceRaysKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdTraceRaysKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdTraceRaysKHR is null" Nothing Nothing
   let vkCmdTraceRaysKHR' = mkVkCmdTraceRaysKHR vkCmdTraceRaysKHRPtr
@@ -1423,6 +1456,8 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Pipeline'
 getRayTracingShaderGroupHandlesKHR :: forall io
                                     . (MonadIO io)
@@ -1444,7 +1479,7 @@ getRayTracingShaderGroupHandlesKHR :: forall io
                                       ("data" ::: Ptr ())
                                    -> io ()
 getRayTracingShaderGroupHandlesKHR device pipeline firstGroup groupCount dataSize data' = liftIO $ do
-  let vkGetRayTracingShaderGroupHandlesKHRPtr = pVkGetRayTracingShaderGroupHandlesKHR (deviceCmds (device :: Device))
+  let vkGetRayTracingShaderGroupHandlesKHRPtr = pVkGetRayTracingShaderGroupHandlesKHR (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetRayTracingShaderGroupHandlesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRayTracingShaderGroupHandlesKHR is null" Nothing Nothing
   let vkGetRayTracingShaderGroupHandlesKHR' = mkVkGetRayTracingShaderGroupHandlesKHR vkGetRayTracingShaderGroupHandlesKHRPtr
@@ -1520,6 +1555,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Pipeline'
 getRayTracingCaptureReplayShaderGroupHandlesKHR :: forall io
                                                  . (MonadIO io)
@@ -1539,7 +1575,7 @@ getRayTracingCaptureReplayShaderGroupHandlesKHR :: forall io
                                                    ("data" ::: Ptr ())
                                                 -> io ()
 getRayTracingCaptureReplayShaderGroupHandlesKHR device pipeline firstGroup groupCount dataSize data' = liftIO $ do
-  let vkGetRayTracingCaptureReplayShaderGroupHandlesKHRPtr = pVkGetRayTracingCaptureReplayShaderGroupHandlesKHR (deviceCmds (device :: Device))
+  let vkGetRayTracingCaptureReplayShaderGroupHandlesKHRPtr = pVkGetRayTracingCaptureReplayShaderGroupHandlesKHR (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetRayTracingCaptureReplayShaderGroupHandlesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRayTracingCaptureReplayShaderGroupHandlesKHR is null" Nothing Nothing
   let vkGetRayTracingCaptureReplayShaderGroupHandlesKHR' = mkVkGetRayTracingCaptureReplayShaderGroupHandlesKHR vkGetRayTracingCaptureReplayShaderGroupHandlesKHRPtr
@@ -1673,6 +1709,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Pipeline',
@@ -1681,10 +1718,10 @@ createRayTracingPipelinesKHR :: forall io
                               . (MonadIO io)
                              => -- | @device@ is the logical device that creates the ray tracing pipelines.
                                 Device
-                             -> -- | @deferredOperation@ is an optional
-                                -- 'Vulkan.Extensions.Handles.DeferredOperationKHR' to
+                             -> -- | @deferredOperation@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or the
+                                -- handle of a valid 'Vulkan.Extensions.Handles.DeferredOperationKHR'
                                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#deferred-host-operations-requesting request deferral>
-                                -- for this command.
+                                -- object for this command.
                                 DeferredOperationKHR
                              -> -- | @pipelineCache@ is either 'Vulkan.Core10.APIConstants.NULL_HANDLE',
                                 -- indicating that pipeline caching is disabled, or the handle of a valid
@@ -1701,11 +1738,11 @@ createRayTracingPipelinesKHR :: forall io
                                 ("allocator" ::: Maybe AllocationCallbacks)
                              -> io (Result, ("pipelines" ::: Vector Pipeline))
 createRayTracingPipelinesKHR device deferredOperation pipelineCache createInfos allocator = liftIO . evalContT $ do
-  let vkCreateRayTracingPipelinesKHRPtr = pVkCreateRayTracingPipelinesKHR (deviceCmds (device :: Device))
+  let vkCreateRayTracingPipelinesKHRPtr = pVkCreateRayTracingPipelinesKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateRayTracingPipelinesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateRayTracingPipelinesKHR is null" Nothing Nothing
   let vkCreateRayTracingPipelinesKHR' = mkVkCreateRayTracingPipelinesKHR vkCreateRayTracingPipelinesKHRPtr
-  pPCreateInfos <- ContT $ allocaBytesAligned @(RayTracingPipelineCreateInfoKHR _) ((Data.Vector.length (createInfos)) * 104) 8
+  pPCreateInfos <- ContT $ allocaBytes @(RayTracingPipelineCreateInfoKHR _) ((Data.Vector.length (createInfos)) * 104)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPCreateInfos `plusPtr` (104 * (i)) :: Ptr (RayTracingPipelineCreateInfoKHR _))) (e) . ($ ())) (createInfos)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -1757,6 +1794,24 @@ foreign import ccall
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
 --
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-mipmapMode-04770# If a
+--     'Vulkan.Core10.Handles.Sampler' created with @mipmapMode@ equal to
+--     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'
+--     and @compareEnable@ equal to 'Vulkan.Core10.FundamentalTypes.FALSE'
+--     is used to sample a 'Vulkan.Core10.Handles.ImageView' as a result of
+--     this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
+--
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-None-06479# If a
+--     'Vulkan.Core10.Handles.ImageView' is sampled with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-depth-compare-operation depth comparison>,
+--     the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR'
+--
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02691# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
 --     operations as a result of this command, then the image view’s
@@ -1805,6 +1860,22 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-OpTypeImage-06423# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being written as a storage image
+--     or storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-OpTypeImage-06424# Any
+--     'Vulkan.Core10.Handles.ImageView' or
+--     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
+--     storage texel buffer where the image format field of the
+--     @OpTypeImage@ is @Unknown@ /must/ have image format features that
+--     support
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02697# For each set /n/ that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
 --     pipeline bind point used by this command, a descriptor set /must/
@@ -1814,14 +1885,15 @@ foreign import ccall
 --     the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02698# For each push constant
---     that is statically used by the 'Vulkan.Core10.Handles.Pipeline'
---     bound to the pipeline bind point used by this command, a push
---     constant value /must/ have been set for the same pipeline bind
---     point, with a 'Vulkan.Core10.Handles.PipelineLayout' that is
---     compatible for push constants, with the
---     'Vulkan.Core10.Handles.PipelineLayout' used to create the current
---     'Vulkan.Core10.Handles.Pipeline', as described in
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-maintenance4-06425# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-maintenance4 maintenance4>
+--     feature is not enabled, then for each push constant that is
+--     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
+--     pipeline bind point used by this command, a push constant value
+--     /must/ have been set for the same pipeline bind point, with a
+--     'Vulkan.Core10.Handles.PipelineLayout' that is compatible for push
+--     constants, with the 'Vulkan.Core10.Handles.PipelineLayout' used to
+--     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02699# Descriptors in each
@@ -1837,9 +1909,10 @@ foreign import ccall
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-commandBuffer-02701# If the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command requires any dynamic state, that state
---     /must/ have been set for @commandBuffer@, and done so after any
---     previously bound pipeline with the corresponding state not specified
---     as dynamic
+--     /must/ have been set or inherited (if the
+--     @VK_NV_inherited_viewport_scissor@ extension is enabled) for
+--     @commandBuffer@, and done so after any previously bound pipeline
+--     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02859# There /must/ not have
 --     been any calls to dynamic state setting commands for any state not
@@ -1894,50 +1967,51 @@ foreign import ccall
 --     the same pipeline bind point
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-commandBuffer-02707# If
---     @commandBuffer@ is an unprotected command buffer, any resource
---     accessed by the 'Vulkan.Core10.Handles.Pipeline' object bound to the
---     pipeline bind point used by this command /must/ not be a protected
---     resource
+--     @commandBuffer@ is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, any resource accessed by the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command /must/ not be a protected resource
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-None-04115# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     image view’s format
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-OpImageWrite-04469# If a
 --     'Vulkan.Core10.Handles.BufferView' is accessed using @OpImageWrite@
 --     as a result of this command, then the @Type@ of the @Texel@ operand
 --     of that instruction /must/ have at least as many components as the
---     image view’s format.
+--     buffer view’s format
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-SampledType-04470# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-SampledType-04471# If a
 --     'Vulkan.Core10.Handles.ImageView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-SampledType-04472# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit channel width
---     is accessed as a result of this command, the @SampledType@ of the
---     @OpTypeImage@ operand of that instruction /must/ have a @Width@ of
---     64.
+--     'Vulkan.Core10.Enums.Format.Format' that has a 64-bit component
+--     width is accessed as a result of this command, the @SampledType@ of
+--     the @OpTypeImage@ operand of that instruction /must/ have a @Width@
+--     of 64
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-SampledType-04473# If a
 --     'Vulkan.Core10.Handles.BufferView' with a
---     'Vulkan.Core10.Enums.Format.Format' that has a channel width less
+--     'Vulkan.Core10.Enums.Format.Format' that has a component width less
 --     than 64-bit is accessed as a result of this command, the
 --     @SampledType@ of the @OpTypeImage@ operand of that instruction
---     /must/ have a @Width@ of 32.
+--     /must/ have a @Width@ of 32
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-sparseImageInt64Atomics-04474# If
 --     the
@@ -1947,7 +2021,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-sparseImageInt64Atomics-04475# If
 --     the
@@ -1957,11 +2031,11 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
 --     flag /must/ not be accessed by atomic instructions through an
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
---     command.
+--     command
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-None-03429# Any shader group handle
 --     referenced by this call /must/ have been queried from the currently
---     bound ray tracing shader pipeline
+--     bound ray tracing pipeline
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-maxPipelineRayRecursionDepth-03679#
 --     This command /must/ not cause a shader call instruction to be
@@ -2075,7 +2149,7 @@ foreign import ccall
 --     ray tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR',
 --     the shader group handle identified by @pMissShaderBindingTable@
---     /must/ contain a valid miss shader
+--     /must/ not be set to zero
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-flags-03512# If the currently bound
 --     ray tracing pipeline was created with @flags@ that included
@@ -2099,15 +2173,15 @@ foreign import ccall
 --     to zero
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-pHitShaderBindingTable-04735# Any
---     non-zero hit group entries in @pHitShaderBindingTable@ accessed by
---     this call from a geometry with a @geometryType@ of
+--     non-zero hit shader group entries in @pHitShaderBindingTable@
+--     accessed by this call from a geometry with a @geometryType@ of
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_TYPE_TRIANGLES_KHR'
 --     /must/ have been created with
 --     'RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR'
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-pHitShaderBindingTable-04736# Any
---     non-zero hit group entries in @pHitShaderBindingTable@ accessed by
---     this call from a geometry with a @geometryType@ of
+--     non-zero hit shader group entries in @pHitShaderBindingTable@
+--     accessed by this call from a geometry with a @geometryType@ of
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_TYPE_AABBS_KHR'
 --     /must/ have been created with
 --     'RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR'
@@ -2135,8 +2209,14 @@ foreign import ccall
 --     1 /must/ be in the buffer device address range of the same buffer
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-rayTracingPipelineTraceRaysIndirect-03637#
---     the
+--     The
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipelineTraceRaysIndirect ::rayTracingPipelineTraceRaysIndirect>
+--     feature /must/ be enabled
+--
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-rayTracingMotionBlurPipelineTraceRaysIndirect-04951#
+--     If the bound ray tracing pipeline was created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV'
+--     'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.PhysicalDeviceRayTracingMotionBlurFeaturesNV'::@rayTracingMotionBlurPipelineTraceRaysIndirect@
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -2183,15 +2263,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceAddress',
 -- 'StridedDeviceAddressRegionKHR'
@@ -2212,13 +2293,13 @@ cmdTraceRaysIndirectKHR :: forall io
                         -> -- | @pCallableShaderBindingTable@ is a 'StridedDeviceAddressRegionKHR' that
                            -- holds the shader binding table data for the callable shader stage.
                            ("callableShaderBindingTable" ::: StridedDeviceAddressRegionKHR)
-                        -> -- | @indirectDeviceAddress@ is a buffer device address which points to a
-                           -- 'TraceRaysIndirectCommandKHR' structure which contains the trace ray
+                        -> -- | @indirectDeviceAddress@ is a buffer device address which is a pointer to
+                           -- a 'TraceRaysIndirectCommandKHR' structure containing the trace ray
                            -- parameters.
                            ("indirectDeviceAddress" ::: DeviceAddress)
                         -> io ()
 cmdTraceRaysIndirectKHR commandBuffer raygenShaderBindingTable missShaderBindingTable hitShaderBindingTable callableShaderBindingTable indirectDeviceAddress = liftIO . evalContT $ do
-  let vkCmdTraceRaysIndirectKHRPtr = pVkCmdTraceRaysIndirectKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdTraceRaysIndirectKHRPtr = pVkCmdTraceRaysIndirectKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdTraceRaysIndirectKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdTraceRaysIndirectKHR is null" Nothing Nothing
   let vkCmdTraceRaysIndirectKHR' = mkVkCmdTraceRaysIndirectKHR vkCmdTraceRaysIndirectKHRPtr
@@ -2275,6 +2356,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Pipeline',
 -- 'ShaderGroupShaderKHR'
 getRayTracingShaderGroupStackSizeKHR :: forall io
@@ -2290,7 +2372,7 @@ getRayTracingShaderGroupStackSizeKHR :: forall io
                                         ShaderGroupShaderKHR
                                      -> io (DeviceSize)
 getRayTracingShaderGroupStackSizeKHR device pipeline group groupShader = liftIO $ do
-  let vkGetRayTracingShaderGroupStackSizeKHRPtr = pVkGetRayTracingShaderGroupStackSizeKHR (deviceCmds (device :: Device))
+  let vkGetRayTracingShaderGroupStackSizeKHRPtr = pVkGetRayTracingShaderGroupStackSizeKHR (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetRayTracingShaderGroupStackSizeKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRayTracingShaderGroupStackSizeKHR is null" Nothing Nothing
   let vkGetRayTracingShaderGroupStackSizeKHR' = mkVkGetRayTracingShaderGroupStackSizeKHR vkGetRayTracingShaderGroupStackSizeKHRPtr
@@ -2305,14 +2387,18 @@ foreign import ccall
   "dynamic" mkVkCmdSetRayTracingPipelineStackSizeKHR
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> IO ()
 
--- | vkCmdSetRayTracingPipelineStackSizeKHR - Set the dynamic stack size for
--- a ray tracing pipeline
+-- | vkCmdSetRayTracingPipelineStackSizeKHR - Set the stack size dynamically
+-- for a ray tracing pipeline
 --
 -- = Description
 --
--- See
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-tracing-pipeline-stack Ray Tracing Pipeline Stack>
--- for more on computing @pipelineStackSize@.
+-- This command sets the stack size for subsequent ray tracing commands
+-- when the ray tracing pipeline is created with
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RAY_TRACING_PIPELINE_STACK_SIZE_KHR'
+-- set in
+-- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, the stack size is computed as described in
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-tracing-pipeline-stack Ray Tracing Pipeline Stack>.
 --
 -- == Valid Usage
 --
@@ -2349,15 +2435,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>,
 -- 'Vulkan.Core10.Handles.CommandBuffer'
 cmdSetRayTracingPipelineStackSizeKHR :: forall io
                                       . (MonadIO io)
@@ -2369,7 +2456,7 @@ cmdSetRayTracingPipelineStackSizeKHR :: forall io
                                         ("pipelineStackSize" ::: Word32)
                                      -> io ()
 cmdSetRayTracingPipelineStackSizeKHR commandBuffer pipelineStackSize = liftIO $ do
-  let vkCmdSetRayTracingPipelineStackSizeKHRPtr = pVkCmdSetRayTracingPipelineStackSizeKHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetRayTracingPipelineStackSizeKHRPtr = pVkCmdSetRayTracingPipelineStackSizeKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetRayTracingPipelineStackSizeKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetRayTracingPipelineStackSizeKHR is null" Nothing Nothing
   let vkCmdSetRayTracingPipelineStackSizeKHR' = mkVkCmdSetRayTracingPipelineStackSizeKHR vkCmdSetRayTracingPipelineStackSizeKHRPtr
@@ -2454,6 +2541,7 @@ cmdSetRayTracingPipelineStackSizeKHR commandBuffer pipelineStackSize = liftIO $ 
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>,
 -- 'RayTracingPipelineCreateInfoKHR', 'RayTracingShaderGroupTypeKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data RayTracingShaderGroupCreateInfoKHR = RayTracingShaderGroupCreateInfoKHR
@@ -2485,7 +2573,7 @@ data RayTracingShaderGroupCreateInfoKHR = RayTracingShaderGroupCreateInfoKHR
     -- 'RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR', and
     -- 'Vulkan.Core10.APIConstants.SHADER_UNUSED_KHR' otherwise.
     intersectionShader :: Word32
-  , -- | @pShaderGroupCaptureReplayHandle@ is an optional pointer to replay
+  , -- | @pShaderGroupCaptureReplayHandle@ is @NULL@ or a pointer to replay
     -- information for this shader group. Ignored if
     -- 'PhysicalDeviceRayTracingPipelineFeaturesKHR'::@rayTracingPipelineShaderGroupHandleCaptureReplay@
     -- is 'Vulkan.Core10.FundamentalTypes.FALSE'.
@@ -2498,7 +2586,7 @@ deriving instance Generic (RayTracingShaderGroupCreateInfoKHR)
 deriving instance Show RayTracingShaderGroupCreateInfoKHR
 
 instance ToCStruct RayTracingShaderGroupCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RayTracingShaderGroupCreateInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -2662,9 +2750,9 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 --     @NULL@
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-pLibraries-03591# Each
---     element of the @pLibraries@ member of @pLibraryInfo@ /must/ have
---     been created with the value of @maxPipelineRayRecursionDepth@ equal
---     to that in this pipeline
+--     element of @pLibraryInfo->pLibraries@ /must/ have been created with
+--     the value of @maxPipelineRayRecursionDepth@ equal to that in this
+--     pipeline
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-pLibraryInfo-03592# If
 --     @pLibraryInfo@ is not @NULL@, each element of its @pLibraries@
@@ -2680,63 +2768,62 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-03594# If @flags@
 --     includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR',
---     each element of the @pLibraries@ member of @libraries@ /must/ have
---     been created with the
+--     each element of @pLibraryInfo->pLibraries@ /must/ have been created
+--     with the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR'
 --     bit set
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-04718# If @flags@
 --     includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR',
---     each element of the @pLibraries@ member of @libraries@ /must/ have
---     been created with the
+--     each element of @pLibraryInfo->pLibraries@ /must/ have been created
+--     with the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR'
 --     bit set
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-04719# If @flags@
 --     includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR',
---     each element of the @pLibraries@ member of @libraries@ /must/ have
---     been created with the
+--     each element of @pLibraryInfo->pLibraries@ /must/ have been created
+--     with the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR'
 --     bit set
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-04720# If @flags@
 --     includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR',
---     each element of the @pLibraries@ member of @libraries@ /must/ have
---     been created with the
+--     each element of @pLibraryInfo->pLibraries@ /must/ have been created
+--     with the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR'
 --     bit set
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-04721# If @flags@
 --     includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR',
---     each element of the @pLibraries@ member of @libraries@ /must/ have
---     been created with the
+--     each element of @pLibraryInfo->pLibraries@ /must/ have been created
+--     with the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR'
 --     bit set
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-04722# If @flags@
 --     includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR',
---     each element of the @pLibraries@ member of @libraries@ /must/ have
---     been created with the
+--     each element of @pLibraryInfo->pLibraries@ /must/ have been created
+--     with the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR'
 --     bit set
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-04723# If @flags@
 --     includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR',
---     each element of the @pLibraries@ member of @libraries@ /must/ have
---     been created with the
+--     each element of @pLibraryInfo->pLibraries@ /must/ have been created
+--     with the
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR'
 --     bit set
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-pLibraryInfo-03595# If the
---     <VK_KHR_pipeline_library.html VK_KHR_pipeline_library> extension is
---     not enabled, @pLibraryInfo@ and @pLibraryInterface@ /must/ be
---     @NULL@.
+--     @VK_KHR_pipeline_library@ extension is not enabled, @pLibraryInfo@
+--     and @pLibraryInterface@ /must/ be @NULL@
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-03470# If @flags@
 --     includes
@@ -2848,6 +2935,7 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>,
 -- 'Vulkan.Core10.Handles.Pipeline',
 -- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlags',
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo',
@@ -2911,7 +2999,7 @@ deriving instance Show (Chain es) => Show (RayTracingPipelineCreateInfoKHR es)
 
 instance Extensible RayTracingPipelineCreateInfoKHR where
   extensibleTypeName = "RayTracingPipelineCreateInfoKHR"
-  setNext x next = x{next = next}
+  setNext RayTracingPipelineCreateInfoKHR{..} next' = RayTracingPipelineCreateInfoKHR{next = next', ..}
   getNext RayTracingPipelineCreateInfoKHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RayTracingPipelineCreateInfoKHR e => b) -> Maybe b
   extends _ f
@@ -2919,18 +3007,18 @@ instance Extensible RayTracingPipelineCreateInfoKHR where
     | otherwise = Nothing
 
 instance (Extendss RayTracingPipelineCreateInfoKHR es, PokeChain es) => ToCStruct (RayTracingPipelineCreateInfoKHR es) where
-  withCStruct x f = allocaBytesAligned 104 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 104 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RayTracingPipelineCreateInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (stages)) :: Word32))
-    pPStages' <- ContT $ allocaBytesAligned @(PipelineShaderStageCreateInfo _) ((Data.Vector.length (stages)) * 48) 8
+    pPStages' <- ContT $ allocaBytes @(PipelineShaderStageCreateInfo _) ((Data.Vector.length (stages)) * 48)
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPStages' `plusPtr` (48 * (i)) :: Ptr (PipelineShaderStageCreateInfo _))) (e) . ($ ())) (stages)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr (PipelineShaderStageCreateInfo _)))) (pPStages')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (groups)) :: Word32))
-    pPGroups' <- ContT $ allocaBytesAligned @RayTracingShaderGroupCreateInfoKHR ((Data.Vector.length (groups)) * 48) 8
+    pPGroups' <- ContT $ allocaBytes @RayTracingShaderGroupCreateInfoKHR ((Data.Vector.length (groups)) * 48)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPGroups' `plusPtr` (48 * (i)) :: Ptr RayTracingShaderGroupCreateInfoKHR) (e)) (groups)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr RayTracingShaderGroupCreateInfoKHR))) (pPGroups')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (maxPipelineRayRecursionDepth)
@@ -3005,10 +3093,14 @@ instance es ~ '[] => Zero (RayTracingPipelineCreateInfoKHR es) where
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceRayTracingPipelineFeaturesKHR'
--- structure describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
+--
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
 --
 -- -   #features-rayTracingPipeline# @rayTracingPipeline@ indicates whether
 --     the implementation supports the ray tracing pipeline functionality.
@@ -3030,7 +3122,7 @@ instance es ~ '[] => Zero (RayTracingPipelineCreateInfoKHR es) where
 --
 -- -   #features-rayTracingPipelineTraceRaysIndirect#
 --     @rayTracingPipelineTraceRaysIndirect@ indicates whether the
---     implementation supports indirect trace ray commands, e.g.
+--     implementation supports indirect ray tracing commands, e.g.
 --     'cmdTraceRaysIndirectKHR'.
 --
 -- -   #features-rayTraversalPrimitiveCulling#
@@ -3039,12 +3131,14 @@ instance es ~ '[] => Zero (RayTracingPipelineCreateInfoKHR es) where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-traversal-culling-primitive primitive culling during ray traversal>.
 --
 -- If the 'PhysicalDeviceRayTracingPipelineFeaturesKHR' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceRayTracingPipelineFeaturesKHR' /can/ also be used in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the
--- features.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceRayTracingPipelineFeaturesKHR' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage
 --
@@ -3062,6 +3156,7 @@ instance es ~ '[] => Zero (RayTracingPipelineCreateInfoKHR es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceRayTracingPipelineFeaturesKHR = PhysicalDeviceRayTracingPipelineFeaturesKHR
@@ -3083,7 +3178,7 @@ deriving instance Generic (PhysicalDeviceRayTracingPipelineFeaturesKHR)
 deriving instance Show PhysicalDeviceRayTracingPipelineFeaturesKHR
 
 instance ToCStruct PhysicalDeviceRayTracingPipelineFeaturesKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceRayTracingPipelineFeaturesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_FEATURES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3136,9 +3231,12 @@ instance Zero PhysicalDeviceRayTracingPipelineFeaturesKHR where
 -- = Description
 --
 -- If the 'PhysicalDeviceRayTracingPipelinePropertiesKHR' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- Limits specified by this structure /must/ match those specified with the
 -- same name in
@@ -3148,9 +3246,10 @@ instance Zero PhysicalDeviceRayTracingPipelineFeaturesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceRayTracingPipelinePropertiesKHR = PhysicalDeviceRayTracingPipelinePropertiesKHR
-  { -- | @shaderGroupHandleSize@ size in bytes of the shader header.
+  { -- | @shaderGroupHandleSize@ is the size in bytes of the shader header.
     shaderGroupHandleSize :: Word32
   , -- | #limits-maxRayRecursionDepth# @maxRayRecursionDepth@ is the maximum
     -- number of levels of ray recursion allowed in a trace command.
@@ -3169,7 +3268,7 @@ data PhysicalDeviceRayTracingPipelinePropertiesKHR = PhysicalDeviceRayTracingPip
     -- 'cmdTraceRaysIndirectKHR' or 'cmdTraceRaysKHR' command.
     maxRayDispatchInvocationCount :: Word32
   , -- | @shaderGroupHandleAlignment@ is the /required/ alignment in bytes for
-    -- each shader binding table entry.
+    -- each shader binding table entry. The value /must/ be a power of two.
     shaderGroupHandleAlignment :: Word32
   , -- | @maxRayHitAttributeSize@ is the maximum size in bytes for a ray
     -- attribute structure
@@ -3182,7 +3281,7 @@ deriving instance Generic (PhysicalDeviceRayTracingPipelinePropertiesKHR)
 deriving instance Show PhysicalDeviceRayTracingPipelinePropertiesKHR
 
 instance ToCStruct PhysicalDeviceRayTracingPipelinePropertiesKHR where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceRayTracingPipelinePropertiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_PROPERTIES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3252,11 +3351,12 @@ instance Zero PhysicalDeviceRayTracingPipelinePropertiesKHR where
 --     buffer
 --
 -- -   #VUID-VkStridedDeviceAddressRegionKHR-size-04632# If @size@ is not
---     zero, @stride@ /must/ be less than the size of the buffer from which
---     @deviceAddress@ was queried
+--     zero, @stride@ /must/ be less than or equal to the size of the
+--     buffer from which @deviceAddress@ was queried
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceAddress',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize', 'cmdTraceRaysIndirectKHR',
 -- 'cmdTraceRaysKHR'
@@ -3277,7 +3377,7 @@ deriving instance Generic (StridedDeviceAddressRegionKHR)
 deriving instance Show StridedDeviceAddressRegionKHR
 
 instance ToCStruct StridedDeviceAddressRegionKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p StridedDeviceAddressRegionKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceAddress)) (deviceAddress)
     poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (stride)
@@ -3312,7 +3412,7 @@ instance Zero StridedDeviceAddressRegionKHR where
 
 
 -- | VkTraceRaysIndirectCommandKHR - Structure specifying the parameters of
--- an indirect trace ray command
+-- an indirect ray tracing command
 --
 -- = Description
 --
@@ -3321,37 +3421,37 @@ instance Zero StridedDeviceAddressRegionKHR where
 --
 -- == Valid Usage
 --
+-- -   #VUID-VkTraceRaysIndirectCommandKHR-width-03638# @width@ /must/ be
+--     less than or equal to
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
+--     ×
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupSize@[0]
+--
+-- -   #VUID-VkTraceRaysIndirectCommandKHR-height-03639# @height@ /must/ be
+--     less than or equal to
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
+--     ×
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupSize@[1]
+--
+-- -   #VUID-VkTraceRaysIndirectCommandKHR-depth-03640# @depth@ /must/ be
+--     less than or equal to
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
+--     ×
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupSize@[2]
+--
+-- -   #VUID-VkTraceRaysIndirectCommandKHR-width-03641# @width@ × @height@
+--     × @depth@ /must/ be less than or equal to
+--     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@maxRayDispatchInvocationCount@
+--
 -- = See Also
 --
--- No cross-references are available
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>
 data TraceRaysIndirectCommandKHR = TraceRaysIndirectCommandKHR
   { -- | @width@ is the width of the ray trace query dimensions.
-    --
-    -- #VUID-VkTraceRaysIndirectCommandKHR-width-03638# @width@ /must/ be less
-    -- than or equal to
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
-    -- ×
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupSize@[0]
-    --
-    -- #VUID-VkTraceRaysIndirectCommandKHR-width-03641# @width@ × @height@ ×
-    -- @depth@ /must/ be less than or equal to
-    -- 'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@maxRayDispatchInvocationCount@
     width :: Word32
   , -- | @height@ is height of the ray trace query dimensions.
-    --
-    -- #VUID-VkTraceRaysIndirectCommandKHR-height-03639# @height@ /must/ be
-    -- less than or equal to
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
-    -- ×
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupSize@[1]
     height :: Word32
   , -- | @depth@ is depth of the ray trace query dimensions.
-    --
-    -- #VUID-VkTraceRaysIndirectCommandKHR-depth-03640# @depth@ /must/ be less
-    -- than or equal to
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
-    -- ×
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupSize@[2]
     depth :: Word32
   }
   deriving (Typeable, Eq)
@@ -3361,7 +3461,7 @@ deriving instance Generic (TraceRaysIndirectCommandKHR)
 deriving instance Show TraceRaysIndirectCommandKHR
 
 instance ToCStruct TraceRaysIndirectCommandKHR where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p TraceRaysIndirectCommandKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (width)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (height)
@@ -3423,6 +3523,7 @@ instance Zero TraceRaysIndirectCommandKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>,
 -- 'RayTracingPipelineCreateInfoKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data RayTracingPipelineInterfaceCreateInfoKHR = RayTracingPipelineInterfaceCreateInfoKHR
@@ -3444,7 +3545,7 @@ deriving instance Generic (RayTracingPipelineInterfaceCreateInfoKHR)
 deriving instance Show RayTracingPipelineInterfaceCreateInfoKHR
 
 instance ToCStruct RayTracingPipelineInterfaceCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RayTracingPipelineInterfaceCreateInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RAY_TRACING_PIPELINE_INTERFACE_CREATE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3491,6 +3592,8 @@ instance Zero RayTracingPipelineInterfaceCreateInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'RayTracingShaderGroupCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingShaderGroupCreateInfoNV'
 newtype RayTracingShaderGroupTypeKHR = RayTracingShaderGroupTypeKHR Int32
@@ -3547,6 +3650,7 @@ instance Read RayTracingShaderGroupTypeKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>,
 -- 'getRayTracingShaderGroupStackSizeKHR'
 newtype ShaderGroupShaderKHR = ShaderGroupShaderKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)

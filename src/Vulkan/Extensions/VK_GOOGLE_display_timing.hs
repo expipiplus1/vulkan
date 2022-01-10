@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Ian Elliott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_GOOGLE_display_timing:%20&body=@ianelliottus%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_GOOGLE_display_timing] @ianelliottus%0A<<Here describe the issue or question you have about the VK_GOOGLE_display_timing extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -109,13 +109,13 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PastPresentationTimingGOOGLE', 'PresentTimeGOOGLE',
 -- 'PresentTimesInfoGOOGLE', 'RefreshCycleDurationGOOGLE',
 -- 'getPastPresentationTimingGOOGLE', 'getRefreshCycleDurationGOOGLE'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GOOGLE_display_timing Vulkan Specification>
@@ -139,7 +139,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -179,6 +179,7 @@ import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetPastPresentationTimingGOOGLE))
 import Vulkan.Dynamic (DeviceCmds(pVkGetRefreshCycleDurationGOOGLE))
 import Vulkan.Core10.Handles (Device_T)
@@ -238,6 +239,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GOOGLE_display_timing VK_GOOGLE_display_timing>,
 -- 'Vulkan.Core10.Handles.Device', 'RefreshCycleDurationGOOGLE',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
 getRefreshCycleDurationGOOGLE :: forall io
@@ -248,7 +250,7 @@ getRefreshCycleDurationGOOGLE :: forall io
                                  SwapchainKHR
                               -> io (("displayTimingProperties" ::: RefreshCycleDurationGOOGLE))
 getRefreshCycleDurationGOOGLE device swapchain = liftIO . evalContT $ do
-  let vkGetRefreshCycleDurationGOOGLEPtr = pVkGetRefreshCycleDurationGOOGLE (deviceCmds (device :: Device))
+  let vkGetRefreshCycleDurationGOOGLEPtr = pVkGetRefreshCycleDurationGOOGLE (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetRefreshCycleDurationGOOGLEPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRefreshCycleDurationGOOGLE is null" Nothing Nothing
   let vkGetRefreshCycleDurationGOOGLE' = mkVkGetRefreshCycleDurationGOOGLE vkGetRefreshCycleDurationGOOGLEPtr
@@ -279,12 +281,10 @@ foreign import ccall
 -- with the number of structures actually written to
 -- @pPresentationTimings@. If the value of @pPresentationTimingCount@ is
 -- less than the number of newly-available timing records, at most
--- @pPresentationTimingCount@ structures will be written. If
--- @pPresentationTimingCount@ is smaller than the number of newly-available
--- timing records for the given @swapchain@,
+-- @pPresentationTimingCount@ structures will be written, and
 -- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS' to indicate that not all the
--- available values were returned.
+-- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
+-- available timing records were returned.
 --
 -- == Valid Usage (Implicit)
 --
@@ -333,6 +333,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GOOGLE_display_timing VK_GOOGLE_display_timing>,
 -- 'Vulkan.Core10.Handles.Device', 'PastPresentationTimingGOOGLE',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
 getPastPresentationTimingGOOGLE :: forall io
@@ -344,7 +345,7 @@ getPastPresentationTimingGOOGLE :: forall io
                                    SwapchainKHR
                                 -> io (Result, ("presentationTimings" ::: Vector PastPresentationTimingGOOGLE))
 getPastPresentationTimingGOOGLE device swapchain = liftIO . evalContT $ do
-  let vkGetPastPresentationTimingGOOGLEPtr = pVkGetPastPresentationTimingGOOGLE (deviceCmds (device :: Device))
+  let vkGetPastPresentationTimingGOOGLEPtr = pVkGetPastPresentationTimingGOOGLE (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetPastPresentationTimingGOOGLEPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPastPresentationTimingGOOGLE is null" Nothing Nothing
   let vkGetPastPresentationTimingGOOGLE' = mkVkGetPastPresentationTimingGOOGLE vkGetPastPresentationTimingGOOGLEPtr
@@ -367,6 +368,7 @@ getPastPresentationTimingGOOGLE device swapchain = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GOOGLE_display_timing VK_GOOGLE_display_timing>,
 -- 'getRefreshCycleDurationGOOGLE'
 data RefreshCycleDurationGOOGLE = RefreshCycleDurationGOOGLE
   { -- | @refreshDuration@ is the number of nanoseconds from the start of one
@@ -379,7 +381,7 @@ deriving instance Generic (RefreshCycleDurationGOOGLE)
 deriving instance Show RefreshCycleDurationGOOGLE
 
 instance ToCStruct RefreshCycleDurationGOOGLE where
-  withCStruct x f = allocaBytesAligned 8 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RefreshCycleDurationGOOGLE{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word64)) (refreshDuration)
     f
@@ -434,6 +436,7 @@ instance Zero RefreshCycleDurationGOOGLE where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GOOGLE_display_timing VK_GOOGLE_display_timing>,
 -- 'getPastPresentationTimingGOOGLE'
 data PastPresentationTimingGOOGLE = PastPresentationTimingGOOGLE
   { -- | @presentID@ is an application-provided value that was given to a
@@ -469,7 +472,7 @@ deriving instance Generic (PastPresentationTimingGOOGLE)
 deriving instance Show PastPresentationTimingGOOGLE
 
 instance ToCStruct PastPresentationTimingGOOGLE where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PastPresentationTimingGOOGLE{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (presentID)
     poke ((p `plusPtr` 8 :: Ptr Word64)) (desiredPresentTime)
@@ -538,6 +541,7 @@ instance Zero PastPresentationTimingGOOGLE where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GOOGLE_display_timing VK_GOOGLE_display_timing>,
 -- 'PresentTimeGOOGLE', 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PresentTimesInfoGOOGLE = PresentTimesInfoGOOGLE
   { -- | @swapchainCount@ is the number of swapchains being presented to by this
@@ -558,7 +562,7 @@ deriving instance Generic (PresentTimesInfoGOOGLE)
 deriving instance Show PresentTimesInfoGOOGLE
 
 instance ToCStruct PresentTimesInfoGOOGLE where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PresentTimesInfoGOOGLE{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -573,7 +577,7 @@ instance ToCStruct PresentTimesInfoGOOGLE where
     pTimes'' <- if Data.Vector.null (times)
       then pure nullPtr
       else do
-        pPTimes <- ContT $ allocaBytesAligned @PresentTimeGOOGLE (((Data.Vector.length (times))) * 16) 8
+        pPTimes <- ContT $ allocaBytes @PresentTimeGOOGLE (((Data.Vector.length (times))) * 16)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPTimes `plusPtr` (16 * (i)) :: Ptr PresentTimeGOOGLE) (e)) ((times))
         pure $ pPTimes
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr PresentTimeGOOGLE))) pTimes''
@@ -602,8 +606,13 @@ instance Zero PresentTimesInfoGOOGLE where
 
 -- | VkPresentTimeGOOGLE - The earliest time image should be presented
 --
+-- = Description
+--
+-- > but does not need a specific pname:desiredPresentTime.
+--
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GOOGLE_display_timing VK_GOOGLE_display_timing>,
 -- 'PresentTimesInfoGOOGLE'
 data PresentTimeGOOGLE = PresentTimeGOOGLE
   { -- | @presentID@ is an application-provided identification value, that /can/
@@ -618,7 +627,7 @@ data PresentTimeGOOGLE = PresentTimeGOOGLE
     -- (e.g. @CLOCK_MONOTONIC@ (see clock_gettime(2)) on Android and Linux). A
     -- value of zero specifies that the presentation engine /may/ display the
     -- image at any time. This is useful when the application desires to
-    -- provide @presentID@, but does not need a specific @desiredPresentTime@.
+    -- provide @presentID@,
     desiredPresentTime :: Word64
   }
   deriving (Typeable, Eq)
@@ -628,7 +637,7 @@ deriving instance Generic (PresentTimeGOOGLE)
 deriving instance Show PresentTimeGOOGLE
 
 instance ToCStruct PresentTimeGOOGLE where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PresentTimeGOOGLE{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (presentID)
     poke ((p `plusPtr` 8 :: Ptr Word64)) (desiredPresentTime)

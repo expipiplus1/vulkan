@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Vikram Kushwaha
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_conditional_rendering:%20&body=@vkushwaha%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_conditional_rendering] @vkushwaha%0A<<Here describe the issue or question you have about the VK_EXT_conditional_rendering extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -118,12 +118,12 @@
 --
 -- 1) Should conditional rendering affect copy and blit commands?
 --
--- RESOLVED: Conditional rendering should not affect copies and blits.
+-- __RESOLVED__: Conditional rendering should not affect copies and blits.
 --
 -- 2) Should secondary command buffers be allowed to execute while
 -- conditional rendering is active in the primary command buffer?
 --
--- RESOLVED: The rendering commands in secondary command buffer will be
+-- __RESOLVED__: The rendering commands in secondary command buffer will be
 -- affected by an active conditional rendering in primary command buffer if
 -- the @conditionalRenderingEnable@ is set to
 -- 'Vulkan.Core10.FundamentalTypes.TRUE'. Conditional rendering /must/ not
@@ -143,9 +143,9 @@
 -- -   Revision 2, 2018-05-21 (Vikram Kushwaha)
 --
 --     -   Add new pipeline stage, access flags and limit conditional
---         rendering to a subpass or entire renderpass.
+--         rendering to a subpass or entire render pass.
 --
--- = See Also
+-- == See Also
 --
 -- 'CommandBufferInheritanceConditionalRenderingInfoEXT',
 -- 'ConditionalRenderingBeginInfoEXT', 'ConditionalRenderingFlagBitsEXT',
@@ -153,7 +153,7 @@
 -- 'PhysicalDeviceConditionalRenderingFeaturesEXT',
 -- 'cmdBeginConditionalRenderingEXT', 'cmdEndConditionalRenderingEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conditional_rendering Vulkan Specification>

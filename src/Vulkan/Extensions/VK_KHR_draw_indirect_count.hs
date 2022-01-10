@@ -29,7 +29,7 @@
 -- [__Contact__]
 --
 --     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_draw_indirect_count:%20&body=@pdaniell-nv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_draw_indirect_count] @pdaniell-nv%0A<<Here describe the issue or question you have about the VK_KHR_draw_indirect_count extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -60,12 +60,12 @@
 -- == Description
 --
 -- This extension is based off the @VK_AMD_draw_indirect_count@ extension.
--- This extension allows an application to source the number of draw calls
--- for indirect draw calls from a buffer.
+-- This extension allows an application to source the number of draws for
+-- indirect drawing calls from a buffer.
 --
 -- Applications might want to do culling on the GPU via a compute shader
--- prior to the draw. This enables the application to generate arbitrary
--- amounts of draw commands and execute them without host intervention.
+-- prior to drawing. This enables the application to generate an arbitrary
+-- number of drawing commands and execute them without host intervention.
 --
 -- == Promotion to Vulkan 1.2
 --
@@ -96,11 +96,11 @@
 --
 --     -   Initial draft based off VK_AMD_draw_indirect_count
 --
--- = See Also
+-- == See Also
 --
 -- 'cmdDrawIndexedIndirectCountKHR', 'cmdDrawIndirectCountKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_draw_indirect_count Vulkan Specification>

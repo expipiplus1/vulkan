@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Kedarnath Thangudu
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_representative_fragment_test:%20&body=@kthangudu%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_representative_fragment_test] @kthangudu%0A<<Here describe the issue or question you have about the VK_NV_representative_fragment_test extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -103,7 +103,7 @@
 --
 -- __RESOLVED__: No. As specified, we only guarantee that each primitive
 -- with at least one fragment that passes prior tests will have one
--- fragment passing the representative fragment tests. We don’t guarantee
+-- fragment passing the representative fragment tests. We do not guarantee
 -- that any particular fragment will fail the test.
 --
 -- In the initial implementation of this extension, the representative
@@ -126,7 +126,7 @@
 -- __RESOLVED__: If writes to the color or depth buffer are enabled, they
 -- will be performed for any fragments that survive the relevant tests. Any
 -- fragments that fail the representative fragment test will not update
--- color buffers. For the use cases intended for this feature, we don’t
+-- color buffers. For the use cases intended for this feature, we do not
 -- expect color or depth writes to be enabled.
 --
 -- (4) How do derivatives and automatic texture level of detail
@@ -135,7 +135,7 @@
 -- __RESOLVED__: If a fragment shader uses derivative functions or texture
 -- lookups using automatic level of detail computation, derivatives will be
 -- computed identically whether or not the representative fragment test is
--- enabled. For the use cases intended for this feature, we don’t expect
+-- enabled. For the use cases intended for this feature, we do not expect
 -- the use of derivatives in the fragment shader.
 --
 -- == Version History
@@ -148,12 +148,12 @@
 --
 --     -   Internal Revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceRepresentativeFragmentTestFeaturesNV',
 -- 'PipelineRepresentativeFragmentTestStateCreateInfoNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_representative_fragment_test Vulkan Specification>
@@ -168,7 +168,7 @@ module Vulkan.Extensions.VK_NV_representative_fragment_test  ( PhysicalDeviceRep
                                                              , pattern NV_REPRESENTATIVE_FRAGMENT_TEST_EXTENSION_NAME
                                                              ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -197,23 +197,26 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceRepresentativeFragmentTestFeaturesNV'
--- structure describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceRepresentativeFragmentTestFeaturesNV' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceRepresentativeFragmentTestFeaturesNV' /can/ also be
--- included in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to enable the feature.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceRepresentativeFragmentTestFeaturesNV' /can/
+-- also be used in the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
+-- features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_representative_fragment_test VK_NV_representative_fragment_test>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceRepresentativeFragmentTestFeaturesNV = PhysicalDeviceRepresentativeFragmentTestFeaturesNV
@@ -229,7 +232,7 @@ deriving instance Generic (PhysicalDeviceRepresentativeFragmentTestFeaturesNV)
 deriving instance Show PhysicalDeviceRepresentativeFragmentTestFeaturesNV
 
 instance ToCStruct PhysicalDeviceRepresentativeFragmentTestFeaturesNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceRepresentativeFragmentTestFeaturesNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_REPRESENTATIVE_FRAGMENT_TEST_FEATURES_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -265,19 +268,20 @@ instance Zero PhysicalDeviceRepresentativeFragmentTestFeaturesNV where
 --
 -- = Description
 --
--- If this structure is not present, @representativeFragmentTestEnable@ is
--- considered to be 'Vulkan.Core10.FundamentalTypes.FALSE', and the
--- representative fragment test is disabled.
+-- If this structure is not included in the @pNext@ chain,
+-- @representativeFragmentTestEnable@ is considered to be
+-- 'Vulkan.Core10.FundamentalTypes.FALSE', and the representative fragment
+-- test is disabled.
 --
--- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-fragment-earlytest early fragment tests>
--- are not enabled in the active fragment shader, the representative
--- fragment shader test has no effect, even if enabled.
+-- If the active fragment shader specifies the @EarlyFragmentTests@
+-- execution mode, the representative fragment shader test has no effect,
+-- even if enabled.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_representative_fragment_test VK_NV_representative_fragment_test>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineRepresentativeFragmentTestStateCreateInfoNV = PipelineRepresentativeFragmentTestStateCreateInfoNV
@@ -291,7 +295,7 @@ deriving instance Generic (PipelineRepresentativeFragmentTestStateCreateInfoNV)
 deriving instance Show PipelineRepresentativeFragmentTestStateCreateInfoNV
 
 instance ToCStruct PipelineRepresentativeFragmentTestStateCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineRepresentativeFragmentTestStateCreateInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_REPRESENTATIVE_FRAGMENT_TEST_STATE_CREATE_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

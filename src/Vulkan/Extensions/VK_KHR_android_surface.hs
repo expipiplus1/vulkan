@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_android_surface:%20&body=@critsec%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_android_surface] @critsec%0A<<Here describe the issue or question you have about the VK_KHR_android_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -147,12 +147,12 @@
 --     -   Moved VK_ERROR_NATIVE_WINDOW_IN_USE_KHR from the
 --         VK_KHR_android_surface to the VK_KHR_surface extension.
 --
--- = See Also
+-- == See Also
 --
 -- 'ANativeWindow', 'AndroidSurfaceCreateFlagsKHR',
 -- 'AndroidSurfaceCreateInfoKHR', 'createAndroidSurfaceKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_android_surface Vulkan Specification>
@@ -176,7 +176,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -217,6 +217,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateAndroidSurfaceKHR))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Enums.Result (Result)
@@ -298,6 +299,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_android_surface VK_KHR_android_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'AndroidSurfaceCreateInfoKHR', 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
@@ -314,7 +316,7 @@ createAndroidSurfaceKHR :: forall io
                            ("allocator" ::: Maybe AllocationCallbacks)
                         -> io (SurfaceKHR)
 createAndroidSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateAndroidSurfaceKHRPtr = pVkCreateAndroidSurfaceKHR (instanceCmds (instance' :: Instance))
+  let vkCreateAndroidSurfaceKHRPtr = pVkCreateAndroidSurfaceKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateAndroidSurfaceKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateAndroidSurfaceKHR is null" Nothing Nothing
   let vkCreateAndroidSurfaceKHR' = mkVkCreateAndroidSurfaceKHR vkCreateAndroidSurfaceKHRPtr
@@ -336,6 +338,7 @@ createAndroidSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_android_surface VK_KHR_android_surface>,
 -- 'AndroidSurfaceCreateFlagsKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createAndroidSurfaceKHR'
@@ -359,7 +362,7 @@ deriving instance Generic (AndroidSurfaceCreateInfoKHR)
 deriving instance Show AndroidSurfaceCreateInfoKHR
 
 instance ToCStruct AndroidSurfaceCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AndroidSurfaceCreateInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -402,6 +405,7 @@ instance Zero AndroidSurfaceCreateInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_android_surface VK_KHR_android_surface>,
 -- 'AndroidSurfaceCreateInfoKHR'
 newtype AndroidSurfaceCreateFlagsKHR = AndroidSurfaceCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Nuno Subtil
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_device_diagnostic_checkpoints:%20&body=@nsubtil%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_device_diagnostic_checkpoints] @nsubtil%0A<<Here describe the issue or question you have about the VK_NV_device_diagnostic_checkpoints extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -92,12 +92,12 @@
 --
 --     -   ???
 --
--- = See Also
+-- == See Also
 --
 -- 'CheckpointDataNV', 'QueueFamilyCheckpointPropertiesNV',
 -- 'cmdSetCheckpointNV', 'getQueueCheckpointDataNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_diagnostic_checkpoints Vulkan Specification>

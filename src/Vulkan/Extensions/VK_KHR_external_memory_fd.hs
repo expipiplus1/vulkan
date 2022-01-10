@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_external_memory_fd:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_external_memory_fd] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_external_memory_fd extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -112,12 +112,12 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'ImportMemoryFdInfoKHR', 'MemoryFdPropertiesKHR', 'MemoryGetFdInfoKHR',
 -- 'getMemoryFdKHR', 'getMemoryFdPropertiesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_fd Vulkan Specification>
@@ -139,7 +139,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -178,6 +178,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetMemoryFdKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkGetMemoryFdPropertiesKHR))
 import Vulkan.Core10.Handles (DeviceMemory)
@@ -226,6 +227,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_fd VK_KHR_external_memory_fd>,
 -- 'Vulkan.Core10.Handles.Device', 'MemoryGetFdInfoKHR'
 getMemoryFdKHR :: forall io
                 . (MonadIO io)
@@ -243,7 +245,7 @@ getMemoryFdKHR :: forall io
                   MemoryGetFdInfoKHR
                -> io (("fd" ::: Int32))
 getMemoryFdKHR device getFdInfo = liftIO . evalContT $ do
-  let vkGetMemoryFdKHRPtr = pVkGetMemoryFdKHR (deviceCmds (device :: Device))
+  let vkGetMemoryFdKHRPtr = pVkGetMemoryFdKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetMemoryFdKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryFdKHR is null" Nothing Nothing
   let vkGetMemoryFdKHR' = mkVkGetMemoryFdKHR vkGetMemoryFdKHRPtr
@@ -279,6 +281,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_fd VK_KHR_external_memory_fd>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'MemoryFdPropertiesKHR'
@@ -289,11 +292,13 @@ getMemoryFdPropertiesKHR :: forall io
                             -- #VUID-vkGetMemoryFdPropertiesKHR-device-parameter# @device@ /must/ be a
                             -- valid 'Vulkan.Core10.Handles.Device' handle
                             Device
-                         -> -- | @handleType@ is the type of the handle @fd@.
+                         -> -- | @handleType@ is a
+                            -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+                            -- value specifying the type of the handle @fd@.
                             --
                             -- #VUID-vkGetMemoryFdPropertiesKHR-handleType-00674# @handleType@ /must/
                             -- not be
-                            -- 'Vulkan.Extensions.VK_KHR_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR'
+                            -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT'
                             --
                             -- #VUID-vkGetMemoryFdPropertiesKHR-handleType-parameter# @handleType@
                             -- /must/ be a valid
@@ -307,7 +312,7 @@ getMemoryFdPropertiesKHR :: forall io
                             ("fd" ::: Int32)
                          -> io (MemoryFdPropertiesKHR)
 getMemoryFdPropertiesKHR device handleType fd = liftIO . evalContT $ do
-  let vkGetMemoryFdPropertiesKHRPtr = pVkGetMemoryFdPropertiesKHR (deviceCmds (device :: Device))
+  let vkGetMemoryFdPropertiesKHRPtr = pVkGetMemoryFdPropertiesKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetMemoryFdPropertiesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryFdPropertiesKHR is null" Nothing Nothing
   let vkGetMemoryFdPropertiesKHR' = mkVkGetMemoryFdPropertiesKHR vkGetMemoryFdPropertiesKHRPtr
@@ -318,7 +323,7 @@ getMemoryFdPropertiesKHR device handleType fd = liftIO . evalContT $ do
   pure $ (pMemoryFdProperties)
 
 
--- | VkImportMemoryFdInfoKHR - import memory created on the same physical
+-- | VkImportMemoryFdInfoKHR - Import memory created on the same physical
 -- device from a file descriptor
 --
 -- = Description
@@ -348,10 +353,13 @@ getMemoryFdPropertiesKHR device handleType fd = liftIO . evalContT $ do
 --
 -- -   #VUID-VkImportMemoryFdInfoKHR-handleType-00669# If @handleType@ is
 --     not @0@, it /must/ be
---     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT'.
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT'
+--     or
+--     'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT'
 --
 -- -   #VUID-VkImportMemoryFdInfoKHR-handleType-00670# If @handleType@ is
---     not @0@, @fd@ /must/ be a valid POSIX file descriptor handle.
+--     not @0@, @fd@ /must/ be a valid handle of the type specified by
+--     @handleType@
 --
 -- -   #VUID-VkImportMemoryFdInfoKHR-fd-01746# The memory represented by
 --     @fd@ /must/ have been created from a physical device and driver that
@@ -374,10 +382,13 @@ getMemoryFdPropertiesKHR device handleType fd = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_fd VK_KHR_external_memory_fd>,
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImportMemoryFdInfoKHR = ImportMemoryFdInfoKHR
-  { -- | @handleType@ specifies the handle type of @fd@.
+  { -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+    -- value specifying the handle type of @fd@.
     handleType :: ExternalMemoryHandleTypeFlagBits
   , -- | @fd@ is the external handle to import.
     fd :: Int32
@@ -389,7 +400,7 @@ deriving instance Generic (ImportMemoryFdInfoKHR)
 deriving instance Show ImportMemoryFdInfoKHR
 
 instance ToCStruct ImportMemoryFdInfoKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImportMemoryFdInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMPORT_MEMORY_FD_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -429,6 +440,7 @@ instance Zero ImportMemoryFdInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_fd VK_KHR_external_memory_fd>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getMemoryFdPropertiesKHR'
 data MemoryFdPropertiesKHR = MemoryFdPropertiesKHR
@@ -442,7 +454,7 @@ deriving instance Generic (MemoryFdPropertiesKHR)
 deriving instance Show MemoryFdPropertiesKHR
 
 instance ToCStruct MemoryFdPropertiesKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryFdPropertiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_FD_PROPERTIES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -487,16 +499,17 @@ instance Zero MemoryFdPropertiesKHR where
 -- Note
 --
 -- The size of the exported file /may/ be larger than the size requested by
--- 'Vulkan.Core10.Memory.MemoryAllocateInfo'::allocationSize. If
+-- 'Vulkan.Core10.Memory.MemoryAllocateInfo'::@allocationSize@. If
 -- @handleType@ is
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT',
 -- then the application /can/ query the file’s actual size with
--- <man:lseek(2) lseek(2)>.
+-- <https://man7.org/linux/man-pages/man2/lseek.2.html lseek>.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_fd VK_KHR_external_memory_fd>,
 -- 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'getMemoryFdKHR'
@@ -506,7 +519,9 @@ data MemoryGetFdInfoKHR = MemoryGetFdInfoKHR
     -- #VUID-VkMemoryGetFdInfoKHR-memory-parameter# @memory@ /must/ be a valid
     -- 'Vulkan.Core10.Handles.DeviceMemory' handle
     memory :: DeviceMemory
-  , -- | @handleType@ is the type of handle requested.
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
+    -- value specifying the type of handle requested.
     --
     -- #VUID-VkMemoryGetFdInfoKHR-handleType-00671# @handleType@ /must/ have
     -- been included in
@@ -514,7 +529,9 @@ data MemoryGetFdInfoKHR = MemoryGetFdInfoKHR
     -- when @memory@ was created
     --
     -- #VUID-VkMemoryGetFdInfoKHR-handleType-00672# @handleType@ /must/ be
-    -- defined as a POSIX file descriptor handle
+    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT'
+    -- or
+    -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT'
     --
     -- #VUID-VkMemoryGetFdInfoKHR-handleType-parameter# @handleType@ /must/ be
     -- a valid
@@ -529,7 +546,7 @@ deriving instance Generic (MemoryGetFdInfoKHR)
 deriving instance Show MemoryGetFdInfoKHR
 
 instance ToCStruct MemoryGetFdInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryGetFdInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_GET_FD_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

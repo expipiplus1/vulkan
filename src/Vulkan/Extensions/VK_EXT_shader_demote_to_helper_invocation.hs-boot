@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_shader_demote_to_helper_invocation:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_shader_demote_to_helper_invocation] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_EXT_shader_demote_to_helper_invocation extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -41,6 +41,9 @@
 --     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_demote_to_helper_invocation.html SPV_EXT_demote_to_helper_invocation>
 --
+--     -   This extension provides API support for
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_demote_to_helper_invocation.txt GL_EXT_demote_to_helper_invocation>
+--
 -- [__Contributors__]
 --
 --     -   Jeff Bolz, NVIDIA
@@ -50,13 +53,13 @@
 -- This extension adds Vulkan support for the
 -- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_demote_to_helper_invocation.html SPV_EXT_demote_to_helper_invocation>
 -- SPIR-V extension. That SPIR-V extension provides a new instruction
--- @OpDemoteToHelperInvocationEXT@ allowing shaders to \"demote\" a
--- fragment shader invocation to behave like a helper invocation for its
--- duration. The demoted invocation will have no further side effects and
--- will not output to the framebuffer, but remains active and can
--- participate in computing derivatives and in
+-- @OpDemoteToHelperInvocationEXT@ allowing shaders to “demote” a fragment
+-- shader invocation to behave like a helper invocation for its duration.
+-- The demoted invocation will have no further side effects and will not
+-- output to the framebuffer, but remains active and can participate in
+-- computing derivatives and in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>.
--- This is a better match for the \"discard\" instruction in HLSL.
+-- This is a better match for the “discard” instruction in HLSL.
 --
 -- == New Structures
 --
@@ -86,11 +89,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_demote_to_helper_invocation Vulkan Specification>

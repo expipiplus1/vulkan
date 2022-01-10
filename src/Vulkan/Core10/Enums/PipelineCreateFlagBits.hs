@@ -4,6 +4,7 @@ module Vulkan.Core10.Enums.PipelineCreateFlagBits  ( PipelineCreateFlags
                                                    , PipelineCreateFlagBits( PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT
                                                                            , PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT
                                                                            , PIPELINE_CREATE_DERIVATIVE_BIT
+                                                                           , PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV
                                                                            , PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT
                                                                            , PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT
                                                                            , PIPELINE_CREATE_LIBRARY_BIT_KHR
@@ -18,6 +19,8 @@ module Vulkan.Core10.Enums.PipelineCreateFlagBits  ( PipelineCreateFlags
                                                                            , PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR
                                                                            , PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR
                                                                            , PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR
+                                                                           , PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT
+                                                                           , PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
                                                                            , PIPELINE_CREATE_DISPATCH_BASE_BIT
                                                                            , PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT
                                                                            , ..
@@ -68,9 +71,9 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --     on each shader in the pipeline before using the pipeline.
 --
 -- -   'PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR' specifies that the
---     shader compiler should capture statistics for the executables
---     produced by the compile process which /can/ later be retrieved by
---     calling
+--     shader compiler should capture statistics for the pipeline
+--     executables produced by the compile process which /can/ later be
+--     retrieved by calling
 --     'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.getPipelineExecutableStatisticsKHR'.
 --     Enabling this flag /must/ not affect the final compiled pipeline but
 --     /may/ disable pipeline caching or otherwise affect pipeline creation
@@ -78,8 +81,8 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --
 -- -   'PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR' specifies
 --     that the shader compiler should capture the internal representations
---     of executables produced by the compile process which /can/ later be
---     retrieved by calling
+--     of pipeline executables produced by the compile process which /can/
+--     later be retrieved by calling
 --     'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.getPipelineExecutableInternalRepresentationsKHR'.
 --     Enabling this flag /must/ not affect the final compiled pipeline but
 --     /may/ disable pipeline caching or otherwise affect pipeline creation
@@ -93,26 +96,37 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR'
 --     specifies that an any-hit shader will always be present when an
---     any-hit shader would be executed.
+--     any-hit shader would be executed. A NULL any-hit shader is an
+--     any-hit shader which is effectively
+--     'Vulkan.Core10.APIConstants.SHADER_UNUSED_KHR', such as from a
+--     shader group consisting entirely of zeros.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR'
 --     specifies that a closest hit shader will always be present when a
---     closest hit shader would be executed.
+--     closest hit shader would be executed. A NULL closest hit shader is a
+--     closest hit shader which is effectively
+--     'Vulkan.Core10.APIConstants.SHADER_UNUSED_KHR', such as from a
+--     shader group consisting entirely of zeros.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR' specifies
 --     that a miss shader will always be present when a miss shader would
---     be executed.
+--     be executed. A NULL miss shader is a miss shader which is
+--     effectively 'Vulkan.Core10.APIConstants.SHADER_UNUSED_KHR', such as
+--     from a shader group consisting entirely of zeros.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR'
 --     specifies that an intersection shader will always be present when an
---     intersection shader would be executed.
+--     intersection shader would be executed. A NULL intersection shader is
+--     an intersection shader which is effectively
+--     'Vulkan.Core10.APIConstants.SHADER_UNUSED_KHR', such as from a
+--     shader group consisting entirely of zeros.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR' specifies that
 --     triangle primitives will be skipped during traversal using
---     @OpTraceKHR@.
+--     @OpTraceRayKHR@.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR' specifies that AABB
---     primitives will be skipped during traversal using @OpTraceKHR@.
+--     primitives will be skipped during traversal using @OpTraceRayKHR@.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR'
 --     specifies that the shader group handles /can/ be saved and reused on
@@ -136,6 +150,17 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --     corresponding pipeline rather than continuing to create additional
 --     pipelines.
 --
+-- -   'PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV' specifies that the
+--     pipeline is allowed to use @OpTraceRayMotionNV@.
+--
+-- -   'PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--     specifies that the pipeline will be used with a fragment shading
+--     rate attachment.
+--
+-- -   'PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
+--     specifies that the pipeline will be used with a fragment density map
+--     attachment.
+--
 -- It is valid to set both 'PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT' and
 -- 'PIPELINE_CREATE_DERIVATIVE_BIT'. This allows a pipeline to be both a
 -- parent and possibly a child in a pipeline hierarchy. See
@@ -144,6 +169,7 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'PipelineCreateFlags'
 newtype PipelineCreateFlagBits = PipelineCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -154,6 +180,8 @@ pattern PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT                    = PipelineCr
 pattern PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT                       = PipelineCreateFlagBits 0x00000002
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_DERIVATIVE_BIT"
 pattern PIPELINE_CREATE_DERIVATIVE_BIT                              = PipelineCreateFlagBits 0x00000004
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV"
+pattern PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV             = PipelineCreateFlagBits 0x00100000
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT"
 pattern PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT             = PipelineCreateFlagBits 0x00000200
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT"
@@ -182,6 +210,10 @@ pattern PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR    = PipelineCr
 pattern PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR = PipelineCreateFlagBits 0x00008000
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR"
 pattern PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR = PipelineCreateFlagBits 0x00004000
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"
+pattern PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT = PipelineCreateFlagBits 0x00400000
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"
+pattern PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = PipelineCreateFlagBits 0x00200000
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_DISPATCH_BASE_BIT"
 pattern PIPELINE_CREATE_DISPATCH_BASE_BIT                           = PipelineCreateFlagBits 0x00000010
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT"
@@ -198,6 +230,7 @@ showTablePipelineCreateFlagBits =
   [ (PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT                 , "DISABLE_OPTIMIZATION_BIT")
   , (PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT                    , "ALLOW_DERIVATIVES_BIT")
   , (PIPELINE_CREATE_DERIVATIVE_BIT                           , "DERIVATIVE_BIT")
+  , (PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV          , "RAY_TRACING_ALLOW_MOTION_BIT_NV")
   , (PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT          , "EARLY_RETURN_ON_FAILURE_BIT_EXT")
   , (PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT, "FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT")
   , (PIPELINE_CREATE_LIBRARY_BIT_KHR                          , "LIBRARY_BIT_KHR")
@@ -216,8 +249,14 @@ showTablePipelineCreateFlagBits =
   , (PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR       , "RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR")
   , (PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR, "RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR")
   , (PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR    , "RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR")
-  , (PIPELINE_CREATE_DISPATCH_BASE_BIT                              , "DISPATCH_BASE_BIT")
-  , (PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT               , "VIEW_INDEX_FROM_DEVICE_INDEX_BIT")
+  , ( PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT
+    , "RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"
+    )
+  , ( PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
+    , "RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"
+    )
+  , (PIPELINE_CREATE_DISPATCH_BASE_BIT               , "DISPATCH_BASE_BIT")
+  , (PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT, "VIEW_INDEX_FROM_DEVICE_INDEX_BIT")
   ]
 
 instance Show PipelineCreateFlagBits where

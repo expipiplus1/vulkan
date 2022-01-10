@@ -26,10 +26,10 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_xlib_surface:%20&body=@critsec%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_xlib_surface] @critsec%0A<<Here describe the issue or question you have about the VK_KHR_xlib_surface extension>> >
 --
 --     -   Ian Elliott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_xlib_surface:%20&body=@ianelliottus%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_xlib_surface] @ianelliottus%0A<<Here describe the issue or question you have about the VK_KHR_xlib_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -131,7 +131,7 @@
 --
 --     -   Added presentation support query for (Display*, VisualID) pair.
 --
---     -   Removed \"root\" parameter from CreateXlibSurfaceKHR(), as it is
+--     -   Removed “root” parameter from CreateXlibSurfaceKHR(), as it is
 --         redundant when a window on the same screen is specified as well.
 --
 --     -   Added appropriate X errors.
@@ -156,12 +156,12 @@
 --     -   Updated the surface create function to take a pCreateInfo
 --         structure.
 --
--- = See Also
+-- == See Also
 --
 -- 'XlibSurfaceCreateFlagsKHR', 'XlibSurfaceCreateInfoKHR',
 -- 'createXlibSurfaceKHR', 'getPhysicalDeviceXlibPresentationSupportKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_xlib_surface Vulkan Specification>

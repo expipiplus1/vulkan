@@ -11,7 +11,7 @@ module Vulkan.Core12.Promoted_From_VK_KHR_driver_properties  ( ConformanceVersio
                                                              ) where
 
 import Vulkan.CStruct.Utils (FixedArray)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Data.ByteString (packCString)
@@ -49,6 +49,8 @@ import Vulkan.Core10.APIConstants (pattern MAX_DRIVER_NAME_SIZE)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_driver_properties VK_KHR_driver_properties>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'PhysicalDeviceDriverProperties',
 -- 'Vulkan.Core12.PhysicalDeviceVulkan12Properties'
 data ConformanceVersion = ConformanceVersion
@@ -68,7 +70,7 @@ deriving instance Generic (ConformanceVersion)
 deriving instance Show ConformanceVersion
 
 instance ToCStruct ConformanceVersion where
-  withCStruct x f = allocaBytesAligned 4 1 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 4 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ConformanceVersion{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word8)) (major)
     poke ((p `plusPtr` 1 :: Ptr Word8)) (minor)
@@ -112,6 +114,16 @@ instance Zero ConformanceVersion where
 --
 -- = Description
 --
+-- If the 'PhysicalDeviceDriverProperties' structure is included in the
+-- @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
+--
+-- These are properties of the driver corresponding to a physical device.
+--
 -- @driverID@ /must/ be immutable for a given driver across instances,
 -- processes, driver versions, and system reboots.
 --
@@ -119,6 +131,8 @@ instance Zero ConformanceVersion where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_driver_properties VK_KHR_driver_properties>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'ConformanceVersion', 'Vulkan.Core12.Enums.DriverId.DriverId',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDriverProperties = PhysicalDeviceDriverProperties
@@ -144,7 +158,7 @@ deriving instance Generic (PhysicalDeviceDriverProperties)
 deriving instance Show PhysicalDeviceDriverProperties
 
 instance ToCStruct PhysicalDeviceDriverProperties where
-  withCStruct x f = allocaBytesAligned 536 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 536 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceDriverProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

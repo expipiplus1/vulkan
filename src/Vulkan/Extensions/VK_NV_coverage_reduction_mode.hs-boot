@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Kedarnath Thangudu
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_coverage_reduction_mode:%20&body=@kthangudu%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_coverage_reduction_mode] @kthangudu%0A<<Here describe the issue or question you have about the VK_NV_coverage_reduction_mode extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -47,7 +47,7 @@
 -- control how this reduction is performed.
 --
 -- -   Merge: When there are more samples in the pixel coverage than color
---     samples, there is an implementation dependent association of each
+--     samples, there is an implementation-dependent association of each
 --     pixel coverage sample to a color sample. In the merge mode, the
 --     color sample coverage is computed such that only if any associated
 --     sample in the pixel coverage is covered, the color sample is
@@ -115,7 +115,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'CoverageReductionModeNV', 'FramebufferMixedSamplesCombinationNV',
 -- 'PhysicalDeviceCoverageReductionModeFeaturesNV',
@@ -123,7 +123,7 @@
 -- 'PipelineCoverageReductionStateCreateInfoNV',
 -- 'getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode Vulkan Specification>

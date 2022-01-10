@@ -52,6 +52,7 @@ newtype V a = V { unV :: ReaderT GlobalHandles (ResourceT IO) a }
   deriving newtype ( Functor
                    , Applicative
                    , Monad
+                   , MonadFail
                    , MonadIO
                    , MonadResource
                    )

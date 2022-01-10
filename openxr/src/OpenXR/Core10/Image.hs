@@ -23,7 +23,7 @@ import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Foldable (traverse_)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -89,6 +89,7 @@ import OpenXR.Core10.Enums.Result (Result(..))
 import {-# SOURCE #-} OpenXR.Extensions.XR_MSFT_secondary_view_configuration (SecondaryViewConfigurationSwapchainCreateInfoMSFT)
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.CStruct.Extends (SomeChild)
 import OpenXR.CStruct.Extends (SomeChild(..))
@@ -97,13 +98,13 @@ import OpenXR.Core10.Enums.StructureType (StructureType)
 import OpenXR.Core10.Handles (Swapchain)
 import OpenXR.Core10.Handles (Swapchain(..))
 import OpenXR.Core10.Handles (Swapchain(Swapchain))
-import OpenXR.Core10.Enums.SwapchainCreateFlags (SwapchainCreateFlags)
+import OpenXR.Core10.Enums.SwapchainCreateFlagBits (SwapchainCreateFlags)
 import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_D3D11_enable (SwapchainImageD3D11KHR)
 import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_D3D12_enable (SwapchainImageD3D12KHR)
 import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_opengl_es_enable (SwapchainImageOpenGLESKHR)
 import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_opengl_enable (SwapchainImageOpenGLKHR)
 import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_vulkan_enable (SwapchainImageVulkanKHR)
-import OpenXR.Core10.Enums.SwapchainUsageFlags (SwapchainUsageFlags)
+import OpenXR.Core10.Enums.SwapchainUsageFlagBits (SwapchainUsageFlags)
 import OpenXR.Core10.Handles (Swapchain_T)
 import OpenXR.Core10.Enums.Result (Result(SUCCESS))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_SWAPCHAIN_CREATE_INFO))
@@ -208,7 +209,7 @@ enumerateSwapchainFormats :: forall io
                              Session
                           -> io (Result, ("formats" ::: Vector Int64))
 enumerateSwapchainFormats session = liftIO . evalContT $ do
-  let xrEnumerateSwapchainFormatsPtr = pXrEnumerateSwapchainFormats (instanceCmds (session :: Session))
+  let xrEnumerateSwapchainFormatsPtr = pXrEnumerateSwapchainFormats (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrEnumerateSwapchainFormatsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEnumerateSwapchainFormats is null" Nothing Nothing
   let xrEnumerateSwapchainFormats' = mkXrEnumerateSwapchainFormats xrEnumerateSwapchainFormatsPtr
@@ -299,7 +300,7 @@ createSwapchain :: forall a io
                    (SwapchainCreateInfo a)
                 -> io (Result, Swapchain)
 createSwapchain session createInfo = liftIO . evalContT $ do
-  let cmds = instanceCmds (session :: Session)
+  let cmds = case session of Session{instanceCmds} -> instanceCmds
   let xrCreateSwapchainPtr = pXrCreateSwapchain cmds
   lift $ unless (xrCreateSwapchainPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateSwapchain is null" Nothing Nothing
@@ -371,7 +372,7 @@ destroySwapchain :: forall io
                     Swapchain
                  -> io ()
 destroySwapchain swapchain = liftIO $ do
-  let xrDestroySwapchainPtr = pXrDestroySwapchain (instanceCmds (swapchain :: Swapchain))
+  let xrDestroySwapchainPtr = pXrDestroySwapchain (case swapchain of Swapchain{instanceCmds} -> instanceCmds)
   unless (xrDestroySwapchainPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrDestroySwapchain is null" Nothing Nothing
   let xrDestroySwapchain' = mkXrDestroySwapchain xrDestroySwapchainPtr
@@ -508,12 +509,13 @@ foreign import ccall
 -- 'OpenXR.Core10.Enums.Result.ERROR_CALL_ORDER_INVALID' if @index@ has
 -- already been acquired and not yet released with 'releaseSwapchainImage'.
 -- If the @swapchain@ was created with the
--- @XR_SWAPCHAIN_CREATE_STATIC_IMAGE_BIT@ set in
--- 'SwapchainCreateInfo'::@createFlags@, this function /must/ not have been
--- previously called for this swapchain. The runtime /must/ return
--- 'OpenXR.Core10.Enums.Result.ERROR_CALL_ORDER_INVALID' if a @swapchain@
--- created with the @XR_SWAPCHAIN_CREATE_STATIC_IMAGE_BIT@ set in
--- 'SwapchainCreateInfo'::@createFlags@ and this function has been
+-- 'OpenXR.Core10.Enums.SwapchainCreateFlagBits.SWAPCHAIN_CREATE_STATIC_IMAGE_BIT'
+-- set in 'SwapchainCreateInfo'::@createFlags@, this function /must/ not
+-- have been previously called for this swapchain. The runtime /must/
+-- return 'OpenXR.Core10.Enums.Result.ERROR_CALL_ORDER_INVALID' if a
+-- @swapchain@ created with the
+-- 'OpenXR.Core10.Enums.SwapchainCreateFlagBits.SWAPCHAIN_CREATE_STATIC_IMAGE_BIT'
+-- set in 'SwapchainCreateInfo'::@createFlags@ and this function has been
 -- successfully called previously for this swapchain.
 --
 -- == Valid Usage (Implicit)
@@ -564,7 +566,7 @@ acquireSwapchainImage :: forall io
                          ("acquireInfo" ::: Maybe SwapchainImageAcquireInfo)
                       -> io (Result, ("index" ::: Word32))
 acquireSwapchainImage swapchain acquireInfo = liftIO . evalContT $ do
-  let xrAcquireSwapchainImagePtr = pXrAcquireSwapchainImage (instanceCmds (swapchain :: Swapchain))
+  let xrAcquireSwapchainImagePtr = pXrAcquireSwapchainImage (case swapchain of Swapchain{instanceCmds} -> instanceCmds)
   lift $ unless (xrAcquireSwapchainImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrAcquireSwapchainImage is null" Nothing Nothing
   let xrAcquireSwapchainImage' = mkXrAcquireSwapchainImage xrAcquireSwapchainImagePtr
@@ -605,7 +607,7 @@ waitSwapchainImageSafeOrUnsafe :: forall io
                                   SwapchainImageWaitInfo
                                -> io (Result)
 waitSwapchainImageSafeOrUnsafe mkXrWaitSwapchainImage swapchain waitInfo = liftIO . evalContT $ do
-  let xrWaitSwapchainImagePtr = pXrWaitSwapchainImage (instanceCmds (swapchain :: Swapchain))
+  let xrWaitSwapchainImagePtr = pXrWaitSwapchainImage (case swapchain of Swapchain{instanceCmds} -> instanceCmds)
   lift $ unless (xrWaitSwapchainImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrWaitSwapchainImage is null" Nothing Nothing
   let xrWaitSwapchainImage' = mkXrWaitSwapchainImage xrWaitSwapchainImagePtr
@@ -717,9 +719,9 @@ foreign import ccall
 -- = Description
 --
 -- If the @swapchain@ was created with the
--- @XR_SWAPCHAIN_CREATE_STATIC_IMAGE_BIT@ set in
--- 'SwapchainCreateInfo'::@createFlags@ structure, this function /must/ not
--- have been previously called for this swapchain.
+-- 'OpenXR.Core10.Enums.SwapchainCreateFlagBits.SWAPCHAIN_CREATE_STATIC_IMAGE_BIT'
+-- set in 'SwapchainCreateInfo'::@createFlags@ structure, this function
+-- /must/ not have been previously called for this swapchain.
 --
 -- The runtime /must/ return
 -- 'OpenXR.Core10.Enums.Result.ERROR_CALL_ORDER_INVALID' if no image has
@@ -771,7 +773,7 @@ releaseSwapchainImage :: forall io
                          ("releaseInfo" ::: Maybe SwapchainImageReleaseInfo)
                       -> io (Result)
 releaseSwapchainImage swapchain releaseInfo = liftIO . evalContT $ do
-  let xrReleaseSwapchainImagePtr = pXrReleaseSwapchainImage (instanceCmds (swapchain :: Swapchain))
+  let xrReleaseSwapchainImagePtr = pXrReleaseSwapchainImage (case swapchain of Swapchain{instanceCmds} -> instanceCmds)
   lift $ unless (xrReleaseSwapchainImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrReleaseSwapchainImage is null" Nothing Nothing
   let xrReleaseSwapchainImage' = mkXrReleaseSwapchainImage xrReleaseSwapchainImagePtr
@@ -789,10 +791,10 @@ releaseSwapchainImage swapchain releaseInfo = liftIO . evalContT $ do
 --
 -- = See Also
 --
--- 'OpenXR.Core10.Enums.SessionCreateFlags.SessionCreateFlags',
+-- 'OpenXR.Core10.Enums.SessionCreateFlagBits.SessionCreateFlags',
 -- 'OpenXR.Core10.Enums.StructureType.StructureType',
--- 'OpenXR.Core10.Enums.SwapchainCreateFlags.SwapchainCreateFlags',
--- 'OpenXR.Core10.Enums.SwapchainUsageFlags.SwapchainUsageFlags',
+-- 'OpenXR.Core10.Enums.SwapchainCreateFlagBits.SwapchainCreateFlags',
+-- 'OpenXR.Core10.Enums.SwapchainUsageFlagBits.SwapchainUsageFlags',
 -- 'OpenXR.Core10.Device.createSession', 'createSwapchain',
 -- 'OpenXR.Extensions.XR_KHR_android_surface_swapchain.createSwapchainAndroidSurfaceKHR',
 -- 'enumerateSwapchainFormats'
@@ -807,16 +809,16 @@ data SwapchainCreateInfo (es :: [Type]) = SwapchainCreateInfo
     -- 'OpenXR.Extensions.XR_MSFT_secondary_view_configuration.SecondaryViewConfigurationSwapchainCreateInfoMSFT'
     next :: Chain es
   , -- | @createFlags@ is a bitmask of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSwapchainCreateFlagBits XrSwapchainCreateFlagBits>
+    -- 'OpenXR.Core10.Enums.SwapchainCreateFlagBits.SwapchainCreateFlagBits'
     -- describing additional properties of the swapchain.
     --
     -- #VUID-XrSwapchainCreateInfo-createFlags-parameter# @createFlags@ /must/
     -- be @0@ or a valid combination of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSwapchainCreateFlagBits XrSwapchainCreateFlagBits>
+    -- 'OpenXR.Core10.Enums.SwapchainCreateFlagBits.SwapchainCreateFlagBits'
     -- values
     createFlags :: SwapchainCreateFlags
   , -- | @usageFlags@ is a bitmask of
-    -- 'OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.SwapchainUsageFlagBits'
+    -- 'OpenXR.Core10.Enums.SwapchainUsageFlagBits.SwapchainUsageFlagBits'
     -- describing the intended usage of the swapchain’s images. The usage flags
     -- define how the corresponding graphics API objects are created. A
     -- mismatch /may/ result in swapchain images that do not support the
@@ -824,7 +826,7 @@ data SwapchainCreateInfo (es :: [Type]) = SwapchainCreateInfo
     --
     -- #VUID-XrSwapchainCreateInfo-usageFlags-parameter# @usageFlags@ /must/ be
     -- @0@ or a valid combination of
-    -- 'OpenXR.Extensions.XR_MND_swapchain_usage_input_attachment_bit.SwapchainUsageFlagBits'
+    -- 'OpenXR.Core10.Enums.SwapchainUsageFlagBits.SwapchainUsageFlagBits'
     -- values
     usageFlags :: SwapchainUsageFlags
   , -- | @format@ is a graphics API-specific texture format identifier. For
@@ -863,7 +865,7 @@ deriving instance Show (Chain es) => Show (SwapchainCreateInfo es)
 
 instance Extensible SwapchainCreateInfo where
   extensibleTypeName = "SwapchainCreateInfo"
-  setNext x next = x{next = next}
+  setNext SwapchainCreateInfo{..} next' = SwapchainCreateInfo{next = next', ..}
   getNext SwapchainCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SwapchainCreateInfo e => b) -> Maybe b
   extends _ f
@@ -871,34 +873,34 @@ instance Extensible SwapchainCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss SwapchainCreateInfo es, PokeChain es) => ToCStruct (SwapchainCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SWAPCHAIN_CREATE_INFO)
     next'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) next''
     lift $ poke ((p `plusPtr` 16 :: Ptr SwapchainCreateFlags)) (createFlags)
-    lift $ poke ((p `plusPtr` 20 :: Ptr SwapchainUsageFlags)) (usageFlags)
-    lift $ poke ((p `plusPtr` 24 :: Ptr Int64)) (format)
-    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (sampleCount)
-    lift $ poke ((p `plusPtr` 36 :: Ptr Word32)) (width)
-    lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) (height)
-    lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) (faceCount)
-    lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (arraySize)
-    lift $ poke ((p `plusPtr` 52 :: Ptr Word32)) (mipCount)
+    lift $ poke ((p `plusPtr` 24 :: Ptr SwapchainUsageFlags)) (usageFlags)
+    lift $ poke ((p `plusPtr` 32 :: Ptr Int64)) (format)
+    lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) (sampleCount)
+    lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) (width)
+    lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (height)
+    lift $ poke ((p `plusPtr` 52 :: Ptr Word32)) (faceCount)
+    lift $ poke ((p `plusPtr` 56 :: Ptr Word32)) (arraySize)
+    lift $ poke ((p `plusPtr` 60 :: Ptr Word32)) (mipCount)
     lift $ f
-  cStructSize = 56
+  cStructSize = 64
   cStructAlignment = 8
   pokeZeroCStruct p f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SWAPCHAIN_CREATE_INFO)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    lift $ poke ((p `plusPtr` 24 :: Ptr Int64)) (zero)
-    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
-    lift $ poke ((p `plusPtr` 36 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 32 :: Ptr Int64)) (zero)
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) (zero)
     lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) (zero)
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (zero)
     lift $ poke ((p `plusPtr` 52 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 56 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 60 :: Ptr Word32)) (zero)
     lift $ f
 
 instance (Extendss SwapchainCreateInfo es, PeekChain es) => FromCStruct (SwapchainCreateInfo es) where
@@ -906,14 +908,14 @@ instance (Extendss SwapchainCreateInfo es, PeekChain es) => FromCStruct (Swapcha
     next <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next' <- peekChain (castPtr next)
     createFlags <- peek @SwapchainCreateFlags ((p `plusPtr` 16 :: Ptr SwapchainCreateFlags))
-    usageFlags <- peek @SwapchainUsageFlags ((p `plusPtr` 20 :: Ptr SwapchainUsageFlags))
-    format <- peek @Int64 ((p `plusPtr` 24 :: Ptr Int64))
-    sampleCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
-    width <- peek @Word32 ((p `plusPtr` 36 :: Ptr Word32))
-    height <- peek @Word32 ((p `plusPtr` 40 :: Ptr Word32))
-    faceCount <- peek @Word32 ((p `plusPtr` 44 :: Ptr Word32))
-    arraySize <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
-    mipCount <- peek @Word32 ((p `plusPtr` 52 :: Ptr Word32))
+    usageFlags <- peek @SwapchainUsageFlags ((p `plusPtr` 24 :: Ptr SwapchainUsageFlags))
+    format <- peek @Int64 ((p `plusPtr` 32 :: Ptr Int64))
+    sampleCount <- peek @Word32 ((p `plusPtr` 40 :: Ptr Word32))
+    width <- peek @Word32 ((p `plusPtr` 44 :: Ptr Word32))
+    height <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
+    faceCount <- peek @Word32 ((p `plusPtr` 52 :: Ptr Word32))
+    arraySize <- peek @Word32 ((p `plusPtr` 56 :: Ptr Word32))
+    mipCount <- peek @Word32 ((p `plusPtr` 60 :: Ptr Word32))
     pure $ SwapchainCreateInfo
              next' createFlags usageFlags format sampleCount width height faceCount arraySize mipCount
 
@@ -989,7 +991,7 @@ instance Inheritable SwapchainImageBaseHeader where
           Nothing
 
 instance ToCStruct SwapchainImageBaseHeader where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainImageBaseHeader{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (type')
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1044,7 +1046,7 @@ deriving instance Generic (SwapchainImageAcquireInfo)
 deriving instance Show SwapchainImageAcquireInfo
 
 instance ToCStruct SwapchainImageAcquireInfo where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainImageAcquireInfo f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SWAPCHAIN_IMAGE_ACQUIRE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1090,7 +1092,7 @@ deriving instance Generic (SwapchainImageWaitInfo)
 deriving instance Show SwapchainImageWaitInfo
 
 instance ToCStruct SwapchainImageWaitInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainImageWaitInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SWAPCHAIN_IMAGE_WAIT_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1147,7 +1149,7 @@ deriving instance Generic (SwapchainImageReleaseInfo)
 deriving instance Show SwapchainImageReleaseInfo
 
 instance ToCStruct SwapchainImageReleaseInfo where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainImageReleaseInfo f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SWAPCHAIN_IMAGE_RELEASE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

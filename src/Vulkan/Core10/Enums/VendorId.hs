@@ -35,7 +35,7 @@ import GHC.Show (Show(showsPrec))
 --
 -- = See Also
 --
--- No cross-references are available
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>
 newtype VendorId = VendorId Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error

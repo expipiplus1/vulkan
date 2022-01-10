@@ -39,7 +39,7 @@ module OpenXR.Extensions.XR_KHR_composition_layer_depth  ( CompositionLayerDepth
                                                          , pattern KHR_COMPOSITION_LAYER_DEPTH_EXTENSION_NAME
                                                          ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Data.Coerce (coerce)
@@ -78,9 +78,9 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_COMPOSITION_LAYER_D
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrCompositionLayerDepthInfoKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'CompositionLayerDepthInfoKHR'
+-- -   #VUID-XrCompositionLayerDepthInfoKHR-extension-notenabled# The
+--     @XR_KHR_composition_layer_depth@ extension /must/ be enabled prior
+--     to using 'CompositionLayerDepthInfoKHR'
 --
 -- -   #VUID-XrCompositionLayerDepthInfoKHR-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_COMPOSITION_LAYER_DEPTH_INFO_KHR'
@@ -135,7 +135,7 @@ deriving instance Generic (CompositionLayerDepthInfoKHR)
 deriving instance Show CompositionLayerDepthInfoKHR
 
 instance ToCStruct CompositionLayerDepthInfoKHR where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CompositionLayerDepthInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_COMPOSITION_LAYER_DEPTH_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

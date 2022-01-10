@@ -15,7 +15,7 @@
 --     151
 --
 -- [__Revision__]
---     11
+--     13
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -30,14 +30,16 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_acceleration_structure:%20&body=@dgkoch%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_acceleration_structure] @dgkoch%0A<<Here describe the issue or question you have about the VK_KHR_acceleration_structure extension>> >
 --
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2020-11-12
+--     2021-09-30
 --
 -- [__Contributors__]
+--
+--     -   Samuel Bourasseau, Adobe
 --
 --     -   Matthäus Chajdas, AMD
 --
@@ -349,6 +351,14 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- is supported:
+--
+-- -   Extending 'FormatFeatureFlagBits2KHR':
+--
+--     -   'FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR'
+--
 -- == Issues
 --
 -- (1) How does this extension differ from VK_NV_ray_tracing?
@@ -466,7 +476,7 @@
 --
 --     -   'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureCreateInfoNV'
 --         → 'AccelerationStructureCreateInfoKHR' (reshuffle geometry
---         layout\/info)
+--         layout\/information)
 --
 --     -   'Vulkan.Extensions.VK_NV_ray_tracing.PhysicalDeviceRayTracingPropertiesNV'
 --         → 'PhysicalDeviceAccelerationStructurePropertiesKHR' (for
@@ -486,7 +496,7 @@
 --
 --     -   'Vulkan.Extensions.VK_NV_ray_tracing.createAccelerationStructureNV'
 --         → 'createAccelerationStructureKHR' (device address, different
---         geometry layout\/info)
+--         geometry layout\/information)
 --
 --     -   'Vulkan.Extensions.VK_NV_ray_tracing.getAccelerationStructureMemoryRequirementsNV'
 --         (deleted - replaced by allocating on top of
@@ -609,10 +619,8 @@
 -- -   change 'cmdBuildAccelerationStructuresIndirectKHR' to use buffer
 --     device address for indirect parameter
 --
--- -   make
---     <VK_KHR_deferred_host_operations.html VK_KHR_deferred_host_operations>
---     an interaction instead of a required extension (later went back on
---     this)
+-- -   make @VK_KHR_deferred_host_operations@ an interaction instead of a
+--     required extension (later went back on this)
 --
 -- -   renamed @VkAccelerationStructureBuildOffsetInfoKHR@ to
 --     'AccelerationStructureBuildRangeInfoKHR'
@@ -669,14 +677,13 @@
 --         that the implementation can modify such parameters until the
 --         deferred host operation completes
 --
---     -   <VK_KHR_deferred_host_operations.html VK_KHR_deferred_host_operations>
---         is required again
+--     -   @VK_KHR_deferred_host_operations@ is required again
 --
 -- -   Change acceleration structure build to always be sized
 --
 --     -   de-alias
 --         'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureMemoryRequirementsTypeNV'
---         and @VkAccelerationStructureMemoryRequirementsTypeKHR@ and
+--         and @VkAccelerationStructureMemoryRequirementsTypeKHR@, and
 --         remove @VkAccelerationStructureMemoryRequirementsTypeKHR@
 --
 --     -   add 'getAccelerationStructureBuildSizesKHR' command and
@@ -705,33 +712,30 @@
 --     implementation flexibility and decoupling ray query support from ray
 --     pipelines:
 --
---     -   <VK_KHR_acceleration_structure.html VK_KHR_acceleration_structure>
---         (for acceleration structure operations)
+--     -   @VK_KHR_acceleration_structure@ (for acceleration structure
+--         operations)
 --
---     -   <VK_KHR_ray_tracing_pipeline.html VK_KHR_ray_tracing_pipeline>
---         (for ray tracing pipeline and shader stages)
+--     -   @VK_KHR_ray_tracing_pipeline@ (for ray tracing pipeline and
+--         shader stages)
 --
---     -   <VK_KHR_ray_query.html VK_KHR_ray_query> (for ray queries in
---         existing shader stages)
+--     -   @VK_KHR_ray_query@ (for ray queries in existing shader stages)
 --
 -- -   clarify buffer usage flags for ray tracing
 --
 --     -   'Vulkan.Extensions.VK_NV_ray_tracing.BUFFER_USAGE_RAY_TRACING_BIT_NV'
---         is left alone in <VK_NV_ray_tracing.html VK_NV_ray_tracing>
---         (required on @scratch@ and @instanceData@)
+--         is left alone in @VK_NV_ray_tracing@ (required on @scratch@ and
+--         @instanceData@)
 --
 --     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR'
 --         is added as an alias of
 --         'Vulkan.Extensions.VK_NV_ray_tracing.BUFFER_USAGE_RAY_TRACING_BIT_NV'
---         in
---         <VK_KHR_ray_tracing_pipeline.html VK_KHR_ray_tracing_pipeline>
---         and is required on shader binding table buffers
+--         in @VK_KHR_ray_tracing_pipeline@ and is required on shader
+--         binding table buffers
 --
 --     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR'
---         is added in
---         <VK_KHR_acceleration_structure.html VK_KHR_acceleration_structure>
---         for all vertex, index, transform, aabb, and instance buffer data
---         referenced by device build commands
+--         is added in @VK_KHR_acceleration_structure@ for all vertex,
+--         index, transform, aabb, and instance buffer data referenced by
+--         device build commands
 --
 --     -   'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_BUFFER_BIT'
 --         is used for @scratchData@
@@ -743,7 +747,8 @@
 --     constrain the device address
 --
 --     -   de-alias
---         'Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV',
+--         'Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV'
+--         and
 --         'Vulkan.Extensions.VK_NV_ray_tracing.bindAccelerationStructureMemoryNV',
 --         and remove @VkBindAccelerationStructureMemoryInfoKHR@,
 --         @VkAccelerationStructureMemoryRequirementsInfoKHR@, and
@@ -755,7 +760,7 @@
 --
 --     -   add a new
 --         'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR'
---         buffer usage such buffers
+--         buffer usage for such buffers
 --
 --     -   add a new 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR' acceleration
 --         structure type for layering
@@ -786,12 +791,12 @@
 --
 -- (5) What is 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR' for?
 --
--- RESOLVED: It is primarily intended for API layering. In DXR, the
+-- __RESOLVED__: It is primarily intended for API layering. In DXR, the
 -- acceleration structure is basically just a buffer in a special layout,
--- and you don’t know at creation time whether it will be used as a top or
+-- and you do not know at creation time whether it will be used as a top or
 -- bottom level acceleration structure. We thus added a generic
 -- acceleration structure type whose type is unknown at creation time, but
--- is specified at build type instead. Applications which are written
+-- is specified at build time instead. Applications which are written
 -- directly for Vulkan should not use it.
 --
 -- == Version History
@@ -815,7 +820,7 @@
 --         better match its type (!3523)
 --
 --     -   Allow VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS for pipeline
---         creation if shader group handles cannot be re-used. (!3523)
+--         creation if shader group handles cannot be reused (!3523)
 --
 --     -   update documentation for the
 --         VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS error code and add
@@ -1080,7 +1085,20 @@
 --     -   define sync for AS build inputs and indirect buffer
 --         (#2407,!4208)
 --
--- = See Also
+-- -   Revision 12, 2021-08-06 (Samuel Bourasseau)
+--
+--     -   rename
+--         VK_GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR to
+--         VK_GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR (keep previous
+--         as alias).
+--
+--     -   Clarify description and add note.
+--
+-- -   Revision 13, 2021-09-30 (Jon Leech)
+--
+--     -   Add interaction with @VK_KHR_format_feature_flags2@ to @vk.xml@
+--
+-- == See Also
 --
 -- 'AabbPositionsKHR', 'AccelerationStructureBuildGeometryInfoKHR',
 -- 'AccelerationStructureBuildRangeInfoKHR',
@@ -1125,7 +1143,7 @@
 -- 'getDeviceAccelerationStructureCompatibilityKHR',
 -- 'writeAccelerationStructuresPropertiesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure Vulkan Specification>
@@ -1167,7 +1185,10 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( AabbPositionsKHR
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
-
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
 data AabbPositionsKHR
 
 instance ToCStruct AabbPositionsKHR
@@ -1198,12 +1219,13 @@ instance Show AccelerationStructureBuildSizesInfoKHR
 instance FromCStruct AccelerationStructureBuildSizesInfoKHR
 
 
-data AccelerationStructureCreateInfoKHR
+type role AccelerationStructureCreateInfoKHR nominal
+data AccelerationStructureCreateInfoKHR (es :: [Type])
 
-instance ToCStruct AccelerationStructureCreateInfoKHR
-instance Show AccelerationStructureCreateInfoKHR
+instance (Extendss AccelerationStructureCreateInfoKHR es, PokeChain es) => ToCStruct (AccelerationStructureCreateInfoKHR es)
+instance Show (Chain es) => Show (AccelerationStructureCreateInfoKHR es)
 
-instance FromCStruct AccelerationStructureCreateInfoKHR
+instance (Extendss AccelerationStructureCreateInfoKHR es, PeekChain es) => FromCStruct (AccelerationStructureCreateInfoKHR es)
 
 
 data AccelerationStructureDeviceAddressInfoKHR
@@ -1232,10 +1254,11 @@ instance ToCStruct AccelerationStructureGeometryKHR
 instance Show AccelerationStructureGeometryKHR
 
 
-data AccelerationStructureGeometryTrianglesDataKHR
+type role AccelerationStructureGeometryTrianglesDataKHR nominal
+data AccelerationStructureGeometryTrianglesDataKHR (es :: [Type])
 
-instance ToCStruct AccelerationStructureGeometryTrianglesDataKHR
-instance Show AccelerationStructureGeometryTrianglesDataKHR
+instance (Extendss AccelerationStructureGeometryTrianglesDataKHR es, PokeChain es) => ToCStruct (AccelerationStructureGeometryTrianglesDataKHR es)
+instance Show (Chain es) => Show (AccelerationStructureGeometryTrianglesDataKHR es)
 
 
 data AccelerationStructureInstanceKHR

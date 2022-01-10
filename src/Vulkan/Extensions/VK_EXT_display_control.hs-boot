@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_display_control:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_display_control] @cubanismo%0A<<Here describe the issue or question you have about the VK_EXT_display_control extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -135,7 +135,7 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'DeviceEventInfoEXT', 'DeviceEventTypeEXT', 'DisplayEventInfoEXT',
 -- 'DisplayEventTypeEXT', 'DisplayPowerInfoEXT', 'DisplayPowerStateEXT',
@@ -143,7 +143,7 @@
 -- 'getSwapchainCounterEXT', 'registerDeviceEventEXT',
 -- 'registerDisplayEventEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control Vulkan Specification>

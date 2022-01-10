@@ -6,6 +6,7 @@ module Vulkan.Core10.Enums.MemoryPropertyFlagBits  ( MemoryPropertyFlags
                                                                            , MEMORY_PROPERTY_HOST_COHERENT_BIT
                                                                            , MEMORY_PROPERTY_HOST_CACHED_BIT
                                                                            , MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT
+                                                                           , MEMORY_PROPERTY_RDMA_CAPABLE_BIT_NV
                                                                            , MEMORY_PROPERTY_DEVICE_UNCACHED_BIT_AMD
                                                                            , MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD
                                                                            , MEMORY_PROPERTY_PROTECTED_BIT
@@ -53,6 +54,7 @@ type MemoryPropertyFlags = MemoryPropertyFlagBits
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'MemoryPropertyFlags'
 newtype MemoryPropertyFlagBits = MemoryPropertyFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -86,6 +88,9 @@ pattern MEMORY_PROPERTY_HOST_CACHED_BIT         = MemoryPropertyFlagBits 0x00000
 -- specified in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-device-lazy_allocation Lazily Allocated Memory>.
 pattern MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT    = MemoryPropertyFlagBits 0x00000010
+-- | 'MEMORY_PROPERTY_RDMA_CAPABLE_BIT_NV' bit specifies that external
+-- devices can access this memory directly.
+pattern MEMORY_PROPERTY_RDMA_CAPABLE_BIT_NV     = MemoryPropertyFlagBits 0x00000100
 -- | 'MEMORY_PROPERTY_DEVICE_UNCACHED_BIT_AMD' bit specifies that memory
 -- allocated with this type is not cached on the device. Uncached device
 -- memory is always device coherent.
@@ -116,6 +121,7 @@ showTableMemoryPropertyFlagBits =
   , (MEMORY_PROPERTY_HOST_COHERENT_BIT      , "HOST_COHERENT_BIT")
   , (MEMORY_PROPERTY_HOST_CACHED_BIT        , "HOST_CACHED_BIT")
   , (MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT   , "LAZILY_ALLOCATED_BIT")
+  , (MEMORY_PROPERTY_RDMA_CAPABLE_BIT_NV    , "RDMA_CAPABLE_BIT_NV")
   , (MEMORY_PROPERTY_DEVICE_UNCACHED_BIT_AMD, "DEVICE_UNCACHED_BIT_AMD")
   , (MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD, "DEVICE_COHERENT_BIT_AMD")
   , (MEMORY_PROPERTY_PROTECTED_BIT          , "PROTECTED_BIT")

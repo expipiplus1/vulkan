@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_texel_buffer_alignment:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_texel_buffer_alignment] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_EXT_texel_buffer_alignment extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -44,7 +44,7 @@
 --
 -- This extension adds more expressive alignment requirements for uniform
 -- and storage texel buffers. Some implementations have single texel
--- alignment requirements that can’t be expressed via
+-- alignment requirements that cannot be expressed via
 -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@minTexelBufferOffsetAlignment@.
 --
 -- == New Structures
@@ -78,12 +78,12 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceTexelBufferAlignmentFeaturesEXT',
 -- 'PhysicalDeviceTexelBufferAlignmentPropertiesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_texel_buffer_alignment Vulkan Specification>
@@ -98,7 +98,7 @@ module Vulkan.Extensions.VK_EXT_texel_buffer_alignment  ( PhysicalDeviceTexelBuf
                                                         , pattern EXT_TEXEL_BUFFER_ALIGNMENT_EXTENSION_NAME
                                                         ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -128,23 +128,25 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceTexelBufferAlignmentFeaturesEXT'
--- structure describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceTexelBufferAlignmentFeaturesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceTexelBufferAlignmentFeaturesEXT' /can/ also be included
--- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- enable the feature.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceTexelBufferAlignmentFeaturesEXT' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_texel_buffer_alignment VK_EXT_texel_buffer_alignment>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceTexelBufferAlignmentFeaturesEXT = PhysicalDeviceTexelBufferAlignmentFeaturesEXT
@@ -160,7 +162,7 @@ deriving instance Generic (PhysicalDeviceTexelBufferAlignmentFeaturesEXT)
 deriving instance Show PhysicalDeviceTexelBufferAlignmentFeaturesEXT
 
 instance ToCStruct PhysicalDeviceTexelBufferAlignmentFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceTexelBufferAlignmentFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -194,17 +196,15 @@ instance Zero PhysicalDeviceTexelBufferAlignmentFeaturesEXT where
 -- | VkPhysicalDeviceTexelBufferAlignmentPropertiesEXT - Structure describing
 -- the texel buffer alignment requirements supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceTexelBufferAlignmentPropertiesEXT'
--- structure describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceTexelBufferAlignmentPropertiesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- If the single texel alignment property is
 -- 'Vulkan.Core10.FundamentalTypes.FALSE', then the buffer view’s offset
@@ -227,25 +227,30 @@ instance Zero PhysicalDeviceTexelBufferAlignmentFeaturesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_texel_buffer_alignment VK_EXT_texel_buffer_alignment>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceTexelBufferAlignmentPropertiesEXT = PhysicalDeviceTexelBufferAlignmentPropertiesEXT
   { -- | #limits-storageTexelBufferOffsetAlignmentBytes#
     -- @storageTexelBufferOffsetAlignmentBytes@ is a byte alignment that is
-    -- sufficient for a storage texel buffer of any format.
+    -- sufficient for a storage texel buffer of any format. The value /must/ be
+    -- a power of two.
     storageTexelBufferOffsetAlignmentBytes :: DeviceSize
   , -- | #limits-storageTexelBufferOffsetSingleTexelAlignment#
     -- @storageTexelBufferOffsetSingleTexelAlignment@ indicates whether single
     -- texel alignment is sufficient for a storage texel buffer of any format.
+    -- The value /must/ be a power of two.
     storageTexelBufferOffsetSingleTexelAlignment :: Bool
   , -- | #limits-uniformTexelBufferOffsetAlignmentBytes#
     -- @uniformTexelBufferOffsetAlignmentBytes@ is a byte alignment that is
-    -- sufficient for a uniform texel buffer of any format.
+    -- sufficient for a uniform texel buffer of any format. The value /must/ be
+    -- a power of two.
     uniformTexelBufferOffsetAlignmentBytes :: DeviceSize
   , -- | #limits-uniformTexelBufferOffsetSingleTexelAlignment#
     -- @uniformTexelBufferOffsetSingleTexelAlignment@ indicates whether single
     -- texel alignment is sufficient for a uniform texel buffer of any format.
+    -- The value /must/ be a power of two.
     uniformTexelBufferOffsetSingleTexelAlignment :: Bool
   }
   deriving (Typeable, Eq)
@@ -255,7 +260,7 @@ deriving instance Generic (PhysicalDeviceTexelBufferAlignmentPropertiesEXT)
 deriving instance Show PhysicalDeviceTexelBufferAlignmentPropertiesEXT
 
 instance ToCStruct PhysicalDeviceTexelBufferAlignmentPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceTexelBufferAlignmentPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

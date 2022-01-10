@@ -15,7 +15,7 @@
 --     12
 --
 -- [__Revision__]
---     9
+--     10
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -32,7 +32,7 @@
 -- [__Contact__]
 --
 --     -   Courtney Goeltzenleuchter
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_debug_report:%20&body=@courtney-g%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_debug_report] @courtney-g%0A<<Here describe the issue or question you have about the VK_EXT_debug_report extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -112,6 +112,8 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT'
 --
+--     -   'STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT'
+--
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 -- is supported:
@@ -135,11 +137,7 @@
 -- application /can/ link a 'DebugReportCallbackCreateInfoEXT' structure to
 -- the @pNext@ element of the
 -- 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo' structure given
--- to 'Vulkan.Core10.DeviceInitialization.createInstance'. This callback is
--- only valid for the duration of the
--- 'Vulkan.Core10.DeviceInitialization.createInstance' and the
--- 'Vulkan.Core10.DeviceInitialization.destroyInstance' call. Use
--- 'createDebugReportCallbackEXT' to create persistent callback objects.
+-- to 'Vulkan.Core10.DeviceInitialization.createInstance'.
 --
 -- Example uses: Create three callback objects. One will log errors and
 -- warnings to the debug console using Windows @OutputDebugString@. The
@@ -247,7 +245,7 @@
 -- 4) How do you compare handles returned by the debug_report callback to
 -- the application’s handles?
 --
--- RESOLVED: Due to the different nature of dispatchable and
+-- __RESOLVED__: Due to the different nature of dispatchable and
 -- nondispatchable handles there is no generic way (that we know of) that
 -- works for common compilers with 32bit, 64bit, C and C++. We recommend
 -- applications use the same cast that the validation layers use:
@@ -313,7 +311,7 @@
 --     -   Add issue 4 discussing matching handles returned by the
 --         extension, based on suggestion in public issue 368.
 --
--- = See Also
+-- == See Also
 --
 -- 'PFN_vkDebugReportCallbackEXT', 'DebugReportCallbackCreateInfoEXT',
 -- 'Vulkan.Extensions.Handles.DebugReportCallbackEXT',
@@ -321,7 +319,7 @@
 -- 'DebugReportObjectTypeEXT', 'createDebugReportCallbackEXT',
 -- 'debugReportMessageEXT', 'destroyDebugReportCallbackEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report Vulkan Specification>
@@ -376,9 +374,12 @@ module Vulkan.Extensions.VK_EXT_debug_report  ( createDebugReportCallbackEXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT
+                                                                        , DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT
+                                                                        , DEBUG_REPORT_OBJECT_TYPE_CU_FUNCTION_NVX_EXT
+                                                                        , DEBUG_REPORT_OBJECT_TYPE_CU_MODULE_NVX_EXT
                                                                         , DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT
                                                                         , ..
                                                                         )
@@ -397,7 +398,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -451,6 +452,7 @@ import Vulkan.Extensions.Handles (DebugReportCallbackEXT(..))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateDebugReportCallbackEXT))
 import Vulkan.Dynamic (InstanceCmds(pVkDebugReportMessageEXT))
 import Vulkan.Dynamic (InstanceCmds(pVkDestroyDebugReportCallbackEXT))
@@ -501,6 +503,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'DebugReportCallbackCreateInfoEXT',
 -- 'Vulkan.Extensions.Handles.DebugReportCallbackEXT',
@@ -519,7 +522,7 @@ createDebugReportCallbackEXT :: forall io
                                 ("allocator" ::: Maybe AllocationCallbacks)
                              -> io (DebugReportCallbackEXT)
 createDebugReportCallbackEXT instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateDebugReportCallbackEXTPtr = pVkCreateDebugReportCallbackEXT (instanceCmds (instance' :: Instance))
+  let vkCreateDebugReportCallbackEXTPtr = pVkCreateDebugReportCallbackEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateDebugReportCallbackEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDebugReportCallbackEXT is null" Nothing Nothing
   let vkCreateDebugReportCallbackEXT' = mkVkCreateDebugReportCallbackEXT vkCreateDebugReportCallbackEXTPtr
@@ -592,6 +595,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Extensions.Handles.DebugReportCallbackEXT',
 -- 'Vulkan.Core10.Handles.Instance'
@@ -611,7 +615,7 @@ destroyDebugReportCallbackEXT :: forall io
                                  ("allocator" ::: Maybe AllocationCallbacks)
                               -> io ()
 destroyDebugReportCallbackEXT instance' callback allocator = liftIO . evalContT $ do
-  let vkDestroyDebugReportCallbackEXTPtr = pVkDestroyDebugReportCallbackEXT (instanceCmds (instance' :: Instance))
+  let vkDestroyDebugReportCallbackEXTPtr = pVkDestroyDebugReportCallbackEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkDestroyDebugReportCallbackEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyDebugReportCallbackEXT is null" Nothing Nothing
   let vkDestroyDebugReportCallbackEXT' = mkVkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXTPtr
@@ -672,6 +676,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>,
 -- 'DebugReportFlagsEXT', 'DebugReportObjectTypeEXT',
 -- 'Vulkan.Core10.Handles.Instance'
 debugReportMessageEXT :: forall io
@@ -699,7 +704,7 @@ debugReportMessageEXT :: forall io
                          ("message" ::: ByteString)
                       -> io ()
 debugReportMessageEXT instance' flags objectType object location messageCode layerPrefix message = liftIO . evalContT $ do
-  let vkDebugReportMessageEXTPtr = pVkDebugReportMessageEXT (instanceCmds (instance' :: Instance))
+  let vkDebugReportMessageEXTPtr = pVkDebugReportMessageEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkDebugReportMessageEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDebugReportMessageEXT is null" Nothing Nothing
   let vkDebugReportMessageEXT' = mkVkDebugReportMessageEXT vkDebugReportMessageEXTPtr
@@ -749,7 +754,9 @@ pattern DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT = DEBUG_REPORT_OBJECT_TYPE
 --
 -- = See Also
 --
--- 'PFN_vkDebugReportCallbackEXT', 'DebugReportFlagsEXT',
+-- 'PFN_vkDebugReportCallbackEXT',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>,
+-- 'DebugReportFlagsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createDebugReportCallbackEXT'
 data DebugReportCallbackCreateInfoEXT = DebugReportCallbackCreateInfoEXT
@@ -774,7 +781,7 @@ deriving instance Generic (DebugReportCallbackCreateInfoEXT)
 deriving instance Show DebugReportCallbackCreateInfoEXT
 
 instance ToCStruct DebugReportCallbackCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DebugReportCallbackCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -818,6 +825,7 @@ type DebugReportFlagsEXT = DebugReportFlagBitsEXT
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>,
 -- 'DebugReportFlagsEXT'
 newtype DebugReportFlagBitsEXT = DebugReportFlagBitsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -962,6 +970,8 @@ instance Read DebugReportFlagBitsEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_marker VK_EXT_debug_marker>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>,
 -- 'Vulkan.Extensions.VK_EXT_debug_marker.DebugMarkerObjectNameInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_debug_marker.DebugMarkerObjectTagInfoEXT',
 -- 'debugReportMessageEXT'
@@ -1032,12 +1042,18 @@ pattern DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT                = DebugReportObj
 pattern DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT           = DebugReportObjectTypeEXT 30
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT"
 pattern DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT       = DebugReportObjectTypeEXT 33
+-- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT"
+pattern DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT  = DebugReportObjectTypeEXT 1000366000
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT"
 pattern DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT  = DebugReportObjectTypeEXT 1000165000
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT"
 pattern DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT   = DebugReportObjectTypeEXT 1000156000
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT"
 pattern DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT = DebugReportObjectTypeEXT 1000150000
+-- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_CU_FUNCTION_NVX_EXT"
+pattern DEBUG_REPORT_OBJECT_TYPE_CU_FUNCTION_NVX_EXT            = DebugReportObjectTypeEXT 1000029001
+-- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_CU_MODULE_NVX_EXT"
+pattern DEBUG_REPORT_OBJECT_TYPE_CU_MODULE_NVX_EXT              = DebugReportObjectTypeEXT 1000029000
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT"
 pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT = DebugReportObjectTypeEXT 1000085000
 {-# complete DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT,
@@ -1072,9 +1088,12 @@ pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT = DebugReportObj
              DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT,
              DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT,
              DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT,
+             DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT,
              DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT,
              DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT,
              DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT,
+             DEBUG_REPORT_OBJECT_TYPE_CU_FUNCTION_NVX_EXT,
+             DEBUG_REPORT_OBJECT_TYPE_CU_MODULE_NVX_EXT,
              DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT :: DebugReportObjectTypeEXT #-}
 
 conNameDebugReportObjectTypeEXT :: String
@@ -1117,9 +1136,12 @@ showTableDebugReportObjectTypeEXT =
   , (DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT               , "DISPLAY_KHR_EXT")
   , (DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT          , "DISPLAY_MODE_KHR_EXT")
   , (DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT      , "VALIDATION_CACHE_EXT_EXT")
+  , (DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT , "BUFFER_COLLECTION_FUCHSIA_EXT")
   , (DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT , "ACCELERATION_STRUCTURE_NV_EXT")
   , (DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT  , "SAMPLER_YCBCR_CONVERSION_EXT")
   , (DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT, "ACCELERATION_STRUCTURE_KHR_EXT")
+  , (DEBUG_REPORT_OBJECT_TYPE_CU_FUNCTION_NVX_EXT           , "CU_FUNCTION_NVX_EXT")
+  , (DEBUG_REPORT_OBJECT_TYPE_CU_MODULE_NVX_EXT             , "CU_MODULE_NVX_EXT")
   , (DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT, "DESCRIPTOR_UPDATE_TEMPLATE_EXT")
   ]
 
@@ -1161,15 +1183,16 @@ type FN_vkDebugReportCallbackEXT = DebugReportFlagsEXT -> DebugReportObjectTypeE
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>,
 -- 'DebugReportCallbackCreateInfoEXT'
 type PFN_vkDebugReportCallbackEXT = FunPtr FN_vkDebugReportCallbackEXT
 
 
-type EXT_DEBUG_REPORT_SPEC_VERSION = 9
+type EXT_DEBUG_REPORT_SPEC_VERSION = 10
 
 -- No documentation found for TopLevel "VK_EXT_DEBUG_REPORT_SPEC_VERSION"
 pattern EXT_DEBUG_REPORT_SPEC_VERSION :: forall a . Integral a => a
-pattern EXT_DEBUG_REPORT_SPEC_VERSION = 9
+pattern EXT_DEBUG_REPORT_SPEC_VERSION = 10
 
 
 type EXT_DEBUG_REPORT_EXTENSION_NAME = "VK_EXT_debug_report"

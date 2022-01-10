@@ -20,7 +20,7 @@ import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -62,6 +62,7 @@ import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceExternalBufferProperties
 import Vulkan.Core10.APIConstants (LUID_SIZE)
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.APIConstants (UUID_SIZE)
@@ -91,6 +92,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'ExternalBufferProperties', 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceExternalBufferInfo'
 getPhysicalDeviceExternalBufferProperties :: forall io
@@ -112,7 +114,7 @@ getPhysicalDeviceExternalBufferProperties :: forall io
                                              PhysicalDeviceExternalBufferInfo
                                           -> io (ExternalBufferProperties)
 getPhysicalDeviceExternalBufferProperties physicalDevice externalBufferInfo = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceExternalBufferPropertiesPtr = pVkGetPhysicalDeviceExternalBufferProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceExternalBufferPropertiesPtr = pVkGetPhysicalDeviceExternalBufferProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceExternalBufferPropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceExternalBufferProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceExternalBufferProperties' = mkVkGetPhysicalDeviceExternalBufferProperties vkGetPhysicalDeviceExternalBufferPropertiesPtr
@@ -140,6 +142,7 @@ getPhysicalDeviceExternalBufferProperties physicalDevice externalBufferInfo = li
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'ExternalBufferProperties', 'ExternalImageFormatProperties',
 -- 'Vulkan.Core11.Enums.ExternalMemoryFeatureFlagBits.ExternalMemoryFeatureFlags',
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlags'
@@ -166,7 +169,7 @@ deriving instance Generic (ExternalMemoryProperties)
 deriving instance Show ExternalMemoryProperties
 
 instance ToCStruct ExternalMemoryProperties where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExternalMemoryProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr ExternalMemoryFeatureFlags)) (externalMemoryFeatures)
     poke ((p `plusPtr` 4 :: Ptr ExternalMemoryHandleTypeFlags)) (exportFromImportedHandleTypes)
@@ -230,6 +233,7 @@ instance Zero ExternalMemoryProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceExternalImageFormatInfo = PhysicalDeviceExternalImageFormatInfo
@@ -245,7 +249,7 @@ deriving instance Generic (PhysicalDeviceExternalImageFormatInfo)
 deriving instance Show PhysicalDeviceExternalImageFormatInfo
 
 instance ToCStruct PhysicalDeviceExternalImageFormatInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceExternalImageFormatInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -282,6 +286,7 @@ instance Zero PhysicalDeviceExternalImageFormatInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'ExternalMemoryProperties',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExternalImageFormatProperties = ExternalImageFormatProperties
@@ -296,7 +301,7 @@ deriving instance Generic (ExternalImageFormatProperties)
 deriving instance Show ExternalImageFormatProperties
 
 instance ToCStruct ExternalImageFormatProperties where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExternalImageFormatProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -334,6 +339,7 @@ instance Zero ExternalImageFormatProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlags',
 -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlags',
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
@@ -380,7 +386,7 @@ deriving instance Generic (PhysicalDeviceExternalBufferInfo)
 deriving instance Show PhysicalDeviceExternalBufferInfo
 
 instance ToCStruct PhysicalDeviceExternalBufferInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceExternalBufferInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -425,6 +431,7 @@ instance Zero PhysicalDeviceExternalBufferInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'ExternalMemoryProperties',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPhysicalDeviceExternalBufferProperties',
@@ -441,7 +448,7 @@ deriving instance Generic (ExternalBufferProperties)
 deriving instance Show ExternalBufferProperties
 
 instance ToCStruct ExternalBufferProperties where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExternalBufferProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -496,6 +503,14 @@ instance Zero ExternalBufferProperties where
 --     'Vulkan.Core10.FundamentalTypes.TRUE' if @deviceLUID@ contains a
 --     valid LUID and @deviceNodeMask@ contains a valid node mask, and
 --     'Vulkan.Core10.FundamentalTypes.FALSE' if they do not.
+--
+-- If the 'PhysicalDeviceIDProperties' structure is included in the @pNext@
+-- chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- @deviceUUID@ /must/ be immutable for a given device across instances,
 -- processes, driver APIs, driver versions, and system reboots.
@@ -586,6 +601,7 @@ instance Zero ExternalBufferProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceIDProperties = PhysicalDeviceIDProperties
@@ -607,7 +623,7 @@ deriving instance Generic (PhysicalDeviceIDProperties)
 deriving instance Show PhysicalDeviceIDProperties
 
 instance ToCStruct PhysicalDeviceIDProperties where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceIDProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

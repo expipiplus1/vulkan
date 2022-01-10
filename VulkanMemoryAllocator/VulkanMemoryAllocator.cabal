@@ -1,16 +1,16 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.34.4.
+-- This file has been generated from package.yaml by hpack version 0.34.5.
 --
 -- see: https://github.com/sol/hpack
 
 name:           VulkanMemoryAllocator
-version:        0.4
+version:        0.7.5
 synopsis:       Bindings to the VulkanMemoryAllocator library
 category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme
 bug-reports:    https://github.com/expipiplus1/vulkan/issues
-maintainer:     Joe Hermaszewski <live.long.and.prosper@monoid.al>
+maintainer:     Ellie Hermaszewska <live.long.and.prosper@monoid.al>
 license:        BSD-3-Clause
 license-file:   LICENSE
 build-type:     Simple
@@ -18,7 +18,7 @@ extra-source-files:
     readme.md
     changelog.md
     package.yaml
-    VulkanMemoryAllocator/src/vk_mem_alloc.h
+    VulkanMemoryAllocator/include/vk_mem_alloc.h
 
 source-repository head
   type: git
@@ -86,7 +86,7 @@ library
   ghc-options: -Wall -Wno-unticked-promoted-constructors -Wno-missing-pattern-synonym-signatures -Wno-unused-imports -Wno-missing-signatures -Wno-partial-type-signatures
   cxx-options: -std=c++11
   include-dirs:
-      VulkanMemoryAllocator/src
+      VulkanMemoryAllocator/include
   cxx-sources:
       src/lib.cpp
   extra-libraries:
@@ -96,7 +96,7 @@ library
     , bytestring
     , transformers
     , vector
-    , vulkan >=3.6 && <3.11
+    , vulkan >=3.6 && <3.15
   if flag(safe-foreign-calls)
     cpp-options: -DSAFE_FOREIGN_CALLS
   if flag(vma-ndebug)

@@ -21,10 +21,16 @@
 --
 --     -   Requires Vulkan 1.0
 --
+-- [__Special Uses__]
+--
+--     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse OpenGL \/ ES support>
+--
+--     -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-compatibility-specialuse D3D support>
+--
 -- [__Contact__]
 --
 --     -   Liam Middlebrook
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_custom_border_color:%20&body=@liam-middlebrook%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_custom_border_color] @liam-middlebrook%0A<<Here describe the issue or question you have about the VK_EXT_custom_border_color extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -85,7 +91,7 @@
 -- When 'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_CUSTOM_EXT' or
 -- 'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_INT_CUSTOM_EXT' is used,
 -- applications must provide a 'SamplerCustomBorderColorCreateInfoEXT' in
--- the pNext chain for 'Vulkan.Core10.Sampler.SamplerCreateInfo'.
+-- the @pNext@ chain for 'Vulkan.Core10.Sampler.SamplerCreateInfo'.
 --
 -- == New Structures
 --
@@ -132,8 +138,8 @@
 -- VkClearColorValue is used here because it provides a union of
 -- float,int,uint types.
 --
--- RESOLVED: Will re-use existing VkClearColorValue structure in order to
--- easily take advantage of float,int,uint borderColor types.
+-- __RESOLVED__: Will reuse existing VkClearColorValue structure in order
+-- to easily take advantage of float,int,uint borderColor types.
 --
 -- 2) For hardware which supports a limited number of border colors what
 -- happens if that number is exceeded? Should this be handled by the driver
@@ -141,7 +147,7 @@
 -- using a new Object type, however that may have lead to additional system
 -- resource consumption which would otherwise not be required.
 --
--- RESOLVED: Added
+-- __RESOLVED__: Added
 -- 'PhysicalDeviceCustomBorderColorPropertiesEXT'::@maxCustomBorderColorSamplers@
 -- for tracking implementation-specific limit, and Valid Usage statement
 -- handling overflow.
@@ -152,19 +158,19 @@
 -- work on them for implementations that can support it, or forbidding it
 -- entirely.
 --
--- RESOLVED: Samplers created with a custom border color are forbidden from
--- being immutable. This resolves concerns for implementations where the
--- custom border color is an index to a LUT instead of being directly
+-- __RESOLVED__: Samplers created with a custom border color are forbidden
+-- from being immutable. This resolves concerns for implementations where
+-- the custom border color is an index to a LUT instead of being directly
 -- embedded into sampler state.
 --
 -- 4) Should UINT and SINT (unsigned integer and signed integer) border
 -- color types be separated or should they be combined into one generic INT
 -- (integer) type?
 --
--- RESOLVED: Separating these doesn’t make much sense as the existing fixed
--- border color types don’t have this distinction, and there is no reason
--- in hardware to do so. This separation would also create unnecessary work
--- and considerations for the application.
+-- __RESOLVED__: Separating these does not make much sense as the existing
+-- fixed border color types do not have this distinction, and there is no
+-- reason in hardware to do so. This separation would also create
+-- unnecessary work and considerations for the application.
 --
 -- == Version History
 --
@@ -201,7 +207,7 @@
 --
 --     -   Type-ize VK_BORDER_COLOR_CUSTOM
 --
---     -   Fix const-ness on pNext of
+--     -   Fix const-ness on @pNext@ of
 --         VkSamplerCustomBorderColorCreateInfoEXT
 --
 -- -   Revision 7, 2019-11-26 (Liam Middlebrook)
@@ -231,13 +237,13 @@
 --     -   Renamed VK_BORDER_COLOR_CUSTOM_FLOAT_EXT to
 --         VK_BORDER_COLOR_FLOAT_CUSTOM_EXT for consistency
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceCustomBorderColorFeaturesEXT',
 -- 'PhysicalDeviceCustomBorderColorPropertiesEXT',
 -- 'SamplerCustomBorderColorCreateInfoEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_custom_border_color Vulkan Specification>
@@ -253,7 +259,7 @@ module Vulkan.Extensions.VK_EXT_custom_border_color  ( SamplerCustomBorderColorC
                                                      , pattern EXT_CUSTOM_BORDER_COLOR_EXTENSION_NAME
                                                      ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -321,6 +327,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_C
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_custom_border_color VK_EXT_custom_border_color>,
 -- 'Vulkan.Core10.CommandBufferBuilding.ClearColorValue',
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -343,7 +350,7 @@ deriving instance Generic (SamplerCustomBorderColorCreateInfoEXT)
 deriving instance Show SamplerCustomBorderColorCreateInfoEXT
 
 instance ToCStruct SamplerCustomBorderColorCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SamplerCustomBorderColorCreateInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_CREATE_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -368,15 +375,21 @@ instance Zero SamplerCustomBorderColorCreateInfoEXT where
 -- | VkPhysicalDeviceCustomBorderColorPropertiesEXT - Structure describing
 -- whether custom border colors can be supported by an implementation
 --
--- = Members
+-- = Description
 --
--- The members of the 'PhysicalDeviceCustomBorderColorPropertiesEXT'
--- structure describe the following features:
+-- If the 'PhysicalDeviceCustomBorderColorPropertiesEXT' structure is
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_custom_border_color VK_EXT_custom_border_color>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCustomBorderColorPropertiesEXT = PhysicalDeviceCustomBorderColorPropertiesEXT
   { -- | #limits-maxCustomBorderColorSamplers# @maxCustomBorderColorSamplers@
@@ -390,7 +403,7 @@ deriving instance Generic (PhysicalDeviceCustomBorderColorPropertiesEXT)
 deriving instance Show PhysicalDeviceCustomBorderColorPropertiesEXT
 
 instance ToCStruct PhysicalDeviceCustomBorderColorPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceCustomBorderColorPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -426,13 +439,25 @@ instance Zero PhysicalDeviceCustomBorderColorPropertiesEXT where
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceCustomBorderColorFeaturesEXT'
--- structure describe the following features:
+-- This structure describes the following features:
+--
+-- = Description
+--
+-- If the 'PhysicalDeviceCustomBorderColorFeaturesEXT' structure is
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceCustomBorderColorFeaturesEXT' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_custom_border_color VK_EXT_custom_border_color>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceCustomBorderColorFeaturesEXT = PhysicalDeviceCustomBorderColorFeaturesEXT
@@ -462,7 +487,7 @@ deriving instance Generic (PhysicalDeviceCustomBorderColorFeaturesEXT)
 deriving instance Show PhysicalDeviceCustomBorderColorFeaturesEXT
 
 instance ToCStruct PhysicalDeviceCustomBorderColorFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceCustomBorderColorFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

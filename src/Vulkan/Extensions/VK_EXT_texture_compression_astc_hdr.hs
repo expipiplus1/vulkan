@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jan-Harald Fredriksen
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_texture_compression_astc_hdr:%20&body=@janharaldfredriksen-arm%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_texture_compression_astc_hdr] @janharaldfredriksen-arm%0A<<Here describe the issue or question you have about the VK_EXT_texture_compression_astc_hdr extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -112,7 +112,7 @@
 -- 2) Should we introduce new format enums for HDR?
 --
 -- Yes. Vulkan 1.0 describes the ASTC format enums as UNORM, e.g.
--- 'Vulkan.Core10.Enums.Format.FORMAT_ASTC_4x4_UNORM_BLOCK', so it’s
+-- 'Vulkan.Core10.Enums.Format.FORMAT_ASTC_4x4_UNORM_BLOCK', so it is
 -- confusing to make these contain HDR data. Note that the OpenGL (ES)
 -- extensions did not make this distinction because a single ASTC HDR
 -- texture may contain both unorm and float blocks. Implementations /may/
@@ -129,11 +129,11 @@
 --
 --     -   Initial version
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_texture_compression_astc_hdr Vulkan Specification>
@@ -147,7 +147,7 @@ module Vulkan.Extensions.VK_EXT_texture_compression_astc_hdr  ( PhysicalDeviceTe
                                                               , pattern EXT_TEXTURE_COMPRESSION_ASTC_HDR_EXTENSION_NAME
                                                               ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -174,23 +174,26 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT'
--- structure describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT' /can/ also be
--- included in the @pNext@ chain of 'Vulkan.Core10.Device.createDevice' to
--- enable features.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT' /can/
+-- also be used in the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
+-- features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_texture_compression_astc_hdr VK_EXT_texture_compression_astc_hdr>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT = PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT
@@ -246,7 +249,7 @@ deriving instance Generic (PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT)
 deriving instance Show PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT
 
 instance ToCStruct PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

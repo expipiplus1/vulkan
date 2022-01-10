@@ -4,7 +4,7 @@ module Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage  ( ImageStencil
                                                                   , StructureType(..)
                                                                   ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -40,7 +40,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- stencil aspect of the image /must/ only be used as specified by
 -- @stencilUsage@. When this structure is not included in the @pNext@ chain
 -- of 'Vulkan.Core10.Image.ImageCreateInfo', the stencil aspect of an image
--- /must/ only be used as specified
+-- /must/ only be used as specified by
 -- 'Vulkan.Core10.Image.ImageCreateInfo'::@usage@. Use of other aspects of
 -- an image are unaffected by this structure.
 --
@@ -79,6 +79,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_separate_stencil_usage VK_EXT_separate_stencil_usage>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImageStencilUsageCreateInfo = ImageStencilUsageCreateInfo
@@ -93,7 +95,7 @@ deriving instance Generic (ImageStencilUsageCreateInfo)
 deriving instance Show ImageStencilUsageCreateInfo
 
 instance ToCStruct ImageStencilUsageCreateInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageStencilUsageCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

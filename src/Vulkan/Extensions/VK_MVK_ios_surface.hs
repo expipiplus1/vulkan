@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Bill Hollings
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_MVK_ios_surface:%20&body=@billhollings%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_MVK_ios_surface] @billhollings%0A<<Here describe the issue or question you have about the VK_MVK_ios_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -98,12 +98,12 @@
 --
 --     -   Mark as deprecated by @VK_EXT_metal_surface@.
 --
--- = See Also
+-- == See Also
 --
 -- 'IOSSurfaceCreateFlagsMVK', 'IOSSurfaceCreateInfoMVK',
 -- 'createIOSSurfaceMVK'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_MVK_ios_surface Vulkan Specification>
@@ -126,7 +126,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -167,6 +167,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateIOSSurfaceMVK))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Enums.Result (Result)
@@ -243,6 +244,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_MVK_ios_surface VK_MVK_ios_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'IOSSurfaceCreateInfoMVK', 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
@@ -256,7 +258,7 @@ createIOSSurfaceMVK :: forall io
                        ("allocator" ::: Maybe AllocationCallbacks)
                     -> io (SurfaceKHR)
 createIOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateIOSSurfaceMVKPtr = pVkCreateIOSSurfaceMVK (instanceCmds (instance' :: Instance))
+  let vkCreateIOSSurfaceMVKPtr = pVkCreateIOSSurfaceMVK (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateIOSSurfaceMVKPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateIOSSurfaceMVK is null" Nothing Nothing
   let vkCreateIOSSurfaceMVK' = mkVkCreateIOSSurfaceMVK vkCreateIOSSurfaceMVKPtr
@@ -279,13 +281,13 @@ createIOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do
 -- -   #VUID-VkIOSSurfaceCreateInfoMVK-pView-04143# If @pView@ is a
 --     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer' object, it
 --     /must/ be a valid
---     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer'.
+--     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer'
 --
 -- -   #VUID-VkIOSSurfaceCreateInfoMVK-pView-01316# If @pView@ is a
 --     @UIView@ object, it /must/ be a valid @UIView@, /must/ be backed by
 --     a @CALayer@ object of type
 --     'Vulkan.Extensions.VK_EXT_metal_surface.CAMetalLayer', and
---     'createIOSSurfaceMVK' /must/ be called on the main thread.
+--     'createIOSSurfaceMVK' /must/ be called on the main thread
 --
 -- == Valid Usage (Implicit)
 --
@@ -300,6 +302,7 @@ createIOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_MVK_ios_surface VK_MVK_ios_surface>,
 -- 'IOSSurfaceCreateFlagsMVK',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createIOSSurfaceMVK'
 data IOSSurfaceCreateInfoMVK = IOSSurfaceCreateInfoMVK
@@ -317,7 +320,7 @@ deriving instance Generic (IOSSurfaceCreateInfoMVK)
 deriving instance Show IOSSurfaceCreateInfoMVK
 
 instance ToCStruct IOSSurfaceCreateInfoMVK where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p IOSSurfaceCreateInfoMVK{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -360,6 +363,7 @@ instance Zero IOSSurfaceCreateInfoMVK where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_MVK_ios_surface VK_MVK_ios_surface>,
 -- 'IOSSurfaceCreateInfoMVK'
 newtype IOSSurfaceCreateFlagsMVK = IOSSurfaceCreateFlagsMVK Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

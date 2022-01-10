@@ -8,7 +8,7 @@ module Vulkan.Core11.Promoted_From_VK_KHR_multiview  ( PhysicalDeviceMultiviewFe
                                                      , DependencyFlags
                                                      ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -49,10 +49,14 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceMultiviewFeatures' structure describe
--- the following features:
+-- This structure describes the following features:
 --
 -- = Description
+--
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
 --
 -- -   #extension-features-multiview# @multiview@ specifies whether the
 --     implementation supports multiview rendering within a render pass. If
@@ -76,11 +80,14 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --     tessellation shaders.
 --
 -- If the 'PhysicalDeviceMultiviewFeatures' structure is included in the
--- @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceMultiviewFeatures' /can/ also be included in the @pNext@
--- chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the features.
+-- @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceMultiviewFeatures' /can/ also be used in the
+-- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively
+-- enable these features.
 --
 -- == Valid Usage
 --
@@ -100,6 +107,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMultiviewFeatures = PhysicalDeviceMultiviewFeatures
@@ -117,7 +125,7 @@ deriving instance Generic (PhysicalDeviceMultiviewFeatures)
 deriving instance Show PhysicalDeviceMultiviewFeatures
 
 instance ToCStruct PhysicalDeviceMultiviewFeatures where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceMultiviewFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -159,22 +167,21 @@ instance Zero PhysicalDeviceMultiviewFeatures where
 -- | VkPhysicalDeviceMultiviewProperties - Structure describing multiview
 -- limits that can be supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceMultiviewProperties' structure
--- describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceMultiviewProperties' structure is included in the
--- @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMultiviewProperties = PhysicalDeviceMultiviewProperties
   { -- | #extension-limits-maxMultiviewViewCount# @maxMultiviewViewCount@ is one
@@ -193,7 +200,7 @@ deriving instance Generic (PhysicalDeviceMultiviewProperties)
 deriving instance Show PhysicalDeviceMultiviewProperties
 
 instance ToCStruct PhysicalDeviceMultiviewProperties where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceMultiviewProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -228,8 +235,8 @@ instance Zero PhysicalDeviceMultiviewProperties where
            zero
 
 
--- | VkRenderPassMultiviewCreateInfo - Structure containing multiview info
--- for all subpasses
+-- | VkRenderPassMultiviewCreateInfo - Structure containing multiview
+-- information for all subpasses
 --
 -- = Description
 --
@@ -343,6 +350,7 @@ instance Zero PhysicalDeviceMultiviewProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data RenderPassMultiviewCreateInfo = RenderPassMultiviewCreateInfo
   { -- | @pViewMasks@ is a pointer to an array of @subpassCount@ view masks,
@@ -368,20 +376,20 @@ deriving instance Generic (RenderPassMultiviewCreateInfo)
 deriving instance Show RenderPassMultiviewCreateInfo
 
 instance ToCStruct RenderPassMultiviewCreateInfo where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RenderPassMultiviewCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (viewMasks)) :: Word32))
-    pPViewMasks' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (viewMasks)) * 4) 4
+    pPViewMasks' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (viewMasks)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPViewMasks' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (viewMasks)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word32))) (pPViewMasks')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (viewOffsets)) :: Word32))
-    pPViewOffsets' <- ContT $ allocaBytesAligned @Int32 ((Data.Vector.length (viewOffsets)) * 4) 4
+    pPViewOffsets' <- ContT $ allocaBytes @Int32 ((Data.Vector.length (viewOffsets)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPViewOffsets' `plusPtr` (4 * (i)) :: Ptr Int32) (e)) (viewOffsets)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr Int32))) (pPViewOffsets')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (correlationMasks)) :: Word32))
-    pPCorrelationMasks' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (correlationMasks)) * 4) 4
+    pPCorrelationMasks' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (correlationMasks)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPCorrelationMasks' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (correlationMasks)
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr Word32))) (pPCorrelationMasks')
     lift $ f

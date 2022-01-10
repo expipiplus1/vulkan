@@ -26,10 +26,10 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_xlib_surface:%20&body=@critsec%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_xlib_surface] @critsec%0A<<Here describe the issue or question you have about the VK_KHR_xlib_surface extension>> >
 --
 --     -   Ian Elliott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_xlib_surface:%20&body=@ianelliottus%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_xlib_surface] @ianelliottus%0A<<Here describe the issue or question you have about the VK_KHR_xlib_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -131,7 +131,7 @@
 --
 --     -   Added presentation support query for (Display*, VisualID) pair.
 --
---     -   Removed \"root\" parameter from CreateXlibSurfaceKHR(), as it is
+--     -   Removed “root” parameter from CreateXlibSurfaceKHR(), as it is
 --         redundant when a window on the same screen is specified as well.
 --
 --     -   Added appropriate X errors.
@@ -156,12 +156,12 @@
 --     -   Updated the surface create function to take a pCreateInfo
 --         structure.
 --
--- = See Also
+-- == See Also
 --
 -- 'XlibSurfaceCreateFlagsKHR', 'XlibSurfaceCreateInfoKHR',
 -- 'createXlibSurfaceKHR', 'getPhysicalDeviceXlibPresentationSupportKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_xlib_surface Vulkan Specification>
@@ -188,7 +188,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -234,11 +234,13 @@ import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateXlibSurfaceKHR))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceXlibPresentationSupportKHR))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -290,6 +292,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_xlib_surface VK_KHR_xlib_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR', 'XlibSurfaceCreateInfoKHR'
@@ -306,7 +309,7 @@ createXlibSurfaceKHR :: forall io
                         ("allocator" ::: Maybe AllocationCallbacks)
                      -> io (SurfaceKHR)
 createXlibSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateXlibSurfaceKHRPtr = pVkCreateXlibSurfaceKHR (instanceCmds (instance' :: Instance))
+  let vkCreateXlibSurfaceKHRPtr = pVkCreateXlibSurfaceKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateXlibSurfaceKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateXlibSurfaceKHR is null" Nothing Nothing
   let vkCreateXlibSurfaceKHR' = mkVkCreateXlibSurfaceKHR vkCreateXlibSurfaceKHRPtr
@@ -340,6 +343,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_xlib_surface VK_KHR_xlib_surface>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceXlibPresentationSupportKHR :: forall io
                                              . (MonadIO io)
@@ -366,7 +370,7 @@ getPhysicalDeviceXlibPresentationSupportKHR :: forall io
                                                VisualID
                                             -> io (Bool)
 getPhysicalDeviceXlibPresentationSupportKHR physicalDevice queueFamilyIndex dpy visualID = liftIO $ do
-  let vkGetPhysicalDeviceXlibPresentationSupportKHRPtr = pVkGetPhysicalDeviceXlibPresentationSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceXlibPresentationSupportKHRPtr = pVkGetPhysicalDeviceXlibPresentationSupportKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   unless (vkGetPhysicalDeviceXlibPresentationSupportKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceXlibPresentationSupportKHR is null" Nothing Nothing
   let vkGetPhysicalDeviceXlibPresentationSupportKHR' = mkVkGetPhysicalDeviceXlibPresentationSupportKHR vkGetPhysicalDeviceXlibPresentationSupportKHRPtr
@@ -381,6 +385,7 @@ getPhysicalDeviceXlibPresentationSupportKHR physicalDevice queueFamilyIndex dpy 
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_xlib_surface VK_KHR_xlib_surface>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'XlibSurfaceCreateFlagsKHR', 'createXlibSurfaceKHR'
 data XlibSurfaceCreateInfoKHR = XlibSurfaceCreateInfoKHR
@@ -407,7 +412,7 @@ deriving instance Generic (XlibSurfaceCreateInfoKHR)
 deriving instance Show XlibSurfaceCreateInfoKHR
 
 instance ToCStruct XlibSurfaceCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p XlibSurfaceCreateInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -454,6 +459,7 @@ instance Zero XlibSurfaceCreateInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_xlib_surface VK_KHR_xlib_surface>,
 -- 'XlibSurfaceCreateInfoKHR'
 newtype XlibSurfaceCreateFlagsKHR = XlibSurfaceCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

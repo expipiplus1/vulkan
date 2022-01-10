@@ -73,6 +73,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.Core10.Enums.Result (Result(SUCCESS))
 foreign import ccall
@@ -94,9 +95,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrSetAndroidApplicationThreadKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
---     'setAndroidApplicationThreadKHR'
+-- -   #VUID-xrSetAndroidApplicationThreadKHR-extension-notenabled# The
+--     @XR_KHR_android_thread_settings@ extension /must/ be enabled prior
+--     to calling 'setAndroidApplicationThreadKHR'
 --
 -- -   #VUID-xrSetAndroidApplicationThreadKHR-session-parameter# @session@
 --     /must/ be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -149,7 +150,7 @@ setAndroidApplicationThreadKHR :: forall io
                                   ("threadId" ::: Word32)
                                -> io (Result)
 setAndroidApplicationThreadKHR session threadType threadId = liftIO $ do
-  let xrSetAndroidApplicationThreadKHRPtr = pXrSetAndroidApplicationThreadKHR (instanceCmds (session :: Session))
+  let xrSetAndroidApplicationThreadKHRPtr = pXrSetAndroidApplicationThreadKHR (case session of Session{instanceCmds} -> instanceCmds)
   unless (xrSetAndroidApplicationThreadKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrSetAndroidApplicationThreadKHR is null" Nothing Nothing
   let xrSetAndroidApplicationThreadKHR' = mkXrSetAndroidApplicationThreadKHR xrSetAndroidApplicationThreadKHRPtr

@@ -5,8 +5,11 @@ module Vulkan.Extensions.Handles  ( IndirectCommandsLayoutNV(..)
                                   , AccelerationStructureKHR(..)
                                   , AccelerationStructureNV(..)
                                   , PerformanceConfigurationINTEL(..)
+                                  , BufferCollectionFUCHSIA(..)
                                   , DeferredOperationKHR(..)
                                   , PrivateDataSlotEXT(..)
+                                  , CuModuleNVX(..)
+                                  , CuFunctionNVX(..)
                                   , DisplayKHR(..)
                                   , DisplayModeKHR(..)
                                   , SurfaceKHR(..)
@@ -50,6 +53,9 @@ import Vulkan.Core10.APIConstants (HasObjectType(..))
 import Vulkan.Core10.APIConstants (IsHandle)
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_ACCELERATION_STRUCTURE_NV))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_CU_FUNCTION_NVX))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_CU_MODULE_NVX))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DEFERRED_OPERATION_KHR))
@@ -92,6 +98,7 @@ import Vulkan.Core10.Handles (ShaderModule(..))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>,
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsInfoNV',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsMemoryRequirementsInfoNV',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.createIndirectCommandsLayoutNV',
@@ -109,6 +116,7 @@ instance Show IndirectCommandsLayoutNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache VK_EXT_validation_cache>,
 -- 'Vulkan.Extensions.VK_EXT_validation_cache.ShaderModuleValidationCacheCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_validation_cache.createValidationCacheEXT',
 -- 'Vulkan.Extensions.VK_EXT_validation_cache.destroyValidationCacheEXT',
@@ -128,6 +136,7 @@ instance Show ValidationCacheEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureBuildGeometryInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureDeviceAddressInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.CopyAccelerationStructureInfoKHR',
@@ -152,6 +161,7 @@ instance Show AccelerationStructureKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureMemoryRequirementsInfoNV',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV',
@@ -175,6 +185,7 @@ instance Show AccelerationStructureNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_performance_query VK_INTEL_performance_query>,
 -- 'Vulkan.Extensions.VK_INTEL_performance_query.acquirePerformanceConfigurationINTEL',
 -- 'Vulkan.Extensions.VK_INTEL_performance_query.queueSetPerformanceConfigurationINTEL',
 -- 'Vulkan.Extensions.VK_INTEL_performance_query.releasePerformanceConfigurationINTEL'
@@ -187,6 +198,28 @@ instance Show PerformanceConfigurationINTEL where
   showsPrec p (PerformanceConfigurationINTEL x) = showParen (p >= 11) (showString "PerformanceConfigurationINTEL 0x" . showHex x)
 
 
+-- | VkBufferCollectionFUCHSIA - Opaque handle to a buffer collection object
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_FUCHSIA_buffer_collection VK_FUCHSIA_buffer_collection>,
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionBufferCreateInfoFUCHSIA',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionImageCreateInfoFUCHSIA',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImportMemoryBufferCollectionFUCHSIA',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.createBufferCollectionFUCHSIA',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.destroyBufferCollectionFUCHSIA',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.getBufferCollectionPropertiesFUCHSIA',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.setBufferCollectionBufferConstraintsFUCHSIA',
+-- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.setBufferCollectionImageConstraintsFUCHSIA'
+newtype BufferCollectionFUCHSIA = BufferCollectionFUCHSIA Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance HasObjectType BufferCollectionFUCHSIA where
+  objectTypeAndHandle (BufferCollectionFUCHSIA h) = (OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA, h)
+instance Show BufferCollectionFUCHSIA where
+  showsPrec p (BufferCollectionFUCHSIA x) = showParen (p >= 11) (showString "BufferCollectionFUCHSIA 0x" . showHex x)
+
+
 -- | VkDeferredOperationKHR - A deferred operation
 --
 -- = Description
@@ -196,6 +229,7 @@ instance Show PerformanceConfigurationINTEL where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_deferred_host_operations VK_KHR_deferred_host_operations>,
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.buildAccelerationStructuresKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.copyAccelerationStructureKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.copyAccelerationStructureToMemoryKHR',
@@ -219,6 +253,7 @@ instance Show DeferredOperationKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data VK_EXT_private_data>,
 -- 'Vulkan.Extensions.VK_EXT_private_data.createPrivateDataSlotEXT',
 -- 'Vulkan.Extensions.VK_EXT_private_data.destroyPrivateDataSlotEXT',
 -- 'Vulkan.Extensions.VK_EXT_private_data.getPrivateDataEXT',
@@ -232,12 +267,48 @@ instance Show PrivateDataSlotEXT where
   showsPrec p (PrivateDataSlotEXT x) = showParen (p >= 11) (showString "PrivateDataSlotEXT 0x" . showHex x)
 
 
+-- | VkCuModuleNVX - Stub description of VkCuModuleNVX
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_binary_import VK_NVX_binary_import>,
+-- 'Vulkan.Extensions.VK_NVX_binary_import.CuFunctionCreateInfoNVX',
+-- 'Vulkan.Extensions.VK_NVX_binary_import.createCuModuleNVX',
+-- 'Vulkan.Extensions.VK_NVX_binary_import.destroyCuModuleNVX'
+newtype CuModuleNVX = CuModuleNVX Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance HasObjectType CuModuleNVX where
+  objectTypeAndHandle (CuModuleNVX h) = (OBJECT_TYPE_CU_MODULE_NVX, h)
+instance Show CuModuleNVX where
+  showsPrec p (CuModuleNVX x) = showParen (p >= 11) (showString "CuModuleNVX 0x" . showHex x)
+
+
+-- | VkCuFunctionNVX - Stub description of VkCuFunctionNVX
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_binary_import VK_NVX_binary_import>,
+-- 'Vulkan.Extensions.VK_NVX_binary_import.CuLaunchInfoNVX',
+-- 'Vulkan.Extensions.VK_NVX_binary_import.createCuFunctionNVX',
+-- 'Vulkan.Extensions.VK_NVX_binary_import.destroyCuFunctionNVX'
+newtype CuFunctionNVX = CuFunctionNVX Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance HasObjectType CuFunctionNVX where
+  objectTypeAndHandle (CuFunctionNVX h) = (OBJECT_TYPE_CU_FUNCTION_NVX, h)
+instance Show CuFunctionNVX where
+  showsPrec p (CuFunctionNVX x) = showParen (p >= 11) (showString "CuFunctionNVX 0x" . showHex x)
+
+
 -- | VkDisplayKHR - Opaque handle to a display object
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayPlanePropertiesKHR',
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayPropertiesKHR',
+-- 'Vulkan.Extensions.VK_EXT_acquire_drm_display.acquireDrmDisplayEXT',
 -- 'Vulkan.Extensions.VK_NV_acquire_winrt_display.acquireWinrtDisplayNV',
 -- 'Vulkan.Extensions.VK_EXT_acquire_xlib_display.acquireXlibDisplayEXT',
 -- 'Vulkan.Extensions.VK_KHR_display.createDisplayModeKHR',
@@ -245,6 +316,7 @@ instance Show PrivateDataSlotEXT where
 -- 'Vulkan.Extensions.VK_KHR_get_display_properties2.getDisplayModeProperties2KHR',
 -- 'Vulkan.Extensions.VK_KHR_display.getDisplayModePropertiesKHR',
 -- 'Vulkan.Extensions.VK_KHR_display.getDisplayPlaneSupportedDisplaysKHR',
+-- 'Vulkan.Extensions.VK_EXT_acquire_drm_display.getDrmDisplayEXT',
 -- 'Vulkan.Extensions.VK_EXT_acquire_xlib_display.getRandROutputDisplayEXT',
 -- 'Vulkan.Extensions.VK_NV_acquire_winrt_display.getWinrtDisplayNV',
 -- 'Vulkan.Extensions.VK_EXT_display_control.registerDisplayEventEXT',
@@ -262,6 +334,7 @@ instance Show DisplayKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_display VK_KHR_display>,
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayModePropertiesKHR',
 -- 'Vulkan.Extensions.VK_KHR_get_display_properties2.DisplayPlaneInfo2KHR',
 -- 'Vulkan.Extensions.VK_KHR_display.DisplaySurfaceCreateInfoKHR',
@@ -289,6 +362,7 @@ instance Show DisplayModeKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_android_surface.createAndroidSurfaceKHR',
@@ -299,6 +373,7 @@ instance Show DisplayModeKHR where
 -- 'Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface.createImagePipeSurfaceFUCHSIA',
 -- 'Vulkan.Extensions.VK_MVK_macos_surface.createMacOSSurfaceMVK',
 -- 'Vulkan.Extensions.VK_EXT_metal_surface.createMetalSurfaceEXT',
+-- 'Vulkan.Extensions.VK_QNX_screen_surface.createScreenSurfaceQNX',
 -- 'Vulkan.Extensions.VK_GGP_stream_descriptor_surface.createStreamDescriptorSurfaceGGP',
 -- 'Vulkan.Extensions.VK_NN_vi_surface.createViSurfaceNN',
 -- 'Vulkan.Extensions.VK_KHR_wayland_surface.createWaylandSurfaceKHR',
@@ -355,7 +430,7 @@ instance Show SurfaceKHR where
 -- presentation engine. Use of a presentable image /must/ occur only after
 -- the image is returned by
 -- 'Vulkan.Extensions.VK_KHR_swapchain.acquireNextImageKHR', and before it
--- is presented by 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR'.
+-- is released by 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR'.
 -- This includes transitioning the image layout and rendering commands.
 --
 -- An application /can/ acquire use of a presentable image with
@@ -380,6 +455,7 @@ instance Show SurfaceKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
 -- 'Vulkan.Extensions.VK_KHR_swapchain.AcquireNextImageInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.BindImageMemorySwapchainInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.ImageSwapchainCreateInfoKHR',
@@ -395,9 +471,11 @@ instance Show SurfaceKHR where
 -- 'Vulkan.Extensions.VK_EXT_display_control.getSwapchainCounterEXT',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.getSwapchainImagesKHR',
 -- 'Vulkan.Extensions.VK_KHR_shared_presentable_image.getSwapchainStatusKHR',
+-- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR',
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.releaseFullScreenExclusiveModeEXT',
 -- 'Vulkan.Extensions.VK_EXT_hdr_metadata.setHdrMetadataEXT',
--- 'Vulkan.Extensions.VK_AMD_display_native_hdr.setLocalDimmingAMD'
+-- 'Vulkan.Extensions.VK_AMD_display_native_hdr.setLocalDimmingAMD',
+-- 'Vulkan.Extensions.VK_KHR_present_wait.waitForPresentKHR'
 newtype SwapchainKHR = SwapchainKHR Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
@@ -412,6 +490,7 @@ instance Show SwapchainKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>,
 -- 'Vulkan.Extensions.VK_EXT_debug_report.createDebugReportCallbackEXT',
 -- 'Vulkan.Extensions.VK_EXT_debug_report.destroyDebugReportCallbackEXT'
 newtype DebugReportCallbackEXT = DebugReportCallbackEXT Word64
@@ -437,6 +516,7 @@ instance Show DebugReportCallbackEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.createDebugUtilsMessengerEXT',
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.destroyDebugUtilsMessengerEXT'
 newtype DebugUtilsMessengerEXT = DebugUtilsMessengerEXT Word64

@@ -20,7 +20,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -62,6 +62,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetSemaphoreCounterValue))
 import Vulkan.Dynamic (DeviceCmds(pVkSignalSemaphore))
 import Vulkan.Dynamic (DeviceCmds(pVkWaitSemaphores))
@@ -120,6 +121,8 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Semaphore'
 getSemaphoreCounterValue :: forall io
                           . (MonadIO io)
@@ -143,7 +146,7 @@ getSemaphoreCounterValue :: forall io
                             Semaphore
                          -> io (("value" ::: Word64))
 getSemaphoreCounterValue device semaphore = liftIO . evalContT $ do
-  let vkGetSemaphoreCounterValuePtr = pVkGetSemaphoreCounterValue (deviceCmds (device :: Device))
+  let vkGetSemaphoreCounterValuePtr = pVkGetSemaphoreCounterValue (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetSemaphoreCounterValuePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSemaphoreCounterValue is null" Nothing Nothing
   let vkGetSemaphoreCounterValue' = mkVkGetSemaphoreCounterValue vkGetSemaphoreCounterValuePtr
@@ -169,7 +172,7 @@ foreign import ccall
 waitSemaphoresSafeOrUnsafe :: forall io
                             . (MonadIO io)
                            => (FunPtr (Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result) -> Ptr Device_T -> Ptr SemaphoreWaitInfo -> Word64 -> IO Result)
-                           -> -- | @device@ is the logical device that owns the semaphore.
+                           -> -- | @device@ is the logical device that owns the semaphores.
                               --
                               -- #VUID-vkWaitSemaphores-device-parameter# @device@ /must/ be a valid
                               -- 'Vulkan.Core10.Handles.Device' handle
@@ -187,7 +190,7 @@ waitSemaphoresSafeOrUnsafe :: forall io
                               ("timeout" ::: Word64)
                            -> io (Result)
 waitSemaphoresSafeOrUnsafe mkVkWaitSemaphores device waitInfo timeout = liftIO . evalContT $ do
-  let vkWaitSemaphoresPtr = pVkWaitSemaphores (deviceCmds (device :: Device))
+  let vkWaitSemaphoresPtr = pVkWaitSemaphores (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkWaitSemaphoresPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkWaitSemaphores is null" Nothing Nothing
   let vkWaitSemaphores' = mkVkWaitSemaphores vkWaitSemaphoresPtr
@@ -207,7 +210,7 @@ waitSemaphoresSafeOrUnsafe mkVkWaitSemaphores device waitInfo timeout = liftIO .
 -- whichever is sooner.
 --
 -- If @timeout@ is zero, then 'waitSemaphores' does not wait, but simply
--- returns information about the current state of the semaphore.
+-- returns information about the current state of the semaphores.
 -- 'Vulkan.Core10.Enums.Result.TIMEOUT' will be returned in this case if
 -- the condition is not satisfied, even though no actual wait was
 -- performed.
@@ -241,10 +244,12 @@ waitSemaphoresSafeOrUnsafe mkVkWaitSemaphores device waitInfo timeout = liftIO .
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.Device', 'SemaphoreWaitInfo'
 waitSemaphores :: forall io
                 . (MonadIO io)
-               => -- | @device@ is the logical device that owns the semaphore.
+               => -- | @device@ is the logical device that owns the semaphores.
                   --
                   -- #VUID-vkWaitSemaphores-device-parameter# @device@ /must/ be a valid
                   -- 'Vulkan.Core10.Handles.Device' handle
@@ -266,7 +271,7 @@ waitSemaphores = waitSemaphoresSafeOrUnsafe mkVkWaitSemaphoresUnsafe
 -- | A variant of 'waitSemaphores' which makes a *safe* FFI call
 waitSemaphoresSafe :: forall io
                     . (MonadIO io)
-                   => -- | @device@ is the logical device that owns the semaphore.
+                   => -- | @device@ is the logical device that owns the semaphores.
                       --
                       -- #VUID-vkWaitSemaphores-device-parameter# @device@ /must/ be a valid
                       -- 'Vulkan.Core10.Handles.Device' handle
@@ -322,6 +327,8 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.Device', 'SemaphoreSignalInfo'
 signalSemaphore :: forall io
                  . (MonadIO io)
@@ -338,7 +345,7 @@ signalSemaphore :: forall io
                    SemaphoreSignalInfo
                 -> io ()
 signalSemaphore device signalInfo = liftIO . evalContT $ do
-  let vkSignalSemaphorePtr = pVkSignalSemaphore (deviceCmds (device :: Device))
+  let vkSignalSemaphorePtr = pVkSignalSemaphore (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkSignalSemaphorePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSignalSemaphore is null" Nothing Nothing
   let vkSignalSemaphore' = mkVkSignalSemaphore vkSignalSemaphorePtr
@@ -352,23 +359,26 @@ signalSemaphore device signalInfo = liftIO . evalContT $ do
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceTimelineSemaphoreFeatures' structure
--- describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceTimelineSemaphoreFeatures' structure is included
--- in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceTimelineSemaphoreFeatures' /can/ also be included in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- features.
+-- in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceTimelineSemaphoreFeatures' /can/ also be used
+-- in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceTimelineSemaphoreFeatures = PhysicalDeviceTimelineSemaphoreFeatures
@@ -385,7 +395,7 @@ deriving instance Generic (PhysicalDeviceTimelineSemaphoreFeatures)
 deriving instance Show PhysicalDeviceTimelineSemaphoreFeatures
 
 instance ToCStruct PhysicalDeviceTimelineSemaphoreFeatures where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceTimelineSemaphoreFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -419,15 +429,22 @@ instance Zero PhysicalDeviceTimelineSemaphoreFeatures where
 -- | VkPhysicalDeviceTimelineSemaphoreProperties - Structure describing
 -- timeline semaphore properties that can be supported by an implementation
 --
--- = Members
+-- = Description
 --
--- The members of the 'PhysicalDeviceTimelineSemaphoreProperties' structure
--- describe the following implementation-dependent limits:
+-- If the 'PhysicalDeviceTimelineSemaphoreProperties' structure is included
+-- in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceTimelineSemaphoreProperties = PhysicalDeviceTimelineSemaphoreProperties
   { -- | #extension-limits-maxTimelineSemaphoreValueDifference#
@@ -442,7 +459,7 @@ deriving instance Generic (PhysicalDeviceTimelineSemaphoreProperties)
 deriving instance Show PhysicalDeviceTimelineSemaphoreProperties
 
 instance ToCStruct PhysicalDeviceTimelineSemaphoreProperties where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceTimelineSemaphoreProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -476,14 +493,17 @@ instance Zero PhysicalDeviceTimelineSemaphoreProperties where
 -- | VkSemaphoreTypeCreateInfo - Structure specifying the type of a newly
 -- created semaphore
 --
--- == Valid Usage (Implicit)
+-- = Description
 --
--- -   #VUID-VkSemaphoreTypeCreateInfo-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO'
+-- To create a semaphore of a specific type, add a
+-- 'SemaphoreTypeCreateInfo' structure to the
+-- 'Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo'::@pNext@ chain.
 --
--- -   #VUID-VkSemaphoreTypeCreateInfo-semaphoreType-parameter#
---     @semaphoreType@ /must/ be a valid
---     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' value
+-- If no 'SemaphoreTypeCreateInfo' structure is included in the @pNext@
+-- chain of 'Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo', then the
+-- created semaphore will have a default
+-- 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
+-- 'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY'.
 --
 -- == Valid Usage
 --
@@ -497,14 +517,19 @@ instance Zero PhysicalDeviceTimelineSemaphoreProperties where
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY',
 --     @initialValue@ /must/ be zero
 --
--- If no 'SemaphoreTypeCreateInfo' structure is included in the @pNext@
--- chain of 'Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo', then the
--- created semaphore will have a default
--- 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
--- 'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY'.
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkSemaphoreTypeCreateInfo-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO'
+--
+-- -   #VUID-VkSemaphoreTypeCreateInfo-semaphoreType-parameter#
+--     @semaphoreType@ /must/ be a valid
+--     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' value
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SemaphoreTypeCreateInfo = SemaphoreTypeCreateInfo
@@ -522,7 +547,7 @@ deriving instance Generic (SemaphoreTypeCreateInfo)
 deriving instance Show SemaphoreTypeCreateInfo
 
 instance ToCStruct SemaphoreTypeCreateInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SemaphoreTypeCreateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -589,22 +614,24 @@ instance Zero SemaphoreTypeCreateInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data TimelineSemaphoreSubmitInfo = TimelineSemaphoreSubmitInfo
   { -- | @waitSemaphoreValueCount@ is the number of semaphore wait values
     -- specified in @pWaitSemaphoreValues@.
     waitSemaphoreValueCount :: Word32
-  , -- | @pWaitSemaphoreValues@ is an array of length @waitSemaphoreValueCount@
-    -- containing values for the corresponding semaphores in
+  , -- | @pWaitSemaphoreValues@ is a pointer to an array of
+    -- @waitSemaphoreValueCount@ values for the corresponding semaphores in
     -- 'Vulkan.Core10.Queue.SubmitInfo'::@pWaitSemaphores@ to wait for.
     waitSemaphoreValues :: Vector Word64
   , -- | @signalSemaphoreValueCount@ is the number of semaphore signal values
     -- specified in @pSignalSemaphoreValues@.
     signalSemaphoreValueCount :: Word32
-  , -- | @pSignalSemaphoreValues@ is an array of length
-    -- @signalSemaphoreValueCount@ containing values for the corresponding
-    -- semaphores in 'Vulkan.Core10.Queue.SubmitInfo'::@pSignalSemaphores@ to
-    -- set when signaled.
+  , -- | @pSignalSemaphoreValues@ is a pointer to an array
+    -- @signalSemaphoreValueCount@ values for the corresponding semaphores in
+    -- 'Vulkan.Core10.Queue.SubmitInfo'::@pSignalSemaphores@ to set when
+    -- signaled.
     signalSemaphoreValues :: Vector Word64
   }
   deriving (Typeable)
@@ -614,7 +641,7 @@ deriving instance Generic (TimelineSemaphoreSubmitInfo)
 deriving instance Show TimelineSemaphoreSubmitInfo
 
 instance ToCStruct TimelineSemaphoreSubmitInfo where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p TimelineSemaphoreSubmitInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -629,7 +656,7 @@ instance ToCStruct TimelineSemaphoreSubmitInfo where
     pWaitSemaphoreValues'' <- if Data.Vector.null (waitSemaphoreValues)
       then pure nullPtr
       else do
-        pPWaitSemaphoreValues <- ContT $ allocaBytesAligned @Word64 (((Data.Vector.length (waitSemaphoreValues))) * 8) 8
+        pPWaitSemaphoreValues <- ContT $ allocaBytes @Word64 (((Data.Vector.length (waitSemaphoreValues))) * 8)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitSemaphoreValues `plusPtr` (8 * (i)) :: Ptr Word64) (e)) ((waitSemaphoreValues))
         pure $ pPWaitSemaphoreValues
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word64))) pWaitSemaphoreValues''
@@ -644,7 +671,7 @@ instance ToCStruct TimelineSemaphoreSubmitInfo where
     pSignalSemaphoreValues'' <- if Data.Vector.null (signalSemaphoreValues)
       then pure nullPtr
       else do
-        pPSignalSemaphoreValues <- ContT $ allocaBytesAligned @Word64 (((Data.Vector.length (signalSemaphoreValues))) * 8) 8
+        pPSignalSemaphoreValues <- ContT $ allocaBytes @Word64 (((Data.Vector.length (signalSemaphoreValues))) * 8)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPSignalSemaphoreValues `plusPtr` (8 * (i)) :: Ptr Word64) (e)) ((signalSemaphoreValues))
         pure $ pPSignalSemaphoreValues
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr Word64))) pSignalSemaphoreValues''
@@ -711,6 +738,8 @@ instance Zero TimelineSemaphoreSubmitInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.Semaphore',
 -- 'Vulkan.Core12.Enums.SemaphoreWaitFlagBits.SemaphoreWaitFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'waitSemaphores',
@@ -734,7 +763,7 @@ deriving instance Generic (SemaphoreWaitInfo)
 deriving instance Show SemaphoreWaitInfo
 
 instance ToCStruct SemaphoreWaitInfo where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SemaphoreWaitInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -743,10 +772,10 @@ instance ToCStruct SemaphoreWaitInfo where
     lift $ unless ((Data.Vector.length $ (values)) == pSemaphoresLength) $
       throwIO $ IOError Nothing InvalidArgument "" "pValues and pSemaphores must have the same length" Nothing Nothing
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral pSemaphoresLength :: Word32))
-    pPSemaphores' <- ContT $ allocaBytesAligned @Semaphore ((Data.Vector.length (semaphores)) * 8) 8
+    pPSemaphores' <- ContT $ allocaBytes @Semaphore ((Data.Vector.length (semaphores)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPSemaphores' `plusPtr` (8 * (i)) :: Ptr Semaphore) (e)) (semaphores)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Semaphore))) (pPSemaphores')
-    pPValues' <- ContT $ allocaBytesAligned @Word64 ((Data.Vector.length (values)) * 8) 8
+    pPValues' <- ContT $ allocaBytes @Word64 ((Data.Vector.length (values)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPValues' `plusPtr` (8 * (i)) :: Ptr Word64) (e)) (values)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr Word64))) (pPValues')
     lift $ f
@@ -782,6 +811,8 @@ instance Zero SemaphoreWaitInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_timeline_semaphore VK_KHR_timeline_semaphore>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.Semaphore',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'signalSemaphore',
 -- 'Vulkan.Extensions.VK_KHR_timeline_semaphore.signalSemaphoreKHR'
@@ -817,7 +848,7 @@ deriving instance Generic (SemaphoreSignalInfo)
 deriving instance Show SemaphoreSignalInfo
 
 instance ToCStruct SemaphoreSignalInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SemaphoreSignalInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

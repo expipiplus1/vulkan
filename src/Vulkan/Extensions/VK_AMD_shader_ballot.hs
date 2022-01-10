@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Dominik Witczak
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_shader_ballot:%20&body=@dominikwitczakamd%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_shader_ballot] @dominikwitczakamd%0A<<Here describe the issue or question you have about the VK_AMD_shader_ballot extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -38,6 +38,9 @@
 --
 --     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_shader_ballot.html SPV_AMD_shader_ballot>
+--
+--     -   This extension provides API support for
+--         <https://www.khronos.org/registry/OpenGL/extensions/AMD/AMD_shader_ballot.txt GL_AMD_shader_ballot>
 --
 -- [__Contributors__]
 --
@@ -72,11 +75,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- No cross-references are available
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_shader_ballot Vulkan Specification>

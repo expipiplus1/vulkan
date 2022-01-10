@@ -10,7 +10,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -57,6 +57,7 @@ import Vulkan.Dynamic (InstanceCmds(pVkEnumerateDeviceExtensionProperties))
 import Vulkan.Core10.APIConstants (MAX_EXTENSION_NAME_SIZE)
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -85,8 +86,7 @@ foreign import ccall
 -- the @pProperties@ array, and on return the variable is overwritten with
 -- the number of structures actually written to @pProperties@. If
 -- @pPropertyCount@ is less than the number of extension properties
--- available, at most @pPropertyCount@ structures will be written. If
--- @pPropertyCount@ is smaller than the number of extensions available,
+-- available, at most @pPropertyCount@ structures will be written, and
 -- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
 -- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
 -- available properties were returned.
@@ -134,6 +134,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'ExtensionProperties'
 enumerateInstanceExtensionProperties :: forall io
                                       . (MonadIO io)
@@ -219,6 +220,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'ExtensionProperties', 'Vulkan.Core10.Handles.PhysicalDevice'
 enumerateDeviceExtensionProperties :: forall io
                                     . (MonadIO io)
@@ -229,7 +231,7 @@ enumerateDeviceExtensionProperties :: forall io
                                       ("layerName" ::: Maybe ByteString)
                                    -> io (Result, ("properties" ::: Vector ExtensionProperties))
 enumerateDeviceExtensionProperties physicalDevice layerName = liftIO . evalContT $ do
-  let vkEnumerateDeviceExtensionPropertiesPtr = pVkEnumerateDeviceExtensionProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkEnumerateDeviceExtensionPropertiesPtr = pVkEnumerateDeviceExtensionProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkEnumerateDeviceExtensionPropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkEnumerateDeviceExtensionProperties is null" Nothing Nothing
   let vkEnumerateDeviceExtensionProperties' = mkVkEnumerateDeviceExtensionProperties vkEnumerateDeviceExtensionPropertiesPtr
@@ -254,6 +256,15 @@ enumerateDeviceExtensionProperties physicalDevice layerName = liftIO . evalContT
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264CapabilitiesEXT VkVideoDecodeH264CapabilitiesEXT>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264SessionCreateInfoEXT VkVideoDecodeH264SessionCreateInfoEXT>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH265CapabilitiesEXT VkVideoDecodeH265CapabilitiesEXT>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH265SessionCreateInfoEXT VkVideoDecodeH265SessionCreateInfoEXT>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264CapabilitiesEXT VkVideoEncodeH264CapabilitiesEXT>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264SessionCreateInfoEXT VkVideoEncodeH264SessionCreateInfoEXT>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265CapabilitiesEXT VkVideoEncodeH265CapabilitiesEXT>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265SessionCreateInfoEXT VkVideoEncodeH265SessionCreateInfoEXT>,
 -- 'enumerateDeviceExtensionProperties',
 -- 'enumerateInstanceExtensionProperties'
 data ExtensionProperties = ExtensionProperties
@@ -272,7 +283,7 @@ deriving instance Generic (ExtensionProperties)
 deriving instance Show ExtensionProperties
 
 instance ToCStruct ExtensionProperties where
-  withCStruct x f = allocaBytesAligned 260 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 260 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExtensionProperties{..} f = do
     pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 0 :: Ptr (FixedArray MAX_EXTENSION_NAME_SIZE CChar))) (extensionName)
     poke ((p `plusPtr` 256 :: Ptr Word32)) (specVersion)

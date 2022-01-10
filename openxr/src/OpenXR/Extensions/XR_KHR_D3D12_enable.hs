@@ -51,7 +51,7 @@ module OpenXR.Extensions.XR_KHR_D3D12_enable  ( getD3D12GraphicsRequirementsKHR
 import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -81,6 +81,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import OpenXR.Extensions.XR_KHR_D3D11_enable (D3D_FEATURE_LEVEL)
 import OpenXR.Core10.Handles (Instance)
 import OpenXR.Core10.Handles (Instance(..))
+import OpenXR.Core10.Handles (Instance(Instance))
 import OpenXR.Dynamic (InstanceCmds(pXrGetD3D12GraphicsRequirementsKHR))
 import OpenXR.Core10.Handles (Instance_T)
 import OpenXR.Core10.Image (IsSwapchainImage(..))
@@ -126,8 +127,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrGetD3D12GraphicsRequirementsKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
+-- -   #VUID-xrGetD3D12GraphicsRequirementsKHR-extension-notenabled# The
+--     @XR_KHR_D3D12_enable@ extension /must/ be enabled prior to calling
 --     'getD3D12GraphicsRequirementsKHR'
 --
 -- -   #VUID-xrGetD3D12GraphicsRequirementsKHR-instance-parameter#
@@ -173,7 +174,7 @@ getD3D12GraphicsRequirementsKHR :: forall io
                                    SystemId
                                 -> io (GraphicsRequirementsD3D12KHR)
 getD3D12GraphicsRequirementsKHR instance' systemId = liftIO . evalContT $ do
-  let xrGetD3D12GraphicsRequirementsKHRPtr = pXrGetD3D12GraphicsRequirementsKHR (instanceCmds (instance' :: Instance))
+  let xrGetD3D12GraphicsRequirementsKHRPtr = pXrGetD3D12GraphicsRequirementsKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetD3D12GraphicsRequirementsKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetD3D12GraphicsRequirementsKHR is null" Nothing Nothing
   let xrGetD3D12GraphicsRequirementsKHR' = mkXrGetD3D12GraphicsRequirementsKHR xrGetD3D12GraphicsRequirementsKHRPtr
@@ -197,8 +198,9 @@ getD3D12GraphicsRequirementsKHR instance' systemId = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsBindingD3D12KHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using 'GraphicsBindingD3D12KHR'
+-- -   #VUID-XrGraphicsBindingD3D12KHR-extension-notenabled# The
+--     @XR_KHR_D3D12_enable@ extension /must/ be enabled prior to using
+--     'GraphicsBindingD3D12KHR'
 --
 -- -   #VUID-XrGraphicsBindingD3D12KHR-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_GRAPHICS_BINDING_D3D12_KHR'
@@ -230,7 +232,7 @@ deriving instance Generic (GraphicsBindingD3D12KHR)
 deriving instance Show GraphicsBindingD3D12KHR
 
 instance ToCStruct GraphicsBindingD3D12KHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsBindingD3D12KHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_BINDING_D3D12_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -292,8 +294,9 @@ instance Zero GraphicsBindingD3D12KHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrSwapchainImageD3D12KHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using 'SwapchainImageD3D12KHR'
+-- -   #VUID-XrSwapchainImageD3D12KHR-extension-notenabled# The
+--     @XR_KHR_D3D12_enable@ extension /must/ be enabled prior to using
+--     'SwapchainImageD3D12KHR'
 --
 -- -   #VUID-XrSwapchainImageD3D12KHR-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_SWAPCHAIN_IMAGE_D3D12_KHR'
@@ -322,7 +325,7 @@ instance IsSwapchainImage SwapchainImageD3D12KHR where
   toSwapchainImageBaseHeader SwapchainImageD3D12KHR{} = SwapchainImageBaseHeader{type' = TYPE_SWAPCHAIN_IMAGE_D3D12_KHR}
 
 instance ToCStruct SwapchainImageD3D12KHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainImageD3D12KHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SWAPCHAIN_IMAGE_D3D12_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -365,8 +368,8 @@ instance Zero SwapchainImageD3D12KHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsRequirementsD3D12KHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrGraphicsRequirementsD3D12KHR-extension-notenabled# The
+--     @XR_KHR_D3D12_enable@ extension /must/ be enabled prior to using
 --     'GraphicsRequirementsD3D12KHR'
 --
 -- -   #VUID-XrGraphicsRequirementsD3D12KHR-type-type# @type@ /must/ be
@@ -402,7 +405,7 @@ deriving instance Generic (GraphicsRequirementsD3D12KHR)
 deriving instance Show GraphicsRequirementsD3D12KHR
 
 instance ToCStruct GraphicsRequirementsD3D12KHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsRequirementsD3D12KHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_REQUIREMENTS_D3D12_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

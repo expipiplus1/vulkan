@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Bill Licea-Kane
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_filter_cubic:%20&body=@wwlk%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_filter_cubic] @wwlk%0A<<Here describe the issue or question you have about the VK_EXT_filter_cubic extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -114,12 +114,12 @@
 --
 --     -   Initial version
 --
--- = See Also
+-- == See Also
 --
 -- 'FilterCubicImageViewImageFormatPropertiesEXT',
 -- 'PhysicalDeviceImageViewImageFormatInfoEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_filter_cubic Vulkan Specification>

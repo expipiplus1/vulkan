@@ -32,7 +32,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_full_screen_exclusive:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_full_screen_exclusive] @cubanismo%0A<<Here describe the issue or question you have about the VK_EXT_full_screen_exclusive extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -158,7 +158,7 @@
 --
 -- 1) What should the extension & flag be called?
 --
--- RESOLVED: VK_EXT_full_screen_exclusive.
+-- __RESOLVED__: VK_EXT_full_screen_exclusive.
 --
 -- Other options considered (prior to the app-controlled mode) were:
 --
@@ -176,7 +176,7 @@
 --
 -- 2) Do we need more than a boolean toggle?
 --
--- RESOLVED: Yes.
+-- __RESOLVED__: Yes.
 --
 -- Using an enum with default\/allowed\/disallowed\/app-controlled enables
 -- applications to accept driver default behavior, specifically override it
@@ -185,13 +185,13 @@
 --
 -- 3) Should this be a KHR or EXT extension?
 --
--- RESOLVED: EXT, in order to allow it to be shipped faster.
+-- __RESOLVED__: EXT, in order to allow it to be shipped faster.
 --
 -- 4) Can the fullscreen hint affect the surface capabilities, and if so,
 -- should the hint also be specified as input when querying the surface
 -- capabilities?
 --
--- RESOLVED: Yes on both accounts.
+-- __RESOLVED__: Yes on both accounts.
 --
 -- While the hint does not guarantee a particular fullscreen mode will be
 -- used when the swapchain is created, it can sometimes imply particular
@@ -206,7 +206,7 @@
 --
 -- 5) Should full-screen be one word or two?
 --
--- RESOLVED: Two words.
+-- __RESOLVED__: Two words.
 --
 -- \"Fullscreen\" is not in my dictionary, and web searches did not turn up
 -- definitive proof that it is a colloquially accepted compound word.
@@ -240,7 +240,7 @@
 --
 --     -   Internal revision
 --
--- = See Also
+-- == See Also
 --
 -- 'FullScreenExclusiveEXT', 'SurfaceCapabilitiesFullScreenExclusiveEXT',
 -- 'SurfaceFullScreenExclusiveInfoEXT',
@@ -248,7 +248,7 @@
 -- 'getPhysicalDeviceSurfacePresentModes2EXT',
 -- 'releaseFullScreenExclusiveModeEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_full_screen_exclusive Vulkan Specification>
@@ -287,7 +287,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -332,6 +332,7 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkAcquireFullScreenExclusiveModeEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkGetDeviceGroupSurfacePresentModes2EXT))
 import Vulkan.Dynamic (DeviceCmds(pVkReleaseFullScreenExclusiveModeEXT))
@@ -342,6 +343,7 @@ import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceSurfacePresentModes2EXT))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Extensions.VK_KHR_get_surface_capabilities2 (PhysicalDeviceSurfaceInfo2KHR)
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.CStruct.Extends (PokeChain)
@@ -381,6 +383,14 @@ foreign import ccall
 -- with the ability to specify extended inputs via chained input
 -- structures.
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkGetPhysicalDeviceSurfacePresentModes2EXT-pSurfaceInfo-06210#
+--     @pSurfaceInfo->surface@ /must/ be supported by @physicalDevice@, as
+--     reported by
+--     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
+--     or an equivalent platform-specific mechanism
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkGetPhysicalDeviceSurfacePresentModes2EXT-physicalDevice-parameter#
@@ -419,6 +429,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_full_screen_exclusive VK_EXT_full_screen_exclusive>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR',
 -- 'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR'
@@ -435,7 +446,7 @@ getPhysicalDeviceSurfacePresentModes2EXT :: forall a io
                                             (PhysicalDeviceSurfaceInfo2KHR a)
                                          -> io (Result, ("presentModes" ::: Vector PresentModeKHR))
 getPhysicalDeviceSurfacePresentModes2EXT physicalDevice surfaceInfo = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceSurfacePresentModes2EXTPtr = pVkGetPhysicalDeviceSurfacePresentModes2EXT (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceSurfacePresentModes2EXTPtr = pVkGetPhysicalDeviceSurfacePresentModes2EXT (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceSurfacePresentModes2EXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSurfacePresentModes2EXT is null" Nothing Nothing
   let vkGetPhysicalDeviceSurfacePresentModes2EXT' = mkVkGetPhysicalDeviceSurfacePresentModes2EXT vkGetPhysicalDeviceSurfacePresentModes2EXTPtr
@@ -487,6 +498,9 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_full_screen_exclusive VK_EXT_full_screen_exclusive>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.DeviceGroupPresentModeFlagsKHR',
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
@@ -509,7 +523,7 @@ getDeviceGroupSurfacePresentModes2EXT :: forall a io
                                          (PhysicalDeviceSurfaceInfo2KHR a)
                                       -> io (("modes" ::: DeviceGroupPresentModeFlagsKHR))
 getDeviceGroupSurfacePresentModes2EXT device surfaceInfo = liftIO . evalContT $ do
-  let vkGetDeviceGroupSurfacePresentModes2EXTPtr = pVkGetDeviceGroupSurfacePresentModes2EXT (deviceCmds (device :: Device))
+  let vkGetDeviceGroupSurfacePresentModes2EXTPtr = pVkGetDeviceGroupSurfacePresentModes2EXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDeviceGroupSurfacePresentModes2EXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceGroupSurfacePresentModes2EXT is null" Nothing Nothing
   let vkGetDeviceGroupSurfacePresentModes2EXT' = mkVkGetDeviceGroupSurfacePresentModes2EXT vkGetDeviceGroupSurfacePresentModes2EXTPtr
@@ -593,6 +607,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_full_screen_exclusive VK_EXT_full_screen_exclusive>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Extensions.Handles.SwapchainKHR'
 acquireFullScreenExclusiveModeEXT :: forall io
                                    . (MonadIO io)
@@ -603,7 +618,7 @@ acquireFullScreenExclusiveModeEXT :: forall io
                                      SwapchainKHR
                                   -> io ()
 acquireFullScreenExclusiveModeEXT device swapchain = liftIO $ do
-  let vkAcquireFullScreenExclusiveModeEXTPtr = pVkAcquireFullScreenExclusiveModeEXT (deviceCmds (device :: Device))
+  let vkAcquireFullScreenExclusiveModeEXTPtr = pVkAcquireFullScreenExclusiveModeEXT (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkAcquireFullScreenExclusiveModeEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireFullScreenExclusiveModeEXT is null" Nothing Nothing
   let vkAcquireFullScreenExclusiveModeEXT' = mkVkAcquireFullScreenExclusiveModeEXT vkAcquireFullScreenExclusiveModeEXTPtr
@@ -634,6 +649,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_full_screen_exclusive VK_EXT_full_screen_exclusive>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Extensions.Handles.SwapchainKHR'
 releaseFullScreenExclusiveModeEXT :: forall io
                                    . (MonadIO io)
@@ -652,7 +668,7 @@ releaseFullScreenExclusiveModeEXT :: forall io
                                      SwapchainKHR
                                   -> io ()
 releaseFullScreenExclusiveModeEXT device swapchain = liftIO $ do
-  let vkReleaseFullScreenExclusiveModeEXTPtr = pVkReleaseFullScreenExclusiveModeEXT (deviceCmds (device :: Device))
+  let vkReleaseFullScreenExclusiveModeEXTPtr = pVkReleaseFullScreenExclusiveModeEXT (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkReleaseFullScreenExclusiveModeEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkReleaseFullScreenExclusiveModeEXT is null" Nothing Nothing
   let vkReleaseFullScreenExclusiveModeEXT' = mkVkReleaseFullScreenExclusiveModeEXT vkReleaseFullScreenExclusiveModeEXTPtr
@@ -672,6 +688,7 @@ releaseFullScreenExclusiveModeEXT device swapchain = liftIO $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_full_screen_exclusive VK_EXT_full_screen_exclusive>,
 -- 'FullScreenExclusiveEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SurfaceFullScreenExclusiveInfoEXT = SurfaceFullScreenExclusiveInfoEXT
@@ -688,7 +705,7 @@ deriving instance Generic (SurfaceFullScreenExclusiveInfoEXT)
 deriving instance Show SurfaceFullScreenExclusiveInfoEXT
 
 instance ToCStruct SurfaceFullScreenExclusiveInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SurfaceFullScreenExclusiveInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -743,6 +760,8 @@ instance Zero SurfaceFullScreenExclusiveInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_full_screen_exclusive VK_EXT_full_screen_exclusive>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_win32_surface VK_KHR_win32_surface>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SurfaceFullScreenExclusiveWin32InfoEXT = SurfaceFullScreenExclusiveWin32InfoEXT
   { -- | @hmonitor@ is the Win32 'HMONITOR' handle identifying the display to
@@ -758,7 +777,7 @@ deriving instance Generic (SurfaceFullScreenExclusiveWin32InfoEXT)
 deriving instance Show SurfaceFullScreenExclusiveWin32InfoEXT
 
 instance ToCStruct SurfaceFullScreenExclusiveWin32InfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SurfaceFullScreenExclusiveWin32InfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_WIN32_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -810,6 +829,7 @@ instance Zero SurfaceFullScreenExclusiveWin32InfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_full_screen_exclusive VK_EXT_full_screen_exclusive>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SurfaceCapabilitiesFullScreenExclusiveEXT = SurfaceCapabilitiesFullScreenExclusiveEXT
@@ -822,7 +842,7 @@ deriving instance Generic (SurfaceCapabilitiesFullScreenExclusiveEXT)
 deriving instance Show SurfaceCapabilitiesFullScreenExclusiveEXT
 
 instance ToCStruct SurfaceCapabilitiesFullScreenExclusiveEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SurfaceCapabilitiesFullScreenExclusiveEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_CAPABILITIES_FULL_SCREEN_EXCLUSIVE_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -858,6 +878,7 @@ instance Zero SurfaceCapabilitiesFullScreenExclusiveEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_full_screen_exclusive VK_EXT_full_screen_exclusive>,
 -- 'SurfaceFullScreenExclusiveInfoEXT'
 newtype FullScreenExclusiveEXT = FullScreenExclusiveEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)

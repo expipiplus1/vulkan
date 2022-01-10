@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Tobias Hector
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_shader_image_atomic_int64:%20&body=@tobski%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_shader_image_atomic_int64] @tobski%0A<<Here describe the issue or question you have about the VK_EXT_shader_image_atomic_int64 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -35,6 +35,14 @@
 --
 -- [__IP Status__]
 --     No known IP claims.
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   This extension requires
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_image_int64.html SPV_EXT_shader_image_int64>
+--
+--     -   This extension provides API support for
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_shader_image_int64.txt GLSL_EXT_shader_image_int64>
 --
 -- [__Contributors__]
 --
@@ -47,16 +55,6 @@
 --     -   Jeff Bolz, Nvidia
 --
 --     -   Jason Ekstrand, Intel
---
--- [__Interactions and External Dependencies__]
---
---     -   This extension requires the
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_EXT_shader_image_atomic_int64.html SPV_EXT_shader_image_int64>
---         SPIR-V extension.
---
---     -   This extension requires the
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_shader_image_int64.txt GLSL_EXT_shader_image_int64>
---         extension for GLSL source languages.
 --
 -- == Description
 --
@@ -97,11 +95,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceShaderImageAtomicInt64FeaturesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_image_atomic_int64 Vulkan Specification>

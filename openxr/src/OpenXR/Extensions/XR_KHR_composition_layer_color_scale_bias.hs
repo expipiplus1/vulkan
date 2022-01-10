@@ -39,7 +39,7 @@ module OpenXR.Extensions.XR_KHR_composition_layer_color_scale_bias  ( Compositio
                                                                     , pattern KHR_COMPOSITION_LAYER_COLOR_SCALE_BIAS_EXTENSION_NAME
                                                                     ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import OpenXR.CStruct (FromCStruct)
@@ -76,8 +76,8 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_COMPOSITION_LAYER_C
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrCompositionLayerColorScaleBiasKHR-extension-notenabled# The
---     @@ extension /must/ be enabled prior to using
---     'CompositionLayerColorScaleBiasKHR'
+--     @XR_KHR_composition_layer_color_scale_bias@ extension /must/ be
+--     enabled prior to using 'CompositionLayerColorScaleBiasKHR'
 --
 -- -   #VUID-XrCompositionLayerColorScaleBiasKHR-type-type# @type@ /must/
 --     be
@@ -107,7 +107,7 @@ deriving instance Generic (CompositionLayerColorScaleBiasKHR)
 deriving instance Show CompositionLayerColorScaleBiasKHR
 
 instance ToCStruct CompositionLayerColorScaleBiasKHR where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CompositionLayerColorScaleBiasKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_COMPOSITION_LAYER_COLOR_SCALE_BIAS_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

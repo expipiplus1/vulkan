@@ -26,10 +26,10 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_swapchain:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_swapchain] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_swapchain extension>> >
 --
 --     -   Ian Elliott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_swapchain:%20&body=@ianelliottus%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_swapchain] @ianelliottus%0A<<Here describe the issue or question you have about the VK_KHR_swapchain extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -307,7 +307,7 @@
 -- __RESOLVED__: Accept a semaphore to signal as an object handle. This
 -- avoids the need to specify whether the application must destroy the
 -- semaphore or whether it is owned by the swapchain, and if the latter,
--- what its lifetime is and whether it can be re-used for other operations
+-- what its lifetime is and whether it can be reused for other operations
 -- once it is received from 'acquireNextImageKHR'.
 --
 -- 11) What types of swapchain queuing behavior should be exposed? Options
@@ -329,7 +329,7 @@
 --     single-entry queue is used to hold pending presentation requests. If
 --     the queue is full when a new presentation request is received, the
 --     new request replaces the existing entry, and any images associated
---     with the prior entry become available for re-use by the application.
+--     with the prior entry become available for reuse by the application.
 --
 -- -   FIFO queue: Waits for the next vertical blanking period to update
 --     the current image. No tearing should be observed. An internal queue
@@ -340,10 +340,10 @@
 --     queue is non-empty
 --
 -- Not all surfaces will support all of these modes, so the modes supported
--- will be returned using a surface info query. All surfaces must support
--- the FIFO queue mode. Applications must choose one of these modes up
--- front when creating a swapchain. Switching modes can be accomplished by
--- recreating the swapchain.
+-- will be returned using a surface information query. All surfaces must
+-- support the FIFO queue mode. Applications must choose one of these modes
+-- up front when creating a swapchain. Switching modes can be accomplished
+-- by recreating the swapchain.
 --
 -- 12) Can 'Vulkan.Extensions.VK_KHR_surface.PRESENT_MODE_MAILBOX_KHR'
 -- provide non-blocking guarantees for 'acquireNextImageKHR'? If so, what
@@ -379,11 +379,11 @@
 -- to indicate there are no practical limits on the number of images in a
 -- swapchain?
 --
--- __RESOLVED__: Yes. There where often be cases where there is no
--- practical limit to the number of images in a swapchain other than the
--- amount of available resources (I.e., memory) in the system. Trying to
--- derive a hard limit from things like memory size is prone to failure. It
--- is better in such cases to leave it to applications to figure such soft
+-- __RESOLVED__: Yes. There will often be cases where there is no practical
+-- limit to the number of images in a swapchain other than the amount of
+-- available resources (i.e., memory) in the system. Trying to derive a
+-- hard limit from things like memory size is prone to failure. It is
+-- better in such cases to leave it to applications to figure such soft
 -- limits out via trial\/failure iterations.
 --
 -- 15) Should there be a special value for
@@ -411,7 +411,7 @@
 -- __RESOLVED__: Applications can query both the supported and current
 -- transforms of a surface. Both are specified relative to the device’s
 -- “natural” display rotation and direction. The supported transforms
--- indicates which orientations the presentation engine accepts images in.
+-- indicate which orientations the presentation engine accepts images in.
 -- For example, a presentation engine that does not support transforming
 -- surfaces as part of presentation, and which is presenting to a surface
 -- that is displayed with a 90-degree rotation, would return only one
@@ -484,7 +484,7 @@
 -- obscuring their target surface?
 --
 -- __RESOLVED__: Applications can choose which behavior they prefer.
--- Allowing the content to be clipped could enable more optimal
+-- Allowing the content to be clipped could enable more efficient
 -- presentation methods on some platforms, but some applications might rely
 -- on the content of presentable images to perform techniques such as
 -- partial updates or motion blurs.
@@ -513,9 +513,9 @@
 -- using such formats does not guarantee working in a specific color space.
 -- It merely means that the hardware can directly support applying the
 -- non-linear transfer functions defined by the sRGB standard color space
--- when reading from or writing to images of that these formats. Still, it
--- is unlikely that a swapchain will expose a @*_SRGB@ format along with
--- any color space other than
+-- when reading from or writing to images of those formats. Still, it is
+-- unlikely that a swapchain will expose a @*_SRGB@ format along with any
+-- color space other than
 -- 'Vulkan.Extensions.VK_KHR_surface.COLOR_SPACE_SRGB_NONLINEAR_KHR'.
 --
 -- On the other hand, non-@*_SRGB@ formats will be very likely exposed in
@@ -525,14 +525,14 @@
 -- characteristics. In this case the application is responsible for
 -- applying the transfer function, for instance by using shader math.
 --
--- 25) How are the lifetime of surfaces and swapchains targeting them
+-- 25) How are the lifetimes of surfaces and swapchains targeting them
 -- related?
 --
 -- __RESOLVED__: A surface must outlive any swapchains targeting it. A
 -- 'Vulkan.Extensions.Handles.SurfaceKHR' owns the binding of the native
 -- window to the Vulkan driver.
 --
--- 26) How can the client control the way the alpha channel of swapchain
+-- 26) How can the client control the way the alpha component of swapchain
 -- images is treated by the presentation engine during compositing?
 --
 -- __RESOLVED__: We should add new enum values to allow the client to
@@ -665,7 +665,7 @@
 --
 --     -   Renamed VkSurfaceCapabilityPropertiesKHR to
 --         VkSurfacePropertiesKHR to better convey the mutable nature of
---         the info it contains.
+--         the information it contains.
 --
 -- -   Revision 12, 2015-05-28 (James Jones)
 --
@@ -678,7 +678,7 @@
 -- -   Revision 13, 2015-06-01 (James Jones)
 --
 --     -   Moved some structures to VK_EXT_KHR_swap_chain to resolve the
---         spec’s issues 1 and 2.
+--         specification’s issues 1 and 2.
 --
 -- -   Revision 14, 2015-06-01 (James Jones)
 --
@@ -753,8 +753,8 @@
 -- -   Revision 24, 2015-06-19 (Ian Elliott)
 --
 --     -   Changed special value for VkSurfacePropertiesKHR::currentExtent
---         back to \"-1\" from \"0\". This value will never need to be
---         unsigned, and \"0\" is actually a legal value.
+--         back to “-1” from “0”. This value will never need to be
+--         unsigned, and “0” is actually a legal value.
 --
 -- -   Revision 25, 2015-06-23 (Ian Elliott)
 --
@@ -773,12 +773,12 @@
 --
 -- -   Revision 28, 2015-06-25 (James Jones)
 --
---     -   Added the \"inherit\" bits to the rotation and mirroring flags
---         and the associated issue 21.
+--     -   Added the “inherit” bits to the rotation and mirroring flags and
+--         the associated issue 21.
 --
 -- -   Revision 29, 2015-06-25 (James Jones)
 --
---     -   Added the \"clipped\" flag to VkSwapchainCreateInfoKHR, and the
+--     -   Added the “clipped” flag to VkSwapchainCreateInfoKHR, and the
 --         associated issue 22.
 --
 --     -   Specified that presenting an image does not modify it.
@@ -791,13 +791,13 @@
 --
 -- -   Revision 31, 2015-06-26 (Ian Elliott)
 --
---     -   Example of new VkSwapchainCreateInfoKHR members,
---         \"oldSwapchain\" and \"clipped\".
+--     -   Example of new VkSwapchainCreateInfoKHR members, “oldSwapchain”
+--         and “clipped”.
 --
 --     -   Example of using VkSurfacePropertiesKHR::{min|max}ImageCount to
 --         set VkSwapchainCreateInfoKHR::minImageCount.
 --
---     -   Rename vkGetSurfaceInfoKHR()\'s 4th parameter to \"pDataSize\",
+--     -   Rename vkGetSurfaceInfoKHR()\'s 4th parameter to “pDataSize”,
 --         for consistency with other functions.
 --
 --     -   Add macro with C-string name of extension (just to header file).
@@ -805,7 +805,7 @@
 -- -   Revision 32, 2015-06-26 (James Jones)
 --
 --     -   Minor adjustments to the language describing the behavior of
---         \"oldSwapchain\"
+--         “oldSwapchain”
 --
 --     -   Fixed the version date on my previous two updates.
 --
@@ -815,7 +815,7 @@
 --
 -- -   Revision 34, 2015-06-26 (Ian Elliott)
 --
---     -   Rename vkQueuePresentKHR()\'s 2nd parameter to \"pPresentInfo\",
+--     -   Rename vkQueuePresentKHR()\'s 2nd parameter to “pPresentInfo”,
 --         for consistency with other functions.
 --
 -- -   Revision 35, 2015-06-26 (Jason Ekstrand)
@@ -855,8 +855,8 @@
 --
 -- -   Revision 40, 2015-07-10 (Ian Elliott)
 --
---     -   Updated to work with version 138 of the \"vulkan.h\" header.
---         This includes declaring the VkSwapchainKHR type using the new
+--     -   Updated to work with version 138 of the @vulkan.h@ header. This
+--         includes declaring the VkSwapchainKHR type using the new
 --         VK_DEFINE_NONDISP_HANDLE macro, and no longer extending
 --         VkObjectType (which was eliminated).
 --
@@ -869,7 +869,7 @@
 --     -   Updated query mechanism to reflect the convention changes done
 --         in the core spec.
 --
---     -   Removed \"queue\" from the name of
+--     -   Removed “queue” from the name of
 --         VK_STRUCTURE_TYPE_QUEUE_PRESENT_INFO_KHR to be consistent with
 --         the established naming convention.
 --
@@ -895,7 +895,7 @@
 --         VkSwapchainCreateInfoKHR struct).
 --
 --     -   Corrected a typo in header file (last parameter in
---         PFN_vkGetSurfacePropertiesKHR was missing \"KHR\" at the end of
+--         PFN_vkGetSurfacePropertiesKHR was missing “KHR” at the end of
 --         type: VkSurfacePropertiesKHR).
 --
 -- -   Revision 46, 2015-08-20 (Ian Elliott)
@@ -904,7 +904,7 @@
 --         functions, etc. This makes it compliant with the proposed
 --         standard for Vulkan extensions.
 --
---     -   Switched from \"revision\" to \"version\", including use of the
+--     -   Switched from “revision” to “version”, including use of the
 --         VK_MAKE_VERSION macro in the header file.
 --
 --     -   Made improvements to several descriptions.
@@ -918,7 +918,7 @@
 --     from James Jones)
 --
 --     -   Moved the surface transform enums to VK_WSI_swapchain so they
---         could be re-used by VK_WSI_display.
+--         could be reused by VK_WSI_display.
 --
 -- -   Revision 48, 2015-09-01 (James Jones)
 --
@@ -1029,22 +1029,21 @@
 --
 -- -   Revision 68, 2016-04-05 (Ian Elliott)
 --
---     -   Moved the \"validity\" include for vkAcquireNextImage to be in
---         its proper place, after the prototype and list of parameters.
+--     -   Moved the “validity” include for vkAcquireNextImage to be in its
+--         proper place, after the prototype and list of parameters.
 --
 --     -   Clarified language about presentable images, including how they
 --         are acquired, when applications can and cannot use them, etc. As
---         part of this, removed language about \"ownership\" of
---         presentable images, and replaced it with more-consistent
---         language about presentable images being \"acquired\" by the
---         application.
+--         part of this, removed language about “ownership” of presentable
+--         images, and replaced it with more-consistent language about
+--         presentable images being “acquired” by the application.
 --
 -- -   2016-08-23 (Ian Elliott)
 --
 --     -   Update the example code, to use the final API command names, to
 --         not have so many characters per line, and to split out a new
 --         example to show how to obtain function pointers. This code is
---         more similar to the LunarG \"cube\" demo program.
+--         more similar to the LunarG “cube” demo program.
 --
 -- -   2016-08-25 (Ian Elliott)
 --
@@ -1059,7 +1058,7 @@
 --
 --     -   Corrected interactions with Vulkan 1.1
 --
--- = See Also
+-- == See Also
 --
 -- 'PresentInfoKHR', 'SwapchainCreateFlagBitsKHR',
 -- 'SwapchainCreateFlagsKHR', 'SwapchainCreateInfoKHR',
@@ -1067,7 +1066,7 @@
 -- 'createSwapchainKHR', 'destroySwapchainKHR', 'getSwapchainImagesKHR',
 -- 'queuePresentKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain Vulkan Specification>
@@ -1129,7 +1128,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -1186,6 +1185,7 @@ import Vulkan.Extensions.VK_KHR_surface (ColorSpaceKHR)
 import Vulkan.Extensions.VK_KHR_surface (CompositeAlphaFlagBitsKHR)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkAcquireNextImage2KHR))
 import Vulkan.Dynamic (DeviceCmds(pVkAcquireNextImageKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateSwapchainKHR))
@@ -1214,15 +1214,18 @@ import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_GGP_frame_token (PresentFrameTokenGGP)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_present_id (PresentIdKHR)
 import Vulkan.Extensions.VK_KHR_surface (PresentModeKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_incremental_present (PresentRegionsKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_GOOGLE_display_timing (PresentTimesInfoGOOGLE)
 import Vulkan.Core10.Handles (Queue)
 import Vulkan.Core10.Handles (Queue(..))
+import Vulkan.Core10.Handles (Queue(Queue))
 import Vulkan.Core10.Handles (Queue_T)
 import Vulkan.Core10.FundamentalTypes (Rect2D)
 import Vulkan.Core10.Enums.Result (Result)
@@ -1354,6 +1357,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'SwapchainCreateInfoKHR',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
@@ -1370,7 +1374,7 @@ createSwapchainKHR :: forall a io
                       ("allocator" ::: Maybe AllocationCallbacks)
                    -> io (SwapchainKHR)
 createSwapchainKHR device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateSwapchainKHRPtr = pVkCreateSwapchainKHR (deviceCmds (device :: Device))
+  let vkCreateSwapchainKHRPtr = pVkCreateSwapchainKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateSwapchainKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateSwapchainKHR is null" Nothing Nothing
   let vkCreateSwapchainKHR' = mkVkCreateSwapchainKHR vkCreateSwapchainKHRPtr
@@ -1471,6 +1475,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Extensions.Handles.SwapchainKHR'
 destroySwapchainKHR :: forall io
@@ -1486,7 +1491,7 @@ destroySwapchainKHR :: forall io
                        ("allocator" ::: Maybe AllocationCallbacks)
                     -> io ()
 destroySwapchainKHR device swapchain allocator = liftIO . evalContT $ do
-  let vkDestroySwapchainKHRPtr = pVkDestroySwapchainKHR (deviceCmds (device :: Device))
+  let vkDestroySwapchainKHRPtr = pVkDestroySwapchainKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroySwapchainKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroySwapchainKHR is null" Nothing Nothing
   let vkDestroySwapchainKHR' = mkVkDestroySwapchainKHR vkDestroySwapchainKHRPtr
@@ -1516,11 +1521,10 @@ foreign import ccall
 -- variable is overwritten with the number of structures actually written
 -- to @pSwapchainImages@. If the value of @pSwapchainImageCount@ is less
 -- than the number of presentable images for @swapchain@, at most
--- @pSwapchainImageCount@ structures will be written. If
--- @pSwapchainImageCount@ is smaller than the number of presentable images
--- for @swapchain@, 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be
--- returned instead of 'Vulkan.Core10.Enums.Result.SUCCESS' to indicate
--- that not all the available values were returned.
+-- @pSwapchainImageCount@ structures will be written, and
+-- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
+-- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
+-- available presentable images were returned.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1560,6 +1564,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
 getSwapchainImagesKHR :: forall io
@@ -1570,7 +1575,7 @@ getSwapchainImagesKHR :: forall io
                          SwapchainKHR
                       -> io (Result, ("swapchainImages" ::: Vector Image))
 getSwapchainImagesKHR device swapchain = liftIO . evalContT $ do
-  let vkGetSwapchainImagesKHRPtr = pVkGetSwapchainImagesKHR (deviceCmds (device :: Device))
+  let vkGetSwapchainImagesKHRPtr = pVkGetSwapchainImagesKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetSwapchainImagesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSwapchainImagesKHR is null" Nothing Nothing
   let vkGetSwapchainImagesKHR' = mkVkGetSwapchainImagesKHR vkGetSwapchainImagesKHRPtr
@@ -1618,7 +1623,7 @@ acquireNextImageKHRSafeOrUnsafe :: forall io
                                    Fence
                                 -> io (Result, ("imageIndex" ::: Word32))
 acquireNextImageKHRSafeOrUnsafe mkVkAcquireNextImageKHR device swapchain timeout semaphore fence = liftIO . evalContT $ do
-  let vkAcquireNextImageKHRPtr = pVkAcquireNextImageKHR (deviceCmds (device :: Device))
+  let vkAcquireNextImageKHRPtr = pVkAcquireNextImageKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkAcquireNextImageKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireNextImageKHR is null" Nothing Nothing
   let vkAcquireNextImageKHR' = mkVkAcquireNextImageKHR vkAcquireNextImageKHRPtr
@@ -1732,6 +1737,7 @@ acquireNextImageKHRSafeOrUnsafe mkVkAcquireNextImageKHR device swapchain timeout
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Fence',
 -- 'Vulkan.Core10.Handles.Semaphore',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
@@ -1872,6 +1878,9 @@ foreign import ccall
 -- wait operation specified in 'PresentInfoKHR' will execute when the
 -- corresponding queue operation is complete.
 --
+-- Calls to 'queuePresentKHR' /may/ block, but /must/ return in finite
+-- time.
+--
 -- If any @swapchain@ member of @pPresentInfo@ was created with
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT',
 -- 'Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT'
@@ -1901,11 +1910,11 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | -                                                                                                                          | -                                                                                                                      | Any                                                                                                                   | -                                                                                                                                   |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | -                                                                                                                          | -                                                                                                                      | Any                                                                                                                   |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- == Return Codes
 --
@@ -1931,6 +1940,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
 -- 'PresentInfoKHR', 'Vulkan.Core10.Handles.Queue'
 queuePresentKHR :: forall a io
                  . (Extendss PresentInfoKHR a, PokeChain a, MonadIO io)
@@ -1942,7 +1952,7 @@ queuePresentKHR :: forall a io
                    (PresentInfoKHR a)
                 -> io (Result)
 queuePresentKHR queue presentInfo = liftIO . evalContT $ do
-  let vkQueuePresentKHRPtr = pVkQueuePresentKHR (deviceCmds (queue :: Queue))
+  let vkQueuePresentKHRPtr = pVkQueuePresentKHR (case queue of Queue{deviceCmds} -> deviceCmds)
   lift $ unless (vkQueuePresentKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueuePresentKHR is null" Nothing Nothing
   let vkQueuePresentKHR' = mkVkQueuePresentKHR vkQueuePresentKHRPtr
@@ -1976,6 +1986,10 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Device', 'DeviceGroupPresentCapabilitiesKHR'
 getDeviceGroupPresentCapabilitiesKHR :: forall io
                                       . (MonadIO io)
@@ -1986,7 +2000,7 @@ getDeviceGroupPresentCapabilitiesKHR :: forall io
                                         Device
                                      -> io (DeviceGroupPresentCapabilitiesKHR)
 getDeviceGroupPresentCapabilitiesKHR device = liftIO . evalContT $ do
-  let vkGetDeviceGroupPresentCapabilitiesKHRPtr = pVkGetDeviceGroupPresentCapabilitiesKHR (deviceCmds (device :: Device))
+  let vkGetDeviceGroupPresentCapabilitiesKHRPtr = pVkGetDeviceGroupPresentCapabilitiesKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDeviceGroupPresentCapabilitiesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceGroupPresentCapabilitiesKHR is null" Nothing Nothing
   let vkGetDeviceGroupPresentCapabilitiesKHR' = mkVkGetDeviceGroupPresentCapabilitiesKHR vkGetDeviceGroupPresentCapabilitiesKHRPtr
@@ -2013,6 +2027,14 @@ foreign import ccall
 -- in response to the surface being moved, resized, or occluded. These
 -- modes /must/ be a subset of the modes returned by
 -- 'getDeviceGroupPresentCapabilitiesKHR'.
+--
+-- == Valid Usage
+--
+-- -   #VUID-vkGetDeviceGroupSurfacePresentModesKHR-surface-06212#
+--     @surface@ /must/ be supported by all physical devices associated
+--     with @device@, as reported by
+--     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
+--     or an equivalent platform-specific mechanism
 --
 -- == Valid Usage (Implicit)
 --
@@ -2051,6 +2073,10 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Device', 'DeviceGroupPresentModeFlagsKHR',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
 getDeviceGroupSurfacePresentModesKHR :: forall io
@@ -2061,7 +2087,7 @@ getDeviceGroupSurfacePresentModesKHR :: forall io
                                         SurfaceKHR
                                      -> io (("modes" ::: DeviceGroupPresentModeFlagsKHR))
 getDeviceGroupSurfacePresentModesKHR device surface = liftIO . evalContT $ do
-  let vkGetDeviceGroupSurfacePresentModesKHRPtr = pVkGetDeviceGroupSurfacePresentModesKHR (deviceCmds (device :: Device))
+  let vkGetDeviceGroupSurfacePresentModesKHRPtr = pVkGetDeviceGroupSurfacePresentModesKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDeviceGroupSurfacePresentModesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceGroupSurfacePresentModesKHR is null" Nothing Nothing
   let vkGetDeviceGroupSurfacePresentModesKHR' = mkVkGetDeviceGroupSurfacePresentModesKHR vkGetDeviceGroupSurfacePresentModesKHRPtr
@@ -2094,7 +2120,7 @@ acquireNextImage2KHRSafeOrUnsafe :: forall io
                                     ("acquireInfo" ::: AcquireNextImageInfoKHR)
                                  -> io (Result, ("imageIndex" ::: Word32))
 acquireNextImage2KHRSafeOrUnsafe mkVkAcquireNextImage2KHR device acquireInfo = liftIO . evalContT $ do
-  let vkAcquireNextImage2KHRPtr = pVkAcquireNextImage2KHR (deviceCmds (device :: Device))
+  let vkAcquireNextImage2KHRPtr = pVkAcquireNextImage2KHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkAcquireNextImage2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireNextImage2KHR is null" Nothing Nothing
   let vkAcquireNextImage2KHR' = mkVkAcquireNextImage2KHR vkAcquireNextImage2KHRPtr
@@ -2160,6 +2186,9 @@ acquireNextImage2KHRSafeOrUnsafe mkVkAcquireNextImage2KHR device acquireInfo = l
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'AcquireNextImageInfoKHR', 'Vulkan.Core10.Handles.Device'
 acquireNextImage2KHR :: forall io
                       . (MonadIO io)
@@ -2201,16 +2230,22 @@ foreign import ccall
 -- elements in the @pRects@ array, and on return the variable is
 -- overwritten with the number of structures actually written to @pRects@.
 -- If the value of @pRectCount@ is less than the number of rectangles, at
--- most @pRectCount@ structures will be written. If @pRectCount@ is smaller
--- than the number of rectangles used for the given @surface@,
+-- most @pRectCount@ structures will be written, and
 -- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS' to indicate that not all the
--- available values were returned.
+-- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
+-- available rectangles were returned.
 --
 -- The values returned by this command are not invariant, and /may/ change
 -- in response to the surface being moved, resized, or occluded.
 --
 -- The rectangles returned by this command /must/ not overlap.
+--
+-- == Valid Usage
+--
+-- -   #VUID-vkGetPhysicalDevicePresentRectanglesKHR-surface-06211#
+--     @surface@ /must/ be supported by @physicalDevice@, as reported by
+--     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
+--     or an equivalent platform-specific mechanism
 --
 -- == Valid Usage (Implicit)
 --
@@ -2254,6 +2289,10 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Vulkan.Core10.FundamentalTypes.Rect2D',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR'
@@ -2265,7 +2304,7 @@ getPhysicalDevicePresentRectanglesKHR :: forall io
                                          SurfaceKHR
                                       -> io (Result, ("rects" ::: Vector Rect2D))
 getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalContT $ do
-  let vkGetPhysicalDevicePresentRectanglesKHRPtr = pVkGetPhysicalDevicePresentRectanglesKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDevicePresentRectanglesKHRPtr = pVkGetPhysicalDevicePresentRectanglesKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDevicePresentRectanglesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDevicePresentRectanglesKHR is null" Nothing Nothing
   let vkGetPhysicalDevicePresentRectanglesKHR' = mkVkGetPhysicalDevicePresentRectanglesKHR vkGetPhysicalDevicePresentRectanglesKHRPtr
@@ -2287,84 +2326,6 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 -- created swapchain object
 --
 -- = Description
---
--- Note
---
--- On some platforms, it is normal that @maxImageExtent@ /may/ become @(0,
--- 0)@, for example when the window is minimized. In such a case, it is not
--- possible to create a swapchain due to the Valid Usage requirements.
---
--- -   @imageArrayLayers@ is the number of views in a multiview\/stereo
---     surface. For non-stereoscopic-3D applications, this value is 1.
---
--- -   @imageUsage@ is a bitmask of
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits'
---     describing the intended usage of the (acquired) swapchain images.
---
--- -   @imageSharingMode@ is the sharing mode used for the image(s) of the
---     swapchain.
---
--- -   @queueFamilyIndexCount@ is the number of queue families having
---     access to the image(s) of the swapchain when @imageSharingMode@ is
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT'.
---
--- -   @pQueueFamilyIndices@ is a pointer to an array of queue family
---     indices having access to the images(s) of the swapchain when
---     @imageSharingMode@ is
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT'.
---
--- -   @preTransform@ is a
---     'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR' value
---     describing the transform, relative to the presentation engine’s
---     natural orientation, applied to the image content prior to
---     presentation. If it does not match the @currentTransform@ value
---     returned by
---     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceCapabilitiesKHR',
---     the presentation engine will transform the image content as part of
---     the presentation operation.
---
--- -   @compositeAlpha@ is a
---     'Vulkan.Extensions.VK_KHR_surface.CompositeAlphaFlagBitsKHR' value
---     indicating the alpha compositing mode to use when this surface is
---     composited together with other surfaces on certain window systems.
---
--- -   @presentMode@ is the presentation mode the swapchain will use. A
---     swapchain’s present mode determines how incoming present requests
---     will be processed and queued internally.
---
--- -   @clipped@ specifies whether the Vulkan implementation is allowed to
---     discard rendering operations that affect regions of the surface that
---     are not visible.
---
---     -   If set to 'Vulkan.Core10.FundamentalTypes.TRUE', the presentable
---         images associated with the swapchain /may/ not own all of their
---         pixels. Pixels in the presentable images that correspond to
---         regions of the target surface obscured by another window on the
---         desktop, or subject to some other clipping mechanism will have
---         undefined content when read back. Fragment shaders /may/ not
---         execute for these pixels, and thus any side effects they would
---         have had will not occur. 'Vulkan.Core10.FundamentalTypes.TRUE'
---         value does not guarantee any clipping will occur, but allows
---         more optimal presentation methods to be used on some platforms.
---
---     -   If set to 'Vulkan.Core10.FundamentalTypes.FALSE', presentable
---         images associated with the swapchain will own all of the pixels
---         they contain.
---
--- Note
---
--- Applications /should/ set this value to
--- 'Vulkan.Core10.FundamentalTypes.TRUE' if they do not expect to read back
--- the content of presentable images before presenting them or after
--- reacquiring them, and if their fragment shaders do not have any side
--- effects that require them to run for all pixels in the presentable
--- image.
---
--- -   @oldSwapchain@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', or the
---     existing non-retired swapchain currently associated with @surface@.
---     Providing a valid @oldSwapchain@ /may/ aid in the resource reuse,
---     and also allows the application to still present any images that are
---     already acquired from it.
 --
 -- Upon calling 'createSwapchainKHR' with an @oldSwapchain@ that is not
 -- 'Vulkan.Core10.APIConstants.NULL_HANDLE', @oldSwapchain@ is
@@ -2653,6 +2614,7 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Extensions.VK_KHR_surface.ColorSpaceKHR',
 -- 'Vulkan.Extensions.VK_KHR_surface.CompositeAlphaFlagBitsKHR',
@@ -2691,24 +2653,78 @@ data SwapchainCreateInfoKHR (es :: [Type]) = SwapchainCreateInfoKHR
     -- behavior is platform-dependent if the image extent does not match the
     -- surface’s @currentExtent@ as returned by
     -- 'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceCapabilitiesKHR'.
+    --
+    -- Note
+    --
+    -- On some platforms, it is normal that @maxImageExtent@ /may/ become @(0,
+    -- 0)@, for example when the window is minimized. In such a case, it is not
+    -- possible to create a swapchain due to the Valid Usage requirements.
     imageExtent :: Extent2D
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "imageArrayLayers"
+  , -- | @imageArrayLayers@ is the number of views in a multiview\/stereo
+    -- surface. For non-stereoscopic-3D applications, this value is 1.
     imageArrayLayers :: Word32
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "imageUsage"
+  , -- | @imageUsage@ is a bitmask of
+    -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits' describing
+    -- the intended usage of the (acquired) swapchain images.
     imageUsage :: ImageUsageFlags
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "imageSharingMode"
+  , -- | @imageSharingMode@ is the sharing mode used for the image(s) of the
+    -- swapchain.
     imageSharingMode :: SharingMode
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "pQueueFamilyIndices"
+  , -- | @pQueueFamilyIndices@ is a pointer to an array of queue family indices
+    -- having access to the images(s) of the swapchain when @imageSharingMode@
+    -- is 'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT'.
     queueFamilyIndices :: Vector Word32
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "preTransform"
+  , -- | @preTransform@ is a
+    -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceTransformFlagBitsKHR' value
+    -- describing the transform, relative to the presentation engine’s natural
+    -- orientation, applied to the image content prior to presentation. If it
+    -- does not match the @currentTransform@ value returned by
+    -- 'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceCapabilitiesKHR',
+    -- the presentation engine will transform the image content as part of the
+    -- presentation operation.
     preTransform :: SurfaceTransformFlagBitsKHR
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "compositeAlpha"
+  , -- | @compositeAlpha@ is a
+    -- 'Vulkan.Extensions.VK_KHR_surface.CompositeAlphaFlagBitsKHR' value
+    -- indicating the alpha compositing mode to use when this surface is
+    -- composited together with other surfaces on certain window systems.
     compositeAlpha :: CompositeAlphaFlagBitsKHR
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "presentMode"
+  , -- | @presentMode@ is the presentation mode the swapchain will use. A
+    -- swapchain’s present mode determines how incoming present requests will
+    -- be processed and queued internally.
     presentMode :: PresentModeKHR
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "clipped"
+  , -- | @clipped@ specifies whether the Vulkan implementation is allowed to
+    -- discard rendering operations that affect regions of the surface that are
+    -- not visible.
+    --
+    -- -   If set to 'Vulkan.Core10.FundamentalTypes.TRUE', the presentable
+    --     images associated with the swapchain /may/ not own all of their
+    --     pixels. Pixels in the presentable images that correspond to regions
+    --     of the target surface obscured by another window on the desktop, or
+    --     subject to some other clipping mechanism will have undefined content
+    --     when read back. Fragment shaders /may/ not execute for these pixels,
+    --     and thus any side effects they would have had will not occur.
+    --     Setting 'Vulkan.Core10.FundamentalTypes.TRUE' does not guarantee any
+    --     clipping will occur, but allows more efficient presentation methods
+    --     to be used on some platforms.
+    --
+    -- -   If set to 'Vulkan.Core10.FundamentalTypes.FALSE', presentable images
+    --     associated with the swapchain will own all of the pixels they
+    --     contain.
+    --
+    --     Note
+    --
+    --     Applications /should/ set this value to
+    --     'Vulkan.Core10.FundamentalTypes.TRUE' if they do not expect to read
+    --     back the content of presentable images before presenting them or
+    --     after reacquiring them, and if their fragment shaders do not have
+    --     any side effects that require them to run for all pixels in the
+    --     presentable image.
     clipped :: Bool
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "oldSwapchain"
+  , -- | @oldSwapchain@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', or the
+    -- existing non-retired swapchain currently associated with @surface@.
+    -- Providing a valid @oldSwapchain@ /may/ aid in the resource reuse, and
+    -- also allows the application to still present any images that are already
+    -- acquired from it.
     oldSwapchain :: SwapchainKHR
   }
   deriving (Typeable)
@@ -2719,7 +2735,7 @@ deriving instance Show (Chain es) => Show (SwapchainCreateInfoKHR es)
 
 instance Extensible SwapchainCreateInfoKHR where
   extensibleTypeName = "SwapchainCreateInfoKHR"
-  setNext x next = x{next = next}
+  setNext SwapchainCreateInfoKHR{..} next' = SwapchainCreateInfoKHR{next = next', ..}
   getNext SwapchainCreateInfoKHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SwapchainCreateInfoKHR e => b) -> Maybe b
   extends _ f
@@ -2732,7 +2748,7 @@ instance Extensible SwapchainCreateInfoKHR where
     | otherwise = Nothing
 
 instance (Extendss SwapchainCreateInfoKHR es, PokeChain es) => ToCStruct (SwapchainCreateInfoKHR es) where
-  withCStruct x f = allocaBytesAligned 104 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 104 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainCreateInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -2747,7 +2763,7 @@ instance (Extendss SwapchainCreateInfoKHR es, PokeChain es) => ToCStruct (Swapch
     lift $ poke ((p `plusPtr` 56 :: Ptr ImageUsageFlags)) (imageUsage)
     lift $ poke ((p `plusPtr` 60 :: Ptr SharingMode)) (imageSharingMode)
     lift $ poke ((p `plusPtr` 64 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (queueFamilyIndices)) :: Word32))
-    pPQueueFamilyIndices' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (queueFamilyIndices)) * 4) 4
+    pPQueueFamilyIndices' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (queueFamilyIndices)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPQueueFamilyIndices' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (queueFamilyIndices)
     lift $ poke ((p `plusPtr` 72 :: Ptr (Ptr Word32))) (pPQueueFamilyIndices')
     lift $ poke ((p `plusPtr` 80 :: Ptr SurfaceTransformFlagBitsKHR)) (preTransform)
@@ -2856,6 +2872,13 @@ instance es ~ '[] => Zero (SwapchainCreateInfoKHR es) where
 --     layout at the time the operation is executed on a
 --     'Vulkan.Core10.Handles.Device'
 --
+-- -   #VUID-VkPresentInfoKHR-pNext-06235# If a
+--     'Vulkan.Extensions.VK_KHR_present_id.PresentIdKHR' structure is
+--     included in the @pNext@ chain, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-presentId presentId>
+--     feature is not enabled, each @presentIds@ entry in that structure
+--     /must/ be NULL
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkPresentInfoKHR-sType-sType# @sType@ /must/ be
@@ -2867,6 +2890,7 @@ instance es ~ '[] => Zero (SwapchainCreateInfoKHR es) where
 --     'DeviceGroupPresentInfoKHR',
 --     'Vulkan.Extensions.VK_KHR_display_swapchain.DisplayPresentInfoKHR',
 --     'Vulkan.Extensions.VK_GGP_frame_token.PresentFrameTokenGGP',
+--     'Vulkan.Extensions.VK_KHR_present_id.PresentIdKHR',
 --     'Vulkan.Extensions.VK_KHR_incremental_present.PresentRegionsKHR', or
 --     'Vulkan.Extensions.VK_GOOGLE_display_timing.PresentTimesInfoGOOGLE'
 --
@@ -2901,6 +2925,7 @@ instance es ~ '[] => Zero (SwapchainCreateInfoKHR es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
 -- 'Vulkan.Core10.Enums.Result.Result', 'Vulkan.Core10.Handles.Semaphore',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR', 'queuePresentKHR'
@@ -2938,35 +2963,36 @@ deriving instance Show (Chain es) => Show (PresentInfoKHR es)
 
 instance Extensible PresentInfoKHR where
   extensibleTypeName = "PresentInfoKHR"
-  setNext x next = x{next = next}
+  setNext PresentInfoKHR{..} next' = PresentInfoKHR{next = next', ..}
   getNext PresentInfoKHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PresentInfoKHR e => b) -> Maybe b
   extends _ f
     | Just Refl <- eqT @e @PresentFrameTokenGGP = Just f
     | Just Refl <- eqT @e @PresentTimesInfoGOOGLE = Just f
+    | Just Refl <- eqT @e @PresentIdKHR = Just f
     | Just Refl <- eqT @e @DeviceGroupPresentInfoKHR = Just f
     | Just Refl <- eqT @e @PresentRegionsKHR = Just f
     | Just Refl <- eqT @e @DisplayPresentInfoKHR = Just f
     | otherwise = Nothing
 
 instance (Extendss PresentInfoKHR es, PokeChain es) => ToCStruct (PresentInfoKHR es) where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PresentInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PRESENT_INFO_KHR)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (waitSemaphores)) :: Word32))
-    pPWaitSemaphores' <- ContT $ allocaBytesAligned @Semaphore ((Data.Vector.length (waitSemaphores)) * 8) 8
+    pPWaitSemaphores' <- ContT $ allocaBytes @Semaphore ((Data.Vector.length (waitSemaphores)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitSemaphores' `plusPtr` (8 * (i)) :: Ptr Semaphore) (e)) (waitSemaphores)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Semaphore))) (pPWaitSemaphores')
     let pSwapchainsLength = Data.Vector.length $ (swapchains)
     lift $ unless ((Data.Vector.length $ (imageIndices)) == pSwapchainsLength) $
       throwIO $ IOError Nothing InvalidArgument "" "pImageIndices and pSwapchains must have the same length" Nothing Nothing
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral pSwapchainsLength :: Word32))
-    pPSwapchains' <- ContT $ allocaBytesAligned @SwapchainKHR ((Data.Vector.length (swapchains)) * 8) 8
+    pPSwapchains' <- ContT $ allocaBytes @SwapchainKHR ((Data.Vector.length (swapchains)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPSwapchains' `plusPtr` (8 * (i)) :: Ptr SwapchainKHR) (e)) (swapchains)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr SwapchainKHR))) (pPSwapchains')
-    pPImageIndices' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (imageIndices)) * 4) 4
+    pPImageIndices' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (imageIndices)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPImageIndices' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (imageIndices)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr Word32))) (pPImageIndices')
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr Result))) (results)
@@ -3021,6 +3047,10 @@ instance es ~ '[] => Zero (PresentInfoKHR es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'DeviceGroupPresentModeFlagsKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getDeviceGroupPresentCapabilitiesKHR'
@@ -3043,7 +3073,7 @@ deriving instance Generic (DeviceGroupPresentCapabilitiesKHR)
 deriving instance Show DeviceGroupPresentCapabilitiesKHR
 
 instance ToCStruct DeviceGroupPresentCapabilitiesKHR where
-  withCStruct x f = allocaBytesAligned 152 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 152 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceGroupPresentCapabilitiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3102,6 +3132,9 @@ instance Zero DeviceGroupPresentCapabilitiesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
 data ImageSwapchainCreateInfoKHR = ImageSwapchainCreateInfoKHR
@@ -3115,7 +3148,7 @@ deriving instance Generic (ImageSwapchainCreateInfoKHR)
 deriving instance Show ImageSwapchainCreateInfoKHR
 
 instance ToCStruct ImageSwapchainCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageSwapchainCreateInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_SWAPCHAIN_CREATE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3179,6 +3212,9 @@ instance Zero ImageSwapchainCreateInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
 data BindImageMemorySwapchainInfoKHR = BindImageMemorySwapchainInfoKHR
@@ -3195,7 +3231,7 @@ deriving instance Generic (BindImageMemorySwapchainInfoKHR)
 deriving instance Show BindImageMemorySwapchainInfoKHR
 
 instance ToCStruct BindImageMemorySwapchainInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindImageMemorySwapchainInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_IMAGE_MEMORY_SWAPCHAIN_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3315,6 +3351,9 @@ instance Zero BindImageMemorySwapchainInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.Fence', 'Vulkan.Core10.Handles.Semaphore',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR', 'acquireNextImage2KHR'
@@ -3341,7 +3380,7 @@ deriving instance Generic (AcquireNextImageInfoKHR)
 deriving instance Show AcquireNextImageInfoKHR
 
 instance ToCStruct AcquireNextImageInfoKHR where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AcquireNextImageInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3476,14 +3515,17 @@ instance Zero AcquireNextImageInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'DeviceGroupPresentModeFlagBitsKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceGroupPresentInfoKHR = DeviceGroupPresentInfoKHR
   { -- | @pDeviceMasks@ is a pointer to an array of device masks, one for each
     -- element of 'PresentInfoKHR'::pSwapchains.
     deviceMasks :: Vector Word32
-  , -- | @mode@ is the device group present mode that will be used for this
-    -- present.
+  , -- | @mode@ is a 'DeviceGroupPresentModeFlagBitsKHR' value specifying the
+    -- device group present mode that will be used for this present.
     mode :: DeviceGroupPresentModeFlagBitsKHR
   }
   deriving (Typeable)
@@ -3493,12 +3535,12 @@ deriving instance Generic (DeviceGroupPresentInfoKHR)
 deriving instance Show DeviceGroupPresentInfoKHR
 
 instance ToCStruct DeviceGroupPresentInfoKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceGroupPresentInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_INFO_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (deviceMasks)) :: Word32))
-    pPDeviceMasks' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (deviceMasks)) * 4) 4
+    pPDeviceMasks' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (deviceMasks)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPDeviceMasks' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (deviceMasks)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Word32))) (pPDeviceMasks')
     lift $ poke ((p `plusPtr` 32 :: Ptr DeviceGroupPresentModeFlagBitsKHR)) (mode)
@@ -3538,6 +3580,9 @@ instance Zero DeviceGroupPresentInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'DeviceGroupPresentModeFlagsKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceGroupSwapchainCreateInfoKHR = DeviceGroupSwapchainCreateInfoKHR
@@ -3557,7 +3602,7 @@ deriving instance Generic (DeviceGroupSwapchainCreateInfoKHR)
 deriving instance Show DeviceGroupSwapchainCreateInfoKHR
 
 instance ToCStruct DeviceGroupSwapchainCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceGroupSwapchainCreateInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_GROUP_SWAPCHAIN_CREATE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3595,6 +3640,10 @@ type DeviceGroupPresentModeFlagsKHR = DeviceGroupPresentModeFlagBitsKHR
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group VK_KHR_device_group>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'DeviceGroupPresentInfoKHR', 'DeviceGroupPresentModeFlagsKHR'
 newtype DeviceGroupPresentModeFlagBitsKHR = DeviceGroupPresentModeFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -3650,6 +3699,7 @@ type SwapchainCreateFlagsKHR = SwapchainCreateFlagBitsKHR
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
 -- 'SwapchainCreateFlagsKHR'
 newtype SwapchainCreateFlagBitsKHR = SwapchainCreateFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -3657,7 +3707,7 @@ newtype SwapchainCreateFlagBitsKHR = SwapchainCreateFlagBitsKHR Flags
 -- | 'SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR' specifies that the images of
 -- the swapchain /can/ be used to create a
 -- 'Vulkan.Core10.Handles.ImageView' with a different format than what the
--- swapchain was created with. The list of allowed image view formats are
+-- swapchain was created with. The list of allowed image view formats is
 -- specified by adding a
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
 -- structure to the @pNext@ chain of 'SwapchainCreateInfoKHR'. In addition,

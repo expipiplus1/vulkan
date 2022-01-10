@@ -9,7 +9,7 @@ module Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer  ( PhysicalDevic
                                                                  , FramebufferCreateFlags
                                                                  ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -54,23 +54,26 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceImagelessFramebufferFeatures'
--- structure describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceImagelessFramebufferFeatures' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceImagelessFramebufferFeatures' /can/ also be included in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- this feature.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceImagelessFramebufferFeatures' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_imageless_framebuffer VK_KHR_imageless_framebuffer>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceImagelessFramebufferFeatures = PhysicalDeviceImagelessFramebufferFeatures
@@ -86,7 +89,7 @@ deriving instance Generic (PhysicalDeviceImagelessFramebufferFeatures)
 deriving instance Show PhysicalDeviceImagelessFramebufferFeatures
 
 instance ToCStruct PhysicalDeviceImagelessFramebufferFeatures where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceImagelessFramebufferFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -133,11 +136,12 @@ instance Zero PhysicalDeviceImagelessFramebufferFeatures where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'FramebufferAttachmentImageInfo',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data FramebufferAttachmentsCreateInfo = FramebufferAttachmentsCreateInfo
   { -- | @pAttachmentImageInfos@ is a pointer to an array of
-    -- 'FramebufferAttachmentImageInfo' instances, each of which describes a
+    -- 'FramebufferAttachmentImageInfo' structures, each structure describing a
     -- number of parameters of the corresponding attachment in a render pass
     -- instance.
     attachmentImageInfos :: Vector FramebufferAttachmentImageInfo }
@@ -148,12 +152,12 @@ deriving instance Generic (FramebufferAttachmentsCreateInfo)
 deriving instance Show FramebufferAttachmentsCreateInfo
 
 instance ToCStruct FramebufferAttachmentsCreateInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FramebufferAttachmentsCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (attachmentImageInfos)) :: Word32))
-    pPAttachmentImageInfos' <- ContT $ allocaBytesAligned @FramebufferAttachmentImageInfo ((Data.Vector.length (attachmentImageInfos)) * 48) 8
+    pPAttachmentImageInfos' <- ContT $ allocaBytes @FramebufferAttachmentImageInfo ((Data.Vector.length (attachmentImageInfos)) * 48)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPAttachmentImageInfos' `plusPtr` (48 * (i)) :: Ptr FramebufferAttachmentImageInfo) (e) . ($ ())) (attachmentImageInfos)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr FramebufferAttachmentImageInfo))) (pPAttachmentImageInfos')
     lift $ f
@@ -213,6 +217,8 @@ instance Zero FramebufferAttachmentsCreateInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_imageless_framebuffer VK_KHR_imageless_framebuffer>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Enums.Format.Format', 'FramebufferAttachmentsCreateInfo',
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlags',
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
@@ -232,11 +238,14 @@ data FramebufferAttachmentImageInfo = FramebufferAttachmentImageInfo
     width :: Word32
   , -- | @height@ is the height of the image view used for rendering.
     height :: Word32
-  , -- No documentation found for Nested "VkFramebufferAttachmentImageInfo" "layerCount"
+  , -- | @layerCount@ is the number of array layers of the image view used for
+    -- rendering.
     layerCount :: Word32
-  , -- | @pViewFormats@ is an array which lists of all formats which /can/ be
-    -- used when creating views of the image, matching the value of
-    -- 'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::pViewFormats
+  , -- | @pViewFormats@ is a pointer to an array of
+    -- 'Vulkan.Core10.Enums.Format.Format' values specifying all of the formats
+    -- which /can/ be used when creating views of the image, matching the value
+    -- of
+    -- 'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@pViewFormats@
     -- used to create an image used with this framebuffer.
     viewFormats :: Vector Format
   }
@@ -247,7 +256,7 @@ deriving instance Generic (FramebufferAttachmentImageInfo)
 deriving instance Show FramebufferAttachmentImageInfo
 
 instance ToCStruct FramebufferAttachmentImageInfo where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FramebufferAttachmentImageInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -257,7 +266,7 @@ instance ToCStruct FramebufferAttachmentImageInfo where
     lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) (height)
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (layerCount)
     lift $ poke ((p `plusPtr` 36 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (viewFormats)) :: Word32))
-    pPViewFormats' <- ContT $ allocaBytesAligned @Format ((Data.Vector.length (viewFormats)) * 4) 4
+    pPViewFormats' <- ContT $ allocaBytes @Format ((Data.Vector.length (viewFormats)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPViewFormats' `plusPtr` (4 * (i)) :: Ptr Format) (e)) (viewFormats)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr Format))) (pPViewFormats')
     lift $ f
@@ -324,6 +333,8 @@ instance Zero FramebufferAttachmentImageInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_imageless_framebuffer VK_KHR_imageless_framebuffer>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.ImageView',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data RenderPassAttachmentBeginInfo = RenderPassAttachmentBeginInfo
@@ -338,12 +349,12 @@ deriving instance Generic (RenderPassAttachmentBeginInfo)
 deriving instance Show RenderPassAttachmentBeginInfo
 
 instance ToCStruct RenderPassAttachmentBeginInfo where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RenderPassAttachmentBeginInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (attachments)) :: Word32))
-    pPAttachments' <- ContT $ allocaBytesAligned @ImageView ((Data.Vector.length (attachments)) * 8) 8
+    pPAttachments' <- ContT $ allocaBytes @ImageView ((Data.Vector.length (attachments)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPAttachments' `plusPtr` (8 * (i)) :: Ptr ImageView) (e)) (attachments)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ImageView))) (pPAttachments')
     lift $ f

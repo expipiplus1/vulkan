@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Jaakko Konttinen
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_shader_info:%20&body=@jaakkoamd%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_shader_info] @jaakkoamd%0A<<Here describe the issue or question you have about the VK_AMD_shader_info extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -140,12 +140,12 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'ShaderInfoTypeAMD', 'ShaderResourceUsageAMD',
 -- 'ShaderStatisticsInfoAMD', 'getShaderInfoAMD'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_shader_info Vulkan Specification>
@@ -173,7 +173,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -223,6 +223,7 @@ import Vulkan.CStruct.Utils (lowerArrayPtr)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetShaderInfoAMD))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.Handles (Pipeline)
@@ -250,12 +251,11 @@ foreign import ccall
 -- @pInfoSize@. Otherwise, @pInfoSize@ /must/ point to a variable set by
 -- the user to the size of the buffer, in bytes, pointed to by @pInfo@, and
 -- on return the variable is overwritten with the amount of data actually
--- written to @pInfo@.
---
--- If @pInfoSize@ is less than the maximum size that /can/ be retrieved by
--- the pipeline cache, then at most @pInfoSize@ bytes will be written to
--- @pInfo@, and 'getShaderInfoAMD' will return
--- 'Vulkan.Core10.Enums.Result.INCOMPLETE'.
+-- written to @pInfo@. If @pInfoSize@ is less than the maximum size that
+-- /can/ be retrieved by the pipeline cache, then at most @pInfoSize@ bytes
+-- will be written to @pInfo@, and 'Vulkan.Core10.Enums.Result.INCOMPLETE'
+-- will be returned, instead of 'Vulkan.Core10.Enums.Result.SUCCESS', to
+-- indicate that not all required of the pipeline cache was returned.
 --
 -- Not all information is available for every shader and implementations
 -- may not support all kinds of information for any shader. When a certain
@@ -322,6 +322,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_shader_info VK_AMD_shader_info>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Pipeline',
 -- 'ShaderInfoTypeAMD',
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits'
@@ -331,14 +332,16 @@ getShaderInfoAMD :: forall io
                     Device
                  -> -- | @pipeline@ is the target of the query.
                     Pipeline
-                 -> -- | @shaderStage@ identifies the particular shader within the pipeline about
-                    -- which information is being queried.
+                 -> -- | @shaderStage@ is a
+                    -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' specifying
+                    -- the particular shader within the pipeline about which information is
+                    -- being queried.
                     ShaderStageFlagBits
                  -> -- | @infoType@ describes what kind of information is being queried.
                     ShaderInfoTypeAMD
                  -> io (Result, ("info" ::: ByteString))
 getShaderInfoAMD device pipeline shaderStage infoType = liftIO . evalContT $ do
-  let vkGetShaderInfoAMDPtr = pVkGetShaderInfoAMD (deviceCmds (device :: Device))
+  let vkGetShaderInfoAMDPtr = pVkGetShaderInfoAMD (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetShaderInfoAMDPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetShaderInfoAMD is null" Nothing Nothing
   let vkGetShaderInfoAMD' = mkVkGetShaderInfoAMD vkGetShaderInfoAMDPtr
@@ -360,6 +363,7 @@ getShaderInfoAMD device pipeline shaderStage infoType = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_shader_info VK_AMD_shader_info>,
 -- 'ShaderStatisticsInfoAMD'
 data ShaderResourceUsageAMD = ShaderResourceUsageAMD
   { -- | @numUsedVgprs@ is the number of vector instruction general-purpose
@@ -385,7 +389,7 @@ deriving instance Generic (ShaderResourceUsageAMD)
 deriving instance Show ShaderResourceUsageAMD
 
 instance ToCStruct ShaderResourceUsageAMD where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ShaderResourceUsageAMD{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (numUsedVgprs)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (numUsedSgprs)
@@ -448,6 +452,7 @@ instance Zero ShaderResourceUsageAMD where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_shader_info VK_AMD_shader_info>,
 -- 'ShaderResourceUsageAMD',
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags'
 data ShaderStatisticsInfoAMD = ShaderStatisticsInfoAMD
@@ -480,7 +485,7 @@ deriving instance Generic (ShaderStatisticsInfoAMD)
 deriving instance Show ShaderStatisticsInfoAMD
 
 instance ToCStruct ShaderStatisticsInfoAMD where
-  withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ShaderStatisticsInfoAMD{..} f = do
     poke ((p `plusPtr` 0 :: Ptr ShaderStageFlags)) (shaderStageMask)
     poke ((p `plusPtr` 8 :: Ptr ShaderResourceUsageAMD)) (resourceUsage)
@@ -544,10 +549,12 @@ instance Zero ShaderStatisticsInfoAMD where
            (zero, zero, zero)
 
 
--- | VkShaderInfoTypeAMD - Enum specifying which type of shader info to query
+-- | VkShaderInfoTypeAMD - Enum specifying which type of shader information
+-- to query
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_shader_info VK_AMD_shader_info>,
 -- 'getShaderInfoAMD'
 newtype ShaderInfoTypeAMD = ShaderInfoTypeAMD Int32
   deriving newtype (Eq, Ord, Storable, Zero)

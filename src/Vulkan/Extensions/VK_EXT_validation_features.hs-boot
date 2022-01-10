@@ -15,7 +15,7 @@
 --     248
 --
 -- [__Revision__]
---     4
+--     5
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Karl Schultz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_validation_features:%20&body=@karl-lunarg%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_validation_features] @karl-lunarg%0A<<Here describe the issue or question you have about the VK_EXT_validation_features extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -110,12 +110,16 @@
 --
 --     -   Add Synchronization Validation enable
 --
--- = See Also
+-- -   Revision 5, 2021-05-18 (Tony Barbour)
+--
+--     -   Add Shader Validation Cache disable
+--
+-- == See Also
 --
 -- 'ValidationFeatureDisableEXT', 'ValidationFeatureEnableEXT',
 -- 'ValidationFeaturesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_features Vulkan Specification>

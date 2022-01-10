@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Martin Dinkov
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_shader_core_properties:%20&body=@mdinkov%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_shader_core_properties] @mdinkov%0A<<Here describe the issue or question you have about the VK_AMD_shader_core_properties extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -140,11 +140,11 @@
 --
 --     -   Initial draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceShaderCorePropertiesAMD'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_shader_core_properties Vulkan Specification>
@@ -158,7 +158,7 @@ module Vulkan.Extensions.VK_AMD_shader_core_properties  ( PhysicalDeviceShaderCo
                                                         , pattern AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME
                                                         ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -181,22 +181,21 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- | VkPhysicalDeviceShaderCorePropertiesAMD - Structure describing shader
 -- core properties that can be supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceShaderCorePropertiesAMD' structure
--- describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceShaderCorePropertiesAMD' structure is included in
--- the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_shader_core_properties VK_AMD_shader_core_properties>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderCorePropertiesAMD = PhysicalDeviceShaderCorePropertiesAMD
   { -- | #limits-shaderEngineCount# @shaderEngineCount@ is an unsigned integer
@@ -206,8 +205,8 @@ data PhysicalDeviceShaderCorePropertiesAMD = PhysicalDeviceShaderCorePropertiesA
   , -- | #limits-shaderArraysPerEngineCount# @shaderArraysPerEngineCount@ is an
     -- unsigned integer value indicating the number of shader arrays inside a
     -- shader engine. Each shader array has its own scan converter, set of
-    -- compute units, and a render back end (color and depth buffers). Shader
-    -- arrays within a shader engine share shader processor input (wave
+    -- compute units, and a render back end (color and depth attachments).
+    -- Shader arrays within a shader engine share shader processor input (wave
     -- launcher) and shader export (export buffer) units. Currently, a shader
     -- engine can have one or two shader arrays.
     shaderArraysPerEngineCount :: Word32
@@ -262,7 +261,7 @@ deriving instance Generic (PhysicalDeviceShaderCorePropertiesAMD)
 deriving instance Show PhysicalDeviceShaderCorePropertiesAMD
 
 instance ToCStruct PhysicalDeviceShaderCorePropertiesAMD where
-  withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShaderCorePropertiesAMD{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

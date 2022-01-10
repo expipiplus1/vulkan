@@ -15,7 +15,7 @@
 --     85
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Ian Elliott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_incremental_present:%20&body=@ianelliottus%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_incremental_present] @ianelliottus%0A<<Here describe the issue or question you have about the VK_KHR_incremental_present extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -127,17 +127,35 @@
 -- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' must still be
 -- honored, including waiting for semaphores to signal.
 --
+-- 5) When the swapchain is created with
+-- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'::@preTransform@
+-- set to a value other than
+-- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
+-- should the rectangular region, 'RectLayerKHR', be transformed to align
+-- with the @preTransform@?
+--
+-- __RESOLVED__: No. The rectangular region in 'RectLayerKHR' should not be
+-- tranformed. As such, it may not align with the extents of the
+-- swapchain’s image(s). It is the responsibility of the presentation
+-- engine to transform the rectangular region. This matches the behavior of
+-- the Android presentation engine, which set the precedent.
+--
 -- == Version History
 --
 -- -   Revision 1, 2016-11-02 (Ian Elliott)
 --
 --     -   Internal revisions
 --
--- = See Also
+-- -   Revision 2, 2021-03-18 (Ian Elliott)
+--
+--     -   Clarified alignment of rectangles for presentation engines that
+--         support transformed swapchains.
+--
+-- == See Also
 --
 -- 'PresentRegionKHR', 'PresentRegionsKHR', 'RectLayerKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_incremental_present Vulkan Specification>

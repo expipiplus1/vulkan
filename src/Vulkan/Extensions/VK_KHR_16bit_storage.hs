@@ -33,7 +33,7 @@
 -- [__Contact__]
 --
 --     -   Jan-Harald Fredriksen
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_16bit_storage:%20&body=@janharaldfredriksen-arm%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_16bit_storage] @janharaldfredriksen-arm%0A<<Here describe the issue or question you have about the VK_KHR_16bit_storage extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -125,11 +125,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDevice16BitStorageFeaturesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_16bit_storage Vulkan Specification>

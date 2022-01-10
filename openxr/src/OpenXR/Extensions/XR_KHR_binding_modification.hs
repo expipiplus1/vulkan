@@ -41,7 +41,7 @@ module OpenXR.Extensions.XR_KHR_binding_modification  ( BindingModificationsKHR(
                                                       ) where
 
 import Control.Monad (unless)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -78,8 +78,9 @@ import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_BINDING_MODIFICATIO
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrBindingModificationsKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using 'BindingModificationsKHR'
+-- -   #VUID-XrBindingModificationsKHR-extension-notenabled# The
+--     @XR_KHR_binding_modification@ extension /must/ be enabled prior to
+--     using 'BindingModificationsKHR'
 --
 -- -   #VUID-XrBindingModificationsKHR-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_BINDING_MODIFICATIONS_KHR'
@@ -115,7 +116,7 @@ deriving instance Generic (BindingModificationsKHR)
 deriving instance Show BindingModificationsKHR
 
 instance ToCStruct BindingModificationsKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindingModificationsKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_BINDING_MODIFICATIONS_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -130,7 +131,7 @@ instance ToCStruct BindingModificationsKHR where
     bindingModifications'' <- if Data.Vector.null (bindingModifications)
       then pure nullPtr
       else do
-        pBindingModifications <- ContT $ allocaBytesAligned @(Ptr BindingModificationBaseHeaderKHR) (((Data.Vector.length (bindingModifications))) * 8) 8
+        pBindingModifications <- ContT $ allocaBytes @(Ptr BindingModificationBaseHeaderKHR) (((Data.Vector.length (bindingModifications))) * 8)
         Data.Vector.imapM_ (\i e -> do
           bindingModifications' <- ContT $ withCStruct (e)
           lift $ poke (pBindingModifications `plusPtr` (8 * (i)) :: Ptr (Ptr BindingModificationBaseHeaderKHR)) bindingModifications') ((bindingModifications))
@@ -172,8 +173,8 @@ instance Zero BindingModificationsKHR where
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrBindingModificationBaseHeaderKHR-extension-notenabled# The
---     @@ extension /must/ be enabled prior to using
---     'BindingModificationBaseHeaderKHR'
+--     @XR_KHR_binding_modification@ extension /must/ be enabled prior to
+--     using 'BindingModificationBaseHeaderKHR'
 --
 -- -   #VUID-XrBindingModificationBaseHeaderKHR-next-next# @next@ /must/ be
 --     @NULL@ or a valid pointer to the
@@ -196,7 +197,7 @@ deriving instance Generic (BindingModificationBaseHeaderKHR)
 deriving instance Show BindingModificationBaseHeaderKHR
 
 instance ToCStruct BindingModificationBaseHeaderKHR where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindingModificationBaseHeaderKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (type')
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

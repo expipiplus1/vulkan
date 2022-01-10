@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_buffer_device_address:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_buffer_device_address] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_KHR_buffer_device_address extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -79,8 +79,8 @@
 -- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_physical_storage_buffer.html SPV_KHR_physical_storage_buffer>
 -- SPIR-V extension.
 --
--- Another way to describe this extension is that it adds \"pointers to
--- buffer memory in shaders\". By calling
+-- Another way to describe this extension is that it adds “pointers to
+-- buffer memory in shaders”. By calling
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.getBufferDeviceAddress'
 -- with a 'Vulkan.Core10.Handles.Buffer', it will return a
 -- 'Vulkan.Core10.FundamentalTypes.DeviceAddress' value which represents
@@ -203,7 +203,7 @@
 --
 --     -   Internal revisions based on VK_EXT_buffer_device_address
 --
--- = See Also
+-- == See Also
 --
 -- 'BufferDeviceAddressInfoKHR', 'BufferOpaqueCaptureAddressCreateInfoKHR',
 -- 'DeviceMemoryOpaqueCaptureAddressInfoKHR',
@@ -212,7 +212,7 @@
 -- 'getBufferDeviceAddressKHR', 'getBufferOpaqueCaptureAddressKHR',
 -- 'getDeviceMemoryOpaqueCaptureAddressKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_buffer_device_address Vulkan Specification>

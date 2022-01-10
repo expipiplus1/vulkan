@@ -24,18 +24,18 @@
 -- [__Contact__]
 --
 --     -   Jeff Leger
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_copy_commands2:%20&body=@jackohound%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_copy_commands2] @jackohound%0A<<Here describe the issue or question you have about the VK_KHR_copy_commands2 extension>> >
 --
 -- == Other Extension Metadata
 --
--- [Last Modified Date]
+-- [__Last Modified Date__]
 --     2020-07-06
 --
 -- [__Interactions and External Dependencies__]
 --
 --     -   None
 --
--- [Contributors]
+-- [__Contributors__]
 --
 --     -   Jeff Leger, Qualcomm
 --
@@ -56,10 +56,10 @@
 -- The following extensible copy commands are introduced with this
 -- extension: 'cmdCopyBuffer2KHR', 'cmdCopyImage2KHR',
 -- 'cmdCopyBufferToImage2KHR', 'cmdCopyImageToBuffer2KHR',
--- 'cmdBlitImage2KHR', and 'cmdResolveImage2KHR'. Each command
--- contain@*Info2KHR@ structure parameter that includes @sType@\/@pNext@
--- members. Lower level structures that describe each region to be copied
--- are also extended with @sType@\/@pNext@ members.
+-- 'cmdBlitImage2KHR', and 'cmdResolveImage2KHR'. Each command contains an
+-- @*Info2KHR@ structure parameter that includes @sType@\/@pNext@ members.
+-- Lower level structures describing each region to be copied are also
+-- extended with @sType@\/@pNext@ members.
 --
 -- == New Commands
 --
@@ -135,7 +135,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'BlitImageInfo2KHR', 'BufferCopy2KHR', 'BufferImageCopy2KHR',
 -- 'CopyBufferInfo2KHR', 'CopyBufferToImageInfo2KHR', 'CopyImageInfo2KHR',
@@ -144,7 +144,7 @@
 -- 'cmdCopyBuffer2KHR', 'cmdCopyBufferToImage2KHR', 'cmdCopyImage2KHR',
 -- 'cmdCopyImageToBuffer2KHR', 'cmdResolveImage2KHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 Vulkan Specification>
@@ -179,7 +179,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
@@ -221,6 +221,7 @@ import Vulkan.Core10.Handles (Buffer)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_rotated_copy_commands (CopyCommandTransformInfoQCOM)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBlitImage2KHR))
@@ -275,16 +276,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyBuffer2KHR-commandBuffer-01822# If @commandBuffer@ is
---     an unprotected command buffer, then @srcBuffer@ /must/ not be a
---     protected buffer
+--     an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcBuffer@ /must/ not be a protected buffer
 --
 -- -   #VUID-vkCmdCopyBuffer2KHR-commandBuffer-01823# If @commandBuffer@ is
---     an unprotected command buffer, then @dstBuffer@ /must/ not be a
---     protected buffer
+--     an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be a protected buffer
 --
 -- -   #VUID-vkCmdCopyBuffer2KHR-commandBuffer-01824# If @commandBuffer@ is
---     a protected command buffer, then @dstBuffer@ /must/ not be an
---     unprotected buffer
+--     a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be an unprotected buffer
 --
 -- == Valid Usage (Implicit)
 --
@@ -318,16 +322,17 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Transfer                                                                                                              | Transfer                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |                                                                                                                                     |
--- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Transfer                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |
+-- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'CopyBufferInfo2KHR'
 cmdCopyBuffer2KHR :: forall io
                    . (MonadIO io)
@@ -339,7 +344,7 @@ cmdCopyBuffer2KHR :: forall io
                      CopyBufferInfo2KHR
                   -> io ()
 cmdCopyBuffer2KHR commandBuffer copyBufferInfo = liftIO . evalContT $ do
-  let vkCmdCopyBuffer2KHRPtr = pVkCmdCopyBuffer2KHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyBuffer2KHRPtr = pVkCmdCopyBuffer2KHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyBuffer2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyBuffer2KHR is null" Nothing Nothing
   let vkCmdCopyBuffer2KHR' = mkVkCmdCopyBuffer2KHR vkCmdCopyBuffer2KHRPtr
@@ -367,16 +372,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyImage2KHR-commandBuffer-01825# If @commandBuffer@ is
---     an unprotected command buffer, then @srcImage@ /must/ not be a
---     protected image
+--     an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdCopyImage2KHR-commandBuffer-01826# If @commandBuffer@ is
---     an unprotected command buffer, then @dstImage@ /must/ not be a
---     protected image
+--     an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdCopyImage2KHR-commandBuffer-01827# If @commandBuffer@ is
---     a protected command buffer, then @dstImage@ /must/ not be an
---     unprotected image
+--     a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be an unprotected image
 --
 -- == Valid Usage (Implicit)
 --
@@ -409,16 +417,17 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Transfer                                                                                                              | Transfer                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |                                                                                                                                     |
--- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Transfer                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |
+-- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'CopyImageInfo2KHR'
 cmdCopyImage2KHR :: forall io
                   . (MonadIO io)
@@ -430,7 +439,7 @@ cmdCopyImage2KHR :: forall io
                     CopyImageInfo2KHR
                  -> io ()
 cmdCopyImage2KHR commandBuffer copyImageInfo = liftIO . evalContT $ do
-  let vkCmdCopyImage2KHRPtr = pVkCmdCopyImage2KHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyImage2KHRPtr = pVkCmdCopyImage2KHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyImage2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyImage2KHR is null" Nothing Nothing
   let vkCmdCopyImage2KHR' = mkVkCmdCopyImage2KHR vkCmdCopyImage2KHRPtr
@@ -459,16 +468,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdBlitImage2KHR-commandBuffer-01834# If @commandBuffer@ is
---     an unprotected command buffer, then @srcImage@ /must/ not be a
---     protected image
+--     an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdBlitImage2KHR-commandBuffer-01835# If @commandBuffer@ is
---     an unprotected command buffer, then @dstImage@ /must/ not be a
---     protected image
+--     an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdBlitImage2KHR-commandBuffer-01836# If @commandBuffer@ is
---     a protected command buffer, then @dstImage@ /must/ not be an
---     unprotected image
+--     a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be an unprotected image
 --
 -- == Valid Usage (Implicit)
 --
@@ -500,15 +512,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              | Transfer                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'BlitImageInfo2KHR', 'Vulkan.Core10.Handles.CommandBuffer'
 cmdBlitImage2KHR :: forall io
                   . (MonadIO io)
@@ -520,7 +533,7 @@ cmdBlitImage2KHR :: forall io
                     BlitImageInfo2KHR
                  -> io ()
 cmdBlitImage2KHR commandBuffer blitImageInfo = liftIO . evalContT $ do
-  let vkCmdBlitImage2KHRPtr = pVkCmdBlitImage2KHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdBlitImage2KHRPtr = pVkCmdBlitImage2KHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBlitImage2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBlitImage2KHR is null" Nothing Nothing
   let vkCmdBlitImage2KHR' = mkVkCmdBlitImage2KHR vkCmdBlitImage2KHRPtr
@@ -548,16 +561,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyBufferToImage2KHR-commandBuffer-01828# If
---     @commandBuffer@ is an unprotected command buffer, then @srcBuffer@
---     /must/ not be a protected buffer
+--     @commandBuffer@ is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcBuffer@ /must/ not be a protected buffer
 --
 -- -   #VUID-vkCmdCopyBufferToImage2KHR-commandBuffer-01829# If
---     @commandBuffer@ is an unprotected command buffer, then @dstImage@
---     /must/ not be a protected image
+--     @commandBuffer@ is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdCopyBufferToImage2KHR-commandBuffer-01830# If
---     @commandBuffer@ is a protected command buffer, then @dstImage@
---     /must/ not be an unprotected image
+--     @commandBuffer@ is a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be an unprotected image
 --
 -- == Valid Usage (Implicit)
 --
@@ -592,16 +608,17 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Transfer                                                                                                              | Transfer                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |                                                                                                                                     |
--- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Transfer                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |
+-- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'CopyBufferToImageInfo2KHR'
 cmdCopyBufferToImage2KHR :: forall io
                           . (MonadIO io)
@@ -613,7 +630,7 @@ cmdCopyBufferToImage2KHR :: forall io
                             CopyBufferToImageInfo2KHR
                          -> io ()
 cmdCopyBufferToImage2KHR commandBuffer copyBufferToImageInfo = liftIO . evalContT $ do
-  let vkCmdCopyBufferToImage2KHRPtr = pVkCmdCopyBufferToImage2KHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyBufferToImage2KHRPtr = pVkCmdCopyBufferToImage2KHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyBufferToImage2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyBufferToImage2KHR is null" Nothing Nothing
   let vkCmdCopyBufferToImage2KHR' = mkVkCmdCopyBufferToImage2KHR vkCmdCopyBufferToImage2KHRPtr
@@ -641,16 +658,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyImageToBuffer2KHR-commandBuffer-01831# If
---     @commandBuffer@ is an unprotected command buffer, then @srcImage@
---     /must/ not be a protected image
+--     @commandBuffer@ is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdCopyImageToBuffer2KHR-commandBuffer-01832# If
---     @commandBuffer@ is an unprotected command buffer, then @dstBuffer@
---     /must/ not be a protected buffer
+--     @commandBuffer@ is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be a protected buffer
 --
 -- -   #VUID-vkCmdCopyImageToBuffer2KHR-commandBuffer-01833# If
---     @commandBuffer@ is a protected command buffer, then @dstBuffer@
---     /must/ not be an unprotected buffer
+--     @commandBuffer@ is a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstBuffer@ /must/ not be an unprotected buffer
 --
 -- == Valid Usage (Implicit)
 --
@@ -685,28 +705,29 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Transfer                                                                                                              | Transfer                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |                                                                                                                                     |
--- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Transfer                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |
+-- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'CopyImageToBufferInfo2KHR'
 cmdCopyImageToBuffer2KHR :: forall io
                           . (MonadIO io)
                          => -- | @commandBuffer@ is the command buffer into which the command will be
                             -- recorded.
                             CommandBuffer
-                         -> -- | @pCopyImageToBufferInfo@ is a pointer to a 'cmdCopyImageToBuffer2KHR'
+                         -> -- | @pCopyImageToBufferInfo@ is a pointer to a 'CopyImageToBufferInfo2KHR'
                             -- structure describing the copy parameters.
                             CopyImageToBufferInfo2KHR
                          -> io ()
 cmdCopyImageToBuffer2KHR commandBuffer copyImageToBufferInfo = liftIO . evalContT $ do
-  let vkCmdCopyImageToBuffer2KHRPtr = pVkCmdCopyImageToBuffer2KHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdCopyImageToBuffer2KHRPtr = pVkCmdCopyImageToBuffer2KHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyImageToBuffer2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyImageToBuffer2KHR is null" Nothing Nothing
   let vkCmdCopyImageToBuffer2KHR' = mkVkCmdCopyImageToBuffer2KHR vkCmdCopyImageToBuffer2KHRPtr
@@ -734,16 +755,19 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdResolveImage2KHR-commandBuffer-01837# If @commandBuffer@
---     is an unprotected command buffer, then @srcImage@ /must/ not be a
---     protected image
+--     is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @srcImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdResolveImage2KHR-commandBuffer-01838# If @commandBuffer@
---     is an unprotected command buffer, then @dstImage@ /must/ not be a
---     protected image
+--     is an unprotected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be a protected image
 --
 -- -   #VUID-vkCmdResolveImage2KHR-commandBuffer-01839# If @commandBuffer@
---     is a protected command buffer, then @dstImage@ /must/ not be an
---     unprotected image
+--     is a protected command buffer and
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
+--     is not supported, @dstImage@ /must/ not be an unprotected image
 --
 -- == Valid Usage (Implicit)
 --
@@ -776,15 +800,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              | Transfer                                                                                                                            |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'ResolveImageInfo2KHR'
 cmdResolveImage2KHR :: forall io
                      . (MonadIO io)
@@ -796,7 +821,7 @@ cmdResolveImage2KHR :: forall io
                        ResolveImageInfo2KHR
                     -> io ()
 cmdResolveImage2KHR commandBuffer resolveImageInfo = liftIO . evalContT $ do
-  let vkCmdResolveImage2KHRPtr = pVkCmdResolveImage2KHR (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdResolveImage2KHRPtr = pVkCmdResolveImage2KHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdResolveImage2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdResolveImage2KHR is null" Nothing Nothing
   let vkCmdResolveImage2KHR' = mkVkCmdResolveImage2KHR vkCmdResolveImage2KHRPtr
@@ -821,6 +846,7 @@ cmdResolveImage2KHR commandBuffer resolveImageInfo = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'CopyBufferInfo2KHR', 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data BufferCopy2KHR = BufferCopy2KHR
@@ -840,7 +866,7 @@ deriving instance Generic (BufferCopy2KHR)
 deriving instance Show BufferCopy2KHR
 
 instance ToCStruct BufferCopy2KHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferCopy2KHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_COPY_2_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -907,6 +933,7 @@ instance Zero BufferCopy2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'CopyImageInfo2KHR', 'Vulkan.Core10.FundamentalTypes.Extent3D',
 -- 'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers',
 -- 'Vulkan.Core10.FundamentalTypes.Offset3D',
@@ -935,7 +962,7 @@ deriving instance Generic (ImageCopy2KHR)
 deriving instance Show ImageCopy2KHR
 
 instance ToCStruct ImageCopy2KHR where
-  withCStruct x f = allocaBytesAligned 88 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 88 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageCopy2KHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_COPY_2_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1021,6 +1048,7 @@ instance Zero ImageCopy2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'BlitImageInfo2KHR',
 -- 'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers',
 -- 'Vulkan.Core10.FundamentalTypes.Offset3D',
@@ -1049,7 +1077,7 @@ deriving instance Show (Chain es) => Show (ImageBlit2KHR es)
 
 instance Extensible ImageBlit2KHR where
   extensibleTypeName = "ImageBlit2KHR"
-  setNext x next = x{next = next}
+  setNext ImageBlit2KHR{..} next' = ImageBlit2KHR{next = next', ..}
   getNext ImageBlit2KHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageBlit2KHR e => b) -> Maybe b
   extends _ f
@@ -1057,7 +1085,7 @@ instance Extensible ImageBlit2KHR where
     | otherwise = Nothing
 
 instance (Extendss ImageBlit2KHR es, PokeChain es) => ToCStruct (ImageBlit2KHR es) where
-  withCStruct x f = allocaBytesAligned 96 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 96 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageBlit2KHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_BLIT_2_KHR)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1160,6 +1188,7 @@ instance es ~ '[] => Zero (ImageBlit2KHR es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'CopyBufferToImageInfo2KHR', 'CopyImageToBufferInfo2KHR',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.FundamentalTypes.Extent3D',
@@ -1200,7 +1229,7 @@ deriving instance Show (Chain es) => Show (BufferImageCopy2KHR es)
 
 instance Extensible BufferImageCopy2KHR where
   extensibleTypeName = "BufferImageCopy2KHR"
-  setNext x next = x{next = next}
+  setNext BufferImageCopy2KHR{..} next' = BufferImageCopy2KHR{next = next', ..}
   getNext BufferImageCopy2KHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BufferImageCopy2KHR e => b) -> Maybe b
   extends _ f
@@ -1208,7 +1237,7 @@ instance Extensible BufferImageCopy2KHR where
     | otherwise = Nothing
 
 instance (Extendss BufferImageCopy2KHR es, PokeChain es) => ToCStruct (BufferImageCopy2KHR es) where
-  withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferImageCopy2KHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2_KHR)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -1288,6 +1317,7 @@ instance es ~ '[] => Zero (BufferImageCopy2KHR es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.FundamentalTypes.Extent3D',
 -- 'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers',
 -- 'Vulkan.Core10.FundamentalTypes.Offset3D', 'ResolveImageInfo2KHR',
@@ -1317,7 +1347,7 @@ deriving instance Generic (ImageResolve2KHR)
 deriving instance Show ImageResolve2KHR
 
 instance ToCStruct ImageResolve2KHR where
-  withCStruct x f = allocaBytesAligned 88 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 88 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageResolve2KHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_RESOLVE_2_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1441,6 +1471,7 @@ instance Zero ImageResolve2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.Handles.Buffer', 'BufferCopy2KHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'cmdCopyBuffer2KHR'
 data CopyBufferInfo2KHR = CopyBufferInfo2KHR
@@ -1459,14 +1490,14 @@ deriving instance Generic (CopyBufferInfo2KHR)
 deriving instance Show CopyBufferInfo2KHR
 
 instance ToCStruct CopyBufferInfo2KHR where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CopyBufferInfo2KHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COPY_BUFFER_INFO_2_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Buffer)) (srcBuffer)
     lift $ poke ((p `plusPtr` 24 :: Ptr Buffer)) (dstBuffer)
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
-    pPRegions' <- ContT $ allocaBytesAligned @BufferCopy2KHR ((Data.Vector.length (regions)) * 40) 8
+    pPRegions' <- ContT $ allocaBytes @BufferCopy2KHR ((Data.Vector.length (regions)) * 40)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions' `plusPtr` (40 * (i)) :: Ptr BufferCopy2KHR) (e)) (regions)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr BufferCopy2KHR))) (pPRegions')
     lift $ f
@@ -1672,12 +1703,12 @@ instance Zero CopyBufferInfo2KHR where
 --
 -- -   #VUID-VkCopyImageInfo2KHR-srcImage-04443# If @srcImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each element
---     of @pRegions@, @srcSubresource.baseArrayLayer@ /must/ be @0@ and and
+--     of @pRegions@, @srcSubresource.baseArrayLayer@ /must/ be @0@ and
 --     @srcSubresource.layerCount@ /must/ be @1@
 --
 -- -   #VUID-VkCopyImageInfo2KHR-dstImage-04444# If @dstImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each element
---     of @pRegions@, @dstSubresource.baseArrayLayer@ /must/ be @0@ and and
+--     of @pRegions@, @dstSubresource.baseArrayLayer@ /must/ be @0@ and
 --     @dstSubresource.layerCount@ /must/ be @1@
 --
 -- -   #VUID-VkCopyImageInfo2KHR-aspectMask-00142# For each element of
@@ -1851,6 +1882,7 @@ instance Zero CopyBufferInfo2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.Handles.Image', 'ImageCopy2KHR',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'cmdCopyImage2KHR'
@@ -1875,7 +1907,7 @@ deriving instance Generic (CopyImageInfo2KHR)
 deriving instance Show CopyImageInfo2KHR
 
 instance ToCStruct CopyImageInfo2KHR where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CopyImageInfo2KHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COPY_IMAGE_INFO_2_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1884,7 +1916,7 @@ instance ToCStruct CopyImageInfo2KHR where
     lift $ poke ((p `plusPtr` 32 :: Ptr Image)) (dstImage)
     lift $ poke ((p `plusPtr` 40 :: Ptr ImageLayout)) (dstImageLayout)
     lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
-    pPRegions' <- ContT $ allocaBytesAligned @ImageCopy2KHR ((Data.Vector.length (regions)) * 88) 8
+    pPRegions' <- ContT $ allocaBytes @ImageCopy2KHR ((Data.Vector.length (regions)) * 88)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions' `plusPtr` (88 * (i)) :: Ptr ImageCopy2KHR) (e)) (regions)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr ImageCopy2KHR))) (pPRegions')
     lift $ f
@@ -1943,9 +1975,9 @@ instance Zero CopyImageInfo2KHR where
 --     of @srcImage@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_SRC_BIT'
 --
--- -   #VUID-VkBlitImageInfo2KHR-srcImage-01561# @srcImage@ /must/ not use
---     a format listed in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion ???>
+-- -   #VUID-VkBlitImageInfo2KHR-srcImage-06421# @srcImage@ /must/ not use
+--     a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion format that requires a sampler Y’CBCR conversion>
 --
 -- -   #VUID-VkBlitImageInfo2KHR-srcImage-00219# @srcImage@ /must/ have
 --     been created with
@@ -1972,9 +2004,9 @@ instance Zero CopyImageInfo2KHR where
 --     of @dstImage@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_DST_BIT'
 --
--- -   #VUID-VkBlitImageInfo2KHR-dstImage-01562# @dstImage@ /must/ not use
---     a format listed in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion ???>
+-- -   #VUID-VkBlitImageInfo2KHR-dstImage-06422# @dstImage@ /must/ not use
+--     a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion format that requires a sampler Y’CBCR conversion>
 --
 -- -   #VUID-VkBlitImageInfo2KHR-dstImage-00224# @dstImage@ /must/ have
 --     been created with
@@ -2069,7 +2101,7 @@ instance Zero CopyImageInfo2KHR where
 --     then for each element of @pRegions@, @srcSubresource.baseArrayLayer@
 --     and @dstSubresource.baseArrayLayer@ /must/ each be @0@, and
 --     @srcSubresource.layerCount@ and @dstSubresource.layerCount@ /must/
---     each be @1@.
+--     each be @1@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-aspectMask-00241# For each element of
 --     @pRegions@, @srcSubresource.aspectMask@ /must/ specify aspects
@@ -2080,69 +2112,74 @@ instance Zero CopyImageInfo2KHR where
 --     present in @dstImage@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-srcOffset-00243# For each element of
---     @pRegions@, @srcOffset@[0].x and @srcOffset@[1].x /must/ both be
+--     @pRegions@, @srcOffsets@[0].x and @srcOffsets@[1].x /must/ both be
 --     greater than or equal to @0@ and less than or equal to the width of
 --     the specified @srcSubresource@ of @srcImage@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-srcOffset-00244# For each element of
---     @pRegions@, @srcOffset@[0].y and @srcOffset@[1].y /must/ both be
+--     @pRegions@, @srcOffsets@[0].y and @srcOffsets@[1].y /must/ both be
 --     greater than or equal to @0@ and less than or equal to the height of
 --     the specified @srcSubresource@ of @srcImage@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-srcImage-00245# If @srcImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
---     of @pRegions@, @srcOffset@[0].y /must/ be @0@ and @srcOffset@[1].y
+--     of @pRegions@, @srcOffsets@[0].y /must/ be @0@ and @srcOffsets@[1].y
 --     /must/ be @1@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-srcOffset-00246# For each element of
---     @pRegions@, @srcOffset@[0].z and @srcOffset@[1].z /must/ both be
+--     @pRegions@, @srcOffsets@[0].z and @srcOffsets@[1].z /must/ both be
 --     greater than or equal to @0@ and less than or equal to the depth of
 --     the specified @srcSubresource@ of @srcImage@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-srcImage-00247# If @srcImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
---     of @pRegions@, @srcOffset@[0].z /must/ be @0@ and @srcOffset@[1].z
+--     of @pRegions@, @srcOffsets@[0].z /must/ be @0@ and @srcOffsets@[1].z
 --     /must/ be @1@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-dstOffset-00248# For each element of
---     @pRegions@, @dstOffset@[0].x and @dstOffset@[1].x /must/ both be
+--     @pRegions@, @dstOffsets@[0].x and @dstOffsets@[1].x /must/ both be
 --     greater than or equal to @0@ and less than or equal to the width of
 --     the specified @dstSubresource@ of @dstImage@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-dstOffset-00249# For each element of
---     @pRegions@, @dstOffset@[0].y and @dstOffset@[1].y /must/ both be
+--     @pRegions@, @dstOffsets@[0].y and @dstOffsets@[1].y /must/ both be
 --     greater than or equal to @0@ and less than or equal to the height of
 --     the specified @dstSubresource@ of @dstImage@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-dstImage-00250# If @dstImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each element
---     of @pRegions@, @dstOffset@[0].y /must/ be @0@ and @dstOffset@[1].y
+--     of @pRegions@, @dstOffsets@[0].y /must/ be @0@ and @dstOffsets@[1].y
 --     /must/ be @1@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-dstOffset-00251# For each element of
---     @pRegions@, @dstOffset@[0].z and @dstOffset@[1].z /must/ both be
+--     @pRegions@, @dstOffsets@[0].z and @dstOffsets@[1].z /must/ both be
 --     greater than or equal to @0@ and less than or equal to the depth of
 --     the specified @dstSubresource@ of @dstImage@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-dstImage-00252# If @dstImage@ is of type
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D' or
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
---     of @pRegions@, @dstOffset@[0].z /must/ be @0@ and @dstOffset@[1].z
+--     of @pRegions@, @dstOffsets@[0].z /must/ be @0@ and @dstOffsets@[1].z
 --     /must/ be @1@
 --
 -- -   #VUID-VkBlitImageInfo2KHR-pRegions-04561# If any element of
 --     @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, then @srcImage@ and @dstImage@ /must/ not be a
---     block-compressed image.
+--     in its @pNext@ chain, then @srcImage@ and @dstImage@ /must/ not be
+--     block-compressed images
 --
--- -   #VUID-VkBlitImageInfo2KHR-pRegions-04562# If any element of
+-- -   #VUID-VkBlitImageInfo2KHR-pRegions-06207# If any element of
 --     @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, then the @srcImage@ /must/ be of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' and /must/ not be a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>.
+--     in its @pNext@ chain, then @srcImage@ /must/ be of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
+--
+-- -   #VUID-VkBlitImageInfo2KHR-pRegions-06208# If any element of
+--     @pRegions@ contains
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--     in its @pNext@ chain, then @srcImage@ /must/ not have a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
 --
 -- == Valid Usage (Implicit)
 --
@@ -2181,6 +2218,7 @@ instance Zero CopyImageInfo2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.Enums.Filter.Filter', 'Vulkan.Core10.Handles.Image',
 -- 'ImageBlit2KHR', 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'cmdBlitImage2KHR'
@@ -2209,7 +2247,7 @@ deriving instance Generic (BlitImageInfo2KHR)
 deriving instance Show BlitImageInfo2KHR
 
 instance ToCStruct BlitImageInfo2KHR where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BlitImageInfo2KHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BLIT_IMAGE_INFO_2_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -2218,7 +2256,7 @@ instance ToCStruct BlitImageInfo2KHR where
     lift $ poke ((p `plusPtr` 32 :: Ptr Image)) (dstImage)
     lift $ poke ((p `plusPtr` 40 :: Ptr ImageLayout)) (dstImageLayout)
     lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
-    pPRegions' <- ContT $ allocaBytesAligned @(ImageBlit2KHR _) ((Data.Vector.length (regions)) * 96) 8
+    pPRegions' <- ContT $ allocaBytes @(ImageBlit2KHR _) ((Data.Vector.length (regions)) * 96)
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPRegions' `plusPtr` (96 * (i)) :: Ptr (ImageBlit2KHR _))) (e) . ($ ())) (regions)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr (ImageBlit2KHR _)))) (pPRegions')
     lift $ poke ((p `plusPtr` 56 :: Ptr Filter)) (filter')
@@ -2267,32 +2305,32 @@ instance Zero BlitImageInfo2KHR where
 --     region specified by each element of @pRegions@ does not contain
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
 --     in its @pNext@ chain, it /must/ be a region that is contained within
---     @dstImage@ if the @dstImage@’s 'Vulkan.Core10.Enums.Format.Format'
---     is not a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     and /must/ be a region that is contained within the plane being
---     copied to if the @dstImage@’s 'Vulkan.Core10.Enums.Format.Format' is
---     a multi-planar format
+--     the specified @imageSubresource@ of @dstImage@
 --
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-04554# If the image
---     region specified by each element of @pRegions@ does contain
+--     region specified by each element of @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
 --     in its @pNext@ chain, the rotated destination region as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies-buffers-images-rotation-addressing>
---     /must/ be contained within @dstImage@.
+--     /must/ be contained within @dstImage@
 --
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-04555# If any element of
 --     @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, then the @dstImage@ /must/ not be a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>.
+--     in its @pNext@ chain, then @dstImage@ /must/ not be a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>
 --
--- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-04556# If any element of
+-- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-06203# If any element of
 --     @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, then the @dstImage@ /must/ be of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' and /must/ not be a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>.
+--     in its @pNext@ chain, then @dstImage@ /must/ be of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
+--
+-- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-06204# If any element of
+--     @pRegions@ contains
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--     in its @pNext@ chain, then @dstImage@ /must/ not have a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
 --
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-00171# @srcBuffer@ /must/
 --     be large enough to contain all buffer locations that are accessed
@@ -2371,27 +2409,23 @@ instance Zero BlitImageInfo2KHR where
 --     element of @pRegions@, the @aspectMask@ member of @imageSubresource@
 --     /must/ not be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'.
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
--- -   #VUID-VkCopyBufferToImageInfo2KHR-imageOffset-00197# For each
---     element of @pRegions@ not containing
+-- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-06223# For each element
+--     of @pRegions@ not containing
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, , @imageOffset.x@ and (@imageExtent.width@ +
+--     in its @pNext@ chain, @imageOffset.x@ and (@imageExtent.width@ +
 --     @imageOffset.x@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the width of the specified @imageSubresource@
---     of @dstImage@ where this refers to the width of the /plane/ of the
---     image involved in the copy in the case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     of @dstImage@
 --
--- -   #VUID-VkCopyBufferToImageInfo2KHR-imageOffset-00198# For each
---     element of @pRegions@ not containing
+-- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-06224# For each element
+--     of @pRegions@ not containing
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, , @imageOffset.y@ and (imageExtent.height +
+--     in its @pNext@ chain, @imageOffset.y@ and (@imageExtent.height@ +
 --     @imageOffset.y@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the height of the specified @imageSubresource@
---     of @dstImage@ where this refers to the height of the /plane/ of the
---     image involved in the copy in the case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     of @dstImage@
 --
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-bufferOffset-01558# If @dstImage@
 --     does not have either a depth\/stencil or a
@@ -2413,7 +2447,7 @@ instance Zero BlitImageInfo2KHR where
 --     @imageExtent.height@ /must/ be @1@
 --
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-imageOffset-00200# For each
---     element of @pRegions@, @imageOffset.z@ and (imageExtent.depth +
+--     element of @pRegions@, @imageOffset.z@ and (@imageExtent.depth@ +
 --     @imageOffset.z@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the depth of the specified @imageSubresource@
 --     of @dstImage@
@@ -2550,6 +2584,7 @@ instance Zero BlitImageInfo2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.Handles.Buffer', 'BufferImageCopy2KHR',
 -- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
@@ -2574,7 +2609,7 @@ deriving instance Generic (CopyBufferToImageInfo2KHR)
 deriving instance Show CopyBufferToImageInfo2KHR
 
 instance ToCStruct CopyBufferToImageInfo2KHR where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CopyBufferToImageInfo2KHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COPY_BUFFER_TO_IMAGE_INFO_2_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -2582,7 +2617,7 @@ instance ToCStruct CopyBufferToImageInfo2KHR where
     lift $ poke ((p `plusPtr` 24 :: Ptr Image)) (dstImage)
     lift $ poke ((p `plusPtr` 32 :: Ptr ImageLayout)) (dstImageLayout)
     lift $ poke ((p `plusPtr` 36 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
-    pPRegions' <- ContT $ allocaBytesAligned @(BufferImageCopy2KHR _) ((Data.Vector.length (regions)) * 72) 8
+    pPRegions' <- ContT $ allocaBytes @(BufferImageCopy2KHR _) ((Data.Vector.length (regions)) * 72)
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPRegions' `plusPtr` (72 * (i)) :: Ptr (BufferImageCopy2KHR _))) (e) . ($ ())) (regions)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr (BufferImageCopy2KHR _)))) (pPRegions')
     lift $ f
@@ -2623,33 +2658,33 @@ instance Zero CopyBufferToImageInfo2KHR where
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-pRegions-04566# If the image
 --     region specified by each element of @pRegions@ does not contain
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, it /must/ be a region that is contained within
---     @srcImage@ if the @srcImage@’s 'Vulkan.Core10.Enums.Format.Format'
---     is not a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     and /must/ be a region that is contained within the plane being
---     copied if the @srcImage@’s 'Vulkan.Core10.Enums.Format.Format' is a
---     multi-planar format
+--     in its @pNext@ chain, it /must/ be contained within the specified
+--     @imageSubresource@ of @srcImage@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-pRegions-04557# If the image
---     region specified by each element of @pRegions@ does contain
+--     region specified by each element of @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
 --     in its @pNext@ chain, the rotated source region as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies-buffers-images-rotation-addressing>
---     /must/ be contained within @srcImage@.
+--     /must/ be contained within @srcImage@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-pRegions-04558# If any element of
 --     @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, then the @srcImage@ /must/ not be a
+--     in its @pNext@ chain, then @srcImage@ /must/ not be a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>
 --
--- -   #VUID-VkCopyImageToBufferInfo2KHR-pRegions-04559# If any element of
+-- -   #VUID-VkCopyImageToBufferInfo2KHR-pRegions-06205# If any element of
 --     @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, then the @srcImage@ /must/ be of type
---     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', and /must/ not be a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>.
+--     in its @pNext@ chain, then @srcImage@ /must/ be of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
+--
+-- -   #VUID-VkCopyImageToBufferInfo2KHR-pRegions-06206# If any element of
+--     @pRegions@ contains
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--     in its @pNext@ chain, then @srcImage@ /must/ not have a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
 --
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-pRegions-00183# @dstBuffer@ /must/
 --     be large enough to contain all buffer locations that are accessed
@@ -2724,22 +2759,18 @@ instance Zero CopyBufferToImageInfo2KHR where
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-imageOffset-00197# For each
 --     element of @pRegions@ not containing
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, , @imageOffset.x@ and (@imageExtent.width@ +
+--     in its @pNext@ chain, @imageOffset.x@ and (@imageExtent.width@ +
 --     @imageOffset.x@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the width of the specified @imageSubresource@
---     of @srcImage@ where this refers to the width of the /plane/ of the
---     image involved in the copy in the case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     of @srcImage@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-imageOffset-00198# For each
 --     element of @pRegions@ not containing
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, , @imageOffset.y@ and (imageExtent.height +
+--     in its @pNext@ chain, @imageOffset.y@ and (@imageExtent.height@ +
 --     @imageOffset.y@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the height of the specified @imageSubresource@
---     of @srcImage@ where this refers to the height of the /plane/ of the
---     image involved in the copy in the case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     of @srcImage@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-bufferOffset-01558# If
 --     {imageparam} does not have either a depth\/stencil or a
@@ -2761,7 +2792,7 @@ instance Zero CopyBufferToImageInfo2KHR where
 --     @imageExtent.height@ /must/ be @1@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-imageOffset-00200# For each
---     element of @pRegions@, @imageOffset.z@ and (imageExtent.depth +
+--     element of @pRegions@, @imageOffset.z@ and (@imageExtent.depth@ +
 --     @imageOffset.z@) /must/ both be greater than or equal to @0@ and
 --     less than or equal to the depth of the specified @imageSubresource@
 --     of {imageparam}
@@ -2901,6 +2932,7 @@ instance Zero CopyBufferToImageInfo2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.Handles.Buffer', 'BufferImageCopy2KHR',
 -- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
@@ -2925,7 +2957,7 @@ deriving instance Generic (CopyImageToBufferInfo2KHR)
 deriving instance Show CopyImageToBufferInfo2KHR
 
 instance ToCStruct CopyImageToBufferInfo2KHR where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CopyImageToBufferInfo2KHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -2933,7 +2965,7 @@ instance ToCStruct CopyImageToBufferInfo2KHR where
     lift $ poke ((p `plusPtr` 24 :: Ptr ImageLayout)) (srcImageLayout)
     lift $ poke ((p `plusPtr` 32 :: Ptr Buffer)) (dstBuffer)
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
-    pPRegions' <- ContT $ allocaBytesAligned @(BufferImageCopy2KHR _) ((Data.Vector.length (regions)) * 72) 8
+    pPRegions' <- ContT $ allocaBytes @(BufferImageCopy2KHR _) ((Data.Vector.length (regions)) * 72)
     Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPRegions' `plusPtr` (72 * (i)) :: Ptr (BufferImageCopy2KHR _))) (e) . ($ ())) (regions)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr (BufferImageCopy2KHR _)))) (pPRegions')
     lift $ f
@@ -3145,6 +3177,7 @@ instance Zero CopyImageToBufferInfo2KHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 VK_KHR_copy_commands2>,
 -- 'Vulkan.Core10.Handles.Image',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout', 'ImageResolve2KHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'cmdResolveImage2KHR'
@@ -3170,7 +3203,7 @@ deriving instance Generic (ResolveImageInfo2KHR)
 deriving instance Show ResolveImageInfo2KHR
 
 instance ToCStruct ResolveImageInfo2KHR where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ResolveImageInfo2KHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -3179,7 +3212,7 @@ instance ToCStruct ResolveImageInfo2KHR where
     lift $ poke ((p `plusPtr` 32 :: Ptr Image)) (dstImage)
     lift $ poke ((p `plusPtr` 40 :: Ptr ImageLayout)) (dstImageLayout)
     lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
-    pPRegions' <- ContT $ allocaBytesAligned @ImageResolve2KHR ((Data.Vector.length (regions)) * 88) 8
+    pPRegions' <- ContT $ allocaBytes @ImageResolve2KHR ((Data.Vector.length (regions)) * 88)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions' `plusPtr` (88 * (i)) :: Ptr ImageResolve2KHR) (e)) (regions)
     lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr ImageResolve2KHR))) (pPRegions')
     lift $ f

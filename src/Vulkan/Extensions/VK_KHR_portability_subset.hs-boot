@@ -32,7 +32,9 @@
 -- [__Contact__]
 --
 --     -   Bill Hollings
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_portability_subset:%20&body=@billhollings%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_portability_subset] @billhollings%0A<<Here describe the issue or question you have about the VK_KHR_portability_subset extension>> >
+--
+-- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
 --     2020-07-21
@@ -56,10 +58,14 @@
 --
 --     -   Neil Trevett, NVIDIA
 --
--- This extension allows a non-conformant Vulkan implementation to be built
--- on top of another non-Vulkan graphics API, and identifies differences
--- between that implementation and a fully-conformant native Vulkan
--- implementation.
+--     -   Alexey Knyazev, Independent
+--
+-- == Description
+--
+-- The \`VK_KHR_portability_subset extension allows a non-conformant Vulkan
+-- implementation to be built on top of another non-Vulkan graphics API,
+-- and identifies differences between that implementation and a
+-- fully-conformant native Vulkan implementation.
 --
 -- This extension provides Vulkan implementations with the ability to mark
 -- otherwise-required capabilities as unsupported, or to establish
@@ -122,12 +128,12 @@
 --
 --     -   Initial draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDevicePortabilitySubsetFeaturesKHR',
 -- 'PhysicalDevicePortabilitySubsetPropertiesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_portability_subset Vulkan Specification>

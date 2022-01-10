@@ -2,6 +2,9 @@
 
 Slightly high level Haskell bindings to the Vulkan graphics API.
 
+Join us on Matrix at
+[#vulkan:monoid.al](https://matrix.to/#/#vulkan:monoid.al?via=monoid.al&via=matrix.org&via=nordgedanken.dev)
+
 These bindings present an interface to Vulkan which looks like more idiomatic
 Haskell and which is much less verbose than the C API. Nevertheless, it retains
 access to all the functionality. If you find something you can do in the C
@@ -462,21 +465,22 @@ There exists a package to build some example programs in the
 ## Current Status
 
 All the core Vulkan 1.0, 1.1, and 1.2 functionality is here as well as all the
-extensions.
+extensions (except the video ones).
 
 This is currently a 64 bit only library.
 
 ## See also
 
 The [VulkanMemoryAllocator
-package](https://hackage.haskell.org/package/VulkanMemoryAllocator-0.1.0.0)
-(source in the [VulkanMemoryAllocator directory](./VulkanMemoryAllocator)) has
-similarly styled bindings to the [Vulkan Memory
+package](https://hackage.haskell.org/package/VulkanMemoryAllocator) (source in
+the [VulkanMemoryAllocator directory](./VulkanMemoryAllocator)) has similarly
+styled bindings to the [Vulkan Memory
 Allocator](https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator)
 library.
 
-The [vulkan-utils](./utils) package (not currently on Hackage) includes a few
-utilities for writing programs using these bindings.
+The [vulkan-utils](https://hackage.haskell.org/package/vulkan-utils) (source in
+the [utils directory](./utils)) includes a few utilities for writing programs
+using these bindings.
 
 For an alternative take on Haskell bindings to Vulkan see the
 [vulkan-api](https://github.com/achirkin/vulkan#readme) package. `vulkan-api`

@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Neil Henning
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_subgroup_size_control:%20&body=@sheredom%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_subgroup_size_control] @sheredom%0A<<Here describe the issue or question you have about the VK_EXT_subgroup_size_control extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -76,20 +76,20 @@
 -- enable that pipeline to vary its subgroup size. If enabled, any
 -- @SubgroupSize@ decorated variables in the SPIR-V shader modules provided
 -- to pipeline creation /may/ vary between the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-min-subgroup-size minimum>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-minSubgroupSize minimum>
 -- and
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroup-size maximum>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxSubgroupSize maximum>
 -- subgroup sizes.
 --
 -- An implementation is also optionally allowed to support specifying a
 -- required subgroup size for a given pipeline stage. Implementations
 -- advertise which
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-required-subgroup-size-stages stages support a required subgroup size>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-requiredSubgroupSizeStages stages support a required subgroup size>,
 -- and any pipeline of a supported stage can be passed a
 -- 'PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT' structure to set
 -- the subgroup size for that shader stage of the pipeline. For compute
 -- shaders, this requires the developer to query the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroups-per-workgroup maxComputeWorkgroupSubgroups>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxComputeWorkgroupSubgroups maxComputeWorkgroupSubgroups>
 -- and ensure that:
 --
 -- \[s = { WorkGroupSize.x \times WorkGroupSize.y \times WorkgroupSize.z \leq SubgroupSize \times maxComputeWorkgroupSubgroups }\]
@@ -148,13 +148,13 @@
 --     -   Add the missing 'PhysicalDeviceSubgroupSizeControlFeaturesEXT'
 --         for querying subgroup size control features.
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceSubgroupSizeControlFeaturesEXT',
 -- 'PhysicalDeviceSubgroupSizeControlPropertiesEXT',
 -- 'PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_subgroup_size_control Vulkan Specification>
@@ -170,7 +170,7 @@ module Vulkan.Extensions.VK_EXT_subgroup_size_control  ( PhysicalDeviceSubgroupS
                                                        , pattern EXT_SUBGROUP_SIZE_CONTROL_EXTENSION_NAME
                                                        ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -202,18 +202,19 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceSubgroupSizeControlFeaturesEXT'
--- structure describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceSubgroupSizeControlFeaturesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceSubgroupSizeControlFeaturesEXT' /can/ also be included in
--- the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable
--- the feature.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceSubgroupSizeControlFeaturesEXT' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- Note
 --
@@ -236,6 +237,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_subgroup_size_control VK_EXT_subgroup_size_control>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceSubgroupSizeControlFeaturesEXT = PhysicalDeviceSubgroupSizeControlFeaturesEXT
@@ -259,7 +261,7 @@ deriving instance Generic (PhysicalDeviceSubgroupSizeControlFeaturesEXT)
 deriving instance Show PhysicalDeviceSubgroupSizeControlFeaturesEXT
 
 instance ToCStruct PhysicalDeviceSubgroupSizeControlFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceSubgroupSizeControlFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -297,17 +299,15 @@ instance Zero PhysicalDeviceSubgroupSizeControlFeaturesEXT where
 -- | VkPhysicalDeviceSubgroupSizeControlPropertiesEXT - Structure describing
 -- the control subgroup size properties of an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceSubgroupSizeControlPropertiesEXT'
--- structure describe the following properties:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceSubgroupSizeControlPropertiesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- If
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_subgroup.PhysicalDeviceSubgroupProperties'::@supportedOperations@
@@ -319,32 +319,33 @@ instance Zero PhysicalDeviceSubgroupSizeControlFeaturesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_subgroup_size_control VK_EXT_subgroup_size_control>,
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceSubgroupSizeControlPropertiesEXT = PhysicalDeviceSubgroupSizeControlPropertiesEXT
-  { -- | #limits-min-subgroup-size# @minSubgroupSize@ is the minimum subgroup
-    -- size supported by this device. @minSubgroupSize@ is at least one if any
-    -- of the physical device’s queues support
+  { -- | #limits-minSubgroupSize# @minSubgroupSize@ is the minimum subgroup size
+    -- supported by this device. @minSubgroupSize@ is at least one if any of
+    -- the physical device’s queues support
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'. @minSubgroupSize@
     -- is a power-of-two. @minSubgroupSize@ is less than or equal to
     -- @maxSubgroupSize@. @minSubgroupSize@ is less than or equal to
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-subgroup-size subgroupSize>.
     minSubgroupSize :: Word32
-  , -- | #limits-max-subgroup-size# @maxSubgroupSize@ is the maximum subgroup
-    -- size supported by this device. @maxSubgroupSize@ is at least one if any
-    -- of the physical device’s queues support
+  , -- | #limits-maxSubgroupSize# @maxSubgroupSize@ is the maximum subgroup size
+    -- supported by this device. @maxSubgroupSize@ is at least one if any of
+    -- the physical device’s queues support
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'. @maxSubgroupSize@
     -- is a power-of-two. @maxSubgroupSize@ is greater than or equal to
     -- @minSubgroupSize@. @maxSubgroupSize@ is greater than or equal to
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-subgroup-size subgroupSize>.
     maxSubgroupSize :: Word32
-  , -- | #limits-max-subgroups-per-workgroup# @maxComputeWorkgroupSubgroups@ is
+  , -- | #limits-maxComputeWorkgroupSubgroups# @maxComputeWorkgroupSubgroups@ is
     -- the maximum number of subgroups supported by the implementation within a
     -- workgroup.
     maxComputeWorkgroupSubgroups :: Word32
-  , -- | #limits-required-subgroup-size-stages# @requiredSubgroupSizeStages@ is a
+  , -- | #limits-requiredSubgroupSizeStages# @requiredSubgroupSizeStages@ is a
     -- bitfield of what shader stages support having a required subgroup size
     -- specified.
     requiredSubgroupSizeStages :: ShaderStageFlags
@@ -356,7 +357,7 @@ deriving instance Generic (PhysicalDeviceSubgroupSizeControlPropertiesEXT)
 deriving instance Show PhysicalDeviceSubgroupSizeControlPropertiesEXT
 
 instance ToCStruct PhysicalDeviceSubgroupSizeControlPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceSubgroupSizeControlPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -417,6 +418,7 @@ instance Zero PhysicalDeviceSubgroupSizeControlPropertiesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_subgroup_size_control VK_EXT_subgroup_size_control>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT = PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT
   { -- | #VUID-VkPipelineShaderStageRequiredSubgroupSizeCreateInfoEXT-requiredSubgroupSize-02760#
@@ -424,11 +426,11 @@ data PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT = PipelineShaderStageR
     --
     -- #VUID-VkPipelineShaderStageRequiredSubgroupSizeCreateInfoEXT-requiredSubgroupSize-02761#
     -- @requiredSubgroupSize@ /must/ be greater or equal to
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-min-subgroup-size minSubgroupSize>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-minSubgroupSize minSubgroupSize>
     --
     -- #VUID-VkPipelineShaderStageRequiredSubgroupSizeCreateInfoEXT-requiredSubgroupSize-02762#
     -- @requiredSubgroupSize@ /must/ be less than or equal to
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-max-subgroup-size maxSubgroupSize>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxSubgroupSize maxSubgroupSize>
     requiredSubgroupSize :: Word32 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -437,7 +439,7 @@ deriving instance Generic (PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT)
 deriving instance Show PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT
 
 instance ToCStruct PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

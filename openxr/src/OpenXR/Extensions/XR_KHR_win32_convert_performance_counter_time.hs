@@ -66,6 +66,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import OpenXR.NamedType ((:::))
 import OpenXR.Core10.Handles (Instance)
 import OpenXR.Core10.Handles (Instance(..))
+import OpenXR.Core10.Handles (Instance(Instance))
 import OpenXR.Dynamic (InstanceCmds(pXrConvertTimeToWin32PerformanceCounterKHR))
 import OpenXR.Dynamic (InstanceCmds(pXrConvertWin32PerformanceCounterToTimeKHR))
 import OpenXR.Core10.Handles (Instance_T)
@@ -100,7 +101,8 @@ foreign import ccall
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrConvertTimeToWin32PerformanceCounterKHR-extension-notenabled#
---     The @@ extension /must/ be enabled prior to calling
+--     The @XR_KHR_win32_convert_performance_counter_time@ extension /must/
+--     be enabled prior to calling
 --     'convertTimeToWin32PerformanceCounterKHR'
 --
 -- -   #VUID-xrConvertTimeToWin32PerformanceCounterKHR-instance-parameter#
@@ -143,7 +145,7 @@ convertTimeToWin32PerformanceCounterKHR :: forall io
                                            Time
                                         -> io (("performanceCounter" ::: LARGE_INTEGER))
 convertTimeToWin32PerformanceCounterKHR instance' time = liftIO . evalContT $ do
-  let xrConvertTimeToWin32PerformanceCounterKHRPtr = pXrConvertTimeToWin32PerformanceCounterKHR (instanceCmds (instance' :: Instance))
+  let xrConvertTimeToWin32PerformanceCounterKHRPtr = pXrConvertTimeToWin32PerformanceCounterKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrConvertTimeToWin32PerformanceCounterKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrConvertTimeToWin32PerformanceCounterKHR is null" Nothing Nothing
   let xrConvertTimeToWin32PerformanceCounterKHR' = mkXrConvertTimeToWin32PerformanceCounterKHR xrConvertTimeToWin32PerformanceCounterKHRPtr
@@ -180,7 +182,8 @@ foreign import ccall
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrConvertWin32PerformanceCounterToTimeKHR-extension-notenabled#
---     The @@ extension /must/ be enabled prior to calling
+--     The @XR_KHR_win32_convert_performance_counter_time@ extension /must/
+--     be enabled prior to calling
 --     'convertWin32PerformanceCounterToTimeKHR'
 --
 -- -   #VUID-xrConvertWin32PerformanceCounterToTimeKHR-instance-parameter#
@@ -228,7 +231,7 @@ convertWin32PerformanceCounterToTimeKHR :: forall io
                                            ("performanceCounter" ::: LARGE_INTEGER)
                                         -> io (Time)
 convertWin32PerformanceCounterToTimeKHR instance' performanceCounter = liftIO . evalContT $ do
-  let xrConvertWin32PerformanceCounterToTimeKHRPtr = pXrConvertWin32PerformanceCounterToTimeKHR (instanceCmds (instance' :: Instance))
+  let xrConvertWin32PerformanceCounterToTimeKHRPtr = pXrConvertWin32PerformanceCounterToTimeKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrConvertWin32PerformanceCounterToTimeKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrConvertWin32PerformanceCounterToTimeKHR is null" Nothing Nothing
   let xrConvertWin32PerformanceCounterToTimeKHR' = mkXrConvertWin32PerformanceCounterToTimeKHR xrConvertWin32PerformanceCounterToTimeKHRPtr

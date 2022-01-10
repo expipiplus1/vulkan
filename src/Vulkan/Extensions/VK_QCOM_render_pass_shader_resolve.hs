@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Bill Licea-Kane
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_QCOM_render_pass_shader_resolve:%20&body=@wwlk%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QCOM_render_pass_shader_resolve] @wwlk%0A<<Here describe the issue or question you have about the VK_QCOM_render_pass_shader_resolve extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -98,7 +98,7 @@
 -- resolve hardware has this limitation, there is little reason to require
 -- a shader resolve to resolve to a single sample buffer.
 --
--- 3) Should a shader resolve subpass be the last subpass in a renderpass?
+-- 3) Should a shader resolve subpass be the last subpass in a render pass?
 --
 -- __RESOLVED__ Yes.
 --
@@ -143,11 +143,11 @@
 --
 --     -   Change resolution of Issue 1 (/render_pass/, not /renderpass/)
 --
--- = See Also
+-- == See Also
 --
 -- No cross-references are available
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_render_pass_shader_resolve Vulkan Specification>

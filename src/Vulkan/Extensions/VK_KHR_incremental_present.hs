@@ -15,7 +15,7 @@
 --     85
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Ian Elliott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_incremental_present:%20&body=@ianelliottus%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_incremental_present] @ianelliottus%0A<<Here describe the issue or question you have about the VK_KHR_incremental_present extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -127,17 +127,35 @@
 -- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' must still be
 -- honored, including waiting for semaphores to signal.
 --
+-- 5) When the swapchain is created with
+-- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'::@preTransform@
+-- set to a value other than
+-- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR',
+-- should the rectangular region, 'RectLayerKHR', be transformed to align
+-- with the @preTransform@?
+--
+-- __RESOLVED__: No. The rectangular region in 'RectLayerKHR' should not be
+-- tranformed. As such, it may not align with the extents of the
+-- swapchain’s image(s). It is the responsibility of the presentation
+-- engine to transform the rectangular region. This matches the behavior of
+-- the Android presentation engine, which set the precedent.
+--
 -- == Version History
 --
 -- -   Revision 1, 2016-11-02 (Ian Elliott)
 --
 --     -   Internal revisions
 --
--- = See Also
+-- -   Revision 2, 2021-03-18 (Ian Elliott)
+--
+--     -   Clarified alignment of rectangles for presentation engines that
+--         support transformed swapchains.
+--
+-- == See Also
 --
 -- 'PresentRegionKHR', 'PresentRegionsKHR', 'RectLayerKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_incremental_present Vulkan Specification>
@@ -154,7 +172,7 @@ module Vulkan.Extensions.VK_KHR_incremental_present  ( PresentRegionsKHR(..)
                                                      ) where
 
 import Control.Monad (unless)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -213,6 +231,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PRESENT_R
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_incremental_present VK_KHR_incremental_present>,
 -- 'PresentRegionKHR', 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PresentRegionsKHR = PresentRegionsKHR
   { -- | @swapchainCount@ is the number of swapchains being presented to by this
@@ -233,7 +252,7 @@ deriving instance Generic (PresentRegionsKHR)
 deriving instance Show PresentRegionsKHR
 
 instance ToCStruct PresentRegionsKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PresentRegionsKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PRESENT_REGIONS_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -248,7 +267,7 @@ instance ToCStruct PresentRegionsKHR where
     pRegions'' <- if Data.Vector.null (regions)
       then pure nullPtr
       else do
-        pPRegions <- ContT $ allocaBytesAligned @PresentRegionKHR (((Data.Vector.length (regions))) * 16) 8
+        pPRegions <- ContT $ allocaBytes @PresentRegionKHR (((Data.Vector.length (regions))) * 16)
         Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPRegions `plusPtr` (16 * (i)) :: Ptr PresentRegionKHR) (e) . ($ ())) ((regions))
         pure $ pPRegions
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr PresentRegionKHR))) pRegions''
@@ -287,6 +306,7 @@ instance Zero PresentRegionsKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_incremental_present VK_KHR_incremental_present>,
 -- 'PresentRegionsKHR', 'RectLayerKHR'
 data PresentRegionKHR = PresentRegionKHR
   { -- | @rectangleCount@ is the number of rectangles in @pRectangles@, or zero
@@ -297,7 +317,12 @@ data PresentRegionKHR = PresentRegionKHR
     -- framebuffer coordinates, plus layer, of a portion of a presentable image
     -- that has changed and /must/ be presented. If non-@NULL@, each entry in
     -- @pRectangles@ is a rectangle of the given image that has changed since
-    -- the last image was presented to the given swapchain.
+    -- the last image was presented to the given swapchain. The rectangles
+    -- /must/ be specified relative to
+    -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR'::@currentTransform@,
+    -- regardless of the swapchain’s @preTransform@. The presentation engine
+    -- will apply the @preTransform@ transformation to the rectangles, along
+    -- with any further transformation it applies to the image content.
     rectangles :: Vector RectLayerKHR
   }
   deriving (Typeable)
@@ -307,7 +332,7 @@ deriving instance Generic (PresentRegionKHR)
 deriving instance Show PresentRegionKHR
 
 instance ToCStruct PresentRegionKHR where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PresentRegionKHR{..} f = evalContT $ do
     let pRectanglesLength = Data.Vector.length $ (rectangles)
     rectangleCount'' <- lift $ if (rectangleCount) == 0
@@ -320,7 +345,7 @@ instance ToCStruct PresentRegionKHR where
     pRectangles'' <- if Data.Vector.null (rectangles)
       then pure nullPtr
       else do
-        pPRectangles <- ContT $ allocaBytesAligned @RectLayerKHR (((Data.Vector.length (rectangles))) * 20) 4
+        pPRectangles <- ContT $ allocaBytes @RectLayerKHR (((Data.Vector.length (rectangles))) * 20)
         lift $ Data.Vector.imapM_ (\i e -> poke (pPRectangles `plusPtr` (20 * (i)) :: Ptr RectLayerKHR) (e)) ((rectangles))
         pure $ pPRectangles
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr RectLayerKHR))) pRectangles''
@@ -347,10 +372,19 @@ instance Zero PresentRegionKHR where
 -- | VkRectLayerKHR - Structure containing a rectangle, including layer,
 -- changed by vkQueuePresentKHR for a given VkImage
 --
+-- = Description
+--
+-- Some platforms allow the size of a surface to change, and then scale the
+-- pixels of the image to fit the surface. 'RectLayerKHR' specifies pixels
+-- of the swapchain’s image(s), which will be constant for the life of the
+-- swapchain.
+--
 -- == Valid Usage
 --
--- -   #VUID-VkRectLayerKHR-offset-01261# The sum of @offset@ and @extent@
---     /must/ be no greater than the @imageExtent@ member of the
+-- -   #VUID-VkRectLayerKHR-offset-04864# The sum of @offset@ and @extent@,
+--     after being transformed according to the @preTransform@ member of
+--     the 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
+--     structure, /must/ be no greater than the @imageExtent@ member of the
 --     'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
 --     structure passed to
 --     'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'
@@ -361,13 +395,9 @@ instance Zero PresentRegionKHR where
 --     structure passed to
 --     'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'
 --
--- Some platforms allow the size of a surface to change, and then scale the
--- pixels of the image to fit the surface. 'RectLayerKHR' specifies pixels
--- of the swapchain’s image(s), which will be constant for the life of the
--- swapchain.
---
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_incremental_present VK_KHR_incremental_present>,
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.FundamentalTypes.Offset2D', 'PresentRegionKHR'
 data RectLayerKHR = RectLayerKHR
@@ -386,7 +416,7 @@ deriving instance Generic (RectLayerKHR)
 deriving instance Show RectLayerKHR
 
 instance ToCStruct RectLayerKHR where
-  withCStruct x f = allocaBytesAligned 20 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 20 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RectLayerKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Offset2D)) (offset)
     poke ((p `plusPtr` 8 :: Ptr Extent2D)) (extent)
@@ -421,11 +451,11 @@ instance Zero RectLayerKHR where
            zero
 
 
-type KHR_INCREMENTAL_PRESENT_SPEC_VERSION = 1
+type KHR_INCREMENTAL_PRESENT_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_KHR_INCREMENTAL_PRESENT_SPEC_VERSION"
 pattern KHR_INCREMENTAL_PRESENT_SPEC_VERSION :: forall a . Integral a => a
-pattern KHR_INCREMENTAL_PRESENT_SPEC_VERSION = 1
+pattern KHR_INCREMENTAL_PRESENT_SPEC_VERSION = 2
 
 
 type KHR_INCREMENTAL_PRESENT_EXTENSION_NAME = "VK_KHR_incremental_present"

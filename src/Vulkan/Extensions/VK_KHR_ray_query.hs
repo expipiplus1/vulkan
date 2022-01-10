@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_ray_query:%20&body=@dgkoch%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_ray_query] @dgkoch%0A<<Here describe the issue or question you have about the VK_KHR_ray_query extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -180,14 +180,14 @@
 -- > rayQueryInitializeEXT(rq, accStruct, gl_RayFlagsNoneEXT, 0, origin, tMin, direction, tMax);
 -- >
 -- > while(rayQueryProceedEXT(rq)) {
--- > 	if (rayQueryGetIntersectionTypeEXT(rq, false) == gl_RayQueryCandidateIntersectionTriangleEXT) {
--- > 		//...
--- > 		rayQueryConfirmIntersectionEXT(rq);
--- > 	}
+-- >     if (rayQueryGetIntersectionTypeEXT(rq, false) == gl_RayQueryCandidateIntersectionTriangleEXT) {
+-- >         //...
+-- >         rayQueryConfirmIntersectionEXT(rq);
+-- >     }
 -- > }
 -- >
 -- > if (rayQueryGetIntersectionTypeEXT(rq, true) == gl_RayQueryCommittedIntersectionNoneEXT) {
--- > 	//...
+-- >     //...
 -- > }
 --
 -- == Issues
@@ -200,14 +200,13 @@
 --     implementation flexibility and decoupling ray query support from ray
 --     pipelines:
 --
---     -   <VK_KHR_acceleration_structure.html VK_KHR_acceleration_structure>
---         (for acceleration structure operations)
+--     -   @VK_KHR_acceleration_structure@ (for acceleration structure
+--         operations)
 --
---     -   <VK_KHR_ray_tracing_pipeline.html VK_KHR_ray_tracing_pipeline>
---         (for ray tracing pipeline and shader stages)
+--     -   @VK_KHR_ray_tracing_pipeline@ (for ray tracing pipeline and
+--         shader stages)
 --
---     -   <VK_KHR_ray_query.html VK_KHR_ray_query> (for ray queries in
---         existing shader stages)
+--     -   @VK_KHR_ray_query@ (for ray queries in existing shader stages)
 --
 -- -   Update SPIRV capabilities to use @RayQueryKHR@
 --
@@ -234,11 +233,11 @@
 --
 --     -   add ray query shader stages for AS read bit (#2407,!4203)
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceRayQueryFeaturesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_query Vulkan Specification>
@@ -252,7 +251,7 @@ module Vulkan.Extensions.VK_KHR_ray_query  ( PhysicalDeviceRayQueryFeaturesKHR(.
                                            , pattern KHR_RAY_QUERY_EXTENSION_NAME
                                            ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -279,22 +278,25 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceRayQueryFeaturesKHR' structure
--- describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceRayQueryFeaturesKHR' structure is included in the
--- @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceRayQueryFeaturesKHR' /can/ also be used in the @pNext@
--- chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the features.
+-- @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceRayQueryFeaturesKHR' /can/ also be used in the
+-- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively
+-- enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_query VK_KHR_ray_query>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceRayQueryFeaturesKHR = PhysicalDeviceRayQueryFeaturesKHR
@@ -308,7 +310,7 @@ deriving instance Generic (PhysicalDeviceRayQueryFeaturesKHR)
 deriving instance Show PhysicalDeviceRayQueryFeaturesKHR
 
 instance ToCStruct PhysicalDeviceRayQueryFeaturesKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceRayQueryFeaturesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_QUERY_FEATURES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

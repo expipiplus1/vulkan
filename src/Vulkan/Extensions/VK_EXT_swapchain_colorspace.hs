@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Courtney Goeltzenleuchter
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_swapchain_colorspace:%20&body=@courtney-g%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_swapchain_colorspace] @courtney-g%0A<<Here describe the issue or question you have about the VK_EXT_swapchain_colorspace extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -61,6 +61,8 @@
 --     -   'Vulkan.Extensions.VK_KHR_surface.COLOR_SPACE_BT709_LINEAR_EXT'
 --
 --     -   'Vulkan.Extensions.VK_KHR_surface.COLOR_SPACE_BT709_NONLINEAR_EXT'
+--
+--     -   'COLOR_SPACE_DCI_P3_LINEAR_EXT'
 --
 --     -   'Vulkan.Extensions.VK_KHR_surface.COLOR_SPACE_DCI_P3_NONLINEAR_EXT'
 --
@@ -124,11 +126,11 @@
 --
 --     -   Clarify DCI-P3 and Display P3 usage.
 --
--- = See Also
+-- == See Also
 --
 -- No cross-references are available
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_swapchain_colorspace Vulkan Specification>

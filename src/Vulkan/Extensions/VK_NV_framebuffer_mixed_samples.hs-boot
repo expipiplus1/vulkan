@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_framebuffer_mixed_samples:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_framebuffer_mixed_samples] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_NV_framebuffer_mixed_samples extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -107,13 +107,13 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'CoverageModulationModeNV',
 -- 'PipelineCoverageModulationStateCreateFlagsNV',
 -- 'PipelineCoverageModulationStateCreateInfoNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_framebuffer_mixed_samples Vulkan Specification>

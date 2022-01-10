@@ -77,6 +77,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.Core10.Enums.Result (Result(SUCCESS))
 import OpenXR.Extensions.XR_EXT_performance_settings (PerfSettingsDomainEXT(..))
@@ -92,8 +93,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrThermalGetTemperatureTrendEXT-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
+-- -   #VUID-xrThermalGetTemperatureTrendEXT-extension-notenabled# The
+--     @XR_EXT_thermal_query@ extension /must/ be enabled prior to calling
 --     'thermalGetTemperatureTrendEXT'
 --
 -- -   #VUID-xrThermalGetTemperatureTrendEXT-session-parameter# @session@
@@ -148,7 +149,7 @@ thermalGetTemperatureTrendEXT :: forall io
                                  PerfSettingsDomainEXT
                               -> io (Result, PerfSettingsNotificationLevelEXT, ("tempHeadroom" ::: Float), ("tempSlope" ::: Float))
 thermalGetTemperatureTrendEXT session domain = liftIO . evalContT $ do
-  let xrThermalGetTemperatureTrendEXTPtr = pXrThermalGetTemperatureTrendEXT (instanceCmds (session :: Session))
+  let xrThermalGetTemperatureTrendEXTPtr = pXrThermalGetTemperatureTrendEXT (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrThermalGetTemperatureTrendEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrThermalGetTemperatureTrendEXT is null" Nothing Nothing
   let xrThermalGetTemperatureTrendEXT' = mkXrThermalGetTemperatureTrendEXT xrThermalGetTemperatureTrendEXTPtr

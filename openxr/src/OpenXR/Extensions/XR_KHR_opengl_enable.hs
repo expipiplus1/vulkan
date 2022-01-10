@@ -63,7 +63,7 @@ module OpenXR.Extensions.XR_KHR_opengl_enable  ( getOpenGLGraphicsRequirementsKH
 import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
@@ -94,6 +94,7 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import OpenXR.Core10.Handles (Instance)
 import OpenXR.Core10.Handles (Instance(..))
+import OpenXR.Core10.Handles (Instance(Instance))
 import OpenXR.Dynamic (InstanceCmds(pXrGetOpenGLGraphicsRequirementsKHR))
 import OpenXR.Core10.Handles (Instance_T)
 import OpenXR.Core10.Image (IsSwapchainImage(..))
@@ -138,7 +139,7 @@ foreign import ccall
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrGetOpenGLGraphicsRequirementsKHR-extension-notenabled# The
---     @@ extension /must/ be enabled prior to calling
+--     @XR_KHR_opengl_enable@ extension /must/ be enabled prior to calling
 --     'getOpenGLGraphicsRequirementsKHR'
 --
 -- -   #VUID-xrGetOpenGLGraphicsRequirementsKHR-instance-parameter#
@@ -183,7 +184,7 @@ getOpenGLGraphicsRequirementsKHR :: forall io
                                     SystemId
                                  -> io (GraphicsRequirementsOpenGLKHR)
 getOpenGLGraphicsRequirementsKHR instance' systemId = liftIO . evalContT $ do
-  let xrGetOpenGLGraphicsRequirementsKHRPtr = pXrGetOpenGLGraphicsRequirementsKHR (instanceCmds (instance' :: Instance))
+  let xrGetOpenGLGraphicsRequirementsKHRPtr = pXrGetOpenGLGraphicsRequirementsKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetOpenGLGraphicsRequirementsKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetOpenGLGraphicsRequirementsKHR is null" Nothing Nothing
   let xrGetOpenGLGraphicsRequirementsKHR' = mkXrGetOpenGLGraphicsRequirementsKHR xrGetOpenGLGraphicsRequirementsKHRPtr
@@ -218,8 +219,8 @@ getOpenGLGraphicsRequirementsKHR instance' systemId = liftIO . evalContT $ do
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsBindingOpenGLWin32KHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrGraphicsBindingOpenGLWin32KHR-extension-notenabled# The
+--     @XR_KHR_opengl_enable@ extension /must/ be enabled prior to using
 --     'GraphicsBindingOpenGLWin32KHR'
 --
 -- -   #VUID-XrGraphicsBindingOpenGLWin32KHR-type-type# @type@ /must/ be
@@ -252,7 +253,7 @@ deriving instance Generic (GraphicsBindingOpenGLWin32KHR)
 deriving instance Show GraphicsBindingOpenGLWin32KHR
 
 instance ToCStruct GraphicsBindingOpenGLWin32KHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsBindingOpenGLWin32KHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_BINDING_OPENGL_WIN32_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -306,8 +307,8 @@ instance Zero GraphicsBindingOpenGLWin32KHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsBindingOpenGLXlibKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrGraphicsBindingOpenGLXlibKHR-extension-notenabled# The
+--     @XR_KHR_opengl_enable@ extension /must/ be enabled prior to using
 --     'GraphicsBindingOpenGLXlibKHR'
 --
 -- -   #VUID-XrGraphicsBindingOpenGLXlibKHR-type-type# @type@ /must/ be
@@ -352,7 +353,7 @@ deriving instance Generic (GraphicsBindingOpenGLXlibKHR)
 deriving instance Show GraphicsBindingOpenGLXlibKHR
 
 instance ToCStruct GraphicsBindingOpenGLXlibKHR where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsBindingOpenGLXlibKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_BINDING_OPENGL_XLIB_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -418,8 +419,8 @@ instance Zero GraphicsBindingOpenGLXlibKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsBindingOpenGLXcbKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrGraphicsBindingOpenGLXcbKHR-extension-notenabled# The
+--     @XR_KHR_opengl_enable@ extension /must/ be enabled prior to using
 --     'GraphicsBindingOpenGLXcbKHR'
 --
 -- -   #VUID-XrGraphicsBindingOpenGLXcbKHR-type-type# @type@ /must/ be
@@ -470,7 +471,7 @@ deriving instance Generic (GraphicsBindingOpenGLXcbKHR)
 deriving instance Show GraphicsBindingOpenGLXcbKHR
 
 instance ToCStruct GraphicsBindingOpenGLXcbKHR where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsBindingOpenGLXcbKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_BINDING_OPENGL_XCB_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -540,8 +541,8 @@ instance Zero GraphicsBindingOpenGLXcbKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsBindingOpenGLWaylandKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrGraphicsBindingOpenGLWaylandKHR-extension-notenabled# The
+--     @XR_KHR_opengl_enable@ extension /must/ be enabled prior to using
 --     'GraphicsBindingOpenGLWaylandKHR'
 --
 -- -   #VUID-XrGraphicsBindingOpenGLWaylandKHR-type-type# @type@ /must/ be
@@ -568,7 +569,7 @@ deriving instance Generic (GraphicsBindingOpenGLWaylandKHR)
 deriving instance Show GraphicsBindingOpenGLWaylandKHR
 
 instance ToCStruct GraphicsBindingOpenGLWaylandKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsBindingOpenGLWaylandKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_BINDING_OPENGL_WAYLAND_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -626,8 +627,9 @@ instance Zero GraphicsBindingOpenGLWaylandKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrSwapchainImageOpenGLKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using 'SwapchainImageOpenGLKHR'
+-- -   #VUID-XrSwapchainImageOpenGLKHR-extension-notenabled# The
+--     @XR_KHR_opengl_enable@ extension /must/ be enabled prior to using
+--     'SwapchainImageOpenGLKHR'
 --
 -- -   #VUID-XrSwapchainImageOpenGLKHR-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_SWAPCHAIN_IMAGE_OPENGL_KHR'
@@ -654,7 +656,7 @@ instance IsSwapchainImage SwapchainImageOpenGLKHR where
   toSwapchainImageBaseHeader SwapchainImageOpenGLKHR{} = SwapchainImageBaseHeader{type' = TYPE_SWAPCHAIN_IMAGE_OPENGL_KHR}
 
 instance ToCStruct SwapchainImageOpenGLKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainImageOpenGLKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SWAPCHAIN_IMAGE_OPENGL_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -697,8 +699,8 @@ instance Zero SwapchainImageOpenGLKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsRequirementsOpenGLKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrGraphicsRequirementsOpenGLKHR-extension-notenabled# The
+--     @XR_KHR_opengl_enable@ extension /must/ be enabled prior to using
 --     'GraphicsRequirementsOpenGLKHR'
 --
 -- -   #VUID-XrGraphicsRequirementsOpenGLKHR-type-type# @type@ /must/ be
@@ -732,7 +734,7 @@ deriving instance Generic (GraphicsRequirementsOpenGLKHR)
 deriving instance Show GraphicsRequirementsOpenGLKHR
 
 instance ToCStruct GraphicsRequirementsOpenGLKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p GraphicsRequirementsOpenGLKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_GRAPHICS_REQUIREMENTS_OPENGL_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

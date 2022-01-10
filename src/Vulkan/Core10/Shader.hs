@@ -5,8 +5,7 @@ module Vulkan.Core10.Shader  ( createShaderModule
                              , destroyShaderModule
                              , ShaderModuleCreateInfo(..)
                              , ShaderModule(..)
-                             , ShaderModuleCreateFlagBits(..)
-                             , ShaderModuleCreateFlags
+                             , ShaderModuleCreateFlags(..)
                              ) where
 
 import Vulkan.Internal.Utils (traceAroundEvent)
@@ -15,7 +14,7 @@ import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Bits ((.&.))
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (copyBytes)
@@ -61,6 +60,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateShaderModule))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyShaderModule))
 import Vulkan.Core10.Handles (Device_T)
@@ -75,7 +75,7 @@ import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Handles (ShaderModule)
 import Vulkan.Core10.Handles (ShaderModule(..))
-import Vulkan.Core10.Enums.ShaderModuleCreateFlagBits (ShaderModuleCreateFlags)
+import Vulkan.Core10.Enums.ShaderModuleCreateFlags (ShaderModuleCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_validation_cache (ShaderModuleValidationCacheCreateInfoEXT)
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -83,8 +83,7 @@ import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Vulkan.Core10.Handles (ShaderModule(..))
-import Vulkan.Core10.Enums.ShaderModuleCreateFlagBits (ShaderModuleCreateFlagBits(..))
-import Vulkan.Core10.Enums.ShaderModuleCreateFlagBits (ShaderModuleCreateFlags)
+import Vulkan.Core10.Enums.ShaderModuleCreateFlags (ShaderModuleCreateFlags(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -101,11 +100,6 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipelines-compute Compute Pipelines>
 -- and
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipelines-graphics Graphics Pipelines>.
---
--- If the shader stage fails to compile
--- 'Vulkan.Core10.Enums.Result.ERROR_INVALID_SHADER_NV' will be generated
--- and the compile log will be reported back to the application by
--- @VK_EXT_debug_report@ if enabled.
 --
 -- == Valid Usage (Implicit)
 --
@@ -140,6 +134,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.ShaderModule',
 -- 'ShaderModuleCreateInfo'
@@ -155,7 +150,7 @@ createShaderModule :: forall a io
                       ("allocator" ::: Maybe AllocationCallbacks)
                    -> io (ShaderModule)
 createShaderModule device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateShaderModulePtr = pVkCreateShaderModule (deviceCmds (device :: Device))
+  let vkCreateShaderModulePtr = pVkCreateShaderModule (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateShaderModulePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateShaderModule is null" Nothing Nothing
   let vkCreateShaderModule' = mkVkCreateShaderModule vkCreateShaderModulePtr
@@ -233,6 +228,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.ShaderModule'
 destroyShaderModule :: forall io
@@ -247,7 +243,7 @@ destroyShaderModule :: forall io
                        ("allocator" ::: Maybe AllocationCallbacks)
                     -> io ()
 destroyShaderModule device shaderModule allocator = liftIO . evalContT $ do
-  let vkDestroyShaderModulePtr = pVkDestroyShaderModule (deviceCmds (device :: Device))
+  let vkDestroyShaderModulePtr = pVkDestroyShaderModule (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyShaderModulePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyShaderModule is null" Nothing Nothing
   let vkDestroyShaderModule' = mkVkDestroyShaderModule vkDestroyShaderModulePtr
@@ -337,7 +333,8 @@ destroyShaderModule device shaderModule allocator = liftIO . evalContT $ do
 --
 -- = See Also
 --
--- 'Vulkan.Core10.Enums.ShaderModuleCreateFlagBits.ShaderModuleCreateFlags',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
+-- 'Vulkan.Core10.Enums.ShaderModuleCreateFlags.ShaderModuleCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createShaderModule'
 data ShaderModuleCreateInfo (es :: [Type]) = ShaderModuleCreateInfo
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
@@ -357,7 +354,7 @@ deriving instance Show (Chain es) => Show (ShaderModuleCreateInfo es)
 
 instance Extensible ShaderModuleCreateInfo where
   extensibleTypeName = "ShaderModuleCreateInfo"
-  setNext x next = x{next = next}
+  setNext ShaderModuleCreateInfo{..} next' = ShaderModuleCreateInfo{next = next', ..}
   getNext ShaderModuleCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ShaderModuleCreateInfo e => b) -> Maybe b
   extends _ f
@@ -365,7 +362,7 @@ instance Extensible ShaderModuleCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss ShaderModuleCreateInfo es, PokeChain es) => ToCStruct (ShaderModuleCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ShaderModuleCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -381,7 +378,7 @@ instance (Extendss ShaderModuleCreateInfo es, PokeChain es) => ToCStruct (Shader
       -- Otherwise allocate and copy the bytes
       else do
         let len = Data.ByteString.length (code)
-        mem <- ContT $ allocaBytesAligned @Word32 len 4
+        mem <- ContT $ allocaBytes @Word32 len
         lift $ copyBytes mem (castPtr @CChar @Word32 unalignedCode) len
         pure mem
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr Word32))) pCode''

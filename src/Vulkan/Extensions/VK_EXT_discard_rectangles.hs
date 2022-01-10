@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_discard_rectangles:%20&body=@pdaniell-nv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_discard_rectangles] @pdaniell-nv%0A<<Here describe the issue or question you have about the VK_EXT_discard_rectangles extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -109,7 +109,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'DiscardRectangleModeEXT',
 -- 'PhysicalDeviceDiscardRectanglePropertiesEXT',
@@ -117,7 +117,7 @@
 -- 'PipelineDiscardRectangleStateCreateInfoEXT',
 -- 'cmdSetDiscardRectangleEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_discard_rectangles Vulkan Specification>
@@ -143,7 +143,7 @@ import Vulkan.Internal.Utils (enumShowsPrec)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
@@ -187,6 +187,7 @@ import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
+import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetDiscardRectangleEXT))
 import Vulkan.Core10.FundamentalTypes (Flags)
@@ -201,7 +202,8 @@ foreign import ccall
   "dynamic" mkVkCmdSetDiscardRectangleEXT
   :: FunPtr (Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Rect2D -> IO ()) -> Ptr CommandBuffer_T -> Word32 -> Word32 -> Ptr Rect2D -> IO ()
 
--- | vkCmdSetDiscardRectangleEXT - Set discard rectangles dynamically
+-- | vkCmdSetDiscardRectangleEXT - Set discard rectangles dynamically for a
+-- command buffer
 --
 -- = Description
 --
@@ -209,11 +211,14 @@ foreign import ccall
 -- replace the current state for the discard rectangle at index
 -- @firstDiscardRectangle@ + i, for i in [0, @discardRectangleCount@).
 --
--- This command sets the state for a given draw when the graphics pipeline
--- is created with
+-- This command sets the discard rectangles for subsequent drawing commands
+-- when the graphics pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
+-- Otherwise, this state is specified by the
+-- 'PipelineDiscardRectangleStateCreateInfoEXT'::@pDiscardRectangles@
+-- values used to create the currently active pipeline.
 --
 -- == Valid Usage
 --
@@ -237,6 +242,11 @@ foreign import ccall
 --     'Vulkan.Core10.FundamentalTypes.Rect2D' element of
 --     @pDiscardRectangles@ /must/ not cause a signed integer addition
 --     overflow
+--
+-- -   #VUID-vkCmdSetDiscardRectangleEXT-viewportScissor2D-04788# If this
+--     command is recorded in a secondary command buffer with
+--     'Vulkan.Extensions.VK_NV_inherited_viewport_scissor.CommandBufferInheritanceViewportScissorInfoNV'::@viewportScissor2D@
+--     enabled, then this function /must/ not be called
 --
 -- == Valid Usage (Implicit)
 --
@@ -271,15 +281,16 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |                                                                                                                                     |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_discard_rectangles VK_EXT_discard_rectangles>,
 -- 'Vulkan.Core10.Handles.CommandBuffer',
 -- 'Vulkan.Core10.FundamentalTypes.Rect2D'
 cmdSetDiscardRectangleEXT :: forall io
@@ -296,11 +307,11 @@ cmdSetDiscardRectangleEXT :: forall io
                              ("discardRectangles" ::: Vector Rect2D)
                           -> io ()
 cmdSetDiscardRectangleEXT commandBuffer firstDiscardRectangle discardRectangles = liftIO . evalContT $ do
-  let vkCmdSetDiscardRectangleEXTPtr = pVkCmdSetDiscardRectangleEXT (deviceCmds (commandBuffer :: CommandBuffer))
+  let vkCmdSetDiscardRectangleEXTPtr = pVkCmdSetDiscardRectangleEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetDiscardRectangleEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDiscardRectangleEXT is null" Nothing Nothing
   let vkCmdSetDiscardRectangleEXT' = mkVkCmdSetDiscardRectangleEXT vkCmdSetDiscardRectangleEXTPtr
-  pPDiscardRectangles <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (discardRectangles)) * 16) 4
+  pPDiscardRectangles <- ContT $ allocaBytes @Rect2D ((Data.Vector.length (discardRectangles)) * 16)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPDiscardRectangles `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (discardRectangles)
   lift $ traceAroundEvent "vkCmdSetDiscardRectangleEXT" (vkCmdSetDiscardRectangleEXT' (commandBufferHandle (commandBuffer)) (firstDiscardRectangle) ((fromIntegral (Data.Vector.length $ (discardRectangles)) :: Word32)) (pPDiscardRectangles))
   pure $ ()
@@ -309,22 +320,21 @@ cmdSetDiscardRectangleEXT commandBuffer firstDiscardRectangle discardRectangles 
 -- | VkPhysicalDeviceDiscardRectanglePropertiesEXT - Structure describing
 -- discard rectangle limits that can be supported by an implementation
 --
--- = Members
---
--- The members of the 'PhysicalDeviceDiscardRectanglePropertiesEXT'
--- structure describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDeviceDiscardRectanglePropertiesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_discard_rectangles VK_EXT_discard_rectangles>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceDiscardRectanglePropertiesEXT = PhysicalDeviceDiscardRectanglePropertiesEXT
   { -- | #limits-maxDiscardRectangles# @maxDiscardRectangles@ is the maximum
@@ -337,7 +347,7 @@ deriving instance Generic (PhysicalDeviceDiscardRectanglePropertiesEXT)
 deriving instance Show PhysicalDeviceDiscardRectanglePropertiesEXT
 
 instance ToCStruct PhysicalDeviceDiscardRectanglePropertiesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceDiscardRectanglePropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_DISCARD_RECTANGLE_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -388,6 +398,7 @@ instance Zero PhysicalDeviceDiscardRectanglePropertiesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_discard_rectangles VK_EXT_discard_rectangles>,
 -- 'DiscardRectangleModeEXT',
 -- 'PipelineDiscardRectangleStateCreateFlagsEXT',
 -- 'Vulkan.Core10.FundamentalTypes.Rect2D',
@@ -416,14 +427,14 @@ deriving instance Generic (PipelineDiscardRectangleStateCreateInfoEXT)
 deriving instance Show PipelineDiscardRectangleStateCreateInfoEXT
 
 instance ToCStruct PipelineDiscardRectangleStateCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineDiscardRectangleStateCreateInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_DISCARD_RECTANGLE_STATE_CREATE_INFO_EXT)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineDiscardRectangleStateCreateFlagsEXT)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr DiscardRectangleModeEXT)) (discardRectangleMode)
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (discardRectangles)) :: Word32))
-    pPDiscardRectangles' <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (discardRectangles)) * 16) 4
+    pPDiscardRectangles' <- ContT $ allocaBytes @Rect2D ((Data.Vector.length (discardRectangles)) * 16)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPDiscardRectangles' `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (discardRectangles)
     lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr Rect2D))) (pPDiscardRectangles')
     lift $ f
@@ -461,6 +472,7 @@ instance Zero PipelineDiscardRectangleStateCreateInfoEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_discard_rectangles VK_EXT_discard_rectangles>,
 -- 'PipelineDiscardRectangleStateCreateInfoEXT'
 newtype PipelineDiscardRectangleStateCreateFlagsEXT = PipelineDiscardRectangleStateCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -494,6 +506,7 @@ instance Read PipelineDiscardRectangleStateCreateFlagsEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_discard_rectangles VK_EXT_discard_rectangles>,
 -- 'PipelineDiscardRectangleStateCreateInfoEXT'
 newtype DiscardRectangleModeEXT = DiscardRectangleModeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)

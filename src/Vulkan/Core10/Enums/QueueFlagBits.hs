@@ -28,29 +28,6 @@ type QueueFlags = QueueFlagBits
 --
 -- = Description
 --
--- -   'QUEUE_GRAPHICS_BIT' specifies that queues in this queue family
---     support graphics operations.
---
--- -   'QUEUE_COMPUTE_BIT' specifies that queues in this queue family
---     support compute operations.
---
--- -   'QUEUE_TRANSFER_BIT' specifies that queues in this queue family
---     support transfer operations.
---
--- -   'QUEUE_SPARSE_BINDING_BIT' specifies that queues in this queue
---     family support sparse memory management operations (see
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#sparsememory Sparse Resources>).
---     If any of the sparse resource features are enabled, then at least
---     one queue family /must/ support this bit.
---
--- -   if 'QUEUE_PROTECTED_BIT' is set, then the queues in this queue
---     family support the
---     'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DEVICE_QUEUE_CREATE_PROTECTED_BIT'
---     bit. (see
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-memory Protected Memory>).
---     If the physical device supports the @protectedMemory@ feature, at
---     least one of its queue families /must/ support this bit.
---
 -- If an implementation exposes any queue family that supports graphics
 -- operations, at least one queue family of at least one physical device
 -- exposed by the implementation /must/ support both graphics and compute
@@ -75,19 +52,33 @@ type QueueFlags = QueueFlagBits
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'QueueFlags'
 newtype QueueFlagBits = QueueFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- No documentation found for Nested "VkQueueFlagBits" "VK_QUEUE_GRAPHICS_BIT"
+-- | 'QUEUE_GRAPHICS_BIT' specifies that queues in this queue family support
+-- graphics operations.
 pattern QUEUE_GRAPHICS_BIT       = QueueFlagBits 0x00000001
--- No documentation found for Nested "VkQueueFlagBits" "VK_QUEUE_COMPUTE_BIT"
+-- | 'QUEUE_COMPUTE_BIT' specifies that queues in this queue family support
+-- compute operations.
 pattern QUEUE_COMPUTE_BIT        = QueueFlagBits 0x00000002
--- No documentation found for Nested "VkQueueFlagBits" "VK_QUEUE_TRANSFER_BIT"
+-- | 'QUEUE_TRANSFER_BIT' specifies that queues in this queue family support
+-- transfer operations.
 pattern QUEUE_TRANSFER_BIT       = QueueFlagBits 0x00000004
--- No documentation found for Nested "VkQueueFlagBits" "VK_QUEUE_SPARSE_BINDING_BIT"
+-- | 'QUEUE_SPARSE_BINDING_BIT' specifies that queues in this queue family
+-- support sparse memory management operations (see
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#sparsememory Sparse Resources>).
+-- If any of the sparse resource features are enabled, then at least one
+-- queue family /must/ support this bit.
 pattern QUEUE_SPARSE_BINDING_BIT = QueueFlagBits 0x00000008
--- No documentation found for Nested "VkQueueFlagBits" "VK_QUEUE_PROTECTED_BIT"
+-- | 'QUEUE_PROTECTED_BIT' specifies that queues in this queue family support
+-- the
+-- 'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DEVICE_QUEUE_CREATE_PROTECTED_BIT'
+-- bit. (see
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-memory Protected Memory>).
+-- If the physical device supports the @protectedMemory@ feature, at least
+-- one of its queue families /must/ support this bit.
 pattern QUEUE_PROTECTED_BIT      = QueueFlagBits 0x00000010
 
 conNameQueueFlagBits :: String

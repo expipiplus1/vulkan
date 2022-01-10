@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_external_semaphore_capabilities:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_external_semaphore_capabilities] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_external_semaphore_capabilities extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -137,7 +137,7 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'Vulkan.Core10.APIConstants.LUID_SIZE_KHR',
 -- 'ExternalSemaphoreFeatureFlagBitsKHR',
@@ -148,7 +148,7 @@
 -- 'Vulkan.Extensions.VK_KHR_external_memory_capabilities.PhysicalDeviceIDPropertiesKHR',
 -- 'getPhysicalDeviceExternalSemaphorePropertiesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_semaphore_capabilities Vulkan Specification>

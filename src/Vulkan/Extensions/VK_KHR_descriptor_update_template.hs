@@ -29,7 +29,7 @@
 -- [__Contact__]
 --
 --     -   Markus Tavenrath
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_descriptor_update_template:%20&body=@mtavenrath%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_descriptor_update_template] @mtavenrath%0A<<Here describe the issue or question you have about the VK_KHR_descriptor_update_template extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -54,7 +54,7 @@
 -- == Description
 --
 -- Applications may wish to update a fixed set of descriptors in a large
--- number of descriptors sets very frequently, i.e. during initializaton
+-- number of descriptor sets very frequently, i.e. during initializaton
 -- phase or if it is required to rebuild descriptor sets for each frame.
 -- For those cases it is also not unlikely that all information required to
 -- update a single descriptor set is stored in a single struct. This
@@ -148,7 +148,7 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'DescriptorUpdateTemplateCreateFlagsKHR',
 -- 'DescriptorUpdateTemplateCreateInfoKHR',
@@ -157,7 +157,7 @@
 -- 'destroyDescriptorUpdateTemplateKHR',
 -- 'updateDescriptorSetWithTemplateKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_descriptor_update_template Vulkan Specification>

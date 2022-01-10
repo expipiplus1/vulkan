@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Ian Romanick
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_INTEL_shader_integer_functions2:%20&body=@ianromanick%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_INTEL_shader_integer_functions2] @ianromanick%0A<<Here describe the issue or question you have about the VK_INTEL_shader_integer_functions2 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -35,6 +35,14 @@
 --
 -- [__IP Status__]
 --     No known IP claims.
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   This extension requires
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/INTEL/SPV_INTEL_shader_integer_functions2.html SPV_INTEL_shader_integer_functions2>.
+--
+--     -   This extension provides API support for
+--         <https://www.khronos.org/registry/OpenGL/extensions/INTEL/INTEL_shader_integer_functions2.txt GL_INTEL_shader_integer_functions2>.
 --
 -- [__Contributors__]
 --
@@ -49,7 +57,7 @@
 -- pre-existing counterparts in the Kernel environment.
 --
 -- The added integer functions are defined by the
--- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/INTEL/SPV_INTEL_shader_integer_functions2.html SPV_INTEL_shader_integer_functions>
+-- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/INTEL/SPV_INTEL_shader_integer_functions2.html SPV_INTEL_shader_integer_functions2>
 -- SPIR-V extension and can be used with the
 -- GL_INTEL_shader_integer_functions2 GLSL extension.
 --
@@ -81,11 +89,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_shader_integer_functions2 Vulkan Specification>
@@ -99,7 +107,7 @@ module Vulkan.Extensions.VK_INTEL_shader_integer_functions2  ( PhysicalDeviceSha
                                                              , pattern INTEL_SHADER_INTEGER_FUNCTIONS_2_EXTENSION_NAME
                                                              ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -127,23 +135,27 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL'
--- structure describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
--- If the 'PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL' /can/ also be
--- included in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to enable features.
+-- If the @VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTELfeatures@.
+-- structure is included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported.
+-- @VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTELfeatures@. /can/
+-- also be used in the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
+-- features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_shader_integer_functions2 VK_INTEL_shader_integer_functions2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL = PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL
@@ -158,7 +170,7 @@ deriving instance Generic (PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL)
 deriving instance Show PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL
 
 instance ToCStruct PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

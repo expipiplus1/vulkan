@@ -25,7 +25,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -68,6 +68,7 @@ import Vulkan.Core10.Handles (Buffer)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageSparseMemoryRequirements))
 import Vulkan.Dynamic (DeviceCmds(pVkQueueBindSparse))
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_group (DeviceGroupBindSparseInfo)
@@ -97,11 +98,13 @@ import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.Handles (Queue)
 import Vulkan.Core10.Handles (Queue(..))
+import Vulkan.Core10.Handles (Queue(Queue))
 import Vulkan.Core10.Handles (Queue_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -184,6 +187,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image',
 -- 'SparseImageMemoryRequirements'
 getImageSparseMemoryRequirements :: forall io
@@ -195,7 +199,7 @@ getImageSparseMemoryRequirements :: forall io
                                     Image
                                  -> io (("sparseMemoryRequirements" ::: Vector SparseImageMemoryRequirements))
 getImageSparseMemoryRequirements device image = liftIO . evalContT $ do
-  let vkGetImageSparseMemoryRequirementsPtr = pVkGetImageSparseMemoryRequirements (deviceCmds (device :: Device))
+  let vkGetImageSparseMemoryRequirementsPtr = pVkGetImageSparseMemoryRequirements (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetImageSparseMemoryRequirementsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageSparseMemoryRequirements is null" Nothing Nothing
   let vkGetImageSparseMemoryRequirements' = mkVkGetImageSparseMemoryRequirements vkGetImageSparseMemoryRequirementsPtr
@@ -297,6 +301,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Core10.Enums.ImageTiling.ImageTiling',
 -- 'Vulkan.Core10.Enums.ImageType.ImageType',
@@ -307,14 +312,15 @@ foreign import ccall
 getPhysicalDeviceSparseImageFormatProperties :: forall io
                                               . (MonadIO io)
                                              => -- | @physicalDevice@ is the physical device from which to query the sparse
-                                                -- image capabilities.
+                                                -- image format properties.
                                                 PhysicalDevice
                                              -> -- | @format@ is the image format.
                                                 Format
                                              -> -- | @type@ is the dimensionality of image.
                                                 ImageType
-                                             -> -- | @samples@ is the number of samples per texel as defined in
-                                                -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'.
+                                             -> -- | @samples@ is a
+                                                -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
+                                                -- specifying the number of samples per texel.
                                                 ("samples" ::: SampleCountFlagBits)
                                              -> -- | @usage@ is a bitmask describing the intended usage of the image.
                                                 ImageUsageFlags
@@ -322,7 +328,7 @@ getPhysicalDeviceSparseImageFormatProperties :: forall io
                                                 ImageTiling
                                              -> io (("properties" ::: Vector SparseImageFormatProperties))
 getPhysicalDeviceSparseImageFormatProperties physicalDevice format type' samples usage tiling = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceSparseImageFormatPropertiesPtr = pVkGetPhysicalDeviceSparseImageFormatProperties (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceSparseImageFormatPropertiesPtr = pVkGetPhysicalDeviceSparseImageFormatProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceSparseImageFormatPropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSparseImageFormatProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceSparseImageFormatProperties' = mkVkGetPhysicalDeviceSparseImageFormatProperties vkGetPhysicalDeviceSparseImageFormatPropertiesPtr
@@ -393,9 +399,9 @@ foreign import ccall
 --     semaphore
 --
 -- -   #VUID-vkQueueBindSparse-pWaitSemaphores-01117# All elements of the
---     @pWaitSemaphores@ member of all elements of @pBindInfo@ member
---     referring to a binary semaphore /must/ be semaphores that are
---     signaled, or have
+--     @pWaitSemaphores@ member of all elements of the @pBindInfo@
+--     parameter referring to a binary semaphore /must/ be semaphores that
+--     are signaled, or have
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
 --     previously submitted for execution
 --
@@ -447,11 +453,11 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
--- | -                                                                                                                          | -                                                                                                                      | SPARSE_BINDING                                                                                                        | -                                                                                                                                   |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
+-- | -                                                                                                                          | -                                                                                                                      | SPARSE_BINDING                                                                                                        |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- == Return Codes
 --
@@ -469,6 +475,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'BindSparseInfo', 'Vulkan.Core10.Handles.Fence',
 -- 'Vulkan.Core10.Handles.Queue'
 queueBindSparse :: forall io
@@ -485,11 +492,11 @@ queueBindSparse :: forall io
                    Fence
                 -> io ()
 queueBindSparse queue bindInfo fence = liftIO . evalContT $ do
-  let vkQueueBindSparsePtr = pVkQueueBindSparse (deviceCmds (queue :: Queue))
+  let vkQueueBindSparsePtr = pVkQueueBindSparse (case queue of Queue{deviceCmds} -> deviceCmds)
   lift $ unless (vkQueueBindSparsePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueBindSparse is null" Nothing Nothing
   let vkQueueBindSparse' = mkVkQueueBindSparse vkQueueBindSparsePtr
-  pPBindInfo <- ContT $ allocaBytesAligned @(BindSparseInfo _) ((Data.Vector.length (bindInfo)) * 96) 8
+  pPBindInfo <- ContT $ allocaBytes @(BindSparseInfo _) ((Data.Vector.length (bindInfo)) * 96)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPBindInfo `plusPtr` (96 * (i)) :: Ptr (BindSparseInfo _))) (e) . ($ ())) (bindInfo)
   r <- lift $ traceAroundEvent "vkQueueBindSparse" (vkQueueBindSparse' (queueHandle (queue)) ((fromIntegral (Data.Vector.length $ (bindInfo)) :: Word32)) (forgetExtensions (pPBindInfo)) (fence))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -500,6 +507,7 @@ queueBindSparse queue bindInfo fence = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.Extent3D',
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
 -- 'Vulkan.Core10.Enums.SparseImageFormatFlagBits.SparseImageFormatFlags',
@@ -526,7 +534,7 @@ deriving instance Generic (SparseImageFormatProperties)
 deriving instance Show SparseImageFormatProperties
 
 instance ToCStruct SparseImageFormatProperties where
-  withCStruct x f = allocaBytesAligned 20 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 20 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SparseImageFormatProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr ImageAspectFlags)) (aspectMask)
     poke ((p `plusPtr` 4 :: Ptr Extent3D)) (imageGranularity)
@@ -564,12 +572,14 @@ instance Zero SparseImageFormatProperties where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'SparseImageFormatProperties',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.SparseImageMemoryRequirements2',
 -- 'getImageSparseMemoryRequirements'
 data SparseImageMemoryRequirements = SparseImageMemoryRequirements
-  { -- No documentation found for Nested "VkSparseImageMemoryRequirements" "formatProperties"
+  { -- | @formatProperties@ is a 'SparseImageFormatProperties' structure
+    -- specifying properties of the image format.
     formatProperties :: SparseImageFormatProperties
   , -- | @imageMipTailFirstLod@ is the first mip level at which image
     -- subresources are included in the mip tail region.
@@ -597,7 +607,7 @@ deriving instance Generic (SparseImageMemoryRequirements)
 deriving instance Show SparseImageMemoryRequirements
 
 instance ToCStruct SparseImageMemoryRequirements where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SparseImageMemoryRequirements{..} f = do
     poke ((p `plusPtr` 0 :: Ptr SparseImageFormatProperties)) (formatProperties)
     poke ((p `plusPtr` 20 :: Ptr Word32)) (imageMipTailFirstLod)
@@ -646,12 +656,13 @@ instance Zero SparseImageMemoryRequirements where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
 -- 'SparseImageMemoryBind', 'Vulkan.Core10.Image.getImageSubresourceLayout'
 data ImageSubresource = ImageSubresource
   { -- | @aspectMask@ is a
-    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags' selecting the
-    -- image /aspect/.
+    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags' value
+    -- selecting the image /aspect/.
     --
     -- #VUID-VkImageSubresource-aspectMask-parameter# @aspectMask@ /must/ be a
     -- valid combination of
@@ -672,7 +683,7 @@ deriving instance Generic (ImageSubresource)
 deriving instance Show ImageSubresource
 
 instance ToCStruct ImageSubresource where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageSubresource{..} f = do
     poke ((p `plusPtr` 0 :: Ptr ImageAspectFlags)) (aspectMask)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (mipLevel)
@@ -794,6 +805,7 @@ instance Zero ImageSubresource where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'SparseBufferMemoryBindInfo', 'SparseImageOpaqueMemoryBindInfo',
@@ -824,7 +836,7 @@ deriving instance Generic (SparseMemoryBind)
 deriving instance Show SparseMemoryBind
 
 instance ToCStruct SparseMemoryBind where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SparseMemoryBind{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (resourceOffset)
     poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (size)
@@ -944,6 +956,7 @@ instance Zero SparseMemoryBind where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.DeviceMemory',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.FundamentalTypes.Extent3D', 'ImageSubresource',
@@ -981,7 +994,7 @@ deriving instance Generic (SparseImageMemoryBind)
 deriving instance Show SparseImageMemoryBind
 
 instance ToCStruct SparseImageMemoryBind where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SparseImageMemoryBind{..} f = do
     poke ((p `plusPtr` 0 :: Ptr ImageSubresource)) (subresource)
     poke ((p `plusPtr` 12 :: Ptr Offset3D)) (offset)
@@ -1033,6 +1046,7 @@ instance Zero SparseImageMemoryBind where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'BindSparseInfo', 'Vulkan.Core10.Handles.Buffer', 'SparseMemoryBind'
 data SparseBufferMemoryBindInfo = SparseBufferMemoryBindInfo
   { -- | @buffer@ is the 'Vulkan.Core10.Handles.Buffer' object to be bound.
@@ -1040,7 +1054,7 @@ data SparseBufferMemoryBindInfo = SparseBufferMemoryBindInfo
     -- #VUID-VkSparseBufferMemoryBindInfo-buffer-parameter# @buffer@ /must/ be
     -- a valid 'Vulkan.Core10.Handles.Buffer' handle
     buffer :: Buffer
-  , -- | @pBinds@ is a pointer to array of 'SparseMemoryBind' structures.
+  , -- | @pBinds@ is a pointer to an array of 'SparseMemoryBind' structures.
     --
     -- #VUID-VkSparseBufferMemoryBindInfo-pBinds-parameter# @pBinds@ /must/ be
     -- a valid pointer to an array of @bindCount@ valid 'SparseMemoryBind'
@@ -1054,11 +1068,11 @@ deriving instance Generic (SparseBufferMemoryBindInfo)
 deriving instance Show SparseBufferMemoryBindInfo
 
 instance ToCStruct SparseBufferMemoryBindInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SparseBufferMemoryBindInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr Buffer)) (buffer)
     lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (binds)) :: Word32))
-    pPBinds' <- ContT $ allocaBytesAligned @SparseMemoryBind ((Data.Vector.length (binds)) * 40) 8
+    pPBinds' <- ContT $ allocaBytes @SparseMemoryBind ((Data.Vector.length (binds)) * 40)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPBinds' `plusPtr` (40 * (i)) :: Ptr SparseMemoryBind) (e)) (binds)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr SparseMemoryBind))) (pPBinds')
     lift $ f
@@ -1084,7 +1098,7 @@ instance Zero SparseBufferMemoryBindInfo where
 
 
 -- | VkSparseImageOpaqueMemoryBindInfo - Structure specifying sparse image
--- opaque memory bind info
+-- opaque memory bind information
 --
 -- == Valid Usage
 --
@@ -1108,6 +1122,7 @@ instance Zero SparseBufferMemoryBindInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'BindSparseInfo', 'Vulkan.Core10.Handles.Image', 'SparseMemoryBind'
 data SparseImageOpaqueMemoryBindInfo = SparseImageOpaqueMemoryBindInfo
   { -- | @image@ is the 'Vulkan.Core10.Handles.Image' object to be bound.
@@ -1122,11 +1137,11 @@ deriving instance Generic (SparseImageOpaqueMemoryBindInfo)
 deriving instance Show SparseImageOpaqueMemoryBindInfo
 
 instance ToCStruct SparseImageOpaqueMemoryBindInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SparseImageOpaqueMemoryBindInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr Image)) (image)
     lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (binds)) :: Word32))
-    pPBinds' <- ContT $ allocaBytesAligned @SparseMemoryBind ((Data.Vector.length (binds)) * 40) 8
+    pPBinds' <- ContT $ allocaBytes @SparseMemoryBind ((Data.Vector.length (binds)) * 40)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPBinds' `plusPtr` (40 * (i)) :: Ptr SparseMemoryBind) (e)) (binds)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr SparseMemoryBind))) (pPBinds')
     lift $ f
@@ -1152,7 +1167,7 @@ instance Zero SparseImageOpaqueMemoryBindInfo where
 
 
 -- | VkSparseImageMemoryBindInfo - Structure specifying sparse image memory
--- bind info
+-- bind information
 --
 -- == Valid Usage
 --
@@ -1185,6 +1200,7 @@ instance Zero SparseImageOpaqueMemoryBindInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'BindSparseInfo', 'Vulkan.Core10.Handles.Image', 'SparseImageMemoryBind'
 data SparseImageMemoryBindInfo = SparseImageMemoryBindInfo
   { -- | @image@ is the 'Vulkan.Core10.Handles.Image' object to be bound
@@ -1199,11 +1215,11 @@ deriving instance Generic (SparseImageMemoryBindInfo)
 deriving instance Show SparseImageMemoryBindInfo
 
 instance ToCStruct SparseImageMemoryBindInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SparseImageMemoryBindInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr Image)) (image)
     lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (binds)) :: Word32))
-    pPBinds' <- ContT $ allocaBytesAligned @SparseImageMemoryBind ((Data.Vector.length (binds)) * 64) 8
+    pPBinds' <- ContT $ allocaBytes @SparseImageMemoryBind ((Data.Vector.length (binds)) * 64)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPBinds' `plusPtr` (64 * (i)) :: Ptr SparseImageMemoryBind) (e)) (binds)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr SparseImageMemoryBind))) (pPBinds')
     lift $ f
@@ -1262,7 +1278,7 @@ instance Zero SparseImageMemoryBindInfo where
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE' the
 --     corresponding element of
---     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::pSignalSemaphoreValues
+--     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::@pSignalSemaphoreValues@
 --     /must/ have a value greater than the current value of the semaphore
 --     when the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
@@ -1273,7 +1289,7 @@ instance Zero SparseImageMemoryBindInfo where
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE' the
 --     corresponding element of
---     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::pWaitSemaphoreValues
+--     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::@pWaitSemaphoreValues@
 --     /must/ have a value which does not differ from the current value of
 --     the semaphore or from the value of any outstanding semaphore wait or
 --     signal operation on that semaphore by more than
@@ -1284,7 +1300,7 @@ instance Zero SparseImageMemoryBindInfo where
 --     'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE' the
 --     corresponding element of
---     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::pSignalSemaphoreValues
+--     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::@pSignalSemaphoreValues@
 --     /must/ have a value which does not differ from the current value of
 --     the semaphore or from the value of any outstanding semaphore wait or
 --     signal operation on that semaphore by more than
@@ -1335,6 +1351,7 @@ instance Zero SparseImageMemoryBindInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Semaphore', 'SparseBufferMemoryBindInfo',
 -- 'SparseImageMemoryBindInfo', 'SparseImageOpaqueMemoryBindInfo',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'queueBindSparse'
@@ -1371,7 +1388,7 @@ deriving instance Show (Chain es) => Show (BindSparseInfo es)
 
 instance Extensible BindSparseInfo where
   extensibleTypeName = "BindSparseInfo"
-  setNext x next = x{next = next}
+  setNext BindSparseInfo{..} next' = BindSparseInfo{next = next', ..}
   getNext BindSparseInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BindSparseInfo e => b) -> Maybe b
   extends _ f
@@ -1380,29 +1397,29 @@ instance Extensible BindSparseInfo where
     | otherwise = Nothing
 
 instance (Extendss BindSparseInfo es, PokeChain es) => ToCStruct (BindSparseInfo es) where
-  withCStruct x f = allocaBytesAligned 96 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 96 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindSparseInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_SPARSE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (waitSemaphores)) :: Word32))
-    pPWaitSemaphores' <- ContT $ allocaBytesAligned @Semaphore ((Data.Vector.length (waitSemaphores)) * 8) 8
+    pPWaitSemaphores' <- ContT $ allocaBytes @Semaphore ((Data.Vector.length (waitSemaphores)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPWaitSemaphores' `plusPtr` (8 * (i)) :: Ptr Semaphore) (e)) (waitSemaphores)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Semaphore))) (pPWaitSemaphores')
     lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (bufferBinds)) :: Word32))
-    pPBufferBinds' <- ContT $ allocaBytesAligned @SparseBufferMemoryBindInfo ((Data.Vector.length (bufferBinds)) * 24) 8
+    pPBufferBinds' <- ContT $ allocaBytes @SparseBufferMemoryBindInfo ((Data.Vector.length (bufferBinds)) * 24)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBufferBinds' `plusPtr` (24 * (i)) :: Ptr SparseBufferMemoryBindInfo) (e) . ($ ())) (bufferBinds)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr SparseBufferMemoryBindInfo))) (pPBufferBinds')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (imageOpaqueBinds)) :: Word32))
-    pPImageOpaqueBinds' <- ContT $ allocaBytesAligned @SparseImageOpaqueMemoryBindInfo ((Data.Vector.length (imageOpaqueBinds)) * 24) 8
+    pPImageOpaqueBinds' <- ContT $ allocaBytes @SparseImageOpaqueMemoryBindInfo ((Data.Vector.length (imageOpaqueBinds)) * 24)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPImageOpaqueBinds' `plusPtr` (24 * (i)) :: Ptr SparseImageOpaqueMemoryBindInfo) (e) . ($ ())) (imageOpaqueBinds)
     lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr SparseImageOpaqueMemoryBindInfo))) (pPImageOpaqueBinds')
     lift $ poke ((p `plusPtr` 64 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (imageBinds)) :: Word32))
-    pPImageBinds' <- ContT $ allocaBytesAligned @SparseImageMemoryBindInfo ((Data.Vector.length (imageBinds)) * 24) 8
+    pPImageBinds' <- ContT $ allocaBytes @SparseImageMemoryBindInfo ((Data.Vector.length (imageBinds)) * 24)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPImageBinds' `plusPtr` (24 * (i)) :: Ptr SparseImageMemoryBindInfo) (e) . ($ ())) (imageBinds)
     lift $ poke ((p `plusPtr` 72 :: Ptr (Ptr SparseImageMemoryBindInfo))) (pPImageBinds')
     lift $ poke ((p `plusPtr` 80 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (signalSemaphores)) :: Word32))
-    pPSignalSemaphores' <- ContT $ allocaBytesAligned @Semaphore ((Data.Vector.length (signalSemaphores)) * 8) 8
+    pPSignalSemaphores' <- ContT $ allocaBytes @Semaphore ((Data.Vector.length (signalSemaphores)) * 8)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPSignalSemaphores' `plusPtr` (8 * (i)) :: Ptr Semaphore) (e)) (signalSemaphores)
     lift $ poke ((p `plusPtr` 88 :: Ptr (Ptr Semaphore))) (pPSignalSemaphores')
     lift $ f

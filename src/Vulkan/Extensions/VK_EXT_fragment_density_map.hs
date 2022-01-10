@@ -15,7 +15,7 @@
 --     219
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -26,17 +26,20 @@
 -- [__Contact__]
 --
 --     -   Matthew Netsch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_fragment_density_map:%20&body=@mnetsch%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_fragment_density_map] @mnetsch%0A<<Here describe the issue or question you have about the VK_EXT_fragment_density_map extension>> >
 --
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2018-09-25
+--     2021-09-30
 --
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_fragment_invocation_density.html SPV_EXT_fragment_invocation_density>
+--
+--     -   This extension provides API support for
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_fragment_invocation_density.txt GL_EXT_fragment_invocation_density>
 --
 -- [__Contributors__]
 --
@@ -145,6 +148,15 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FormatFeatureFlagBits2KHR':
+--
+--     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT'
+--
 -- == New or Modified Built-In Variables
 --
 -- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-fraginvocationcount FragInvocationCountEXT>
@@ -161,13 +173,17 @@
 --
 --     -   Initial version
 --
--- = See Also
+-- -   Revision 2, 2021-09-30 (Jon Leech)
+--
+--     -   Add interaction with @VK_KHR_format_feature_flags2@ to @vk.xml@
+--
+-- == See Also
 --
 -- 'PhysicalDeviceFragmentDensityMapFeaturesEXT',
 -- 'PhysicalDeviceFragmentDensityMapPropertiesEXT',
 -- 'RenderPassFragmentDensityMapCreateInfoEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_fragment_density_map Vulkan Specification>
@@ -181,9 +197,12 @@ module Vulkan.Extensions.VK_EXT_fragment_density_map  ( PhysicalDeviceFragmentDe
                                                       , pattern EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION
                                                       , EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME
                                                       , pattern EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME
+                                                      , FormatFeatureFlagBits2KHR(..)
+                                                      , FormatFeatureFlags2KHR
+                                                      , Flags64
                                                       ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -209,28 +228,33 @@ import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT))
+import Vulkan.Core10.FundamentalTypes (Flags64)
+import Vulkan.Extensions.VK_KHR_acceleration_structure (FormatFeatureFlagBits2KHR(..))
+import Vulkan.Extensions.VK_KHR_acceleration_structure (FormatFeatureFlags2KHR)
 -- | VkPhysicalDeviceFragmentDensityMapFeaturesEXT - Structure describing
 -- fragment density map features that can be supported by an implementation
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceFragmentDensityMapFeaturesEXT'
--- structure describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceFragmentDensityMapFeaturesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceFragmentDensityMapFeaturesEXT' /can/ also be included in
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the
--- features.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceFragmentDensityMapFeaturesEXT' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_fragment_density_map VK_EXT_fragment_density_map>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceFragmentDensityMapFeaturesEXT = PhysicalDeviceFragmentDensityMapFeaturesEXT
@@ -267,7 +291,7 @@ deriving instance Generic (PhysicalDeviceFragmentDensityMapFeaturesEXT)
 deriving instance Show PhysicalDeviceFragmentDensityMapFeaturesEXT
 
 instance ToCStruct PhysicalDeviceFragmentDensityMapFeaturesEXT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceFragmentDensityMapFeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -310,32 +334,33 @@ instance Zero PhysicalDeviceFragmentDensityMapFeaturesEXT where
 -- fragment density map properties that can be supported by an
 -- implementation
 --
--- = Members
+-- = Description
 --
--- The members of the 'PhysicalDeviceFragmentDensityMapPropertiesEXT'
--- structure describe the following implementation-dependent limits:
+-- If the 'PhysicalDeviceFragmentDensityMapPropertiesEXT' structure is
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
--- If the 'PhysicalDeviceFragmentDensityMapPropertiesEXT' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits and properties.
---
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_fragment_density_map VK_EXT_fragment_density_map>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.FundamentalTypes.Extent2D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceFragmentDensityMapPropertiesEXT = PhysicalDeviceFragmentDensityMapPropertiesEXT
-  { -- | #limits-minfragmentdensitytexelsize# @minFragmentDensityTexelSize@ is
+  { -- | #limits-minFragmentDensityTexelSize# @minFragmentDensityTexelSize@ is
     -- the minimum
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-fragment-density-texel-size fragment density texel size>.
     minFragmentDensityTexelSize :: Extent2D
-  , -- | #limits-maxfragmentdensitytexelsize# @maxFragmentDensityTexelSize@ is
+  , -- | #limits-maxFragmentDensityTexelSize# @maxFragmentDensityTexelSize@ is
     -- the maximum fragment density texel size.
     maxFragmentDensityTexelSize :: Extent2D
-  , -- | #limits-fragmentdensityinvocations# @fragmentDensityInvocations@
+  , -- | #limits-fragmentDensityInvocations# @fragmentDensityInvocations@
     -- specifies whether the implementation /may/ invoke additional fragment
     -- shader invocations for each covered sample.
     fragmentDensityInvocations :: Bool
@@ -347,7 +372,7 @@ deriving instance Generic (PhysicalDeviceFragmentDensityMapPropertiesEXT)
 deriving instance Show PhysicalDeviceFragmentDensityMapPropertiesEXT
 
 instance ToCStruct PhysicalDeviceFragmentDensityMapPropertiesEXT where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceFragmentDensityMapPropertiesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -418,12 +443,6 @@ instance Zero PhysicalDeviceFragmentDensityMapPropertiesEXT where
 --
 -- == Valid Usage
 --
--- -   #VUID-VkRenderPassFragmentDensityMapCreateInfoEXT-fragmentDensityMapAttachment-02547#
---     If @fragmentDensityMapAttachment@ is not
---     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED',
---     @fragmentDensityMapAttachment@ /must/ be less than
---     'Vulkan.Core10.Pass.RenderPassCreateInfo'::@attachmentCount@
---
 -- -   #VUID-VkRenderPassFragmentDensityMapCreateInfoEXT-fragmentDensityMapAttachment-02548#
 --     If @fragmentDensityMapAttachment@ is not
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED',
@@ -469,6 +488,7 @@ instance Zero PhysicalDeviceFragmentDensityMapPropertiesEXT where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_fragment_density_map VK_EXT_fragment_density_map>,
 -- 'Vulkan.Core10.Pass.AttachmentReference',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data RenderPassFragmentDensityMapCreateInfoEXT = RenderPassFragmentDensityMapCreateInfoEXT
@@ -482,7 +502,7 @@ deriving instance Generic (RenderPassFragmentDensityMapCreateInfoEXT)
 deriving instance Show RenderPassFragmentDensityMapCreateInfoEXT
 
 instance ToCStruct RenderPassFragmentDensityMapCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RenderPassFragmentDensityMapCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -513,11 +533,11 @@ instance Zero RenderPassFragmentDensityMapCreateInfoEXT where
            zero
 
 
-type EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION = 1
+type EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION"
 pattern EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION :: forall a . Integral a => a
-pattern EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION = 1
+pattern EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION = 2
 
 
 type EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME = "VK_EXT_fragment_density_map"

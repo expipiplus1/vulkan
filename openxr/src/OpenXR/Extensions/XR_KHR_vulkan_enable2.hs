@@ -46,8 +46,10 @@ module OpenXR.Extensions.XR_KHR_vulkan_enable2  ( createVulkanInstanceKHR
                                                 , VulkanInstanceCreateInfoKHR(..)
                                                 , VulkanDeviceCreateInfoKHR(..)
                                                 , VulkanGraphicsDeviceGetInfoKHR(..)
-                                                , VulkanInstanceCreateFlagsKHR(..)
-                                                , VulkanDeviceCreateFlagsKHR(..)
+                                                , VulkanInstanceCreateFlagsKHR
+                                                , VulkanInstanceCreateFlagBitsKHR(..)
+                                                , VulkanDeviceCreateFlagsKHR
+                                                , VulkanDeviceCreateFlagBitsKHR(..)
                                                 , GraphicsBindingVulkan2KHR
                                                 , SwapchainImageVulkan2KHR
                                                 , GraphicsRequirementsVulkan2KHR
@@ -76,7 +78,7 @@ import qualified OpenXR.VulkanTypes (SomeStruct)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -120,6 +122,7 @@ import OpenXR.Extensions.XR_KHR_vulkan_enable (GraphicsBindingVulkanKHR)
 import OpenXR.Extensions.XR_KHR_vulkan_enable (GraphicsRequirementsVulkanKHR)
 import OpenXR.Core10.Handles (Instance)
 import OpenXR.Core10.Handles (Instance(..))
+import OpenXR.Core10.Handles (Instance(Instance))
 import OpenXR.Dynamic (InstanceCmds(pXrCreateVulkanDeviceKHR))
 import OpenXR.Dynamic (InstanceCmds(pXrCreateVulkanInstanceKHR))
 import OpenXR.Dynamic (InstanceCmds(pXrGetVulkanGraphicsDevice2KHR))
@@ -152,8 +155,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrCreateVulkanInstanceKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
+-- -   #VUID-xrCreateVulkanInstanceKHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable2@ extension /must/ be enabled prior to calling
 --     'createVulkanInstanceKHR'
 --
 -- -   #VUID-xrCreateVulkanInstanceKHR-instance-parameter# @instance@
@@ -203,7 +206,7 @@ createVulkanInstanceKHR :: forall io
                            VulkanInstanceCreateInfoKHR
                         -> io (("vulkanInstance" ::: Ptr OpenXR.VulkanTypes.Instance_T), ("vulkanResult" ::: OpenXR.VulkanTypes.Result))
 createVulkanInstanceKHR instance' createInfo = liftIO . evalContT $ do
-  let xrCreateVulkanInstanceKHRPtr = pXrCreateVulkanInstanceKHR (instanceCmds (instance' :: Instance))
+  let xrCreateVulkanInstanceKHRPtr = pXrCreateVulkanInstanceKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrCreateVulkanInstanceKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateVulkanInstanceKHR is null" Nothing Nothing
   let xrCreateVulkanInstanceKHR' = mkXrCreateVulkanInstanceKHR xrCreateVulkanInstanceKHRPtr
@@ -228,8 +231,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrCreateVulkanDeviceKHR-extension-notenabled# The @@ extension
---     /must/ be enabled prior to calling 'createVulkanDeviceKHR'
+-- -   #VUID-xrCreateVulkanDeviceKHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable2@ extension /must/ be enabled prior to calling
+--     'createVulkanDeviceKHR'
 --
 -- -   #VUID-xrCreateVulkanDeviceKHR-instance-parameter# @instance@ /must/
 --     be a valid 'OpenXR.Core10.Handles.Instance' handle
@@ -277,7 +281,7 @@ createVulkanDeviceKHR :: forall io
                          VulkanDeviceCreateInfoKHR
                       -> io (("vulkanDevice" ::: Ptr OpenXR.VulkanTypes.Device_T), ("vulkanResult" ::: OpenXR.VulkanTypes.Result))
 createVulkanDeviceKHR instance' createInfo = liftIO . evalContT $ do
-  let xrCreateVulkanDeviceKHRPtr = pXrCreateVulkanDeviceKHR (instanceCmds (instance' :: Instance))
+  let xrCreateVulkanDeviceKHRPtr = pXrCreateVulkanDeviceKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrCreateVulkanDeviceKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateVulkanDeviceKHR is null" Nothing Nothing
   let xrCreateVulkanDeviceKHR' = mkXrCreateVulkanDeviceKHR xrCreateVulkanDeviceKHRPtr
@@ -303,8 +307,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrGetVulkanGraphicsDevice2KHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
+-- -   #VUID-xrGetVulkanGraphicsDevice2KHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable2@ extension /must/ be enabled prior to calling
 --     'getVulkanGraphicsDevice2KHR'
 --
 -- -   #VUID-xrGetVulkanGraphicsDevice2KHR-instance-parameter# @instance@
@@ -351,7 +355,7 @@ getVulkanGraphicsDevice2KHR :: forall io
                                VulkanGraphicsDeviceGetInfoKHR
                             -> io (("vulkanPhysicalDevice" ::: Ptr OpenXR.VulkanTypes.PhysicalDevice_T))
 getVulkanGraphicsDevice2KHR instance' getInfo = liftIO . evalContT $ do
-  let xrGetVulkanGraphicsDevice2KHRPtr = pXrGetVulkanGraphicsDevice2KHR (instanceCmds (instance' :: Instance))
+  let xrGetVulkanGraphicsDevice2KHRPtr = pXrGetVulkanGraphicsDevice2KHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetVulkanGraphicsDevice2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetVulkanGraphicsDevice2KHR is null" Nothing Nothing
   let xrGetVulkanGraphicsDevice2KHR' = mkXrGetVulkanGraphicsDevice2KHR xrGetVulkanGraphicsDevice2KHRPtr
@@ -407,7 +411,7 @@ pattern TYPE_GRAPHICS_REQUIREMENTS_VULKAN2_KHR = TYPE_GRAPHICS_REQUIREMENTS_VULK
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrGetVulkanGraphicsRequirements2KHR-extension-notenabled# The
---     @@ extension /must/ be enabled prior to calling
+--     @XR_KHR_vulkan_enable2@ extension /must/ be enabled prior to calling
 --     'getVulkanGraphicsRequirements2KHR'
 --
 -- -   #VUID-xrGetVulkanGraphicsRequirements2KHR-instance-parameter#
@@ -451,8 +455,8 @@ getVulkanGraphicsRequirements2KHR = getVulkanGraphicsRequirementsKHR
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrVulkanInstanceCreateInfoKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrVulkanInstanceCreateInfoKHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable2@ extension /must/ be enabled prior to using
 --     'VulkanInstanceCreateInfoKHR'
 --
 -- -   #VUID-XrVulkanInstanceCreateInfoKHR-type-type# @type@ /must/ be
@@ -506,7 +510,7 @@ deriving instance Generic (VulkanInstanceCreateInfoKHR)
 deriving instance Show VulkanInstanceCreateInfoKHR
 
 instance ToCStruct VulkanInstanceCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p VulkanInstanceCreateInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VULKAN_INSTANCE_CREATE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -557,8 +561,8 @@ instance Zero VulkanInstanceCreateInfoKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrVulkanDeviceCreateInfoKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrVulkanDeviceCreateInfoKHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable2@ extension /must/ be enabled prior to using
 --     'VulkanDeviceCreateInfoKHR'
 --
 -- -   #VUID-XrVulkanDeviceCreateInfoKHR-type-type# @type@ /must/ be
@@ -618,7 +622,7 @@ deriving instance Generic (VulkanDeviceCreateInfoKHR)
 deriving instance Show VulkanDeviceCreateInfoKHR
 
 instance ToCStruct VulkanDeviceCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p VulkanDeviceCreateInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VULKAN_DEVICE_CREATE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -673,8 +677,8 @@ instance Zero VulkanDeviceCreateInfoKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrVulkanGraphicsDeviceGetInfoKHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrVulkanGraphicsDeviceGetInfoKHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable2@ extension /must/ be enabled prior to using
 --     'VulkanGraphicsDeviceGetInfoKHR'
 --
 -- -   #VUID-XrVulkanGraphicsDeviceGetInfoKHR-type-type# @type@ /must/ be
@@ -707,7 +711,7 @@ deriving instance Generic (VulkanGraphicsDeviceGetInfoKHR)
 deriving instance Show VulkanGraphicsDeviceGetInfoKHR
 
 instance ToCStruct VulkanGraphicsDeviceGetInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p VulkanGraphicsDeviceGetInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VULKAN_GRAPHICS_DEVICE_GET_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -742,70 +746,66 @@ instance Zero VulkanGraphicsDeviceGetInfoKHR where
            zero
 
 
--- | XrVulkanInstanceCreateFlagsKHR - Vulkan Instance Create Info Flags
---
--- = See Also
---
--- 'VulkanInstanceCreateInfoKHR'
-newtype VulkanInstanceCreateFlagsKHR = VulkanInstanceCreateFlagsKHR Flags64
+type VulkanInstanceCreateFlagsKHR = VulkanInstanceCreateFlagBitsKHR
+
+-- No documentation found for TopLevel "XrVulkanInstanceCreateFlagBitsKHR"
+newtype VulkanInstanceCreateFlagBitsKHR = VulkanInstanceCreateFlagBitsKHR Flags64
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 
 
-conNameVulkanInstanceCreateFlagsKHR :: String
-conNameVulkanInstanceCreateFlagsKHR = "VulkanInstanceCreateFlagsKHR"
+conNameVulkanInstanceCreateFlagBitsKHR :: String
+conNameVulkanInstanceCreateFlagBitsKHR = "VulkanInstanceCreateFlagBitsKHR"
 
-enumPrefixVulkanInstanceCreateFlagsKHR :: String
-enumPrefixVulkanInstanceCreateFlagsKHR = ""
+enumPrefixVulkanInstanceCreateFlagBitsKHR :: String
+enumPrefixVulkanInstanceCreateFlagBitsKHR = ""
 
-showTableVulkanInstanceCreateFlagsKHR :: [(VulkanInstanceCreateFlagsKHR, String)]
-showTableVulkanInstanceCreateFlagsKHR = []
+showTableVulkanInstanceCreateFlagBitsKHR :: [(VulkanInstanceCreateFlagBitsKHR, String)]
+showTableVulkanInstanceCreateFlagBitsKHR = []
 
-instance Show VulkanInstanceCreateFlagsKHR where
-  showsPrec = enumShowsPrec enumPrefixVulkanInstanceCreateFlagsKHR
-                            showTableVulkanInstanceCreateFlagsKHR
-                            conNameVulkanInstanceCreateFlagsKHR
-                            (\(VulkanInstanceCreateFlagsKHR x) -> x)
+instance Show VulkanInstanceCreateFlagBitsKHR where
+  showsPrec = enumShowsPrec enumPrefixVulkanInstanceCreateFlagBitsKHR
+                            showTableVulkanInstanceCreateFlagBitsKHR
+                            conNameVulkanInstanceCreateFlagBitsKHR
+                            (\(VulkanInstanceCreateFlagBitsKHR x) -> x)
                             (\x -> showString "0x" . showHex x)
 
-instance Read VulkanInstanceCreateFlagsKHR where
-  readPrec = enumReadPrec enumPrefixVulkanInstanceCreateFlagsKHR
-                          showTableVulkanInstanceCreateFlagsKHR
-                          conNameVulkanInstanceCreateFlagsKHR
-                          VulkanInstanceCreateFlagsKHR
+instance Read VulkanInstanceCreateFlagBitsKHR where
+  readPrec = enumReadPrec enumPrefixVulkanInstanceCreateFlagBitsKHR
+                          showTableVulkanInstanceCreateFlagBitsKHR
+                          conNameVulkanInstanceCreateFlagBitsKHR
+                          VulkanInstanceCreateFlagBitsKHR
 
 
--- | XrVulkanDeviceCreateFlagsKHR - Vulkan Device Create Info Flags
---
--- = See Also
---
--- 'VulkanDeviceCreateInfoKHR'
-newtype VulkanDeviceCreateFlagsKHR = VulkanDeviceCreateFlagsKHR Flags64
+type VulkanDeviceCreateFlagsKHR = VulkanDeviceCreateFlagBitsKHR
+
+-- No documentation found for TopLevel "XrVulkanDeviceCreateFlagBitsKHR"
+newtype VulkanDeviceCreateFlagBitsKHR = VulkanDeviceCreateFlagBitsKHR Flags64
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 
 
-conNameVulkanDeviceCreateFlagsKHR :: String
-conNameVulkanDeviceCreateFlagsKHR = "VulkanDeviceCreateFlagsKHR"
+conNameVulkanDeviceCreateFlagBitsKHR :: String
+conNameVulkanDeviceCreateFlagBitsKHR = "VulkanDeviceCreateFlagBitsKHR"
 
-enumPrefixVulkanDeviceCreateFlagsKHR :: String
-enumPrefixVulkanDeviceCreateFlagsKHR = ""
+enumPrefixVulkanDeviceCreateFlagBitsKHR :: String
+enumPrefixVulkanDeviceCreateFlagBitsKHR = ""
 
-showTableVulkanDeviceCreateFlagsKHR :: [(VulkanDeviceCreateFlagsKHR, String)]
-showTableVulkanDeviceCreateFlagsKHR = []
+showTableVulkanDeviceCreateFlagBitsKHR :: [(VulkanDeviceCreateFlagBitsKHR, String)]
+showTableVulkanDeviceCreateFlagBitsKHR = []
 
-instance Show VulkanDeviceCreateFlagsKHR where
-  showsPrec = enumShowsPrec enumPrefixVulkanDeviceCreateFlagsKHR
-                            showTableVulkanDeviceCreateFlagsKHR
-                            conNameVulkanDeviceCreateFlagsKHR
-                            (\(VulkanDeviceCreateFlagsKHR x) -> x)
+instance Show VulkanDeviceCreateFlagBitsKHR where
+  showsPrec = enumShowsPrec enumPrefixVulkanDeviceCreateFlagBitsKHR
+                            showTableVulkanDeviceCreateFlagBitsKHR
+                            conNameVulkanDeviceCreateFlagBitsKHR
+                            (\(VulkanDeviceCreateFlagBitsKHR x) -> x)
                             (\x -> showString "0x" . showHex x)
 
-instance Read VulkanDeviceCreateFlagsKHR where
-  readPrec = enumReadPrec enumPrefixVulkanDeviceCreateFlagsKHR
-                          showTableVulkanDeviceCreateFlagsKHR
-                          conNameVulkanDeviceCreateFlagsKHR
-                          VulkanDeviceCreateFlagsKHR
+instance Read VulkanDeviceCreateFlagBitsKHR where
+  readPrec = enumReadPrec enumPrefixVulkanDeviceCreateFlagBitsKHR
+                          showTableVulkanDeviceCreateFlagBitsKHR
+                          conNameVulkanDeviceCreateFlagBitsKHR
+                          VulkanDeviceCreateFlagBitsKHR
 
 
 -- | XrGraphicsBindingVulkan2KHR - The graphics binding structure to be
@@ -825,8 +825,8 @@ instance Read VulkanDeviceCreateFlagsKHR where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsBindingVulkan2KHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrGraphicsBindingVulkan2KHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable2@ extension /must/ be enabled prior to using
 --     'GraphicsBindingVulkan2KHR'
 --
 -- -   __Note:__ 'GraphicsBindingVulkan2KHR' is an alias for
@@ -880,8 +880,8 @@ type GraphicsBindingVulkan2KHR = GraphicsBindingVulkanKHR
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrSwapchainImageVulkan2KHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrSwapchainImageVulkan2KHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable2@ extension /must/ be enabled prior to using
 --     'SwapchainImageVulkan2KHR'
 --
 -- -   __Note:__ 'SwapchainImageVulkan2KHR' is an alias for
@@ -908,8 +908,8 @@ type SwapchainImageVulkan2KHR = SwapchainImageVulkanKHR
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrGraphicsRequirementsVulkan2KHR-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
+-- -   #VUID-XrGraphicsRequirementsVulkan2KHR-extension-notenabled# The
+--     @XR_KHR_vulkan_enable2@ extension /must/ be enabled prior to using
 --     'GraphicsRequirementsVulkan2KHR'
 --
 -- -   __Note:__ 'GraphicsRequirementsVulkan2KHR' is an alias for

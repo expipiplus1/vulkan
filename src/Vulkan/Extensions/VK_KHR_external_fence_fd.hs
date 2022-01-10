@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_external_fence_fd:%20&body=@critsec%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_external_fence_fd] @critsec%0A<<Here describe the issue or question you have about the VK_KHR_external_fence_fd extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -91,12 +91,12 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'FenceGetFdInfoKHR', 'ImportFenceFdInfoKHR', 'getFenceFdKHR',
 -- 'importFenceFdKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_fd Vulkan Specification>
@@ -117,7 +117,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -155,6 +155,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetFenceFdKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkImportFenceFdKHR))
 import Vulkan.Core10.Handles (Device_T)
@@ -218,6 +219,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_fd VK_KHR_external_fence_fd>,
 -- 'Vulkan.Core10.Handles.Device', 'FenceGetFdInfoKHR'
 getFenceFdKHR :: forall io
                . (MonadIO io)
@@ -234,7 +236,7 @@ getFenceFdKHR :: forall io
                  FenceGetFdInfoKHR
               -> io (("fd" ::: Int32))
 getFenceFdKHR device getFdInfo = liftIO . evalContT $ do
-  let vkGetFenceFdKHRPtr = pVkGetFenceFdKHR (deviceCmds (device :: Device))
+  let vkGetFenceFdKHRPtr = pVkGetFenceFdKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetFenceFdKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetFenceFdKHR is null" Nothing Nothing
   let vkGetFenceFdKHR' = mkVkGetFenceFdKHR vkGetFenceFdKHRPtr
@@ -280,6 +282,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_fd VK_KHR_external_fence_fd>,
 -- 'Vulkan.Core10.Handles.Device', 'ImportFenceFdInfoKHR'
 importFenceFdKHR :: forall io
                   . (MonadIO io)
@@ -297,7 +300,7 @@ importFenceFdKHR :: forall io
                     ImportFenceFdInfoKHR
                  -> io ()
 importFenceFdKHR device importFenceFdInfo = liftIO . evalContT $ do
-  let vkImportFenceFdKHRPtr = pVkImportFenceFdKHR (deviceCmds (device :: Device))
+  let vkImportFenceFdKHRPtr = pVkImportFenceFdKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkImportFenceFdKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkImportFenceFdKHR is null" Nothing Nothing
   let vkImportFenceFdKHR' = mkVkImportFenceFdKHR vkImportFenceFdKHRPtr
@@ -378,6 +381,7 @@ importFenceFdKHR device importFenceFdInfo = liftIO . evalContT $ do
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_fd VK_KHR_external_fence_fd>,
 -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits',
 -- 'Vulkan.Core10.Handles.Fence',
 -- 'Vulkan.Core11.Enums.FenceImportFlagBits.FenceImportFlags',
@@ -389,7 +393,9 @@ data ImportFenceFdInfoKHR = ImportFenceFdInfoKHR
     -- 'Vulkan.Core11.Enums.FenceImportFlagBits.FenceImportFlagBits' specifying
     -- additional parameters for the fence payload import operation.
     flags :: FenceImportFlags
-  , -- | @handleType@ specifies the type of @fd@.
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
+    -- value specifying the type of @fd@.
     handleType :: ExternalFenceHandleTypeFlagBits
   , -- | @fd@ is the external handle to import.
     fd :: Int32
@@ -401,7 +407,7 @@ deriving instance Generic (ImportFenceFdInfoKHR)
 deriving instance Show ImportFenceFdInfoKHR
 
 instance ToCStruct ImportFenceFdInfoKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImportFenceFdInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMPORT_FENCE_FD_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -495,13 +501,16 @@ instance Zero ImportFenceFdInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_fd VK_KHR_external_fence_fd>,
 -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits',
 -- 'Vulkan.Core10.Handles.Fence',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'getFenceFdKHR'
 data FenceGetFdInfoKHR = FenceGetFdInfoKHR
   { -- | @fence@ is the fence from which state will be exported.
     fence :: Fence
-  , -- | @handleType@ is the type of handle requested.
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
+    -- value specifying the type of handle requested.
     handleType :: ExternalFenceHandleTypeFlagBits
   }
   deriving (Typeable, Eq)
@@ -511,7 +520,7 @@ deriving instance Generic (FenceGetFdInfoKHR)
 deriving instance Show FenceGetFdInfoKHR
 
 instance ToCStruct FenceGetFdInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FenceGetFdInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FENCE_GET_FD_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

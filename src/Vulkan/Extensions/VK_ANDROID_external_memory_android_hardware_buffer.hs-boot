@@ -15,7 +15,7 @@
 --     130
 --
 -- [__Revision__]
---     3
+--     4
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -32,12 +32,12 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_ANDROID_external_memory_android_hardware_buffer:%20&body=@critsec%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_ANDROID_external_memory_android_hardware_buffer] @critsec%0A<<Here describe the issue or question you have about the VK_ANDROID_external_memory_android_hardware_buffer extension>> >
 --
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2019-08-27
+--     2021-09-30
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -110,6 +110,14 @@
 --
 --     -   'ImportAndroidHardwareBufferInfoANDROID'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- is supported:
+--
+-- -   Extending 'AndroidHardwareBufferPropertiesANDROID':
+--
+--     -   'AndroidHardwareBufferFormatProperties2ANDROID'
+--
 -- == New Enum Constants
 --
 -- -   'ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME'
@@ -135,6 +143,14 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MEMORY_GET_ANDROID_HARDWARE_BUFFER_INFO_ANDROID'
 --
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_PROPERTIES_2_ANDROID'
+--
 -- == Issues
 --
 -- 1) Other external memory objects are represented as weakly-typed handles
@@ -153,7 +169,7 @@
 --
 -- 2) The internal layout and therefore size of a 'AHardwareBuffer' image
 -- may depend on native usage flags that do not have corresponding Vulkan
--- counterparts. Do we provide this info to
+-- counterparts. Do we provide this information to
 -- 'Vulkan.Core10.Image.createImage' somehow, or allow the allocation size
 -- reported by 'Vulkan.Core10.MemoryManagement.getImageMemoryRequirements'
 -- to be approximate?
@@ -174,7 +190,7 @@
 -- __RESOLVED__: This would be desirable, so that apps converting from
 -- OpenGL ES to Vulkan could get the same output given the same input. But
 -- since sampling and conversion from Y′CBCR images is so loosely defined
--- in OpenGL ES, multiple implementations do it in a way that doesn’t
+-- in OpenGL ES, multiple implementations do it in a way that does not
 -- conform to Vulkan’s requirements. Modifying the OpenGL ES implementation
 -- would be difficult, and would change the output of existing unmodified
 -- applications. Changing the output only for applications that are being
@@ -183,7 +199,7 @@
 -- as possible without causing compatibility problems for existing OpenGL
 -- ES applications or violating Vulkan requirements.
 --
--- 4) Should an 'AHardwareBuffer' with @AHARDWAREBUFFER_USAGE_CPU_@* usage
+-- 4) Should an 'AHardwareBuffer' with @AHARDWAREBUFFER_USAGE_CPU_*@ usage
 -- be mappable in Vulkan? Should it be possible to export an
 -- @AHardwareBuffers@ with such usage?
 --
@@ -209,13 +225,13 @@
 -- time. Can reference to them be added to this extension, or do they need
 -- a new extension?
 --
--- RESOLVED: This extension can document the interaction between the new
--- AHB formats\/usages and existing Vulkan features. No new Vulkan features
--- or implementation requirements can be added. The extension version
--- number will be incremented when this additional documentation is added,
--- but the version number does not indicate that an implementaiton supports
--- Vulkan memory or resources that map to the new 'AHardwareBuffer'
--- features: support for that must be queried with
+-- __RESOLVED__: This extension can document the interaction between the
+-- new AHB formats\/usages and existing Vulkan features. No new Vulkan
+-- features or implementation requirements can be added. The extension
+-- version number will be incremented when this additional documentation is
+-- added, but the version number does not indicate that an implementaiton
+-- supports Vulkan memory or resources that map to the new
+-- 'AHardwareBuffer' features: support for that must be queried with
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 -- or is implied by successfully allocating a 'AHardwareBuffer' outside of
 -- Vulkan that uses the new feature and has a GPU usage flag.
@@ -225,6 +241,10 @@
 -- existing Vulkan features map to that new Android feature.
 --
 -- == Version History
+--
+-- -   Revision 4, 2021-09-30 (Jon Leech)
+--
+--     -   Add interaction with @VK_KHR_format_feature_flags2@ to @vk.xml@
 --
 -- -   Revision 3, 2019-08-27 (Jon Leech)
 --
@@ -238,7 +258,7 @@
 --
 --     -   Initial version
 --
--- = See Also
+-- == See Also
 --
 -- 'AHardwareBuffer', 'AndroidHardwareBufferFormatPropertiesANDROID',
 -- 'AndroidHardwareBufferPropertiesANDROID',
@@ -248,14 +268,15 @@
 -- 'getAndroidHardwareBufferPropertiesANDROID',
 -- 'getMemoryAndroidHardwareBufferANDROID'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ANDROID_external_memory_android_hardware_buffer Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer  ( AndroidHardwareBufferFormatPropertiesANDROID
+module Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer  ( AndroidHardwareBufferFormatProperties2ANDROID
+                                                                             , AndroidHardwareBufferFormatPropertiesANDROID
                                                                              , AndroidHardwareBufferPropertiesANDROID
                                                                              , AndroidHardwareBufferUsageANDROID
                                                                              , ExternalFormatANDROID
@@ -271,6 +292,14 @@ import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
+data AndroidHardwareBufferFormatProperties2ANDROID
+
+instance ToCStruct AndroidHardwareBufferFormatProperties2ANDROID
+instance Show AndroidHardwareBufferFormatProperties2ANDROID
+
+instance FromCStruct AndroidHardwareBufferFormatProperties2ANDROID
+
+
 data AndroidHardwareBufferFormatPropertiesANDROID
 
 instance ToCStruct AndroidHardwareBufferFormatPropertiesANDROID

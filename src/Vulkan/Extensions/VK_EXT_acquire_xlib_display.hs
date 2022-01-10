@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_acquire_xlib_display:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_acquire_xlib_display] @cubanismo%0A<<Here describe the issue or question you have about the VK_EXT_acquire_xlib_display extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -101,11 +101,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'acquireXlibDisplayEXT', 'getRandROutputDisplayEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_acquire_xlib_display Vulkan Specification>
@@ -151,6 +151,7 @@ import Vulkan.Dynamic (InstanceCmds(pVkAcquireXlibDisplayEXT))
 import Vulkan.Dynamic (InstanceCmds(pVkGetRandROutputDisplayEXT))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -200,6 +201,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_acquire_xlib_display VK_EXT_acquire_xlib_display>,
 -- 'Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 acquireXlibDisplayEXT :: forall io
@@ -224,7 +226,7 @@ acquireXlibDisplayEXT :: forall io
                          DisplayKHR
                       -> io ()
 acquireXlibDisplayEXT physicalDevice dpy display = liftIO $ do
-  let vkAcquireXlibDisplayEXTPtr = pVkAcquireXlibDisplayEXT (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkAcquireXlibDisplayEXTPtr = pVkAcquireXlibDisplayEXT (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   unless (vkAcquireXlibDisplayEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireXlibDisplayEXT is null" Nothing Nothing
   let vkAcquireXlibDisplayEXT' = mkVkAcquireXlibDisplayEXT vkAcquireXlibDisplayEXTPtr
@@ -260,6 +262,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_acquire_xlib_display VK_EXT_acquire_xlib_display>,
 -- 'Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getRandROutputDisplayEXT :: forall io
@@ -279,7 +282,7 @@ getRandROutputDisplayEXT :: forall io
                             RROutput
                          -> io (DisplayKHR)
 getRandROutputDisplayEXT physicalDevice dpy rrOutput = liftIO . evalContT $ do
-  let vkGetRandROutputDisplayEXTPtr = pVkGetRandROutputDisplayEXT (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetRandROutputDisplayEXTPtr = pVkGetRandROutputDisplayEXT (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetRandROutputDisplayEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRandROutputDisplayEXT is null" Nothing Nothing
   let vkGetRandROutputDisplayEXT' = mkVkGetRandROutputDisplayEXT vkGetRandROutputDisplayEXTPtr

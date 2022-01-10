@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_sampler_filter_minmax:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_sampler_filter_minmax] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_EXT_sampler_filter_minmax extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -123,12 +123,12 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceSamplerFilterMinmaxPropertiesEXT',
 -- 'SamplerReductionModeCreateInfoEXT', 'SamplerReductionModeEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_sampler_filter_minmax Vulkan Specification>

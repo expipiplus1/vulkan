@@ -2,6 +2,26 @@
 
 ## WIP
 
+## [0.5.4] - 2021-11-25
+- Relax bounds on `vulkan`
+
+## [0.5.3] - 2021-10-14
+- Relax bounds on `vulkan`
+
+## [0.5.2] - 2021-08-12
+- Relax bounds on `vulkan`
+
+## [0.5.1] - 2021-07-24
+- Fix bug where `createInstanceFromRequirements` and
+  `createDebugInstanceFromRequirements` would fail for missing layers in
+  optional requirements.
+
+## [0.5.0.2] - 2021-06-22
+- Relax bounds on `vulkan`
+
+## [0.5.0.1] - 2021-06-09
+- Squash warning
+
 ## [0.5.0] - 2021-02-24
 - Refactor module `Vulkan.Utils.ShaderQQ`
   - Remove `Vulkan.Utils.ShaderQQ`

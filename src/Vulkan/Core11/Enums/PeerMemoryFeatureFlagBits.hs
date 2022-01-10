@@ -34,7 +34,7 @@ type PeerMemoryFeatureFlags = PeerMemoryFeatureFlagBits
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transitions>.
 --
 -- 'PEER_MEMORY_FEATURE_COPY_DST_BIT' /must/ be supported for all host
--- local heaps and for at least one device local heap.
+-- local heaps and for at least one device-local memory heap.
 --
 -- If a device does not support a peer memory feature, it is still valid to
 -- use a resource that includes both local and peer memory bindings with
@@ -46,6 +46,7 @@ type PeerMemoryFeatureFlags = PeerMemoryFeatureFlagBits
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'PeerMemoryFeatureFlags'
 newtype PeerMemoryFeatureFlagBits = PeerMemoryFeatureFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

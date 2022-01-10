@@ -26,10 +26,10 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_win32_surface:%20&body=@critsec%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_win32_surface] @critsec%0A<<Here describe the issue or question you have about the VK_KHR_win32_surface extension>> >
 --
 --     -   Ian Elliott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_win32_surface:%20&body=@ianelliottus%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_win32_surface] @ianelliottus%0A<<Here describe the issue or question you have about the VK_KHR_win32_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -167,9 +167,9 @@
 --     object’s pixel format can be set only one time.
 --
 -- -   Creating a 'Vulkan.Extensions.Handles.SwapchainKHR' over a window
---     object can alter the object for the remaining life of its lifetime.
---     Either of the above alterations may occur as a side-effect of
---     'Vulkan.Extensions.Handles.SwapchainKHR'.
+--     object can alter the object for its remaining lifetime. Either of
+--     the above alterations may occur as a side effect of
+--     'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
 --
 -- == Version History
 --
@@ -200,12 +200,12 @@
 --     -   Add issue 2 addressing reuse of a native window object in a
 --         different Graphics API, or by a different Vulkan ICD.
 --
--- = See Also
+-- == See Also
 --
 -- 'Win32SurfaceCreateFlagsKHR', 'Win32SurfaceCreateInfoKHR',
 -- 'createWin32SurfaceKHR', 'getPhysicalDeviceWin32PresentationSupportKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_win32_surface Vulkan Specification>
@@ -231,7 +231,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -276,11 +276,13 @@ import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateWin32SurfaceKHR))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceWin32PresentationSupportKHR))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
@@ -298,8 +300,8 @@ foreign import ccall
   "dynamic" mkVkCreateWin32SurfaceKHR
   :: FunPtr (Ptr Instance_T -> Ptr Win32SurfaceCreateInfoKHR -> Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO Result) -> Ptr Instance_T -> Ptr Win32SurfaceCreateInfoKHR -> Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO Result
 
--- | vkCreateWin32SurfaceKHR - Create a
--- 'Vulkan.Extensions.Handles.SurfaceKHR' object for an Win32 native window
+-- | vkCreateWin32SurfaceKHR - Create a VkSurfaceKHR object for an Win32
+-- native window
 --
 -- == Valid Usage (Implicit)
 --
@@ -332,6 +334,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_win32_surface VK_KHR_win32_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR', 'Win32SurfaceCreateInfoKHR'
@@ -348,7 +351,7 @@ createWin32SurfaceKHR :: forall io
                          ("allocator" ::: Maybe AllocationCallbacks)
                       -> io (SurfaceKHR)
 createWin32SurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateWin32SurfaceKHRPtr = pVkCreateWin32SurfaceKHR (instanceCmds (instance' :: Instance))
+  let vkCreateWin32SurfaceKHRPtr = pVkCreateWin32SurfaceKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateWin32SurfaceKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateWin32SurfaceKHR is null" Nothing Nothing
   let vkCreateWin32SurfaceKHR' = mkVkCreateWin32SurfaceKHR vkCreateWin32SurfaceKHRPtr
@@ -370,7 +373,7 @@ foreign import ccall
   "dynamic" mkVkGetPhysicalDeviceWin32PresentationSupportKHR
   :: FunPtr (Ptr PhysicalDevice_T -> Word32 -> IO Bool32) -> Ptr PhysicalDevice_T -> Word32 -> IO Bool32
 
--- | vkGetPhysicalDeviceWin32PresentationSupportKHR - query queue family
+-- | vkGetPhysicalDeviceWin32PresentationSupportKHR - Query queue family
 -- support for presentation on a Win32 display
 --
 -- = Description
@@ -382,6 +385,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_win32_surface VK_KHR_win32_surface>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceWin32PresentationSupportKHR :: forall io
                                               . (MonadIO io)
@@ -401,7 +405,7 @@ getPhysicalDeviceWin32PresentationSupportKHR :: forall io
                                                 ("queueFamilyIndex" ::: Word32)
                                              -> io (Bool)
 getPhysicalDeviceWin32PresentationSupportKHR physicalDevice queueFamilyIndex = liftIO $ do
-  let vkGetPhysicalDeviceWin32PresentationSupportKHRPtr = pVkGetPhysicalDeviceWin32PresentationSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceWin32PresentationSupportKHRPtr = pVkGetPhysicalDeviceWin32PresentationSupportKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   unless (vkGetPhysicalDeviceWin32PresentationSupportKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceWin32PresentationSupportKHR is null" Nothing Nothing
   let vkGetPhysicalDeviceWin32PresentationSupportKHR' = mkVkGetPhysicalDeviceWin32PresentationSupportKHR vkGetPhysicalDeviceWin32PresentationSupportKHRPtr
@@ -416,6 +420,7 @@ getPhysicalDeviceWin32PresentationSupportKHR physicalDevice queueFamilyIndex = l
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_win32_surface VK_KHR_win32_surface>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Win32SurfaceCreateFlagsKHR', 'createWin32SurfaceKHR'
 data Win32SurfaceCreateInfoKHR = Win32SurfaceCreateInfoKHR
@@ -443,7 +448,7 @@ deriving instance Generic (Win32SurfaceCreateInfoKHR)
 deriving instance Show Win32SurfaceCreateInfoKHR
 
 instance ToCStruct Win32SurfaceCreateInfoKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p Win32SurfaceCreateInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -490,6 +495,7 @@ instance Zero Win32SurfaceCreateInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_win32_surface VK_KHR_win32_surface>,
 -- 'Win32SurfaceCreateInfoKHR'
 newtype Win32SurfaceCreateFlagsKHR = Win32SurfaceCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

@@ -30,10 +30,10 @@
 -- [__Contact__]
 --
 --     -   Joshua Ashton
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_VALVE_mutable_descriptor_type:%20&body=@Joshua-Ashton%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_VALVE_mutable_descriptor_type] @Joshua-Ashton%0A<<Here describe the issue or question you have about the VK_VALVE_mutable_descriptor_type extension>> >
 --
 --     -   Hans-Kristian Arntzen
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_VALVE_mutable_descriptor_type:%20&body=@HansKristian-Work%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_VALVE_mutable_descriptor_type] @HansKristian-Work%0A<<Here describe the issue or question you have about the VK_VALVE_mutable_descriptor_type extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -121,13 +121,13 @@
 --
 --     -   Initial specification, squashed from public draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'MutableDescriptorTypeCreateInfoVALVE',
 -- 'MutableDescriptorTypeListVALVE',
 -- 'PhysicalDeviceMutableDescriptorTypeFeaturesVALVE'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VALVE_mutable_descriptor_type Vulkan Specification>
@@ -143,7 +143,7 @@ module Vulkan.Extensions.VK_VALVE_mutable_descriptor_type  ( PhysicalDeviceMutab
                                                            , pattern VALVE_MUTABLE_DESCRIPTOR_TYPE_EXTENSION_NAME
                                                            ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
@@ -181,10 +181,14 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceMutableDescriptorTypeFeaturesVALVE'
--- structure describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
+--
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to a structure extending this
+--     structure.
 --
 -- -   #features-mutableDescriptorType# @mutableDescriptorType@ indicates
 --     that the implementation /must/ support using the
@@ -232,6 +236,16 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --     -   'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_VALVE'
 --         /must/ be supported.
 --
+-- If the 'PhysicalDeviceMutableDescriptorTypeFeaturesVALVE' structure is
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceMutableDescriptorTypeFeaturesVALVE' /can/ also
+-- be used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
+-- to selectively enable these features.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkPhysicalDeviceMutableDescriptorTypeFeaturesVALVE-sType-sType#
@@ -240,6 +254,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VALVE_mutable_descriptor_type VK_VALVE_mutable_descriptor_type>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMutableDescriptorTypeFeaturesVALVE = PhysicalDeviceMutableDescriptorTypeFeaturesVALVE
@@ -252,7 +267,7 @@ deriving instance Generic (PhysicalDeviceMutableDescriptorTypeFeaturesVALVE)
 deriving instance Show PhysicalDeviceMutableDescriptorTypeFeaturesVALVE
 
 instance ToCStruct PhysicalDeviceMutableDescriptorTypeFeaturesVALVE where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceMutableDescriptorTypeFeaturesVALVE{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_VALVE)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -331,12 +346,13 @@ instance Zero PhysicalDeviceMutableDescriptorTypeFeaturesVALVE where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VALVE_mutable_descriptor_type VK_VALVE_mutable_descriptor_type>,
 -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType',
 -- 'MutableDescriptorTypeCreateInfoVALVE'
 data MutableDescriptorTypeListVALVE = MutableDescriptorTypeListVALVE
   { -- | @pDescriptorTypes@ is @NULL@ or a pointer to an array of
     -- @descriptorTypeCount@
-    -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType' values which define
+    -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType' values defining
     -- which descriptor types a given binding may mutate to.
     descriptorTypes :: Vector DescriptorType }
   deriving (Typeable)
@@ -346,10 +362,10 @@ deriving instance Generic (MutableDescriptorTypeListVALVE)
 deriving instance Show MutableDescriptorTypeListVALVE
 
 instance ToCStruct MutableDescriptorTypeListVALVE where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MutableDescriptorTypeListVALVE{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (descriptorTypes)) :: Word32))
-    pPDescriptorTypes' <- ContT $ allocaBytesAligned @DescriptorType ((Data.Vector.length (descriptorTypes)) * 4) 4
+    pPDescriptorTypes' <- ContT $ allocaBytes @DescriptorType ((Data.Vector.length (descriptorTypes)) * 4)
     lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorTypes' `plusPtr` (4 * (i)) :: Ptr DescriptorType) (e)) (descriptorTypes)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr DescriptorType))) (pPDescriptorTypes')
     lift $ f
@@ -397,6 +413,7 @@ instance Zero MutableDescriptorTypeListVALVE where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VALVE_mutable_descriptor_type VK_VALVE_mutable_descriptor_type>,
 -- 'MutableDescriptorTypeListVALVE',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data MutableDescriptorTypeCreateInfoVALVE = MutableDescriptorTypeCreateInfoVALVE
@@ -410,12 +427,12 @@ deriving instance Generic (MutableDescriptorTypeCreateInfoVALVE)
 deriving instance Show MutableDescriptorTypeCreateInfoVALVE
 
 instance ToCStruct MutableDescriptorTypeCreateInfoVALVE where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MutableDescriptorTypeCreateInfoVALVE{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_VALVE)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (mutableDescriptorTypeLists)) :: Word32))
-    pPMutableDescriptorTypeLists' <- ContT $ allocaBytesAligned @MutableDescriptorTypeListVALVE ((Data.Vector.length (mutableDescriptorTypeLists)) * 16) 8
+    pPMutableDescriptorTypeLists' <- ContT $ allocaBytes @MutableDescriptorTypeListVALVE ((Data.Vector.length (mutableDescriptorTypeLists)) * 16)
     Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPMutableDescriptorTypeLists' `plusPtr` (16 * (i)) :: Ptr MutableDescriptorTypeListVALVE) (e) . ($ ())) (mutableDescriptorTypeLists)
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr MutableDescriptorTypeListVALVE))) (pPMutableDescriptorTypeLists')
     lift $ f

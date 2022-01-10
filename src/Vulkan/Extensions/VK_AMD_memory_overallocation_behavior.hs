@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Martin Dinkov
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_AMD_memory_overallocation_behavior:%20&body=@mdinkov%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_memory_overallocation_behavior] @mdinkov%0A<<Here describe the issue or question you have about the VK_AMD_memory_overallocation_behavior extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -78,12 +78,12 @@
 --
 --     -   Initial draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'DeviceMemoryOverallocationCreateInfoAMD',
 -- 'MemoryOverallocationBehaviorAMD'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_memory_overallocation_behavior Vulkan Specification>
@@ -104,7 +104,7 @@ module Vulkan.Extensions.VK_AMD_memory_overallocation_behavior  ( DeviceMemoryOv
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showsPrec)
@@ -135,6 +135,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_ME
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_memory_overallocation_behavior VK_AMD_memory_overallocation_behavior>,
 -- 'MemoryOverallocationBehaviorAMD',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceMemoryOverallocationCreateInfoAMD = DeviceMemoryOverallocationCreateInfoAMD
@@ -151,7 +152,7 @@ deriving instance Generic (DeviceMemoryOverallocationCreateInfoAMD)
 deriving instance Show DeviceMemoryOverallocationCreateInfoAMD
 
 instance ToCStruct DeviceMemoryOverallocationCreateInfoAMD where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceMemoryOverallocationCreateInfoAMD{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -187,6 +188,7 @@ instance Zero DeviceMemoryOverallocationCreateInfoAMD where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_memory_overallocation_behavior VK_AMD_memory_overallocation_behavior>,
 -- 'DeviceMemoryOverallocationCreateInfoAMD'
 newtype MemoryOverallocationBehaviorAMD = MemoryOverallocationBehaviorAMD Int32
   deriving newtype (Eq, Ord, Storable, Zero)

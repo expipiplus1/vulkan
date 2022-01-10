@@ -9,6 +9,13 @@ module Vulkan.Core10.Enums.DynamicState  (DynamicState( DYNAMIC_STATE_VIEWPORT
                                                       , DYNAMIC_STATE_STENCIL_COMPARE_MASK
                                                       , DYNAMIC_STATE_STENCIL_WRITE_MASK
                                                       , DYNAMIC_STATE_STENCIL_REFERENCE
+                                                      , DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT
+                                                      , DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT
+                                                      , DYNAMIC_STATE_LOGIC_OP_EXT
+                                                      , DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT
+                                                      , DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT
+                                                      , DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT
+                                                      , DYNAMIC_STATE_VERTEX_INPUT_EXT
                                                       , DYNAMIC_STATE_STENCIL_OP_EXT
                                                       , DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT
                                                       , DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT
@@ -47,6 +54,7 @@ import GHC.Show (Show(showsPrec))
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'
 newtype DynamicState = DynamicState Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -54,7 +62,7 @@ newtype DynamicState = DynamicState Int32
 -- | 'DYNAMIC_STATE_VIEWPORT' specifies that the @pViewports@ state in
 -- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo' will be ignored
 -- and /must/ be set dynamically with
--- 'Vulkan.Core10.CommandBufferBuilding.cmdSetViewport' before any draw
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdSetViewport' before any drawing
 -- commands. The number of viewports used by a pipeline is still specified
 -- by the @viewportCount@ member of
 -- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'.
@@ -62,7 +70,7 @@ pattern DYNAMIC_STATE_VIEWPORT                            = DynamicState 0
 -- | 'DYNAMIC_STATE_SCISSOR' specifies that the @pScissors@ state in
 -- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo' will be ignored
 -- and /must/ be set dynamically with
--- 'Vulkan.Core10.CommandBufferBuilding.cmdSetScissor' before any draw
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdSetScissor' before any drawing
 -- commands. The number of scissor rectangles used by a pipeline is still
 -- specified by the @scissorCount@ member of
 -- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'.
@@ -70,7 +78,7 @@ pattern DYNAMIC_STATE_SCISSOR                             = DynamicState 1
 -- | 'DYNAMIC_STATE_LINE_WIDTH' specifies that the @lineWidth@ state in
 -- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo' will be
 -- ignored and /must/ be set dynamically with
--- 'Vulkan.Core10.CommandBufferBuilding.cmdSetLineWidth' before any draw
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdSetLineWidth' before any drawing
 -- commands that generate line primitives for the rasterizer.
 pattern DYNAMIC_STATE_LINE_WIDTH                          = DynamicState 2
 -- | 'DYNAMIC_STATE_DEPTH_BIAS' specifies that the @depthBiasConstantFactor@,
@@ -125,6 +133,52 @@ pattern DYNAMIC_STATE_STENCIL_WRITE_MASK                  = DynamicState 7
 -- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' member
 -- @stencilTestEnable@ set to 'Vulkan.Core10.FundamentalTypes.TRUE'
 pattern DYNAMIC_STATE_STENCIL_REFERENCE                   = DynamicState 8
+-- | 'DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT' specifies that the
+-- @pColorWriteEnables@ state in
+-- 'Vulkan.Extensions.VK_EXT_color_write_enable.PipelineColorWriteCreateInfoEXT'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT              = DynamicState 1000381000
+-- | 'DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT' specifies that the
+-- @primitiveRestartEnable@ state in
+-- 'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo' will be
+-- ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnableEXT'
+-- before any drawing commands.
+pattern DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT        = DynamicState 1000377004
+-- | 'DYNAMIC_STATE_LOGIC_OP_EXT' specifies that the @logicOp@ state in
+-- 'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo' will be
+-- ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetLogicOpEXT'
+-- before any drawing commands.
+pattern DYNAMIC_STATE_LOGIC_OP_EXT                        = DynamicState 1000377003
+-- | 'DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT' specifies that the
+-- @depthBiasEnable@ state in
+-- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo' will be
+-- ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnableEXT'
+-- before any drawing commands.
+pattern DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT               = DynamicState 1000377002
+-- | 'DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT' specifies that the
+-- @rasterizerDiscardEnable@ state in
+-- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo' will be
+-- ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnableEXT'
+-- before any drawing commands.
+pattern DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT       = DynamicState 1000377001
+-- | 'DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT' specifies that the
+-- @patchControlPoints@ state in
+-- 'Vulkan.Core10.Pipeline.PipelineTessellationStateCreateInfo' will be
+-- ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPatchControlPointsEXT'
+-- before any drawing commands.
+pattern DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT            = DynamicState 1000377000
+-- | 'DYNAMIC_STATE_VERTEX_INPUT_EXT' specifies that the @pVertexInputState@
+-- state will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
+-- before any drawing commands
+pattern DYNAMIC_STATE_VERTEX_INPUT_EXT                    = DynamicState 1000352000
 -- | 'DYNAMIC_STATE_STENCIL_OP_EXT' specifies that the @failOp@, @passOp@,
 -- @depthFailOp@, and @compareOp@ states in
 -- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' for both
@@ -195,19 +249,19 @@ pattern DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT             = DynamicState 1000267
 -- and the specific topology order and adjacency /must/ be set dynamically
 -- with
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
--- before any draw commands.
+-- before any drawing commands.
 pattern DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT              = DynamicState 1000267002
 -- | 'DYNAMIC_STATE_FRONT_FACE_EXT' specifies that the @frontFace@ state in
 -- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo' will be
 -- ignored and /must/ be set dynamically with
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetFrontFaceEXT'
--- before any draw commands.
+-- before any drawing commands.
 pattern DYNAMIC_STATE_FRONT_FACE_EXT                      = DynamicState 1000267001
 -- | 'DYNAMIC_STATE_CULL_MODE_EXT' specifies that the @cullMode@ state in
 -- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo' will be
 -- ignored and /must/ be set dynamically with
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetCullModeEXT'
--- before any draw commands.
+-- before any drawing commands.
 pattern DYNAMIC_STATE_CULL_MODE_EXT                       = DynamicState 1000267000
 -- | 'DYNAMIC_STATE_LINE_STIPPLE_EXT' specifies that the @lineStippleFactor@
 -- and @lineStipplePattern@ state in
@@ -227,14 +281,14 @@ pattern DYNAMIC_STATE_LINE_STIPPLE_EXT                    = DynamicState 1000259
 -- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.cmdSetFragmentShadingRateKHR'
 -- or
 -- 'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.cmdSetFragmentShadingRateEnumNV'
--- before any draw commands.
+-- before any drawing commands.
 pattern DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR           = DynamicState 1000226000
 -- | 'DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV' specifies that the
 -- @pExclusiveScissors@ state in
 -- 'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'
 -- will be ignored and /must/ be set dynamically with
 -- 'Vulkan.Extensions.VK_NV_scissor_exclusive.cmdSetExclusiveScissorNV'
--- before any draw commands. The number of exclusive scissor rectangles
+-- before any drawing commands. The number of exclusive scissor rectangles
 -- used by a pipeline is still specified by the @exclusiveScissorCount@
 -- member of
 -- 'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'.
@@ -244,14 +298,14 @@ pattern DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV                = DynamicState 1000205
 -- 'Vulkan.Extensions.VK_NV_shading_rate_image.PipelineViewportCoarseSampleOrderStateCreateInfoNV'
 -- will be ignored and /must/ be set dynamically with
 -- 'Vulkan.Extensions.VK_NV_shading_rate_image.cmdSetCoarseSampleOrderNV'
--- before any draw commands.
+-- before any drawing commands.
 pattern DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV     = DynamicState 1000164006
 -- | 'DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV' specifies that the
 -- @pShadingRatePalettes@ state in
 -- 'Vulkan.Extensions.VK_NV_shading_rate_image.PipelineViewportShadingRateImageStateCreateInfoNV'
 -- will be ignored and /must/ be set dynamically with
 -- 'Vulkan.Extensions.VK_NV_shading_rate_image.cmdSetViewportShadingRatePaletteNV'
--- before any draw commands.
+-- before any drawing commands.
 pattern DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV    = DynamicState 1000164004
 -- | 'DYNAMIC_STATE_RAY_TRACING_PIPELINE_STACK_SIZE_KHR' specifies that the
 -- default stack size computation for the pipeline will be ignored and
@@ -298,6 +352,13 @@ pattern DYNAMIC_STATE_VIEWPORT_W_SCALING_NV               = DynamicState 1000087
              DYNAMIC_STATE_STENCIL_COMPARE_MASK,
              DYNAMIC_STATE_STENCIL_WRITE_MASK,
              DYNAMIC_STATE_STENCIL_REFERENCE,
+             DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT,
+             DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT,
+             DYNAMIC_STATE_LOGIC_OP_EXT,
+             DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT,
+             DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT,
+             DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT,
+             DYNAMIC_STATE_VERTEX_INPUT_EXT,
              DYNAMIC_STATE_STENCIL_OP_EXT,
              DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT,
              DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT,
@@ -337,6 +398,13 @@ showTableDynamicState =
   , (DYNAMIC_STATE_STENCIL_COMPARE_MASK               , "STENCIL_COMPARE_MASK")
   , (DYNAMIC_STATE_STENCIL_WRITE_MASK                 , "STENCIL_WRITE_MASK")
   , (DYNAMIC_STATE_STENCIL_REFERENCE                  , "STENCIL_REFERENCE")
+  , (DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT             , "COLOR_WRITE_ENABLE_EXT")
+  , (DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT       , "PRIMITIVE_RESTART_ENABLE_EXT")
+  , (DYNAMIC_STATE_LOGIC_OP_EXT                       , "LOGIC_OP_EXT")
+  , (DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT              , "DEPTH_BIAS_ENABLE_EXT")
+  , (DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT      , "RASTERIZER_DISCARD_ENABLE_EXT")
+  , (DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT           , "PATCH_CONTROL_POINTS_EXT")
+  , (DYNAMIC_STATE_VERTEX_INPUT_EXT                   , "VERTEX_INPUT_EXT")
   , (DYNAMIC_STATE_STENCIL_OP_EXT                     , "STENCIL_OP_EXT")
   , (DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT            , "STENCIL_TEST_ENABLE_EXT")
   , (DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT       , "DEPTH_BOUNDS_TEST_ENABLE_EXT")

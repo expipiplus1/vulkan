@@ -1,13 +1,13 @@
 cabal-version: 2.0
 
--- This file has been generated from package.yaml by hpack version 0.34.2.
+-- This file has been generated from package.yaml by hpack version 0.34.4.
 --
 -- see: https://github.com/sol/hpack
 
 name:           generate-new
 version:        0.0.0
 synopsis:       A program to generate the vulkan package from the vulkan docs.
-author:         Joe Hermaszewski
+author:         Ellie Hermaszewska
 maintainer:     generator.i.ardly.know.er@monoid.al
 license:        BSD3
 license-file:   LICENSE
@@ -85,12 +85,54 @@ library
       Paths_generate_new
   hs-source-dirs:
       src
-  default-extensions: BangPatterns BinaryLiterals BlockArguments ConstraintKinds DataKinds DeriveFunctor DeriveFoldable DeriveTraversable DeriveGeneric DerivingVia DisambiguateRecordFields DuplicateRecordFields EmptyCase FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings ParallelListComp PartialTypeSignatures PatternSynonyms PolyKinds RankNTypes RecordWildCards RecursiveDo ScopedTypeVariables StandaloneDeriving TemplateHaskellQuotes TupleSections TypeApplications TypeFamilies TypeOperators ViewPatterns
+  default-extensions:
+      BangPatterns
+      BinaryLiterals
+      BlockArguments
+      ConstraintKinds
+      DataKinds
+      DeriveFunctor
+      DeriveFoldable
+      DeriveTraversable
+      DeriveGeneric
+      DerivingVia
+      DisambiguateRecordFields
+      DuplicateRecordFields
+      EmptyCase
+      FlexibleContexts
+      FlexibleInstances
+      FunctionalDependencies
+      GADTs
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      KindSignatures
+      LambdaCase
+      MonadComprehensions
+      MultiParamTypeClasses
+      MultiWayIf
+      NoImplicitPrelude
+      OverloadedStrings
+      ParallelListComp
+      PartialTypeSignatures
+      PatternSynonyms
+      PolyKinds
+      RankNTypes
+      RecordWildCards
+      RecursiveDo
+      ScopedTypeVariables
+      StandaloneDeriving
+      TemplateHaskellQuotes
+      TupleSections
+      TypeApplications
+      TypeFamilies
+      TypeOperators
+      ViewPatterns
   ghc-options: -Wall -fno-warn-unticked-promoted-constructors -fno-warn-name-shadowing -O2 -flate-specialise -fspecialise-aggressively
   build-depends:
       algebraic-graphs
     , ascii-progress
     , async-pool
+    , attoparsec
     , base
     , brittany
     , bytestring
@@ -110,11 +152,11 @@ library
     , parsec
     , parsers
     , polysemy >=1.4
-    , polysemy-plugin
     , pretty-show
     , prettyprinter
     , regex-applicative
     , relude
+    , replace-attoparsec >=1.4.5
     , safe
     , say
     , some
@@ -148,12 +190,54 @@ library khronos-spec
       Paths_generate_new
   hs-source-dirs:
       khronos-spec
-  default-extensions: BangPatterns BinaryLiterals BlockArguments ConstraintKinds DataKinds DeriveFunctor DeriveFoldable DeriveTraversable DeriveGeneric DerivingVia DisambiguateRecordFields DuplicateRecordFields EmptyCase FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings ParallelListComp PartialTypeSignatures PatternSynonyms PolyKinds RankNTypes RecordWildCards RecursiveDo ScopedTypeVariables StandaloneDeriving TemplateHaskellQuotes TupleSections TypeApplications TypeFamilies TypeOperators ViewPatterns
+  default-extensions:
+      BangPatterns
+      BinaryLiterals
+      BlockArguments
+      ConstraintKinds
+      DataKinds
+      DeriveFunctor
+      DeriveFoldable
+      DeriveTraversable
+      DeriveGeneric
+      DerivingVia
+      DisambiguateRecordFields
+      DuplicateRecordFields
+      EmptyCase
+      FlexibleContexts
+      FlexibleInstances
+      FunctionalDependencies
+      GADTs
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      KindSignatures
+      LambdaCase
+      MonadComprehensions
+      MultiParamTypeClasses
+      MultiWayIf
+      NoImplicitPrelude
+      OverloadedStrings
+      ParallelListComp
+      PartialTypeSignatures
+      PatternSynonyms
+      PolyKinds
+      RankNTypes
+      RecordWildCards
+      RecursiveDo
+      ScopedTypeVariables
+      StandaloneDeriving
+      TemplateHaskellQuotes
+      TupleSections
+      TypeApplications
+      TypeFamilies
+      TypeOperators
+      ViewPatterns
   ghc-options: -Wall -fno-warn-unticked-promoted-constructors -fno-warn-name-shadowing -O2 -flate-specialise -fspecialise-aggressively
   build-depends:
       algebraic-graphs
     , ascii-progress
     , async-pool
+    , attoparsec
     , base
     , brittany
     , bytestring
@@ -174,11 +258,11 @@ library khronos-spec
     , parsec
     , parsers
     , polysemy >=1.4
-    , polysemy-plugin
     , pretty-show
     , prettyprinter
     , regex-applicative
     , relude
+    , replace-attoparsec >=1.4.5
     , safe
     , say
     , some
@@ -207,12 +291,54 @@ executable vk
       Paths_generate_new
   hs-source-dirs:
       vk
-  default-extensions: BangPatterns BinaryLiterals BlockArguments ConstraintKinds DataKinds DeriveFunctor DeriveFoldable DeriveTraversable DeriveGeneric DerivingVia DisambiguateRecordFields DuplicateRecordFields EmptyCase FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings ParallelListComp PartialTypeSignatures PatternSynonyms PolyKinds RankNTypes RecordWildCards RecursiveDo ScopedTypeVariables StandaloneDeriving TemplateHaskellQuotes TupleSections TypeApplications TypeFamilies TypeOperators ViewPatterns
+  default-extensions:
+      BangPatterns
+      BinaryLiterals
+      BlockArguments
+      ConstraintKinds
+      DataKinds
+      DeriveFunctor
+      DeriveFoldable
+      DeriveTraversable
+      DeriveGeneric
+      DerivingVia
+      DisambiguateRecordFields
+      DuplicateRecordFields
+      EmptyCase
+      FlexibleContexts
+      FlexibleInstances
+      FunctionalDependencies
+      GADTs
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      KindSignatures
+      LambdaCase
+      MonadComprehensions
+      MultiParamTypeClasses
+      MultiWayIf
+      NoImplicitPrelude
+      OverloadedStrings
+      ParallelListComp
+      PartialTypeSignatures
+      PatternSynonyms
+      PolyKinds
+      RankNTypes
+      RecordWildCards
+      RecursiveDo
+      ScopedTypeVariables
+      StandaloneDeriving
+      TemplateHaskellQuotes
+      TupleSections
+      TypeApplications
+      TypeFamilies
+      TypeOperators
+      ViewPatterns
   ghc-options: -Wall -fno-warn-unticked-promoted-constructors -fno-warn-name-shadowing -O2 -flate-specialise -fspecialise-aggressively -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       algebraic-graphs
     , ascii-progress
     , async-pool
+    , attoparsec
     , base
     , brittany
     , bytestring
@@ -234,11 +360,11 @@ executable vk
     , parsec
     , parsers
     , polysemy >=1.4
-    , polysemy-plugin
     , pretty-show
     , prettyprinter
     , regex-applicative
     , relude
+    , replace-attoparsec >=1.4.5
     , safe
     , say
     , some
@@ -270,12 +396,54 @@ executable vma
       Paths_generate_new
   hs-source-dirs:
       vma
-  default-extensions: BangPatterns BinaryLiterals BlockArguments ConstraintKinds DataKinds DeriveFunctor DeriveFoldable DeriveTraversable DeriveGeneric DerivingVia DisambiguateRecordFields DuplicateRecordFields EmptyCase FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings ParallelListComp PartialTypeSignatures PatternSynonyms PolyKinds RankNTypes RecordWildCards RecursiveDo ScopedTypeVariables StandaloneDeriving TemplateHaskellQuotes TupleSections TypeApplications TypeFamilies TypeOperators ViewPatterns
+  default-extensions:
+      BangPatterns
+      BinaryLiterals
+      BlockArguments
+      ConstraintKinds
+      DataKinds
+      DeriveFunctor
+      DeriveFoldable
+      DeriveTraversable
+      DeriveGeneric
+      DerivingVia
+      DisambiguateRecordFields
+      DuplicateRecordFields
+      EmptyCase
+      FlexibleContexts
+      FlexibleInstances
+      FunctionalDependencies
+      GADTs
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      KindSignatures
+      LambdaCase
+      MonadComprehensions
+      MultiParamTypeClasses
+      MultiWayIf
+      NoImplicitPrelude
+      OverloadedStrings
+      ParallelListComp
+      PartialTypeSignatures
+      PatternSynonyms
+      PolyKinds
+      RankNTypes
+      RecordWildCards
+      RecursiveDo
+      ScopedTypeVariables
+      StandaloneDeriving
+      TemplateHaskellQuotes
+      TupleSections
+      TypeApplications
+      TypeFamilies
+      TypeOperators
+      ViewPatterns
   ghc-options: -Wall -fno-warn-unticked-promoted-constructors -fno-warn-name-shadowing -O2 -flate-specialise -fspecialise-aggressively -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       algebraic-graphs
     , ascii-progress
     , async-pool
+    , attoparsec
     , base
     , brittany
     , bytestring
@@ -297,11 +465,11 @@ executable vma
     , parsec
     , parsers
     , polysemy >=1.4
-    , polysemy-plugin
     , pretty-show
     , prettyprinter
     , regex-applicative
     , relude
+    , replace-attoparsec >=1.4.5
     , safe
     , say
     , some
@@ -331,12 +499,54 @@ executable xr
       Paths_generate_new
   hs-source-dirs:
       xr
-  default-extensions: BangPatterns BinaryLiterals BlockArguments ConstraintKinds DataKinds DeriveFunctor DeriveFoldable DeriveTraversable DeriveGeneric DerivingVia DisambiguateRecordFields DuplicateRecordFields EmptyCase FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings ParallelListComp PartialTypeSignatures PatternSynonyms PolyKinds RankNTypes RecordWildCards RecursiveDo ScopedTypeVariables StandaloneDeriving TemplateHaskellQuotes TupleSections TypeApplications TypeFamilies TypeOperators ViewPatterns
+  default-extensions:
+      BangPatterns
+      BinaryLiterals
+      BlockArguments
+      ConstraintKinds
+      DataKinds
+      DeriveFunctor
+      DeriveFoldable
+      DeriveTraversable
+      DeriveGeneric
+      DerivingVia
+      DisambiguateRecordFields
+      DuplicateRecordFields
+      EmptyCase
+      FlexibleContexts
+      FlexibleInstances
+      FunctionalDependencies
+      GADTs
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      KindSignatures
+      LambdaCase
+      MonadComprehensions
+      MultiParamTypeClasses
+      MultiWayIf
+      NoImplicitPrelude
+      OverloadedStrings
+      ParallelListComp
+      PartialTypeSignatures
+      PatternSynonyms
+      PolyKinds
+      RankNTypes
+      RecordWildCards
+      RecursiveDo
+      ScopedTypeVariables
+      StandaloneDeriving
+      TemplateHaskellQuotes
+      TupleSections
+      TypeApplications
+      TypeFamilies
+      TypeOperators
+      ViewPatterns
   ghc-options: -Wall -fno-warn-unticked-promoted-constructors -fno-warn-name-shadowing -O2 -flate-specialise -fspecialise-aggressively -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       algebraic-graphs
     , ascii-progress
     , async-pool
+    , attoparsec
     , base
     , brittany
     , bytestring
@@ -358,11 +568,11 @@ executable xr
     , parsec
     , parsers
     , polysemy >=1.4
-    , polysemy-plugin
     , pretty-show
     , prettyprinter
     , regex-applicative
     , relude
+    , replace-attoparsec >=1.4.5
     , safe
     , say
     , some

@@ -1,0 +1,160 @@
+{-# language CPP #-}
+-- | = Name
+--
+-- VK_HUAWEI_invocation_mask - device extension
+--
+-- == VK_HUAWEI_invocation_mask
+--
+-- [__Name String__]
+--     @VK_HUAWEI_invocation_mask@
+--
+-- [__Extension Type__]
+--     Device extension
+--
+-- [__Registered Extension Number__]
+--     371
+--
+-- [__Revision__]
+--     1
+--
+-- [__Extension and Version Dependencies__]
+--
+--     -   Requires Vulkan 1.0
+--
+--     -   Requires @VK_KHR_ray_tracing_pipeline@
+--
+--     -   Requires @VK_KHR_synchronization2@
+--
+-- [__Contact__]
+--
+--     -   Yunpeng Zhu
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_HUAWEI_invocation_mask] @yunxingzhu%0A<<Here describe the issue or question you have about the VK_HUAWEI_invocation_mask extension>> >
+--
+-- [__Extension Proposal__]
+--     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_HUAWEI_invocation_mask.asciidoc VK_HUAWEI_invocation_mask>
+--
+-- == Other Extension Metadata
+--
+-- [__Last Modified Date__]
+--     2021-05-27
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   This extension requires @VK_KHR_ray_tracing_pipeline@, which
+--         allow to bind an invocation mask image before the ray tracing
+--         command
+--
+--     -   This extension requires @VK_KHR_synchronization2@, which allows
+--         new pipeline stage for the invocation mask image
+--
+-- [__Contributors__]
+--
+--     -   Yunpeng Zhu, HuaWei
+--
+-- == Description
+--
+-- The rays to trace may be sparse in some use cases. For example, the
+-- scene only have a few regions to reflect. Providing an invocation mask
+-- image to the ray tracing commands could potentially give the hardware
+-- the hint to do certain optimization without invoking an additional pass
+-- to compact the ray buffer.
+--
+-- == New Commands
+--
+-- -   'cmdBindInvocationMaskHUAWEI'
+--
+-- == New Structures
+--
+-- -   Extending
+--     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
+--     'Vulkan.Core10.Device.DeviceCreateInfo':
+--
+--     -   'PhysicalDeviceInvocationMaskFeaturesHUAWEI'
+--
+-- == New Enum Constants
+--
+-- -   'HUAWEI_INVOCATION_MASK_EXTENSION_NAME'
+--
+-- -   'HUAWEI_INVOCATION_MASK_SPEC_VERSION'
+--
+-- -   Extending
+--     'Vulkan.Extensions.VK_KHR_synchronization2.AccessFlagBits2KHR':
+--
+--     -   'Vulkan.Extensions.VK_KHR_synchronization2.ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI'
+--
+-- -   Extending
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits':
+--
+--     -   'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INVOCATION_MASK_BIT_HUAWEI'
+--
+-- -   Extending
+--     'Vulkan.Extensions.VK_KHR_synchronization2.PipelineStageFlagBits2KHR':
+--
+--     -   'Vulkan.Extensions.VK_KHR_synchronization2.PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
+--
+-- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
+--
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_INVOCATION_MASK_FEATURES_HUAWEI'
+--
+-- == Examples
+--
+-- RT mask is updated before each traceRay.
+--
+-- Step 1. Generate InvocationMask.
+--
+-- > //the rt mask image bind as color attachment in the fragment shader
+-- > Layout(location = 2) out vec4 outRTmask
+-- > vec4 mask = vec4(x,x,x,x);
+-- > outRTmask = mask;
+--
+-- Step 2. traceRay with InvocationMask
+--
+-- > vkCmdBindPipeline(
+-- >     commandBuffers[imageIndex],
+-- >     VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR, m_rtPipeline);
+-- >     vkCmdBindDescriptorSets(commandBuffers[imageIndex],
+-- >     VK_PIPELINE_BIND_POINT_RAY_TRACING_NV,
+-- >     m_rtPipelineLayout, 0, 1, &m_rtDescriptorSet,
+-- >     0, nullptr);
+-- >
+-- > vkCmdBindInvocationMaskHUAWEI(
+-- >     commandBuffers[imageIndex],
+-- >     InvocationMaskimageView,
+-- >     InvocationMaskimageLayout);
+-- >     vkCmdTraceRaysKHR(commandBuffers[imageIndex],
+-- >     pRaygenShaderBindingTable,
+-- >     pMissShaderBindingTable,
+-- >     swapChainExtent.width,
+-- >     swapChainExtent.height, 1);
+--
+-- == Version History
+--
+-- -   Revision 1, 2021-05-27 (Yunpeng Zhu)
+--
+--     -   Initial draft.
+--
+-- == See Also
+--
+-- 'PhysicalDeviceInvocationMaskFeaturesHUAWEI',
+-- 'cmdBindInvocationMaskHUAWEI'
+--
+-- == Document Notes
+--
+-- For more information, see the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_HUAWEI_invocation_mask Vulkan Specification>
+--
+-- This page is a generated document. Fixes and changes should be made to
+-- the generator scripts, not directly.
+module Vulkan.Extensions.VK_HUAWEI_invocation_mask  (PhysicalDeviceInvocationMaskFeaturesHUAWEI) where
+
+import Vulkan.CStruct (FromCStruct)
+import Vulkan.CStruct (ToCStruct)
+import Data.Kind (Type)
+
+data PhysicalDeviceInvocationMaskFeaturesHUAWEI
+
+instance ToCStruct PhysicalDeviceInvocationMaskFeaturesHUAWEI
+instance Show PhysicalDeviceInvocationMaskFeaturesHUAWEI
+
+instance FromCStruct PhysicalDeviceInvocationMaskFeaturesHUAWEI
+

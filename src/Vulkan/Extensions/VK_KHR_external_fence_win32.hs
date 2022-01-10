@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_external_fence_win32:%20&body=@critsec%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_external_fence_win32] @critsec%0A<<Here describe the issue or question you have about the VK_KHR_external_fence_win32 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -100,7 +100,7 @@
 -- 'Vulkan.Core10.Handles.Semaphore' instead of a
 -- 'Vulkan.Core10.Handles.Fence', and applications can check status or wait
 -- on the D3D12 fence using non-Vulkan APIs. The convenience of being able
--- to do these operations on 'Vulkan.Core10.Handles.Fence' objects doesn’t
+-- to do these operations on 'Vulkan.Core10.Handles.Fence' objects does not
 -- justify the extra API complexity.
 --
 -- == Version History
@@ -109,13 +109,13 @@
 --
 --     -   Initial revision
 --
--- = See Also
+-- == See Also
 --
 -- 'ExportFenceWin32HandleInfoKHR', 'FenceGetWin32HandleInfoKHR',
 -- 'ImportFenceWin32HandleInfoKHR', 'getFenceWin32HandleKHR',
 -- 'importFenceWin32HandleKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_win32 Vulkan Specification>
@@ -141,7 +141,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -173,6 +173,7 @@ import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Extensions.VK_NV_external_memory_win32 (DWORD)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetFenceWin32HandleKHR))
 import Vulkan.Dynamic (DeviceCmds(pVkImportFenceWin32HandleKHR))
 import Vulkan.Core10.Handles (Device_T)
@@ -229,6 +230,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_win32 VK_KHR_external_fence_win32>,
 -- 'Vulkan.Core10.Handles.Device', 'FenceGetWin32HandleInfoKHR'
 getFenceWin32HandleKHR :: forall io
                         . (MonadIO io)
@@ -246,7 +248,7 @@ getFenceWin32HandleKHR :: forall io
                           FenceGetWin32HandleInfoKHR
                        -> io (HANDLE)
 getFenceWin32HandleKHR device getWin32HandleInfo = liftIO . evalContT $ do
-  let vkGetFenceWin32HandleKHRPtr = pVkGetFenceWin32HandleKHR (deviceCmds (device :: Device))
+  let vkGetFenceWin32HandleKHRPtr = pVkGetFenceWin32HandleKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetFenceWin32HandleKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetFenceWin32HandleKHR is null" Nothing Nothing
   let vkGetFenceWin32HandleKHR' = mkVkGetFenceWin32HandleKHR vkGetFenceWin32HandleKHRPtr
@@ -292,6 +294,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_win32 VK_KHR_external_fence_win32>,
 -- 'Vulkan.Core10.Handles.Device', 'ImportFenceWin32HandleInfoKHR'
 importFenceWin32HandleKHR :: forall io
                            . (MonadIO io)
@@ -310,7 +313,7 @@ importFenceWin32HandleKHR :: forall io
                              ImportFenceWin32HandleInfoKHR
                           -> io ()
 importFenceWin32HandleKHR device importFenceWin32HandleInfo = liftIO . evalContT $ do
-  let vkImportFenceWin32HandleKHRPtr = pVkImportFenceWin32HandleKHR (deviceCmds (device :: Device))
+  let vkImportFenceWin32HandleKHRPtr = pVkImportFenceWin32HandleKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkImportFenceWin32HandleKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkImportFenceWin32HandleKHR is null" Nothing Nothing
   let vkImportFenceWin32HandleKHR' = mkVkImportFenceWin32HandleKHR vkImportFenceWin32HandleKHRPtr
@@ -389,6 +392,7 @@ importFenceWin32HandleKHR device importFenceWin32HandleInfo = liftIO . evalContT
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_win32 VK_KHR_external_fence_win32>,
 -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits',
 -- 'Vulkan.Core10.Handles.Fence',
 -- 'Vulkan.Core11.Enums.FenceImportFlagBits.FenceImportFlags',
@@ -401,12 +405,14 @@ data ImportFenceWin32HandleInfoKHR = ImportFenceWin32HandleInfoKHR
     -- 'Vulkan.Core11.Enums.FenceImportFlagBits.FenceImportFlagBits' specifying
     -- additional parameters for the fence payload import operation.
     flags :: FenceImportFlags
-  , -- | @handleType@ specifies the type of @handle@.
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
+    -- value specifying the type of @handle@.
     handleType :: ExternalFenceHandleTypeFlagBits
-  , -- | @handle@ is the external handle to import, or @NULL@.
+  , -- | @handle@ is @NULL@ or the external handle to import.
     handle :: HANDLE
-  , -- | @name@ is a null-terminated UTF-16 string naming the underlying
-    -- synchronization primitive to import, or @NULL@.
+  , -- | @name@ is @NULL@ or a null-terminated UTF-16 string naming the
+    -- underlying synchronization primitive to import.
     name :: LPCWSTR
   }
   deriving (Typeable, Eq)
@@ -416,7 +422,7 @@ deriving instance Generic (ImportFenceWin32HandleInfoKHR)
 deriving instance Show ImportFenceWin32HandleInfoKHR
 
 instance ToCStruct ImportFenceWin32HandleInfoKHR where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImportFenceWin32HandleInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMPORT_FENCE_WIN32_HANDLE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -467,18 +473,18 @@ instance Zero ImportFenceWin32HandleInfoKHR where
 --
 -- If
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_fence.ExportFenceCreateInfo'
--- is not present in the same @pNext@ chain, this structure is ignored.
+-- is not inluded in the same @pNext@ chain, this structure is ignored.
 --
 -- If
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_fence.ExportFenceCreateInfo'
--- is present in the @pNext@ chain of 'Vulkan.Core10.Fence.FenceCreateInfo'
--- with a Windows @handleType@, but either 'ExportFenceWin32HandleInfoKHR'
--- is not present in the @pNext@ chain, or if it is but @pAttributes@ is
--- set to @NULL@, default security descriptor values will be used, and
--- child processes created by the application will not inherit the handle,
--- as described in the MSDN documentation for “Synchronization Object
--- Security and Access Rights”1. Further, if the structure is not present,
--- the access rights will be
+-- is included in the @pNext@ chain of
+-- 'Vulkan.Core10.Fence.FenceCreateInfo' with a Windows @handleType@, but
+-- either 'ExportFenceWin32HandleInfoKHR' is not included in the @pNext@
+-- chain, or if it is but @pAttributes@ is set to @NULL@, default security
+-- descriptor values will be used, and child processes created by the
+-- application will not inherit the handle, as described in the MSDN
+-- documentation for “Synchronization Object Security and Access Rights”1.
+-- Further, if the structure is not present, the access rights will be
 --
 -- @DXGI_SHARED_RESOURCE_READ@ | @DXGI_SHARED_RESOURCE_WRITE@
 --
@@ -511,6 +517,7 @@ instance Zero ImportFenceWin32HandleInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_win32 VK_KHR_external_fence_win32>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExportFenceWin32HandleInfoKHR = ExportFenceWin32HandleInfoKHR
   { -- | @pAttributes@ is a pointer to a Windows
@@ -532,7 +539,7 @@ deriving instance Generic (ExportFenceWin32HandleInfoKHR)
 deriving instance Show ExportFenceWin32HandleInfoKHR
 
 instance ToCStruct ExportFenceWin32HandleInfoKHR where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExportFenceWin32HandleInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXPORT_FENCE_WIN32_HANDLE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -628,6 +635,7 @@ instance Zero ExportFenceWin32HandleInfoKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_fence_win32 VK_KHR_external_fence_win32>,
 -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits',
 -- 'Vulkan.Core10.Handles.Fence',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
@@ -635,7 +643,9 @@ instance Zero ExportFenceWin32HandleInfoKHR where
 data FenceGetWin32HandleInfoKHR = FenceGetWin32HandleInfoKHR
   { -- | @fence@ is the fence from which state will be exported.
     fence :: Fence
-  , -- | @handleType@ is the type of handle requested.
+  , -- | @handleType@ is a
+    -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
+    -- value specifying the type of handle requested.
     handleType :: ExternalFenceHandleTypeFlagBits
   }
   deriving (Typeable, Eq)
@@ -645,7 +655,7 @@ deriving instance Generic (FenceGetWin32HandleInfoKHR)
 deriving instance Show FenceGetWin32HandleInfoKHR
 
 instance ToCStruct FenceGetWin32HandleInfoKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FenceGetWin32HandleInfoKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FENCE_GET_WIN32_HANDLE_INFO_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -64,7 +64,7 @@ import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -120,6 +120,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.Core10.Enums.StructureType (StructureType)
 import OpenXR.Core10.Enums.Result (Result(SUCCESS))
@@ -141,9 +142,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrGetControllerModelKeyMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
---     'getControllerModelKeyMSFT'
+-- -   #VUID-xrGetControllerModelKeyMSFT-extension-notenabled# The
+--     @XR_MSFT_controller_model@ extension /must/ be enabled prior to
+--     calling 'getControllerModelKeyMSFT'
 --
 -- -   #VUID-xrGetControllerModelKeyMSFT-session-parameter# @session@
 --     /must/ be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -195,7 +196,7 @@ getControllerModelKeyMSFT :: forall io
                              ("topLevelUserPath" ::: Path)
                           -> io (ControllerModelKeyStateMSFT)
 getControllerModelKeyMSFT session topLevelUserPath = liftIO . evalContT $ do
-  let xrGetControllerModelKeyMSFTPtr = pXrGetControllerModelKeyMSFT (instanceCmds (session :: Session))
+  let xrGetControllerModelKeyMSFTPtr = pXrGetControllerModelKeyMSFT (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetControllerModelKeyMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetControllerModelKeyMSFT is null" Nothing Nothing
   let xrGetControllerModelKeyMSFT' = mkXrGetControllerModelKeyMSFT xrGetControllerModelKeyMSFTPtr
@@ -250,9 +251,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrLoadControllerModelMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
---     'loadControllerModelMSFT'
+-- -   #VUID-xrLoadControllerModelMSFT-extension-notenabled# The
+--     @XR_MSFT_controller_model@ extension /must/ be enabled prior to
+--     calling 'loadControllerModelMSFT'
 --
 -- -   #VUID-xrLoadControllerModelMSFT-session-parameter# @session@ /must/
 --     be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -302,7 +303,7 @@ loadControllerModelMSFT :: forall io
                            ControllerModelKeyMSFT
                         -> io (("buffer" ::: Vector Word8))
 loadControllerModelMSFT session modelKey = liftIO . evalContT $ do
-  let xrLoadControllerModelMSFTPtr = pXrLoadControllerModelMSFT (instanceCmds (session :: Session))
+  let xrLoadControllerModelMSFTPtr = pXrLoadControllerModelMSFT (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrLoadControllerModelMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrLoadControllerModelMSFT is null" Nothing Nothing
   let xrLoadControllerModelMSFT' = mkXrLoadControllerModelMSFT xrLoadControllerModelMSFTPtr
@@ -345,8 +346,8 @@ foreign import ccall
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrGetControllerModelPropertiesMSFT-extension-notenabled# The
---     @@ extension /must/ be enabled prior to calling
---     'getControllerModelPropertiesMSFT'
+--     @XR_MSFT_controller_model@ extension /must/ be enabled prior to
+--     calling 'getControllerModelPropertiesMSFT'
 --
 -- -   #VUID-xrGetControllerModelPropertiesMSFT-session-parameter#
 --     @session@ /must/ be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -392,7 +393,7 @@ getControllerModelPropertiesMSFT :: forall io
                                     ControllerModelKeyMSFT
                                  -> io (ControllerModelPropertiesMSFT)
 getControllerModelPropertiesMSFT session modelKey = liftIO . evalContT $ do
-  let xrGetControllerModelPropertiesMSFTPtr = pXrGetControllerModelPropertiesMSFT (instanceCmds (session :: Session))
+  let xrGetControllerModelPropertiesMSFTPtr = pXrGetControllerModelPropertiesMSFT (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetControllerModelPropertiesMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetControllerModelPropertiesMSFT is null" Nothing Nothing
   let xrGetControllerModelPropertiesMSFT' = mkXrGetControllerModelPropertiesMSFT xrGetControllerModelPropertiesMSFTPtr
@@ -427,9 +428,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrGetControllerModelStateMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
---     'getControllerModelStateMSFT'
+-- -   #VUID-xrGetControllerModelStateMSFT-extension-notenabled# The
+--     @XR_MSFT_controller_model@ extension /must/ be enabled prior to
+--     calling 'getControllerModelStateMSFT'
 --
 -- -   #VUID-xrGetControllerModelStateMSFT-session-parameter# @session@
 --     /must/ be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -474,7 +475,7 @@ getControllerModelStateMSFT :: forall io
                                ControllerModelKeyMSFT
                             -> io (ControllerModelStateMSFT)
 getControllerModelStateMSFT session modelKey = liftIO . evalContT $ do
-  let xrGetControllerModelStateMSFTPtr = pXrGetControllerModelStateMSFT (instanceCmds (session :: Session))
+  let xrGetControllerModelStateMSFTPtr = pXrGetControllerModelStateMSFT (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetControllerModelStateMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetControllerModelStateMSFT is null" Nothing Nothing
   let xrGetControllerModelStateMSFT' = mkXrGetControllerModelStateMSFT xrGetControllerModelStateMSFTPtr
@@ -523,9 +524,9 @@ instance Show ControllerModelKeyMSFT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrControllerModelKeyStateMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'ControllerModelKeyStateMSFT'
+-- -   #VUID-XrControllerModelKeyStateMSFT-extension-notenabled# The
+--     @XR_MSFT_controller_model@ extension /must/ be enabled prior to
+--     using 'ControllerModelKeyStateMSFT'
 --
 -- -   #VUID-XrControllerModelKeyStateMSFT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_CONTROLLER_MODEL_KEY_STATE_MSFT'
@@ -550,7 +551,7 @@ deriving instance Generic (ControllerModelKeyStateMSFT)
 deriving instance Show ControllerModelKeyStateMSFT
 
 instance ToCStruct ControllerModelKeyStateMSFT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ControllerModelKeyStateMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_CONTROLLER_MODEL_KEY_STATE_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -603,8 +604,8 @@ instance Zero ControllerModelKeyStateMSFT where
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrControllerModelNodePropertiesMSFT-extension-notenabled# The
---     @@ extension /must/ be enabled prior to using
---     'ControllerModelNodePropertiesMSFT'
+--     @XR_MSFT_controller_model@ extension /must/ be enabled prior to
+--     using 'ControllerModelNodePropertiesMSFT'
 --
 -- -   #VUID-XrControllerModelNodePropertiesMSFT-type-type# @type@ /must/
 --     be
@@ -643,7 +644,7 @@ deriving instance Generic (ControllerModelNodePropertiesMSFT)
 deriving instance Show ControllerModelNodePropertiesMSFT
 
 instance ToCStruct ControllerModelNodePropertiesMSFT where
-  withCStruct x f = allocaBytesAligned 144 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 144 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ControllerModelNodePropertiesMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_CONTROLLER_MODEL_NODE_PROPERTIES_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -707,9 +708,9 @@ instance Zero ControllerModelNodePropertiesMSFT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrControllerModelPropertiesMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'ControllerModelPropertiesMSFT'
+-- -   #VUID-XrControllerModelPropertiesMSFT-extension-notenabled# The
+--     @XR_MSFT_controller_model@ extension /must/ be enabled prior to
+--     using 'ControllerModelPropertiesMSFT'
 --
 -- -   #VUID-XrControllerModelPropertiesMSFT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_CONTROLLER_MODEL_PROPERTIES_MSFT'
@@ -743,7 +744,7 @@ deriving instance Generic (ControllerModelPropertiesMSFT)
 deriving instance Show ControllerModelPropertiesMSFT
 
 instance ToCStruct ControllerModelPropertiesMSFT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ControllerModelPropertiesMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_CONTROLLER_MODEL_PROPERTIES_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -796,9 +797,9 @@ instance Zero ControllerModelPropertiesMSFT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrControllerModelNodeStateMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'ControllerModelNodeStateMSFT'
+-- -   #VUID-XrControllerModelNodeStateMSFT-extension-notenabled# The
+--     @XR_MSFT_controller_model@ extension /must/ be enabled prior to
+--     using 'ControllerModelNodeStateMSFT'
 --
 -- -   #VUID-XrControllerModelNodeStateMSFT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_CONTROLLER_MODEL_NODE_STATE_MSFT'
@@ -823,7 +824,7 @@ deriving instance Generic (ControllerModelNodeStateMSFT)
 deriving instance Show ControllerModelNodeStateMSFT
 
 instance ToCStruct ControllerModelNodeStateMSFT where
-  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ControllerModelNodeStateMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_CONTROLLER_MODEL_NODE_STATE_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -882,9 +883,9 @@ instance Zero ControllerModelNodeStateMSFT where
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-XrControllerModelStateMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to using
---     'ControllerModelStateMSFT'
+-- -   #VUID-XrControllerModelStateMSFT-extension-notenabled# The
+--     @XR_MSFT_controller_model@ extension /must/ be enabled prior to
+--     using 'ControllerModelStateMSFT'
 --
 -- -   #VUID-XrControllerModelStateMSFT-type-type# @type@ /must/ be
 --     'OpenXR.Core10.Enums.StructureType.TYPE_CONTROLLER_MODEL_STATE_MSFT'
@@ -918,7 +919,7 @@ deriving instance Generic (ControllerModelStateMSFT)
 deriving instance Show ControllerModelStateMSFT
 
 instance ToCStruct ControllerModelStateMSFT where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ControllerModelStateMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_CONTROLLER_MODEL_STATE_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

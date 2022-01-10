@@ -50,8 +50,10 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --
 -- = Description
 --
--- The following bits /may/ be set in @linearTilingFeatures@,
--- @optimalTilingFeatures@, and
+-- These values all have the same meaning as the equivalently named values
+-- for
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.FormatFeatureFlags2KHR'
+-- and /may/ be set in @linearTilingFeatures@, @optimalTilingFeatures@, and
 -- 'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.DrmFormatModifierPropertiesEXT'::@drmFormatModifierTilingFeatures@,
 -- specifying that the features are supported by <VkImage.html images> or
 -- <VkImageView.html image views> or
@@ -65,7 +67,7 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --
 -- -   'FORMAT_FEATURE_STORAGE_IMAGE_BIT' specifies that an image view
 --     /can/ be used as a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage storage images>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage storage image>.
 --
 -- -   'FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT' specifies that an image
 --     view /can/ be used as storage image that supports atomic operations.
@@ -110,14 +112,13 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --     only specifies that the depth aspect (not the stencil aspect) of an
 --     image of this format supports linear filtering, and that linear
 --     filtering of the depth aspect is supported whether depth compare is
---     enabled in the sampler or not. If this bit is not present, linear
---     filtering with depth compare disabled is unsupported and linear
---     filtering with depth compare enabled is supported, but /may/ compute
---     the filtered value in an implementation-dependent manner which
---     differs from the normal rules of linear filtering. The resulting
---     value /must/ be in the range [0,1] and /should/ be proportional to,
---     or a weighted average of, the number of comparison passes or
---     failures.
+--     enabled in the sampler or not. Where depth comparison is supported
+--     it /may/ be linear filtered whether this bit is present or not, but
+--     where this bit is not present the filtered value /may/ be computed
+--     in an implementation-dependent manner which differs from the normal
+--     rules of linear filtering. The resulting value /must/ be in the
+--     range [0,1] and /should/ be proportional to, or a weighted average
+--     of, the number of comparison passes or failures.
 --
 -- -   'FORMAT_FEATURE_TRANSFER_SRC_BIT' specifies that an image /can/ be
 --     used as a source image for
@@ -179,8 +180,10 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --     using this format as a source.
 --
 -- -   'FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT'
---     specifies that the format can do linear sampler filtering
---     (min\/magFilter) whilst sampler Y′CBCR conversion is enabled.
+--     specifies that an application /can/ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+--     using this format as a source with @chromaFilter@ set to
+--     'Vulkan.Core10.Enums.Filter.FILTER_LINEAR'.
 --
 -- -   'FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT'
 --     specifies that the format can have different chroma, min, and mag
@@ -214,13 +217,13 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 -- -   'FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR' specifies
 --     that an image view /can/ be used as a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>.
---     An implementation /must/ not set this feature for formats that with
+--     An implementation /must/ not set this feature for formats with
 --     numeric type other than @*UINT@, or set it as a buffer feature.
 --
 -- The following bits /may/ be set in @bufferFeatures@, specifying that the
 -- features are supported by <VkBuffer.html buffers> or
 -- <VkBufferView.html buffer views> created with the queried
--- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceProperties'::@format@:
+-- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'::@format@:
 --
 -- -   'FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT' specifies that the format
 --     /can/ be used to create a buffer view that /can/ be bound to a
@@ -253,6 +256,7 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'FormatFeatureFlags'
 newtype FormatFeatureFlagBits = FormatFeatureFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
@@ -262,7 +266,7 @@ newtype FormatFeatureFlagBits = FormatFeatureFlagBits Flags
 pattern FORMAT_FEATURE_SAMPLED_IMAGE_BIT                        = FormatFeatureFlagBits 0x00000001
 -- | 'FORMAT_FEATURE_STORAGE_IMAGE_BIT' specifies that an image view /can/ be
 -- used as a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage storage images>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage storage image>.
 pattern FORMAT_FEATURE_STORAGE_IMAGE_BIT                        = FormatFeatureFlagBits 0x00000002
 -- | 'FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT' specifies that an image view
 -- /can/ be used as storage image that supports atomic operations.
@@ -323,9 +327,9 @@ pattern FORMAT_FEATURE_BLIT_DST_BIT                             = FormatFeatureF
 -- specifies that the depth aspect (not the stencil aspect) of an image of
 -- this format supports linear filtering, and that linear filtering of the
 -- depth aspect is supported whether depth compare is enabled in the
--- sampler or not. If this bit is not present, linear filtering with depth
--- compare disabled is unsupported and linear filtering with depth compare
--- enabled is supported, but /may/ compute the filtered value in an
+-- sampler or not. Where depth comparison is supported it /may/ be linear
+-- filtered whether this bit is present or not, but where this bit is not
+-- present the filtered value /may/ be computed in an
 -- implementation-dependent manner which differs from the normal rules of
 -- linear filtering. The resulting value /must/ be in the range [0,1] and
 -- /should/ be proportional to, or a weighted average of, the number of
@@ -334,8 +338,8 @@ pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT          = FormatFeatureF
 -- | 'FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR' specifies that
 -- an image view /can/ be used as a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>.
--- An implementation /must/ not set this feature for formats that with
--- numeric type other than @*UINT@, or set it as a buffer feature.
+-- An implementation /must/ not set this feature for formats with numeric
+-- type other than @*UINT@, or set it as a buffer feature.
 pattern FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = FormatFeatureFlagBits 0x40000000
 -- | 'FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT' specifies that an image
 -- view /can/ be used as a
@@ -403,8 +407,10 @@ pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPL
 pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT =
   FormatFeatureFlagBits 0x00080000
 -- | 'FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT'
--- specifies that the format can do linear sampler filtering
--- (min\/magFilter) whilst sampler Y′CBCR conversion is enabled.
+-- specifies that an application /can/ define a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+-- using this format as a source with @chromaFilter@ set to
+-- 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR'.
 pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT = FormatFeatureFlagBits 0x00040000
 -- | 'FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT' specifies that an
 -- application /can/ define a

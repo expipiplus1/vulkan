@@ -33,18 +33,18 @@
 -- [__Contact__]
 --
 --     -   Tobias Hector
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_imageless_framebuffer:%20&body=@tobias%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_imageless_framebuffer] @tobias%0A<<Here describe the issue or question you have about the VK_KHR_imageless_framebuffer extension>> >
 --
 -- == Other Extension Metadata
 --
--- [Last Modified Date]
+-- [__Last Modified Date__]
 --     2018-12-14
 --
 -- [__Interactions and External Dependencies__]
 --
 --     -   Promoted to Vulkan 1.2 Core
 --
--- [Contributors]
+-- [__Contributors__]
 --
 --     -   Tobias Hector
 --
@@ -113,14 +113,14 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'FramebufferAttachmentImageInfoKHR',
 -- 'FramebufferAttachmentsCreateInfoKHR',
 -- 'PhysicalDeviceImagelessFramebufferFeaturesKHR',
 -- 'RenderPassAttachmentBeginInfoKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_imageless_framebuffer Vulkan Specification>

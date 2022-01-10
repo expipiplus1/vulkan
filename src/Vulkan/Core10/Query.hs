@@ -19,7 +19,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -58,6 +58,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateQueryPool))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyQueryPool))
 import Vulkan.Dynamic (DeviceCmds(pVkGetQueryPoolResults))
@@ -131,6 +132,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.QueryPool',
 -- 'QueryPoolCreateInfo'
@@ -147,7 +149,7 @@ createQueryPool :: forall a io
                    ("allocator" ::: Maybe AllocationCallbacks)
                 -> io (QueryPool)
 createQueryPool device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateQueryPoolPtr = pVkCreateQueryPool (deviceCmds (device :: Device))
+  let vkCreateQueryPoolPtr = pVkCreateQueryPool (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateQueryPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateQueryPool is null" Nothing Nothing
   let vkCreateQueryPool' = mkVkCreateQueryPool vkCreateQueryPoolPtr
@@ -198,6 +200,14 @@ foreign import ccall
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
 --     provided when @queryPool@ was created, @pAllocator@ /must/ be @NULL@
 --
+-- Note
+--
+-- Applications /can/ verify that @queryPool@ /can/ be destroyed by
+-- checking that 'getQueryPoolResults'() without the
+-- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_PARTIAL_BIT' flag
+-- returns 'Vulkan.Core10.Enums.Result.SUCCESS' for all queries that are
+-- used in command buffers submitted for execution.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkDestroyQueryPool-device-parameter# @device@ /must/ be a
@@ -221,6 +231,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.QueryPool'
 destroyQueryPool :: forall io
@@ -235,7 +246,7 @@ destroyQueryPool :: forall io
                     ("allocator" ::: Maybe AllocationCallbacks)
                  -> io ()
 destroyQueryPool device queryPool allocator = liftIO . evalContT $ do
-  let vkDestroyQueryPoolPtr = pVkDestroyQueryPool (deviceCmds (device :: Device))
+  let vkDestroyQueryPoolPtr = pVkDestroyQueryPool (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyQueryPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyQueryPool is null" Nothing Nothing
   let vkDestroyQueryPool' = mkVkDestroyQueryPool vkDestroyQueryPoolPtr
@@ -294,6 +305,11 @@ foreign import ccall
 -- queries if
 -- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT'
 -- is set.
+--
+-- If 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WAIT_BIT' is
+-- not set, 'getQueryPoolResults' /may/ return
+-- 'Vulkan.Core10.Enums.Result.NOT_READY' if there are queries in the
+-- unavailable state.
 --
 -- Note
 --
@@ -356,10 +372,6 @@ foreign import ccall
 -- -   #VUID-vkGetQueryPoolResults-firstQuery-00813# @firstQuery@ /must/ be
 --     less than the number of queries in @queryPool@
 --
--- -   #VUID-vkGetQueryPoolResults-flags-02827# If
---     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT' is not
---     set in @flags@, then @pData@ and @stride@ /must/ be multiples of @4@
---
 -- -   #VUID-vkGetQueryPoolResults-flags-02828# If
 --     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT' is not
 --     set in @flags@ and the @queryType@ used to create @queryPool@ was
@@ -383,7 +395,7 @@ foreign import ccall
 --     then @stride@ /must/ be large enough to contain
 --     'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR'::@counterIndexCount@
 --     used to create @queryPool@ times the size of
---     'Vulkan.Extensions.VK_KHR_performance_query.PerformanceCounterResultKHR'.
+--     'Vulkan.Extensions.VK_KHR_performance_query.PerformanceCounterResultKHR'
 --
 -- -   #VUID-vkGetQueryPoolResults-firstQuery-00816# The sum of
 --     @firstQuery@ and @queryCount@ /must/ be less than or equal to the
@@ -453,6 +465,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Handles.QueryPool',
@@ -482,7 +495,7 @@ getQueryPoolResults :: forall io
                        QueryResultFlags
                     -> io (Result)
 getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride flags = liftIO $ do
-  let vkGetQueryPoolResultsPtr = pVkGetQueryPoolResults (deviceCmds (device :: Device))
+  let vkGetQueryPoolResultsPtr = pVkGetQueryPoolResults (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetQueryPoolResultsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetQueryPoolResults is null" Nothing Nothing
   let vkGetQueryPoolResults' = mkVkGetQueryPoolResults vkGetQueryPoolResultsPtr
@@ -514,8 +527,9 @@ getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride
 --
 -- -   #VUID-VkQueryPoolCreateInfo-queryType-03222# If @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
---     the @pNext@ chain /must/ include a structure of type
+--     the @pNext@ chain /must/ include a
 --     'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR'
+--     structure
 --
 -- -   #VUID-VkQueryPoolCreateInfo-queryCount-02763# @queryCount@ /must/ be
 --     greater than 0
@@ -528,9 +542,14 @@ getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride
 -- -   #VUID-VkQueryPoolCreateInfo-pNext-pNext# Each @pNext@ member of any
 --     structure (including this one) in the @pNext@ chain /must/ be either
 --     @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR'
+--     'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR',
+--     'Vulkan.Extensions.VK_INTEL_performance_query.QueryPoolPerformanceQueryCreateInfoINTEL',
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264ProfileEXT VkVideoDecodeH264ProfileEXT>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH265ProfileEXT VkVideoDecodeH265ProfileEXT>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264ProfileEXT VkVideoEncodeH264ProfileEXT>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265ProfileEXT VkVideoEncodeH265ProfileEXT>,
 --     or
---     'Vulkan.Extensions.VK_INTEL_performance_query.QueryPoolPerformanceQueryCreateInfoINTEL'
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileKHR VkVideoProfileKHR>
 --
 -- -   #VUID-VkQueryPoolCreateInfo-sType-unique# The @sType@ value of each
 --     struct in the @pNext@ chain /must/ be unique
@@ -542,6 +561,7 @@ getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QueryPipelineStatisticFlags',
 -- 'Vulkan.Core10.Enums.QueryPoolCreateFlags.QueryPoolCreateFlags',
 -- 'Vulkan.Core10.Enums.QueryType.QueryType',
@@ -571,7 +591,7 @@ deriving instance Show (Chain es) => Show (QueryPoolCreateInfo es)
 
 instance Extensible QueryPoolCreateInfo where
   extensibleTypeName = "QueryPoolCreateInfo"
-  setNext x next = x{next = next}
+  setNext QueryPoolCreateInfo{..} next' = QueryPoolCreateInfo{next = next', ..}
   getNext QueryPoolCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends QueryPoolCreateInfo e => b) -> Maybe b
   extends _ f
@@ -580,7 +600,7 @@ instance Extensible QueryPoolCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss QueryPoolCreateInfo es, PokeChain es) => ToCStruct (QueryPoolCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p QueryPoolCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)

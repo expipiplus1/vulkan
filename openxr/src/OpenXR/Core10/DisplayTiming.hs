@@ -20,7 +20,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -88,6 +88,7 @@ import {-# SOURCE #-} OpenXR.Extensions.XR_MSFT_secondary_view_configuration (Se
 import {-# SOURCE #-} OpenXR.Extensions.XR_MSFT_secondary_view_configuration (SecondaryViewConfigurationFrameStateMSFT)
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.CStruct.Extends (SomeChild)
 import OpenXR.CStruct.Extends (SomeStruct)
@@ -95,7 +96,7 @@ import OpenXR.Core10.Handles (Space_T)
 import OpenXR.Core10.Enums.StructureType (StructureType)
 import OpenXR.Core10.FundamentalTypes (Time)
 import OpenXR.Core10.Enums.ViewConfigurationType (ViewConfigurationType)
-import OpenXR.Core10.Enums.ViewStateFlags (ViewStateFlags)
+import OpenXR.Core10.Enums.ViewStateFlagBits (ViewStateFlags)
 import OpenXR.Core10.Enums.Result (Result(SUCCESS))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_FRAME_BEGIN_INFO))
 import OpenXR.Core10.Enums.StructureType (StructureType(TYPE_FRAME_END_INFO))
@@ -182,7 +183,7 @@ beginFrame :: forall io
               ("frameBeginInfo" ::: Maybe FrameBeginInfo)
            -> io (Result)
 beginFrame session frameBeginInfo = liftIO . evalContT $ do
-  let xrBeginFramePtr = pXrBeginFrame (instanceCmds (session :: Session))
+  let xrBeginFramePtr = pXrBeginFrame (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrBeginFramePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrBeginFrame is null" Nothing Nothing
   let xrBeginFrame' = mkXrBeginFrame xrBeginFramePtr
@@ -316,7 +317,7 @@ locateViews :: forall io
                ViewLocateInfo
             -> io (Result, ViewState, ("views" ::: Vector View))
 locateViews session viewLocateInfo = liftIO . evalContT $ do
-  let xrLocateViewsPtr = pXrLocateViews (instanceCmds (session :: Session))
+  let xrLocateViewsPtr = pXrLocateViews (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrLocateViewsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrLocateViews is null" Nothing Nothing
   let xrLocateViews' = mkXrLocateViews xrLocateViewsPtr
@@ -470,7 +471,7 @@ endFrame :: forall a io
             (FrameEndInfo a)
          -> io (Result)
 endFrame session frameEndInfo = liftIO . evalContT $ do
-  let xrEndFramePtr = pXrEndFrame (instanceCmds (session :: Session))
+  let xrEndFramePtr = pXrEndFrame (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrEndFramePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEndFrame is null" Nothing Nothing
   let xrEndFrame' = mkXrEndFrame xrEndFramePtr
@@ -502,7 +503,7 @@ waitFrameSafeOrUnsafe :: forall a io
                          ("frameWaitInfo" ::: Maybe FrameWaitInfo)
                       -> io (Result, FrameState a)
 waitFrameSafeOrUnsafe mkXrWaitFrame session frameWaitInfo = liftIO . evalContT $ do
-  let xrWaitFramePtr = pXrWaitFrame (instanceCmds (session :: Session))
+  let xrWaitFramePtr = pXrWaitFrame (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrWaitFramePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrWaitFrame is null" Nothing Nothing
   let xrWaitFrame' = mkXrWaitFrame xrWaitFramePtr
@@ -668,7 +669,7 @@ deriving instance Generic (View)
 deriving instance Show View
 
 instance ToCStruct View where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p View{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VIEW)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -753,7 +754,7 @@ deriving instance Generic (ViewLocateInfo)
 deriving instance Show ViewLocateInfo
 
 instance ToCStruct ViewLocateInfo where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ViewLocateInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VIEW_LOCATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -806,16 +807,15 @@ instance Zero ViewLocateInfo where
 -- = See Also
 --
 -- 'OpenXR.Core10.Enums.StructureType.StructureType', 'View',
--- 'OpenXR.Core10.Enums.ViewStateFlags.ViewStateFlags', 'locateViews'
+-- 'OpenXR.Core10.Enums.ViewStateFlagBits.ViewStateFlags', 'locateViews'
 data ViewState = ViewState
   { -- | @viewStateFlags@ is a bitmask of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrViewStateFlagBits XrViewStateFlagBits>
-    -- indicating state for all views.
+    -- 'OpenXR.Core10.Enums.ViewStateFlagBits.ViewStateFlagBits' indicating
+    -- state for all views.
     --
     -- #VUID-XrViewState-viewStateFlags-parameter# @viewStateFlags@ /must/ be
     -- @0@ or a valid combination of
-    -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrViewStateFlagBits XrViewStateFlagBits>
-    -- values
+    -- 'OpenXR.Core10.Enums.ViewStateFlagBits.ViewStateFlagBits' values
     viewStateFlags :: ViewStateFlags }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -824,7 +824,7 @@ deriving instance Generic (ViewState)
 deriving instance Show ViewState
 
 instance ToCStruct ViewState where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ViewState{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VIEW_STATE)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -880,7 +880,7 @@ deriving instance Generic (FrameBeginInfo)
 deriving instance Show FrameBeginInfo
 
 instance ToCStruct FrameBeginInfo where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FrameBeginInfo f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_FRAME_BEGIN_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -976,7 +976,7 @@ deriving instance Show (Chain es) => Show (FrameEndInfo es)
 
 instance Extensible FrameEndInfo where
   extensibleTypeName = "FrameEndInfo"
-  setNext x next = x{next = next}
+  setNext FrameEndInfo{..} next' = FrameEndInfo{next = next', ..}
   getNext FrameEndInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends FrameEndInfo e => b) -> Maybe b
   extends _ f
@@ -984,7 +984,7 @@ instance Extensible FrameEndInfo where
     | otherwise = Nothing
 
 instance (Extendss FrameEndInfo es, PokeChain es) => ToCStruct (FrameEndInfo es) where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FrameEndInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_FRAME_END_INFO)
     next'' <- fmap castPtr . ContT $ withChain (next)
@@ -1002,7 +1002,7 @@ instance (Extendss FrameEndInfo es, PokeChain es) => ToCStruct (FrameEndInfo es)
     layers'' <- if Data.Vector.null (layers)
       then pure nullPtr
       else do
-        pLayers <- ContT $ allocaBytesAligned @(Ptr _) (((Data.Vector.length (layers))) * 8) 8
+        pLayers <- ContT $ allocaBytes @(Ptr _) (((Data.Vector.length (layers))) * 8)
         Data.Vector.imapM_ (\i e -> do
           layers' <- ContT $ withSomeChild (e)
           lift $ poke (pLayers `plusPtr` (8 * (i)) :: Ptr (Ptr _)) layers') ((layers))
@@ -1067,7 +1067,7 @@ deriving instance Generic (FrameWaitInfo)
 deriving instance Show FrameWaitInfo
 
 instance ToCStruct FrameWaitInfo where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FrameWaitInfo f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_FRAME_WAIT_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -1161,7 +1161,7 @@ deriving instance Show (Chain es) => Show (FrameState es)
 
 instance Extensible FrameState where
   extensibleTypeName = "FrameState"
-  setNext x next = x{next = next}
+  setNext FrameState{..} next' = FrameState{next = next', ..}
   getNext FrameState{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends FrameState e => b) -> Maybe b
   extends _ f
@@ -1169,7 +1169,7 @@ instance Extensible FrameState where
     | otherwise = Nothing
 
 instance (Extendss FrameState es, PokeChain es) => ToCStruct (FrameState es) where
-  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FrameState{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_FRAME_STATE)
     next'' <- fmap castPtr . ContT $ withChain (next)

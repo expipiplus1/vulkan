@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NVX_multiview_per_view_attributes:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NVX_multiview_per_view_attributes] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_NVX_multiview_per_view_attributes extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -56,14 +56,17 @@
 --
 -- This extension adds a new way to write shaders to be used with multiview
 -- subpasses, where the attributes for all views are written out by a
--- single invocation of the vertex processing stages. Related SPIR-V and
--- GLSL extensions @SPV_NVX_multiview_per_view_attributes@ and
+-- single invocation of the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stages>.
+-- Related SPIR-V and GLSL extensions
+-- @SPV_NVX_multiview_per_view_attributes@ and
 -- @GL_NVX_multiview_per_view_attributes@ introduce per-view position and
 -- viewport mask attributes arrays, and this extension defines how those
 -- per-view attribute arrays are interpreted by Vulkan. Pipelines using
--- per-view attributes /may/ only execute the vertex processing stages once
--- for all views rather than once per-view, which reduces redundant shading
--- work.
+-- per-view attributes /may/ only execute the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stages>
+-- once for all views rather than once per-view, which reduces redundant
+-- shading work.
 --
 -- A subpass creation flag controls whether the subpass uses this
 -- extension. A subpass /must/ either exclusively use this extension or not
@@ -143,11 +146,11 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_multiview_per_view_attributes Vulkan Specification>

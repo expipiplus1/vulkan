@@ -32,7 +32,9 @@
 -- [__Contact__]
 --
 --     -   Bill Hollings
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_portability_subset:%20&body=@billhollings%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_portability_subset] @billhollings%0A<<Here describe the issue or question you have about the VK_KHR_portability_subset extension>> >
+--
+-- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
 --     2020-07-21
@@ -56,10 +58,14 @@
 --
 --     -   Neil Trevett, NVIDIA
 --
--- This extension allows a non-conformant Vulkan implementation to be built
--- on top of another non-Vulkan graphics API, and identifies differences
--- between that implementation and a fully-conformant native Vulkan
--- implementation.
+--     -   Alexey Knyazev, Independent
+--
+-- == Description
+--
+-- The \`VK_KHR_portability_subset extension allows a non-conformant Vulkan
+-- implementation to be built on top of another non-Vulkan graphics API,
+-- and identifies differences between that implementation and a
+-- fully-conformant native Vulkan implementation.
 --
 -- This extension provides Vulkan implementations with the ability to mark
 -- otherwise-required capabilities as unsupported, or to establish
@@ -122,12 +128,12 @@
 --
 --     -   Initial draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDevicePortabilitySubsetFeaturesKHR',
 -- 'PhysicalDevicePortabilitySubsetPropertiesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_portability_subset Vulkan Specification>
@@ -142,7 +148,7 @@ module Vulkan.Extensions.VK_KHR_portability_subset  ( PhysicalDevicePortabilityS
                                                     , pattern KHR_PORTABILITY_SUBSET_EXTENSION_NAME
                                                     ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -172,23 +178,25 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Members
 --
--- The members of the 'PhysicalDevicePortabilitySubsetFeaturesKHR'
--- structure describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- If the 'PhysicalDevicePortabilitySubsetFeaturesKHR' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the features are supported.
--- 'PhysicalDevicePortabilitySubsetFeaturesKHR' /can/ also be used in the
--- @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to enable the
--- features.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDevicePortabilitySubsetFeaturesKHR' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_portability_subset VK_KHR_portability_subset>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePortabilitySubsetFeaturesKHR = PhysicalDevicePortabilitySubsetFeaturesKHR
@@ -293,7 +301,7 @@ deriving instance Generic (PhysicalDevicePortabilitySubsetFeaturesKHR)
 deriving instance Show PhysicalDevicePortabilitySubsetFeaturesKHR
 
 instance ToCStruct PhysicalDevicePortabilitySubsetFeaturesKHR where
-  withCStruct x f = allocaBytesAligned 80 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 80 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDevicePortabilitySubsetFeaturesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_FEATURES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -383,29 +391,29 @@ instance Zero PhysicalDevicePortabilitySubsetFeaturesKHR where
 -- | VkPhysicalDevicePortabilitySubsetPropertiesKHR - Structure describing
 -- additional properties supported by a portable implementation
 --
--- = Members
---
--- The members of the 'PhysicalDevicePortabilitySubsetPropertiesKHR'
--- structure describe the following implementation-dependent limits:
---
 -- = Description
 --
 -- If the 'PhysicalDevicePortabilitySubsetPropertiesKHR' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
+-- it is filled in with each corresponding implementation-dependent
+-- property.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_portability_subset VK_KHR_portability_subset>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePortabilitySubsetPropertiesKHR = PhysicalDevicePortabilitySubsetPropertiesKHR
   { -- | #limits-minVertexInputBindingStrideAlignment#
     -- @minVertexInputBindingStrideAlignment@ indicates the minimum alignment
     -- for vertex input strides.
     -- 'Vulkan.Core10.Pipeline.VertexInputBindingDescription'::@stride@ /must/
-    -- be a multiple of, and at least as large as, this value.
+    -- be a multiple of, and at least as large as, this value. The value /must/
+    -- be a power of two.
     minVertexInputBindingStrideAlignment :: Word32 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -414,7 +422,7 @@ deriving instance Generic (PhysicalDevicePortabilitySubsetPropertiesKHR)
 deriving instance Show PhysicalDevicePortabilitySubsetPropertiesKHR
 
 instance ToCStruct PhysicalDevicePortabilitySubsetPropertiesKHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDevicePortabilitySubsetPropertiesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_PROPERTIES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

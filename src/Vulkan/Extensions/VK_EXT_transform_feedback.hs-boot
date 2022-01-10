@@ -34,7 +34,7 @@
 -- [__Contact__]
 --
 --     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_transform_feedback:%20&body=@pdaniell-nv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_transform_feedback] @pdaniell-nv%0A<<Here describe the issue or question you have about the VK_EXT_transform_feedback extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -205,9 +205,11 @@
 -- 'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT'.
 -- A query pool created with this type will capture 2 integers -
 -- numPrimitivesWritten and numPrimitivesNeeded - for the specified vertex
--- stream output from the last vertex processing stage. The vertex stream
--- output queried is zero by default, but can be specified with the new
--- 'cmdBeginQueryIndexedEXT' and 'cmdEndQueryIndexedEXT' commands.
+-- stream output from the last
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>.
+-- The vertex stream output queried is zero by default, but can be
+-- specified with the new 'cmdBeginQueryIndexedEXT' and
+-- 'cmdEndQueryIndexedEXT' commands.
 --
 -- == Version History
 --
@@ -215,7 +217,7 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceTransformFeedbackFeaturesEXT',
 -- 'PhysicalDeviceTransformFeedbackPropertiesEXT',
@@ -225,7 +227,7 @@
 -- 'cmdBindTransformFeedbackBuffersEXT', 'cmdDrawIndirectByteCountEXT',
 -- 'cmdEndQueryIndexedEXT', 'cmdEndTransformFeedbackEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback Vulkan Specification>

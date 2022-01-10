@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_line_rasterization:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_line_rasterization] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_EXT_line_rasterization extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -103,9 +103,8 @@
 -- == Issues
 --
 -- > (1) Do we need to support Bresenham-style and smooth lines with more than
--- >     one rasterization sample? i.e. the equivalent of
--- >     glDisable(GL_MULTISAMPLE) in OpenGL when the framebuffer has more than
--- >     one sample?
+-- > one rasterization sample? i.e. the equivalent of glDisable(GL_MULTISAMPLE)
+-- > in OpenGL when the framebuffer has more than one sample?
 --
 -- > RESOLVED: Yes.
 -- > For simplicity, Bresenham line rasterization carries forward a few
@@ -118,14 +117,14 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'LineRasterizationModeEXT',
 -- 'PhysicalDeviceLineRasterizationFeaturesEXT',
 -- 'PhysicalDeviceLineRasterizationPropertiesEXT',
 -- 'PipelineRasterizationLineStateCreateInfoEXT', 'cmdSetLineStippleEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_line_rasterization Vulkan Specification>

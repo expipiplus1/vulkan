@@ -2,6 +2,9 @@
 -- No documentation found for Chapter "Handles"
 module Vulkan.Extensions.Handles  ( AccelerationStructureKHR
                                   , AccelerationStructureNV
+                                  , BufferCollectionFUCHSIA
+                                  , CuFunctionNVX
+                                  , CuModuleNVX
                                   , DebugReportCallbackEXT
                                   , DebugUtilsMessengerEXT
                                   , DeferredOperationKHR
@@ -21,6 +24,15 @@ data AccelerationStructureKHR
 
 
 data AccelerationStructureNV
+
+
+data BufferCollectionFUCHSIA
+
+
+data CuFunctionNVX
+
+
+data CuModuleNVX
 
 
 data DebugReportCallbackEXT

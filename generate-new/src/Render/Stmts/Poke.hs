@@ -22,7 +22,7 @@ module Render.Stmts.Poke
 import           Data.Char                      ( isUpper )
 import           Data.List                      ( (!!) )
 import qualified Data.Text.Extra               as T
-import           Data.Text.Prettyprint.Doc
+import           Prettyprinter
 import           Data.Vector.Extra              ( pattern Empty
                                                 , Vector
                                                 )
@@ -496,7 +496,10 @@ lenRefFromSibling name = do
           ("either id (fromIntegral . Data.Vector.length)" <+> vec)
         -- Assume vector for now, TODO, put this in CustomScheme
         Custom _ -> pure $ Pure InlineOnce ("Data.Vector.length $" <+> vec)
-        _ -> throw "Trying to get the length of a non vector type sibling"
+        s ->
+          throw
+            $  "Trying to get the length of a non vector type sibling: "
+            <> show s
 
 
 -- TODO: the type of the value here could be improved
@@ -694,12 +697,9 @@ allocArray allocType name elemType size = do
     tellImportWithAll ''ContT
     alloc <- case allocType of
       Uninitialized -> do
-        tellImport 'allocaBytesAligned
-        pure
-          $   "allocaBytesAligned @"
-          <>  elemTyDoc
-          <+> vecSizeDoc
-          <+> viaShow elemAlign
+        let (a, an, af) = chooseAlign elemAlign
+        tellImport an
+        pure $ af (a <+> "@" <> elemTyDoc <+> vecSizeDoc)
       Zeroed -> do
         tellImport 'callocBytes
         tellImport 'free

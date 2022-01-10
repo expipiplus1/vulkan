@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Tobias Hector
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_shader_image_atomic_int64:%20&body=@tobski%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_shader_image_atomic_int64] @tobski%0A<<Here describe the issue or question you have about the VK_EXT_shader_image_atomic_int64 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -35,6 +35,14 @@
 --
 -- [__IP Status__]
 --     No known IP claims.
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   This extension requires
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_shader_image_int64.html SPV_EXT_shader_image_int64>
+--
+--     -   This extension provides API support for
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_shader_image_int64.txt GLSL_EXT_shader_image_int64>
 --
 -- [__Contributors__]
 --
@@ -47,16 +55,6 @@
 --     -   Jeff Bolz, Nvidia
 --
 --     -   Jason Ekstrand, Intel
---
--- [__Interactions and External Dependencies__]
---
---     -   This extension requires the
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_EXT_shader_image_atomic_int64.html SPV_EXT_shader_image_int64>
---         SPIR-V extension.
---
---     -   This extension requires the
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_shader_image_int64.txt GLSL_EXT_shader_image_int64>
---         extension for GLSL source languages.
 --
 -- == Description
 --
@@ -97,11 +95,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceShaderImageAtomicInt64FeaturesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_image_atomic_int64 Vulkan Specification>
@@ -115,7 +113,7 @@ module Vulkan.Extensions.VK_EXT_shader_image_atomic_int64  ( PhysicalDeviceShade
                                                            , pattern EXT_SHADER_IMAGE_ATOMIC_INT64_EXTENSION_NAME
                                                            ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -140,10 +138,27 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- | VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT - Structure describing
 -- features supported by VK_EXT_shader_image_atomic_int64
 --
+-- = Members
+--
+-- This structure describes the following features:
+--
+-- = Description
+--
+-- If the @VkPhysicalDeviceShaderAtomicInt64FeaturesEXT@ structure is
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. @VkPhysicalDeviceShaderAtomicInt64FeaturesEXT@ /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
+--
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_image_atomic_int64 VK_EXT_shader_image_atomic_int64>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderImageAtomicInt64FeaturesEXT = PhysicalDeviceShaderImageAtomicInt64FeaturesEXT
@@ -162,7 +177,7 @@ deriving instance Generic (PhysicalDeviceShaderImageAtomicInt64FeaturesEXT)
 deriving instance Show PhysicalDeviceShaderImageAtomicInt64FeaturesEXT
 
 instance ToCStruct PhysicalDeviceShaderImageAtomicInt64FeaturesEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShaderImageAtomicInt64FeaturesEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_ATOMIC_INT64_FEATURES_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

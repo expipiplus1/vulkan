@@ -15,7 +15,7 @@
 --     12
 --
 -- [__Revision__]
---     9
+--     10
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -32,7 +32,7 @@
 -- [__Contact__]
 --
 --     -   Courtney Goeltzenleuchter
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_debug_report:%20&body=@courtney-g%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_debug_report] @courtney-g%0A<<Here describe the issue or question you have about the VK_EXT_debug_report extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -112,6 +112,8 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT'
 --
+--     -   'STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT'
+--
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.1 Version 1.1>
 -- is supported:
@@ -135,11 +137,7 @@
 -- application /can/ link a 'DebugReportCallbackCreateInfoEXT' structure to
 -- the @pNext@ element of the
 -- 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo' structure given
--- to 'Vulkan.Core10.DeviceInitialization.createInstance'. This callback is
--- only valid for the duration of the
--- 'Vulkan.Core10.DeviceInitialization.createInstance' and the
--- 'Vulkan.Core10.DeviceInitialization.destroyInstance' call. Use
--- 'createDebugReportCallbackEXT' to create persistent callback objects.
+-- to 'Vulkan.Core10.DeviceInitialization.createInstance'.
 --
 -- Example uses: Create three callback objects. One will log errors and
 -- warnings to the debug console using Windows @OutputDebugString@. The
@@ -247,7 +245,7 @@
 -- 4) How do you compare handles returned by the debug_report callback to
 -- the application’s handles?
 --
--- RESOLVED: Due to the different nature of dispatchable and
+-- __RESOLVED__: Due to the different nature of dispatchable and
 -- nondispatchable handles there is no generic way (that we know of) that
 -- works for common compilers with 32bit, 64bit, C and C++. We recommend
 -- applications use the same cast that the validation layers use:
@@ -313,7 +311,7 @@
 --     -   Add issue 4 discussing matching handles returned by the
 --         extension, based on suggestion in public issue 368.
 --
--- = See Also
+-- == See Also
 --
 -- 'PFN_vkDebugReportCallbackEXT', 'DebugReportCallbackCreateInfoEXT',
 -- 'Vulkan.Extensions.Handles.DebugReportCallbackEXT',
@@ -321,7 +319,7 @@
 -- 'DebugReportObjectTypeEXT', 'createDebugReportCallbackEXT',
 -- 'debugReportMessageEXT', 'destroyDebugReportCallbackEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report Vulkan Specification>

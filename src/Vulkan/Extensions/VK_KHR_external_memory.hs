@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_external_memory:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_external_memory] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_external_memory extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -174,9 +174,9 @@
 -- receive it from another instance or API?
 --
 -- __RESOLVED__: Yes. Some implementations need to perform additional cache
--- management when transitioning memory between address spaces, and other
--- APIs, instances, or processes may operate in a separate address space.
--- Options for defining this transition include:
+-- management when transitioning memory between address spaces and other
+-- APIs, instances, or processes which may operate in a separate address
+-- space. Options for defining this transition include:
 --
 -- -   A new structure that can be added to the @pNext@ list in
 --     'Vulkan.Core10.OtherTypes.MemoryBarrier',
@@ -212,7 +212,7 @@
 -- external→internal barrier. This may not be a problem in practice, but
 -- seems like the wrong scope. Another downside of
 -- 'Vulkan.Core10.Enums.DependencyFlagBits.DependencyFlags' is that it
--- lacks inherent directionality: There are not @src@ and @dst@ variants of
+-- lacks inherent directionality: there are no @src@ and @dst@ variants of
 -- it in the barrier or dependency description semantics, so two bits might
 -- need to be added to describe both internal→external and
 -- external→internal transitions. Transitioning a resource to a special
@@ -237,7 +237,7 @@
 --
 -- __RESOLVED__: Some vendors claim this is necessary on their
 -- implementations, but it was determined that the security risks of
--- allowing opaque meta data to be passed from applications to the driver
+-- allowing opaque metadata to be passed from applications to the driver
 -- were too high. Therefore, implementations which require metadata will
 -- need to associate it with the objects represented by the external
 -- handles, and rely on the dedicated allocation mechanism to associate the
@@ -256,29 +256,30 @@
 -- containing brief descriptions of the layout of bits within that memory.
 --
 -- Because memory object-based sharing is aligned with the overall Vulkan
--- API design, it exposes the full power of Vulkan on external objects.
--- External memory can be used as backing for sparse images, for example,
--- whereas such usage would be awkward at best with a sharing mechanism
--- based on higher-level primitives such as images. Further, aligning the
--- mechanism with the API in this way provides some hope of trivial
--- compatibility with future API enhancements. If new objects backed by
--- memory objects are added to the API, they too can be used across
--- processes with minimal additions to the base external memory APIs.
+-- API design, it enables the full range of Vulkan capabilities with
+-- external objects. External memory can be used as backing for sparse
+-- images, for example, whereas such usage would be awkward at best with a
+-- sharing mechanism based on higher-level primitives such as images.
+-- Further, aligning the mechanism with the API in this way provides some
+-- hope of trivial compatibility with future API enhancements. If new
+-- objects backed by memory objects are added to the API, they too can be
+-- used across processes with minimal additions to the base external memory
+-- APIs.
 --
 -- Earlier APIs implemented interop at a higher level, and this
 -- necessitated entirely separate sharing APIs for images and buffers. To
 -- co-exist and interoperate with those APIs, the Vulkan external sharing
 -- mechanism must accommodate their model. However, if it can be agreed
 -- that memory-based sharing is the more desirable and forward-looking
--- design, legacy interoperation considerations can be considered another
--- reason to favor memory-based sharing: While native and legacy driver
+-- design, legacy interoperation constraints can be considered another
+-- reason to favor memory-based sharing: while native and legacy driver
 -- primitives that may be used to implement sharing may not be as low-level
 -- as the API here suggests, raw memory is still the least common
 -- denominator among the types. Image-based sharing can be cleanly derived
 -- from a set of base memory- object sharing APIs with minimal effort,
 -- whereas image-based sharing does not generalize well to buffer or
 -- raw-memory sharing. Therefore, following the general Vulkan design
--- principle of minimalism, it is better to expose even interopability with
+-- principle of minimalism, it is better to expose interopability with
 -- image-based native and external primitives via the memory sharing API,
 -- and place sufficient limits on their usage to ensure they can be used
 -- only as backing for equivalent Vulkan images. This provides a consistent
@@ -310,7 +311,7 @@
 -- not be visible to applications importing an exported memory object.
 --
 -- 9) Must implementations validate external handles the application
--- provides as input to memory import operations?
+-- provides as inputs to memory import operations?
 --
 -- __RESOLVED__: Implementations must return an error to the application if
 -- the provided memory handle cannot be used to complete the requested
@@ -323,13 +324,13 @@
 --
 --     -   Initial version
 --
--- = See Also
+-- == See Also
 --
 -- 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_EXTERNAL_KHR',
 -- 'ExportMemoryAllocateInfoKHR', 'ExternalMemoryBufferCreateInfoKHR',
 -- 'ExternalMemoryImageCreateInfoKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory Vulkan Specification>

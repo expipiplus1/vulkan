@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Jean-Francois Roy
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_GGP_stream_descriptor_surface:%20&body=@jfroy%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_GGP_stream_descriptor_surface] @jfroy%0A<<Here describe the issue or question you have about the VK_GGP_stream_descriptor_surface extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -104,13 +104,13 @@
 --
 --     -   Initial revision.
 --
--- = See Also
+-- == See Also
 --
 -- 'StreamDescriptorSurfaceCreateFlagsGGP',
 -- 'StreamDescriptorSurfaceCreateInfoGGP',
 -- 'createStreamDescriptorSurfaceGGP'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GGP_stream_descriptor_surface Vulkan Specification>
@@ -134,7 +134,7 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -176,6 +176,7 @@ import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
+import Vulkan.Core10.Handles (Instance(Instance))
 import Vulkan.Dynamic (InstanceCmds(pVkCreateStreamDescriptorSurfaceGGP))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Enums.Result (Result)
@@ -232,6 +233,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GGP_stream_descriptor_surface VK_GGP_stream_descriptor_surface>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Instance',
 -- 'StreamDescriptorSurfaceCreateInfoGGP',
@@ -250,7 +252,7 @@ createStreamDescriptorSurfaceGGP :: forall io
                                     ("allocator" ::: Maybe AllocationCallbacks)
                                  -> io (SurfaceKHR)
 createStreamDescriptorSurfaceGGP instance' createInfo allocator = liftIO . evalContT $ do
-  let vkCreateStreamDescriptorSurfaceGGPPtr = pVkCreateStreamDescriptorSurfaceGGP (instanceCmds (instance' :: Instance))
+  let vkCreateStreamDescriptorSurfaceGGPPtr = pVkCreateStreamDescriptorSurfaceGGP (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateStreamDescriptorSurfaceGGPPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateStreamDescriptorSurfaceGGP is null" Nothing Nothing
   let vkCreateStreamDescriptorSurfaceGGP' = mkVkCreateStreamDescriptorSurfaceGGP vkCreateStreamDescriptorSurfaceGGPPtr
@@ -272,6 +274,7 @@ createStreamDescriptorSurfaceGGP instance' createInfo allocator = liftIO . evalC
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GGP_stream_descriptor_surface VK_GGP_stream_descriptor_surface>,
 -- 'StreamDescriptorSurfaceCreateFlagsGGP',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createStreamDescriptorSurfaceGGP'
@@ -295,7 +298,7 @@ deriving instance Generic (StreamDescriptorSurfaceCreateInfoGGP)
 deriving instance Show StreamDescriptorSurfaceCreateInfoGGP
 
 instance ToCStruct StreamDescriptorSurfaceCreateInfoGGP where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p StreamDescriptorSurfaceCreateInfoGGP{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -338,6 +341,7 @@ instance Zero StreamDescriptorSurfaceCreateInfoGGP where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_GGP_stream_descriptor_surface VK_GGP_stream_descriptor_surface>,
 -- 'StreamDescriptorSurfaceCreateInfoGGP'
 newtype StreamDescriptorSurfaceCreateFlagsGGP = StreamDescriptorSurfaceCreateFlagsGGP Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

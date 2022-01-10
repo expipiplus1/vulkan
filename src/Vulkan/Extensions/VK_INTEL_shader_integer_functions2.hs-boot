@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Ian Romanick
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_INTEL_shader_integer_functions2:%20&body=@ianromanick%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_INTEL_shader_integer_functions2] @ianromanick%0A<<Here describe the issue or question you have about the VK_INTEL_shader_integer_functions2 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -35,6 +35,14 @@
 --
 -- [__IP Status__]
 --     No known IP claims.
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   This extension requires
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/INTEL/SPV_INTEL_shader_integer_functions2.html SPV_INTEL_shader_integer_functions2>.
+--
+--     -   This extension provides API support for
+--         <https://www.khronos.org/registry/OpenGL/extensions/INTEL/INTEL_shader_integer_functions2.txt GL_INTEL_shader_integer_functions2>.
 --
 -- [__Contributors__]
 --
@@ -49,7 +57,7 @@
 -- pre-existing counterparts in the Kernel environment.
 --
 -- The added integer functions are defined by the
--- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/INTEL/SPV_INTEL_shader_integer_functions2.html SPV_INTEL_shader_integer_functions>
+-- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/INTEL/SPV_INTEL_shader_integer_functions2.html SPV_INTEL_shader_integer_functions2>
 -- SPIR-V extension and can be used with the
 -- GL_INTEL_shader_integer_functions2 GLSL extension.
 --
@@ -81,11 +89,11 @@
 --
 --     -   Initial draft
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_INTEL_shader_integer_functions2 Vulkan Specification>

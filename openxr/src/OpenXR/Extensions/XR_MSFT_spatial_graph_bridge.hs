@@ -53,7 +53,7 @@ import OpenXR.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -99,6 +99,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.Core10.Handles (Space)
 import OpenXR.Core10.Handles (Space(Space))
@@ -118,9 +119,9 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   #VUID-xrCreateSpatialGraphNodeSpaceMSFT-extension-notenabled# The @@
---     extension /must/ be enabled prior to calling
---     'createSpatialGraphNodeSpaceMSFT'
+-- -   #VUID-xrCreateSpatialGraphNodeSpaceMSFT-extension-notenabled# The
+--     @XR_MSFT_spatial_graph_bridge@ extension /must/ be enabled prior to
+--     calling 'createSpatialGraphNodeSpaceMSFT'
 --
 -- -   #VUID-xrCreateSpatialGraphNodeSpaceMSFT-session-parameter# @session@
 --     /must/ be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -170,7 +171,7 @@ createSpatialGraphNodeSpaceMSFT :: forall io
                                    SpatialGraphNodeSpaceCreateInfoMSFT
                                 -> io (Space)
 createSpatialGraphNodeSpaceMSFT session createInfo = liftIO . evalContT $ do
-  let cmds = instanceCmds (session :: Session)
+  let cmds = case session of Session{instanceCmds} -> instanceCmds
   let xrCreateSpatialGraphNodeSpaceMSFTPtr = pXrCreateSpatialGraphNodeSpaceMSFT cmds
   lift $ unless (xrCreateSpatialGraphNodeSpaceMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateSpatialGraphNodeSpaceMSFT is null" Nothing Nothing
@@ -202,8 +203,8 @@ withSpatialGraphNodeSpaceMSFT session createInfo b =
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-XrSpatialGraphNodeSpaceCreateInfoMSFT-extension-notenabled#
---     The @@ extension /must/ be enabled prior to using
---     'SpatialGraphNodeSpaceCreateInfoMSFT'
+--     The @XR_MSFT_spatial_graph_bridge@ extension /must/ be enabled prior
+--     to using 'SpatialGraphNodeSpaceCreateInfoMSFT'
 --
 -- -   #VUID-XrSpatialGraphNodeSpaceCreateInfoMSFT-type-type# @type@ /must/
 --     be
@@ -240,7 +241,7 @@ deriving instance Generic (SpatialGraphNodeSpaceCreateInfoMSFT)
 deriving instance Show SpatialGraphNodeSpaceCreateInfoMSFT
 
 instance ToCStruct SpatialGraphNodeSpaceCreateInfoMSFT where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SpatialGraphNodeSpaceCreateInfoMSFT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SPATIAL_GRAPH_NODE_SPACE_CREATE_INFO_MSFT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_fragment_coverage_to_color:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_fragment_coverage_to_color] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_NV_fragment_coverage_to_color extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -78,12 +78,12 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PipelineCoverageToColorStateCreateFlagsNV',
 -- 'PipelineCoverageToColorStateCreateInfoNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_fragment_coverage_to_color Vulkan Specification>
@@ -100,7 +100,7 @@ module Vulkan.Extensions.VK_NV_fragment_coverage_to_color  ( PipelineCoverageToC
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showString)
@@ -153,8 +153,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 -- the sample coverage mask are filled with zeros.
 --
 -- If @coverageToColorEnable@ is 'Vulkan.Core10.FundamentalTypes.FALSE',
--- these operations are skipped. If this structure is not present, it is as
--- if @coverageToColorEnable@ is 'Vulkan.Core10.FundamentalTypes.FALSE'.
+-- these operations are skipped. If this structure is not included in the
+-- @pNext@ chain, it is as if @coverageToColorEnable@ is
+-- 'Vulkan.Core10.FundamentalTypes.FALSE'.
 --
 -- == Valid Usage
 --
@@ -184,6 +185,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_fragment_coverage_to_color VK_NV_fragment_coverage_to_color>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'PipelineCoverageToColorStateCreateFlagsNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -204,7 +206,7 @@ deriving instance Generic (PipelineCoverageToColorStateCreateInfoNV)
 deriving instance Show PipelineCoverageToColorStateCreateInfoNV
 
 instance ToCStruct PipelineCoverageToColorStateCreateInfoNV where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PipelineCoverageToColorStateCreateInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -250,6 +252,7 @@ instance Zero PipelineCoverageToColorStateCreateInfoNV where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_fragment_coverage_to_color VK_NV_fragment_coverage_to_color>,
 -- 'PipelineCoverageToColorStateCreateInfoNV'
 newtype PipelineCoverageToColorStateCreateFlagsNV = PipelineCoverageToColorStateCreateFlagsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)

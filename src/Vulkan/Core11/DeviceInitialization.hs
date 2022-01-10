@@ -63,7 +63,7 @@ foreign import ccall
 --
 -- = See Also
 --
--- No cross-references are available
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>
 enumerateInstanceVersion :: forall io
                           . (MonadIO io)
                          => io (("apiVersion" ::: Word32))

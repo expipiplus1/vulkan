@@ -21,7 +21,7 @@
 --
 -- -   Requires OpenXR 1.0
 --
--- -   Requires @@
+-- -   Requires @XR_MSFT_spatial_anchor@
 --
 -- = See Also
 --
@@ -75,6 +75,7 @@ import OpenXR.Core10.Enums.Result (Result)
 import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
+import OpenXR.Core10.Handles (Session(Session))
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.Extensions.Handles (SpatialAnchorMSFT)
 import OpenXR.Extensions.Handles (SpatialAnchorMSFT(..))
@@ -117,8 +118,8 @@ foreign import ccall
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrCreateSpatialAnchorFromPerceptionAnchorMSFT-extension-notenabled#
---     The @@ extension /must/ be enabled prior to calling
---     'createSpatialAnchorFromPerceptionAnchorMSFT'
+--     The @XR_MSFT_perception_anchor_interop@ extension /must/ be enabled
+--     prior to calling 'createSpatialAnchorFromPerceptionAnchorMSFT'
 --
 -- -   #VUID-xrCreateSpatialAnchorFromPerceptionAnchorMSFT-session-parameter#
 --     @session@ /must/ be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -166,7 +167,7 @@ createSpatialAnchorFromPerceptionAnchorMSFT :: forall io
                                                ("perceptionAnchor" ::: Ptr IUnknown)
                                             -> io (SpatialAnchorMSFT)
 createSpatialAnchorFromPerceptionAnchorMSFT session perceptionAnchor = liftIO . evalContT $ do
-  let cmds = instanceCmds (session :: Session)
+  let cmds = case session of Session{instanceCmds} -> instanceCmds
   let xrCreateSpatialAnchorFromPerceptionAnchorMSFTPtr = pXrCreateSpatialAnchorFromPerceptionAnchorMSFT cmds
   lift $ unless (xrCreateSpatialAnchorFromPerceptionAnchorMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateSpatialAnchorFromPerceptionAnchorMSFT is null" Nothing Nothing
@@ -227,8 +228,8 @@ foreign import ccall
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-xrTryGetPerceptionAnchorFromSpatialAnchorMSFT-extension-notenabled#
---     The @@ extension /must/ be enabled prior to calling
---     'tryGetPerceptionAnchorFromSpatialAnchorMSFT'
+--     The @XR_MSFT_perception_anchor_interop@ extension /must/ be enabled
+--     prior to calling 'tryGetPerceptionAnchorFromSpatialAnchorMSFT'
 --
 -- -   #VUID-xrTryGetPerceptionAnchorFromSpatialAnchorMSFT-session-parameter#
 --     @session@ /must/ be a valid 'OpenXR.Core10.Handles.Session' handle
@@ -280,7 +281,7 @@ tryGetPerceptionAnchorFromSpatialAnchorMSFT :: forall io
                                                SpatialAnchorMSFT
                                             -> io (("perceptionAnchor" ::: Ptr IUnknown))
 tryGetPerceptionAnchorFromSpatialAnchorMSFT session anchor = liftIO . evalContT $ do
-  let xrTryGetPerceptionAnchorFromSpatialAnchorMSFTPtr = pXrTryGetPerceptionAnchorFromSpatialAnchorMSFT (instanceCmds (session :: Session))
+  let xrTryGetPerceptionAnchorFromSpatialAnchorMSFTPtr = pXrTryGetPerceptionAnchorFromSpatialAnchorMSFT (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrTryGetPerceptionAnchorFromSpatialAnchorMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrTryGetPerceptionAnchorFromSpatialAnchorMSFT is null" Nothing Nothing
   let xrTryGetPerceptionAnchorFromSpatialAnchorMSFT' = mkXrTryGetPerceptionAnchorFromSpatialAnchorMSFT xrTryGetPerceptionAnchorFromSpatialAnchorMSFTPtr

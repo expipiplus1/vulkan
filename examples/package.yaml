@@ -2,7 +2,7 @@ name: vulkan-examples
 version: 0.1.0.0
 synopsis: Haskell examples for the Vulkan graphics API.
 category: Graphics
-maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
+maintainer: Ellie Hermaszewska <live.long.and.prosper@monoid.al>
 github: expipiplus1/vulkan
 extra-source-files:
 - readme.md

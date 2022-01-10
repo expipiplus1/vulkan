@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Caio Marcelo de Oliveira Filho
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_workgroup_memory_explicit_layout:%20&body=@cmarcelo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_workgroup_memory_explicit_layout] @cmarcelo%0A<<Here describe the issue or question you have about the VK_KHR_workgroup_memory_explicit_layout extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -40,6 +40,9 @@
 --
 --     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_workgroup_memory_explicit_layout.html SPV_KHR_workgroup_memory_explicit_layout>
+--
+--     -   This extension provides API support for
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shared_memory_block.txt GL_EXT_shared_memory_block>
 --
 -- [__Contributors__]
 --
@@ -61,11 +64,11 @@
 -- of @Workgroup@ storage class memory and create aliases between variables
 -- from that storage class in a compute shader.
 --
--- The aliasing feature allows different \"views\" on the same data, so the
+-- The aliasing feature allows different “views” on the same data, so the
 -- shader can bulk copy data from another storage class using one type
 -- (e.g. an array of large vectors), and then use the data with a more
 -- specific type. It also enables reducing the amount of workgroup memory
--- consumed by allowing the shader to alias data whose lifetimes don’t
+-- consumed by allowing the shader to alias data whose lifetimes do not
 -- overlap.
 --
 -- The explicit layout support and some form of aliasing is also required
@@ -91,11 +94,11 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-workgroup-memory-explicit-layout WorkgroupMemoryExplicitLayoutKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-WorkgroupMemoryExplicitLayoutKHR WorkgroupMemoryExplicitLayoutKHR>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-workgroup-memory-explicit-layout-8-bit-access WorkgroupMemoryExplicitLayout8BitAccessKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-WorkgroupMemoryExplicitLayout8BitAccessKHR WorkgroupMemoryExplicitLayout8BitAccessKHR>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-workgroup-memory-explicit-layout-16-bit-access WorkgroupMemoryExplicitLayout16BitAccessKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-WorkgroupMemoryExplicitLayout16BitAccessKHR WorkgroupMemoryExplicitLayout16BitAccessKHR>
 --
 -- == Version History
 --
@@ -103,11 +106,11 @@
 --
 --     -   Initial version
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_workgroup_memory_explicit_layout Vulkan Specification>
@@ -121,7 +124,7 @@ module Vulkan.Extensions.VK_KHR_workgroup_memory_explicit_layout  ( PhysicalDevi
                                                                   , pattern KHR_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_EXTENSION_NAME
                                                                   ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -149,24 +152,26 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Members
 --
--- The members of the
--- 'PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR' structure
--- describe the following features:
+-- This structure describes the following features:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR'
--- structure is included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR' /can/ also be
--- included in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to enable the feature.
+-- structure is included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR'
+-- /can/ also be used in the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
+-- features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_workgroup_memory_explicit_layout VK_KHR_workgroup_memory_explicit_layout>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR = PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR
@@ -203,7 +208,7 @@ deriving instance Generic (PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKH
 deriving instance Show PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR
 
 instance ToCStruct PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_FEATURES_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

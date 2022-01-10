@@ -4,7 +4,7 @@ module Vulkan.Core12.Promoted_From_VK_KHR_shader_subgroup_extended_types  ( Phys
                                                                           , StructureType(..)
                                                                           ) where
 
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Vulkan.CStruct (FromCStruct)
@@ -32,34 +32,38 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceShaderSubgroupExtendedTypesFeatures'
--- structure describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
 -- If the 'PhysicalDeviceShaderSubgroupExtendedTypesFeatures' structure is
--- included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'PhysicalDeviceShaderSubgroupExtendedTypesFeatures' /can/ also be
--- included in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to enable features.
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceShaderSubgroupExtendedTypesFeatures' /can/
+-- also be used in the @pNext@ chain of
+-- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
+-- features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_subgroup_extended_types VK_KHR_shader_subgroup_extended_types>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderSubgroupExtendedTypesFeatures = PhysicalDeviceShaderSubgroupExtendedTypesFeatures
   { -- | #extension-features-subgroup-extended-types#
-    -- @shaderSubgroupExtendedTypes@ is a boolean that specifies whether
-    -- subgroup operations can use 8-bit integer, 16-bit integer, 64-bit
-    -- integer, 16-bit floating-point, and vectors of these types in
+    -- @shaderSubgroupExtendedTypes@ is a boolean specifying whether subgroup
+    -- operations can use 8-bit integer, 16-bit integer, 64-bit integer, 16-bit
+    -- floating-point, and vectors of these types in
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>
     -- with
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>if
-    -- the implementation supports the types.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>,
+    -- if the implementation supports the types.
     shaderSubgroupExtendedTypes :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -68,7 +72,7 @@ deriving instance Generic (PhysicalDeviceShaderSubgroupExtendedTypesFeatures)
 deriving instance Show PhysicalDeviceShaderSubgroupExtendedTypesFeatures
 
 instance ToCStruct PhysicalDeviceShaderSubgroupExtendedTypesFeatures where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShaderSubgroupExtendedTypesFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

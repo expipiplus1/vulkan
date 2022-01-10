@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_NV_shader_sm_builtins:%20&body=@dgkoch%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_shader_sm_builtins] @dgkoch%0A<<Here describe the issue or question you have about the VK_NV_shader_sm_builtins extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -36,9 +36,8 @@
 --     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_shader_sm_builtins.html SPV_NV_shader_sm_builtins>.
 --
---     -   This extension enables
+--     -   This extension provides API support for
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GLSL_NV_shader_sm_builtins.txt GL_NV_shader_sm_builtins>
---         for GLSL source languages.
 --
 -- [__Contributors__]
 --
@@ -103,14 +102,14 @@
 --
 -- 1.  What should we call this extension?
 --
---     RESOLVED: Using NV_shader_sm_builtins. Other options considered
+--     __RESOLVED__: @NV_shader_sm_builtins@. Other options considered
 --     included:
 --
---     -   NV_shader_smid - but SMID is really easy to typo\/confuse as
+--     -   @NV_shader_smid@ - but SMID is really easy to typo\/confuse as
 --         SIMD.
 --
---     -   NV_shader_sm_info - but __Info__ is typically reserved for input
---         structures
+--     -   @NV_shader_sm_info@ - but __Info__ is typically reserved for
+--         input structures
 --
 -- == Version History
 --
@@ -118,12 +117,12 @@
 --
 --     -   Internal revisions
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceShaderSMBuiltinsFeaturesNV',
 -- 'PhysicalDeviceShaderSMBuiltinsPropertiesNV'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shader_sm_builtins Vulkan Specification>

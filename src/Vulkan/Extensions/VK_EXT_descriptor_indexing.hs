@@ -33,7 +33,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_descriptor_indexing:%20&body=@jeffbolznv%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_descriptor_indexing] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_EXT_descriptor_indexing extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -43,6 +43,12 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   Promoted to Vulkan 1.2 Core
+--
+--     -   This extension requires
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_descriptor_indexing.html SPV_EXT_descriptor_indexing>
+--
+--     -   This extension provides API support for
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_nonuniform_qualifier.txt GL_EXT_nonuniform_qualifier>
 --
 -- [__Contributors__]
 --
@@ -195,7 +201,7 @@
 --
 --     -   ???
 --
--- = See Also
+-- == See Also
 --
 -- 'DescriptorBindingFlagBitsEXT', 'DescriptorBindingFlagsEXT',
 -- 'DescriptorSetLayoutBindingFlagsCreateInfoEXT',
@@ -204,7 +210,7 @@
 -- 'PhysicalDeviceDescriptorIndexingFeaturesEXT',
 -- 'PhysicalDeviceDescriptorIndexingPropertiesEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_descriptor_indexing Vulkan Specification>

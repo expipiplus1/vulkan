@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_KHR_get_surface_capabilities2:%20&body=@cubanismo%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_get_surface_capabilities2] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_get_surface_capabilities2 extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -128,13 +128,13 @@
 --
 --     -   Initial draft.
 --
--- = See Also
+-- == See Also
 --
 -- 'PhysicalDeviceSurfaceInfo2KHR', 'SurfaceCapabilities2KHR',
 -- 'SurfaceFormat2KHR', 'getPhysicalDeviceSurfaceCapabilities2KHR',
 -- 'getPhysicalDeviceSurfaceFormats2KHR'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_surface_capabilities2 Vulkan Specification>
@@ -165,7 +165,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -213,6 +213,7 @@ import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core10.Handles (PhysicalDevice(..))
+import Vulkan.Core10.Handles (PhysicalDevice(PhysicalDevice))
 import Vulkan.Core10.Handles (PhysicalDevice_T)
 import Vulkan.CStruct.Extends (PokeChain)
 import Vulkan.CStruct.Extends (PokeChain(..))
@@ -261,6 +262,12 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-pSurfaceInfo-06210#
+--     @pSurfaceInfo->surface@ /must/ be supported by @physicalDevice@, as
+--     reported by
+--     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
+--     or an equivalent platform-specific mechanism
+--
 -- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-pNext-02671# If a
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceCapabilitiesFullScreenExclusiveEXT'
 --     structure is included in the @pNext@ chain of
@@ -298,6 +305,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_surface_capabilities2 VK_KHR_get_surface_capabilities2>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceSurfaceInfo2KHR',
 -- 'SurfaceCapabilities2KHR'
 getPhysicalDeviceSurfaceCapabilities2KHR :: forall a b io
@@ -312,7 +320,7 @@ getPhysicalDeviceSurfaceCapabilities2KHR :: forall a b io
                                             (PhysicalDeviceSurfaceInfo2KHR a)
                                          -> io (SurfaceCapabilities2KHR b)
 getPhysicalDeviceSurfaceCapabilities2KHR physicalDevice surfaceInfo = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceSurfaceCapabilities2KHRPtr = pVkGetPhysicalDeviceSurfaceCapabilities2KHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceSurfaceCapabilities2KHRPtr = pVkGetPhysicalDeviceSurfaceCapabilities2KHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceSurfaceCapabilities2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSurfaceCapabilities2KHR is null" Nothing Nothing
   let vkGetPhysicalDeviceSurfaceCapabilities2KHR' = mkVkGetPhysicalDeviceSurfaceCapabilities2KHR vkGetPhysicalDeviceSurfaceCapabilities2KHRPtr
@@ -347,16 +355,14 @@ foreign import ccall
 -- return the variable is overwritten with the number of structures
 -- actually written to @pSurfaceFormats@. If the value of
 -- @pSurfaceFormatCount@ is less than the number of format tuples
--- supported, at most @pSurfaceFormatCount@ structures will be written. If
--- @pSurfaceFormatCount@ is smaller than the number of format tuples
--- supported for the surface parameters described in @pSurfaceInfo@,
+-- supported, at most @pSurfaceFormatCount@ structures will be written, and
 -- 'Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned instead of
--- 'Vulkan.Core10.Enums.Result.SUCCESS' to indicate that not all the
+-- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
 -- available values were returned.
 --
 -- == Valid Usage
 --
--- -   #VUID-vkGetPhysicalDeviceSurfaceFormats2KHR-pSurfaceInfo-02740#
+-- -   #VUID-vkGetPhysicalDeviceSurfaceFormats2KHR-pSurfaceInfo-06210#
 --     @pSurfaceInfo->surface@ /must/ be supported by @physicalDevice@, as
 --     reported by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
@@ -400,6 +406,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_surface_capabilities2 VK_KHR_get_surface_capabilities2>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceSurfaceInfo2KHR',
 -- 'SurfaceFormat2KHR'
 getPhysicalDeviceSurfaceFormats2KHR :: forall a io
@@ -414,7 +421,7 @@ getPhysicalDeviceSurfaceFormats2KHR :: forall a io
                                        (PhysicalDeviceSurfaceInfo2KHR a)
                                     -> io (Result, ("surfaceFormats" ::: Vector SurfaceFormat2KHR))
 getPhysicalDeviceSurfaceFormats2KHR physicalDevice surfaceInfo = liftIO . evalContT $ do
-  let vkGetPhysicalDeviceSurfaceFormats2KHRPtr = pVkGetPhysicalDeviceSurfaceFormats2KHR (instanceCmds (physicalDevice :: PhysicalDevice))
+  let vkGetPhysicalDeviceSurfaceFormats2KHRPtr = pVkGetPhysicalDeviceSurfaceFormats2KHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceSurfaceFormats2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSurfaceFormats2KHR is null" Nothing Nothing
   let vkGetPhysicalDeviceSurfaceFormats2KHR' = mkVkGetPhysicalDeviceSurfaceFormats2KHR vkGetPhysicalDeviceSurfaceFormats2KHRPtr
@@ -490,6 +497,7 @@ getPhysicalDeviceSurfaceFormats2KHR physicalDevice surfaceInfo = liftIO . evalCo
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_surface_capabilities2 VK_KHR_get_surface_capabilities2>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Extensions.Handles.SurfaceKHR',
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.getDeviceGroupSurfacePresentModes2EXT',
@@ -510,7 +518,7 @@ deriving instance Show (Chain es) => Show (PhysicalDeviceSurfaceInfo2KHR es)
 
 instance Extensible PhysicalDeviceSurfaceInfo2KHR where
   extensibleTypeName = "PhysicalDeviceSurfaceInfo2KHR"
-  setNext x next = x{next = next}
+  setNext PhysicalDeviceSurfaceInfo2KHR{..} next' = PhysicalDeviceSurfaceInfo2KHR{next = next', ..}
   getNext PhysicalDeviceSurfaceInfo2KHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceSurfaceInfo2KHR e => b) -> Maybe b
   extends _ f
@@ -519,7 +527,7 @@ instance Extensible PhysicalDeviceSurfaceInfo2KHR where
     | otherwise = Nothing
 
 instance (Extendss PhysicalDeviceSurfaceInfo2KHR es, PokeChain es) => ToCStruct (PhysicalDeviceSurfaceInfo2KHR es) where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceSurfaceInfo2KHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -571,6 +579,7 @@ instance es ~ '[] => Zero (PhysicalDeviceSurfaceInfo2KHR es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_surface_capabilities2 VK_KHR_get_surface_capabilities2>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR',
 -- 'getPhysicalDeviceSurfaceCapabilities2KHR'
@@ -590,7 +599,7 @@ deriving instance Show (Chain es) => Show (SurfaceCapabilities2KHR es)
 
 instance Extensible SurfaceCapabilities2KHR where
   extensibleTypeName = "SurfaceCapabilities2KHR"
-  setNext x next = x{next = next}
+  setNext SurfaceCapabilities2KHR{..} next' = SurfaceCapabilities2KHR{next = next', ..}
   getNext SurfaceCapabilities2KHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SurfaceCapabilities2KHR e => b) -> Maybe b
   extends _ f
@@ -601,7 +610,7 @@ instance Extensible SurfaceCapabilities2KHR where
     | otherwise = Nothing
 
 instance (Extendss SurfaceCapabilities2KHR es, PokeChain es) => ToCStruct (SurfaceCapabilities2KHR es) where
-  withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SurfaceCapabilities2KHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -638,6 +647,7 @@ instance es ~ '[] => Zero (SurfaceCapabilities2KHR es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_surface_capabilities2 VK_KHR_get_surface_capabilities2>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceFormatKHR',
 -- 'getPhysicalDeviceSurfaceFormats2KHR'
@@ -653,7 +663,7 @@ deriving instance Generic (SurfaceFormat2KHR)
 deriving instance Show SurfaceFormat2KHR
 
 instance ToCStruct SurfaceFormat2KHR where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SurfaceFormat2KHR{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

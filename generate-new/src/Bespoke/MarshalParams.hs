@@ -27,9 +27,9 @@ marshalParams spec@Spec {..} = do
     bitmaskNames :: HashSet CName
     bitmaskNames = fromList
       [ n
-      | Enum {..}      <- toList specEnums
-      , ABitmask flags <- pure eType
-      , n              <- [eName, flags]
+      | Enum {..}        <- toList specEnums
+      , ABitmask flags _ <- pure eType
+      , n                <- [eName, flags]
       ]
     isBitmask     = (`member` bitmaskNames)
     isBitmaskType = \case
@@ -114,6 +114,7 @@ isIntegral =
 isFloating :: CType -> Bool
 isFloating = (`elem` [Float, Double])
 
+-- | Foreign handles
 isDefaultableForeignType :: CType -> Bool
 isDefaultableForeignType t =
   (      t
@@ -121,6 +122,7 @@ isDefaultableForeignType t =
            , TypeName "DWORD"
            , TypeName "LPCWSTR"
            , Ptr CType.Const (TypeName "SECURITY_ATTRIBUTES")
+           , TypeName "zx_handle_t"
            ]
     )
     || case t of
@@ -149,6 +151,8 @@ isPassAsPointerType' = \case
              , "IDirectFBSurface"
              , "IUnknown"
              , "jobject"
+             , "_screen_window"
+             , "_screen_context"
              -- TODO: remove these
              , "VkInstanceCreateInfo"
              , "VkAllocationCallbacks"

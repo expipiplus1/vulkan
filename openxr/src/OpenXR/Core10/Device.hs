@@ -20,7 +20,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -87,6 +87,7 @@ import {-# SOURCE #-} OpenXR.Extensions.XR_KHR_vulkan_enable (GraphicsBindingVul
 import {-# SOURCE #-} OpenXR.Extensions.XR_MSFT_holographic_window_attachment (HolographicWindowAttachmentMSFT)
 import OpenXR.Core10.Handles (Instance)
 import OpenXR.Core10.Handles (Instance(..))
+import OpenXR.Core10.Handles (Instance(Instance))
 import OpenXR.Dynamic (InstanceCmds(pXrCreateSession))
 import OpenXR.Dynamic (InstanceCmds(pXrDestroySession))
 import OpenXR.Dynamic (InstanceCmds(pXrEnumerateEnvironmentBlendModes))
@@ -104,7 +105,7 @@ import OpenXR.Core10.Enums.Result (Result(..))
 import OpenXR.Core10.Handles (Session)
 import OpenXR.Core10.Handles (Session(..))
 import OpenXR.Core10.Handles (Session(Session))
-import OpenXR.Core10.Enums.SessionCreateFlags (SessionCreateFlags)
+import OpenXR.Core10.Enums.SessionCreateFlagBits (SessionCreateFlags)
 import {-# SOURCE #-} OpenXR.Extensions.XR_EXTX_overlay (SessionCreateInfoOverlayEXTX)
 import OpenXR.Core10.Handles (Session_T)
 import OpenXR.CStruct.Extends (SomeStruct)
@@ -189,7 +190,7 @@ getSystem :: forall io
              SystemGetInfo
           -> io (SystemId)
 getSystem instance' getInfo = liftIO . evalContT $ do
-  let xrGetSystemPtr = pXrGetSystem (instanceCmds (instance' :: Instance))
+  let xrGetSystemPtr = pXrGetSystem (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetSystemPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetSystem is null" Nothing Nothing
   let xrGetSystem' = mkXrGetSystem xrGetSystemPtr
@@ -256,7 +257,7 @@ getSystemProperties :: forall a io
                        SystemId
                     -> io (SystemProperties a)
 getSystemProperties instance' systemId = liftIO . evalContT $ do
-  let xrGetSystemPropertiesPtr = pXrGetSystemProperties (instanceCmds (instance' :: Instance))
+  let xrGetSystemPropertiesPtr = pXrGetSystemProperties (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetSystemPropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetSystemProperties is null" Nothing Nothing
   let xrGetSystemProperties' = mkXrGetSystemProperties xrGetSystemPropertiesPtr
@@ -319,7 +320,7 @@ foreign import ccall
 --
 -- 'OpenXR.Core10.Instance.ExtensionProperties',
 -- 'OpenXR.Core10.Handles.Instance', 'OpenXR.Core10.Handles.Session',
--- 'OpenXR.Core10.Enums.SessionCreateFlags.SessionCreateFlags',
+-- 'OpenXR.Core10.Enums.SessionCreateFlagBits.SessionCreateFlags',
 -- 'SessionCreateInfo', 'OpenXR.Core10.Session.beginSession',
 -- 'destroySession', 'OpenXR.Core10.Session.endSession'
 createSession :: forall a io
@@ -337,7 +338,7 @@ createSession :: forall a io
                  (SessionCreateInfo a)
               -> io (Session)
 createSession instance' createInfo = liftIO . evalContT $ do
-  let cmds = instanceCmds (instance' :: Instance)
+  let cmds = case instance' of Instance{instanceCmds} -> instanceCmds
   let xrCreateSessionPtr = pXrCreateSession cmds
   lift $ unless (xrCreateSessionPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateSession is null" Nothing Nothing
@@ -416,7 +417,7 @@ destroySession :: forall io
                   Session
                -> io ()
 destroySession session = liftIO $ do
-  let xrDestroySessionPtr = pXrDestroySession (instanceCmds (session :: Session))
+  let xrDestroySessionPtr = pXrDestroySession (case session of Session{instanceCmds} -> instanceCmds)
   unless (xrDestroySessionPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrDestroySession is null" Nothing Nothing
   let xrDestroySession' = mkXrDestroySession xrDestroySessionPtr
@@ -532,7 +533,7 @@ enumerateEnvironmentBlendModes :: forall io
                                   ViewConfigurationType
                                -> io (("environmentBlendModes" ::: Vector EnvironmentBlendMode))
 enumerateEnvironmentBlendModes instance' systemId viewConfigurationType = liftIO . evalContT $ do
-  let xrEnumerateEnvironmentBlendModesPtr = pXrEnumerateEnvironmentBlendModes (instanceCmds (instance' :: Instance))
+  let xrEnumerateEnvironmentBlendModesPtr = pXrEnumerateEnvironmentBlendModes (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrEnumerateEnvironmentBlendModesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEnumerateEnvironmentBlendModes is null" Nothing Nothing
   let xrEnumerateEnvironmentBlendModes' = mkXrEnumerateEnvironmentBlendModes xrEnumerateEnvironmentBlendModesPtr
@@ -615,7 +616,7 @@ deriving instance Generic (SystemGetInfo)
 deriving instance Show SystemGetInfo
 
 instance ToCStruct SystemGetInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SystemGetInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SYSTEM_GET_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -691,7 +692,7 @@ deriving instance Show (Chain es) => Show (SystemProperties es)
 
 instance Extensible SystemProperties where
   extensibleTypeName = "SystemProperties"
-  setNext x next = x{next = next}
+  setNext SystemProperties{..} next' = SystemProperties{next = next', ..}
   getNext SystemProperties{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SystemProperties e => b) -> Maybe b
   extends _ f
@@ -701,7 +702,7 @@ instance Extensible SystemProperties where
     | otherwise = Nothing
 
 instance (Extendss SystemProperties es, PokeChain es) => ToCStruct (SystemProperties es) where
-  withCStruct x f = allocaBytesAligned 304 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 304 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SystemProperties{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SYSTEM_PROPERTIES)
     next'' <- fmap castPtr . ContT $ withChain (next)
@@ -776,7 +777,7 @@ deriving instance Generic (SystemGraphicsProperties)
 deriving instance Show SystemGraphicsProperties
 
 instance ToCStruct SystemGraphicsProperties where
-  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 12 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SystemGraphicsProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word32)) (maxSwapchainImageHeight)
     poke ((p `plusPtr` 4 :: Ptr Word32)) (maxSwapchainImageWidth)
@@ -839,7 +840,7 @@ deriving instance Generic (SystemTrackingProperties)
 deriving instance Show SystemTrackingProperties
 
 instance ToCStruct SystemTrackingProperties where
-  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SystemTrackingProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Bool32)) (boolToBool32 (orientationTracking))
     poke ((p `plusPtr` 4 :: Ptr Bool32)) (boolToBool32 (positionTracking))
@@ -876,7 +877,7 @@ instance Zero SystemTrackingProperties where
 --
 -- = See Also
 --
--- 'OpenXR.Core10.Enums.SessionCreateFlags.SessionCreateFlags',
+-- 'OpenXR.Core10.Enums.SessionCreateFlagBits.SessionCreateFlags',
 -- 'OpenXR.Core10.Enums.StructureType.StructureType',
 -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSystemId >,
 -- 'createSession'
@@ -909,8 +910,8 @@ data SessionCreateInfo (es :: [Type]) = SessionCreateInfo
     -- 'OpenXR.Extensions.XR_EXTX_overlay.SessionCreateInfoOverlayEXTX'
     next :: Chain es
   , -- | @createFlags@ identifies
-    -- 'OpenXR.Core10.Enums.SessionCreateFlags.SessionCreateFlags' that apply
-    -- to the creation.
+    -- 'OpenXR.Core10.Enums.SessionCreateFlagBits.SessionCreateFlags' that
+    -- apply to the creation.
     --
     -- #VUID-XrSessionCreateInfo-createFlags-zerobitmask# @createFlags@ /must/
     -- be @0@
@@ -932,7 +933,7 @@ deriving instance Show (Chain es) => Show (SessionCreateInfo es)
 
 instance Extensible SessionCreateInfo where
   extensibleTypeName = "SessionCreateInfo"
-  setNext x next = x{next = next}
+  setNext SessionCreateInfo{..} next' = SessionCreateInfo{next = next', ..}
   getNext SessionCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SessionCreateInfo e => b) -> Maybe b
   extends _ f
@@ -950,7 +951,7 @@ instance Extensible SessionCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss SessionCreateInfo es, PokeChain es) => ToCStruct (SessionCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SessionCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SESSION_CREATE_INFO)
     next'' <- fmap castPtr . ContT $ withChain (next)

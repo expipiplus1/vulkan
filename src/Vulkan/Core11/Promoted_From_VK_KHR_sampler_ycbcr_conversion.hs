@@ -29,7 +29,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -71,6 +71,7 @@ import Vulkan.Core11.Enums.ChromaLocation (ChromaLocation)
 import Vulkan.Core10.ImageView (ComponentMapping)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateSamplerYcbcrConversion))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroySamplerYcbcrConversion))
 import Vulkan.Core10.Handles (Device_T)
@@ -170,6 +171,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core11.Handles.SamplerYcbcrConversion',
@@ -188,7 +190,7 @@ createSamplerYcbcrConversion :: forall a io
                                 ("allocator" ::: Maybe AllocationCallbacks)
                              -> io (SamplerYcbcrConversion)
 createSamplerYcbcrConversion device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateSamplerYcbcrConversionPtr = pVkCreateSamplerYcbcrConversion (deviceCmds (device :: Device))
+  let vkCreateSamplerYcbcrConversionPtr = pVkCreateSamplerYcbcrConversion (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateSamplerYcbcrConversionPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateSamplerYcbcrConversion is null" Nothing Nothing
   let vkCreateSamplerYcbcrConversion' = mkVkCreateSamplerYcbcrConversion vkCreateSamplerYcbcrConversionPtr
@@ -250,6 +252,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core11.Handles.SamplerYcbcrConversion'
@@ -265,7 +268,7 @@ destroySamplerYcbcrConversion :: forall io
                                  ("allocator" ::: Maybe AllocationCallbacks)
                               -> io ()
 destroySamplerYcbcrConversion device ycbcrConversion allocator = liftIO . evalContT $ do
-  let vkDestroySamplerYcbcrConversionPtr = pVkDestroySamplerYcbcrConversion (deviceCmds (device :: Device))
+  let vkDestroySamplerYcbcrConversionPtr = pVkDestroySamplerYcbcrConversion (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroySamplerYcbcrConversionPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroySamplerYcbcrConversion is null" Nothing Nothing
   let vkDestroySamplerYcbcrConversion' = mkVkDestroySamplerYcbcrConversion vkDestroySamplerYcbcrConversionPtr
@@ -283,6 +286,7 @@ destroySamplerYcbcrConversion device ycbcrConversion allocator = liftIO . evalCo
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core11.Handles.SamplerYcbcrConversion',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SamplerYcbcrConversionInfo = SamplerYcbcrConversionInfo
@@ -299,7 +303,7 @@ deriving instance Generic (SamplerYcbcrConversionInfo)
 deriving instance Show SamplerYcbcrConversionInfo
 
 instance ToCStruct SamplerYcbcrConversionInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SamplerYcbcrConversionInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -381,7 +385,7 @@ instance Zero SamplerYcbcrConversionInfo where
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT',
 --     @xChromaOffset@ and @yChromaOffset@ /must/ not be
 --     'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_COSITED_EVEN' if
---     the corresponding channels are
+--     the corresponding components are
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-chroma-reconstruction downsampled>
 --
 -- -   #VUID-VkSamplerYcbcrConversionCreateInfo-xChromaOffset-01652# If the
@@ -390,7 +394,7 @@ instance Zero SamplerYcbcrConversionInfo where
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT',
 --     @xChromaOffset@ and @yChromaOffset@ /must/ not be
 --     'Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_MIDPOINT' if the
---     corresponding channels are
+--     corresponding components are
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-chroma-reconstruction downsampled>
 --
 -- -   #VUID-VkSamplerYcbcrConversionCreateInfo-components-02581# If the
@@ -427,18 +431,18 @@ instance Zero SamplerYcbcrConversionInfo where
 --     @ycbcrModel@ is not
 --     'Vulkan.Core11.Enums.SamplerYcbcrModelConversion.SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY',
 --     then @components.r@, @components.g@, and @components.b@ /must/
---     correspond to channels of the @format@; that is, @components.r@,
+--     correspond to components of the @format@; that is, @components.r@,
 --     @components.g@, and @components.b@ /must/ not be
 --     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_ZERO' or
 --     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_ONE', and
---     /must/ not correspond to a channel which contains zero or one as a
+--     /must/ not correspond to a component containing zero or one as a
 --     consequence of
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-conversion-to-rgba conversion to RGBA>
 --
 -- -   #VUID-VkSamplerYcbcrConversionCreateInfo-ycbcrRange-02748# If
 --     @ycbcrRange@ is
 --     'Vulkan.Core11.Enums.SamplerYcbcrRange.SAMPLER_YCBCR_RANGE_ITU_NARROW'
---     then the R, G and B channels obtained by applying the @component@
+--     then the R, G and B components obtained by applying the @component@
 --     swizzle to @format@ /must/ each have a bit-depth greater than or
 --     equal to 8
 --
@@ -499,7 +503,7 @@ instance Zero SamplerYcbcrConversionInfo where
 --     value
 --
 -- If @chromaFilter@ is 'Vulkan.Core10.Enums.Filter.FILTER_NEAREST', chroma
--- samples are reconstructed to luma channel resolution using
+-- samples are reconstructed to luma component resolution using
 -- nearest-neighbour sampling. Otherwise, chroma samples are reconstructed
 -- using interpolation. More details can be found in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-sampler-YCbCr-conversion the description of sampler Y′CBCR conversion>
@@ -509,6 +513,7 @@ instance Zero SamplerYcbcrConversionInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core11.Enums.ChromaLocation.ChromaLocation',
 -- 'Vulkan.Core10.ImageView.ComponentMapping',
@@ -537,14 +542,14 @@ data SamplerYcbcrConversionCreateInfo (es :: [Type]) = SamplerYcbcrConversionCre
     components :: ComponentMapping
   , -- | @xChromaOffset@ describes the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-chroma-reconstruction sample location>
-    -- associated with downsampled chroma channels in the x dimension.
-    -- @xChromaOffset@ has no effect for formats in which chroma channels are
+    -- associated with downsampled chroma components in the x dimension.
+    -- @xChromaOffset@ has no effect for formats in which chroma components are
     -- not downsampled horizontally.
     xChromaOffset :: ChromaLocation
   , -- | @yChromaOffset@ describes the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-chroma-reconstruction sample location>
-    -- associated with downsampled chroma channels in the y dimension.
-    -- @yChromaOffset@ has no effect for formats in which the chroma channels
+    -- associated with downsampled chroma components in the y dimension.
+    -- @yChromaOffset@ has no effect for formats in which the chroma components
     -- are not downsampled vertically.
     yChromaOffset :: ChromaLocation
   , -- | @chromaFilter@ is the filter for chroma reconstruction.
@@ -561,7 +566,7 @@ deriving instance Show (Chain es) => Show (SamplerYcbcrConversionCreateInfo es)
 
 instance Extensible SamplerYcbcrConversionCreateInfo where
   extensibleTypeName = "SamplerYcbcrConversionCreateInfo"
-  setNext x next = x{next = next}
+  setNext SamplerYcbcrConversionCreateInfo{..} next' = SamplerYcbcrConversionCreateInfo{next = next', ..}
   getNext SamplerYcbcrConversionCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SamplerYcbcrConversionCreateInfo e => b) -> Maybe b
   extends _ f
@@ -569,7 +574,7 @@ instance Extensible SamplerYcbcrConversionCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss SamplerYcbcrConversionCreateInfo es, PokeChain es) => ToCStruct (SamplerYcbcrConversionCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SamplerYcbcrConversionCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)
@@ -667,10 +672,13 @@ instance es ~ '[] => Zero (SamplerYcbcrConversionCreateInfo es) where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data BindImagePlaneMemoryInfo = BindImagePlaneMemoryInfo
-  { -- | @planeAspect@ is the aspect of the disjoint image plane to bind.
+  { -- | @planeAspect@ is a
+    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' value
+    -- specifying the aspect of the disjoint image plane to bind.
     planeAspect :: ImageAspectFlagBits }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -679,7 +687,7 @@ deriving instance Generic (BindImagePlaneMemoryInfo)
 deriving instance Show BindImagePlaneMemoryInfo
 
 instance ToCStruct BindImagePlaneMemoryInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindImagePlaneMemoryInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -752,10 +760,13 @@ instance Zero BindImagePlaneMemoryInfo where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ImagePlaneMemoryRequirementsInfo = ImagePlaneMemoryRequirementsInfo
-  { -- | @planeAspect@ is the aspect corresponding to the image plane to query.
+  { -- | @planeAspect@ is a
+    -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' value
+    -- specifying the aspect corresponding to the image plane to query.
     planeAspect :: ImageAspectFlagBits }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -764,7 +775,7 @@ deriving instance Generic (ImagePlaneMemoryRequirementsInfo)
 deriving instance Show ImagePlaneMemoryRequirementsInfo
 
 instance ToCStruct ImagePlaneMemoryRequirementsInfo where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImagePlaneMemoryRequirementsInfo{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -796,17 +807,30 @@ instance Zero ImagePlaneMemoryRequirementsInfo where
 
 
 -- | VkPhysicalDeviceSamplerYcbcrConversionFeatures - Structure describing
--- Y’CbCr conversion features that can be supported by an implementation
+-- Y′CBCR conversion features that can be supported by an implementation
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceSamplerYcbcrConversionFeatures'
--- structure describe the following feature:
+-- This structure describes the following feature:
+--
+-- = Description
+--
+-- If the 'PhysicalDeviceSamplerYcbcrConversionFeatures' structure is
+-- included in the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
+-- it is filled in to indicate whether each corresponding feature is
+-- supported. 'PhysicalDeviceSamplerYcbcrConversionFeatures' /can/ also be
+-- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
+-- selectively enable these features.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_sampler_ycbcr_conversion VK_KHR_sampler_ycbcr_conversion>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceSamplerYcbcrConversionFeatures = PhysicalDeviceSamplerYcbcrConversionFeatures
@@ -824,7 +848,7 @@ deriving instance Generic (PhysicalDeviceSamplerYcbcrConversionFeatures)
 deriving instance Show PhysicalDeviceSamplerYcbcrConversionFeatures
 
 instance ToCStruct PhysicalDeviceSamplerYcbcrConversionFeatures where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceSamplerYcbcrConversionFeatures{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -862,6 +886,7 @@ instance Zero PhysicalDeviceSamplerYcbcrConversionFeatures where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SamplerYcbcrConversionImageFormatProperties = SamplerYcbcrConversionImageFormatProperties
   { -- | @combinedImageSamplerDescriptorCount@ is the number of combined image
@@ -874,7 +899,7 @@ deriving instance Generic (SamplerYcbcrConversionImageFormatProperties)
 deriving instance Show SamplerYcbcrConversionImageFormatProperties
 
 instance ToCStruct SamplerYcbcrConversionImageFormatProperties where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SamplerYcbcrConversionImageFormatProperties{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)

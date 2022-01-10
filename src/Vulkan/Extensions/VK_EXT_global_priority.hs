@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Andres Rodriguez
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?title=VK_EXT_global_priority:%20&body=@lostgoat%20 >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_global_priority] @lostgoat%0A<<Here describe the issue or question you have about the VK_EXT_global_priority extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -48,8 +48,8 @@
 --
 -- In Vulkan, users can specify device-scope queue priorities. In some
 -- cases it may be useful to extend this concept to a system-wide scope.
--- This extension provides a mechanism for caller’s to set their
--- system-wide priority. The default queue priority is
+-- This extension provides a mechanism for callers to set their system-wide
+-- priority. The default queue priority is
 -- 'QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT'.
 --
 -- The driver implementation will attempt to skew hardware resource
@@ -108,11 +108,11 @@
 --
 --     -   First version.
 --
--- = See Also
+-- == See Also
 --
 -- 'DeviceQueueGlobalPriorityCreateInfoEXT', 'QueueGlobalPriorityEXT'
 --
--- = Document Notes
+-- == Document Notes
 --
 -- For more information, see the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_global_priority Vulkan Specification>
@@ -134,7 +134,7 @@ module Vulkan.Extensions.VK_EXT_global_priority  ( DeviceQueueGlobalPriorityCrea
 
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showsPrec)
@@ -171,6 +171,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_QU
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_global_priority VK_EXT_global_priority>,
 -- 'QueueGlobalPriorityEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceQueueGlobalPriorityCreateInfoEXT = DeviceQueueGlobalPriorityCreateInfoEXT
@@ -187,7 +188,7 @@ deriving instance Generic (DeviceQueueGlobalPriorityCreateInfoEXT)
 deriving instance Show DeviceQueueGlobalPriorityCreateInfoEXT
 
 instance ToCStruct DeviceQueueGlobalPriorityCreateInfoEXT where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceQueueGlobalPriorityCreateInfoEXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
@@ -228,7 +229,9 @@ instance Zero DeviceQueueGlobalPriorityCreateInfoEXT where
 --
 -- = See Also
 --
--- 'DeviceQueueGlobalPriorityCreateInfoEXT'
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_global_priority VK_EXT_global_priority>,
+-- 'DeviceQueueGlobalPriorityCreateInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_global_priority_query.QueueFamilyGlobalPriorityPropertiesEXT'
 newtype QueueGlobalPriorityEXT = QueueGlobalPriorityEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error

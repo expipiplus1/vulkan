@@ -26,7 +26,7 @@ module OpenXR.CStruct.Extends  ( BaseInStructure(..)
 
 import Data.Maybe (fromMaybe)
 import Type.Reflection (typeRep)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.Base (join)
 import GHC.IO (throwIO)
 import GHC.Ptr (castPtr)
@@ -237,7 +237,7 @@ deriving instance Generic (BaseInStructure)
 deriving instance Show BaseInStructure
 
 instance ToCStruct BaseInStructure where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BaseInStructure{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (type')
     poke ((p `plusPtr` 8 :: Ptr (Ptr BaseInStructure))) (next)
@@ -297,7 +297,7 @@ deriving instance Generic (BaseOutStructure)
 deriving instance Show BaseOutStructure
 
 instance ToCStruct BaseOutStructure where
-  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BaseOutStructure{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (type')
     poke ((p `plusPtr` 8 :: Ptr (Ptr BaseOutStructure))) (next)
@@ -448,9 +448,9 @@ peekSomeChain p c = if p == nullPtr
   else do
     baseOut <- peek p
     join
-      $ peekChainHead @a (type' (baseOut :: BaseOutStructure))
+      $ peekChainHead @a (case baseOut of BaseOutStructure{type'} -> type')
                          (castPtr @BaseOutStructure @() p)
-      $ \head' -> peekSomeChain @a (next (baseOut :: BaseOutStructure))
+      $ \head' -> peekSomeChain @a (case baseOut of BaseOutStructure{next} -> next)
                                   (\tail' -> c (head', tail'))
 
 peekChainHead

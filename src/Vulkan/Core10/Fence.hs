@@ -18,7 +18,7 @@ import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
-import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
@@ -60,6 +60,7 @@ import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
+import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateFence))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyFence))
 import Vulkan.Dynamic (DeviceCmds(pVkGetFenceStatus))
@@ -126,6 +127,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Fence',
 -- 'FenceCreateInfo'
@@ -142,7 +144,7 @@ createFence :: forall a io
                ("allocator" ::: Maybe AllocationCallbacks)
             -> io (Fence)
 createFence device createInfo allocator = liftIO . evalContT $ do
-  let vkCreateFencePtr = pVkCreateFence (deviceCmds (device :: Device))
+  let vkCreateFencePtr = pVkCreateFence (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateFencePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateFence is null" Nothing Nothing
   let vkCreateFence' = mkVkCreateFence vkCreateFencePtr
@@ -216,6 +218,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Fence'
 destroyFence :: forall io
@@ -230,7 +233,7 @@ destroyFence :: forall io
                 ("allocator" ::: Maybe AllocationCallbacks)
              -> io ()
 destroyFence device fence allocator = liftIO . evalContT $ do
-  let vkDestroyFencePtr = pVkDestroyFence (deviceCmds (device :: Device))
+  let vkDestroyFencePtr = pVkDestroyFence (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyFencePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyFence is null" Nothing Nothing
   let vkDestroyFence' = mkVkDestroyFence vkDestroyFencePtr
@@ -304,6 +307,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Fence'
 resetFences :: forall io
              . (MonadIO io)
@@ -313,11 +317,11 @@ resetFences :: forall io
                ("fences" ::: Vector Fence)
             -> io ()
 resetFences device fences = liftIO . evalContT $ do
-  let vkResetFencesPtr = pVkResetFences (deviceCmds (device :: Device))
+  let vkResetFencesPtr = pVkResetFences (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkResetFencesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetFences is null" Nothing Nothing
   let vkResetFences' = mkVkResetFences vkResetFencesPtr
-  pPFences <- ContT $ allocaBytesAligned @Fence ((Data.Vector.length (fences)) * 8) 8
+  pPFences <- ContT $ allocaBytes @Fence ((Data.Vector.length (fences)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPFences `plusPtr` (8 * (i)) :: Ptr Fence) (e)) (fences)
   r <- lift $ traceAroundEvent "vkResetFences" (vkResetFences' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (fences)) :: Word32)) (pPFences))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -380,6 +384,7 @@ foreign import ccall
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Fence'
 getFenceStatus :: forall io
                 . (MonadIO io)
@@ -398,7 +403,7 @@ getFenceStatus :: forall io
                   Fence
                -> io (Result)
 getFenceStatus device fence = liftIO $ do
-  let vkGetFenceStatusPtr = pVkGetFenceStatus (deviceCmds (device :: Device))
+  let vkGetFenceStatusPtr = pVkGetFenceStatus (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetFenceStatusPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetFenceStatus is null" Nothing Nothing
   let vkGetFenceStatus' = mkVkGetFenceStatus vkGetFenceStatusPtr
@@ -439,11 +444,11 @@ waitForFencesSafeOrUnsafe :: forall io
                              ("timeout" ::: Word64)
                           -> io (Result)
 waitForFencesSafeOrUnsafe mkVkWaitForFences device fences waitAll timeout = liftIO . evalContT $ do
-  let vkWaitForFencesPtr = pVkWaitForFences (deviceCmds (device :: Device))
+  let vkWaitForFencesPtr = pVkWaitForFences (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkWaitForFencesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkWaitForFences is null" Nothing Nothing
   let vkWaitForFences' = mkVkWaitForFences vkWaitForFencesPtr
-  pPFences <- ContT $ allocaBytesAligned @Fence ((Data.Vector.length (fences)) * 8) 8
+  pPFences <- ContT $ allocaBytes @Fence ((Data.Vector.length (fences)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPFences `plusPtr` (8 * (i)) :: Ptr Fence) (e)) (fences)
   r <- lift $ traceAroundEvent "vkWaitForFences" (vkWaitForFences' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (fences)) :: Word32)) (pPFences) (boolToBool32 (waitAll)) (timeout))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -517,6 +522,7 @@ waitForFencesSafeOrUnsafe mkVkWaitForFences device fences waitAll timeout = lift
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32', 'Vulkan.Core10.Handles.Device',
 -- 'Vulkan.Core10.Handles.Fence'
 waitForFences :: forall io
@@ -585,6 +591,7 @@ waitForFencesSafe = waitForFencesSafeOrUnsafe mkVkWaitForFencesSafe
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.FenceCreateFlagBits.FenceCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createFence'
 data FenceCreateInfo (es :: [Type]) = FenceCreateInfo
@@ -603,7 +610,7 @@ deriving instance Show (Chain es) => Show (FenceCreateInfo es)
 
 instance Extensible FenceCreateInfo where
   extensibleTypeName = "FenceCreateInfo"
-  setNext x next = x{next = next}
+  setNext FenceCreateInfo{..} next' = FenceCreateInfo{next = next', ..}
   getNext FenceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends FenceCreateInfo e => b) -> Maybe b
   extends _ f
@@ -612,7 +619,7 @@ instance Extensible FenceCreateInfo where
     | otherwise = Nothing
 
 instance (Extendss FenceCreateInfo es, PokeChain es) => ToCStruct (FenceCreateInfo es) where
-  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FenceCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FENCE_CREATE_INFO)
     pNext'' <- fmap castPtr . ContT $ withChain (next)

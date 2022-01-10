@@ -20,10 +20,10 @@ module Vulkan.Core10.Enums.PipelineStageFlagBits  ( PipelineStageFlags
                                                                          , PIPELINE_STAGE_ALL_COMMANDS_BIT
                                                                          , PIPELINE_STAGE_NONE_KHR
                                                                          , PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV
+                                                                         , PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
                                                                          , PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT
                                                                          , PIPELINE_STAGE_MESH_SHADER_BIT_NV
                                                                          , PIPELINE_STAGE_TASK_SHADER_BIT_NV
-                                                                         , PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV
                                                                          , PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR
                                                                          , PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR
                                                                          , PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT
@@ -49,12 +49,12 @@ type PipelineStageFlags = PipelineStageFlagBits
 --
 -- = Description
 --
--- These values all have the same value\/meaning as the equivalently named
--- values for
--- 'Vulkan.Extensions.VK_KHR_synchronization2.PipelineStageFlags2KHR'.
+-- These values all have the same meaning as the equivalently named values
+-- for 'Vulkan.Extensions.VK_KHR_synchronization2.PipelineStageFlags2KHR'.
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints.CheckpointDataNV',
 -- 'PipelineStageFlags',
 -- 'Vulkan.Extensions.VK_AMD_buffer_marker.cmdWriteBufferMarkerAMD',
@@ -69,8 +69,9 @@ newtype PipelineStageFlagBits = PipelineStageFlagBits Flags
 -- execution when specified in the first scope.
 pattern PIPELINE_STAGE_TOP_OF_PIPE_BIT                      = PipelineStageFlagBits 0x00000001
 -- | 'PIPELINE_STAGE_DRAW_INDIRECT_BIT' specifies the stage of the pipeline
--- where Draw\/DispatchIndirect\/TraceRaysIndirect data structures are
--- consumed. This stage also includes reading commands written by
+-- where @VkDrawIndirect*@ \/ @VkDispatchIndirect*@ \/
+-- @VkTraceRaysIndirect*@ data structures are consumed. This stage also
+-- includes reading commands written by
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.cmdExecuteGeneratedCommandsNV'.
 pattern PIPELINE_STAGE_DRAW_INDIRECT_BIT                    = PipelineStageFlagBits 0x00000002
 -- | 'PIPELINE_STAGE_VERTEX_INPUT_BIT' specifies the stage of the pipeline
@@ -172,7 +173,7 @@ pattern PIPELINE_STAGE_HOST_BIT                             = PipelineStageFlagB
 --
 -- -   'PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT'
 --
--- -   'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+-- -   'PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- -   'PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
 pattern PIPELINE_STAGE_ALL_GRAPHICS_BIT                     = PipelineStageFlagBits 0x00008000
@@ -186,6 +187,14 @@ pattern PIPELINE_STAGE_NONE_KHR                             = PipelineStageFlagB
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.cmdPreprocessGeneratedCommandsNV'
 -- is handled.
 pattern PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV            = PipelineStageFlagBits 0x00020000
+-- | 'PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR' specifies the
+-- stage of the pipeline where the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
+-- or
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-shading-rate-image shading rate image>
+-- is read to determine the fragment shading rate for portions of a
+-- rasterized primitive.
+pattern PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = PipelineStageFlagBits 0x00400000
 -- | 'PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT' specifies the stage of
 -- the pipeline where the fragment density map is read to
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragmentdensitymapops generate the fragment areas>.
@@ -194,8 +203,6 @@ pattern PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT     = PipelineStageFlagB
 pattern PIPELINE_STAGE_MESH_SHADER_BIT_NV                   = PipelineStageFlagBits 0x00100000
 -- | 'PIPELINE_STAGE_TASK_SHADER_BIT_NV' specifies the task shader stage.
 pattern PIPELINE_STAGE_TASK_SHADER_BIT_NV                   = PipelineStageFlagBits 0x00080000
--- No documentation found for Nested "VkPipelineStageFlagBits" "VK_PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV"
-pattern PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV            = PipelineStageFlagBits 0x00400000
 -- | 'PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR' specifies the execution of
 -- the ray tracing shader stages, via
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdTraceRaysNV' ,
@@ -251,10 +258,10 @@ showTablePipelineStageFlagBits =
   , (PIPELINE_STAGE_ALL_COMMANDS_BIT                    , "ALL_COMMANDS_BIT")
   , (PIPELINE_STAGE_NONE_KHR                            , "NONE_KHR")
   , (PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV           , "COMMAND_PREPROCESS_BIT_NV")
+  , (PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR, "FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR")
   , (PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT    , "FRAGMENT_DENSITY_PROCESS_BIT_EXT")
   , (PIPELINE_STAGE_MESH_SHADER_BIT_NV                  , "MESH_SHADER_BIT_NV")
   , (PIPELINE_STAGE_TASK_SHADER_BIT_NV                  , "TASK_SHADER_BIT_NV")
-  , (PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV           , "SHADING_RATE_IMAGE_BIT_NV")
   , (PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR          , "RAY_TRACING_SHADER_BIT_KHR")
   , (PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR, "ACCELERATION_STRUCTURE_BUILD_BIT_KHR")
   , (PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT       , "CONDITIONAL_RENDERING_BIT_EXT")
