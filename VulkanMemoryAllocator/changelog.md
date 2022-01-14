@@ -1,6 +1,10 @@
 # Change Log
 
 ## WIP
+- Bump VMA
+  - lost allocations stuff removed
+  - Minor changes
+  - Requires c++14 now
 
 ## [0.7.5] - 2021-11-25
 - Bump VMA, adds `getAllocationMemoryProperties`
