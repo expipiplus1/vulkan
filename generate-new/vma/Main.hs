@@ -143,6 +143,7 @@ marshalParams handles =
     getBespokeScheme p a = case (p, name a) of
       ("VmaAllocatorCreateInfo", "pHeapSizeLimit") -> Just $ Preserve (type' a)
       ("VmaAllocatorCreateInfo", "pTypeExternalMemoryHandleTypes") -> Just $ Preserve (type' a)
+      ("vmaGetHeapBudgets", "pBudgets") -> Just $ Preserve (type' a)
       ("vmaBuildStatsString", "ppStatsString") | Ptr _ p <- type' a ->
         Just $ Returned (Preserve p)
       ("vmaBuildVirtualBlockStatsString", "ppStatsString") | Ptr _ p <- type' a ->
@@ -275,21 +276,27 @@ vulkanFuncPointers =
         , "vkGetPhysicalDeviceMemoryProperties"
         , "vkGetPhysicalDeviceMemoryProperties2KHR"
         , "vkGetPhysicalDeviceProperties"
+        , "vkGetDeviceProcAddr"
+        , "vkGetInstanceProcAddr"
         , "vkInvalidateMappedMemoryRanges"
+        , "vkVoidFunction"
         , "vkMapMemory"
         , "vkUnmapMemory"
         ]
-    $ \n -> do
-        Command {..} <- note ("Unable to find command " <> show n)
-          =<< getCommand n
-        pure $ FuncPointer
-          (CName ("PFN_" <> unCName n))
-          (Ptr NonConst $ Proto
-            cReturnType
-            (   (\Parameter {..} -> (Just (unCName pName), pType))
-            <$> toList cParameters
+    $ \case
+        "vkVoidFunction" ->
+          pure (FuncPointer "PFN_vkVoidFunction" (Ptr NonConst $ Proto Void []))
+        n -> do
+          Command {..} <- note ("Unable to find command " <> show n)
+            =<< getCommand n
+          pure $ FuncPointer
+            (CName ("PFN_" <> unCName n))
+            (Ptr NonConst $ Proto
+              cReturnType
+              (   (\Parameter {..} -> (Just (unCName pName), pType))
+              <$> toList cParameters
+              )
             )
-          )
 
 unitCommands :: HasErr r => GlobalDecls -> Sem r (Vector (NodeInfo, Command))
 unitCommands ds =
