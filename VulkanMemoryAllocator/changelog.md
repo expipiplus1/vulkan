@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+
+## [0.8] - 2022-01-14
 - Bump VMA
   - lost allocations stuff removed
   - Minor changes
