@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+- Relax bounds on `vulkan`
+- Squash warnings
 
 ## [0.5.4] - 2021-11-25
 - Relax bounds on `vulkan`
