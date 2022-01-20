@@ -35,6 +35,9 @@ import           Vulkan.Core10                 as Vk
                                          hiding ( withBuffer
                                                 , withImage
                                                 )
+import           Vulkan.Dynamic                 ( DeviceCmds(DeviceCmds, pVkGetDeviceProcAddr)
+                                                , InstanceCmds(InstanceCmds, pVkGetInstanceProcAddr)
+                                                )
 import           Vulkan.Extensions.VK_KHR_get_physical_device_properties2
 import           Vulkan.Extensions.VK_KHR_surface
 import           Vulkan.Extensions.VK_KHR_swapchain
@@ -45,9 +48,11 @@ import qualified Vulkan.Utils.Requirements.TH  as U
 import           Vulkan.Zero
 import           VulkanMemoryAllocator          ( Allocator
                                                 , AllocatorCreateInfo(..)
+                                                , VulkanFunctions(..)
                                                 , withAllocator
                                                 )
 import           Window
+import Foreign.Ptr (castFunPtr)
 
 myApiVersion :: Word32
 myApiVersion = API_VERSION_1_0
@@ -200,12 +205,19 @@ createVMA
 createVMA inst phys dev =
   snd
     <$> withAllocator
-          zero { flags            = zero
-               , physicalDevice   = physicalDeviceHandle phys
-               , device           = deviceHandle dev
-               , instance'        = instanceHandle inst
-               , vulkanApiVersion = myApiVersion
-               }
+          zero
+            { flags            = zero
+            , physicalDevice   = physicalDeviceHandle phys
+            , device           = deviceHandle dev
+            , instance'        = instanceHandle inst
+            , vulkanApiVersion = myApiVersion
+            , vulkanFunctions  = Just $ case inst of
+              Instance _ InstanceCmds {..} -> case dev of
+                Device _ DeviceCmds {..} -> zero
+                  { vkGetInstanceProcAddr = castFunPtr pVkGetInstanceProcAddr
+                  , vkGetDeviceProcAddr   = castFunPtr pVkGetDeviceProcAddr
+                  }
+            }
           allocate
 
 ----------------------------------------------------------------
