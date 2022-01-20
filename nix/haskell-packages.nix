@@ -115,7 +115,7 @@ let
         super.pandoc;
     } // pkgs.lib.optionalAttrs hoogle {
       ghc = super.ghc // { withPackages = super.ghc.withHoogle; };
-      ghcWithPackages = self.ghc.withPackages;
+      ghcWithPackages = super.ghcWithPackages.override { withHoogle = true; };
     };
 
 in baseHaskellPackages.override { inherit overrides; }

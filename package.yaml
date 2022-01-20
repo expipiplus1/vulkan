@@ -35,6 +35,8 @@ library:
     cpp-options: -DGENERIC_INSTANCES
   - condition: flag(trace-calls)
     cpp-options: -DTRACE_CALLS
+  - condition: false
+    other-modules: Paths_vulkan
   ghc-options:
   - -Wall
   - -Wno-unticked-promoted-constructors
