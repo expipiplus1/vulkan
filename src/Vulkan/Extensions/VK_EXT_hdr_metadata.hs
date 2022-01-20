@@ -184,6 +184,14 @@ foreign import ccall
 
 -- | vkSetHdrMetadataEXT - Set Hdr metadata
 --
+-- = Description
+--
+-- The metadata will be applied to the specified
+-- 'Vulkan.Extensions.Handles.SwapchainKHR' objects at the next
+-- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' call using that
+-- 'Vulkan.Extensions.Handles.SwapchainKHR' object. The metadata will
+-- persist until a subsequent 'setHdrMetadataEXT' changes it.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkSetHdrMetadataEXT-device-parameter# @device@ /must/ be a
@@ -238,14 +246,20 @@ setHdrMetadataEXT device swapchains metadata = liftIO . evalContT $ do
 
 -- | VkXYColorEXT - Specify X,Y chromaticity coordinates
 --
+-- = Description
+--
+-- Chromaticity coordinates are as specified in CIE 15:2004 “Calculation of
+-- chromaticity coordinates” (Section 7.3) and are limited to between 0 and
+-- 1 for real colors for the reference monitor.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_hdr_metadata VK_EXT_hdr_metadata>,
 -- 'HdrMetadataEXT'
 data XYColorEXT = XYColorEXT
-  { -- No documentation found for Nested "VkXYColorEXT" "x"
+  { -- | @x@ is the x chromaticity coordinate.
     x :: Float
-  , -- No documentation found for Nested "VkXYColorEXT" "y"
+  , -- | @y@ is the y chromaticity coordinate.
     y :: Float
   }
   deriving (Typeable, Eq)
@@ -300,17 +314,17 @@ instance Zero XYColorEXT where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'XYColorEXT',
 -- 'setHdrMetadataEXT'
 data HdrMetadataEXT = HdrMetadataEXT
-  { -- | @displayPrimaryRed@ is the reference monitor’s red primary in
-    -- chromaticity coordinates
+  { -- | @displayPrimaryRed@ is a 'XYColorEXT' structure specifying the reference
+    -- monitor’s red primary in chromaticity coordinates
     displayPrimaryRed :: XYColorEXT
-  , -- | @displayPrimaryGreen@ is the reference monitor’s green primary in
-    -- chromaticity coordinates
+  , -- | @displayPrimaryGreen@ is a 'XYColorEXT' structure specifying the
+    -- reference monitor’s green primary in chromaticity coordinates
     displayPrimaryGreen :: XYColorEXT
-  , -- | @displayPrimaryBlue@ is the reference monitor’s blue primary in
-    -- chromaticity coordinates
+  , -- | @displayPrimaryBlue@ is a 'XYColorEXT' structure specifying the
+    -- reference monitor’s blue primary in chromaticity coordinates
     displayPrimaryBlue :: XYColorEXT
-  , -- | @whitePoint@ is the reference monitor’s white-point in chromaticity
-    -- coordinates
+  , -- | @whitePoint@ is a 'XYColorEXT' structure specifying the reference
+    -- monitor’s white-point in chromaticity coordinates
     whitePoint :: XYColorEXT
   , -- | @maxLuminance@ is the maximum luminance of the reference monitor in nits
     maxLuminance :: Float

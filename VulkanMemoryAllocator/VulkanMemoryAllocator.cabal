@@ -1,11 +1,11 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.34.5.
+-- This file has been generated from package.yaml by hpack version 0.34.6.
 --
 -- see: https://github.com/sol/hpack
 
 name:           VulkanMemoryAllocator
-version:        0.7.5
+version:        0.8
 synopsis:       Bindings to the VulkanMemoryAllocator library
 category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme
@@ -84,7 +84,7 @@ library
       UndecidableInstances
       ViewPatterns
   ghc-options: -Wall -Wno-unticked-promoted-constructors -Wno-missing-pattern-synonym-signatures -Wno-unused-imports -Wno-missing-signatures -Wno-partial-type-signatures
-  cxx-options: -std=c++11
+  cxx-options: -std=c++14
   include-dirs:
       VulkanMemoryAllocator/include
   cxx-sources:
@@ -96,7 +96,7 @@ library
     , bytestring
     , transformers
     , vector
-    , vulkan >=3.6 && <3.15
+    , vulkan >=3.6 && <3.16
   if flag(safe-foreign-calls)
     cpp-options: -DSAFE_FOREIGN_CALLS
   if flag(vma-ndebug)
@@ -106,5 +106,5 @@ library
   if flag(generic-instances)
     cpp-options: -DGENERIC_INSTANCES
   if impl(ghc >= 8.10)
-    ghc-options: -optcxx -std=c++11
+    ghc-options: -optcxx -std=c++14
   default-language: Haskell2010

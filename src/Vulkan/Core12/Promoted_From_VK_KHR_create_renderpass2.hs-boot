@@ -69,10 +69,11 @@ instance Show (Chain es) => Show (SubpassDescription2 es)
 instance (Extendss SubpassDescription2 es, PeekChain es) => FromCStruct (SubpassDescription2 es)
 
 
-data SubpassEndInfo
+type role SubpassEndInfo nominal
+data SubpassEndInfo (es :: [Type])
 
-instance ToCStruct SubpassEndInfo
-instance Show SubpassEndInfo
+instance (Extendss SubpassEndInfo es, PokeChain es) => ToCStruct (SubpassEndInfo es)
+instance Show (Chain es) => Show (SubpassEndInfo es)
 
-instance FromCStruct SubpassEndInfo
+instance (Extendss SubpassEndInfo es, PeekChain es) => FromCStruct (SubpassEndInfo es)
 

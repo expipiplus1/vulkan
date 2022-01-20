@@ -3050,6 +3050,14 @@ instance Zero CopyImageToBufferInfo2KHR where
 --     of @dstImage@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --
+-- -   #VUID-VkResolveImageInfo2KHR-linearColorAttachment-06519# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
+--     feature is enabled and the image is created with
+--     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR', the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @dstImage@ /must/ contain
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
+--
 -- -   #VUID-VkResolveImageInfo2KHR-srcImage-01386# @srcImage@ and
 --     @dstImage@ /must/ have been created with the same image format
 --

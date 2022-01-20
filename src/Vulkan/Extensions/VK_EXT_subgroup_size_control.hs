@@ -404,8 +404,6 @@ instance Zero PhysicalDeviceSubgroupSizeControlPropertiesEXT where
 -- specifying the required subgroup size of a newly created pipeline shader
 -- stage
 --
--- == Valid Usage
---
 -- = Description
 --
 -- If a 'PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT' structure is
@@ -421,7 +419,11 @@ instance Zero PhysicalDeviceSubgroupSizeControlPropertiesEXT where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_subgroup_size_control VK_EXT_subgroup_size_control>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT = PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT
-  { -- | #VUID-VkPipelineShaderStageRequiredSubgroupSizeCreateInfoEXT-requiredSubgroupSize-02760#
+  { -- | #pipelines-required-subgroup-size# @requiredSubgroupSize@ is an unsigned
+    -- integer value specifying the required subgroup size for the newly
+    -- created pipeline shader stage.
+    --
+    -- #VUID-VkPipelineShaderStageRequiredSubgroupSizeCreateInfoEXT-requiredSubgroupSize-02760#
     -- @requiredSubgroupSize@ /must/ be a power-of-two integer
     --
     -- #VUID-VkPipelineShaderStageRequiredSubgroupSizeCreateInfoEXT-requiredSubgroupSize-02761#

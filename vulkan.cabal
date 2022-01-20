@@ -1,11 +1,11 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.34.5.
+-- This file has been generated from package.yaml by hpack version 0.34.6.
 --
 -- see: https://github.com/sol/hpack
 
 name:           vulkan
-version:        3.14.2
+version:        3.15
 synopsis:       Bindings to the Vulkan graphics API.
 description:    Please see [the readme](https://github.com/expipiplus1/vulkan/#readme)
 category:       Graphics
@@ -374,6 +374,7 @@ library
       Vulkan.Extensions.VK_GOOGLE_decorate_string
       Vulkan.Extensions.VK_GOOGLE_display_timing
       Vulkan.Extensions.VK_GOOGLE_hlsl_functionality1
+      Vulkan.Extensions.VK_GOOGLE_surfaceless_query
       Vulkan.Extensions.VK_GOOGLE_user_type
       Vulkan.Extensions.VK_HUAWEI_invocation_mask
       Vulkan.Extensions.VK_HUAWEI_subpass_shading
@@ -494,6 +495,7 @@ library
       Vulkan.Extensions.VK_NV_geometry_shader_passthrough
       Vulkan.Extensions.VK_NV_glsl_shader
       Vulkan.Extensions.VK_NV_inherited_viewport_scissor
+      Vulkan.Extensions.VK_NV_linear_color_attachment
       Vulkan.Extensions.VK_NV_mesh_shader
       Vulkan.Extensions.VK_NV_ray_tracing
       Vulkan.Extensions.VK_NV_ray_tracing_motion_blur
@@ -510,6 +512,7 @@ library
       Vulkan.Extensions.VK_NVX_binary_import
       Vulkan.Extensions.VK_NVX_image_view_handle
       Vulkan.Extensions.VK_NVX_multiview_per_view_attributes
+      Vulkan.Extensions.VK_QCOM_fragment_density_map_offset
       Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
       Vulkan.Extensions.VK_QCOM_render_pass_store_ops
       Vulkan.Extensions.VK_QCOM_render_pass_transform

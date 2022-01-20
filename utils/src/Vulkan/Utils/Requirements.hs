@@ -623,7 +623,7 @@ getMaybe funPtr wrapper2 get1 get2 phys =
 
 showVersion :: Word32 -> String
 showVersion ver = intercalate "." [show ma, show mi, show pa]
-  where MAKE_VERSION ma mi pa = ver
+  where MAKE_API_VERSION ma mi pa = ver
 
 data Has c a where
   Has ::c a => Has c a

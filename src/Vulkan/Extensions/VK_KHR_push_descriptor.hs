@@ -261,6 +261,16 @@ foreign import ccall
 --     layout that was created with
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
 --
+-- -   #VUID-vkCmdPushDescriptorSetKHR-pDescriptorWrites-06494# For each
+--     element i where @pDescriptorWrites@[i].@descriptorType@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
+--     @pDescriptorWrites@[i].@pImageInfo@ /must/ be a valid pointer to an
+--     array of @pDescriptorWrites@[i].@descriptorCount@ valid
+--     'Vulkan.Core10.DescriptorSet.DescriptorImageInfo' structures
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdPushDescriptorSetKHR-commandBuffer-parameter#

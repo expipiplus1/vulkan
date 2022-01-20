@@ -121,6 +121,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_GOOGLE_decorate_string
                           , module Vulkan.Extensions.VK_GOOGLE_display_timing
                           , module Vulkan.Extensions.VK_GOOGLE_hlsl_functionality1
+                          , module Vulkan.Extensions.VK_GOOGLE_surfaceless_query
                           , module Vulkan.Extensions.VK_GOOGLE_user_type
                           , module Vulkan.Extensions.VK_HUAWEI_invocation_mask
                           , module Vulkan.Extensions.VK_HUAWEI_subpass_shading
@@ -244,6 +245,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_NV_geometry_shader_passthrough
                           , module Vulkan.Extensions.VK_NV_glsl_shader
                           , module Vulkan.Extensions.VK_NV_inherited_viewport_scissor
+                          , module Vulkan.Extensions.VK_NV_linear_color_attachment
                           , module Vulkan.Extensions.VK_NV_mesh_shader
                           , module Vulkan.Extensions.VK_NV_ray_tracing
                           , module Vulkan.Extensions.VK_NV_ray_tracing_motion_blur
@@ -257,6 +259,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_NV_viewport_array2
                           , module Vulkan.Extensions.VK_NV_viewport_swizzle
                           , module Vulkan.Extensions.VK_NV_win32_keyed_mutex
+                          , module Vulkan.Extensions.VK_QCOM_fragment_density_map_offset
                           , module Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
                           , module Vulkan.Extensions.VK_QCOM_render_pass_store_ops
                           , module Vulkan.Extensions.VK_QCOM_render_pass_transform
@@ -385,6 +388,7 @@ import Vulkan.Extensions.VK_GGP_stream_descriptor_surface
 import Vulkan.Extensions.VK_GOOGLE_decorate_string
 import Vulkan.Extensions.VK_GOOGLE_display_timing
 import Vulkan.Extensions.VK_GOOGLE_hlsl_functionality1
+import Vulkan.Extensions.VK_GOOGLE_surfaceless_query
 import Vulkan.Extensions.VK_GOOGLE_user_type
 import Vulkan.Extensions.VK_HUAWEI_invocation_mask
 import Vulkan.Extensions.VK_HUAWEI_subpass_shading
@@ -508,6 +512,7 @@ import Vulkan.Extensions.VK_NV_framebuffer_mixed_samples
 import Vulkan.Extensions.VK_NV_geometry_shader_passthrough
 import Vulkan.Extensions.VK_NV_glsl_shader
 import Vulkan.Extensions.VK_NV_inherited_viewport_scissor
+import Vulkan.Extensions.VK_NV_linear_color_attachment
 import Vulkan.Extensions.VK_NV_mesh_shader
 import Vulkan.Extensions.VK_NV_ray_tracing
 import Vulkan.Extensions.VK_NV_ray_tracing_motion_blur
@@ -521,6 +526,7 @@ import Vulkan.Extensions.VK_NV_shading_rate_image
 import Vulkan.Extensions.VK_NV_viewport_array2
 import Vulkan.Extensions.VK_NV_viewport_swizzle
 import Vulkan.Extensions.VK_NV_win32_keyed_mutex
+import Vulkan.Extensions.VK_QCOM_fragment_density_map_offset
 import Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
 import Vulkan.Extensions.VK_QCOM_render_pass_store_ops
 import Vulkan.Extensions.VK_QCOM_render_pass_transform

@@ -375,17 +375,13 @@
 -- -   #VUID-VkCuLaunchInfoNVX-function-parameter# @function@ /must/ be a
 --     valid 'Vulkan.Extensions.Handles.CuFunctionNVX' handle
 --
--- -   #VUID-VkCuLaunchInfoNVX-pParams-parameter# @pParams@ /must/ be a
---     valid pointer to an array of @paramCount@ bytes
+-- -   #VUID-VkCuLaunchInfoNVX-pParams-parameter# If @paramCount@ is not
+--     @0@, @pParams@ /must/ be a valid pointer to an array of @paramCount@
+--     bytes
 --
--- -   #VUID-VkCuLaunchInfoNVX-pExtras-parameter# @pExtras@ /must/ be a
---     valid pointer to an array of @extraCount@ bytes
---
--- -   #VUID-VkCuLaunchInfoNVX-paramCount-arraylength# @paramCount@ /must/
---     be greater than @0@
---
--- -   #VUID-VkCuLaunchInfoNVX-extraCount-arraylength# @extraCount@ /must/
---     be greater than @0@
+-- -   #VUID-VkCuLaunchInfoNVX-pExtras-parameter# If @extraCount@ is not
+--     @0@, @pExtras@ /must/ be a valid pointer to an array of @extraCount@
+--     bytes
 --
 -- == Version History
 --

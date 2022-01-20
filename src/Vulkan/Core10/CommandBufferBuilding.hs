@@ -8952,6 +8952,14 @@ foreign import ccall
 --     of @dstImage@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --
+-- -   #VUID-vkCmdResolveImage-linearColorAttachment-06519# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
+--     feature is enabled and the image is created with
+--     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR', the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @dstImage@ /must/ contain
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
+--
 -- -   #VUID-vkCmdResolveImage-srcImage-01386# @srcImage@ and @dstImage@
 --     /must/ have been created with the same image format
 --
@@ -10470,7 +10478,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBeginQuery-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, or compute operations
+--     allocated from /must/ support graphics, compute, decode, or encode
+--     operations
 --
 -- -   #VUID-vkCmdBeginQuery-commonparent# Both of @commandBuffer@, and
 --     @queryPool@ /must/ have been created, allocated, or retrieved from
@@ -10492,6 +10501,8 @@ foreign import ccall
 -- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
 -- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
 -- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- |                                                                                                                            |                                                                                                                        | Decode                                                                                                                |
+-- |                                                                                                                            |                                                                                                                        | Encode                                                                                                                |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
@@ -10605,7 +10616,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdEndQuery-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, or compute operations
+--     allocated from /must/ support graphics, compute, decode, or encode
+--     operations
 --
 -- -   #VUID-vkCmdEndQuery-commonparent# Both of @commandBuffer@, and
 --     @queryPool@ /must/ have been created, allocated, or retrieved from
@@ -10627,6 +10639,8 @@ foreign import ccall
 -- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
 -- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
 -- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- |                                                                                                                            |                                                                                                                        | Decode                                                                                                                |
+-- |                                                                                                                            |                                                                                                                        | Encode                                                                                                                |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
@@ -10720,7 +10734,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdResetQueryPool-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics, or compute operations
+--     allocated from /must/ support graphics, compute, decode, or encode
+--     operations
 --
 -- -   #VUID-vkCmdResetQueryPool-renderpass# This command /must/ only be
 --     called outside of a render pass instance
@@ -10745,6 +10760,8 @@ foreign import ccall
 -- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
 -- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              |
 -- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
+-- |                                                                                                                            |                                                                                                                        | Decode                                                                                                                |
+-- |                                                                                                                            |                                                                                                                        | Encode                                                                                                                |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
@@ -10918,8 +10935,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdWriteTimestamp-commandBuffer-cmdpool# The
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support transfer, graphics, or compute
---     operations
+--     allocated from /must/ support transfer, graphics, compute, decode,
+--     or encode operations
 --
 -- -   #VUID-vkCmdWriteTimestamp-commonparent# Both of @commandBuffer@, and
 --     @queryPool@ /must/ have been created, allocated, or retrieved from
@@ -10942,6 +10959,8 @@ foreign import ccall
 -- | Primary                                                                                                                    | Both                                                                                                                   | Transfer                                                                                                              |
 -- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |
 -- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |
+-- |                                                                                                                            |                                                                                                                        | Decode                                                                                                                |
+-- |                                                                                                                            |                                                                                                                        | Encode                                                                                                                |
 -- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also

@@ -49,7 +49,7 @@
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_multiview.html SPV_KHR_multiview>
 --
 --     -   This extension provides API support for
---         <https://raw.githubusercontent.com/KhronosGroup/GLSL/master/extensions/ext/GL_EXT_multiview.txt GL_EXT_multiview>
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_multiview.txt GL_EXT_multiview>
 --
 -- [__Contributors__]
 --
@@ -76,7 +76,7 @@
 -- shader extension, which adds a new @ViewIndex@ built-in type that allows
 -- shaders to control what to do for each view. If using GLSL there is also
 -- the
--- <https://raw.githubusercontent.com/KhronosGroup/GLSL/master/extensions/ext/GL_EXT_multiview.txt GL_EXT_multiview>
+-- <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_multiview.txt GL_EXT_multiview>
 -- extension that introduces a @highp int gl_ViewIndex;@ built-in variable
 -- for vertex, tessellation, geometry, and fragment shaders.
 --

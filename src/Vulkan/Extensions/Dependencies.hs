@@ -84,6 +84,7 @@ import Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface (pattern FUCHSIA_IMAGEPIPE
 import Vulkan.Extensions.VK_GGP_frame_token (pattern GGP_FRAME_TOKEN_EXTENSION_NAME)
 import Vulkan.Extensions.VK_GGP_stream_descriptor_surface (pattern GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_GOOGLE_display_timing (pattern GOOGLE_DISPLAY_TIMING_EXTENSION_NAME)
+import Vulkan.Extensions.VK_GOOGLE_surfaceless_query (pattern GOOGLE_SURFACELESS_QUERY_EXTENSION_NAME)
 import Vulkan.Extensions.VK_HUAWEI_invocation_mask (pattern HUAWEI_INVOCATION_MASK_EXTENSION_NAME)
 import Vulkan.Extensions.VK_HUAWEI_subpass_shading (pattern HUAWEI_SUBPASS_SHADING_EXTENSION_NAME)
 import Vulkan.Extensions.VK_INTEL_shader_integer_functions2 (pattern INTEL_SHADER_INTEGER_FUNCTIONS_2_EXTENSION_NAME)
@@ -196,6 +197,7 @@ import Vulkan.Extensions.VK_NV_shader_sm_builtins (pattern NV_SHADER_SM_BUILTINS
 import Vulkan.Extensions.VK_NV_shader_subgroup_partitioned (pattern NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_shading_rate_image (pattern NV_SHADING_RATE_IMAGE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_win32_keyed_mutex (pattern NV_WIN32_KEYED_MUTEX_EXTENSION_NAME)
+import Vulkan.Extensions.VK_QCOM_fragment_density_map_offset (pattern QCOM_FRAGMENT_DENSITY_MAP_OFFSET_EXTENSION_NAME)
 import Vulkan.Extensions.VK_QCOM_render_pass_transform (pattern QCOM_RENDER_PASS_TRANSFORM_EXTENSION_NAME)
 import Vulkan.Extensions.VK_QCOM_rotated_copy_commands (pattern QCOM_ROTATED_COPY_COMMANDS_EXTENSION_NAME)
 import Vulkan.Extensions.VK_QNX_screen_surface (pattern QNX_SCREEN_SURFACE_EXTENSION_NAME)
@@ -608,6 +610,9 @@ extensionDependencies = \case
   EXT_BORDER_COLOR_SWIZZLE_EXTENSION_NAME -> [EXT_CUSTOM_BORDER_COLOR_EXTENSION_NAME]
   EXT_PAGEABLE_DEVICE_LOCAL_MEMORY_EXTENSION_NAME ->
     [EXT_MEMORY_PRIORITY_EXTENSION_NAME, KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME]
+  QCOM_FRAGMENT_DENSITY_MAP_OFFSET_EXTENSION_NAME ->
+    [KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME, EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME]
+  GOOGLE_SURFACELESS_QUERY_EXTENSION_NAME -> [KHR_SURFACE_EXTENSION_NAME]
   _ -> []
 
 -- | The minimum required API version to use this extension

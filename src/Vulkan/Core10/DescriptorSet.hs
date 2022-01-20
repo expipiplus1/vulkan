@@ -872,6 +872,18 @@ foreign import ccall
 --     structure in the @pNext@ chain of @pDescriptorWrites@[i] /must/ have
 --     been created on @device@
 --
+-- -   #VUID-vkUpdateDescriptorSets-pDescriptorWrites-06493# For each
+--     element i where @pDescriptorWrites@[i].@descriptorType@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
+--     @pDescriptorWrites@[i].@pImageInfo@ /must/ be a valid pointer to an
+--     array of @pDescriptorWrites@[i].@descriptorCount@ valid
+--     'DescriptorImageInfo' structures
+--
 -- -   #VUID-vkUpdateDescriptorSets-None-03047# Descriptor bindings updated
 --     by this command which were created without the
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
@@ -1274,16 +1286,6 @@ instance Zero DescriptorImageInfo where
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
 --     @descriptorCount@ /must/ be an integer multiple of @4@
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-00322# If @descriptorType@
---     is 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
---     @pImageInfo@ /must/ be a valid pointer to an array of
---     @descriptorCount@ valid 'DescriptorImageInfo' structures
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-02994# If @descriptorType@
 --     is

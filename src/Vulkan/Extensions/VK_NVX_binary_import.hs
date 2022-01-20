@@ -375,17 +375,13 @@
 -- -   #VUID-VkCuLaunchInfoNVX-function-parameter# @function@ /must/ be a
 --     valid 'Vulkan.Extensions.Handles.CuFunctionNVX' handle
 --
--- -   #VUID-VkCuLaunchInfoNVX-pParams-parameter# @pParams@ /must/ be a
---     valid pointer to an array of @paramCount@ bytes
+-- -   #VUID-VkCuLaunchInfoNVX-pParams-parameter# If @paramCount@ is not
+--     @0@, @pParams@ /must/ be a valid pointer to an array of @paramCount@
+--     bytes
 --
--- -   #VUID-VkCuLaunchInfoNVX-pExtras-parameter# @pExtras@ /must/ be a
---     valid pointer to an array of @extraCount@ bytes
---
--- -   #VUID-VkCuLaunchInfoNVX-paramCount-arraylength# @paramCount@ /must/
---     be greater than @0@
---
--- -   #VUID-VkCuLaunchInfoNVX-extraCount-arraylength# @extraCount@ /must/
---     be greater than @0@
+-- -   #VUID-VkCuLaunchInfoNVX-pExtras-parameter# If @extraCount@ is not
+--     @0@, @pExtras@ /must/ be a valid pointer to an array of @extraCount@
+--     bytes
 --
 -- == Version History
 --
@@ -950,6 +946,22 @@ instance Zero CuFunctionCreateInfoNVX where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkCuLaunchInfoNVX-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CU_LAUNCH_INFO_NVX'
+--
+-- -   #VUID-VkCuLaunchInfoNVX-pNext-pNext# @pNext@ /must/ be @NULL@
+--
+-- -   #VUID-VkCuLaunchInfoNVX-function-parameter# @function@ /must/ be a
+--     valid 'Vulkan.Extensions.Handles.CuFunctionNVX' handle
+--
+-- -   #VUID-VkCuLaunchInfoNVX-pParams-parameter# If @paramCount@ is not
+--     @0@, @pParams@ /must/ be a valid pointer to an array of @paramCount@
+--     bytes
+--
+-- -   #VUID-VkCuLaunchInfoNVX-pExtras-parameter# If @extraCount@ is not
+--     @0@, @pExtras@ /must/ be a valid pointer to an array of @extraCount@
+--     bytes
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_binary_import VK_NVX_binary_import>,
@@ -957,8 +969,7 @@ instance Zero CuFunctionCreateInfoNVX where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'cmdCuLaunchKernelNVX'
 data CuLaunchInfoNVX = CuLaunchInfoNVX
-  { -- | #VUID-VkCuLaunchInfoNVX-function-parameter# @function@ /must/ be a valid
-    -- 'Vulkan.Extensions.Handles.CuFunctionNVX' handle
+  { -- No documentation found for Nested "VkCuLaunchInfoNVX" "function"
     function :: CuFunctionNVX
   , -- No documentation found for Nested "VkCuLaunchInfoNVX" "gridDimX"
     gridDimX :: Word32
@@ -974,11 +985,9 @@ data CuLaunchInfoNVX = CuLaunchInfoNVX
     blockDimZ :: Word32
   , -- No documentation found for Nested "VkCuLaunchInfoNVX" "sharedMemBytes"
     sharedMemBytes :: Word32
-  , -- | #VUID-VkCuLaunchInfoNVX-pParams-parameter# @pParams@ /must/ be a valid
-    -- pointer to an array of @paramCount@ bytes
+  , -- No documentation found for Nested "VkCuLaunchInfoNVX" "pParams"
     params :: Vector (Ptr ())
-  , -- | #VUID-VkCuLaunchInfoNVX-pExtras-parameter# @pExtras@ /must/ be a valid
-    -- pointer to an array of @extraCount@ bytes
+  , -- No documentation found for Nested "VkCuLaunchInfoNVX" "pExtras"
     extras :: Vector (Ptr ())
   }
   deriving (Typeable)

@@ -41,6 +41,15 @@ import           Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address
 import           Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
                                                 ( PhysicalDeviceTimelineSemaphoreFeatures(..)
                                                 )
+import           Vulkan.Dynamic                 ( DeviceCmds
+                                                  ( DeviceCmds
+                                                  , pVkGetDeviceProcAddr
+                                                  )
+                                                , InstanceCmds
+                                                  ( InstanceCmds
+                                                  , pVkGetInstanceProcAddr
+                                                  )
+                                                )
 import           Vulkan.Extensions.VK_KHR_acceleration_structure
 import           Vulkan.Extensions.VK_KHR_get_physical_device_properties2
 import           Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
@@ -54,9 +63,12 @@ import           Vulkan.Zero
 import           VulkanMemoryAllocator          ( Allocator
                                                 , AllocatorCreateFlagBits(..)
                                                 , AllocatorCreateInfo(..)
+                                                , VulkanFunctions(..)
+                                                , vkGetInstanceProcAddr
                                                 , withAllocator
                                                 )
 import           Window
+import Foreign.Ptr (castFunPtr)
 
 myApiVersion :: Word32
 myApiVersion = API_VERSION_1_1
@@ -220,12 +232,19 @@ createVMA
 createVMA inst phys dev =
   snd
     <$> withAllocator
-          zero { flags            = ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT
-               , physicalDevice   = physicalDeviceHandle phys
-               , device           = deviceHandle dev
-               , instance'        = instanceHandle inst
-               , vulkanApiVersion = myApiVersion
-               }
+          zero
+            { flags            = ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT
+            , physicalDevice   = physicalDeviceHandle phys
+            , device           = deviceHandle dev
+            , instance'        = instanceHandle inst
+            , vulkanApiVersion = myApiVersion
+            , vulkanFunctions  = Just $ case inst of
+              Instance _ InstanceCmds {..} -> case dev of
+                Device _ DeviceCmds {..} -> zero
+                  { vkGetInstanceProcAddr = castFunPtr pVkGetInstanceProcAddr
+                  , vkGetDeviceProcAddr   = castFunPtr pVkGetDeviceProcAddr
+                  }
+            }
           allocate
 
 ----------------------------------------------------------------

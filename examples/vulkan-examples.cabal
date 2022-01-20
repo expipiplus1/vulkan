@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.34.4.
+-- This file has been generated from package.yaml by hpack version 0.34.6.
 --
 -- see: https://github.com/sol/hpack
 
@@ -53,6 +53,8 @@ library
       Utils
       Window
   other-modules:
+      Paths_vulkan_examples
+  autogen-modules:
       Paths_vulkan_examples
   hs-source-dirs:
       lib
@@ -118,6 +120,8 @@ library
 executable compute
   main-is: Main.hs
   other-modules:
+      Paths_vulkan_examples
+  autogen-modules:
       Paths_vulkan_examples
   hs-source-dirs:
       compute
@@ -185,6 +189,8 @@ executable hlsl
       Render
       RenderPass
       Paths_vulkan_examples
+  autogen-modules:
+      Paths_vulkan_examples
   hs-source-dirs:
       hlsl
   default-extensions:
@@ -251,6 +257,8 @@ executable info
   main-is: Main.hs
   other-modules:
       Paths_vulkan_examples
+  autogen-modules:
+      Paths_vulkan_examples
   hs-source-dirs:
       info
   default-extensions:
@@ -299,6 +307,8 @@ executable info
 executable offscreen
   main-is: Main.hs
   other-modules:
+      Paths_vulkan_examples
+  autogen-modules:
       Paths_vulkan_examples
   hs-source-dirs:
       offscreen
@@ -374,6 +384,8 @@ executable rays
       Pipeline
       Render
       Scene
+      Paths_vulkan_examples
+  autogen-modules:
       Paths_vulkan_examples
   hs-source-dirs:
       rays
@@ -455,6 +467,8 @@ executable resize
       Pipeline
       Swapchain
       Paths_vulkan_examples
+  autogen-modules:
+      Paths_vulkan_examples
   hs-source-dirs:
       resize
   default-extensions:
@@ -518,6 +532,8 @@ executable sdl-triangle
   main-is: Main.hs
   other-modules:
       Paths_vulkan_examples
+  autogen-modules:
+      Paths_vulkan_examples
   hs-source-dirs:
       sdl-triangle
   default-extensions:
@@ -575,6 +591,8 @@ executable timeline-semaphore
   main-is: Main.hs
   other-modules:
       Paths_vulkan_examples
+  autogen-modules:
+      Paths_vulkan_examples
   hs-source-dirs:
       timeline-semaphore
   default-extensions:
@@ -628,6 +646,8 @@ executable timeline-semaphore
 executable vrcube
   main-is: Main.hs
   other-modules:
+      Paths_vulkan_examples
+  autogen-modules:
       Paths_vulkan_examples
   hs-source-dirs:
       vrcube

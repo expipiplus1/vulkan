@@ -139,6 +139,19 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SURFACE_P
 -- | VkSurfaceProtectedCapabilitiesKHR - Structure describing capability of a
 -- surface to be protected
 --
+-- = Description
+--
+-- If the @VK_GOOGLE_surfaceless_query@ extension is enabled, the value
+-- returned in @supportsProtected@ will be identical for every valid
+-- surface created on this physical device, and so in the
+-- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceCapabilities2KHR'
+-- call,
+-- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'::@surface@
+-- /can/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'. In that case, the
+-- contents of
+-- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceCapabilities2KHR'::@surfaceCapabilities@
+-- as well as any other struct chained to it will be undefined.
+--
 -- == Valid Usage (Implicit)
 --
 -- = See Also

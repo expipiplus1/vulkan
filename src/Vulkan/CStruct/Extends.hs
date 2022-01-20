@@ -413,6 +413,8 @@ import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_shader_float_controls (
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_density_map2 (PhysicalDeviceFragmentDensityMap2FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_density_map2 (PhysicalDeviceFragmentDensityMap2PropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_density_map (PhysicalDeviceFragmentDensityMapFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_fragment_density_map_offset (PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM)
+import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_fragment_density_map_offset (PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_density_map (PhysicalDeviceFragmentDensityMapPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_fragment_shader_barycentric (PhysicalDeviceFragmentShaderBarycentricFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_shader_interlock (PhysicalDeviceFragmentShaderInterlockFeaturesEXT)
@@ -439,6 +441,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_invocation_mask (PhysicalDevic
 import {-# SOURCE #-} Vulkan.Core10.DeviceInitialization (PhysicalDeviceLimits)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_line_rasterization (PhysicalDeviceLineRasterizationFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_line_rasterization (PhysicalDeviceLineRasterizationPropertiesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_linear_color_attachment (PhysicalDeviceLinearColorAttachmentFeaturesNV)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance3 (PhysicalDeviceMaintenance3Properties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance4 (PhysicalDeviceMaintenance4FeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance4 (PhysicalDeviceMaintenance4PropertiesKHR)
@@ -681,6 +684,7 @@ import {-# SOURCE #-} Vulkan.Core10.Pass (SubpassDescription)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2 (SubpassDescription2)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve (SubpassDescriptionDepthStencilResolve)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2 (SubpassEndInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_fragment_density_map_offset (SubpassFragmentDensityMapOffsetEndInfoQCOM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (SubpassSampleLocationsEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_subpass_shading (SubpassShadingPipelineCreateInfoHUAWEI)
 import {-# SOURCE #-} Vulkan.Core10.Image (SubresourceLayout)
@@ -919,6 +923,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo DeviceMemoryOverallocationCreateInfoAMD = ()
   Extends DeviceCreateInfo PhysicalDeviceFragmentDensityMapFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceFragmentDensityMap2FeaturesEXT = ()
+  Extends DeviceCreateInfo PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM = ()
   Extends DeviceCreateInfo PhysicalDeviceScalarBlockLayoutFeatures = ()
   Extends DeviceCreateInfo PhysicalDeviceUniformBufferStandardLayoutFeatures = ()
   Extends DeviceCreateInfo PhysicalDeviceDepthClipEnableFeaturesEXT = ()
@@ -981,6 +986,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceDynamicRenderingFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDeviceImageViewMinLodFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM = ()
+  Extends DeviceCreateInfo PhysicalDeviceLinearColorAttachmentFeaturesNV = ()
   Extends DeviceQueueCreateInfo DeviceQueueGlobalPriorityCreateInfoEXT = ()
   Extends FenceCreateInfo ExportFenceCreateInfo = ()
   Extends FenceCreateInfo ExportFenceWin32HandleInfoKHR = ()
@@ -1088,6 +1094,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRayQueryFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceFragmentDensityMapFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceFragmentDensityMap2FeaturesEXT = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceScalarBlockLayoutFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceUniformBufferStandardLayoutFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceDepthClipEnableFeaturesEXT = ()
@@ -1149,6 +1156,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceDynamicRenderingFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceImageViewMinLodFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceLinearColorAttachmentFeaturesNV = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceExternalImageFormatInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 ImageFormatListCreateInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageDrmFormatModifierInfoEXT = ()
@@ -1190,6 +1198,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceProperties2 PhysicalDeviceRayTracingPropertiesNV = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceFragmentDensityMapPropertiesEXT = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceFragmentDensityMap2PropertiesEXT = ()
+  Extends PhysicalDeviceProperties2 PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceCooperativeMatrixPropertiesNV = ()
   Extends PhysicalDeviceProperties2 PhysicalDevicePerformanceQueryPropertiesKHR = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceShaderSMBuiltinsPropertiesNV = ()
@@ -1277,6 +1286,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends SubpassDependency2 MemoryBarrier2KHR = ()
   Extends SubpassDescription2 SubpassDescriptionDepthStencilResolve = ()
   Extends SubpassDescription2 FragmentShadingRateAttachmentInfoKHR = ()
+  Extends SubpassEndInfo SubpassFragmentDensityMapOffsetEndInfoQCOM = ()
   Extends SurfaceCapabilities2KHR DisplayNativeHdrSurfaceCapabilitiesAMD = ()
   Extends SurfaceCapabilities2KHR SharedPresentSurfaceCapabilitiesKHR = ()
   Extends SurfaceCapabilities2KHR SurfaceProtectedCapabilitiesKHR = ()
@@ -1579,9 +1589,12 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD -> go @DeviceMemoryOverallocationCreateInfoAMD
   STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT -> go @PhysicalDeviceFragmentDensityMapFeaturesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_FEATURES_EXT -> go @PhysicalDeviceFragmentDensityMap2FeaturesEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_QCOM -> go @PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM
   STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT -> go @PhysicalDeviceFragmentDensityMapPropertiesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_PROPERTIES_EXT -> go @PhysicalDeviceFragmentDensityMap2PropertiesEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_PROPERTIES_QCOM -> go @PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM
   STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT -> go @RenderPassFragmentDensityMapCreateInfoEXT
+  STRUCTURE_TYPE_SUBPASS_FRAGMENT_DENSITY_MAP_OFFSET_END_INFO_QCOM -> go @SubpassFragmentDensityMapOffsetEndInfoQCOM
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES -> go @PhysicalDeviceScalarBlockLayoutFeatures
   STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR -> go @SurfaceProtectedCapabilitiesKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES -> go @PhysicalDeviceUniformBufferStandardLayoutFeatures
@@ -1717,6 +1730,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_MIN_LOD_FEATURES_EXT -> go @PhysicalDeviceImageViewMinLodFeaturesEXT
   STRUCTURE_TYPE_IMAGE_VIEW_MIN_LOD_CREATE_INFO_EXT -> go @ImageViewMinLodCreateInfoEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_ARM -> go @PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_LINEAR_COLOR_ATTACHMENT_FEATURES_NV -> go @PhysicalDeviceLinearColorAttachmentFeaturesNV
   t -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("Unrecognized struct type: " <> show t) Nothing Nothing
  where
   go :: forall e . (Typeable e, FromCStruct e, ToCStruct e, Show e) => IO b
@@ -1957,9 +1971,12 @@ infix 6 ::&
 {-# complete (::&) :: DeviceMemoryOverallocationCreateInfoAMD #-}
 {-# complete (::&) :: PhysicalDeviceFragmentDensityMapFeaturesEXT #-}
 {-# complete (::&) :: PhysicalDeviceFragmentDensityMap2FeaturesEXT #-}
+{-# complete (::&) :: PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM #-}
 {-# complete (::&) :: PhysicalDeviceFragmentDensityMapPropertiesEXT #-}
 {-# complete (::&) :: PhysicalDeviceFragmentDensityMap2PropertiesEXT #-}
+{-# complete (::&) :: PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM #-}
 {-# complete (::&) :: RenderPassFragmentDensityMapCreateInfoEXT #-}
+{-# complete (::&) :: SubpassFragmentDensityMapOffsetEndInfoQCOM #-}
 {-# complete (::&) :: PhysicalDeviceScalarBlockLayoutFeatures #-}
 {-# complete (::&) :: SurfaceProtectedCapabilitiesKHR #-}
 {-# complete (::&) :: PhysicalDeviceUniformBufferStandardLayoutFeatures #-}
@@ -2095,6 +2112,7 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceImageViewMinLodFeaturesEXT #-}
 {-# complete (::&) :: ImageViewMinLodCreateInfoEXT #-}
 {-# complete (::&) :: PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM #-}
+{-# complete (::&) :: PhysicalDeviceLinearColorAttachmentFeaturesNV #-}
 
 -- | View the head and tail of a 'Chain', see '::&'
 --

@@ -9,9 +9,7 @@ module VulkanMemoryAllocator  ( createAllocator
                               , getMemoryTypeProperties
                               , setCurrentFrameIndex
                               , calculateStats
-                              , getBudget
-                              , buildStatsString
-                              , freeStatsString
+                              , getHeapBudgets
                               , findMemoryTypeIndex
                               , findMemoryTypeIndexForBufferInfo
                               , findMemoryTypeIndexForImageInfo
@@ -19,7 +17,6 @@ module VulkanMemoryAllocator  ( createAllocator
                               , withPool
                               , destroyPool
                               , getPoolStats
-                              , makePoolAllocationsLost
                               , checkPoolCorruption
                               , getPoolName
                               , setPoolName
@@ -34,10 +31,7 @@ module VulkanMemoryAllocator  ( createAllocator
                               , freeMemory
                               , freeMemoryPages
                               , getAllocationInfo
-                              , touchAllocation
                               , setAllocationUserData
-                              , createLostAllocation
-                              , withLostAllocation
                               , getAllocationMemoryProperties
                               , mapMemory
                               , withMappedMemory
@@ -78,12 +72,8 @@ module VulkanMemoryAllocator  ( createAllocator
                               , calculateVirtualBlockStats
                               , buildVirtualBlockStatsString
                               , freeVirtualBlockStatsString
-                              , Allocator(..)
-                              , PFN_vmaAllocateDeviceMemoryFunction
-                              , FN_vmaAllocateDeviceMemoryFunction
-                              , PFN_vmaFreeDeviceMemoryFunction
-                              , FN_vmaFreeDeviceMemoryFunction
-                              , DeviceMemoryCallbacks(..)
+                              , buildStatsString
+                              , freeStatsString
                               , AllocatorCreateFlags
                               , AllocatorCreateFlagBits( ALLOCATOR_CREATE_EXTERNALLY_SYNCHRONIZED_BIT
                                                        , ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT
@@ -94,18 +84,6 @@ module VulkanMemoryAllocator  ( createAllocator
                                                        , ALLOCATOR_CREATE_EXT_MEMORY_PRIORITY_BIT
                                                        , ..
                                                        )
-                              , VulkanFunctions(..)
-                              , RecordFlags
-                              , RecordFlagBits( RECORD_FLUSH_AFTER_CALL_BIT
-                                              , ..
-                                              )
-                              , RecordSettings(..)
-                              , AllocatorCreateInfo(..)
-                              , AllocatorInfo(..)
-                              , StatInfo(..)
-                              , Stats(..)
-                              , Budget(..)
-                              , Pool(..)
                               , MemoryUsage( MEMORY_USAGE_UNKNOWN
                                            , MEMORY_USAGE_GPU_ONLY
                                            , MEMORY_USAGE_CPU_ONLY
@@ -119,12 +97,13 @@ module VulkanMemoryAllocator  ( createAllocator
                               , AllocationCreateFlagBits( ALLOCATION_CREATE_DEDICATED_MEMORY_BIT
                                                         , ALLOCATION_CREATE_NEVER_ALLOCATE_BIT
                                                         , ALLOCATION_CREATE_MAPPED_BIT
-                                                        , ALLOCATION_CREATE_CAN_BECOME_LOST_BIT
-                                                        , ALLOCATION_CREATE_CAN_MAKE_OTHER_LOST_BIT
+                                                        , ALLOCATION_CREATE_RESERVED_1_BIT
+                                                        , ALLOCATION_CREATE_RESERVED_2_BIT
                                                         , ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT
                                                         , ALLOCATION_CREATE_UPPER_ADDRESS_BIT
                                                         , ALLOCATION_CREATE_DONT_BIND_BIT
                                                         , ALLOCATION_CREATE_WITHIN_BUDGET_BIT
+                                                        , ALLOCATION_CREATE_CAN_ALIAS_BIT
                                                         , ALLOCATION_CREATE_STRATEGY_BEST_FIT_BIT
                                                         , ALLOCATION_CREATE_STRATEGY_WORST_FIT_BIT
                                                         , ALLOCATION_CREATE_STRATEGY_FIRST_FIT_BIT
@@ -134,7 +113,6 @@ module VulkanMemoryAllocator  ( createAllocator
                                                         , ALLOCATION_CREATE_STRATEGY_MASK
                                                         , ..
                                                         )
-                              , AllocationCreateInfo(..)
                               , PoolCreateFlags
                               , PoolCreateFlagBits( POOL_CREATE_IGNORE_BUFFER_IMAGE_GRANULARITY_BIT
                                                   , POOL_CREATE_LINEAR_ALGORITHM_BIT
@@ -142,27 +120,16 @@ module VulkanMemoryAllocator  ( createAllocator
                                                   , POOL_CREATE_ALGORITHM_MASK
                                                   , ..
                                                   )
-                              , PoolCreateInfo(..)
-                              , PoolStats(..)
-                              , Allocation(..)
-                              , AllocationInfo(..)
-                              , DefragmentationContext(..)
                               , DefragmentationFlags
                               , DefragmentationFlagBits( DEFRAGMENTATION_FLAG_INCREMENTAL
                                                        , ..
                                                        )
-                              , DefragmentationInfo2(..)
-                              , DefragmentationPassMoveInfo(..)
-                              , DefragmentationPassInfo(..)
-                              , DefragmentationInfo(..)
-                              , DefragmentationStats(..)
                               , VirtualBlockCreateFlags
                               , VirtualBlockCreateFlagBits( VIRTUAL_BLOCK_CREATE_LINEAR_ALGORITHM_BIT
                                                           , VIRTUAL_BLOCK_CREATE_BUDDY_ALGORITHM_BIT
                                                           , VIRTUAL_BLOCK_CREATE_ALGORITHM_MASK
                                                           , ..
                                                           )
-                              , VirtualBlockCreateInfo(..)
                               , VirtualAllocationCreateFlags
                               , VirtualAllocationCreateFlagBits( VIRTUAL_ALLOCATION_CREATE_UPPER_ADDRESS_BIT
                                                                , VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT
@@ -171,9 +138,34 @@ module VulkanMemoryAllocator  ( createAllocator
                                                                , VIRTUAL_ALLOCATION_CREATE_STRATEGY_MASK
                                                                , ..
                                                                )
+                              , Allocator(..)
+                              , Pool(..)
+                              , Allocation(..)
+                              , DefragmentationContext(..)
+                              , VirtualBlock(..)
+                              , PFN_vmaAllocateDeviceMemoryFunction
+                              , FN_vmaAllocateDeviceMemoryFunction
+                              , PFN_vmaFreeDeviceMemoryFunction
+                              , FN_vmaFreeDeviceMemoryFunction
+                              , DeviceMemoryCallbacks(..)
+                              , VulkanFunctions(..)
+                              , AllocatorCreateInfo(..)
+                              , AllocatorInfo(..)
+                              , StatInfo(..)
+                              , Stats(..)
+                              , Budget(..)
+                              , AllocationCreateInfo(..)
+                              , PoolCreateInfo(..)
+                              , PoolStats(..)
+                              , AllocationInfo(..)
+                              , DefragmentationInfo2(..)
+                              , DefragmentationPassMoveInfo(..)
+                              , DefragmentationPassInfo(..)
+                              , DefragmentationInfo(..)
+                              , DefragmentationStats(..)
+                              , VirtualBlockCreateInfo(..)
                               , VirtualAllocationCreateInfo(..)
                               , VirtualAllocationInfo(..)
-                              , VirtualBlock(..)
                               ) where
 
 import Vulkan (AllocationCallbacks)
@@ -229,7 +221,6 @@ import GHC.Show (showParen)
 import GHC.Show (showString)
 import GHC.Show (showsPrec)
 import Numeric (showHex)
-import Data.ByteString (packCString)
 import Data.ByteString (useAsCString)
 import Data.Coerce (coerce)
 import Control.Monad.Trans.Class (lift)
@@ -447,12 +438,6 @@ foreign import ccall
   :: Allocator -> Word32 -> IO ()
 
 -- | Sets index of the current frame.
---
--- This function must be used if you make allocations with
--- 'ALLOCATION_CREATE_CAN_BECOME_LOST_BIT' and
--- 'ALLOCATION_CREATE_CAN_MAKE_OTHER_LOST_BIT' flags to inform the
--- allocator when a new frame begins. Allocations queried using
--- 'getAllocationInfo' cannot become lost in the current frame.
 setCurrentFrameIndex :: forall io
                       . (MonadIO io)
                      => -- No documentation found for Nested "vmaSetCurrentFrameIndex" "allocator"
@@ -477,7 +462,7 @@ foreign import ccall
 -- This function is called \"calculate\" not \"get\" because it has to
 -- traverse all internal data structures, so it may be quite slow. For
 -- faster but more brief statistics suitable to be called every frame or
--- every allocation, use 'getBudget'.
+-- every allocation, use 'getHeapBudgets'.
 --
 -- Note that when using allocator from multiple threads, returned
 -- information may immediately become outdated.
@@ -497,7 +482,7 @@ foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vmaGetBudget" ffiVmaGetBudget
+  "vmaGetHeapBudgets" ffiVmaGetHeapBudgets
   :: Allocator -> Ptr Budget -> IO ()
 
 -- | Retrieves information about current memory budget for all memory heaps.
@@ -507,7 +492,7 @@ foreign import ccall
 -- +-----------+-----------+-----------------------------------------------+
 -- |           | allocator |                                               |
 -- +-----------+-----------+-----------------------------------------------+
--- | out       | pBudget   | Must point to array with number of elements   |
+-- | out       | pBudgets  | Must point to array with number of elements   |
 -- |           |           | at least equal to number of memory heaps in   |
 -- |           |           | physical device used.                         |
 -- +-----------+-----------+-----------------------------------------------+
@@ -518,70 +503,15 @@ foreign import ccall
 --
 -- Note that when using allocator from multiple threads, returned
 -- information may immediately become outdated.
-getBudget :: forall io
-           . (MonadIO io)
-          => -- No documentation found for Nested "vmaGetBudget" "allocator"
-             Allocator
-          -> io (("budget" ::: Vector Budget))
-getBudget allocator = liftIO . evalContT $ do
-  pPBudget <- ContT $ bracket (callocBytes @Budget ((MAX_MEMORY_HEAPS) * 32)) free
-  _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPBudget `advancePtrBytes` (i * 32) :: Ptr Budget) . ($ ())) [0..(MAX_MEMORY_HEAPS) - 1]
-  lift $ traceAroundEvent "vmaGetBudget" ((ffiVmaGetBudget) (allocator) ((pPBudget)))
-  pBudget <- lift $ generateM (MAX_MEMORY_HEAPS) (\i -> peekCStruct @Budget (((pPBudget) `advancePtrBytes` (32 * (i)) :: Ptr Budget)))
-  pure $ (pBudget)
-
-
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "vmaBuildStatsString" ffiVmaBuildStatsString
-  :: Allocator -> Ptr (Ptr CChar) -> Bool32 -> IO ()
-
--- | Builds and returns statistics as a null-terminated string in JSON
--- format.
---
--- __Parameters__
---
--- +-----------+---------------+-----------------------------------------------+
--- |           | allocator     |                                               |
--- +-----------+---------------+-----------------------------------------------+
--- | out       | ppStatsString | Must be freed using 'freeStatsString'         |
--- |           |               | function.                                     |
--- +-----------+---------------+-----------------------------------------------+
--- |           | detailedMap   |                                               |
--- +-----------+---------------+-----------------------------------------------+
-buildStatsString :: forall io
-                  . (MonadIO io)
-                 => -- No documentation found for Nested "vmaBuildStatsString" "allocator"
-                    Allocator
-                 -> -- No documentation found for Nested "vmaBuildStatsString" "detailedMap"
-                    ("detailedMap" ::: Bool)
-                 -> io (("statsString" ::: Ptr CChar))
-buildStatsString allocator detailedMap = liftIO . evalContT $ do
-  pPpStatsString <- ContT $ bracket (callocBytes @(Ptr CChar) 8) free
-  lift $ traceAroundEvent "vmaBuildStatsString" ((ffiVmaBuildStatsString) (allocator) (pPpStatsString) (boolToBool32 (detailedMap)))
-  ppStatsString <- lift $ peek @(Ptr CChar) pPpStatsString
-  pure $ (ppStatsString)
-
-
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "vmaFreeStatsString" ffiVmaFreeStatsString
-  :: Allocator -> Ptr CChar -> IO ()
-
-
-freeStatsString :: forall io
-                 . (MonadIO io)
-                => -- No documentation found for Nested "vmaFreeStatsString" "allocator"
-                   Allocator
-                -> -- No documentation found for Nested "vmaFreeStatsString" "pStatsString"
-                   ("statsString" ::: Ptr CChar)
-                -> io ()
-freeStatsString allocator statsString = liftIO $ do
-  traceAroundEvent "vmaFreeStatsString" ((ffiVmaFreeStatsString) (allocator) (statsString))
+getHeapBudgets :: forall io
+                . (MonadIO io)
+               => -- No documentation found for Nested "vmaGetHeapBudgets" "allocator"
+                  Allocator
+               -> -- No documentation found for Nested "vmaGetHeapBudgets" "pBudgets"
+                  ("budgets" ::: Ptr Budget)
+               -> io ()
+getHeapBudgets allocator budgets = liftIO $ do
+  traceAroundEvent "vmaGetHeapBudgets" ((ffiVmaGetHeapBudgets) (allocator) (budgets))
   pure $ ()
 
 
@@ -817,41 +747,6 @@ foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vmaMakePoolAllocationsLost" ffiVmaMakePoolAllocationsLost
-  :: Allocator -> Pool -> Ptr CSize -> IO ()
-
--- | Marks all allocations in given pool as lost if they are not used in
--- current frame or /VmaPoolCreateInfo::frameInUseCount/ back from now.
---
--- __Parameters__
---
--- +-----------+----------------------+-----------------------------------------------+
--- |           | allocator            | Allocator object.                             |
--- +-----------+----------------------+-----------------------------------------------+
--- |           | pool                 | Pool.                                         |
--- +-----------+----------------------+-----------------------------------------------+
--- | out       | pLostAllocationCount | Number of allocations marked as lost.         |
--- |           |                      | Optional - pass null if you don\'t need this  |
--- |           |                      | information.                                  |
--- +-----------+----------------------+-----------------------------------------------+
-makePoolAllocationsLost :: forall io
-                         . (MonadIO io)
-                        => -- No documentation found for Nested "vmaMakePoolAllocationsLost" "allocator"
-                           Allocator
-                        -> -- No documentation found for Nested "vmaMakePoolAllocationsLost" "pool"
-                           Pool
-                        -> io (("lostAllocationCount" ::: Word64))
-makePoolAllocationsLost allocator pool = liftIO . evalContT $ do
-  pPLostAllocationCount <- ContT $ bracket (callocBytes @CSize 8) free
-  lift $ traceAroundEvent "vmaMakePoolAllocationsLost" ((ffiVmaMakePoolAllocationsLost) (allocator) (pool) (pPLostAllocationCount))
-  pLostAllocationCount <- lift $ peek @CSize pPLostAllocationCount
-  pure $ ((coerce @CSize @Word64 pLostAllocationCount))
-
-
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
   "vmaCheckPoolCorruption" ffiVmaCheckPoolCorruption
   :: Allocator -> Pool -> IO Result
 
@@ -1025,7 +920,7 @@ foreign import ccall
 -- +-----------+-----------------------+-----------------------------------------------+
 -- |           | pVkMemoryRequirements | Memory requirements for each allocation.      |
 -- +-----------+-----------------------+-----------------------------------------------+
--- |           | pCreateInfo           | Creation parameters for each alloction.       |
+-- |           | pCreateInfo           | Creation parameters for each allocation.      |
 -- +-----------+-----------------------+-----------------------------------------------+
 -- |           | allocationCount       | Number of allocations to make.                |
 -- +-----------+-----------------------+-----------------------------------------------+
@@ -1252,26 +1147,16 @@ foreign import ccall
   "vmaGetAllocationInfo" ffiVmaGetAllocationInfo
   :: Allocator -> Allocation -> Ptr AllocationInfo -> IO ()
 
--- | Returns current information about specified allocation and atomically
--- marks it as used in current frame.
+-- | Returns current information about specified allocation.
 --
 -- Current paramteres of given allocation are returned in
 -- @pAllocationInfo@.
 --
--- This function also atomically \"touches\" allocation - marks it as used
--- in current frame, just like 'touchAllocation'. If the allocation is in
--- lost state, @pAllocationInfo->deviceMemory == VK_NULL_HANDLE@.
---
--- Although this function uses atomics and doesn\'t lock any mutex, so it
--- should be quite efficient, you can avoid calling it too often.
---
--- -   You can retrieve same 'AllocationInfo' structure while creating your
---     resource, from function 'createBuffer', 'createImage'. You can
---     remember it if you are sure parameters don\'t change (e.g. due to
---     defragmentation or allocation becoming lost).
---
--- -   If you just want to check if allocation is not lost,
---     'touchAllocation' will work faster.
+-- Although this function doesn\'t lock any mutex, so it should be quite
+-- efficient, you should avoid calling it too often. You can retrieve same
+-- 'AllocationInfo' structure while creating your resource, from function
+-- 'createBuffer', 'createImage'. You can remember it if you are sure
+-- parameters don\'t change (e.g. due to defragmentation).
 getAllocationInfo :: forall io
                    . (MonadIO io)
                   => -- No documentation found for Nested "vmaGetAllocationInfo" "allocator"
@@ -1284,43 +1169,6 @@ getAllocationInfo allocator allocation = liftIO . evalContT $ do
   lift $ traceAroundEvent "vmaGetAllocationInfo" ((ffiVmaGetAllocationInfo) (allocator) (allocation) (pPAllocationInfo))
   pAllocationInfo <- lift $ peekCStruct @AllocationInfo pPAllocationInfo
   pure $ (pAllocationInfo)
-
-
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "vmaTouchAllocation" ffiVmaTouchAllocation
-  :: Allocator -> Allocation -> IO Bool32
-
--- | Returns @VK_TRUE@ if allocation is not lost and atomically marks it as
--- used in current frame.
---
--- If the allocation has been created with
--- 'ALLOCATION_CREATE_CAN_BECOME_LOST_BIT' flag, this function returns
--- @VK_TRUE@ if it is not in lost state, so it can still be used. It then
--- also atomically \"touches\" the allocation - marks it as used in current
--- frame, so that you can be sure it won\'t become lost in current frame or
--- next @frameInUseCount@ frames.
---
--- If the allocation is in lost state, the function returns @VK_FALSE@.
--- Memory of such allocation, as well as buffer or image bound to it,
--- should not be used. Lost allocation and the buffer\/image still need to
--- be destroyed.
---
--- If the allocation has been created without
--- 'ALLOCATION_CREATE_CAN_BECOME_LOST_BIT' flag, this function always
--- returns @VK_TRUE@.
-touchAllocation :: forall io
-                 . (MonadIO io)
-                => -- No documentation found for Nested "vmaTouchAllocation" "allocator"
-                   Allocator
-                -> -- No documentation found for Nested "vmaTouchAllocation" "allocation"
-                   Allocation
-                -> io (Bool)
-touchAllocation allocator allocation = liftIO $ do
-  r <- traceAroundEvent "vmaTouchAllocation" ((ffiVmaTouchAllocation) (allocator) (allocation))
-  pure $ ((bool32ToBool r))
 
 
 foreign import ccall
@@ -1362,47 +1210,6 @@ foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vmaCreateLostAllocation" ffiVmaCreateLostAllocation
-  :: Allocator -> Ptr Allocation -> IO ()
-
--- | Creates new allocation that is in lost state from the beginning.
---
--- It can be useful if you need a dummy, non-null allocation.
---
--- You still need to destroy created object using 'freeMemory'.
---
--- Returned allocation is not tied to any specific memory pool or memory
--- type and not bound to any image or buffer. It has size = 0. It cannot be
--- turned into a real, non-empty allocation.
-createLostAllocation :: forall io
-                      . (MonadIO io)
-                     => -- No documentation found for Nested "vmaCreateLostAllocation" "allocator"
-                        Allocator
-                     -> io (Allocation)
-createLostAllocation allocator = liftIO . evalContT $ do
-  pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
-  lift $ traceAroundEvent "vmaCreateLostAllocation" ((ffiVmaCreateLostAllocation) (allocator) (pPAllocation))
-  pAllocation <- lift $ peek @Allocation pPAllocation
-  pure $ (pAllocation)
-
--- | A convenience wrapper to make a compatible pair of calls to
--- 'createLostAllocation' and 'freeMemory'
---
--- To ensure that 'freeMemory' is always called: pass
--- 'Control.Exception.bracket' (or the allocate function from your
--- favourite resource management library) as the last argument.
--- To just extract the pair pass '(,)' as the last argument.
---
-withLostAllocation :: forall io r . MonadIO io => Allocator -> (io Allocation -> (Allocation -> io ()) -> r) -> r
-withLostAllocation allocator b =
-  b (createLostAllocation allocator)
-    (\(o0) -> freeMemory allocator o0)
-
-
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
   "vmaGetAllocationMemoryProperties" ffiVmaGetAllocationMemoryProperties
   :: Allocator -> Allocation -> Ptr MemoryPropertyFlags -> IO ()
 
@@ -1435,9 +1242,15 @@ foreign import ccall
 --
 -- Maps memory represented by given allocation to make it accessible to CPU
 -- code. When succeeded, @*ppData@ contains pointer to first byte of this
--- memory. If the allocation is part of bigger @VkDeviceMemory@ block, the
+-- memory.
+--
+-- Warning
+--
+-- If the allocation is part of a bigger @VkDeviceMemory@ block, returned
 -- pointer is correctly offsetted to the beginning of region assigned to
--- this particular allocation.
+-- this particular allocation. Unlike the result of @vkMapMemory@, it
+-- points to the allocation, not to the beginning of the whole block. You
+-- should not add /VmaAllocationInfo::offset/ to it!
 --
 -- Mapping is internally reference-counted and synchronized, so despite raw
 -- Vulkan function @vkMapMemory()@ cannot be used to map same block of
@@ -1462,10 +1275,6 @@ foreign import ccall
 --
 -- This function fails when used on allocation made in memory type that is
 -- not @HOST_VISIBLE@.
---
--- This function always fails when called for allocation that was created
--- with 'ALLOCATION_CREATE_CAN_BECOME_LOST_BIT' flag. Such allocations
--- cannot be mapped.
 --
 -- This function doesn\'t automatically flush or invalidate caches. If the
 -- allocation is made from a memory types that is not @HOST_COHERENT@, you
@@ -1860,8 +1669,8 @@ foreign import ccall
 --
 -- -   You should not use any of allocations passed as
 --     @pInfo->pAllocations@ or any allocations that belong to pools passed
---     as @pInfo->pPools@, including calling 'getAllocationInfo',
---     'touchAllocation', or access their data.
+--     as @pInfo->pPools@, including calling 'getAllocationInfo', or access
+--     their data.
 --
 -- -   Some mutexes protecting internal data structures may be locked, so
 --     trying to make or free any allocations, bind buffers or images, map
@@ -2804,6 +2613,60 @@ freeVirtualBlockStatsString virtualBlock statsString = liftIO $ do
   pure $ ()
 
 
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaBuildStatsString" ffiVmaBuildStatsString
+  :: Allocator -> Ptr (Ptr CChar) -> Bool32 -> IO ()
+
+-- | Builds and returns statistics as a null-terminated string in JSON
+-- format.
+--
+-- __Parameters__
+--
+-- +-----------+---------------+-----------------------------------------------+
+-- |           | allocator     |                                               |
+-- +-----------+---------------+-----------------------------------------------+
+-- | out       | ppStatsString | Must be freed using 'freeStatsString'         |
+-- |           |               | function.                                     |
+-- +-----------+---------------+-----------------------------------------------+
+-- |           | detailedMap   |                                               |
+-- +-----------+---------------+-----------------------------------------------+
+buildStatsString :: forall io
+                  . (MonadIO io)
+                 => -- No documentation found for Nested "vmaBuildStatsString" "allocator"
+                    Allocator
+                 -> -- No documentation found for Nested "vmaBuildStatsString" "detailedMap"
+                    ("detailedMap" ::: Bool)
+                 -> io (("statsString" ::: Ptr CChar))
+buildStatsString allocator detailedMap = liftIO . evalContT $ do
+  pPpStatsString <- ContT $ bracket (callocBytes @(Ptr CChar) 8) free
+  lift $ traceAroundEvent "vmaBuildStatsString" ((ffiVmaBuildStatsString) (allocator) (pPpStatsString) (boolToBool32 (detailedMap)))
+  ppStatsString <- lift $ peek @(Ptr CChar) pPpStatsString
+  pure $ (ppStatsString)
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vmaFreeStatsString" ffiVmaFreeStatsString
+  :: Allocator -> Ptr CChar -> IO ()
+
+
+freeStatsString :: forall io
+                 . (MonadIO io)
+                => -- No documentation found for Nested "vmaFreeStatsString" "allocator"
+                   Allocator
+                -> -- No documentation found for Nested "vmaFreeStatsString" "pStatsString"
+                   ("statsString" ::: Ptr CChar)
+                -> io ()
+freeStatsString allocator statsString = liftIO $ do
+  traceAroundEvent "vmaFreeStatsString" ((ffiVmaFreeStatsString) (allocator) (statsString))
+  pure $ ()
+
+
 type FN_vkAllocateMemory = Ptr Device_T -> ("pAllocateInfo" ::: Ptr (SomeStruct MemoryAllocateInfo)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pMemory" ::: Ptr DeviceMemory) -> IO Result
 -- No documentation found for TopLevel "PFN_vkAllocateMemory"
 type PFN_vkAllocateMemory = FunPtr FN_vkAllocateMemory
@@ -2899,9 +2762,24 @@ type FN_vkGetPhysicalDeviceProperties = Ptr PhysicalDevice_T -> ("pProperties" :
 type PFN_vkGetPhysicalDeviceProperties = FunPtr FN_vkGetPhysicalDeviceProperties
 
 
+type FN_vkGetDeviceProcAddr = Ptr Device_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction
+-- No documentation found for TopLevel "PFN_vkGetDeviceProcAddr"
+type PFN_vkGetDeviceProcAddr = FunPtr FN_vkGetDeviceProcAddr
+
+
+type FN_vkGetInstanceProcAddr = Ptr Instance_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction
+-- No documentation found for TopLevel "PFN_vkGetInstanceProcAddr"
+type PFN_vkGetInstanceProcAddr = FunPtr FN_vkGetInstanceProcAddr
+
+
 type FN_vkInvalidateMappedMemoryRanges = Ptr Device_T -> ("memoryRangeCount" ::: Word32) -> ("pMemoryRanges" ::: Ptr MappedMemoryRange) -> IO Result
 -- No documentation found for TopLevel "PFN_vkInvalidateMappedMemoryRanges"
 type PFN_vkInvalidateMappedMemoryRanges = FunPtr FN_vkInvalidateMappedMemoryRanges
+
+
+type FN_vkVoidFunction = IO ()
+-- No documentation found for TopLevel "PFN_vkVoidFunction"
+type PFN_vkVoidFunction = FunPtr FN_vkVoidFunction
 
 
 type FN_vkMapMemory = Ptr Device_T -> DeviceMemory -> ("offset" ::: DeviceSize) -> DeviceSize -> MemoryMapFlags -> ("ppData" ::: Ptr (Ptr ())) -> IO Result
@@ -2912,88 +2790,6 @@ type PFN_vkMapMemory = FunPtr FN_vkMapMemory
 type FN_vkUnmapMemory = Ptr Device_T -> DeviceMemory -> IO ()
 -- No documentation found for TopLevel "PFN_vkUnmapMemory"
 type PFN_vkUnmapMemory = FunPtr FN_vkUnmapMemory
-
-
--- | VmaAllocator
---
--- Represents main object of this library initialized.
---
--- Fill structure 'AllocatorCreateInfo' and call function 'createAllocator'
--- to create it. Call function 'destroyAllocator' to destroy it.
---
--- It is recommended to create just one object of this type per @VkDevice@
--- object, right after Vulkan is initialized and keep it alive until before
--- Vulkan device is destroyed.
-newtype Allocator = Allocator Word64
-  deriving newtype (Eq, Ord, Storable, Zero)
-  deriving anyclass (IsHandle)
-instance Show Allocator where
-  showsPrec p (Allocator x) = showParen (p >= 11) (showString "Allocator 0x" . showHex x)
-
-
-type FN_vmaAllocateDeviceMemoryFunction = Allocator -> ("memoryType" ::: Word32) -> DeviceMemory -> DeviceSize -> ("pUserData" ::: Ptr ()) -> IO ()
--- No documentation found for TopLevel "PFN_vmaAllocateDeviceMemoryFunction"
-type PFN_vmaAllocateDeviceMemoryFunction = FunPtr FN_vmaAllocateDeviceMemoryFunction
-
-
-type FN_vmaFreeDeviceMemoryFunction = Allocator -> ("memoryType" ::: Word32) -> DeviceMemory -> DeviceSize -> ("pUserData" ::: Ptr ()) -> IO ()
--- No documentation found for TopLevel "PFN_vmaFreeDeviceMemoryFunction"
-type PFN_vmaFreeDeviceMemoryFunction = FunPtr FN_vmaFreeDeviceMemoryFunction
-
-
--- | VmaDeviceMemoryCallbacks
---
--- Set of callbacks that the library will call for @vkAllocateMemory@ and
--- @vkFreeMemory@.
---
--- Provided for informative purpose, e.g. to gather statistics about number
--- of allocations or total amount of memory allocated in Vulkan.
---
--- Used in /VmaAllocatorCreateInfo::pDeviceMemoryCallbacks/.
-data DeviceMemoryCallbacks = DeviceMemoryCallbacks
-  { -- | Optional, can be null.
-    pfnAllocate :: PFN_vmaAllocateDeviceMemoryFunction
-  , -- | Optional, can be null.
-    pfnFree :: PFN_vmaFreeDeviceMemoryFunction
-  , -- | Optional, can be null.
-    userData :: Ptr ()
-  }
-  deriving (Typeable)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (DeviceMemoryCallbacks)
-#endif
-deriving instance Show DeviceMemoryCallbacks
-
-instance ToCStruct DeviceMemoryCallbacks where
-  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p DeviceMemoryCallbacks{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr PFN_vmaAllocateDeviceMemoryFunction)) (pfnAllocate)
-    poke ((p `plusPtr` 8 :: Ptr PFN_vmaFreeDeviceMemoryFunction)) (pfnFree)
-    poke ((p `plusPtr` 16 :: Ptr (Ptr ()))) (userData)
-    f
-  cStructSize = 24
-  cStructAlignment = 8
-  pokeZeroCStruct _ f = f
-
-instance FromCStruct DeviceMemoryCallbacks where
-  peekCStruct p = do
-    pfnAllocate <- peek @PFN_vmaAllocateDeviceMemoryFunction ((p `plusPtr` 0 :: Ptr PFN_vmaAllocateDeviceMemoryFunction))
-    pfnFree <- peek @PFN_vmaFreeDeviceMemoryFunction ((p `plusPtr` 8 :: Ptr PFN_vmaFreeDeviceMemoryFunction))
-    pUserData <- peek @(Ptr ()) ((p `plusPtr` 16 :: Ptr (Ptr ())))
-    pure $ DeviceMemoryCallbacks
-             pfnAllocate pfnFree pUserData
-
-instance Storable DeviceMemoryCallbacks where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero DeviceMemoryCallbacks where
-  zero = DeviceMemoryCallbacks
-           zero
-           zero
-           zero
 
 
 type AllocatorCreateFlags = AllocatorCreateFlagBits
@@ -3164,13 +2960,637 @@ instance Read AllocatorCreateFlagBits where
                           AllocatorCreateFlagBits
 
 
+
+newtype MemoryUsage = MemoryUsage Int32
+  deriving newtype (Eq, Ord, Storable, Zero)
+
+-- | No intended memory usage specified. Use other members of
+-- 'AllocationCreateInfo' to specify your requirements.
+pattern MEMORY_USAGE_UNKNOWN              = MemoryUsage 0
+-- | Memory will be used on device only, so fast access from the device is
+-- preferred. It usually means device-local GPU (video) memory. No need to
+-- be mappable on host. It is roughly equivalent of
+-- @D3D12_HEAP_TYPE_DEFAULT@.
+--
+-- Usage:
+--
+-- -   Resources written and read by device, e.g. images used as
+--     attachments.
+--
+-- -   Resources transferred from host once (immutable) or infrequently and
+--     read by device multiple times, e.g. textures to be sampled, vertex
+--     buffers, uniform (constant) buffers, and majority of other types of
+--     resources used on GPU.
+--
+-- Allocation may still end up in @HOST_VISIBLE@ memory on some
+-- implementations. In such case, you are free to map it. You can use
+-- 'ALLOCATION_CREATE_MAPPED_BIT' with this usage type.
+pattern MEMORY_USAGE_GPU_ONLY             = MemoryUsage 1
+-- | Memory will be mappable on host. It usually means CPU (system) memory.
+-- Guarantees to be @HOST_VISIBLE@ and @HOST_COHERENT@. CPU access is
+-- typically uncached. Writes may be write-combined. Resources created in
+-- this pool may still be accessible to the device, but access to them can
+-- be slow. It is roughly equivalent of @D3D12_HEAP_TYPE_UPLOAD@.
+--
+-- Usage: Staging copy of resources used as transfer source.
+pattern MEMORY_USAGE_CPU_ONLY             = MemoryUsage 2
+-- | Memory that is both mappable on host (guarantees to be @HOST_VISIBLE@)
+-- and preferably fast to access by GPU. CPU access is typically uncached.
+-- Writes may be write-combined.
+--
+-- Usage: Resources written frequently by host (dynamic), read by device.
+-- E.g. textures (with LINEAR layout), vertex buffers, uniform buffers
+-- updated every frame or every draw call.
+pattern MEMORY_USAGE_CPU_TO_GPU           = MemoryUsage 3
+-- | Memory mappable on host (guarantees to be @HOST_VISIBLE@) and cached. It
+-- is roughly equivalent of @D3D12_HEAP_TYPE_READBACK@.
+--
+-- Usage:
+--
+-- -   Resources written by device, read by host - results of some
+--     computations, e.g. screen capture, average scene luminance for HDR
+--     tone mapping.
+--
+-- -   Any resources read or accessed randomly on host, e.g. CPU-side copy
+--     of vertex buffer used as source of transfer, but also used for
+--     collision detection.
+pattern MEMORY_USAGE_GPU_TO_CPU           = MemoryUsage 4
+-- | CPU memory - memory that is preferably not @DEVICE_LOCAL@, but also not
+-- guaranteed to be @HOST_VISIBLE@.
+--
+-- Usage: Staging copy of resources moved from GPU memory to CPU memory as
+-- part of custom paging\/residency mechanism, to be moved back to GPU
+-- memory when needed.
+pattern MEMORY_USAGE_CPU_COPY             = MemoryUsage 5
+-- | Lazily allocated GPU memory having
+-- @VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT@. Exists mostly on mobile
+-- platforms. Using it on desktop PC or other GPUs with no such memory type
+-- present will fail the allocation.
+--
+-- Usage: Memory for transient attachment images (color attachments, depth
+-- attachments etc.), created with
+-- @VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT@.
+--
+-- Allocations with this usage are always created as dedicated - it implies
+-- 'ALLOCATION_CREATE_DEDICATED_MEMORY_BIT'.
+pattern MEMORY_USAGE_GPU_LAZILY_ALLOCATED = MemoryUsage 6
+{-# complete MEMORY_USAGE_UNKNOWN,
+             MEMORY_USAGE_GPU_ONLY,
+             MEMORY_USAGE_CPU_ONLY,
+             MEMORY_USAGE_CPU_TO_GPU,
+             MEMORY_USAGE_GPU_TO_CPU,
+             MEMORY_USAGE_CPU_COPY,
+             MEMORY_USAGE_GPU_LAZILY_ALLOCATED :: MemoryUsage #-}
+
+conNameMemoryUsage :: String
+conNameMemoryUsage = "MemoryUsage"
+
+enumPrefixMemoryUsage :: String
+enumPrefixMemoryUsage = "MEMORY_USAGE_"
+
+showTableMemoryUsage :: [(MemoryUsage, String)]
+showTableMemoryUsage =
+  [ (MEMORY_USAGE_UNKNOWN             , "UNKNOWN")
+  , (MEMORY_USAGE_GPU_ONLY            , "GPU_ONLY")
+  , (MEMORY_USAGE_CPU_ONLY            , "CPU_ONLY")
+  , (MEMORY_USAGE_CPU_TO_GPU          , "CPU_TO_GPU")
+  , (MEMORY_USAGE_GPU_TO_CPU          , "GPU_TO_CPU")
+  , (MEMORY_USAGE_CPU_COPY            , "CPU_COPY")
+  , (MEMORY_USAGE_GPU_LAZILY_ALLOCATED, "GPU_LAZILY_ALLOCATED")
+  ]
+
+instance Show MemoryUsage where
+  showsPrec =
+    enumShowsPrec enumPrefixMemoryUsage showTableMemoryUsage conNameMemoryUsage (\(MemoryUsage x) -> x) (showsPrec 11)
+
+instance Read MemoryUsage where
+  readPrec = enumReadPrec enumPrefixMemoryUsage showTableMemoryUsage conNameMemoryUsage MemoryUsage
+
+
+type AllocationCreateFlags = AllocationCreateFlagBits
+
+-- | Flags to be passed as /VmaAllocationCreateInfo::flags/.
+newtype AllocationCreateFlagBits = AllocationCreateFlagBits Flags
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
+
+-- | Set this flag if the allocation should have its own memory block.
+--
+-- Use it for special, big resources, like fullscreen images used as
+-- attachments.
+pattern ALLOCATION_CREATE_DEDICATED_MEMORY_BIT           = AllocationCreateFlagBits 0x00000001
+-- | Set this flag to only try to allocate from existing @VkDeviceMemory@
+-- blocks and never create new such block.
+--
+-- If new allocation cannot be placed in any of the existing blocks,
+-- allocation fails with @VK_ERROR_OUT_OF_DEVICE_MEMORY@ error.
+--
+-- You should not use 'ALLOCATION_CREATE_DEDICATED_MEMORY_BIT' and
+-- 'ALLOCATION_CREATE_NEVER_ALLOCATE_BIT' at the same time. It makes no
+-- sense.
+--
+-- If /VmaAllocationCreateInfo::pool/ is not null, this flag is implied and
+-- ignored.
+pattern ALLOCATION_CREATE_NEVER_ALLOCATE_BIT             = AllocationCreateFlagBits 0x00000002
+-- | Set this flag to use a memory that will be persistently mapped and
+-- retrieve pointer to it.
+--
+-- Pointer to mapped memory will be returned through
+-- /VmaAllocationInfo::pMappedData/.
+--
+-- It is valid to use this flag for allocation made from memory type that
+-- is not @HOST_VISIBLE@. This flag is then ignored and memory is not
+-- mapped. This is useful if you need an allocation that is efficient to
+-- use on GPU (@DEVICE_LOCAL@) and still want to map it directly if
+-- possible on platforms that support it (e.g. Intel GPU).
+pattern ALLOCATION_CREATE_MAPPED_BIT                     = AllocationCreateFlagBits 0x00000004
+-- | /Deprecated/
+--
+-- Removed. Do not use.
+pattern ALLOCATION_CREATE_RESERVED_1_BIT                 = AllocationCreateFlagBits 0x00000008
+-- | /Deprecated/
+--
+-- Removed. Do not use.
+pattern ALLOCATION_CREATE_RESERVED_2_BIT                 = AllocationCreateFlagBits 0x00000010
+-- | Set this flag to treat /VmaAllocationCreateInfo::pUserData/ as pointer
+-- to a null-terminated string. Instead of copying pointer value, a local
+-- copy of the string is made and stored in allocation\'s @pUserData@. The
+-- string is automatically freed together with the allocation. It is also
+-- used in 'buildStatsString'.
+pattern ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT      = AllocationCreateFlagBits 0x00000020
+-- | Allocation will be created from upper stack in a double stack pool.
+--
+-- This flag is only allowed for custom pools created with
+-- 'POOL_CREATE_LINEAR_ALGORITHM_BIT' flag.
+pattern ALLOCATION_CREATE_UPPER_ADDRESS_BIT              = AllocationCreateFlagBits 0x00000040
+-- | Create both buffer\/image and allocation, but don\'t bind them together.
+-- It is useful when you want to bind yourself to do some more advanced
+-- binding, e.g. using some extensions. The flag is meaningful only with
+-- functions that bind by default: 'createBuffer', 'createImage'. Otherwise
+-- it is ignored.
+pattern ALLOCATION_CREATE_DONT_BIND_BIT                  = AllocationCreateFlagBits 0x00000080
+-- | Create allocation only if additional device memory required for it, if
+-- any, won\'t exceed memory budget. Otherwise return
+-- @VK_ERROR_OUT_OF_DEVICE_MEMORY@.
+pattern ALLOCATION_CREATE_WITHIN_BUDGET_BIT              = AllocationCreateFlagBits 0x00000100
+-- | Set this flag if the allocated memory will have aliasing resources.
+--
+-- Usage of this flag prevents supplying @VkMemoryDedicatedAllocateInfoKHR@
+-- when VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT is specified. Otherwise
+-- created dedicated memory will not be suitable for aliasing resources,
+-- resulting in Vulkan Validation Layer errors.
+pattern ALLOCATION_CREATE_CAN_ALIAS_BIT                  = AllocationCreateFlagBits 0x00000200
+-- | Allocation strategy that chooses smallest possible free range for the
+-- allocation.
+pattern ALLOCATION_CREATE_STRATEGY_BEST_FIT_BIT          = AllocationCreateFlagBits 0x00010000
+-- | Allocation strategy that chooses biggest possible free range for the
+-- allocation.
+pattern ALLOCATION_CREATE_STRATEGY_WORST_FIT_BIT         = AllocationCreateFlagBits 0x00020000
+-- | Allocation strategy that chooses first suitable free range for the
+-- allocation.
+--
+-- \"First\" doesn\'t necessarily means the one with smallest offset in
+-- memory, but rather the one that is easiest and fastest to find.
+pattern ALLOCATION_CREATE_STRATEGY_FIRST_FIT_BIT         = AllocationCreateFlagBits 0x00040000
+-- | Allocation strategy that tries to minimize memory usage.
+pattern ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT        = AllocationCreateFlagBits 0x00010000
+-- | Allocation strategy that tries to minimize allocation time.
+pattern ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT          = AllocationCreateFlagBits 0x00040000
+-- | Allocation strategy that tries to minimize memory fragmentation.
+pattern ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT = AllocationCreateFlagBits 0x00020000
+-- | A bit mask to extract only @STRATEGY@ bits from entire set of flags.
+pattern ALLOCATION_CREATE_STRATEGY_MASK                  = AllocationCreateFlagBits 0x00070000
+
+conNameAllocationCreateFlagBits :: String
+conNameAllocationCreateFlagBits = "AllocationCreateFlagBits"
+
+enumPrefixAllocationCreateFlagBits :: String
+enumPrefixAllocationCreateFlagBits = "ALLOCATION_CREATE_"
+
+showTableAllocationCreateFlagBits :: [(AllocationCreateFlagBits, String)]
+showTableAllocationCreateFlagBits =
+  [ (ALLOCATION_CREATE_DEDICATED_MEMORY_BIT          , "DEDICATED_MEMORY_BIT")
+  , (ALLOCATION_CREATE_NEVER_ALLOCATE_BIT            , "NEVER_ALLOCATE_BIT")
+  , (ALLOCATION_CREATE_MAPPED_BIT                    , "MAPPED_BIT")
+  , (ALLOCATION_CREATE_RESERVED_1_BIT                , "RESERVED_1_BIT")
+  , (ALLOCATION_CREATE_RESERVED_2_BIT                , "RESERVED_2_BIT")
+  , (ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT     , "USER_DATA_COPY_STRING_BIT")
+  , (ALLOCATION_CREATE_UPPER_ADDRESS_BIT             , "UPPER_ADDRESS_BIT")
+  , (ALLOCATION_CREATE_DONT_BIND_BIT                 , "DONT_BIND_BIT")
+  , (ALLOCATION_CREATE_WITHIN_BUDGET_BIT             , "WITHIN_BUDGET_BIT")
+  , (ALLOCATION_CREATE_CAN_ALIAS_BIT                 , "CAN_ALIAS_BIT")
+  , (ALLOCATION_CREATE_STRATEGY_BEST_FIT_BIT         , "STRATEGY_BEST_FIT_BIT")
+  , (ALLOCATION_CREATE_STRATEGY_WORST_FIT_BIT        , "STRATEGY_WORST_FIT_BIT")
+  , (ALLOCATION_CREATE_STRATEGY_FIRST_FIT_BIT        , "STRATEGY_FIRST_FIT_BIT")
+  , (ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT       , "STRATEGY_MIN_MEMORY_BIT")
+  , (ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT         , "STRATEGY_MIN_TIME_BIT")
+  , (ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT, "STRATEGY_MIN_FRAGMENTATION_BIT")
+  , (ALLOCATION_CREATE_STRATEGY_MASK                 , "STRATEGY_MASK")
+  ]
+
+instance Show AllocationCreateFlagBits where
+  showsPrec = enumShowsPrec enumPrefixAllocationCreateFlagBits
+                            showTableAllocationCreateFlagBits
+                            conNameAllocationCreateFlagBits
+                            (\(AllocationCreateFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
+
+instance Read AllocationCreateFlagBits where
+  readPrec = enumReadPrec enumPrefixAllocationCreateFlagBits
+                          showTableAllocationCreateFlagBits
+                          conNameAllocationCreateFlagBits
+                          AllocationCreateFlagBits
+
+
+type PoolCreateFlags = PoolCreateFlagBits
+
+-- | Flags to be passed as /VmaPoolCreateInfo::flags/.
+newtype PoolCreateFlagBits = PoolCreateFlagBits Flags
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
+
+-- | Use this flag if you always allocate only buffers and linear images or
+-- only optimal images out of this pool and so Buffer-Image Granularity can
+-- be ignored.
+--
+-- This is an optional optimization flag.
+--
+-- If you always allocate using 'createBuffer', 'createImage',
+-- 'allocateMemoryForBuffer', then you don\'t need to use it because
+-- allocator knows exact type of your allocations so it can handle
+-- Buffer-Image Granularity in the optimal way.
+--
+-- If you also allocate using 'allocateMemoryForImage' or 'allocateMemory',
+-- exact type of such allocations is not known, so allocator must be
+-- conservative in handling Buffer-Image Granularity, which can lead to
+-- suboptimal allocation (wasted memory). In that case, if you can make
+-- sure you always allocate only buffers and linear images or only optimal
+-- images out of this pool, use this flag to make allocator disregard
+-- Buffer-Image Granularity and so make allocations faster and more
+-- optimal.
+pattern POOL_CREATE_IGNORE_BUFFER_IMAGE_GRANULARITY_BIT = PoolCreateFlagBits 0x00000002
+-- | Enables alternative, linear allocation algorithm in this pool.
+--
+-- Specify this flag to enable linear allocation algorithm, which always
+-- creates new allocations after last one and doesn\'t reuse space from
+-- allocations freed in between. It trades memory consumption for
+-- simplified algorithm and data structure, which has better performance
+-- and uses less memory for metadata.
+--
+-- By using this flag, you can achieve behavior of free-at-once, stack,
+-- ring buffer, and double stack. For details, see documentation chapter
+-- /Linear allocation algorithm/.
+--
+-- When using this flag, you must specify
+-- /VmaPoolCreateInfo::maxBlockCount/ == 1 (or 0 for default).
+pattern POOL_CREATE_LINEAR_ALGORITHM_BIT                = PoolCreateFlagBits 0x00000004
+-- | Enables alternative, buddy allocation algorithm in this pool.
+--
+-- It operates on a tree of blocks, each having size that is a power of two
+-- and a half of its parent\'s size. Comparing to default algorithm, this
+-- one provides faster allocation and deallocation and decreased external
+-- fragmentation, at the expense of more memory wasted (internal
+-- fragmentation). For details, see documentation chapter /Buddy allocation
+-- algorithm/.
+pattern POOL_CREATE_BUDDY_ALGORITHM_BIT                 = PoolCreateFlagBits 0x00000008
+-- | Bit mask to extract only @ALGORITHM@ bits from entire set of flags.
+pattern POOL_CREATE_ALGORITHM_MASK                      = PoolCreateFlagBits 0x0000000c
+
+conNamePoolCreateFlagBits :: String
+conNamePoolCreateFlagBits = "PoolCreateFlagBits"
+
+enumPrefixPoolCreateFlagBits :: String
+enumPrefixPoolCreateFlagBits = "POOL_CREATE_"
+
+showTablePoolCreateFlagBits :: [(PoolCreateFlagBits, String)]
+showTablePoolCreateFlagBits =
+  [ (POOL_CREATE_IGNORE_BUFFER_IMAGE_GRANULARITY_BIT, "IGNORE_BUFFER_IMAGE_GRANULARITY_BIT")
+  , (POOL_CREATE_LINEAR_ALGORITHM_BIT               , "LINEAR_ALGORITHM_BIT")
+  , (POOL_CREATE_BUDDY_ALGORITHM_BIT                , "BUDDY_ALGORITHM_BIT")
+  , (POOL_CREATE_ALGORITHM_MASK                     , "ALGORITHM_MASK")
+  ]
+
+instance Show PoolCreateFlagBits where
+  showsPrec = enumShowsPrec enumPrefixPoolCreateFlagBits
+                            showTablePoolCreateFlagBits
+                            conNamePoolCreateFlagBits
+                            (\(PoolCreateFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
+
+instance Read PoolCreateFlagBits where
+  readPrec =
+    enumReadPrec enumPrefixPoolCreateFlagBits showTablePoolCreateFlagBits conNamePoolCreateFlagBits PoolCreateFlagBits
+
+
+type DefragmentationFlags = DefragmentationFlagBits
+
+-- | Flags to be used in 'defragmentationBegin'. None at the moment. Reserved
+-- for future use.
+newtype DefragmentationFlagBits = DefragmentationFlagBits Flags
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
+
+
+pattern DEFRAGMENTATION_FLAG_INCREMENTAL = DefragmentationFlagBits 0x00000001
+
+conNameDefragmentationFlagBits :: String
+conNameDefragmentationFlagBits = "DefragmentationFlagBits"
+
+enumPrefixDefragmentationFlagBits :: String
+enumPrefixDefragmentationFlagBits = "DEFRAGMENTATION_FLAG_INCREMENTAL"
+
+showTableDefragmentationFlagBits :: [(DefragmentationFlagBits, String)]
+showTableDefragmentationFlagBits = [(DEFRAGMENTATION_FLAG_INCREMENTAL, "")]
+
+instance Show DefragmentationFlagBits where
+  showsPrec = enumShowsPrec enumPrefixDefragmentationFlagBits
+                            showTableDefragmentationFlagBits
+                            conNameDefragmentationFlagBits
+                            (\(DefragmentationFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
+
+instance Read DefragmentationFlagBits where
+  readPrec = enumReadPrec enumPrefixDefragmentationFlagBits
+                          showTableDefragmentationFlagBits
+                          conNameDefragmentationFlagBits
+                          DefragmentationFlagBits
+
+
+type VirtualBlockCreateFlags = VirtualBlockCreateFlagBits
+
+-- | Flags to be passed as /VmaVirtualBlockCreateInfo::flags/.
+newtype VirtualBlockCreateFlagBits = VirtualBlockCreateFlagBits Flags
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
+
+-- | Enables alternative, linear allocation algorithm in this virtual block.
+--
+-- Specify this flag to enable linear allocation algorithm, which always
+-- creates new allocations after last one and doesn\'t reuse space from
+-- allocations freed in between. It trades memory consumption for
+-- simplified algorithm and data structure, which has better performance
+-- and uses less memory for metadata.
+--
+-- By using this flag, you can achieve behavior of free-at-once, stack,
+-- ring buffer, and double stack. For details, see documentation chapter
+-- /Linear allocation algorithm/.
+pattern VIRTUAL_BLOCK_CREATE_LINEAR_ALGORITHM_BIT = VirtualBlockCreateFlagBits 0x00000001
+-- | Enables alternative, buddy allocation algorithm in this virtual block.
+--
+-- It operates on a tree of blocks, each having size that is a power of two
+-- and a half of its parent\'s size. Comparing to default algorithm, this
+-- one provides faster allocation and deallocation and decreased external
+-- fragmentation, at the expense of more memory wasted (internal
+-- fragmentation). For details, see documentation chapter /Buddy allocation
+-- algorithm/.
+pattern VIRTUAL_BLOCK_CREATE_BUDDY_ALGORITHM_BIT  = VirtualBlockCreateFlagBits 0x00000002
+-- | Bit mask to extract only @ALGORITHM@ bits from entire set of flags.
+pattern VIRTUAL_BLOCK_CREATE_ALGORITHM_MASK       = VirtualBlockCreateFlagBits 0x00000003
+
+conNameVirtualBlockCreateFlagBits :: String
+conNameVirtualBlockCreateFlagBits = "VirtualBlockCreateFlagBits"
+
+enumPrefixVirtualBlockCreateFlagBits :: String
+enumPrefixVirtualBlockCreateFlagBits = "VIRTUAL_BLOCK_CREATE_"
+
+showTableVirtualBlockCreateFlagBits :: [(VirtualBlockCreateFlagBits, String)]
+showTableVirtualBlockCreateFlagBits =
+  [ (VIRTUAL_BLOCK_CREATE_LINEAR_ALGORITHM_BIT, "LINEAR_ALGORITHM_BIT")
+  , (VIRTUAL_BLOCK_CREATE_BUDDY_ALGORITHM_BIT , "BUDDY_ALGORITHM_BIT")
+  , (VIRTUAL_BLOCK_CREATE_ALGORITHM_MASK      , "ALGORITHM_MASK")
+  ]
+
+instance Show VirtualBlockCreateFlagBits where
+  showsPrec = enumShowsPrec enumPrefixVirtualBlockCreateFlagBits
+                            showTableVirtualBlockCreateFlagBits
+                            conNameVirtualBlockCreateFlagBits
+                            (\(VirtualBlockCreateFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
+
+instance Read VirtualBlockCreateFlagBits where
+  readPrec = enumReadPrec enumPrefixVirtualBlockCreateFlagBits
+                          showTableVirtualBlockCreateFlagBits
+                          conNameVirtualBlockCreateFlagBits
+                          VirtualBlockCreateFlagBits
+
+
+type VirtualAllocationCreateFlags = VirtualAllocationCreateFlagBits
+
+-- | Flags to be passed as /VmaVirtualAllocationCreateInfo::flags/.
+newtype VirtualAllocationCreateFlagBits = VirtualAllocationCreateFlagBits Flags
+  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
+
+-- | Allocation will be created from upper stack in a double stack pool.
+--
+-- This flag is only allowed for virtual blocks created with
+-- 'VIRTUAL_BLOCK_CREATE_LINEAR_ALGORITHM_BIT' flag.
+pattern VIRTUAL_ALLOCATION_CREATE_UPPER_ADDRESS_BIT              = VirtualAllocationCreateFlagBits 0x00000040
+-- | Allocation strategy that tries to minimize memory usage.
+pattern VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT        = VirtualAllocationCreateFlagBits 0x00010000
+-- | Allocation strategy that tries to minimize allocation time.
+pattern VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT          = VirtualAllocationCreateFlagBits 0x00040000
+-- | Allocation strategy that tries to minimize memory fragmentation.
+pattern VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT = VirtualAllocationCreateFlagBits 0x00020000
+-- | A bit mask to extract only @STRATEGY@ bits from entire set of flags.
+--
+-- These strategy flags are binary compatible with equivalent flags in
+-- 'AllocationCreateFlagBits'.
+pattern VIRTUAL_ALLOCATION_CREATE_STRATEGY_MASK                  = VirtualAllocationCreateFlagBits 0x00070000
+
+conNameVirtualAllocationCreateFlagBits :: String
+conNameVirtualAllocationCreateFlagBits = "VirtualAllocationCreateFlagBits"
+
+enumPrefixVirtualAllocationCreateFlagBits :: String
+enumPrefixVirtualAllocationCreateFlagBits = "VIRTUAL_ALLOCATION_CREATE_"
+
+showTableVirtualAllocationCreateFlagBits :: [(VirtualAllocationCreateFlagBits, String)]
+showTableVirtualAllocationCreateFlagBits =
+  [ (VIRTUAL_ALLOCATION_CREATE_UPPER_ADDRESS_BIT             , "UPPER_ADDRESS_BIT")
+  , (VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT       , "STRATEGY_MIN_MEMORY_BIT")
+  , (VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT         , "STRATEGY_MIN_TIME_BIT")
+  , (VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT, "STRATEGY_MIN_FRAGMENTATION_BIT")
+  , (VIRTUAL_ALLOCATION_CREATE_STRATEGY_MASK                 , "STRATEGY_MASK")
+  ]
+
+instance Show VirtualAllocationCreateFlagBits where
+  showsPrec = enumShowsPrec enumPrefixVirtualAllocationCreateFlagBits
+                            showTableVirtualAllocationCreateFlagBits
+                            conNameVirtualAllocationCreateFlagBits
+                            (\(VirtualAllocationCreateFlagBits x) -> x)
+                            (\x -> showString "0x" . showHex x)
+
+instance Read VirtualAllocationCreateFlagBits where
+  readPrec = enumReadPrec enumPrefixVirtualAllocationCreateFlagBits
+                          showTableVirtualAllocationCreateFlagBits
+                          conNameVirtualAllocationCreateFlagBits
+                          VirtualAllocationCreateFlagBits
+
+
+-- | VmaAllocator
+--
+-- Represents main object of this library initialized.
+--
+-- Fill structure 'AllocatorCreateInfo' and call function 'createAllocator'
+-- to create it. Call function 'destroyAllocator' to destroy it.
+--
+-- It is recommended to create just one object of this type per @VkDevice@
+-- object, right after Vulkan is initialized and keep it alive until before
+-- Vulkan device is destroyed.
+newtype Allocator = Allocator Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance Show Allocator where
+  showsPrec p (Allocator x) = showParen (p >= 11) (showString "Allocator 0x" . showHex x)
+
+
+-- | VmaPool
+--
+-- Represents custom memory pool.
+--
+-- Fill structure 'PoolCreateInfo' and call function 'createPool' to create
+-- it. Call function 'destroyPool' to destroy it.
+--
+-- For more information see /Custom memory pools/.
+newtype Pool = Pool Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance Show Pool where
+  showsPrec p (Pool x) = showParen (p >= 11) (showString "Pool 0x" . showHex x)
+
+
+-- | VmaAllocation
+--
+-- Represents single memory allocation.
+--
+-- It may be either dedicated block of @VkDeviceMemory@ or a specific
+-- region of a bigger block of this type plus unique offset.
+--
+-- There are multiple ways to create such object. You need to fill
+-- structure 'AllocationCreateInfo'. For more information see /Choosing
+-- memory type/.
+--
+-- Although the library provides convenience functions that create Vulkan
+-- buffer or image, allocate memory for it and bind them together, binding
+-- of the allocation to a buffer or an image is out of scope of the
+-- allocation itself. Allocation object can exist without buffer\/image
+-- bound, binding can be done manually by the user, and destruction of it
+-- can be done independently of destruction of the allocation.
+--
+-- The object also remembers its size and some other information. To
+-- retrieve this information, use function 'getAllocationInfo' and inspect
+-- returned structure 'AllocationInfo'.
+newtype Allocation = Allocation Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance Show Allocation where
+  showsPrec p (Allocation x) = showParen (p >= 11) (showString "Allocation 0x" . showHex x)
+
+
+-- | VmaDefragmentationContext
+--
+-- Represents Opaque object that represents started defragmentation
+-- process.
+--
+-- Fill structure 'DefragmentationInfo2' and call function
+-- 'defragmentationBegin' to create it. Call function 'defragmentationEnd'
+-- to destroy it.
+newtype DefragmentationContext = DefragmentationContext Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance Show DefragmentationContext where
+  showsPrec p (DefragmentationContext x) = showParen (p >= 11) (showString "DefragmentationContext 0x" . showHex x)
+
+
+-- | VmaVirtualBlock
+--
+-- Handle to a virtual block object that allows to use core allocation
+-- algorithm without allocating any real GPU memory.
+--
+-- Fill in 'VirtualBlockCreateInfo' structure and use 'createVirtualBlock'
+-- to create it. Use 'destroyVirtualBlock' to destroy it. For more
+-- information, see documentation chapter /Virtual allocator/.
+--
+-- This object is not thread-safe - should not be used from multiple
+-- threads simultaneously, must be synchronized externally.
+newtype VirtualBlock = VirtualBlock Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance Show VirtualBlock where
+  showsPrec p (VirtualBlock x) = showParen (p >= 11) (showString "VirtualBlock 0x" . showHex x)
+
+
+type FN_vmaAllocateDeviceMemoryFunction = Allocator -> ("memoryType" ::: Word32) -> DeviceMemory -> DeviceSize -> ("pUserData" ::: Ptr ()) -> IO ()
+-- No documentation found for TopLevel "PFN_vmaAllocateDeviceMemoryFunction"
+type PFN_vmaAllocateDeviceMemoryFunction = FunPtr FN_vmaAllocateDeviceMemoryFunction
+
+
+type FN_vmaFreeDeviceMemoryFunction = Allocator -> ("memoryType" ::: Word32) -> DeviceMemory -> DeviceSize -> ("pUserData" ::: Ptr ()) -> IO ()
+-- No documentation found for TopLevel "PFN_vmaFreeDeviceMemoryFunction"
+type PFN_vmaFreeDeviceMemoryFunction = FunPtr FN_vmaFreeDeviceMemoryFunction
+
+
+-- | VmaDeviceMemoryCallbacks
+--
+-- Set of callbacks that the library will call for @vkAllocateMemory@ and
+-- @vkFreeMemory@.
+--
+-- Provided for informative purpose, e.g. to gather statistics about number
+-- of allocations or total amount of memory allocated in Vulkan.
+--
+-- Used in /VmaAllocatorCreateInfo::pDeviceMemoryCallbacks/.
+data DeviceMemoryCallbacks = DeviceMemoryCallbacks
+  { -- | Optional, can be null.
+    pfnAllocate :: PFN_vmaAllocateDeviceMemoryFunction
+  , -- | Optional, can be null.
+    pfnFree :: PFN_vmaFreeDeviceMemoryFunction
+  , -- | Optional, can be null.
+    userData :: Ptr ()
+  }
+  deriving (Typeable)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (DeviceMemoryCallbacks)
+#endif
+deriving instance Show DeviceMemoryCallbacks
+
+instance ToCStruct DeviceMemoryCallbacks where
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p DeviceMemoryCallbacks{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr PFN_vmaAllocateDeviceMemoryFunction)) (pfnAllocate)
+    poke ((p `plusPtr` 8 :: Ptr PFN_vmaFreeDeviceMemoryFunction)) (pfnFree)
+    poke ((p `plusPtr` 16 :: Ptr (Ptr ()))) (userData)
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct _ f = f
+
+instance FromCStruct DeviceMemoryCallbacks where
+  peekCStruct p = do
+    pfnAllocate <- peek @PFN_vmaAllocateDeviceMemoryFunction ((p `plusPtr` 0 :: Ptr PFN_vmaAllocateDeviceMemoryFunction))
+    pfnFree <- peek @PFN_vmaFreeDeviceMemoryFunction ((p `plusPtr` 8 :: Ptr PFN_vmaFreeDeviceMemoryFunction))
+    pUserData <- peek @(Ptr ()) ((p `plusPtr` 16 :: Ptr (Ptr ())))
+    pure $ DeviceMemoryCallbacks
+             pfnAllocate pfnFree pUserData
+
+instance Storable DeviceMemoryCallbacks where
+  sizeOf ~_ = 24
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero DeviceMemoryCallbacks where
+  zero = DeviceMemoryCallbacks
+           zero
+           zero
+           zero
+
+
 -- | VmaVulkanFunctions
 --
 -- Pointers to some Vulkan functions - a subset used by the library.
 --
 -- Used in /VmaAllocatorCreateInfo::pVulkanFunctions/.
 data VulkanFunctions = VulkanFunctions
-  { 
+  { -- | Required when using VMA_DYNAMIC_VULKAN_FUNCTIONS.
+    vkGetInstanceProcAddr :: PFN_vkGetInstanceProcAddr
+  , -- | Required when using VMA_DYNAMIC_VULKAN_FUNCTIONS.
+    vkGetDeviceProcAddr :: PFN_vkGetDeviceProcAddr
+  , 
     vkGetPhysicalDeviceProperties :: PFN_vkGetPhysicalDeviceProperties
   , 
     vkGetPhysicalDeviceMemoryProperties :: PFN_vkGetPhysicalDeviceMemoryProperties
@@ -3228,64 +3648,68 @@ deriving instance Generic (VulkanFunctions)
 deriving instance Show VulkanFunctions
 
 instance ToCStruct VulkanFunctions where
-  withCStruct x f = allocaBytes 176 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 192 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p VulkanFunctions{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr PFN_vkGetPhysicalDeviceProperties)) (vkGetPhysicalDeviceProperties)
-    poke ((p `plusPtr` 8 :: Ptr PFN_vkGetPhysicalDeviceMemoryProperties)) (vkGetPhysicalDeviceMemoryProperties)
-    poke ((p `plusPtr` 16 :: Ptr PFN_vkAllocateMemory)) (vkAllocateMemory)
-    poke ((p `plusPtr` 24 :: Ptr PFN_vkFreeMemory)) (vkFreeMemory)
-    poke ((p `plusPtr` 32 :: Ptr PFN_vkMapMemory)) (vkMapMemory)
-    poke ((p `plusPtr` 40 :: Ptr PFN_vkUnmapMemory)) (vkUnmapMemory)
-    poke ((p `plusPtr` 48 :: Ptr PFN_vkFlushMappedMemoryRanges)) (vkFlushMappedMemoryRanges)
-    poke ((p `plusPtr` 56 :: Ptr PFN_vkInvalidateMappedMemoryRanges)) (vkInvalidateMappedMemoryRanges)
-    poke ((p `plusPtr` 64 :: Ptr PFN_vkBindBufferMemory)) (vkBindBufferMemory)
-    poke ((p `plusPtr` 72 :: Ptr PFN_vkBindImageMemory)) (vkBindImageMemory)
-    poke ((p `plusPtr` 80 :: Ptr PFN_vkGetBufferMemoryRequirements)) (vkGetBufferMemoryRequirements)
-    poke ((p `plusPtr` 88 :: Ptr PFN_vkGetImageMemoryRequirements)) (vkGetImageMemoryRequirements)
-    poke ((p `plusPtr` 96 :: Ptr PFN_vkCreateBuffer)) (vkCreateBuffer)
-    poke ((p `plusPtr` 104 :: Ptr PFN_vkDestroyBuffer)) (vkDestroyBuffer)
-    poke ((p `plusPtr` 112 :: Ptr PFN_vkCreateImage)) (vkCreateImage)
-    poke ((p `plusPtr` 120 :: Ptr PFN_vkDestroyImage)) (vkDestroyImage)
-    poke ((p `plusPtr` 128 :: Ptr PFN_vkCmdCopyBuffer)) (vkCmdCopyBuffer)
-    poke ((p `plusPtr` 136 :: Ptr PFN_vkGetBufferMemoryRequirements2KHR)) (vkGetBufferMemoryRequirements2KHR)
-    poke ((p `plusPtr` 144 :: Ptr PFN_vkGetImageMemoryRequirements2KHR)) (vkGetImageMemoryRequirements2KHR)
-    poke ((p `plusPtr` 152 :: Ptr PFN_vkBindBufferMemory2KHR)) (vkBindBufferMemory2KHR)
-    poke ((p `plusPtr` 160 :: Ptr PFN_vkBindImageMemory2KHR)) (vkBindImageMemory2KHR)
-    poke ((p `plusPtr` 168 :: Ptr PFN_vkGetPhysicalDeviceMemoryProperties2KHR)) (vkGetPhysicalDeviceMemoryProperties2KHR)
+    poke ((p `plusPtr` 0 :: Ptr PFN_vkGetInstanceProcAddr)) (vkGetInstanceProcAddr)
+    poke ((p `plusPtr` 8 :: Ptr PFN_vkGetDeviceProcAddr)) (vkGetDeviceProcAddr)
+    poke ((p `plusPtr` 16 :: Ptr PFN_vkGetPhysicalDeviceProperties)) (vkGetPhysicalDeviceProperties)
+    poke ((p `plusPtr` 24 :: Ptr PFN_vkGetPhysicalDeviceMemoryProperties)) (vkGetPhysicalDeviceMemoryProperties)
+    poke ((p `plusPtr` 32 :: Ptr PFN_vkAllocateMemory)) (vkAllocateMemory)
+    poke ((p `plusPtr` 40 :: Ptr PFN_vkFreeMemory)) (vkFreeMemory)
+    poke ((p `plusPtr` 48 :: Ptr PFN_vkMapMemory)) (vkMapMemory)
+    poke ((p `plusPtr` 56 :: Ptr PFN_vkUnmapMemory)) (vkUnmapMemory)
+    poke ((p `plusPtr` 64 :: Ptr PFN_vkFlushMappedMemoryRanges)) (vkFlushMappedMemoryRanges)
+    poke ((p `plusPtr` 72 :: Ptr PFN_vkInvalidateMappedMemoryRanges)) (vkInvalidateMappedMemoryRanges)
+    poke ((p `plusPtr` 80 :: Ptr PFN_vkBindBufferMemory)) (vkBindBufferMemory)
+    poke ((p `plusPtr` 88 :: Ptr PFN_vkBindImageMemory)) (vkBindImageMemory)
+    poke ((p `plusPtr` 96 :: Ptr PFN_vkGetBufferMemoryRequirements)) (vkGetBufferMemoryRequirements)
+    poke ((p `plusPtr` 104 :: Ptr PFN_vkGetImageMemoryRequirements)) (vkGetImageMemoryRequirements)
+    poke ((p `plusPtr` 112 :: Ptr PFN_vkCreateBuffer)) (vkCreateBuffer)
+    poke ((p `plusPtr` 120 :: Ptr PFN_vkDestroyBuffer)) (vkDestroyBuffer)
+    poke ((p `plusPtr` 128 :: Ptr PFN_vkCreateImage)) (vkCreateImage)
+    poke ((p `plusPtr` 136 :: Ptr PFN_vkDestroyImage)) (vkDestroyImage)
+    poke ((p `plusPtr` 144 :: Ptr PFN_vkCmdCopyBuffer)) (vkCmdCopyBuffer)
+    poke ((p `plusPtr` 152 :: Ptr PFN_vkGetBufferMemoryRequirements2KHR)) (vkGetBufferMemoryRequirements2KHR)
+    poke ((p `plusPtr` 160 :: Ptr PFN_vkGetImageMemoryRequirements2KHR)) (vkGetImageMemoryRequirements2KHR)
+    poke ((p `plusPtr` 168 :: Ptr PFN_vkBindBufferMemory2KHR)) (vkBindBufferMemory2KHR)
+    poke ((p `plusPtr` 176 :: Ptr PFN_vkBindImageMemory2KHR)) (vkBindImageMemory2KHR)
+    poke ((p `plusPtr` 184 :: Ptr PFN_vkGetPhysicalDeviceMemoryProperties2KHR)) (vkGetPhysicalDeviceMemoryProperties2KHR)
     f
-  cStructSize = 176
+  cStructSize = 192
   cStructAlignment = 8
   pokeZeroCStruct _ f = f
 
 instance FromCStruct VulkanFunctions where
   peekCStruct p = do
-    vkGetPhysicalDeviceProperties <- peek @PFN_vkGetPhysicalDeviceProperties ((p `plusPtr` 0 :: Ptr PFN_vkGetPhysicalDeviceProperties))
-    vkGetPhysicalDeviceMemoryProperties <- peek @PFN_vkGetPhysicalDeviceMemoryProperties ((p `plusPtr` 8 :: Ptr PFN_vkGetPhysicalDeviceMemoryProperties))
-    vkAllocateMemory <- peek @PFN_vkAllocateMemory ((p `plusPtr` 16 :: Ptr PFN_vkAllocateMemory))
-    vkFreeMemory <- peek @PFN_vkFreeMemory ((p `plusPtr` 24 :: Ptr PFN_vkFreeMemory))
-    vkMapMemory <- peek @PFN_vkMapMemory ((p `plusPtr` 32 :: Ptr PFN_vkMapMemory))
-    vkUnmapMemory <- peek @PFN_vkUnmapMemory ((p `plusPtr` 40 :: Ptr PFN_vkUnmapMemory))
-    vkFlushMappedMemoryRanges <- peek @PFN_vkFlushMappedMemoryRanges ((p `plusPtr` 48 :: Ptr PFN_vkFlushMappedMemoryRanges))
-    vkInvalidateMappedMemoryRanges <- peek @PFN_vkInvalidateMappedMemoryRanges ((p `plusPtr` 56 :: Ptr PFN_vkInvalidateMappedMemoryRanges))
-    vkBindBufferMemory <- peek @PFN_vkBindBufferMemory ((p `plusPtr` 64 :: Ptr PFN_vkBindBufferMemory))
-    vkBindImageMemory <- peek @PFN_vkBindImageMemory ((p `plusPtr` 72 :: Ptr PFN_vkBindImageMemory))
-    vkGetBufferMemoryRequirements <- peek @PFN_vkGetBufferMemoryRequirements ((p `plusPtr` 80 :: Ptr PFN_vkGetBufferMemoryRequirements))
-    vkGetImageMemoryRequirements <- peek @PFN_vkGetImageMemoryRequirements ((p `plusPtr` 88 :: Ptr PFN_vkGetImageMemoryRequirements))
-    vkCreateBuffer <- peek @PFN_vkCreateBuffer ((p `plusPtr` 96 :: Ptr PFN_vkCreateBuffer))
-    vkDestroyBuffer <- peek @PFN_vkDestroyBuffer ((p `plusPtr` 104 :: Ptr PFN_vkDestroyBuffer))
-    vkCreateImage <- peek @PFN_vkCreateImage ((p `plusPtr` 112 :: Ptr PFN_vkCreateImage))
-    vkDestroyImage <- peek @PFN_vkDestroyImage ((p `plusPtr` 120 :: Ptr PFN_vkDestroyImage))
-    vkCmdCopyBuffer <- peek @PFN_vkCmdCopyBuffer ((p `plusPtr` 128 :: Ptr PFN_vkCmdCopyBuffer))
-    vkGetBufferMemoryRequirements2KHR <- peek @PFN_vkGetBufferMemoryRequirements2KHR ((p `plusPtr` 136 :: Ptr PFN_vkGetBufferMemoryRequirements2KHR))
-    vkGetImageMemoryRequirements2KHR <- peek @PFN_vkGetImageMemoryRequirements2KHR ((p `plusPtr` 144 :: Ptr PFN_vkGetImageMemoryRequirements2KHR))
-    vkBindBufferMemory2KHR <- peek @PFN_vkBindBufferMemory2KHR ((p `plusPtr` 152 :: Ptr PFN_vkBindBufferMemory2KHR))
-    vkBindImageMemory2KHR <- peek @PFN_vkBindImageMemory2KHR ((p `plusPtr` 160 :: Ptr PFN_vkBindImageMemory2KHR))
-    vkGetPhysicalDeviceMemoryProperties2KHR <- peek @PFN_vkGetPhysicalDeviceMemoryProperties2KHR ((p `plusPtr` 168 :: Ptr PFN_vkGetPhysicalDeviceMemoryProperties2KHR))
+    vkGetInstanceProcAddr <- peek @PFN_vkGetInstanceProcAddr ((p `plusPtr` 0 :: Ptr PFN_vkGetInstanceProcAddr))
+    vkGetDeviceProcAddr <- peek @PFN_vkGetDeviceProcAddr ((p `plusPtr` 8 :: Ptr PFN_vkGetDeviceProcAddr))
+    vkGetPhysicalDeviceProperties <- peek @PFN_vkGetPhysicalDeviceProperties ((p `plusPtr` 16 :: Ptr PFN_vkGetPhysicalDeviceProperties))
+    vkGetPhysicalDeviceMemoryProperties <- peek @PFN_vkGetPhysicalDeviceMemoryProperties ((p `plusPtr` 24 :: Ptr PFN_vkGetPhysicalDeviceMemoryProperties))
+    vkAllocateMemory <- peek @PFN_vkAllocateMemory ((p `plusPtr` 32 :: Ptr PFN_vkAllocateMemory))
+    vkFreeMemory <- peek @PFN_vkFreeMemory ((p `plusPtr` 40 :: Ptr PFN_vkFreeMemory))
+    vkMapMemory <- peek @PFN_vkMapMemory ((p `plusPtr` 48 :: Ptr PFN_vkMapMemory))
+    vkUnmapMemory <- peek @PFN_vkUnmapMemory ((p `plusPtr` 56 :: Ptr PFN_vkUnmapMemory))
+    vkFlushMappedMemoryRanges <- peek @PFN_vkFlushMappedMemoryRanges ((p `plusPtr` 64 :: Ptr PFN_vkFlushMappedMemoryRanges))
+    vkInvalidateMappedMemoryRanges <- peek @PFN_vkInvalidateMappedMemoryRanges ((p `plusPtr` 72 :: Ptr PFN_vkInvalidateMappedMemoryRanges))
+    vkBindBufferMemory <- peek @PFN_vkBindBufferMemory ((p `plusPtr` 80 :: Ptr PFN_vkBindBufferMemory))
+    vkBindImageMemory <- peek @PFN_vkBindImageMemory ((p `plusPtr` 88 :: Ptr PFN_vkBindImageMemory))
+    vkGetBufferMemoryRequirements <- peek @PFN_vkGetBufferMemoryRequirements ((p `plusPtr` 96 :: Ptr PFN_vkGetBufferMemoryRequirements))
+    vkGetImageMemoryRequirements <- peek @PFN_vkGetImageMemoryRequirements ((p `plusPtr` 104 :: Ptr PFN_vkGetImageMemoryRequirements))
+    vkCreateBuffer <- peek @PFN_vkCreateBuffer ((p `plusPtr` 112 :: Ptr PFN_vkCreateBuffer))
+    vkDestroyBuffer <- peek @PFN_vkDestroyBuffer ((p `plusPtr` 120 :: Ptr PFN_vkDestroyBuffer))
+    vkCreateImage <- peek @PFN_vkCreateImage ((p `plusPtr` 128 :: Ptr PFN_vkCreateImage))
+    vkDestroyImage <- peek @PFN_vkDestroyImage ((p `plusPtr` 136 :: Ptr PFN_vkDestroyImage))
+    vkCmdCopyBuffer <- peek @PFN_vkCmdCopyBuffer ((p `plusPtr` 144 :: Ptr PFN_vkCmdCopyBuffer))
+    vkGetBufferMemoryRequirements2KHR <- peek @PFN_vkGetBufferMemoryRequirements2KHR ((p `plusPtr` 152 :: Ptr PFN_vkGetBufferMemoryRequirements2KHR))
+    vkGetImageMemoryRequirements2KHR <- peek @PFN_vkGetImageMemoryRequirements2KHR ((p `plusPtr` 160 :: Ptr PFN_vkGetImageMemoryRequirements2KHR))
+    vkBindBufferMemory2KHR <- peek @PFN_vkBindBufferMemory2KHR ((p `plusPtr` 168 :: Ptr PFN_vkBindBufferMemory2KHR))
+    vkBindImageMemory2KHR <- peek @PFN_vkBindImageMemory2KHR ((p `plusPtr` 176 :: Ptr PFN_vkBindImageMemory2KHR))
+    vkGetPhysicalDeviceMemoryProperties2KHR <- peek @PFN_vkGetPhysicalDeviceMemoryProperties2KHR ((p `plusPtr` 184 :: Ptr PFN_vkGetPhysicalDeviceMemoryProperties2KHR))
     pure $ VulkanFunctions
-             vkGetPhysicalDeviceProperties vkGetPhysicalDeviceMemoryProperties vkAllocateMemory vkFreeMemory vkMapMemory vkUnmapMemory vkFlushMappedMemoryRanges vkInvalidateMappedMemoryRanges vkBindBufferMemory vkBindImageMemory vkGetBufferMemoryRequirements vkGetImageMemoryRequirements vkCreateBuffer vkDestroyBuffer vkCreateImage vkDestroyImage vkCmdCopyBuffer vkGetBufferMemoryRequirements2KHR vkGetImageMemoryRequirements2KHR vkBindBufferMemory2KHR vkBindImageMemory2KHR vkGetPhysicalDeviceMemoryProperties2KHR
+             vkGetInstanceProcAddr vkGetDeviceProcAddr vkGetPhysicalDeviceProperties vkGetPhysicalDeviceMemoryProperties vkAllocateMemory vkFreeMemory vkMapMemory vkUnmapMemory vkFlushMappedMemoryRanges vkInvalidateMappedMemoryRanges vkBindBufferMemory vkBindImageMemory vkGetBufferMemoryRequirements vkGetImageMemoryRequirements vkCreateBuffer vkDestroyBuffer vkCreateImage vkDestroyImage vkCmdCopyBuffer vkGetBufferMemoryRequirements2KHR vkGetImageMemoryRequirements2KHR vkBindBufferMemory2KHR vkBindImageMemory2KHR vkGetPhysicalDeviceMemoryProperties2KHR
 
 instance Storable VulkanFunctions where
-  sizeOf ~_ = 176
+  sizeOf ~_ = 192
   alignment ~_ = 8
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
@@ -3314,87 +3738,8 @@ instance Zero VulkanFunctions where
            zero
            zero
            zero
-
-
-type RecordFlags = RecordFlagBits
-
--- | Flags to be used in /VmaRecordSettings::flags/.
-newtype RecordFlagBits = RecordFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
-
--- | Enables flush after recording every function call.
---
--- Enable it if you expect your application to crash, which may leave
--- recording file truncated. It may degrade performance though.
-pattern RECORD_FLUSH_AFTER_CALL_BIT = RecordFlagBits 0x00000001
-
-conNameRecordFlagBits :: String
-conNameRecordFlagBits = "RecordFlagBits"
-
-enumPrefixRecordFlagBits :: String
-enumPrefixRecordFlagBits = "RECORD_FLUSH_AFTER_CALL_BIT"
-
-showTableRecordFlagBits :: [(RecordFlagBits, String)]
-showTableRecordFlagBits = [(RECORD_FLUSH_AFTER_CALL_BIT, "")]
-
-instance Show RecordFlagBits where
-  showsPrec = enumShowsPrec enumPrefixRecordFlagBits
-                            showTableRecordFlagBits
-                            conNameRecordFlagBits
-                            (\(RecordFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
-
-instance Read RecordFlagBits where
-  readPrec = enumReadPrec enumPrefixRecordFlagBits showTableRecordFlagBits conNameRecordFlagBits RecordFlagBits
-
-
--- | VmaRecordSettings
---
--- Parameters for recording calls to VMA functions. To be used in
--- /VmaAllocatorCreateInfo::pRecordSettings/.
-data RecordSettings = RecordSettings
-  { -- | Flags for recording. Use 'RecordFlagBits' enum.
-    flags :: RecordFlags
-  , -- | Path to the file that should be written by the recording.
-    --
-    -- Suggested extension: \"csv\". If the file already exists, it will be
-    -- overwritten. It will be opened for the whole time 'Allocator' object is
-    -- alive. If opening this file fails, creation of the whole allocator
-    -- object fails.
-    filePath :: ByteString
-  }
-  deriving (Typeable)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (RecordSettings)
-#endif
-deriving instance Show RecordSettings
-
-instance ToCStruct RecordSettings where
-  withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p RecordSettings{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr RecordFlags)) (flags)
-    pFilePath'' <- ContT $ useAsCString (filePath)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr CChar))) pFilePath''
-    lift $ f
-  cStructSize = 16
-  cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr RecordFlags)) (zero)
-    pFilePath'' <- ContT $ useAsCString (mempty)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr CChar))) pFilePath''
-    lift $ f
-
-instance FromCStruct RecordSettings where
-  peekCStruct p = do
-    flags <- peek @RecordFlags ((p `plusPtr` 0 :: Ptr RecordFlags))
-    pFilePath <- packCString =<< peek ((p `plusPtr` 8 :: Ptr (Ptr CChar)))
-    pure $ RecordSettings
-             flags pFilePath
-
-instance Zero RecordSettings where
-  zero = RecordSettings
            zero
-           mempty
+           zero
 
 
 -- | VmaAllocatorCreateInfo
@@ -3425,22 +3770,6 @@ data AllocatorCreateInfo = AllocatorCreateInfo
     --
     -- Optional, can be null.
     deviceMemoryCallbacks :: Maybe DeviceMemoryCallbacks
-  , -- | Maximum number of additional frames that are in use at the same time as
-    -- current frame.
-    --
-    -- This value is used only when you make allocations with
-    -- VMA_ALLOCATION_CREATE_CAN_BECOME_LOST_BIT flag. Such allocation cannot
-    -- become lost if allocation.lastUseFrameIndex >=
-    -- allocator.currentFrameIndex - frameInUseCount.
-    --
-    -- For example, if you double-buffer your command buffers, so resources
-    -- used for rendering in previous frame may still be in use by the GPU at
-    -- the moment you allocate resources needed for the current frame, set this
-    -- value to 1.
-    --
-    -- If you want to allow any allocations other than used in the current
-    -- frame to become lost, set this value to 0.
-    frameInUseCount :: Word32
   , -- | Either null or a pointer to an array of limits on maximum number of
     -- bytes that can be allocated out of particular Vulkan memory heap.
     --
@@ -3475,13 +3804,6 @@ data AllocatorCreateInfo = AllocatorCreateInfo
     --
     -- For details see /Pointers to Vulkan functions/.
     vulkanFunctions :: Maybe VulkanFunctions
-  , -- | Parameters for recording of VMA calls. Can be null.
-    --
-    -- If not null, it enables recording of calls to VMA functions to a file.
-    -- If support for recording is not enabled using @VMA_RECORDING_ENABLED@
-    -- macro, creation of the allocator object fails with
-    -- @VK_ERROR_FEATURE_NOT_PRESENT@.
-    recordSettings :: Maybe RecordSettings
   , -- | Handle to Vulkan instance object.
     --
     -- Starting from version 3.0.0 this member is no longer optional, it must
@@ -3519,7 +3841,7 @@ deriving instance Generic (AllocatorCreateInfo)
 deriving instance Show AllocatorCreateInfo
 
 instance ToCStruct AllocatorCreateInfo where
-  withCStruct x f = allocaBytes 104 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 88 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AllocatorCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr AllocatorCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr PhysicalDevice_T))) (physicalDevice)
@@ -3533,30 +3855,24 @@ instance ToCStruct AllocatorCreateInfo where
       Nothing -> pure nullPtr
       Just j -> ContT $ withCStruct (j)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr DeviceMemoryCallbacks))) pDeviceMemoryCallbacks''
-    lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (frameInUseCount)
-    lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr DeviceSize))) (heapSizeLimit)
+    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr DeviceSize))) (heapSizeLimit)
     pVulkanFunctions'' <- case (vulkanFunctions) of
       Nothing -> pure nullPtr
       Just j -> ContT $ withCStruct (j)
-    lift $ poke ((p `plusPtr` 64 :: Ptr (Ptr VulkanFunctions))) pVulkanFunctions''
-    pRecordSettings'' <- case (recordSettings) of
-      Nothing -> pure nullPtr
-      Just j -> ContT $ withCStruct (j)
-    lift $ poke ((p `plusPtr` 72 :: Ptr (Ptr RecordSettings))) pRecordSettings''
-    lift $ poke ((p `plusPtr` 80 :: Ptr (Ptr Instance_T))) (instance')
-    lift $ poke ((p `plusPtr` 88 :: Ptr Word32)) (vulkanApiVersion)
-    lift $ poke ((p `plusPtr` 96 :: Ptr (Ptr ExternalMemoryHandleTypeFlagsKHR))) (typeExternalMemoryHandleTypes)
+    lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr VulkanFunctions))) pVulkanFunctions''
+    lift $ poke ((p `plusPtr` 64 :: Ptr (Ptr Instance_T))) (instance')
+    lift $ poke ((p `plusPtr` 72 :: Ptr Word32)) (vulkanApiVersion)
+    lift $ poke ((p `plusPtr` 80 :: Ptr (Ptr ExternalMemoryHandleTypeFlagsKHR))) (typeExternalMemoryHandleTypes)
     lift $ f
-  cStructSize = 104
+  cStructSize = 88
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr AllocatorCreateFlags)) (zero)
     poke ((p `plusPtr` 8 :: Ptr (Ptr PhysicalDevice_T))) (zero)
     poke ((p `plusPtr` 16 :: Ptr (Ptr Device_T))) (zero)
     poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (zero)
-    poke ((p `plusPtr` 48 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 80 :: Ptr (Ptr Instance_T))) (zero)
-    poke ((p `plusPtr` 88 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 64 :: Ptr (Ptr Instance_T))) (zero)
+    poke ((p `plusPtr` 72 :: Ptr Word32)) (zero)
     f
 
 instance FromCStruct AllocatorCreateInfo where
@@ -3569,17 +3885,14 @@ instance FromCStruct AllocatorCreateInfo where
     pAllocationCallbacks' <- maybePeek (\j -> peekCStruct @AllocationCallbacks (j)) pAllocationCallbacks
     pDeviceMemoryCallbacks <- peek @(Ptr DeviceMemoryCallbacks) ((p `plusPtr` 40 :: Ptr (Ptr DeviceMemoryCallbacks)))
     pDeviceMemoryCallbacks' <- maybePeek (\j -> peekCStruct @DeviceMemoryCallbacks (j)) pDeviceMemoryCallbacks
-    frameInUseCount <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
-    pHeapSizeLimit <- peek @(Ptr DeviceSize) ((p `plusPtr` 56 :: Ptr (Ptr DeviceSize)))
-    pVulkanFunctions <- peek @(Ptr VulkanFunctions) ((p `plusPtr` 64 :: Ptr (Ptr VulkanFunctions)))
+    pHeapSizeLimit <- peek @(Ptr DeviceSize) ((p `plusPtr` 48 :: Ptr (Ptr DeviceSize)))
+    pVulkanFunctions <- peek @(Ptr VulkanFunctions) ((p `plusPtr` 56 :: Ptr (Ptr VulkanFunctions)))
     pVulkanFunctions' <- maybePeek (\j -> peekCStruct @VulkanFunctions (j)) pVulkanFunctions
-    pRecordSettings <- peek @(Ptr RecordSettings) ((p `plusPtr` 72 :: Ptr (Ptr RecordSettings)))
-    pRecordSettings' <- maybePeek (\j -> peekCStruct @RecordSettings (j)) pRecordSettings
-    instance' <- peek @(Ptr Instance_T) ((p `plusPtr` 80 :: Ptr (Ptr Instance_T)))
-    vulkanApiVersion <- peek @Word32 ((p `plusPtr` 88 :: Ptr Word32))
-    pTypeExternalMemoryHandleTypes <- peek @(Ptr ExternalMemoryHandleTypeFlagsKHR) ((p `plusPtr` 96 :: Ptr (Ptr ExternalMemoryHandleTypeFlagsKHR)))
+    instance' <- peek @(Ptr Instance_T) ((p `plusPtr` 64 :: Ptr (Ptr Instance_T)))
+    vulkanApiVersion <- peek @Word32 ((p `plusPtr` 72 :: Ptr Word32))
+    pTypeExternalMemoryHandleTypes <- peek @(Ptr ExternalMemoryHandleTypeFlagsKHR) ((p `plusPtr` 80 :: Ptr (Ptr ExternalMemoryHandleTypeFlagsKHR)))
     pure $ AllocatorCreateInfo
-             flags physicalDevice device preferredLargeHeapBlockSize pAllocationCallbacks' pDeviceMemoryCallbacks' frameInUseCount pHeapSizeLimit pVulkanFunctions' pRecordSettings' instance' vulkanApiVersion pTypeExternalMemoryHandleTypes
+             flags physicalDevice device preferredLargeHeapBlockSize pAllocationCallbacks' pDeviceMemoryCallbacks' pHeapSizeLimit pVulkanFunctions' instance' vulkanApiVersion pTypeExternalMemoryHandleTypes
 
 instance Zero AllocatorCreateInfo where
   zero = AllocatorCreateInfo
@@ -3590,8 +3903,6 @@ instance Zero AllocatorCreateInfo where
            Nothing
            Nothing
            zero
-           zero
-           Nothing
            Nothing
            zero
            zero
@@ -3851,9 +4162,6 @@ data Budget = Budget
     -- Usually less or equal than @blockBytes@. Difference
     -- @blockBytes - allocationBytes@ is the amount of memory allocated but
     -- unused - available for new allocations or wasted due to fragmentation.
-    --
-    -- It might be greater than @blockBytes@ if there are some allocations in
-    -- lost state, as they account to this value as well.
     allocationBytes :: DeviceSize
   , -- | Estimated current memory usage of the program, in bytes.
     --
@@ -3920,272 +4228,6 @@ instance Zero Budget where
            zero
            zero
            zero
-
-
--- | VmaPool
---
--- Represents custom memory pool.
---
--- Fill structure 'PoolCreateInfo' and call function 'createPool' to create
--- it. Call function 'destroyPool' to destroy it.
---
--- For more information see /Custom memory pools/.
-newtype Pool = Pool Word64
-  deriving newtype (Eq, Ord, Storable, Zero)
-  deriving anyclass (IsHandle)
-instance Show Pool where
-  showsPrec p (Pool x) = showParen (p >= 11) (showString "Pool 0x" . showHex x)
-
-
-
-newtype MemoryUsage = MemoryUsage Int32
-  deriving newtype (Eq, Ord, Storable, Zero)
-
--- | No intended memory usage specified. Use other members of
--- 'AllocationCreateInfo' to specify your requirements.
-pattern MEMORY_USAGE_UNKNOWN              = MemoryUsage 0
--- | Memory will be used on device only, so fast access from the device is
--- preferred. It usually means device-local GPU (video) memory. No need to
--- be mappable on host. It is roughly equivalent of
--- @D3D12_HEAP_TYPE_DEFAULT@.
---
--- Usage:
---
--- -   Resources written and read by device, e.g. images used as
---     attachments.
---
--- -   Resources transferred from host once (immutable) or infrequently and
---     read by device multiple times, e.g. textures to be sampled, vertex
---     buffers, uniform (constant) buffers, and majority of other types of
---     resources used on GPU.
---
--- Allocation may still end up in @HOST_VISIBLE@ memory on some
--- implementations. In such case, you are free to map it. You can use
--- 'ALLOCATION_CREATE_MAPPED_BIT' with this usage type.
-pattern MEMORY_USAGE_GPU_ONLY             = MemoryUsage 1
--- | Memory will be mappable on host. It usually means CPU (system) memory.
--- Guarantees to be @HOST_VISIBLE@ and @HOST_COHERENT@. CPU access is
--- typically uncached. Writes may be write-combined. Resources created in
--- this pool may still be accessible to the device, but access to them can
--- be slow. It is roughly equivalent of @D3D12_HEAP_TYPE_UPLOAD@.
---
--- Usage: Staging copy of resources used as transfer source.
-pattern MEMORY_USAGE_CPU_ONLY             = MemoryUsage 2
--- | Memory that is both mappable on host (guarantees to be @HOST_VISIBLE@)
--- and preferably fast to access by GPU. CPU access is typically uncached.
--- Writes may be write-combined.
---
--- Usage: Resources written frequently by host (dynamic), read by device.
--- E.g. textures (with LINEAR layout), vertex buffers, uniform buffers
--- updated every frame or every draw call.
-pattern MEMORY_USAGE_CPU_TO_GPU           = MemoryUsage 3
--- | Memory mappable on host (guarantees to be @HOST_VISIBLE@) and cached. It
--- is roughly equivalent of @D3D12_HEAP_TYPE_READBACK@.
---
--- Usage:
---
--- -   Resources written by device, read by host - results of some
---     computations, e.g. screen capture, average scene luminance for HDR
---     tone mapping.
---
--- -   Any resources read or accessed randomly on host, e.g. CPU-side copy
---     of vertex buffer used as source of transfer, but also used for
---     collision detection.
-pattern MEMORY_USAGE_GPU_TO_CPU           = MemoryUsage 4
--- | CPU memory - memory that is preferably not @DEVICE_LOCAL@, but also not
--- guaranteed to be @HOST_VISIBLE@.
---
--- Usage: Staging copy of resources moved from GPU memory to CPU memory as
--- part of custom paging\/residency mechanism, to be moved back to GPU
--- memory when needed.
-pattern MEMORY_USAGE_CPU_COPY             = MemoryUsage 5
--- | Lazily allocated GPU memory having
--- @VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT@. Exists mostly on mobile
--- platforms. Using it on desktop PC or other GPUs with no such memory type
--- present will fail the allocation.
---
--- Usage: Memory for transient attachment images (color attachments, depth
--- attachments etc.), created with
--- @VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT@.
---
--- Allocations with this usage are always created as dedicated - it implies
--- 'ALLOCATION_CREATE_DEDICATED_MEMORY_BIT'.
-pattern MEMORY_USAGE_GPU_LAZILY_ALLOCATED = MemoryUsage 6
-{-# complete MEMORY_USAGE_UNKNOWN,
-             MEMORY_USAGE_GPU_ONLY,
-             MEMORY_USAGE_CPU_ONLY,
-             MEMORY_USAGE_CPU_TO_GPU,
-             MEMORY_USAGE_GPU_TO_CPU,
-             MEMORY_USAGE_CPU_COPY,
-             MEMORY_USAGE_GPU_LAZILY_ALLOCATED :: MemoryUsage #-}
-
-conNameMemoryUsage :: String
-conNameMemoryUsage = "MemoryUsage"
-
-enumPrefixMemoryUsage :: String
-enumPrefixMemoryUsage = "MEMORY_USAGE_"
-
-showTableMemoryUsage :: [(MemoryUsage, String)]
-showTableMemoryUsage =
-  [ (MEMORY_USAGE_UNKNOWN             , "UNKNOWN")
-  , (MEMORY_USAGE_GPU_ONLY            , "GPU_ONLY")
-  , (MEMORY_USAGE_CPU_ONLY            , "CPU_ONLY")
-  , (MEMORY_USAGE_CPU_TO_GPU          , "CPU_TO_GPU")
-  , (MEMORY_USAGE_GPU_TO_CPU          , "GPU_TO_CPU")
-  , (MEMORY_USAGE_CPU_COPY            , "CPU_COPY")
-  , (MEMORY_USAGE_GPU_LAZILY_ALLOCATED, "GPU_LAZILY_ALLOCATED")
-  ]
-
-instance Show MemoryUsage where
-  showsPrec =
-    enumShowsPrec enumPrefixMemoryUsage showTableMemoryUsage conNameMemoryUsage (\(MemoryUsage x) -> x) (showsPrec 11)
-
-instance Read MemoryUsage where
-  readPrec = enumReadPrec enumPrefixMemoryUsage showTableMemoryUsage conNameMemoryUsage MemoryUsage
-
-
-type AllocationCreateFlags = AllocationCreateFlagBits
-
--- | Flags to be passed as /VmaAllocationCreateInfo::flags/.
-newtype AllocationCreateFlagBits = AllocationCreateFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
-
--- | Set this flag if the allocation should have its own memory block.
---
--- Use it for special, big resources, like fullscreen images used as
--- attachments.
---
--- You should not use this flag if /VmaAllocationCreateInfo::pool/ is not
--- null.
-pattern ALLOCATION_CREATE_DEDICATED_MEMORY_BIT           = AllocationCreateFlagBits 0x00000001
--- | Set this flag to only try to allocate from existing @VkDeviceMemory@
--- blocks and never create new such block.
---
--- If new allocation cannot be placed in any of the existing blocks,
--- allocation fails with @VK_ERROR_OUT_OF_DEVICE_MEMORY@ error.
---
--- You should not use 'ALLOCATION_CREATE_DEDICATED_MEMORY_BIT' and
--- 'ALLOCATION_CREATE_NEVER_ALLOCATE_BIT' at the same time. It makes no
--- sense.
---
--- If /VmaAllocationCreateInfo::pool/ is not null, this flag is implied and
--- ignored.
-pattern ALLOCATION_CREATE_NEVER_ALLOCATE_BIT             = AllocationCreateFlagBits 0x00000002
--- | Set this flag to use a memory that will be persistently mapped and
--- retrieve pointer to it.
---
--- Pointer to mapped memory will be returned through
--- /VmaAllocationInfo::pMappedData/.
---
--- It is valid to use this flag for allocation made from memory type that
--- is not @HOST_VISIBLE@. This flag is then ignored and memory is not
--- mapped. This is useful if you need an allocation that is efficient to
--- use on GPU (@DEVICE_LOCAL@) and still want to map it directly if
--- possible on platforms that support it (e.g. Intel GPU).
---
--- You should not use this flag together with
--- 'ALLOCATION_CREATE_CAN_BECOME_LOST_BIT'.
-pattern ALLOCATION_CREATE_MAPPED_BIT                     = AllocationCreateFlagBits 0x00000004
--- | Allocation created with this flag can become lost as a result of another
--- allocation with 'ALLOCATION_CREATE_CAN_MAKE_OTHER_LOST_BIT' flag, so you
--- must check it before use.
---
--- To check if allocation is not lost, call 'getAllocationInfo' and check
--- if /VmaAllocationInfo::deviceMemory/ is not @VK_NULL_HANDLE@.
---
--- For details about supporting lost allocations, see Lost Allocations
--- chapter of User Guide on Main Page.
---
--- You should not use this flag together with
--- 'ALLOCATION_CREATE_MAPPED_BIT'.
-pattern ALLOCATION_CREATE_CAN_BECOME_LOST_BIT            = AllocationCreateFlagBits 0x00000008
--- | While creating allocation using this flag, other allocations that were
--- created with flag 'ALLOCATION_CREATE_CAN_BECOME_LOST_BIT' can become
--- lost.
---
--- For details about supporting lost allocations, see Lost Allocations
--- chapter of User Guide on Main Page.
-pattern ALLOCATION_CREATE_CAN_MAKE_OTHER_LOST_BIT        = AllocationCreateFlagBits 0x00000010
--- | Set this flag to treat /VmaAllocationCreateInfo::pUserData/ as pointer
--- to a null-terminated string. Instead of copying pointer value, a local
--- copy of the string is made and stored in allocation\'s @pUserData@. The
--- string is automatically freed together with the allocation. It is also
--- used in 'buildStatsString'.
-pattern ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT      = AllocationCreateFlagBits 0x00000020
--- | Allocation will be created from upper stack in a double stack pool.
---
--- This flag is only allowed for custom pools created with
--- 'POOL_CREATE_LINEAR_ALGORITHM_BIT' flag.
-pattern ALLOCATION_CREATE_UPPER_ADDRESS_BIT              = AllocationCreateFlagBits 0x00000040
--- | Create both buffer\/image and allocation, but don\'t bind them together.
--- It is useful when you want to bind yourself to do some more advanced
--- binding, e.g. using some extensions. The flag is meaningful only with
--- functions that bind by default: 'createBuffer', 'createImage'. Otherwise
--- it is ignored.
-pattern ALLOCATION_CREATE_DONT_BIND_BIT                  = AllocationCreateFlagBits 0x00000080
--- | Create allocation only if additional device memory required for it, if
--- any, won\'t exceed memory budget. Otherwise return
--- @VK_ERROR_OUT_OF_DEVICE_MEMORY@.
-pattern ALLOCATION_CREATE_WITHIN_BUDGET_BIT              = AllocationCreateFlagBits 0x00000100
--- | Allocation strategy that chooses smallest possible free range for the
--- allocation.
-pattern ALLOCATION_CREATE_STRATEGY_BEST_FIT_BIT          = AllocationCreateFlagBits 0x00010000
--- | Allocation strategy that chooses biggest possible free range for the
--- allocation.
-pattern ALLOCATION_CREATE_STRATEGY_WORST_FIT_BIT         = AllocationCreateFlagBits 0x00020000
--- | Allocation strategy that chooses first suitable free range for the
--- allocation.
---
--- \"First\" doesn\'t necessarily means the one with smallest offset in
--- memory, but rather the one that is easiest and fastest to find.
-pattern ALLOCATION_CREATE_STRATEGY_FIRST_FIT_BIT         = AllocationCreateFlagBits 0x00040000
--- | Allocation strategy that tries to minimize memory usage.
-pattern ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT        = AllocationCreateFlagBits 0x00010000
--- | Allocation strategy that tries to minimize allocation time.
-pattern ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT          = AllocationCreateFlagBits 0x00040000
--- | Allocation strategy that tries to minimize memory fragmentation.
-pattern ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT = AllocationCreateFlagBits 0x00020000
--- | A bit mask to extract only @STRATEGY@ bits from entire set of flags.
-pattern ALLOCATION_CREATE_STRATEGY_MASK                  = AllocationCreateFlagBits 0x00070000
-
-conNameAllocationCreateFlagBits :: String
-conNameAllocationCreateFlagBits = "AllocationCreateFlagBits"
-
-enumPrefixAllocationCreateFlagBits :: String
-enumPrefixAllocationCreateFlagBits = "ALLOCATION_CREATE_"
-
-showTableAllocationCreateFlagBits :: [(AllocationCreateFlagBits, String)]
-showTableAllocationCreateFlagBits =
-  [ (ALLOCATION_CREATE_DEDICATED_MEMORY_BIT          , "DEDICATED_MEMORY_BIT")
-  , (ALLOCATION_CREATE_NEVER_ALLOCATE_BIT            , "NEVER_ALLOCATE_BIT")
-  , (ALLOCATION_CREATE_MAPPED_BIT                    , "MAPPED_BIT")
-  , (ALLOCATION_CREATE_CAN_BECOME_LOST_BIT           , "CAN_BECOME_LOST_BIT")
-  , (ALLOCATION_CREATE_CAN_MAKE_OTHER_LOST_BIT       , "CAN_MAKE_OTHER_LOST_BIT")
-  , (ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT     , "USER_DATA_COPY_STRING_BIT")
-  , (ALLOCATION_CREATE_UPPER_ADDRESS_BIT             , "UPPER_ADDRESS_BIT")
-  , (ALLOCATION_CREATE_DONT_BIND_BIT                 , "DONT_BIND_BIT")
-  , (ALLOCATION_CREATE_WITHIN_BUDGET_BIT             , "WITHIN_BUDGET_BIT")
-  , (ALLOCATION_CREATE_STRATEGY_BEST_FIT_BIT         , "STRATEGY_BEST_FIT_BIT")
-  , (ALLOCATION_CREATE_STRATEGY_WORST_FIT_BIT        , "STRATEGY_WORST_FIT_BIT")
-  , (ALLOCATION_CREATE_STRATEGY_FIRST_FIT_BIT        , "STRATEGY_FIRST_FIT_BIT")
-  , (ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT       , "STRATEGY_MIN_MEMORY_BIT")
-  , (ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT         , "STRATEGY_MIN_TIME_BIT")
-  , (ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT, "STRATEGY_MIN_FRAGMENTATION_BIT")
-  , (ALLOCATION_CREATE_STRATEGY_MASK                 , "STRATEGY_MASK")
-  ]
-
-instance Show AllocationCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixAllocationCreateFlagBits
-                            showTableAllocationCreateFlagBits
-                            conNameAllocationCreateFlagBits
-                            (\(AllocationCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
-
-instance Read AllocationCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixAllocationCreateFlagBits
-                          showTableAllocationCreateFlagBits
-                          conNameAllocationCreateFlagBits
-                          AllocationCreateFlagBits
 
 
 -- | VmaAllocationCreateInfo
@@ -4314,85 +4356,6 @@ instance Zero AllocationCreateInfo where
            zero
 
 
-type PoolCreateFlags = PoolCreateFlagBits
-
--- | Flags to be passed as /VmaPoolCreateInfo::flags/.
-newtype PoolCreateFlagBits = PoolCreateFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
-
--- | Use this flag if you always allocate only buffers and linear images or
--- only optimal images out of this pool and so Buffer-Image Granularity can
--- be ignored.
---
--- This is an optional optimization flag.
---
--- If you always allocate using 'createBuffer', 'createImage',
--- 'allocateMemoryForBuffer', then you don\'t need to use it because
--- allocator knows exact type of your allocations so it can handle
--- Buffer-Image Granularity in the optimal way.
---
--- If you also allocate using 'allocateMemoryForImage' or 'allocateMemory',
--- exact type of such allocations is not known, so allocator must be
--- conservative in handling Buffer-Image Granularity, which can lead to
--- suboptimal allocation (wasted memory). In that case, if you can make
--- sure you always allocate only buffers and linear images or only optimal
--- images out of this pool, use this flag to make allocator disregard
--- Buffer-Image Granularity and so make allocations faster and more
--- optimal.
-pattern POOL_CREATE_IGNORE_BUFFER_IMAGE_GRANULARITY_BIT = PoolCreateFlagBits 0x00000002
--- | Enables alternative, linear allocation algorithm in this pool.
---
--- Specify this flag to enable linear allocation algorithm, which always
--- creates new allocations after last one and doesn\'t reuse space from
--- allocations freed in between. It trades memory consumption for
--- simplified algorithm and data structure, which has better performance
--- and uses less memory for metadata.
---
--- By using this flag, you can achieve behavior of free-at-once, stack,
--- ring buffer, and double stack. For details, see documentation chapter
--- /Linear allocation algorithm/.
---
--- When using this flag, you must specify
--- /VmaPoolCreateInfo::maxBlockCount/ == 1 (or 0 for default).
-pattern POOL_CREATE_LINEAR_ALGORITHM_BIT                = PoolCreateFlagBits 0x00000004
--- | Enables alternative, buddy allocation algorithm in this pool.
---
--- It operates on a tree of blocks, each having size that is a power of two
--- and a half of its parent\'s size. Comparing to default algorithm, this
--- one provides faster allocation and deallocation and decreased external
--- fragmentation, at the expense of more memory wasted (internal
--- fragmentation). For details, see documentation chapter /Buddy allocation
--- algorithm/.
-pattern POOL_CREATE_BUDDY_ALGORITHM_BIT                 = PoolCreateFlagBits 0x00000008
--- | Bit mask to extract only @ALGORITHM@ bits from entire set of flags.
-pattern POOL_CREATE_ALGORITHM_MASK                      = PoolCreateFlagBits 0x0000000c
-
-conNamePoolCreateFlagBits :: String
-conNamePoolCreateFlagBits = "PoolCreateFlagBits"
-
-enumPrefixPoolCreateFlagBits :: String
-enumPrefixPoolCreateFlagBits = "POOL_CREATE_"
-
-showTablePoolCreateFlagBits :: [(PoolCreateFlagBits, String)]
-showTablePoolCreateFlagBits =
-  [ (POOL_CREATE_IGNORE_BUFFER_IMAGE_GRANULARITY_BIT, "IGNORE_BUFFER_IMAGE_GRANULARITY_BIT")
-  , (POOL_CREATE_LINEAR_ALGORITHM_BIT               , "LINEAR_ALGORITHM_BIT")
-  , (POOL_CREATE_BUDDY_ALGORITHM_BIT                , "BUDDY_ALGORITHM_BIT")
-  , (POOL_CREATE_ALGORITHM_MASK                     , "ALGORITHM_MASK")
-  ]
-
-instance Show PoolCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixPoolCreateFlagBits
-                            showTablePoolCreateFlagBits
-                            conNamePoolCreateFlagBits
-                            (\(PoolCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
-
-instance Read PoolCreateFlagBits where
-  readPrec =
-    enumReadPrec enumPrefixPoolCreateFlagBits showTablePoolCreateFlagBits conNamePoolCreateFlagBits PoolCreateFlagBits
-
-
 -- | VmaPoolCreateInfo
 --
 -- Describes parameter of created 'Pool'.
@@ -4408,7 +4371,8 @@ data PoolCreateInfo = PoolCreateInfo
     -- this pool.
     --
     -- Leave 0 to use default and let the library manage block sizes
-    -- automatically. Sizes of particular blocks may vary.
+    -- automatically. Sizes of particular blocks may vary. In this case, the
+    -- pool will also support dedicated allocations.
     blockSize :: DeviceSize
   , -- | Minimum number of blocks to be always allocated in this pool, even if
     -- they stay empty.
@@ -4423,22 +4387,6 @@ data PoolCreateInfo = PoolCreateInfo
     -- Set to same value as /VmaPoolCreateInfo::minBlockCount/ to have fixed
     -- amount of memory allocated throughout whole lifetime of this pool.
     maxBlockCount :: Word64
-  , -- | Maximum number of additional frames that are in use at the same time as
-    -- current frame.
-    --
-    -- This value is used only when you make allocations with
-    -- 'ALLOCATION_CREATE_CAN_BECOME_LOST_BIT' flag. Such allocation cannot
-    -- become lost if allocation.lastUseFrameIndex >=
-    -- allocator.currentFrameIndex - frameInUseCount.
-    --
-    -- For example, if you double-buffer your command buffers, so resources
-    -- used for rendering in previous frame may still be in use by the GPU at
-    -- the moment you allocate resources needed for the current frame, set this
-    -- value to 1.
-    --
-    -- If you want to allow any allocations other than used in the current
-    -- frame to become lost, set this value to 0.
-    frameInUseCount :: Word32
   , -- | A floating-point value between 0 and 1, indicating the priority of the
     -- allocations in this pool relative to other memory allocations.
     --
@@ -4483,8 +4431,7 @@ instance ToCStruct PoolCreateInfo where
     poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (blockSize)
     poke ((p `plusPtr` 16 :: Ptr CSize)) (CSize (minBlockCount))
     poke ((p `plusPtr` 24 :: Ptr CSize)) (CSize (maxBlockCount))
-    poke ((p `plusPtr` 32 :: Ptr Word32)) (frameInUseCount)
-    poke ((p `plusPtr` 36 :: Ptr CFloat)) (CFloat (priority))
+    poke ((p `plusPtr` 32 :: Ptr CFloat)) (CFloat (priority))
     poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (minAllocationAlignment)
     poke ((p `plusPtr` 48 :: Ptr (Ptr ()))) (memoryAllocateNext)
     f
@@ -4496,8 +4443,7 @@ instance ToCStruct PoolCreateInfo where
     poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (zero)
     poke ((p `plusPtr` 16 :: Ptr CSize)) (CSize (zero))
     poke ((p `plusPtr` 24 :: Ptr CSize)) (CSize (zero))
-    poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 36 :: Ptr CFloat)) (CFloat (zero))
+    poke ((p `plusPtr` 32 :: Ptr CFloat)) (CFloat (zero))
     poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (zero)
     f
 
@@ -4508,12 +4454,11 @@ instance FromCStruct PoolCreateInfo where
     blockSize <- peek @DeviceSize ((p `plusPtr` 8 :: Ptr DeviceSize))
     minBlockCount <- peek @CSize ((p `plusPtr` 16 :: Ptr CSize))
     maxBlockCount <- peek @CSize ((p `plusPtr` 24 :: Ptr CSize))
-    frameInUseCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
-    priority <- peek @CFloat ((p `plusPtr` 36 :: Ptr CFloat))
+    priority <- peek @CFloat ((p `plusPtr` 32 :: Ptr CFloat))
     minAllocationAlignment <- peek @DeviceSize ((p `plusPtr` 40 :: Ptr DeviceSize))
     pMemoryAllocateNext <- peek @(Ptr ()) ((p `plusPtr` 48 :: Ptr (Ptr ())))
     pure $ PoolCreateInfo
-             memoryTypeIndex flags blockSize (coerce @CSize @Word64 minBlockCount) (coerce @CSize @Word64 maxBlockCount) frameInUseCount (coerce @CFloat @Float priority) minAllocationAlignment pMemoryAllocateNext
+             memoryTypeIndex flags blockSize (coerce @CSize @Word64 minBlockCount) (coerce @CSize @Word64 maxBlockCount) (coerce @CFloat @Float priority) minAllocationAlignment pMemoryAllocateNext
 
 instance Storable PoolCreateInfo where
   sizeOf ~_ = 56
@@ -4523,7 +4468,6 @@ instance Storable PoolCreateInfo where
 
 instance Zero PoolCreateInfo where
   zero = PoolCreateInfo
-           zero
            zero
            zero
            zero
@@ -4544,18 +4488,11 @@ data PoolStats = PoolStats
   , -- | Total number of bytes in the pool not used by any 'Allocation'.
     unusedSize :: DeviceSize
   , -- | Number of 'Allocation' objects created from this pool that were not
-    -- destroyed or lost.
+    -- destroyed.
     allocationCount :: Word64
   , -- | Number of continuous memory ranges in the pool not used by any
     -- 'Allocation'.
     unusedRangeCount :: Word64
-  , -- | Size of the largest continuous free memory region available for new
-    -- allocation.
-    --
-    -- Making a new allocation of that size is not guaranteed to succeed
-    -- because of possible additional margin required to respect alignment and
-    -- buffer\/image granularity.
-    unusedRangeSizeMax :: DeviceSize
   , -- | Number of @VkDeviceMemory@ blocks allocated for this pool.
     blockCount :: Word64
   }
@@ -4566,24 +4503,22 @@ deriving instance Generic (PoolStats)
 deriving instance Show PoolStats
 
 instance ToCStruct PoolStats where
-  withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PoolStats{..} f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (size)
     poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (unusedSize)
     poke ((p `plusPtr` 16 :: Ptr CSize)) (CSize (allocationCount))
     poke ((p `plusPtr` 24 :: Ptr CSize)) (CSize (unusedRangeCount))
-    poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (unusedRangeSizeMax)
-    poke ((p `plusPtr` 40 :: Ptr CSize)) (CSize (blockCount))
+    poke ((p `plusPtr` 32 :: Ptr CSize)) (CSize (blockCount))
     f
-  cStructSize = 48
+  cStructSize = 40
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr DeviceSize)) (zero)
     poke ((p `plusPtr` 8 :: Ptr DeviceSize)) (zero)
     poke ((p `plusPtr` 16 :: Ptr CSize)) (CSize (zero))
     poke ((p `plusPtr` 24 :: Ptr CSize)) (CSize (zero))
-    poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (zero)
-    poke ((p `plusPtr` 40 :: Ptr CSize)) (CSize (zero))
+    poke ((p `plusPtr` 32 :: Ptr CSize)) (CSize (zero))
     f
 
 instance FromCStruct PoolStats where
@@ -4592,13 +4527,12 @@ instance FromCStruct PoolStats where
     unusedSize <- peek @DeviceSize ((p `plusPtr` 8 :: Ptr DeviceSize))
     allocationCount <- peek @CSize ((p `plusPtr` 16 :: Ptr CSize))
     unusedRangeCount <- peek @CSize ((p `plusPtr` 24 :: Ptr CSize))
-    unusedRangeSizeMax <- peek @DeviceSize ((p `plusPtr` 32 :: Ptr DeviceSize))
-    blockCount <- peek @CSize ((p `plusPtr` 40 :: Ptr CSize))
+    blockCount <- peek @CSize ((p `plusPtr` 32 :: Ptr CSize))
     pure $ PoolStats
-             size unusedSize (coerce @CSize @Word64 allocationCount) (coerce @CSize @Word64 unusedRangeCount) unusedRangeSizeMax (coerce @CSize @Word64 blockCount)
+             size unusedSize (coerce @CSize @Word64 allocationCount) (coerce @CSize @Word64 unusedRangeCount) (coerce @CSize @Word64 blockCount)
 
 instance Storable PoolStats where
-  sizeOf ~_ = 48
+  sizeOf ~_ = 40
   alignment ~_ = 8
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
@@ -4610,38 +4544,6 @@ instance Zero PoolStats where
            zero
            zero
            zero
-           zero
-
-
--- | VmaAllocation
---
--- Represents single memory allocation.
---
--- It may be either dedicated block of @VkDeviceMemory@ or a specific
--- region of a bigger block of this type plus unique offset.
---
--- There are multiple ways to create such object. You need to fill
--- structure 'AllocationCreateInfo'. For more information see /Choosing
--- memory type/.
---
--- Although the library provides convenience functions that create Vulkan
--- buffer or image, allocate memory for it and bind them together, binding
--- of the allocation to a buffer or an image is out of scope of the
--- allocation itself. Allocation object can exist without buffer\/image
--- bound, binding can be done manually by the user, and destruction of it
--- can be done independently of destruction of the allocation.
---
--- The object also remembers its size and some other information. To
--- retrieve this information, use function 'getAllocationInfo' and inspect
--- returned structure 'AllocationInfo'.
---
--- Some kinds allocations can be in lost state. For more information, see
--- /Lost allocations/.
-newtype Allocation = Allocation Word64
-  deriving newtype (Eq, Ord, Storable, Zero)
-  deriving anyclass (IsHandle)
-instance Show Allocation where
-  showsPrec p (Allocation x) = showParen (p >= 11) (showString "Allocation 0x" . showHex x)
 
 
 -- | VmaAllocationInfo
@@ -4658,9 +4560,7 @@ data AllocationInfo = AllocationInfo
     -- Same memory object can be shared by multiple allocations.
     --
     -- It can change after call to 'defragment' if this allocation is passed to
-    -- the function, or if allocation is lost.
-    --
-    -- If the allocation is lost, it is equal to @VK_NULL_HANDLE@.
+    -- the function.
     deviceMemory :: DeviceMemory
   , -- | Offset in @VkDeviceMemory@ object to the beginning of this allocation,
     -- in bytes. @(deviceMemory, offset)@ pair is unique to this allocation.
@@ -4673,11 +4573,11 @@ data AllocationInfo = AllocationInfo
     -- beginning of the allocation and apply this offset automatically.
     --
     -- It can change after call to 'defragment' if this allocation is passed to
-    -- the function, or if allocation is lost.
+    -- the function.
     offset :: DeviceSize
   , -- | Size of this allocation, in bytes.
     --
-    -- It never changes, unless allocation is lost.
+    -- It never changes.
     --
     -- Note
     --
@@ -4755,54 +4655,6 @@ instance Zero AllocationInfo where
            zero
 
 
--- | VmaDefragmentationContext
---
--- Represents Opaque object that represents started defragmentation
--- process.
---
--- Fill structure 'DefragmentationInfo2' and call function
--- 'defragmentationBegin' to create it. Call function 'defragmentationEnd'
--- to destroy it.
-newtype DefragmentationContext = DefragmentationContext Word64
-  deriving newtype (Eq, Ord, Storable, Zero)
-  deriving anyclass (IsHandle)
-instance Show DefragmentationContext where
-  showsPrec p (DefragmentationContext x) = showParen (p >= 11) (showString "DefragmentationContext 0x" . showHex x)
-
-
-type DefragmentationFlags = DefragmentationFlagBits
-
--- | Flags to be used in 'defragmentationBegin'. None at the moment. Reserved
--- for future use.
-newtype DefragmentationFlagBits = DefragmentationFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
-
-
-pattern DEFRAGMENTATION_FLAG_INCREMENTAL = DefragmentationFlagBits 0x00000001
-
-conNameDefragmentationFlagBits :: String
-conNameDefragmentationFlagBits = "DefragmentationFlagBits"
-
-enumPrefixDefragmentationFlagBits :: String
-enumPrefixDefragmentationFlagBits = "DEFRAGMENTATION_FLAG_INCREMENTAL"
-
-showTableDefragmentationFlagBits :: [(DefragmentationFlagBits, String)]
-showTableDefragmentationFlagBits = [(DEFRAGMENTATION_FLAG_INCREMENTAL, "")]
-
-instance Show DefragmentationFlagBits where
-  showsPrec = enumShowsPrec enumPrefixDefragmentationFlagBits
-                            showTableDefragmentationFlagBits
-                            conNameDefragmentationFlagBits
-                            (\(DefragmentationFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
-
-instance Read DefragmentationFlagBits where
-  readPrec = enumReadPrec enumPrefixDefragmentationFlagBits
-                          showTableDefragmentationFlagBits
-                          conNameDefragmentationFlagBits
-                          DefragmentationFlagBits
-
-
 -- | VmaDefragmentationInfo2
 --
 -- Parameters for defragmentation.
@@ -4815,8 +4667,7 @@ data DefragmentationInfo2 = DefragmentationInfo2
     --
     -- The array should have @allocationCount@ elements. The array should not
     -- contain nulls. Elements in the array should be unique - same allocation
-    -- cannot occur twice. It is safe to pass allocations that are in the lost
-    -- state - they are ignored. All allocations not present in this array are
+    -- cannot occur twice. All allocations not present in this array are
     -- considered non-moveable during this defragmentation.
     allocations :: Vector Allocation
   , -- | Optional, output. Pointer to array that will be filled with information
@@ -5160,63 +5011,6 @@ instance Zero DefragmentationStats where
            zero
 
 
-type VirtualBlockCreateFlags = VirtualBlockCreateFlagBits
-
--- | Flags to be passed as /VmaVirtualBlockCreateInfo::flags/.
-newtype VirtualBlockCreateFlagBits = VirtualBlockCreateFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
-
--- | Enables alternative, linear allocation algorithm in this virtual block.
---
--- Specify this flag to enable linear allocation algorithm, which always
--- creates new allocations after last one and doesn\'t reuse space from
--- allocations freed in between. It trades memory consumption for
--- simplified algorithm and data structure, which has better performance
--- and uses less memory for metadata.
---
--- By using this flag, you can achieve behavior of free-at-once, stack,
--- ring buffer, and double stack. For details, see documentation chapter
--- /Linear allocation algorithm/.
-pattern VIRTUAL_BLOCK_CREATE_LINEAR_ALGORITHM_BIT = VirtualBlockCreateFlagBits 0x00000001
--- | Enables alternative, buddy allocation algorithm in this virtual block.
---
--- It operates on a tree of blocks, each having size that is a power of two
--- and a half of its parent\'s size. Comparing to default algorithm, this
--- one provides faster allocation and deallocation and decreased external
--- fragmentation, at the expense of more memory wasted (internal
--- fragmentation). For details, see documentation chapter /Buddy allocation
--- algorithm/.
-pattern VIRTUAL_BLOCK_CREATE_BUDDY_ALGORITHM_BIT  = VirtualBlockCreateFlagBits 0x00000002
--- | Bit mask to extract only @ALGORITHM@ bits from entire set of flags.
-pattern VIRTUAL_BLOCK_CREATE_ALGORITHM_MASK       = VirtualBlockCreateFlagBits 0x00000003
-
-conNameVirtualBlockCreateFlagBits :: String
-conNameVirtualBlockCreateFlagBits = "VirtualBlockCreateFlagBits"
-
-enumPrefixVirtualBlockCreateFlagBits :: String
-enumPrefixVirtualBlockCreateFlagBits = "VIRTUAL_BLOCK_CREATE_"
-
-showTableVirtualBlockCreateFlagBits :: [(VirtualBlockCreateFlagBits, String)]
-showTableVirtualBlockCreateFlagBits =
-  [ (VIRTUAL_BLOCK_CREATE_LINEAR_ALGORITHM_BIT, "LINEAR_ALGORITHM_BIT")
-  , (VIRTUAL_BLOCK_CREATE_BUDDY_ALGORITHM_BIT , "BUDDY_ALGORITHM_BIT")
-  , (VIRTUAL_BLOCK_CREATE_ALGORITHM_MASK      , "ALGORITHM_MASK")
-  ]
-
-instance Show VirtualBlockCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixVirtualBlockCreateFlagBits
-                            showTableVirtualBlockCreateFlagBits
-                            conNameVirtualBlockCreateFlagBits
-                            (\(VirtualBlockCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
-
-instance Read VirtualBlockCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixVirtualBlockCreateFlagBits
-                          showTableVirtualBlockCreateFlagBits
-                          conNameVirtualBlockCreateFlagBits
-                          VirtualBlockCreateFlagBits
-
-
 -- | VmaVirtualBlockCreateInfo
 --
 -- Parameters of created 'VirtualBlock' object to be passed to
@@ -5273,58 +5067,6 @@ instance Zero VirtualBlockCreateInfo where
            zero
            zero
            Nothing
-
-
-type VirtualAllocationCreateFlags = VirtualAllocationCreateFlagBits
-
--- | Flags to be passed as /VmaVirtualAllocationCreateInfo::flags/.
-newtype VirtualAllocationCreateFlagBits = VirtualAllocationCreateFlagBits Flags
-  deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
-
--- | Allocation will be created from upper stack in a double stack pool.
---
--- This flag is only allowed for virtual blocks created with
--- 'VIRTUAL_BLOCK_CREATE_LINEAR_ALGORITHM_BIT' flag.
-pattern VIRTUAL_ALLOCATION_CREATE_UPPER_ADDRESS_BIT              = VirtualAllocationCreateFlagBits 0x00000040
--- | Allocation strategy that tries to minimize memory usage.
-pattern VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT        = VirtualAllocationCreateFlagBits 0x00010000
--- | Allocation strategy that tries to minimize allocation time.
-pattern VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT          = VirtualAllocationCreateFlagBits 0x00040000
--- | Allocation strategy that tries to minimize memory fragmentation.
-pattern VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT = VirtualAllocationCreateFlagBits 0x00020000
--- | A bit mask to extract only @STRATEGY@ bits from entire set of flags.
---
--- These stategy flags are binary compatible with equivalent flags in
--- 'AllocationCreateFlagBits'.
-pattern VIRTUAL_ALLOCATION_CREATE_STRATEGY_MASK                  = VirtualAllocationCreateFlagBits 0x00070000
-
-conNameVirtualAllocationCreateFlagBits :: String
-conNameVirtualAllocationCreateFlagBits = "VirtualAllocationCreateFlagBits"
-
-enumPrefixVirtualAllocationCreateFlagBits :: String
-enumPrefixVirtualAllocationCreateFlagBits = "VIRTUAL_ALLOCATION_CREATE_"
-
-showTableVirtualAllocationCreateFlagBits :: [(VirtualAllocationCreateFlagBits, String)]
-showTableVirtualAllocationCreateFlagBits =
-  [ (VIRTUAL_ALLOCATION_CREATE_UPPER_ADDRESS_BIT             , "UPPER_ADDRESS_BIT")
-  , (VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT       , "STRATEGY_MIN_MEMORY_BIT")
-  , (VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT         , "STRATEGY_MIN_TIME_BIT")
-  , (VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT, "STRATEGY_MIN_FRAGMENTATION_BIT")
-  , (VIRTUAL_ALLOCATION_CREATE_STRATEGY_MASK                 , "STRATEGY_MASK")
-  ]
-
-instance Show VirtualAllocationCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixVirtualAllocationCreateFlagBits
-                            showTableVirtualAllocationCreateFlagBits
-                            conNameVirtualAllocationCreateFlagBits
-                            (\(VirtualAllocationCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
-
-instance Read VirtualAllocationCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixVirtualAllocationCreateFlagBits
-                          showTableVirtualAllocationCreateFlagBits
-                          conNameVirtualAllocationCreateFlagBits
-                          VirtualAllocationCreateFlagBits
 
 
 -- | VmaVirtualAllocationCreateInfo
@@ -5444,19 +5186,4 @@ instance Zero VirtualAllocationInfo where
   zero = VirtualAllocationInfo
            zero
            zero
-
-
--- | VmaVirtualBlock
---
--- Handle to a virtual block object that allows to use core allocation
--- algorithm without allocating any real GPU memory.
---
--- Fill in 'VirtualBlockCreateInfo' structure and Use 'createVirtualBlock'
--- to create it. Use 'destroyVirtualBlock' to destroy it. For more
--- information, see documentation chapter /Virtual allocator/.
-newtype VirtualBlock = VirtualBlock Word64
-  deriving newtype (Eq, Ord, Storable, Zero)
-  deriving anyclass (IsHandle)
-instance Show VirtualBlock where
-  showsPrec p (VirtualBlock x) = showParen (p >= 11) (showString "VirtualBlock 0x" . showHex x)
 

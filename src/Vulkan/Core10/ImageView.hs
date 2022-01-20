@@ -753,6 +753,28 @@ instance Zero ImageSubresourceRange where
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
+-- -   #VUID-VkImageViewCreateInfo-usage-06516# If @usage@ contains
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT',
+--     then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV',
+--     if the image is created with
+--     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
+--     feature is enabled
+--
+-- -   #VUID-VkImageViewCreateInfo-usage-06517# If @usage@ contains
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT',
+--     then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     must contain
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV',
+--     if the image is created with
+--     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
+--     feature is enabled
+--
 -- -   #VUID-VkImageViewCreateInfo-usage-02652# If @usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT',
 --     then the image view’s

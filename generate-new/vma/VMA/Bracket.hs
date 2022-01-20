@@ -29,7 +29,7 @@ brackets marshaledCommands = context "brackets" $ do
               [ (mcName, m)
               | m@MarshaledCommand {..} <- toList marshaledCommands
               ]
-        in  note "Unable to find marshaled command" . (`Map.lookup` mcMap)
+        in \c ->  note ("Unable to find marshaled command " <> show c) . (`Map.lookup` mcMap) $ c
       autoBracket' :: BracketType -> CName -> CName -> CName -> Sem r Bracket
       autoBracket' bracketType create destroy with = do
         create'  <- getMarshaledCommand create
@@ -42,7 +42,6 @@ brackets marshaledCommands = context "brackets" $ do
     , autoBracket' BracketCPS "vmaAllocateMemoryForBuffer" "vmaFreeMemory" "vmaWithMemoryForBuffer"
     , autoBracket' BracketCPS "vmaAllocateMemoryForImage" "vmaFreeMemory" "vmaWithMemoryForImage"
     , autoBracket' BracketCPS "vmaAllocateMemoryPages" "vmaFreeMemoryPages" "vmaWithMemoryPages"
-    , autoBracket' BracketCPS "vmaCreateLostAllocation" "vmaFreeMemory" "vmaWithLostAllocation"
     , autoBracket' BracketCPS "vmaMapMemory" "vmaUnmapMemory" "vmaWithMappedMemory"
     , autoBracket' BracketCPS "vmaDefragmentationBegin" "vmaDefragmentationEnd" "vmaWithDefragmentation"
     , autoBracket' BracketBookend "vmaBeginDefragmentationPass" "vmaEndDefragmentationPass" "vmaUseDefragmentationPass"

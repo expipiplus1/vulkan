@@ -20,6 +20,7 @@ import           Data.Ord
 import           Data.String                        ( IsString )
 import           Data.Text                   hiding ( maximum
                                                     , partition
+                                                    , elem
                                                     )
 import qualified Data.Text                         as T
 import           Data.Text.Encoding

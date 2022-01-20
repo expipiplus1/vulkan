@@ -262,6 +262,10 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-pSurfaceInfo-06520#
+--     @pSurfaceInfo->surface@ /must/ be a valid
+--     'Vulkan.Extensions.Handles.SurfaceKHR' handle
+--
 -- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-pSurfaceInfo-06210#
 --     @pSurfaceInfo->surface@ /must/ be supported by @physicalDevice@, as
 --     reported by
@@ -362,9 +366,15 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkGetPhysicalDeviceSurfaceFormats2KHR-pSurfaceInfo-06210#
---     @pSurfaceInfo->surface@ /must/ be supported by @physicalDevice@, as
---     reported by
+-- -   #VUID-vkGetPhysicalDeviceSurfaceFormats2KHR-pSurfaceInfo-06521# If
+--     the @VK_GOOGLE_surfaceless_query@ extension is not enabled,
+--     @pSurfaceInfo->surface@ /must/ be a valid
+--     'Vulkan.Extensions.Handles.SurfaceKHR' handle
+--
+-- -   #VUID-vkGetPhysicalDeviceSurfaceFormats2KHR-pSurfaceInfo-06522# If
+--     @pSurfaceInfo->surface@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ be supported by
+--     @physicalDevice@, as reported by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
 --     or an equivalent platform-specific mechanism
 --
@@ -477,6 +487,32 @@ getPhysicalDeviceSurfaceFormats2KHR physicalDevice surfaceInfo = liftIO . evalCo
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveWin32InfoEXT'
 --     structure /must/ be included in the @pNext@ chain
 --
+-- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-pSurfaceInfo-06526# When
+--     passed as the @pSurfaceInfo@ parameter of
+--     'getPhysicalDeviceSurfaceCapabilities2KHR', if the
+--     @VK_GOOGLE_surfaceless_query@ extension is enabled and the @pNext@
+--     chain of the @pSurfaceCapabilities@ parameter includes
+--     'Vulkan.Extensions.VK_KHR_surface_protected_capabilities.SurfaceProtectedCapabilitiesKHR',
+--     then @surface@ /can/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'.
+--     Otherwise, @surface@ /must/ be a valid
+--     'Vulkan.Extensions.Handles.SurfaceKHR' handle
+--
+-- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-pSurfaceInfo-06527# When
+--     passed as the @pSurfaceInfo@ parameter of
+--     'getPhysicalDeviceSurfaceFormats2KHR', if the
+--     @VK_GOOGLE_surfaceless_query@ extension is enabled, then @surface@
+--     /can/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'. Otherwise,
+--     @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
+--     handle
+--
+-- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-pSurfaceInfo-06528# When
+--     passed as the @pSurfaceInfo@ parameter of
+--     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.getPhysicalDeviceSurfacePresentModes2EXT',
+--     if the @VK_GOOGLE_surfaceless_query@ extension is enabled, then
+--     @surface@ /can/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE'.
+--     Otherwise, @surface@ /must/ be a valid
+--     'Vulkan.Extensions.Handles.SurfaceKHR' handle
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-sType-sType# @sType@ /must/ be
@@ -492,7 +528,8 @@ getPhysicalDeviceSurfaceFormats2KHR physicalDevice surfaceInfo = liftIO . evalCo
 -- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-sType-unique# The @sType@
 --     value of each struct in the @pNext@ chain /must/ be unique
 --
--- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-surface-parameter# @surface@
+-- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-surface-parameter# If
+--     @surface@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @surface@
 --     /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR' handle
 --
 -- = See Also
@@ -540,7 +577,6 @@ instance (Extendss PhysicalDeviceSurfaceInfo2KHR es, PokeChain es) => ToCStruct 
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR)
     pNext' <- fmap castPtr . ContT $ withZeroChain @es
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    lift $ poke ((p `plusPtr` 16 :: Ptr SurfaceKHR)) (zero)
     lift $ f
 
 instance (Extendss PhysicalDeviceSurfaceInfo2KHR es, PeekChain es) => FromCStruct (PhysicalDeviceSurfaceInfo2KHR es) where

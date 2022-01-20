@@ -112,6 +112,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.SubpassContents (SubpassContents)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve (SubpassDescriptionDepthStencilResolve)
 import Vulkan.Core10.Enums.SubpassDescriptionFlagBits (SubpassDescriptionFlags)
+import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_fragment_density_map_offset (SubpassFragmentDensityMapOffsetEndInfoQCOM)
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2))
@@ -434,7 +435,7 @@ cmdBeginRenderPass2 commandBuffer renderPassBegin subpassBeginInfo = liftIO . ev
 --
 -- Note that 'cmdEndRenderPass2' is *not* called if an exception is thrown
 -- by the inner action.
-cmdUseRenderPass2 :: forall a io r . (Extendss RenderPassBeginInfo a, PokeChain a, MonadIO io) => CommandBuffer -> RenderPassBeginInfo a -> SubpassBeginInfo -> SubpassEndInfo -> io r -> io r
+cmdUseRenderPass2 :: forall a io r . (Extendss RenderPassBeginInfo a, Extendss SubpassEndInfo a, PokeChain a, PokeChain a, MonadIO io) => CommandBuffer -> RenderPassBeginInfo a -> SubpassBeginInfo -> SubpassEndInfo a -> io r -> io r
 cmdUseRenderPass2 commandBuffer pRenderPassBegin pSubpassBeginInfo pSubpassEndInfo a =
   (cmdBeginRenderPass2 commandBuffer pRenderPassBegin pSubpassBeginInfo) *> a <* (cmdEndRenderPass2 commandBuffer pSubpassEndInfo)
 
@@ -444,7 +445,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCmdNextSubpass2
-  :: FunPtr (Ptr CommandBuffer_T -> Ptr SubpassBeginInfo -> Ptr SubpassEndInfo -> IO ()) -> Ptr CommandBuffer_T -> Ptr SubpassBeginInfo -> Ptr SubpassEndInfo -> IO ()
+  :: FunPtr (Ptr CommandBuffer_T -> Ptr SubpassBeginInfo -> Ptr (SomeStruct SubpassEndInfo) -> IO ()) -> Ptr CommandBuffer_T -> Ptr SubpassBeginInfo -> Ptr (SomeStruct SubpassEndInfo) -> IO ()
 
 -- | vkCmdNextSubpass2 - Transition to the next subpass of a render pass
 --
@@ -512,8 +513,8 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'SubpassBeginInfo',
 -- 'SubpassEndInfo'
-cmdNextSubpass2 :: forall io
-                 . (MonadIO io)
+cmdNextSubpass2 :: forall a io
+                 . (Extendss SubpassEndInfo a, PokeChain a, MonadIO io)
                 => -- | @commandBuffer@ is the command buffer in which to record the command.
                    CommandBuffer
                 -> -- | @pSubpassBeginInfo@ is a pointer to a 'SubpassBeginInfo' structure
@@ -522,7 +523,7 @@ cmdNextSubpass2 :: forall io
                    SubpassBeginInfo
                 -> -- | @pSubpassEndInfo@ is a pointer to a 'SubpassEndInfo' structure
                    -- containing information about how the previous subpass will be ended.
-                   SubpassEndInfo
+                   (SubpassEndInfo a)
                 -> io ()
 cmdNextSubpass2 commandBuffer subpassBeginInfo subpassEndInfo = liftIO . evalContT $ do
   let vkCmdNextSubpass2Ptr = pVkCmdNextSubpass2 (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
@@ -531,7 +532,7 @@ cmdNextSubpass2 commandBuffer subpassBeginInfo subpassEndInfo = liftIO . evalCon
   let vkCmdNextSubpass2' = mkVkCmdNextSubpass2 vkCmdNextSubpass2Ptr
   pSubpassBeginInfo <- ContT $ withCStruct (subpassBeginInfo)
   pSubpassEndInfo <- ContT $ withCStruct (subpassEndInfo)
-  lift $ traceAroundEvent "vkCmdNextSubpass2" (vkCmdNextSubpass2' (commandBufferHandle (commandBuffer)) pSubpassBeginInfo pSubpassEndInfo)
+  lift $ traceAroundEvent "vkCmdNextSubpass2" (vkCmdNextSubpass2' (commandBufferHandle (commandBuffer)) pSubpassBeginInfo (forgetExtensions pSubpassEndInfo))
   pure $ ()
 
 
@@ -540,7 +541,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCmdEndRenderPass2
-  :: FunPtr (Ptr CommandBuffer_T -> Ptr SubpassEndInfo -> IO ()) -> Ptr CommandBuffer_T -> Ptr SubpassEndInfo -> IO ()
+  :: FunPtr (Ptr CommandBuffer_T -> Ptr (SomeStruct SubpassEndInfo) -> IO ()) -> Ptr CommandBuffer_T -> Ptr (SomeStruct SubpassEndInfo) -> IO ()
 
 -- | vkCmdEndRenderPass2 - End the current render pass
 --
@@ -608,14 +609,14 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 VK_KHR_create_renderpass2>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_2 VK_VERSION_1_2>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'SubpassEndInfo'
-cmdEndRenderPass2 :: forall io
-                   . (MonadIO io)
+cmdEndRenderPass2 :: forall a io
+                   . (Extendss SubpassEndInfo a, PokeChain a, MonadIO io)
                   => -- | @commandBuffer@ is the command buffer in which to end the current render
                      -- pass instance.
                      CommandBuffer
                   -> -- | @pSubpassEndInfo@ is a pointer to a 'SubpassEndInfo' structure
                      -- containing information about how the previous subpass will be ended.
-                     SubpassEndInfo
+                     (SubpassEndInfo a)
                   -> io ()
 cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
   let vkCmdEndRenderPass2Ptr = pVkCmdEndRenderPass2 (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
@@ -623,7 +624,7 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndRenderPass2 is null" Nothing Nothing
   let vkCmdEndRenderPass2' = mkVkCmdEndRenderPass2 vkCmdEndRenderPass2Ptr
   pSubpassEndInfo <- ContT $ withCStruct (subpassEndInfo)
-  lift $ traceAroundEvent "vkCmdEndRenderPass2" (vkCmdEndRenderPass2' (commandBufferHandle (commandBuffer)) pSubpassEndInfo)
+  lift $ traceAroundEvent "vkCmdEndRenderPass2" (vkCmdEndRenderPass2' (commandBufferHandle (commandBuffer)) (forgetExtensions pSubpassEndInfo))
   pure $ ()
 
 
@@ -1228,6 +1229,39 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
 --     contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--
+-- -   #VUID-VkSubpassDescription2-linearColorAttachment-06499# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
+--     feature is enabled and the image is created with
+--     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR', all
+--     attachments in @pInputAttachments@ that are not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have image
+--     formats whose
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
+--     /must/ contain
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
+--
+-- -   #VUID-VkSubpassDescription2-linearColorAttachment-06500# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
+--     feature is enabled and the image is created with
+--     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR', all
+--     attachments in @pColorAttachments@ that are not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have image
+--     formats whose
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
+--     /must/ contain
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
+--
+-- -   #VUID-VkSubpassDescription2-linearColorAttachment-06501# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
+--     feature is enabled and the image is created with
+--     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR', all
+--     attachments in @pResolveAttachments@ that are not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have image
+--     formats whose
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
+--     /must/ contain
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
 --
 -- -   #VUID-VkSubpassDescription2-pColorAttachments-03070# If the
 --     @VK_AMD_mixed_attachment_samples@ extension is enabled, all
@@ -2207,6 +2241,16 @@ instance Zero SubpassBeginInfo where
 --
 -- == Valid Usage (Implicit)
 --
+-- -   #VUID-VkSubpassEndInfo-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SUBPASS_END_INFO'
+--
+-- -   #VUID-VkSubpassEndInfo-pNext-pNext# @pNext@ /must/ be @NULL@ or a
+--     pointer to a valid instance of
+--     'Vulkan.Extensions.VK_QCOM_fragment_density_map_offset.SubpassFragmentDensityMapOffsetEndInfoQCOM'
+--
+-- -   #VUID-VkSubpassEndInfo-sType-unique# The @sType@ value of each
+--     struct in the @pNext@ chain /must/ be unique
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_create_renderpass2 VK_KHR_create_renderpass2>,
@@ -2215,38 +2259,47 @@ instance Zero SubpassBeginInfo where
 -- 'Vulkan.Extensions.VK_KHR_create_renderpass2.cmdEndRenderPass2KHR',
 -- 'cmdNextSubpass2',
 -- 'Vulkan.Extensions.VK_KHR_create_renderpass2.cmdNextSubpass2KHR'
-data SubpassEndInfo = SubpassEndInfo
-  {}
-  deriving (Typeable, Eq)
+data SubpassEndInfo (es :: [Type]) = SubpassEndInfo
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es }
+  deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (SubpassEndInfo)
+deriving instance Generic (SubpassEndInfo (es :: [Type]))
 #endif
-deriving instance Show SubpassEndInfo
+deriving instance Show (Chain es) => Show (SubpassEndInfo es)
 
-instance ToCStruct SubpassEndInfo where
+instance Extensible SubpassEndInfo where
+  extensibleTypeName = "SubpassEndInfo"
+  setNext SubpassEndInfo{..} next' = SubpassEndInfo{next = next', ..}
+  getNext SubpassEndInfo{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends SubpassEndInfo e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @SubpassFragmentDensityMapOffsetEndInfoQCOM = Just f
+    | otherwise = Nothing
+
+instance (Extendss SubpassEndInfo es, PokeChain es) => ToCStruct (SubpassEndInfo es) where
   withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p SubpassEndInfo f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBPASS_END_INFO)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    f
+  pokeCStruct p SubpassEndInfo{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBPASS_END_INFO)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ f
   cStructSize = 16
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBPASS_END_INFO)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBPASS_END_INFO)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ f
 
-instance FromCStruct SubpassEndInfo where
-  peekCStruct _ = pure $ SubpassEndInfo
-                           
+instance (Extendss SubpassEndInfo es, PeekChain es) => FromCStruct (SubpassEndInfo es) where
+  peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
+    pure $ SubpassEndInfo
+             next
 
-instance Storable SubpassEndInfo where
-  sizeOf ~_ = 16
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero SubpassEndInfo where
+instance es ~ '[] => Zero (SubpassEndInfo es) where
   zero = SubpassEndInfo
-           
+           ()
 

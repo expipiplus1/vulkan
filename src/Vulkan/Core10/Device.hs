@@ -121,6 +121,7 @@ import Vulkan.Core10.DeviceInitialization (PhysicalDeviceFeatures)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2 (PhysicalDeviceFeatures2)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_density_map2 (PhysicalDeviceFragmentDensityMap2FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_density_map (PhysicalDeviceFragmentDensityMapFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_fragment_density_map_offset (PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_fragment_shader_barycentric (PhysicalDeviceFragmentShaderBarycentricFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_shader_interlock (PhysicalDeviceFragmentShaderInterlockFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_fragment_shading_rate_enums (PhysicalDeviceFragmentShadingRateEnumsFeaturesNV)
@@ -135,6 +136,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_inherited_viewport_scissor (Physic
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_inline_uniform_block (PhysicalDeviceInlineUniformBlockFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_invocation_mask (PhysicalDeviceInvocationMaskFeaturesHUAWEI)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_line_rasterization (PhysicalDeviceLineRasterizationFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_linear_color_attachment (PhysicalDeviceLinearColorAttachmentFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_maintenance4 (PhysicalDeviceMaintenance4FeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_memory_priority (PhysicalDeviceMemoryPriorityFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_mesh_shader (PhysicalDeviceMeshShaderFeaturesNV)
@@ -621,44 +623,44 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Core12.Promoted_From_VK_KHR_vulkan_memory_model.PhysicalDeviceVulkanMemoryModelFeatures'
 --     structure
 --
--- -   #VUID-VkDeviceCreateInfo-ppEnabledExtensions-04476# If
---     @ppEnabledExtensions@ contains @\"VK_KHR_shader_draw_parameters\"@
---     and the @pNext@ chain includes a
+-- -   #VUID-VkDeviceCreateInfo-ppEnabledExtensionNames-04476# If
+--     @ppEnabledExtensionNames@ contains
+--     @\"VK_KHR_shader_draw_parameters\"@ and the @pNext@ chain includes a
 --     'Vulkan.Core12.PhysicalDeviceVulkan11Features' structure, then
 --     'Vulkan.Core12.PhysicalDeviceVulkan11Features'::@shaderDrawParameters@
 --     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
--- -   #VUID-VkDeviceCreateInfo-ppEnabledExtensions-02831# If
---     @ppEnabledExtensions@ contains @\"VK_KHR_draw_indirect_count\"@ and
---     the @pNext@ chain includes a
+-- -   #VUID-VkDeviceCreateInfo-ppEnabledExtensionNames-02831# If
+--     @ppEnabledExtensionNames@ contains @\"VK_KHR_draw_indirect_count\"@
+--     and the @pNext@ chain includes a
 --     'Vulkan.Core12.PhysicalDeviceVulkan12Features' structure, then
 --     'Vulkan.Core12.PhysicalDeviceVulkan12Features'::@drawIndirectCount@
 --     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
--- -   #VUID-VkDeviceCreateInfo-ppEnabledExtensions-02832# If
---     @ppEnabledExtensions@ contains
+-- -   #VUID-VkDeviceCreateInfo-ppEnabledExtensionNames-02832# If
+--     @ppEnabledExtensionNames@ contains
 --     @\"VK_KHR_sampler_mirror_clamp_to_edge\"@ and the @pNext@ chain
 --     includes a 'Vulkan.Core12.PhysicalDeviceVulkan12Features' structure,
 --     then
 --     'Vulkan.Core12.PhysicalDeviceVulkan12Features'::@samplerMirrorClampToEdge@
 --     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
--- -   #VUID-VkDeviceCreateInfo-ppEnabledExtensions-02833# If
---     @ppEnabledExtensions@ contains @\"VK_EXT_descriptor_indexing\"@ and
---     the @pNext@ chain includes a
+-- -   #VUID-VkDeviceCreateInfo-ppEnabledExtensionNames-02833# If
+--     @ppEnabledExtensionNames@ contains @\"VK_EXT_descriptor_indexing\"@
+--     and the @pNext@ chain includes a
 --     'Vulkan.Core12.PhysicalDeviceVulkan12Features' structure, then
 --     'Vulkan.Core12.PhysicalDeviceVulkan12Features'::@descriptorIndexing@
 --     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
--- -   #VUID-VkDeviceCreateInfo-ppEnabledExtensions-02834# If
---     @ppEnabledExtensions@ contains @\"VK_EXT_sampler_filter_minmax\"@
---     and the @pNext@ chain includes a
+-- -   #VUID-VkDeviceCreateInfo-ppEnabledExtensionNames-02834# If
+--     @ppEnabledExtensionNames@ contains
+--     @\"VK_EXT_sampler_filter_minmax\"@ and the @pNext@ chain includes a
 --     'Vulkan.Core12.PhysicalDeviceVulkan12Features' structure, then
 --     'Vulkan.Core12.PhysicalDeviceVulkan12Features'::@samplerFilterMinmax@
 --     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
--- -   #VUID-VkDeviceCreateInfo-ppEnabledExtensions-02835# If
---     @ppEnabledExtensions@ contains
+-- -   #VUID-VkDeviceCreateInfo-ppEnabledExtensionNames-02835# If
+--     @ppEnabledExtensionNames@ contains
 --     @\"VK_EXT_shader_viewport_index_layer\"@ and the @pNext@ chain
 --     includes a 'Vulkan.Core12.PhysicalDeviceVulkan12Features' structure,
 --     then
@@ -671,7 +673,8 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     @VK_KHR_portability_subset@ extension is included in @pProperties@
 --     of
 --     'Vulkan.Core10.ExtensionDiscovery.enumerateDeviceExtensionProperties',
---     @ppEnabledExtensions@ /must/ include \"VK_KHR_portability_subset\"
+--     @ppEnabledExtensionNames@ /must/ include
+--     @\"VK_KHR_portability_subset\"@
 --
 -- -   #VUID-VkDeviceCreateInfo-shadingRateImage-04478# If
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
@@ -778,6 +781,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
 --     'Vulkan.Extensions.VK_EXT_fragment_density_map2.PhysicalDeviceFragmentDensityMap2FeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_fragment_density_map.PhysicalDeviceFragmentDensityMapFeaturesEXT',
+--     'Vulkan.Extensions.VK_QCOM_fragment_density_map_offset.PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM',
 --     'Vulkan.Extensions.VK_NV_fragment_shader_barycentric.PhysicalDeviceFragmentShaderBarycentricFeaturesNV',
 --     'Vulkan.Extensions.VK_EXT_fragment_shader_interlock.PhysicalDeviceFragmentShaderInterlockFeaturesEXT',
 --     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.PhysicalDeviceFragmentShadingRateEnumsFeaturesNV',
@@ -792,6 +796,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockFeaturesEXT',
 --     'Vulkan.Extensions.VK_HUAWEI_invocation_mask.PhysicalDeviceInvocationMaskFeaturesHUAWEI',
 --     'Vulkan.Extensions.VK_EXT_line_rasterization.PhysicalDeviceLineRasterizationFeaturesEXT',
+--     'Vulkan.Extensions.VK_NV_linear_color_attachment.PhysicalDeviceLinearColorAttachmentFeaturesNV',
 --     'Vulkan.Extensions.VK_KHR_maintenance4.PhysicalDeviceMaintenance4FeaturesKHR',
 --     'Vulkan.Extensions.VK_EXT_memory_priority.PhysicalDeviceMemoryPriorityFeaturesEXT',
 --     'Vulkan.Extensions.VK_NV_mesh_shader.PhysicalDeviceMeshShaderFeaturesNV',
@@ -934,6 +939,7 @@ instance Extensible DeviceCreateInfo where
   getNext DeviceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DeviceCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceLinearColorAttachmentFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM = Just f
     | Just Refl <- eqT @e @PhysicalDeviceImageViewMinLodFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDynamicRenderingFeaturesKHR = Just f
@@ -996,6 +1002,7 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @PhysicalDeviceDepthClipEnableFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceUniformBufferStandardLayoutFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDeviceScalarBlockLayoutFeatures = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFragmentDensityMap2FeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFragmentDensityMapFeaturesEXT = Just f
     | Just Refl <- eqT @e @DeviceMemoryOverallocationCreateInfoAMD = Just f

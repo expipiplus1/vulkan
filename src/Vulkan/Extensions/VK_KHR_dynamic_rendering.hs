@@ -588,13 +588,15 @@ pattern STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_NV = STRUCTURE_TYPE_ATTACHME
 --
 -- == Valid Usage
 --
--- -   #VUID-VkPipelineRenderingCreateInfoKHR-pColorAttachmentFormats-06064#
+-- -   #VUID-VkPipelineRenderingCreateInfoKHR-pColorAttachmentFormats-06495#
 --     If any element of @pColorAttachmentFormats@ is not
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', it /must/ be a format
 --     with
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
---     that include
+--     that includes either
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
+--     or
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
 --
 -- -   #VUID-VkPipelineRenderingCreateInfoKHR-depthAttachmentFormat-06065#
 --     If @depthAttachmentFormat@ is not
@@ -1907,6 +1909,16 @@ instance Zero PhysicalDeviceDynamicRenderingFeaturesKHR where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
 --     that include
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--
+-- -   #VUID-VkCommandBufferInheritanceRenderingInfoKHR-pColorAttachmentFormats-06492#
+--     When rendering to a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary Linear Color attachment>,
+--     if any element of @pColorAttachmentFormats@ is not
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', it /must/ be a format
+--     with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#potential-format-features potential format features>
+--     that include
+--     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
 --
 -- -   #VUID-VkCommandBufferInheritanceRenderingInfoKHR-stencilAttachmentFormat-06199#
 --     If @stencilAttachmentFormat@ is not

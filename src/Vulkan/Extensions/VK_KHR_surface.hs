@@ -675,6 +675,10 @@ foreign import ccall
 --
 -- == Valid Usage
 --
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilitiesKHR-surface-06523#
+--     @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
+--     handle
+--
 -- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilitiesKHR-surface-06211#
 --     @surface@ /must/ be supported by @physicalDevice@, as reported by
 --     'getPhysicalDeviceSurfaceSupportKHR' or an equivalent
@@ -776,10 +780,20 @@ foreign import ccall
 -- @colorSpace@ and @format@ equal to the corresponding SRGB (or UNORM)
 -- format.
 --
+-- If the @VK_GOOGLE_surfaceless_query@ extension is enabled, the values
+-- returned in @pSurfaceFormats@ will be identical for every valid surface
+-- created on this physical device, and so @surface@ /can/ be
+-- 'Vulkan.Core10.APIConstants.NULL_HANDLE'.
+--
 -- == Valid Usage
 --
--- -   #VUID-vkGetPhysicalDeviceSurfaceFormatsKHR-surface-06211# @surface@
---     /must/ be supported by @physicalDevice@, as reported by
+-- -   #VUID-vkGetPhysicalDeviceSurfaceFormatsKHR-surface-06524# If the
+--     @VK_GOOGLE_surfaceless_query@ extension is not enabled, @surface@
+--     /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR' handle
+--
+-- -   #VUID-vkGetPhysicalDeviceSurfaceFormatsKHR-surface-06525# If
+--     @surface@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/
+--     be supported by @physicalDevice@, as reported by
 --     'getPhysicalDeviceSurfaceSupportKHR' or an equivalent
 --     platform-specific mechanism
 --
@@ -789,9 +803,9 @@ foreign import ccall
 --     @physicalDevice@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   #VUID-vkGetPhysicalDeviceSurfaceFormatsKHR-surface-parameter#
---     @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
---     handle
+-- -   #VUID-vkGetPhysicalDeviceSurfaceFormatsKHR-surface-parameter# If
+--     @surface@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @surface@
+--     /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR' handle
 --
 -- -   #VUID-vkGetPhysicalDeviceSurfaceFormatsKHR-pSurfaceFormatCount-parameter#
 --     @pSurfaceFormatCount@ /must/ be a valid pointer to a @uint32_t@
@@ -804,8 +818,9 @@ foreign import ccall
 --     structures
 --
 -- -   #VUID-vkGetPhysicalDeviceSurfaceFormatsKHR-commonparent# Both of
---     @physicalDevice@, and @surface@ /must/ have been created, allocated,
---     or retrieved from the same 'Vulkan.Core10.Handles.Instance'
+--     @physicalDevice@, and @surface@ that are valid handles of
+--     non-ignored parameters /must/ have been created, allocated, or
+--     retrieved from the same 'Vulkan.Core10.Handles.Instance'
 --
 -- == Return Codes
 --
@@ -880,10 +895,21 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
 -- available modes were returned.
 --
+-- If the @VK_GOOGLE_surfaceless_query@ extension is enabled, the values
+-- returned in @pPresentModes@ will be identical for every valid surface
+-- created on this physical device, and so @surface@ /can/ be
+-- 'Vulkan.Core10.APIConstants.NULL_HANDLE'.
+--
 -- == Valid Usage
 --
--- -   #VUID-vkGetPhysicalDeviceSurfacePresentModesKHR-surface-06211#
---     @surface@ /must/ be supported by @physicalDevice@, as reported by
+-- -   #VUID-vkGetPhysicalDeviceSurfacePresentModesKHR-surface-06524# If
+--     the @VK_GOOGLE_surfaceless_query@ extension is not enabled,
+--     @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
+--     handle
+--
+-- -   #VUID-vkGetPhysicalDeviceSurfacePresentModesKHR-surface-06525# If
+--     @surface@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/
+--     be supported by @physicalDevice@, as reported by
 --     'getPhysicalDeviceSurfaceSupportKHR' or an equivalent
 --     platform-specific mechanism
 --
@@ -894,6 +920,7 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   #VUID-vkGetPhysicalDeviceSurfacePresentModesKHR-surface-parameter#
+--     If @surface@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @surface@ /must/ be a valid 'Vulkan.Extensions.Handles.SurfaceKHR'
 --     handle
 --
@@ -906,9 +933,9 @@ foreign import ccall
 --     pointer to an array of @pPresentModeCount@ 'PresentModeKHR' values
 --
 -- -   #VUID-vkGetPhysicalDeviceSurfacePresentModesKHR-commonparent# Both
---     of @physicalDevice@, and @surface@ /must/ have been created,
---     allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Instance'
+--     of @physicalDevice@, and @surface@ that are valid handles of
+--     non-ignored parameters /must/ have been created, allocated, or
+--     retrieved from the same 'Vulkan.Core10.Handles.Instance'
 --
 -- == Return Codes
 --

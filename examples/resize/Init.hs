@@ -33,9 +33,20 @@ import           Vulkan.Extensions.VK_KHR_swapchain
 import           Vulkan.Zero
 import           VulkanMemoryAllocator          ( Allocator
                                                 , AllocatorCreateInfo(..)
+                                                , VulkanFunctions(..)
                                                 , withAllocator
                                                 )
 
+import           Foreign.Ptr                    ( castFunPtr )
+import           Vulkan.Dynamic                 ( DeviceCmds
+                                                  ( DeviceCmds
+                                                  , pVkGetDeviceProcAddr
+                                                  )
+                                                , InstanceCmds
+                                                  ( InstanceCmds
+                                                  , pVkGetInstanceProcAddr
+                                                  )
+                                                )
 import           Vulkan.Requirement
 import           Vulkan.Utils.Initialization    ( createDebugInstanceFromRequirements
                                                 )
@@ -51,7 +62,7 @@ myApiVersion = API_VERSION_1_0
 createInstance :: forall m . MonadResource m => [ByteString] -> m Instance
 createInstance extraExtensions = do
   createDebugInstanceFromRequirements
-    [RequireInstanceExtension Nothing n minBound | n <- extraExtensions]
+    [ RequireInstanceExtension Nothing n minBound | n <- extraExtensions ]
     []
     zero
       { applicationInfo = Just zero { applicationName = Nothing
@@ -177,14 +188,20 @@ createVMA
 createVMA inst phys dev =
   snd
     <$> withAllocator
-          zero { flags            = zero
-               , physicalDevice   = physicalDeviceHandle phys
-               , device           = deviceHandle dev
-               , instance'        = instanceHandle inst
-               , vulkanApiVersion = myApiVersion
-               }
+          zero
+            { flags            = zero
+            , physicalDevice   = physicalDeviceHandle phys
+            , device           = deviceHandle dev
+            , instance'        = instanceHandle inst
+            , vulkanApiVersion = myApiVersion
+            , vulkanFunctions  = Just $ case inst of
+              Instance _ InstanceCmds {..} -> case dev of
+                Device _ DeviceCmds {..} -> zero
+                  { vkGetInstanceProcAddr = castFunPtr pVkGetInstanceProcAddr
+                  , vkGetDeviceProcAddr   = castFunPtr pVkGetDeviceProcAddr
+                  }
+            }
           allocate
-
 ----------------------------------------------------------------
 -- Bit utils
 ----------------------------------------------------------------

@@ -1,5 +1,5 @@
 name: VulkanMemoryAllocator
-version: "0.7.5"
+version: "0.8"
 synopsis: Bindings to the VulkanMemoryAllocator library
 category: Graphics
 maintainer: Ellie Hermaszewska <live.long.and.prosper@monoid.al>
@@ -20,7 +20,7 @@ library:
     src/lib.cpp
   dependencies:
     - base <5
-    - vulkan >= 3.6 && < 3.15
+    - vulkan >= 3.6 && < 3.16
     - bytestring
     - transformers
     - vector
@@ -36,7 +36,9 @@ library:
     # Work around https://github.com/haskell/cabal/pull/7074
     - condition: "impl(ghc >= 8.10)"
       ghc-options:
-        - -optcxx -std=c++11
+        - -optcxx -std=c++14
+    - condition: false
+      other-modules: Paths_VulkanMemoryAllocator
   ghc-options:
     - -Wall
     - -Wno-unticked-promoted-constructors
@@ -45,7 +47,7 @@ library:
     - -Wno-missing-signatures
     - -Wno-partial-type-signatures
   cxx-options:
-    - -std=c++11
+    - -std=c++14
   verbatim:
     other-modules:
 
