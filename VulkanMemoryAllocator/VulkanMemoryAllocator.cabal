@@ -47,8 +47,6 @@ flag vma-recording
 library
   exposed-modules:
       VulkanMemoryAllocator
-  autogen-modules:
-      Paths_VulkanMemoryAllocator
   hs-source-dirs:
       src
   default-extensions:
