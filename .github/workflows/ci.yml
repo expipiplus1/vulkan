@@ -224,7 +224,7 @@ jobs:
 
     strategy:
       matrix:
-        ghc: ['null', '"ghc901"']
+        ghc: ['null', '"ghc902"']
       fail-fast: false
 
     steps:
