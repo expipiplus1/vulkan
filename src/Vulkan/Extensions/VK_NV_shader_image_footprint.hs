@@ -127,7 +127,7 @@
 --
 -- == New SPIR-V Capability
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-ImageFootprintNV ImageFootprintNV>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ImageFootprintNV ImageFootprintNV>
 --
 -- == Issues
 --
@@ -190,7 +190,7 @@
 -- and y offset values and then atomically OR the updated mask bits into
 -- the contents of the corresponding footprint texel.
 --
--- >     uint64_t returnedMask = (uint64_t(footprint.mask.x) | (uint64_t(footprint.mask.y) link:https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html# 32));
+-- >     uint64_t returnedMask = (uint64_t(footprint.mask.x) | (uint64_t(footprint.mask.y) link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html# 32));
 -- >     uint64_t rightMask    = ((0xFF [^] footprint.offset.x) * 0x0101010101010101UL);
 -- >     uint64_t bottomMask   = 0xFFFFFFFFFFFFFFFFUL >> (8 * footprint.offset.y);
 -- >     uint64_t bottomRight  = returnedMask & bottomMask & rightMask;
@@ -262,7 +262,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shader_image_footprint Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_shader_image_footprint Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -306,7 +306,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- = Description
 --
 -- See
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-footprint Texel Footprint Evaluation>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-footprint Texel Footprint Evaluation>
 -- for more information.
 --
 -- If the 'PhysicalDeviceShaderImageFootprintFeaturesNV' structure is

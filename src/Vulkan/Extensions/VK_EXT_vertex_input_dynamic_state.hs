@@ -112,7 +112,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_vertex_input_dynamic_state Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_vertex_input_dynamic_state Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -196,7 +196,7 @@ foreign import ccall
 -- values used to create the currently active pipeline.
 --
 -- If the bound pipeline state object was also created with the
--- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
 -- dynamic state enabled, then
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
 -- can be used instead of 'cmdSetVertexInputEXT' to dynamically set the
@@ -205,7 +205,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdSetVertexInputEXT-None-04790# The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-vertexInputDynamicState vertexInputDynamicState>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-vertexInputDynamicState vertexInputDynamicState>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdSetVertexInputEXT-vertexBindingDescriptionCount-04791#
@@ -388,11 +388,11 @@ instance Zero PhysicalDeviceVertexInputDynamicStateFeaturesEXT where
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputBindingStride@
 --
 -- -   #VUID-VkVertexInputBindingDescription2EXT-divisor-04798# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-vertexAttributeInstanceRateZeroDivisor vertexAttributeInstanceRateZeroDivisor>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-vertexAttributeInstanceRateZeroDivisor vertexAttributeInstanceRateZeroDivisor>
 --     feature is not enabled, @divisor@ /must/ not be @0@
 --
 -- -   #VUID-VkVertexInputBindingDescription2EXT-divisor-04799# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-vertexAttributeInstanceRateDivisor vertexAttributeInstanceRateDivisor>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-vertexAttributeInstanceRateDivisor vertexAttributeInstanceRateDivisor>
 --     feature is not enabled, @divisor@ /must/ be @1@
 --
 -- -   #VUID-VkVertexInputBindingDescription2EXT-divisor-06226# @divisor@
@@ -433,14 +433,14 @@ data VertexInputBindingDescription2EXT = VertexInputBindingDescription2EXT
   , -- | @divisor@ is the number of successive instances that will use the same
     -- value of the vertex attribute when instanced rendering is enabled. This
     -- member /can/ be set to a value other than @1@ if the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-vertexAttributeInstanceRateDivisor vertexAttributeInstanceRateDivisor>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-vertexAttributeInstanceRateDivisor vertexAttributeInstanceRateDivisor>
     -- feature is enabled. For example, if the divisor is N, the same vertex
     -- attribute will be applied to N successive instances before moving on to
     -- the next vertex attribute. The maximum value of @divisor@ is
     -- implementation-dependent and can be queried using
     -- 'Vulkan.Extensions.VK_EXT_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorPropertiesEXT'::@maxVertexAttribDivisor@.
     -- A value of @0@ /can/ be used for the divisor if the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-vertexAttributeInstanceRateZeroDivisor vertexAttributeInstanceRateZeroDivisor>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-vertexAttributeInstanceRateZeroDivisor vertexAttributeInstanceRateZeroDivisor>
     -- feature is enabled. In this case, the same vertex attribute will be
     -- applied to all instances.
     divisor :: Word32

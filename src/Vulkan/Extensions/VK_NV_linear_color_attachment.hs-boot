@@ -51,20 +51,20 @@
 -- attachments when all the color attachments in the render pass instance
 -- have 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' tiling. This
 -- extension adds a new flag bit
--- 'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
+-- 'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
 -- that extends the existing
--- 'Vulkan.Extensions.VK_KHR_acceleration_structure.FormatFeatureFlagBits2KHR'
+-- 'Vulkan.Extensions.VK_KHR_format_feature_flags2.FormatFeatureFlagBits2KHR'
 -- bits. This flag /can/ be set for renderable color formats in the
 -- 'Vulkan.Extensions.VK_KHR_format_feature_flags2.FormatProperties3KHR'::@linearTilingFeatures@
 -- format properties structure member. Formats with the
--- 'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
+-- 'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
 -- flag /may/ be used as color attachments as long as all the color
 -- attachments in the render pass instance have
 -- 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' tiling, and the
 -- formats their images views are created with have
 -- 'Vulkan.Extensions.VK_KHR_format_feature_flags2.FormatProperties3KHR'::@linearTilingFeatures@
 -- which include
--- 'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'.
+-- 'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'.
 -- This extension supports both dynamic rendering and traditional render
 -- passes.
 --
@@ -91,9 +91,9 @@
 -- is supported:
 --
 -- -   Extending
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.FormatFeatureFlagBits2KHR':
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FormatFeatureFlagBits2':
 --
---     -   'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
+--     -   'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
 --
 -- == Version History
 --
@@ -108,7 +108,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_linear_color_attachment Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_linear_color_attachment Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

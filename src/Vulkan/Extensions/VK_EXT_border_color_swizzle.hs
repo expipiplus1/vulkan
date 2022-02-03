@@ -114,7 +114,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_border_color_swizzle Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_border_color_swizzle Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -164,7 +164,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_B
 --
 -- -   #VUID-VkSamplerBorderColorComponentMappingCreateInfoEXT-borderColorSwizzle-06437#
 --     The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-borderColorSwizzle borderColorSwizzle>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-borderColorSwizzle borderColorSwizzle>
 --     feature /must/ be enabled.
 --
 -- == Valid Usage (Implicit)
@@ -269,7 +269,7 @@ data PhysicalDeviceBorderColorSwizzleFeaturesEXT = PhysicalDeviceBorderColorSwiz
     -- 'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_CUSTOM_EXT', or
     -- 'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_INT_CUSTOM_EXT'
     -- @borderColor@ and an image view that uses a
-    -- non-<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-identity-mappings identity component mapping>,
+    -- non-<https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity component mapping>,
     -- when either @borderColorSwizzleFromImage@ is enabled or the
     -- 'SamplerBorderColorComponentMappingCreateInfoEXT' is specified.
     borderColorSwizzle :: Bool
@@ -281,7 +281,7 @@ data PhysicalDeviceBorderColorSwizzleFeaturesEXT = PhysicalDeviceBorderColorSwiz
     -- is not set, applications /can/ chain a
     -- 'SamplerBorderColorComponentMappingCreateInfoEXT' structure when
     -- creating samplers for use with image views that do not have an
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
     -- and, when those samplers are combined with image views using the same
     -- component mapping, sampled image operations that use opaque black or
     -- custom border colors will return the correct border color values.

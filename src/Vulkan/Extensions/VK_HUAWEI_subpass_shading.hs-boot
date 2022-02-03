@@ -108,9 +108,9 @@
 --     -   'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI'
 --
 -- -   Extending
---     'Vulkan.Extensions.VK_KHR_synchronization2.PipelineStageFlagBits2KHR':
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2':
 --
---     -   'Vulkan.Extensions.VK_KHR_synchronization2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI'
+--     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits':
@@ -335,7 +335,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_HUAWEI_subpass_shading Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_HUAWEI_subpass_shading Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

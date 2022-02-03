@@ -5,8 +5,6 @@ module Vulkan.Core10.Enums.PipelineCreateFlagBits  ( PipelineCreateFlags
                                                                            , PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT
                                                                            , PIPELINE_CREATE_DERIVATIVE_BIT
                                                                            , PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV
-                                                                           , PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT
-                                                                           , PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT
                                                                            , PIPELINE_CREATE_LIBRARY_BIT_KHR
                                                                            , PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV
                                                                            , PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR
@@ -21,6 +19,8 @@ module Vulkan.Core10.Enums.PipelineCreateFlagBits  ( PipelineCreateFlags
                                                                            , PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR
                                                                            , PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT
                                                                            , PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
+                                                                           , PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT
+                                                                           , PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT
                                                                            , PIPELINE_CREATE_DISPATCH_BASE_BIT
                                                                            , PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT
                                                                            , ..
@@ -134,21 +134,20 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --
 -- -   'PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV' specifies that the
 --     pipeline can be used in combination with
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#device-generated-commands>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#device-generated-commands>.
 --
--- -   'PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT'
---     specifies that pipeline creation will fail if a compile is required
---     for creation of a valid 'Vulkan.Core10.Handles.Pipeline' object;
---     'Vulkan.Core10.Enums.Result.PIPELINE_COMPILE_REQUIRED_EXT' will be
+-- -   'PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT' specifies
+--     that pipeline creation will fail if a compile is required for
+--     creation of a valid 'Vulkan.Core10.Handles.Pipeline' object;
+--     'Vulkan.Core10.Enums.Result.PIPELINE_COMPILE_REQUIRED' will be
 --     returned by pipeline creation, and the
 --     'Vulkan.Core10.Handles.Pipeline' will be set to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'.
 --
 -- -   When creating multiple pipelines,
---     'PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT' specifies that
---     control will be returned to the application on failure of the
---     corresponding pipeline rather than continuing to create additional
---     pipelines.
+--     'PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT' specifies that control
+--     will be returned to the application on failure of the corresponding
+--     pipeline rather than continuing to create additional pipelines.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV' specifies that the
 --     pipeline is allowed to use @OpTraceRayMotionNV@.
@@ -164,7 +163,7 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 -- It is valid to set both 'PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT' and
 -- 'PIPELINE_CREATE_DERIVATIVE_BIT'. This allows a pipeline to be both a
 -- parent and possibly a child in a pipeline hierarchy. See
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipelines-pipeline-derivatives Pipeline Derivatives>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-pipeline-derivatives Pipeline Derivatives>
 -- for more information.
 --
 -- = See Also
@@ -182,10 +181,6 @@ pattern PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT                       = PipelineCr
 pattern PIPELINE_CREATE_DERIVATIVE_BIT                              = PipelineCreateFlagBits 0x00000004
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV"
 pattern PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV             = PipelineCreateFlagBits 0x00100000
--- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT"
-pattern PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT             = PipelineCreateFlagBits 0x00000200
--- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT"
-pattern PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT   = PipelineCreateFlagBits 0x00000100
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_LIBRARY_BIT_KHR"
 pattern PIPELINE_CREATE_LIBRARY_BIT_KHR                             = PipelineCreateFlagBits 0x00000800
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV"
@@ -214,6 +209,10 @@ pattern PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR = PipelineCr
 pattern PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT = PipelineCreateFlagBits 0x00400000
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"
 pattern PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = PipelineCreateFlagBits 0x00200000
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT"
+pattern PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT                 = PipelineCreateFlagBits 0x00000200
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT"
+pattern PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT       = PipelineCreateFlagBits 0x00000100
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_DISPATCH_BASE_BIT"
 pattern PIPELINE_CREATE_DISPATCH_BASE_BIT                           = PipelineCreateFlagBits 0x00000010
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT"
@@ -227,17 +226,15 @@ enumPrefixPipelineCreateFlagBits = "PIPELINE_CREATE_"
 
 showTablePipelineCreateFlagBits :: [(PipelineCreateFlagBits, String)]
 showTablePipelineCreateFlagBits =
-  [ (PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT                 , "DISABLE_OPTIMIZATION_BIT")
-  , (PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT                    , "ALLOW_DERIVATIVES_BIT")
-  , (PIPELINE_CREATE_DERIVATIVE_BIT                           , "DERIVATIVE_BIT")
-  , (PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV          , "RAY_TRACING_ALLOW_MOTION_BIT_NV")
-  , (PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT          , "EARLY_RETURN_ON_FAILURE_BIT_EXT")
-  , (PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT, "FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT")
-  , (PIPELINE_CREATE_LIBRARY_BIT_KHR                          , "LIBRARY_BIT_KHR")
-  , (PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV                 , "INDIRECT_BINDABLE_BIT_NV")
-  , (PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR , "CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR")
-  , (PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR               , "CAPTURE_STATISTICS_BIT_KHR")
-  , (PIPELINE_CREATE_DEFER_COMPILE_BIT_NV                     , "DEFER_COMPILE_BIT_NV")
+  [ (PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT                , "DISABLE_OPTIMIZATION_BIT")
+  , (PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT                   , "ALLOW_DERIVATIVES_BIT")
+  , (PIPELINE_CREATE_DERIVATIVE_BIT                          , "DERIVATIVE_BIT")
+  , (PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV         , "RAY_TRACING_ALLOW_MOTION_BIT_NV")
+  , (PIPELINE_CREATE_LIBRARY_BIT_KHR                         , "LIBRARY_BIT_KHR")
+  , (PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV                , "INDIRECT_BINDABLE_BIT_NV")
+  , (PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR, "CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR")
+  , (PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR              , "CAPTURE_STATISTICS_BIT_KHR")
+  , (PIPELINE_CREATE_DEFER_COMPILE_BIT_NV                    , "DEFER_COMPILE_BIT_NV")
   , ( PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR
     , "RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR"
     )
@@ -255,8 +252,10 @@ showTablePipelineCreateFlagBits =
   , ( PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
     , "RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"
     )
-  , (PIPELINE_CREATE_DISPATCH_BASE_BIT               , "DISPATCH_BASE_BIT")
-  , (PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT, "VIEW_INDEX_FROM_DEVICE_INDEX_BIT")
+  , (PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT          , "EARLY_RETURN_ON_FAILURE_BIT")
+  , (PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT, "FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT")
+  , (PIPELINE_CREATE_DISPATCH_BASE_BIT                    , "DISPATCH_BASE_BIT")
+  , (PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT     , "VIEW_INDEX_FROM_DEVICE_INDEX_BIT")
   ]
 
 instance Show PipelineCreateFlagBits where

@@ -479,7 +479,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_debug_utils Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -1199,7 +1199,7 @@ createDebugUtilsMessengerEXT :: forall io
                                 -- conditions under which this messenger will trigger the callback.
                                 DebugUtilsMessengerCreateInfoEXT
                              -> -- | @pAllocator@ controls host memory allocation as described in the
-                                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                 -- chapter.
                                 ("allocator" ::: Maybe AllocationCallbacks)
                              -> io (DebugUtilsMessengerEXT)
@@ -1296,7 +1296,7 @@ destroyDebugUtilsMessengerEXT :: forall io
                                  -- active.
                                  DebugUtilsMessengerEXT
                               -> -- | @pAllocator@ controls host memory allocation as described in the
-                                 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                 -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                  -- chapter.
                                  ("allocator" ::: Maybe AllocationCallbacks)
                               -> io ()
@@ -1405,7 +1405,7 @@ submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData =
 --     'Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_UNKNOWN', @objectHandle@
 --     /must/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a valid Vulkan
 --     handle of the type associated with @objectType@ as defined in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-object-types  and Vulkan Handle Relationship>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#debugging-object-types  and Vulkan Handle Relationship>
 --     table
 --
 -- == Valid Usage (Implicit)
@@ -1516,7 +1516,7 @@ data DebugUtilsObjectTagInfoEXT = DebugUtilsObjectTagInfoEXT
     -- #VUID-VkDebugUtilsObjectTagInfoEXT-objectHandle-01910# @objectHandle@
     -- /must/ be a valid Vulkan handle of the type associated with @objectType@
     -- as defined in the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-object-types  and Vulkan Handle Relationship>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#debugging-object-types  and Vulkan Handle Relationship>
     -- table
     objectHandle :: Word64
   , -- | @tagName@ is a numerical identifier of the tag.
@@ -1902,14 +1902,14 @@ data DebugUtilsMessengerCallbackDataEXT = DebugUtilsMessengerCallbackDataEXT
   , -- | @pQueueLabels@ is @NULL@ or a pointer to an array of
     -- 'DebugUtilsLabelEXT' active in the current 'Vulkan.Core10.Handles.Queue'
     -- at the time the callback was triggered. Refer to
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-queue-labels Queue Labels>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#debugging-queue-labels Queue Labels>
     -- for more information.
     queueLabels :: Vector DebugUtilsLabelEXT
   , -- | @pCmdBufLabels@ is @NULL@ or a pointer to an array of
     -- 'DebugUtilsLabelEXT' active in the current
     -- 'Vulkan.Core10.Handles.CommandBuffer' at the time the callback was
     -- triggered. Refer to
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-command-buffer-labels Command Buffer Labels>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#debugging-command-buffer-labels Command Buffer Labels>
     -- for more information.
     cmdBufLabels :: Vector DebugUtilsLabelEXT
   , -- | @pObjects@ is a pointer to an array of 'DebugUtilsObjectNameInfoEXT'

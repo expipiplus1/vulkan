@@ -120,7 +120,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_external_memory_fd Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_external_memory_fd Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -364,11 +364,11 @@ getMemoryFdPropertiesKHR device handleType fd = liftIO . evalContT $ do
 -- -   #VUID-VkImportMemoryFdInfoKHR-fd-01746# The memory represented by
 --     @fd@ /must/ have been created from a physical device and driver that
 --     is compatible with @device@ and @handleType@, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-memory-handle-types-compatibility>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#external-memory-handle-types-compatibility>
 --
 -- -   #VUID-VkImportMemoryFdInfoKHR-fd-01520# @fd@ /must/ obey any
 --     requirements listed for @handleType@ in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>
 --
 -- == Valid Usage (Implicit)
 --

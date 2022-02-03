@@ -139,7 +139,7 @@ createFence :: forall a io
                -- information about how the fence is to be created.
                (FenceCreateInfo a)
             -> -- | @pAllocator@ controls host memory allocation as described in the
-               -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+               -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                -- chapter.
                ("allocator" ::: Maybe AllocationCallbacks)
             -> io (Fence)
@@ -184,7 +184,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkDestroyFence-fence-01120# All
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-submission queue submission>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-submission queue submission>
 --     commands that refer to @fence@ /must/ have completed execution
 --
 -- -   #VUID-vkDestroyFence-fence-01121# If
@@ -228,7 +228,7 @@ destroyFence :: forall io
              -> -- | @fence@ is the handle of the fence to destroy.
                 Fence
              -> -- | @pAllocator@ controls host memory allocation as described in the
-                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                 -- chapter.
                 ("allocator" ::: Maybe AllocationCallbacks)
              -> io ()
@@ -256,7 +256,7 @@ foreign import ccall
 -- = Description
 --
 -- If any member of @pFences@ currently has its
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fences-importing payload imported>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-fences-importing payload imported>
 -- with temporary permanence, that fence’s prior permanent payload is first
 -- restored. The remaining operations described therefore operate on the
 -- restored payload.
@@ -349,18 +349,18 @@ foreign import ccall
 -- | 'Vulkan.Core10.Enums.Result.NOT_READY'         | The fence specified by @fence@ is unsignaled.                                                                          |
 -- +------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+
 -- | 'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST' | The device has been lost. See                                                                                          |
--- |                                                | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>. |
+-- |                                                | <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>. |
 -- +------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+
 --
 -- Fence Object Status Codes
 --
 -- If a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-submission queue submission>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-submission queue submission>
 -- command is pending execution, then the value returned by this command
 -- /may/ immediately be out of date.
 --
 -- If the device has been lost (see
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>),
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>),
 -- 'getFenceStatus' /may/ return any of the above status codes. If the
 -- device has been lost and 'getFenceStatus' is called repeatedly, it will
 -- eventually return either 'Vulkan.Core10.Enums.Result.SUCCESS' or
@@ -476,7 +476,7 @@ waitForFencesSafeOrUnsafe mkVkWaitForFences device fences waitAll timeout = lift
 -- @timeout@ has expired.
 --
 -- If device loss occurs (see
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>)
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>)
 -- before the timeout has expired, 'waitForFences' /must/ return in finite
 -- time with either 'Vulkan.Core10.Enums.Result.SUCCESS' or
 -- 'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'.

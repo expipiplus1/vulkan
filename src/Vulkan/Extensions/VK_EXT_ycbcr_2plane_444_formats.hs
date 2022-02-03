@@ -23,6 +23,11 @@
 --
 --     -   Requires @VK_KHR_sampler_ycbcr_conversion@
 --
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3-promotions Vulkan 1.3>
+--
 -- [__Contact__]
 --
 --     -   Tony Zlatinski
@@ -32,6 +37,10 @@
 --
 -- [__Last Modified Date__]
 --     2020-07-28
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.3 Core
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -64,17 +73,27 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.Format.Format':
 --
---     -   'Vulkan.Core10.Enums.Format.FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16_EXT'
+--     -   'FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16_EXT'
 --
---     -   'Vulkan.Core10.Enums.Format.FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16_EXT'
+--     -   'FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16_EXT'
 --
---     -   'Vulkan.Core10.Enums.Format.FORMAT_G16_B16R16_2PLANE_444_UNORM_EXT'
+--     -   'FORMAT_G16_B16R16_2PLANE_444_UNORM_EXT'
 --
---     -   'Vulkan.Core10.Enums.Format.FORMAT_G8_B8R8_2PLANE_444_UNORM_EXT'
+--     -   'FORMAT_G8_B8R8_2PLANE_444_UNORM_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_YCBCR_2_PLANE_444_FORMATS_FEATURES_EXT'
+--
+-- == Promotion to Vulkan 1.3
+--
+-- This extension has been partially promoted. The format enumerants
+-- introduced by the extension are included in core Vulkan 1.3, with the
+-- EXT suffix omitted. However, runtime support for these formats is
+-- optional in core Vulkan 1.3, while if this extension is supported,
+-- runtime support is mandatory. The feature structure is not promoted. The
+-- original enum names are still available as aliases of the core
+-- functionality.
 --
 -- == Version History
 --
@@ -89,11 +108,15 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_ycbcr_2plane_444_formats Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_ycbcr_2plane_444_formats Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_EXT_ycbcr_2plane_444_formats  ( PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT(..)
+module Vulkan.Extensions.VK_EXT_ycbcr_2plane_444_formats  ( pattern FORMAT_G8_B8R8_2PLANE_444_UNORM_EXT
+                                                          , pattern FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16_EXT
+                                                          , pattern FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16_EXT
+                                                          , pattern FORMAT_G16_B16R16_2PLANE_444_UNORM_EXT
+                                                          , PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT(..)
                                                           , EXT_YCBCR_2PLANE_444_FORMATS_SPEC_VERSION
                                                           , pattern EXT_YCBCR_2PLANE_444_FORMATS_SPEC_VERSION
                                                           , EXT_YCBCR_2PLANE_444_FORMATS_EXTENSION_NAME
@@ -121,7 +144,27 @@ import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Enums.StructureType (StructureType)
+import Vulkan.Core10.Enums.Format (Format(FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16))
+import Vulkan.Core10.Enums.Format (Format(FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16))
+import Vulkan.Core10.Enums.Format (Format(FORMAT_G16_B16R16_2PLANE_444_UNORM))
+import Vulkan.Core10.Enums.Format (Format(FORMAT_G8_B8R8_2PLANE_444_UNORM))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_YCBCR_2_PLANE_444_FORMATS_FEATURES_EXT))
+-- No documentation found for TopLevel "VK_FORMAT_G8_B8R8_2PLANE_444_UNORM_EXT"
+pattern FORMAT_G8_B8R8_2PLANE_444_UNORM_EXT = FORMAT_G8_B8R8_2PLANE_444_UNORM
+
+
+-- No documentation found for TopLevel "VK_FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16_EXT"
+pattern FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16_EXT = FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16
+
+
+-- No documentation found for TopLevel "VK_FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16_EXT"
+pattern FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16_EXT = FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16
+
+
+-- No documentation found for TopLevel "VK_FORMAT_G16_B16R16_2PLANE_444_UNORM_EXT"
+pattern FORMAT_G16_B16R16_2PLANE_444_UNORM_EXT = FORMAT_G16_B16R16_2PLANE_444_UNORM
+
+
 -- | VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT - Structure describing
 -- whether the implementation supports additional 2-plane 444 Y′CBCR
 -- formats
@@ -144,6 +187,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- Note
+--
+-- Although the formats defined by the @VK_EXT_ycbcr_2plane_444_formats@
+-- were promoted to Vulkan 1.3 as optional formats, the
+-- 'PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT' structure was not
+-- promoted to Vulkan 1.3.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_ycbcr_2plane_444_formats VK_EXT_ycbcr_2plane_444_formats>,
@@ -153,13 +203,13 @@ data PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT = PhysicalDeviceYcbcr2Plane4
   { -- | #features-ycbcr2plane444Formats# @ycbcr2plane444Formats@ indicates that
     -- the implementation supports the following 2-plane 444 Y′CBCR formats:
     --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_G8_B8R8_2PLANE_444_UNORM_EXT'
+    -- -   'Vulkan.Core10.Enums.Format.FORMAT_G8_B8R8_2PLANE_444_UNORM'
     --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16_EXT'
+    -- -   'Vulkan.Core10.Enums.Format.FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16'
     --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16_EXT'
+    -- -   'Vulkan.Core10.Enums.Format.FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16'
     --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_G16_B16R16_2PLANE_444_UNORM_EXT'
+    -- -   'Vulkan.Core10.Enums.Format.FORMAT_G16_B16R16_2PLANE_444_UNORM'
     ycbcr2plane444Formats :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

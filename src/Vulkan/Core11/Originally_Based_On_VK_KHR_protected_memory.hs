@@ -279,7 +279,7 @@ data PhysicalDeviceProtectedMemoryProperties = PhysicalDeviceProtectedMemoryProp
     -- have undefined values written, reads and queries will return undefined
     -- values. If this limit is 'Vulkan.Core10.FundamentalTypes.FALSE',
     -- applications /must/ not perform these operations. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-access-rules>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-protected-access-rules>
     -- for more information.
     protectedNoFault :: Bool }
   deriving (Typeable, Eq)

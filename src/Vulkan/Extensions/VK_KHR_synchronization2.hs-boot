@@ -23,6 +23,11 @@
 --
 --     -   Requires @VK_KHR_get_physical_device_properties2@
 --
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3-promotions Vulkan 1.3>
+--
 -- [__Contact__]
 --
 --     -   Tobias Hector
@@ -34,6 +39,8 @@
 --     2020-12-03
 --
 -- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.3 Core
 --
 --     -   Interacts with @VK_KHR_create_renderpass2@
 --
@@ -60,16 +67,12 @@
 --
 -- Layout transitions have been simplified as well; rather than requiring a
 -- different set of layouts for depth\/stencil\/color attachments, there
--- are generic
--- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR'
--- and 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR'
--- layouts which are contextually applied based on the image format. For
--- example, for a depth format image,
--- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR' is
--- equivalent to
+-- are generic 'IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR' and
+-- 'IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR' layouts which are contextually
+-- applied based on the image format. For example, for a depth format
+-- image, 'IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR' is equivalent to
 -- 'Vulkan.Extensions.VK_KHR_separate_depth_stencil_layouts.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL_KHR'.
--- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR'
--- also functionally replaces
+-- 'IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR' also functionally replaces
 -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL'.
 --
 -- Events are now more efficient, because they include memory dependency
@@ -115,9 +118,9 @@
 --     future changes.
 --
 -- -   Relevant pipeline stage masks can now be specified as empty with the
---     new
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_NONE_KHR'
---     and 'PIPELINE_STAGE_2_NONE_KHR' values.
+--     new 'PIPELINE_STAGE_NONE_KHR' and
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_NONE_KHR'
+--     values.
 --
 -- -   'MemoryBarrier2KHR' can be chained to
 --     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDependency2',
@@ -213,123 +216,129 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits':
 --
---     -   'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_NONE_KHR'
+--     -   'ACCESS_NONE_KHR'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.EventCreateFlagBits.EventCreateFlagBits':
 --
---     -   'Vulkan.Core10.Enums.EventCreateFlagBits.EVENT_CREATE_DEVICE_ONLY_BIT_KHR'
+--     -   'EVENT_CREATE_DEVICE_ONLY_BIT_KHR'
 --
 -- -   Extending 'Vulkan.Core10.Enums.ImageLayout.ImageLayout':
 --
---     -   'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR'
+--     -   'IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR'
 --
---     -   'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR'
+--     -   'IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits':
 --
---     -   'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_NONE_KHR'
+--     -   'PIPELINE_STAGE_NONE_KHR'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2_KHR'
+--     -   'STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO_KHR'
+--     -   'STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEPENDENCY_INFO_KHR'
+--     -   'STRUCTURE_TYPE_DEPENDENCY_INFO_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2_KHR'
+--     -   'STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR'
+--     -   'STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES_KHR'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO_KHR'
+--     -   'STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SUBMIT_INFO_2_KHR'
+--     -   'STRUCTURE_TYPE_SUBMIT_INFO_2_KHR'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_blend_operation_advanced VK_EXT_blend_operation_advanced>
 -- is supported:
 --
--- -   Extending 'AccessFlagBits2KHR':
+-- -   Extending 'Vulkan.Core13.Enums.AccessFlags2.AccessFlagBits2':
 --
---     -   'ACCESS_2_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT'
+--     -   'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conditional_rendering VK_EXT_conditional_rendering>
 -- is supported:
 --
--- -   Extending 'AccessFlagBits2KHR':
+-- -   Extending 'Vulkan.Core13.Enums.AccessFlags2.AccessFlagBits2':
 --
---     -   'ACCESS_2_CONDITIONAL_RENDERING_READ_BIT_EXT'
+--     -   'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_CONDITIONAL_RENDERING_READ_BIT_EXT'
 --
--- -   Extending 'PipelineStageFlagBits2KHR':
+-- -   Extending
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2':
 --
---     -   'PIPELINE_STAGE_2_CONDITIONAL_RENDERING_BIT_EXT'
+--     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_CONDITIONAL_RENDERING_BIT_EXT'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_fragment_density_map VK_EXT_fragment_density_map>
 -- is supported:
 --
--- -   Extending 'AccessFlagBits2KHR':
+-- -   Extending 'Vulkan.Core13.Enums.AccessFlags2.AccessFlagBits2':
 --
---     -   'ACCESS_2_FRAGMENT_DENSITY_MAP_READ_BIT_EXT'
+--     -   'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_FRAGMENT_DENSITY_MAP_READ_BIT_EXT'
 --
--- -   Extending 'PipelineStageFlagBits2KHR':
+-- -   Extending
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2':
 --
---     -   'PIPELINE_STAGE_2_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
+--     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>
 -- is supported:
 --
--- -   Extending 'AccessFlagBits2KHR':
+-- -   Extending 'Vulkan.Core13.Enums.AccessFlags2.AccessFlagBits2':
 --
---     -   'ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT'
+--     -   'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT'
 --
---     -   'ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT'
+--     -   'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT'
 --
---     -   'ACCESS_2_TRANSFORM_FEEDBACK_WRITE_BIT_EXT'
+--     -   'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_TRANSFORM_FEEDBACK_WRITE_BIT_EXT'
 --
--- -   Extending 'PipelineStageFlagBits2KHR':
+-- -   Extending
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2':
 --
---     -   'PIPELINE_STAGE_2_TRANSFORM_FEEDBACK_BIT_EXT'
+--     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TRANSFORM_FEEDBACK_BIT_EXT'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>
 -- is supported:
 --
--- -   Extending 'AccessFlagBits2KHR':
+-- -   Extending 'Vulkan.Core13.Enums.AccessFlags2.AccessFlagBits2':
 --
---     -   'ACCESS_2_ACCELERATION_STRUCTURE_READ_BIT_KHR'
+--     -   'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_ACCELERATION_STRUCTURE_READ_BIT_KHR'
 --
---     -   'ACCESS_2_ACCELERATION_STRUCTURE_WRITE_BIT_KHR'
+--     -   'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_ACCELERATION_STRUCTURE_WRITE_BIT_KHR'
 --
--- -   Extending 'PipelineStageFlagBits2KHR':
+-- -   Extending
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2':
 --
---     -   'PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
+--     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_fragment_shading_rate VK_KHR_fragment_shading_rate>
 -- is supported:
 --
--- -   Extending 'AccessFlagBits2KHR':
+-- -   Extending 'Vulkan.Core13.Enums.AccessFlags2.AccessFlagBits2':
 --
---     -   'ACCESS_2_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR'
+--     -   'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR'
 --
--- -   Extending 'PipelineStageFlagBits2KHR':
+-- -   Extending
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2':
 --
---     -   'PIPELINE_STAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
+--     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline VK_KHR_ray_tracing_pipeline>
 -- is supported:
 --
--- -   Extending 'PipelineStageFlagBits2KHR':
+-- -   Extending
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2':
 --
---     -   'PIPELINE_STAGE_2_RAY_TRACING_SHADER_BIT_KHR'
+--     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_RAY_TRACING_SHADER_BIT_KHR'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_diagnostic_checkpoints VK_NV_device_diagnostic_checkpoints>
@@ -345,37 +354,40 @@
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_generated_commands VK_NV_device_generated_commands>
 -- is supported:
 --
--- -   Extending 'AccessFlagBits2KHR':
+-- -   Extending 'Vulkan.Core13.Enums.AccessFlags2.AccessFlagBits2':
 --
---     -   'ACCESS_2_COMMAND_PREPROCESS_READ_BIT_NV'
+--     -   'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_COMMAND_PREPROCESS_READ_BIT_NV'
 --
---     -   'ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_NV'
+--     -   'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_NV'
 --
--- -   Extending 'PipelineStageFlagBits2KHR':
+-- -   Extending
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2':
 --
---     -   'PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_NV'
+--     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_NV'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_mesh_shader VK_NV_mesh_shader>
 -- is supported:
 --
--- -   Extending 'PipelineStageFlagBits2KHR':
+-- -   Extending
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2':
 --
---     -   'PIPELINE_STAGE_2_MESH_SHADER_BIT_NV'
+--     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MESH_SHADER_BIT_NV'
 --
---     -   'PIPELINE_STAGE_2_TASK_SHADER_BIT_NV'
+--     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TASK_SHADER_BIT_NV'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
 -- is supported:
 --
--- -   Extending 'AccessFlagBits2KHR':
+-- -   Extending 'Vulkan.Core13.Enums.AccessFlags2.AccessFlagBits2':
 --
 --     -   'ACCESS_2_ACCELERATION_STRUCTURE_READ_BIT_NV'
 --
 --     -   'ACCESS_2_ACCELERATION_STRUCTURE_WRITE_BIT_NV'
 --
--- -   Extending 'PipelineStageFlagBits2KHR':
+-- -   Extending
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2':
 --
 --     -   'PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_NV'
 --
@@ -385,13 +397,20 @@
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image VK_NV_shading_rate_image>
 -- is supported:
 --
--- -   Extending 'AccessFlagBits2KHR':
+-- -   Extending 'Vulkan.Core13.Enums.AccessFlags2.AccessFlagBits2':
 --
 --     -   'ACCESS_2_SHADING_RATE_IMAGE_READ_BIT_NV'
 --
--- -   Extending 'PipelineStageFlagBits2KHR':
+-- -   Extending
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2':
 --
 --     -   'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
+--
+-- == Promotion to Vulkan 1.3
+--
+-- Functionality in this extension is included in core Vulkan 1.3, with the
+-- KHR suffix omitted. The original type, enum and command names are still
+-- available as aliases of the core functionality.
 --
 -- == Examples
 --
@@ -419,39 +438,19 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_synchronization2 Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_synchronization2 Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_KHR_synchronization2  ( BufferMemoryBarrier2KHR
-                                                  , CheckpointData2NV
-                                                  , CommandBufferSubmitInfoKHR
-                                                  , DependencyInfoKHR
+module Vulkan.Extensions.VK_KHR_synchronization2  ( CheckpointData2NV
                                                   , ImageMemoryBarrier2KHR
-                                                  , MemoryBarrier2KHR
-                                                  , PhysicalDeviceSynchronization2FeaturesKHR
                                                   , QueueFamilyCheckpointProperties2NV
-                                                  , SemaphoreSubmitInfoKHR
-                                                  , SubmitInfo2KHR
-                                                  , PipelineStageFlags2KHR
-                                                  , PipelineStageFlagBits2KHR
                                                   ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
-import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
-import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
-import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
-import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
-data BufferMemoryBarrier2KHR
-
-instance ToCStruct BufferMemoryBarrier2KHR
-instance Show BufferMemoryBarrier2KHR
-
-instance FromCStruct BufferMemoryBarrier2KHR
-
-
+import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 (ImageMemoryBarrier2)
 data CheckpointData2NV
 
 instance ToCStruct CheckpointData2NV
@@ -460,45 +459,8 @@ instance Show CheckpointData2NV
 instance FromCStruct CheckpointData2NV
 
 
-data CommandBufferSubmitInfoKHR
-
-instance ToCStruct CommandBufferSubmitInfoKHR
-instance Show CommandBufferSubmitInfoKHR
-
-instance FromCStruct CommandBufferSubmitInfoKHR
-
-
-data DependencyInfoKHR
-
-instance ToCStruct DependencyInfoKHR
-instance Show DependencyInfoKHR
-
-instance FromCStruct DependencyInfoKHR
-
-
-type role ImageMemoryBarrier2KHR nominal
-data ImageMemoryBarrier2KHR (es :: [Type])
-
-instance (Extendss ImageMemoryBarrier2KHR es, PokeChain es) => ToCStruct (ImageMemoryBarrier2KHR es)
-instance Show (Chain es) => Show (ImageMemoryBarrier2KHR es)
-
-instance (Extendss ImageMemoryBarrier2KHR es, PeekChain es) => FromCStruct (ImageMemoryBarrier2KHR es)
-
-
-data MemoryBarrier2KHR
-
-instance ToCStruct MemoryBarrier2KHR
-instance Show MemoryBarrier2KHR
-
-instance FromCStruct MemoryBarrier2KHR
-
-
-data PhysicalDeviceSynchronization2FeaturesKHR
-
-instance ToCStruct PhysicalDeviceSynchronization2FeaturesKHR
-instance Show PhysicalDeviceSynchronization2FeaturesKHR
-
-instance FromCStruct PhysicalDeviceSynchronization2FeaturesKHR
+-- No documentation found for TopLevel "VkImageMemoryBarrier2KHR"
+type ImageMemoryBarrier2KHR = ImageMemoryBarrier2
 
 
 data QueueFamilyCheckpointProperties2NV
@@ -507,26 +469,4 @@ instance ToCStruct QueueFamilyCheckpointProperties2NV
 instance Show QueueFamilyCheckpointProperties2NV
 
 instance FromCStruct QueueFamilyCheckpointProperties2NV
-
-
-data SemaphoreSubmitInfoKHR
-
-instance ToCStruct SemaphoreSubmitInfoKHR
-instance Show SemaphoreSubmitInfoKHR
-
-instance FromCStruct SemaphoreSubmitInfoKHR
-
-
-type role SubmitInfo2KHR nominal
-data SubmitInfo2KHR (es :: [Type])
-
-instance (Extendss SubmitInfo2KHR es, PokeChain es) => ToCStruct (SubmitInfo2KHR es)
-instance Show (Chain es) => Show (SubmitInfo2KHR es)
-
-instance (Extendss SubmitInfo2KHR es, PeekChain es) => FromCStruct (SubmitInfo2KHR es)
-
-
-type PipelineStageFlags2KHR = PipelineStageFlagBits2KHR
-
-data PipelineStageFlagBits2KHR
 

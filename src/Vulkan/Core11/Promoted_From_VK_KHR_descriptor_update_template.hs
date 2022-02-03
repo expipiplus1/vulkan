@@ -144,7 +144,7 @@ createDescriptorUpdateTemplate :: forall io
                                   -- or 'updateDescriptorSetWithTemplate'.
                                   DescriptorUpdateTemplateCreateInfo
                                -> -- | @pAllocator@ controls host memory allocation as described in the
-                                  -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                  -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                   -- chapter.
                                   ("allocator" ::: Maybe AllocationCallbacks)
                                -> io (DescriptorUpdateTemplate)
@@ -238,7 +238,7 @@ destroyDescriptorUpdateTemplate :: forall io
                                 -> -- | @descriptorUpdateTemplate@ is the descriptor update template to destroy.
                                    DescriptorUpdateTemplate
                                 -> -- | @pAllocator@ controls host memory allocation as described in the
-                                   -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                   -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                    -- chapter.
                                    ("allocator" ::: Maybe AllocationCallbacks)
                                 -> io ()
@@ -421,16 +421,16 @@ updateDescriptorSetWithTemplate device descriptorSet descriptorUpdateTemplate da
 --     implicitly specified when using a descriptor update template to
 --     update descriptors, and all applicable consecutive bindings, as
 --     described by
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-updates-consecutive>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-updates-consecutive>
 --
 -- -   #VUID-VkDescriptorUpdateTemplateEntry-descriptor-02226# If
 --     @descriptor@ type is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK',
 --     @dstArrayElement@ /must/ be an integer multiple of @4@
 --
 -- -   #VUID-VkDescriptorUpdateTemplateEntry-descriptor-02227# If
 --     @descriptor@ type is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK',
 --     @descriptorCount@ /must/ be an integer multiple of @4@
 --
 -- == Valid Usage (Implicit)
@@ -451,7 +451,7 @@ data DescriptorUpdateTemplateEntry = DescriptorUpdateTemplateEntry
   , -- | @dstArrayElement@ is the starting element in the array belonging to
     -- @dstBinding@. If the descriptor binding identified by @dstBinding@ has a
     -- descriptor type of
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
     -- then @dstArrayElement@ specifies the starting byte offset to update.
     dstArrayElement :: Word32
   , -- | @descriptorCount@ is the number of descriptors to update. If
@@ -460,7 +460,7 @@ data DescriptorUpdateTemplateEntry = DescriptorUpdateTemplateEntry
     -- manner similar to 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'
     -- above. If the descriptor binding identified by @dstBinding@ has a
     -- descriptor type of
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
     -- then @descriptorCount@ specifies the number of bytes to update and the
     -- remaining array elements in the destination binding refer to the
     -- remaining number of bytes in it.
@@ -481,7 +481,7 @@ data DescriptorUpdateTemplateEntry = DescriptorUpdateTemplateEntry
     --
     -- The stride is useful in case the bindings are stored in structs along
     -- with other data. If @descriptorType@ is
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
     -- then the value of @stride@ is ignored and the stride is assumed to be
     -- @1@, i.e. the descriptor update information for them is always specified
     -- as a contiguous range.

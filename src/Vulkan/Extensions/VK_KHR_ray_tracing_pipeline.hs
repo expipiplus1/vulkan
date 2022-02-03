@@ -44,13 +44,13 @@
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_ray_tracing.txt GLSL_EXT_ray_tracing>
 --
 --     -   This extension interacts with
---         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.2 Vulkan 1.2>
+--         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#versions-1.2 Vulkan 1.2>
 --         and @VK_KHR_vulkan_memory_model@, adding the
---         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shader-call-related shader-call-related>
+--         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shader-call-related shader-call-related>
 --         relation of invocations,
---         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shader-call-order shader-call-order>
+--         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shader-call-order shader-call-order>
 --         partial order of dynamic instances of instructions, and the
---         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-shadercall ShaderCallKHR>
+--         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-scope-shadercall ShaderCallKHR>
 --         scope.
 --
 --     -   This extension interacts with @VK_KHR_pipeline_library@,
@@ -287,43 +287,43 @@
 --
 -- == New or Modified Built-In Variables
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-launchid LaunchIdKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-launchid LaunchIdKHR>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-launchsize LaunchSizeKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-launchsize LaunchSizeKHR>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-worldrayorigin WorldRayOriginKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-worldrayorigin WorldRayOriginKHR>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-worldraydirection WorldRayDirectionKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-worldraydirection WorldRayDirectionKHR>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-objectrayorigin ObjectRayOriginKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-objectrayorigin ObjectRayOriginKHR>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-objectraydirection ObjectRayDirectionKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-objectraydirection ObjectRayDirectionKHR>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-raytmin RayTminKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-raytmin RayTminKHR>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-raytmax RayTmaxKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-raytmax RayTmaxKHR>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-instancecustomindex InstanceCustomIndexKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-instancecustomindex InstanceCustomIndexKHR>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-instanceid InstanceId>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-instanceid InstanceId>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-objecttoworld ObjectToWorldKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-objecttoworld ObjectToWorldKHR>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-worldtoobject WorldToObjectKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-worldtoobject WorldToObjectKHR>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-hitkind HitKindKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-hitkind HitKindKHR>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-incomingrayflags IncomingRayFlagsKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-incomingrayflags IncomingRayFlagsKHR>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-raygeometryindex RayGeometryIndexKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-raygeometryindex RayGeometryIndexKHR>
 --
 -- -   (modified)@PrimitiveId@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-RayTracingKHR RayTracingKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-RayTracingKHR RayTracingKHR>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-RayTraversalPrimitiveCullingKHR RayTraversalPrimitiveCullingKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-RayTraversalPrimitiveCullingKHR RayTraversalPrimitiveCullingKHR>
 --
 -- == Issues
 --
@@ -345,7 +345,7 @@
 --
 -- -   removed vkCompileDeferredNV compilation functionality and replaced
 --     with
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#deferred-host-operations deferred host operations>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#deferred-host-operations deferred host operations>
 --     interactions for ray tracing
 --
 -- -   added 'PhysicalDeviceRayTracingPipelineFeaturesKHR' structure
@@ -370,17 +370,17 @@
 --     device build
 --
 -- -   added
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-library pipeline library>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-library pipeline library>
 --     support for ray tracing
 --
 -- -   added
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-traversal-watertight watertightness guarantees>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#ray-traversal-watertight watertightness guarantees>
 --
 -- -   added no-null-shader pipeline flags
 --     (@VK_PIPELINE_CREATE_RAY_TRACING_NO_NULL_*_SHADERS_BIT_KHR@)
 --
 -- -   added
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-tracing-shader-call memory model interactions>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#ray-tracing-shader-call memory model interactions>
 --     with ray tracing and define how subgroups work and can be repacked
 --
 -- (2) Can you give a more detailed comparision of differences and
@@ -706,7 +706,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_ray_tracing_pipeline Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -840,7 +840,7 @@ import Vulkan.Core10.Handles (Pipeline(..))
 import Vulkan.Core10.Handles (PipelineCache)
 import Vulkan.Core10.Handles (PipelineCache(..))
 import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)
-import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pipeline_creation_feedback (PipelineCreationFeedbackCreateInfoEXT)
+import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_feedback (PipelineCreationFeedbackCreateInfo)
 import Vulkan.Core10.Pipeline (PipelineDynamicStateCreateInfo)
 import Vulkan.Core10.Handles (PipelineLayout)
 import Vulkan.Extensions.VK_KHR_pipeline_library (PipelineLibraryCreateInfoKHR)
@@ -904,7 +904,7 @@ foreign import ccall
 --     the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR'
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT'
 --
 -- -   #VUID-vkCmdTraceRaysKHR-None-02691# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
@@ -960,7 +960,7 @@ foreign import ccall
 --     or storage texel buffer where the image format field of the
 --     @OpTypeImage@ is @Unknown@ /must/ have image format features that
 --     support
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdTraceRaysKHR-OpTypeImage-06424# Any
 --     'Vulkan.Core10.Handles.ImageView' or
@@ -968,7 +968,7 @@ foreign import ccall
 --     storage texel buffer where the image format field of the
 --     @OpTypeImage@ is @Unknown@ /must/ have image format features that
 --     support
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdTraceRaysKHR-None-02697# For each set /n/ that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
@@ -1626,7 +1626,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCreateRayTracingPipelinesKHR-pipelineCache-02903# If
 --     @pipelineCache@ was created with
---     'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT',
+--     'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT',
 --     host access to @pipelineCache@ /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>
 --
@@ -1640,13 +1640,13 @@ foreign import ccall
 --     @deferredOperation@ /must/ be complete
 --
 -- -   #VUID-vkCreateRayTracingPipelinesKHR-rayTracingPipeline-03586# The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCreateRayTracingPipelinesKHR-deferredOperation-03587# If
 --     @deferredOperation@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     the @flags@ member of elements of @pCreateInfos@ /must/ not include
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT'
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT'
 --
 -- == Valid Usage (Implicit)
 --
@@ -1697,7 +1697,7 @@ foreign import ccall
 --
 --     -   'Vulkan.Core10.Enums.Result.OPERATION_NOT_DEFERRED_KHR'
 --
---     -   'Vulkan.Core10.Enums.Result.PIPELINE_COMPILE_REQUIRED_EXT'
+--     -   'Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control.PIPELINE_COMPILE_REQUIRED_EXT'
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
@@ -1720,12 +1720,12 @@ createRayTracingPipelinesKHR :: forall io
                                 Device
                              -> -- | @deferredOperation@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE' or the
                                 -- handle of a valid 'Vulkan.Extensions.Handles.DeferredOperationKHR'
-                                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#deferred-host-operations-requesting request deferral>
+                                -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#deferred-host-operations-requesting request deferral>
                                 -- object for this command.
                                 DeferredOperationKHR
                              -> -- | @pipelineCache@ is either 'Vulkan.Core10.APIConstants.NULL_HANDLE',
                                 -- indicating that pipeline caching is disabled, or the handle of a valid
-                                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipelines-cache pipeline cache>
+                                -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-cache pipeline cache>
                                 -- object, in which case use of that cache is enabled for the duration of
                                 -- the command.
                                 PipelineCache
@@ -1733,7 +1733,7 @@ createRayTracingPipelinesKHR :: forall io
                                 -- 'RayTracingPipelineCreateInfoKHR' structures.
                                 ("createInfos" ::: Vector (SomeStruct RayTracingPipelineCreateInfoKHR))
                              -> -- | @pAllocator@ controls host memory allocation as described in the
-                                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                 -- chapter.
                                 ("allocator" ::: Maybe AllocationCallbacks)
                              -> io (Result, ("pipelines" ::: Vector Pipeline))
@@ -1810,7 +1810,7 @@ foreign import ccall
 --     the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR'
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT'
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02691# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
@@ -1866,7 +1866,7 @@ foreign import ccall
 --     or storage texel buffer where the image format field of the
 --     @OpTypeImage@ is @Unknown@ /must/ have image format features that
 --     support
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-OpTypeImage-06424# Any
 --     'Vulkan.Core10.Handles.ImageView' or
@@ -1874,7 +1874,7 @@ foreign import ccall
 --     storage texel buffer where the image format field of the
 --     @OpTypeImage@ is @Unknown@ /must/ have image format features that
 --     support
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02697# For each set /n/ that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
@@ -2210,7 +2210,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-rayTracingPipelineTraceRaysIndirect-03637#
 --     The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipelineTraceRaysIndirect ::rayTracingPipelineTraceRaysIndirect>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-rayTracingPipelineTraceRaysIndirect ::rayTracingPipelineTraceRaysIndirect>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-rayTracingMotionBlurPipelineTraceRaysIndirect-04951#
@@ -2398,7 +2398,7 @@ foreign import ccall
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, the stack size is computed as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-tracing-pipeline-stack Ray Tracing Pipeline Stack>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#ray-tracing-pipeline-stack Ray Tracing Pipeline Stack>.
 --
 -- == Valid Usage
 --
@@ -2643,7 +2643,7 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 --
 -- The parameters @basePipelineHandle@ and @basePipelineIndex@ are
 -- described in more detail in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipelines-pipeline-derivatives Pipeline Derivatives>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-pipeline-derivatives Pipeline Derivatives>.
 --
 -- When
 -- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'
@@ -2669,7 +2669,7 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 -- The default stack size for a pipeline if
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RAY_TRACING_PIPELINE_STACK_SIZE_KHR'
 -- is not provided is computed as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-tracing-pipeline-stack Ray Tracing Pipeline Stack>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#ray-tracing-pipeline-stack Ray Tracing Pipeline Stack>.
 --
 -- == Valid Usage
 --
@@ -2724,9 +2724,9 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 --     If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineCreationCacheControl pipelineCreationCacheControl>
 --     feature is not enabled, @flags@ /must/ not include
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT'
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT'
 --     or
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT'
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT'
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-stage-03425# If @flags@ does
 --     not include
@@ -2845,20 +2845,20 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-rayTraversalPrimitiveCulling-03596#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTraversalPrimitiveCulling rayTraversalPrimitiveCulling>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-rayTraversalPrimitiveCulling rayTraversalPrimitiveCulling>
 --     feature is not enabled, @flags@ /must/ not include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR'
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-rayTraversalPrimitiveCulling-03597#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTraversalPrimitiveCulling rayTraversalPrimitiveCulling>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-rayTraversalPrimitiveCulling rayTraversalPrimitiveCulling>
 --     feature is not enabled, @flags@ /must/ not include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR'
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-03598# If @flags@
 --     includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR',
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipelineShaderGroupHandleCaptureReplay rayTracingPipelineShaderGroupHandleCaptureReplay>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-rayTracingPipelineShaderGroupHandleCaptureReplay rayTracingPipelineShaderGroupHandleCaptureReplay>
 --     /must/ be enabled
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-rayTracingPipelineShaderGroupHandleCaptureReplay-03599#
@@ -2889,7 +2889,7 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-pNext-pNext# @pNext@ /must/
 --     be @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_EXT_pipeline_creation_feedback.PipelineCreationFeedbackCreateInfoEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_feedback.PipelineCreationFeedbackCreateInfo'
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-sType-unique# The @sType@
 --     value of each struct in the @pNext@ chain /must/ be unique
@@ -2964,7 +2964,7 @@ data RayTracingPipelineCreateInfoKHR (es :: [Type]) = RayTracingPipelineCreateIn
     -- pipeline.
     groups :: Vector RayTracingShaderGroupCreateInfoKHR
   , -- | @maxPipelineRayRecursionDepth@ is the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-tracing-recursion-depth maximum recursion depth>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#ray-tracing-recursion-depth maximum recursion depth>
     -- of shaders executed by this pipeline.
     maxPipelineRayRecursionDepth :: Word32
   , -- | @pLibraryInfo@ is a pointer to a
@@ -3003,7 +3003,7 @@ instance Extensible RayTracingPipelineCreateInfoKHR where
   getNext RayTracingPipelineCreateInfoKHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RayTracingPipelineCreateInfoKHR e => b) -> Maybe b
   extends _ f
-    | Just Refl <- eqT @e @PipelineCreationFeedbackCreateInfoEXT = Just f
+    | Just Refl <- eqT @e @PipelineCreationFeedbackCreateInfo = Just f
     | otherwise = Nothing
 
 instance (Extendss RayTracingPipelineCreateInfoKHR es, PokeChain es) => ToCStruct (RayTracingPipelineCreateInfoKHR es) where
@@ -3105,7 +3105,7 @@ instance es ~ '[] => Zero (RayTracingPipelineCreateInfoKHR es) where
 -- -   #features-rayTracingPipeline# @rayTracingPipeline@ indicates whether
 --     the implementation supports the ray tracing pipeline functionality.
 --     See
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-tracing Ray Tracing>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#ray-tracing Ray Tracing>.
 --
 -- -   #features-rayTracingPipelineShaderGroupHandleCaptureReplay#
 --     @rayTracingPipelineShaderGroupHandleCaptureReplay@ indicates whether
@@ -3128,7 +3128,7 @@ instance es ~ '[] => Zero (RayTracingPipelineCreateInfoKHR es) where
 -- -   #features-rayTraversalPrimitiveCulling#
 --     @rayTraversalPrimitiveCulling@ indicates whether the implementation
 --     supports
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#ray-traversal-culling-primitive primitive culling during ray traversal>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#ray-traversal-culling-primitive primitive culling during ray traversal>.
 --
 -- If the 'PhysicalDeviceRayTracingPipelineFeaturesKHR' structure is
 -- included in the @pNext@ chain of the
@@ -3508,7 +3508,7 @@ instance Zero TraceRaysIndirectCommandKHR where
 -- bytes used by any block declared in the @HitAttributeKHR@ storage class.
 -- As variables in these storage classes do not have explicit offsets, the
 -- size should be calculated as if each variable has a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-alignment-requirements scalar alignment>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-alignment-requirements scalar alignment>
 -- equal to the largest scalar alignment of any of the block’s members.
 --
 -- Note

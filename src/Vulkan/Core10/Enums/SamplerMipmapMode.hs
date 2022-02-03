@@ -19,7 +19,7 @@ import GHC.Show (Show(showsPrec))
 -- = Description
 --
 -- These modes are described in detail in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-texel-filtering Texel Filtering>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-texel-filtering Texel Filtering>.
 --
 -- = See Also
 --

@@ -107,7 +107,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_color_write_enable Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_color_write_enable Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -192,7 +192,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdSetColorWriteEnableEXT-None-04803# The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdSetColorWriteEnableEXT-attachmentCount-04804#
@@ -350,14 +350,14 @@ instance Zero PhysicalDeviceColorWriteEnableFeaturesEXT where
 -- 'Vulkan.Core10.FundamentalTypes.TRUE' values.
 --
 -- If the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
 -- feature is not enabled on the device, all
 -- 'Vulkan.Core10.FundamentalTypes.Bool32' elements in the
 -- @pColorWriteEnables@ array /must/ be
 -- 'Vulkan.Core10.FundamentalTypes.TRUE'.
 --
 -- Color Write Enable interacts with the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-color-write-mask Color Write Mask>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-color-write-mask Color Write Mask>
 -- as follows:
 --
 -- -   If @colorWriteEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE',
@@ -371,7 +371,7 @@ instance Zero PhysicalDeviceColorWriteEnableFeaturesEXT where
 -- == Valid Usage
 --
 -- -   #VUID-VkPipelineColorWriteCreateInfoEXT-pAttachments-04801# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
 --     feature is not enabled, all elements of @pColorWriteEnables@ /must/
 --     be 'Vulkan.Core10.FundamentalTypes.TRUE'
 --

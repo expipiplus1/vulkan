@@ -271,7 +271,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ANDROID_external_memory_android_hardware_buffer Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_ANDROID_external_memory_android_hardware_buffer Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -289,9 +289,6 @@ module Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer  ( g
                                                                              , ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME
                                                                              , pattern ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME
                                                                              , AHardwareBuffer
-                                                                             , FormatFeatureFlagBits2KHR(..)
-                                                                             , FormatFeatureFlags2KHR
-                                                                             , Flags64
                                                                              ) where
 
 import Vulkan.Internal.Utils (traceAroundEvent)
@@ -349,7 +346,7 @@ import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.Core10.Enums.FormatFeatureFlagBits (FormatFeatureFlags)
-import Vulkan.Extensions.VK_KHR_acceleration_structure (FormatFeatureFlags2KHR)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.CStruct.Extends (PokeChain)
@@ -369,9 +366,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_EXTERNAL_
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MEMORY_GET_ANDROID_HARDWARE_BUFFER_INFO_ANDROID))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
-import Vulkan.Core10.FundamentalTypes (Flags64)
-import Vulkan.Extensions.VK_KHR_acceleration_structure (FormatFeatureFlagBits2KHR(..))
-import Vulkan.Extensions.VK_KHR_acceleration_structure (FormatFeatureFlags2KHR)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -521,7 +515,7 @@ getMemoryAndroidHardwareBufferANDROID device info = liftIO . evalContT $ do
 --     @buffer@ is not @NULL@, it /must/ be a valid Android hardware buffer
 --     object with @AHardwareBuffer_Desc@::@usage@ compatible with Vulkan
 --     as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer Android Hardware Buffers>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer Android Hardware Buffers>
 --
 -- == Valid Usage (Implicit)
 --
@@ -584,7 +578,7 @@ instance Zero ImportAndroidHardwareBufferInfoANDROID where
 --
 -- The @androidHardwareBufferUsage@ field /must/ include Android hardware
 -- buffer usage flags listed in the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer-usage AHardwareBuffer Usage Equivalence>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-usage AHardwareBuffer Usage Equivalence>
 -- table when the corresponding Vulkan image usage or image creation flags
 -- are included in the @usage@ or @flags@ fields of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'.
@@ -821,7 +815,7 @@ instance Zero MemoryGetAndroidHardwareBufferInfoANDROID where
 -- = Description
 --
 -- If the Android hardware buffer has one of the formats listed in the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer-formats Format Equivalence table>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-formats Format Equivalence table>,
 -- then @format@ /must/ have the equivalent Vulkan format listed in the
 -- table. Otherwise, @format@ /may/ be
 -- 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', indicating the Android
@@ -842,7 +836,7 @@ instance Zero MemoryGetAndroidHardwareBufferInfoANDROID where
 --
 -- The @formatFeatures@ member only indicates the features available when
 -- using an
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external-format image>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external-format image>
 -- created from the Android hardware buffer. Images from Android hardware
 -- buffers with a format other than
 -- 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED' are subject to the format
@@ -879,7 +873,7 @@ instance Zero MemoryGetAndroidHardwareBufferInfoANDROID where
 -- with that format. If @format@ is
 -- 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', all members of
 -- @samplerYcbcrConversionComponents@ /must/ be the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>.
 --
 -- Implementations /may/ not always be able to determine the color model,
 -- numerical range, or chroma offsets of the image contents, so the values
@@ -1088,7 +1082,7 @@ instance Zero ExternalFormatANDROID where
 -- 'Vulkan.Core11.Enums.ChromaLocation.ChromaLocation',
 -- 'Vulkan.Core10.ImageView.ComponentMapping',
 -- 'Vulkan.Core10.Enums.Format.Format',
--- 'Vulkan.Extensions.VK_KHR_acceleration_structure.FormatFeatureFlags2KHR',
+-- 'Vulkan.Core13.Enums.FormatFeatureFlags2.FormatFeatureFlags2',
 -- 'Vulkan.Core11.Enums.SamplerYcbcrModelConversion.SamplerYcbcrModelConversion',
 -- 'Vulkan.Core11.Enums.SamplerYcbcrRange.SamplerYcbcrRange',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
@@ -1102,7 +1096,7 @@ data AndroidHardwareBufferFormatProperties2ANDROID = AndroidHardwareBufferFormat
     externalFormat :: Word64
   , -- | @formatFeatures@ describes the capabilities of this external format when
     -- used with an image bound to memory imported from @buffer@.
-    formatFeatures :: FormatFeatureFlags2KHR
+    formatFeatures :: FormatFeatureFlags2
   , -- | @samplerYcbcrConversionComponents@ is the component swizzle that
     -- /should/ be used in
     -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'.
@@ -1133,7 +1127,7 @@ instance ToCStruct AndroidHardwareBufferFormatProperties2ANDROID where
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr Format)) (format)
     poke ((p `plusPtr` 24 :: Ptr Word64)) (externalFormat)
-    poke ((p `plusPtr` 32 :: Ptr FormatFeatureFlags2KHR)) (formatFeatures)
+    poke ((p `plusPtr` 32 :: Ptr FormatFeatureFlags2)) (formatFeatures)
     poke ((p `plusPtr` 40 :: Ptr ComponentMapping)) (samplerYcbcrConversionComponents)
     poke ((p `plusPtr` 56 :: Ptr SamplerYcbcrModelConversion)) (suggestedYcbcrModel)
     poke ((p `plusPtr` 60 :: Ptr SamplerYcbcrRange)) (suggestedYcbcrRange)
@@ -1147,7 +1141,7 @@ instance ToCStruct AndroidHardwareBufferFormatProperties2ANDROID where
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr Format)) (zero)
     poke ((p `plusPtr` 24 :: Ptr Word64)) (zero)
-    poke ((p `plusPtr` 32 :: Ptr FormatFeatureFlags2KHR)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr FormatFeatureFlags2)) (zero)
     poke ((p `plusPtr` 40 :: Ptr ComponentMapping)) (zero)
     poke ((p `plusPtr` 56 :: Ptr SamplerYcbcrModelConversion)) (zero)
     poke ((p `plusPtr` 60 :: Ptr SamplerYcbcrRange)) (zero)
@@ -1159,7 +1153,7 @@ instance FromCStruct AndroidHardwareBufferFormatProperties2ANDROID where
   peekCStruct p = do
     format <- peek @Format ((p `plusPtr` 16 :: Ptr Format))
     externalFormat <- peek @Word64 ((p `plusPtr` 24 :: Ptr Word64))
-    formatFeatures <- peek @FormatFeatureFlags2KHR ((p `plusPtr` 32 :: Ptr FormatFeatureFlags2KHR))
+    formatFeatures <- peek @FormatFeatureFlags2 ((p `plusPtr` 32 :: Ptr FormatFeatureFlags2))
     samplerYcbcrConversionComponents <- peekCStruct @ComponentMapping ((p `plusPtr` 40 :: Ptr ComponentMapping))
     suggestedYcbcrModel <- peek @SamplerYcbcrModelConversion ((p `plusPtr` 56 :: Ptr SamplerYcbcrModelConversion))
     suggestedYcbcrRange <- peek @SamplerYcbcrRange ((p `plusPtr` 60 :: Ptr SamplerYcbcrRange))

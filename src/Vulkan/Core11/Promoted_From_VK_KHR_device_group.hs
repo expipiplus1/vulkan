@@ -286,7 +286,7 @@ foreign import ccall
 --     the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR'
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT'
 --
 -- -   #VUID-vkCmdDispatchBase-None-02691# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
@@ -342,7 +342,7 @@ foreign import ccall
 --     or storage texel buffer where the image format field of the
 --     @OpTypeImage@ is @Unknown@ /must/ have image format features that
 --     support
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdDispatchBase-OpTypeImage-06424# Any
 --     'Vulkan.Core10.Handles.ImageView' or
@@ -350,7 +350,7 @@ foreign import ccall
 --     storage texel buffer where the image format field of the
 --     @OpTypeImage@ is @Unknown@ /must/ have image format features that
 --     support
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdDispatchBase-None-02697# For each set /n/ that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
@@ -800,12 +800,12 @@ instance Zero MemoryAllocateFlagsInfo where
 -- -   #VUID-VkDeviceGroupRenderPassBeginInfo-offset-06168# The sum of the
 --     @offset.x@ and @extent.width@ members of any element of
 --     @pDeviceRenderAreas@ /must/ be less than or equal to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxFramebufferWidth maxFramebufferWidth>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFramebufferWidth maxFramebufferWidth>
 --
 -- -   #VUID-VkDeviceGroupRenderPassBeginInfo-offset-06169# The sum of the
 --     @offset.y@ and @extent.height@ members of any element of
 --     @pDeviceRenderAreas@ /must/ be less than or equal to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxFramebufferHeight maxFramebufferHeight>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFramebufferHeight maxFramebufferHeight>
 --
 -- == Valid Usage (Implicit)
 --

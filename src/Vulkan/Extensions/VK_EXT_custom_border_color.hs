@@ -246,7 +246,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_custom_border_color Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_custom_border_color Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -300,11 +300,11 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_C
 --     'Vulkan.Core10.Sampler.SamplerCreateInfo'::@borderColor@ type /must/
 --     match the sampled type of the provided @format@, as shown in the
 --     /SPIR-V Sampled Type/ column of the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-numericformat>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-numericformat>
 --     table
 --
 -- -   #VUID-VkSamplerCustomBorderColorCreateInfoEXT-format-04014# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-customBorderColorWithoutFormat customBorderColorWithoutFormat>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-customBorderColorWithoutFormat customBorderColorWithoutFormat>
 --     feature is not enabled then @format@ /must/ not be
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
@@ -339,7 +339,7 @@ data SamplerCustomBorderColorCreateInfoEXT = SamplerCustomBorderColorCreateInfoE
   , -- | @format@ is a 'Vulkan.Core10.Enums.Format.Format' representing the
     -- format of the sampled image view(s). This field may be
     -- 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED' if the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-customBorderColorWithoutFormat customBorderColorWithoutFormat>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-customBorderColorWithoutFormat customBorderColorWithoutFormat>
     -- feature is enabled.
     format :: Format
   }

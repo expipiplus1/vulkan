@@ -55,7 +55,7 @@
 --
 -- This extension provides a mechanism for applications to enable driver
 -- support for
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vertexpostproc-renderpass-transform render pass transform>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-renderpass-transform render pass transform>.
 --
 -- Mobile devices can be rotated and mobile applications need to render
 -- properly when a device is held in a landscape or portrait orientation.
@@ -225,7 +225,7 @@
 -- coordinate system.
 --
 -- The
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate set of supported shading rates>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate set of supported shading rates>
 -- /may/ be different per transform. Supported rates queried from
 -- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.getPhysicalDeviceFragmentShadingRatesKHR'
 -- are in the native (rotated) coordinate system. This means that the
@@ -248,7 +248,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_render_pass_transform Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_QCOM_render_pass_transform Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

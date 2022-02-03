@@ -21,6 +21,11 @@
 --
 --     -   Requires Vulkan 1.0
 --
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3-promotions Vulkan 1.3>
+--
 -- [__Contact__]
 --
 --     -   Baldur Karlsson
@@ -31,13 +36,15 @@
 -- [__Last Modified Date__]
 --     2019-10-16
 --
--- [__IP Status__]
---     No known IP claims.
---
 -- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.3 Core
 --
 --     -   This extension requires
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_non_semantic_info.html SPV_KHR_non_semantic_info>
+--
+-- [__IP Status__]
+--     No known IP claims.
 --
 -- [__Contributors__]
 --
@@ -54,6 +61,13 @@
 --
 -- -   'KHR_SHADER_NON_SEMANTIC_INFO_SPEC_VERSION'
 --
+-- == Promotion to Vulkan 1.3
+--
+-- Functionality in this extension is included in core Vulkan 1.3 Because
+-- the extension has no API controlling its functionality, this results
+-- only in a change to the
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-extensions-table SPIR-V Extensions table>.
+--
 -- == Version History
 --
 -- -   Revision 1, 2019-10-16 (Baldur Karlsson)
@@ -67,7 +81,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_non_semantic_info Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_shader_non_semantic_info Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

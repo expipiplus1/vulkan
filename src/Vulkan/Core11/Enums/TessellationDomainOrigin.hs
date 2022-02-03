@@ -31,11 +31,11 @@ newtype TessellationDomainOrigin = TessellationDomainOrigin Int32
 
 -- | 'TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT' specifies that the origin of the
 -- domain space is in the upper left corner, as shown in figure
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#img-tessellation-topology-ul>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#img-tessellation-topology-ul>.
 pattern TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT = TessellationDomainOrigin 0
 -- | 'TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT' specifies that the origin of the
 -- domain space is in the lower left corner, as shown in figure
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#img-tessellation-topology-ll>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#img-tessellation-topology-ll>.
 pattern TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT = TessellationDomainOrigin 1
 {-# complete TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT,
              TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT :: TessellationDomainOrigin #-}

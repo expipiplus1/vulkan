@@ -67,9 +67,9 @@
 -- graphics, video, and display APIs.
 --
 -- Its functionality closely overlaps with
--- @EGL_EXT_image_dma_buf_import_modifiers@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn2 2>^
+-- @EGL_EXT_image_dma_buf_import_modifiers@<https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn2 2>^
 -- and
--- @EGL_MESA_image_dma_buf_export@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn3 3>^.
+-- @EGL_MESA_image_dma_buf_export@<https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn3 3>^.
 -- Unlike the EGL extensions, this extension does not require the use of a
 -- specific handle type (such as a dma_buf) for external memory and
 -- provides more explicit control of image creation.
@@ -250,33 +250,33 @@
 -- == Prior Art
 --
 -- Extension
--- @EGL_EXT_image_dma_buf_import@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn1 1>^
+-- @EGL_EXT_image_dma_buf_import@<https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn1 1>^
 -- introduced the ability to create an @EGLImage@ by importing for each
 -- plane a dma_buf, offset, and row pitch.
 --
 -- Later, extension
--- @EGL_EXT_image_dma_buf_import_modifiers@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn2 2>^
+-- @EGL_EXT_image_dma_buf_import_modifiers@<https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn2 2>^
 -- introduced the ability to query which combination of formats and
 -- /modifiers/ the implementation supports and to specify /modifiers/
 -- during creation of the @EGLImage@.
 --
 -- Extension
--- @EGL_MESA_image_dma_buf_export@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn3 3>^
+-- @EGL_MESA_image_dma_buf_export@<https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn3 3>^
 -- is the inverse of @EGL_EXT_image_dma_buf_import_modifiers@.
 --
 -- The Linux kernel modesetting API (KMS), when configuring the display’s
 -- framebuffer with @struct
--- drm_mode_fb_cmd2@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn4 4>^,
+-- drm_mode_fb_cmd2@<https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn4 4>^,
 -- allows one to specify the frambuffer’s /modifier/ as well as a per-plane
 -- memory handle, offset, and row pitch.
 --
 -- GBM, a graphics buffer manager for Linux, allows creation of a @gbm_bo@
 -- (that is, a graphics /buffer object/) by importing data similar to that
 -- in
--- @EGL_EXT_image_dma_buf_import_modifiers@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn1 1>^;
+-- @EGL_EXT_image_dma_buf_import_modifiers@<https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn1 1>^;
 -- and symmetrically allows exporting the same data from the @gbm_bo@. See
 -- the references to /modifier/ and /plane/ in
--- @gbm.h@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn5 5>^.
+-- @gbm.h@<https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn5 5>^.
 --
 -- == New Commands
 --
@@ -371,10 +371,10 @@
 -- 'Vulkan.Core10.Handles.Image'.
 --
 -- __DISCUSSION__: Prior art, such as
--- @EGL_EXT_image_dma_buf_import_modifiers@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn2 2>^,
--- @struct drm_mode_fb_cmd2@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn4 4>^,
+-- @EGL_EXT_image_dma_buf_import_modifiers@<https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn2 2>^,
+-- @struct drm_mode_fb_cmd2@<https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn4 4>^,
 -- and @struct
--- gbm_import_fd_modifier_data@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn5 5>^,
+-- gbm_import_fd_modifier_data@<https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn5 5>^,
 -- allows defining one /modifier/ per plane. However, developers of the GBM
 -- and kernel APIs concede it was a mistake. Beginning in Linux 4.10, the
 -- kernel requires that the application provide the same DRM format
@@ -397,10 +397,10 @@
 -- /must/ be 0.
 --
 -- __DISCUSSION__: Prior art, such as
--- @EGL_EXT_image_dma_buf_import_modifiers@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn2 2>^,
--- @struct drm_mode_fb_cmd2@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn4 4>^,
+-- @EGL_EXT_image_dma_buf_import_modifiers@<https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn2 2>^,
+-- @struct drm_mode_fb_cmd2@<https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn4 4>^,
 -- and @struct
--- gbm_import_fd_modifier_data@<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn5 5>^,
+-- gbm_import_fd_modifier_data@<https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn5 5>^,
 -- omits from the API the size of each plane. Instead, the APIs infer each
 -- plane’s size from the import parameters, which include the image’s pixel
 -- format and a dma_buf, offset, and row pitch for each plane.
@@ -545,7 +545,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -562,9 +562,6 @@ module Vulkan.Extensions.VK_EXT_image_drm_format_modifier  ( getImageDrmFormatMo
                                                            , pattern EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION
                                                            , EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME
                                                            , pattern EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME
-                                                           , FormatFeatureFlagBits2KHR(..)
-                                                           , FormatFeatureFlags2KHR
-                                                           , Flags64
                                                            ) where
 
 import Vulkan.Internal.Utils (traceAroundEvent)
@@ -610,7 +607,7 @@ import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageDrmFormatModifierPropertiesEXT))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.Enums.FormatFeatureFlagBits (FormatFeatureFlags)
-import Vulkan.Extensions.VK_KHR_acceleration_structure (FormatFeatureFlags2KHR)
+import Vulkan.Core13.Enums.FormatFeatureFlags2 (FormatFeatureFlags2)
 import Vulkan.Core10.Handles (Image)
 import Vulkan.Core10.Handles (Image(..))
 import Vulkan.Core10.Enums.Result (Result)
@@ -626,9 +623,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_DRM
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
-import Vulkan.Core10.FundamentalTypes (Flags64)
-import Vulkan.Extensions.VK_KHR_acceleration_structure (FormatFeatureFlagBits2KHR(..))
-import Vulkan.Extensions.VK_KHR_acceleration_structure (FormatFeatureFlags2KHR)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -771,7 +765,7 @@ instance Zero DrmFormatModifierPropertiesListEXT where
 -- An image’s /memory planecount/ (as returned by
 -- @drmFormatModifierPlaneCount@) is distinct from its /format planecount/
 -- (in the sense of
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
 -- Y′CBCR formats). In
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags', each
 -- @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ represents a /memory plane/ and
@@ -798,7 +792,7 @@ instance Zero DrmFormatModifierPropertiesListEXT where
 -- not necessarily contiguous.
 --
 -- If an image is
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-linear-resource linear>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-linear-resource linear>,
 -- then the partition is the same for /memory planes/ and for /format
 -- planes/. Therefore, if the returned @drmFormatModifier@ is
 -- @DRM_FORMAT_MOD_LINEAR@, then @drmFormatModifierPlaneCount@ /must/ equal
@@ -808,7 +802,7 @@ instance Zero DrmFormatModifierPropertiesListEXT where
 -- returned in the same @pNext@ chain.
 --
 -- If an image is
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-linear-resource non-linear>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-linear-resource non-linear>,
 -- then the partition of the image’s __memory__ into /memory planes/ is
 -- implementation-specific and /may/ be unrelated to the partition of the
 -- image’s __content__ into /format planes/. For example, consider an image
@@ -1217,7 +1211,7 @@ instance Zero ImageDrmFormatModifierExplicitCreateInfoEXT where
 -- 'getImageDrmFormatModifierPropertiesEXT'
 data ImageDrmFormatModifierPropertiesEXT = ImageDrmFormatModifierPropertiesEXT
   { -- | @drmFormatModifier@ returns the image’s
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-drm-format-modifier Linux DRM format modifier>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-drm-format-modifier Linux DRM format modifier>.
     drmFormatModifier :: Word64 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -1342,7 +1336,7 @@ instance Zero DrmFormatModifierPropertiesList2EXT where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier VK_EXT_image_drm_format_modifier>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>,
 -- 'DrmFormatModifierPropertiesList2EXT',
--- 'Vulkan.Extensions.VK_KHR_acceleration_structure.FormatFeatureFlags2KHR'
+-- 'Vulkan.Core13.Enums.FormatFeatureFlags2.FormatFeatureFlags2'
 data DrmFormatModifierProperties2EXT = DrmFormatModifierProperties2EXT
   { -- | @drmFormatModifier@ is a /Linux DRM format modifier/.
     drmFormatModifier :: Word64
@@ -1352,10 +1346,10 @@ data DrmFormatModifierProperties2EXT = DrmFormatModifierProperties2EXT
     -- below.
     drmFormatModifierPlaneCount :: Word32
   , -- | @drmFormatModifierTilingFeatures@ is a bitmask of
-    -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.FormatFeatureFlagBits2KHR'
-    -- that are supported by any image created with @format@ and
+    -- 'Vulkan.Core13.Enums.FormatFeatureFlags2.FormatFeatureFlagBits2' that
+    -- are supported by any image created with @format@ and
     -- @drmFormatModifier@.
-    drmFormatModifierTilingFeatures :: FormatFeatureFlags2KHR
+    drmFormatModifierTilingFeatures :: FormatFeatureFlags2
   }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -1368,21 +1362,21 @@ instance ToCStruct DrmFormatModifierProperties2EXT where
   pokeCStruct p DrmFormatModifierProperties2EXT{..} f = do
     poke ((p `plusPtr` 0 :: Ptr Word64)) (drmFormatModifier)
     poke ((p `plusPtr` 8 :: Ptr Word32)) (drmFormatModifierPlaneCount)
-    poke ((p `plusPtr` 16 :: Ptr FormatFeatureFlags2KHR)) (drmFormatModifierTilingFeatures)
+    poke ((p `plusPtr` 16 :: Ptr FormatFeatureFlags2)) (drmFormatModifierTilingFeatures)
     f
   cStructSize = 24
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr Word64)) (zero)
     poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 16 :: Ptr FormatFeatureFlags2KHR)) (zero)
+    poke ((p `plusPtr` 16 :: Ptr FormatFeatureFlags2)) (zero)
     f
 
 instance FromCStruct DrmFormatModifierProperties2EXT where
   peekCStruct p = do
     drmFormatModifier <- peek @Word64 ((p `plusPtr` 0 :: Ptr Word64))
     drmFormatModifierPlaneCount <- peek @Word32 ((p `plusPtr` 8 :: Ptr Word32))
-    drmFormatModifierTilingFeatures <- peek @FormatFeatureFlags2KHR ((p `plusPtr` 16 :: Ptr FormatFeatureFlags2KHR))
+    drmFormatModifierTilingFeatures <- peek @FormatFeatureFlags2 ((p `plusPtr` 16 :: Ptr FormatFeatureFlags2))
     pure $ DrmFormatModifierProperties2EXT
              drmFormatModifier drmFormatModifierPlaneCount drmFormatModifierTilingFeatures
 

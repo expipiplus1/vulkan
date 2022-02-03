@@ -21,6 +21,11 @@
 --
 --     -   Requires Vulkan 1.0
 --
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3-promotions Vulkan 1.3>
+--
 -- [__Contact__]
 --
 --     -   Jeff Leger
@@ -30,6 +35,10 @@
 --
 -- [__Last Modified Date__]
 --     2020-07-06
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.3 Core
 --
 -- [__Interactions and External Dependencies__]
 --
@@ -107,27 +116,33 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BLIT_IMAGE_INFO_2_KHR'
+--     -   'STRUCTURE_TYPE_BLIT_IMAGE_INFO_2_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_COPY_2_KHR'
+--     -   'STRUCTURE_TYPE_BUFFER_COPY_2_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2_KHR'
+--     -   'STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COPY_BUFFER_INFO_2_KHR'
+--     -   'STRUCTURE_TYPE_COPY_BUFFER_INFO_2_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COPY_BUFFER_TO_IMAGE_INFO_2_KHR'
+--     -   'STRUCTURE_TYPE_COPY_BUFFER_TO_IMAGE_INFO_2_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COPY_IMAGE_INFO_2_KHR'
+--     -   'STRUCTURE_TYPE_COPY_IMAGE_INFO_2_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2_KHR'
+--     -   'STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_BLIT_2_KHR'
+--     -   'STRUCTURE_TYPE_IMAGE_BLIT_2_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_COPY_2_KHR'
+--     -   'STRUCTURE_TYPE_IMAGE_COPY_2_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_RESOLVE_2_KHR'
+--     -   'STRUCTURE_TYPE_IMAGE_RESOLVE_2_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2_KHR'
+--     -   'STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2_KHR'
+--
+-- == Promotion to Vulkan 1.3
+--
+-- Functionality in this extension is included in core Vulkan 1.3, with the
+-- KHR suffix omitted. The original type, enum and command names are still
+-- available as aliases of the core functionality.
 --
 -- == Version History
 --
@@ -147,116 +162,21 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_copy_commands2 Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_copy_commands2 Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_KHR_copy_commands2  ( BlitImageInfo2KHR
-                                                , BufferCopy2KHR
-                                                , BufferImageCopy2KHR
-                                                , CopyBufferInfo2KHR
-                                                , CopyBufferToImageInfo2KHR
-                                                , CopyImageInfo2KHR
-                                                , CopyImageToBufferInfo2KHR
+module Vulkan.Extensions.VK_KHR_copy_commands2  ( BufferImageCopy2KHR
                                                 , ImageBlit2KHR
-                                                , ImageCopy2KHR
-                                                , ImageResolve2KHR
-                                                , ResolveImageInfo2KHR
                                                 ) where
 
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (ToCStruct)
-import Data.Kind (Type)
-import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
-import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
-import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
-import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
-data BlitImageInfo2KHR
 
-instance ToCStruct BlitImageInfo2KHR
-instance Show BlitImageInfo2KHR
-
-instance FromCStruct BlitImageInfo2KHR
+import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2 (BufferImageCopy2)
+import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2 (ImageBlit2)
+-- No documentation found for TopLevel "VkBufferImageCopy2KHR"
+type BufferImageCopy2KHR = BufferImageCopy2
 
 
-data BufferCopy2KHR
-
-instance ToCStruct BufferCopy2KHR
-instance Show BufferCopy2KHR
-
-instance FromCStruct BufferCopy2KHR
-
-
-type role BufferImageCopy2KHR nominal
-data BufferImageCopy2KHR (es :: [Type])
-
-instance (Extendss BufferImageCopy2KHR es, PokeChain es) => ToCStruct (BufferImageCopy2KHR es)
-instance Show (Chain es) => Show (BufferImageCopy2KHR es)
-
-instance (Extendss BufferImageCopy2KHR es, PeekChain es) => FromCStruct (BufferImageCopy2KHR es)
-
-
-data CopyBufferInfo2KHR
-
-instance ToCStruct CopyBufferInfo2KHR
-instance Show CopyBufferInfo2KHR
-
-instance FromCStruct CopyBufferInfo2KHR
-
-
-data CopyBufferToImageInfo2KHR
-
-instance ToCStruct CopyBufferToImageInfo2KHR
-instance Show CopyBufferToImageInfo2KHR
-
-instance FromCStruct CopyBufferToImageInfo2KHR
-
-
-data CopyImageInfo2KHR
-
-instance ToCStruct CopyImageInfo2KHR
-instance Show CopyImageInfo2KHR
-
-instance FromCStruct CopyImageInfo2KHR
-
-
-data CopyImageToBufferInfo2KHR
-
-instance ToCStruct CopyImageToBufferInfo2KHR
-instance Show CopyImageToBufferInfo2KHR
-
-instance FromCStruct CopyImageToBufferInfo2KHR
-
-
-type role ImageBlit2KHR nominal
-data ImageBlit2KHR (es :: [Type])
-
-instance (Extendss ImageBlit2KHR es, PokeChain es) => ToCStruct (ImageBlit2KHR es)
-instance Show (Chain es) => Show (ImageBlit2KHR es)
-
-instance (Extendss ImageBlit2KHR es, PeekChain es) => FromCStruct (ImageBlit2KHR es)
-
-
-data ImageCopy2KHR
-
-instance ToCStruct ImageCopy2KHR
-instance Show ImageCopy2KHR
-
-instance FromCStruct ImageCopy2KHR
-
-
-data ImageResolve2KHR
-
-instance ToCStruct ImageResolve2KHR
-instance Show ImageResolve2KHR
-
-instance FromCStruct ImageResolve2KHR
-
-
-data ResolveImageInfo2KHR
-
-instance ToCStruct ResolveImageInfo2KHR
-instance Show ResolveImageInfo2KHR
-
-instance FromCStruct ResolveImageInfo2KHR
+-- No documentation found for TopLevel "VkImageBlit2KHR"
+type ImageBlit2KHR = ImageBlit2
 

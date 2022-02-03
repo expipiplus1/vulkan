@@ -54,7 +54,7 @@
 -- For example, placing a vector of three floats at an offset of 16×N + 4.
 --
 -- See
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources-layout Offset and Stride Assignment>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-layout Offset and Stride Assignment>
 -- for details.
 --
 -- == Promotion to Vulkan 1.1
@@ -80,7 +80,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_relaxed_block_layout Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_relaxed_block_layout Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

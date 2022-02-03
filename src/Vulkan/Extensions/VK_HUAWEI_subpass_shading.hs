@@ -108,9 +108,9 @@
 --     -   'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI'
 --
 -- -   Extending
---     'Vulkan.Extensions.VK_KHR_synchronization2.PipelineStageFlagBits2KHR':
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2':
 --
---     -   'Vulkan.Extensions.VK_KHR_synchronization2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI'
+--     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits':
@@ -335,7 +335,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_HUAWEI_subpass_shading Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_HUAWEI_subpass_shading Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -348,9 +348,6 @@ module Vulkan.Extensions.VK_HUAWEI_subpass_shading  ( getDeviceSubpassShadingMax
                                                     , pattern HUAWEI_SUBPASS_SHADING_SPEC_VERSION
                                                     , HUAWEI_SUBPASS_SHADING_EXTENSION_NAME
                                                     , pattern HUAWEI_SUBPASS_SHADING_EXTENSION_NAME
-                                                    , PipelineStageFlagBits2KHR(..)
-                                                    , PipelineStageFlags2KHR
-                                                    , Flags64
                                                     ) where
 
 import Vulkan.Internal.Utils (traceAroundEvent)
@@ -409,9 +406,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBPASS_SHADING_PROPERTIES_HUAWEI))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SUBPASS_SHADING_PIPELINE_CREATE_INFO_HUAWEI))
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
-import Vulkan.Core10.FundamentalTypes (Flags64)
-import Vulkan.Extensions.VK_KHR_synchronization2 (PipelineStageFlagBits2KHR(..))
-import Vulkan.Extensions.VK_KHR_synchronization2 (PipelineStageFlags2KHR)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -515,7 +509,7 @@ foreign import ccall
 --     the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR'
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT'
 --
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-None-02691# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
@@ -571,7 +565,7 @@ foreign import ccall
 --     or storage texel buffer where the image format field of the
 --     @OpTypeImage@ is @Unknown@ /must/ have image format features that
 --     support
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-OpTypeImage-06424# Any
 --     'Vulkan.Core10.Handles.ImageView' or
@@ -579,7 +573,7 @@ foreign import ccall
 --     storage texel buffer where the image format field of the
 --     @OpTypeImage@ is @Unknown@ /must/ have image format features that
 --     support
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-None-02697# For each set /n/ that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
@@ -813,7 +807,7 @@ data SubpassShadingPipelineCreateInfoHUAWEI = SubpassShadingPipelineCreateInfoHU
     -- environment in which the pipeline will be used. The pipeline /must/ only
     -- be used with a render pass instance compatible with the one provided.
     -- See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility Render Pass Compatibility>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-compatibility Render Pass Compatibility>
     -- for more information.
     renderPass :: RenderPass
   , -- | @subpass@ is the index of the subpass in the render pass where this

@@ -57,10 +57,10 @@
 --
 -- 1) How do 'Vulkan.Core10.Pipeline.Viewport' @minDepth@ and @maxDepth@
 -- values outside of the @0.0@ to @1.0@ range interact with
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vertexpostproc-clipping Primitive Clipping>?
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-clipping Primitive Clipping>?
 --
 -- __RESOLVED__: The behavior described in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vertexpostproc-clipping Primitive Clipping>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-clipping Primitive Clipping>
 -- still applies. If depth clamping is disabled the depth values are still
 -- clipped to 0 ≤ zc ≤ wc before the viewport transform. If depth clamping
 -- is enabled the above equation is ignored and the depth values are
@@ -88,7 +88,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_depth_range_unrestricted Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_depth_range_unrestricted Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

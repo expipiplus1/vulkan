@@ -31,6 +31,7 @@ import GHC.Show (Show(showsPrec))
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Pipeline.StencilOpState',
+-- 'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilOp',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetStencilOpEXT'
 newtype StencilOp = StencilOp Int32
   deriving newtype (Eq, Ord, Storable, Zero)

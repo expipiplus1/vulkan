@@ -276,7 +276,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_blend_operation_advanced Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_blend_operation_advanced Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -355,9 +355,9 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 data PhysicalDeviceBlendOperationAdvancedFeaturesEXT = PhysicalDeviceBlendOperationAdvancedFeaturesEXT
   { -- | #features-advancedBlendCoherentOperations#
     -- @advancedBlendCoherentOperations@ specifies whether blending using
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-blend-advanced advanced blend operations>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-blend-advanced advanced blend operations>
     -- is guaranteed to execute atomically and in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-order primitive order>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#drawing-primitive-order primitive order>.
     -- If this is 'Vulkan.Core10.FundamentalTypes.TRUE',
     -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT'
     -- is treated the same as
@@ -431,7 +431,7 @@ data PhysicalDeviceBlendOperationAdvancedPropertiesEXT = PhysicalDeviceBlendOper
     -- @advancedBlendMaxColorAttachments@ is one greater than the highest color
     -- attachment index that /can/ be used in a subpass, for a pipeline that
     -- uses an
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-blend-advanced advanced blend operation>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-blend-advanced advanced blend operation>.
     advancedBlendMaxColorAttachments :: Word32
   , -- | #limits-advancedBlendIndependentBlend# @advancedBlendIndependentBlend@
     -- specifies whether advanced blend operations /can/ vary per-attachment.
@@ -534,19 +534,19 @@ instance Zero PhysicalDeviceBlendOperationAdvancedPropertiesEXT where
 --
 -- -   #VUID-VkPipelineColorBlendAdvancedStateCreateInfoEXT-srcPremultiplied-01424#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-advancedBlendNonPremultipliedSrcColor non-premultiplied source color>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-advancedBlendNonPremultipliedSrcColor non-premultiplied source color>
 --     property is not supported, @srcPremultiplied@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- -   #VUID-VkPipelineColorBlendAdvancedStateCreateInfoEXT-dstPremultiplied-01425#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-advancedBlendNonPremultipliedDstColor non-premultiplied destination color>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-advancedBlendNonPremultipliedDstColor non-premultiplied destination color>
 --     property is not supported, @dstPremultiplied@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- -   #VUID-VkPipelineColorBlendAdvancedStateCreateInfoEXT-blendOverlap-01426#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-advancedBlendCorrelatedOverlap correlated overlap>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-advancedBlendCorrelatedOverlap correlated overlap>
 --     property is not supported, @blendOverlap@ /must/ be
 --     'BLEND_OVERLAP_UNCORRELATED_EXT'
 --

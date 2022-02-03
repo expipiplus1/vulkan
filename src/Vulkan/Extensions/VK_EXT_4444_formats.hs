@@ -23,6 +23,11 @@
 --
 --     -   Requires @VK_KHR_get_physical_device_properties2@
 --
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3-promotions Vulkan 1.3>
+--
 -- [__Contact__]
 --
 --     -   Joshua Ashton
@@ -32,6 +37,10 @@
 --
 -- [__Last Modified Date__]
 --     2020-07-28
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.3 Core
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -44,10 +53,9 @@
 --
 -- == Description
 --
--- This extension defines the
--- 'Vulkan.Core10.Enums.Format.FORMAT_A4R4G4B4_UNORM_PACK16_EXT' and
--- 'Vulkan.Core10.Enums.Format.FORMAT_A4B4G4R4_UNORM_PACK16_EXT' formats
--- which are defined in other current graphics APIs.
+-- This extension defines the 'FORMAT_A4R4G4B4_UNORM_PACK16_EXT' and
+-- 'FORMAT_A4B4G4R4_UNORM_PACK16_EXT' formats which are defined in other
+-- current graphics APIs.
 --
 -- This extension may be useful for building translation layers for those
 -- APIs or for porting applications that use these formats without having
@@ -73,13 +81,23 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.Format.Format':
 --
---     -   'Vulkan.Core10.Enums.Format.FORMAT_A4B4G4R4_UNORM_PACK16_EXT'
+--     -   'FORMAT_A4B4G4R4_UNORM_PACK16_EXT'
 --
---     -   'Vulkan.Core10.Enums.Format.FORMAT_A4R4G4B4_UNORM_PACK16_EXT'
+--     -   'FORMAT_A4R4G4B4_UNORM_PACK16_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT'
+--
+-- == Promotion to Vulkan 1.3
+--
+-- This extension has been partially promoted. The format enumerants
+-- introduced by the extension are included in core Vulkan 1.3, with the
+-- EXT suffix omitted. However, runtime support for these formats is
+-- optional in core Vulkan 1.3, while if this extension is supported,
+-- runtime support is mandatory. The feature structure is not promoted. The
+-- original enum names are still available as aliases of the core
+-- functionality.
 --
 -- == Version History
 --
@@ -94,11 +112,13 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_4444_formats Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_4444_formats Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_EXT_4444_formats  ( PhysicalDevice4444FormatsFeaturesEXT(..)
+module Vulkan.Extensions.VK_EXT_4444_formats  ( pattern FORMAT_A4R4G4B4_UNORM_PACK16_EXT
+                                              , pattern FORMAT_A4B4G4R4_UNORM_PACK16_EXT
+                                              , PhysicalDevice4444FormatsFeaturesEXT(..)
                                               , EXT_4444_FORMATS_SPEC_VERSION
                                               , pattern EXT_4444_FORMATS_SPEC_VERSION
                                               , EXT_4444_FORMATS_EXTENSION_NAME
@@ -126,7 +146,17 @@ import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Enums.StructureType (StructureType)
+import Vulkan.Core10.Enums.Format (Format(FORMAT_A4B4G4R4_UNORM_PACK16))
+import Vulkan.Core10.Enums.Format (Format(FORMAT_A4R4G4B4_UNORM_PACK16))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT))
+-- No documentation found for TopLevel "VK_FORMAT_A4R4G4B4_UNORM_PACK16_EXT"
+pattern FORMAT_A4R4G4B4_UNORM_PACK16_EXT = FORMAT_A4R4G4B4_UNORM_PACK16
+
+
+-- No documentation found for TopLevel "VK_FORMAT_A4B4G4R4_UNORM_PACK16_EXT"
+pattern FORMAT_A4B4G4R4_UNORM_PACK16_EXT = FORMAT_A4B4G4R4_UNORM_PACK16
+
+
 -- | VkPhysicalDevice4444FormatsFeaturesEXT - Structure describing additional
 -- 4444 formats supported by an implementation
 --
@@ -148,6 +178,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- == Valid Usage (Implicit)
 --
+-- Note
+--
+-- Although the formats defined by the @VK_EXT_4444_formats@ extension were
+-- promoted to Vulkan 1.3 as optional formats, the
+-- 'PhysicalDevice4444FormatsFeaturesEXT' structure was not promoted to
+-- Vulkan 1.3.
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_4444_formats VK_EXT_4444_formats>,
@@ -157,8 +194,7 @@ data PhysicalDevice4444FormatsFeaturesEXT = PhysicalDevice4444FormatsFeaturesEXT
   { -- | #features-formatA4R4G4B4# @formatA4R4G4B4@ indicates that the
     -- implementation /must/ support using a
     -- 'Vulkan.Core10.Enums.Format.Format' of
-    -- 'Vulkan.Core10.Enums.Format.FORMAT_A4R4G4B4_UNORM_PACK16_EXT' with at
-    -- least the following
+    -- 'FORMAT_A4R4G4B4_UNORM_PACK16_EXT' with at least the following
     -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits':
     --
     -- -   'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_BIT'
@@ -170,8 +206,7 @@ data PhysicalDevice4444FormatsFeaturesEXT = PhysicalDevice4444FormatsFeaturesEXT
   , -- | #features-formatA4B4G4R4# @formatA4B4G4R4@ indicates that the
     -- implementation /must/ support using a
     -- 'Vulkan.Core10.Enums.Format.Format' of
-    -- 'Vulkan.Core10.Enums.Format.FORMAT_A4B4G4R4_UNORM_PACK16_EXT' with at
-    -- least the following
+    -- 'FORMAT_A4B4G4R4_UNORM_PACK16_EXT' with at least the following
     -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits':
     --
     -- -   'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_BIT'

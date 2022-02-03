@@ -23,6 +23,11 @@
 --
 --     -   Requires @VK_KHR_get_physical_device_properties2@
 --
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3-promotions Vulkan 1.3>
+--
 -- [__Contact__]
 --
 --     -   Jeff Bolz
@@ -33,10 +38,14 @@
 -- [__Last Modified Date__]
 --     2019-06-06
 --
+-- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.3 Core
+--
 -- [__IP Status__]
 --     No known IP claims.
 --
--- [__Interactions and External Dependencies__; __Contributors__]
+-- [__Contributors__]
 --
 --     -   Jeff Bolz, NVIDIA
 --
@@ -70,7 +79,14 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_FEATURES_EXT'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES_EXT'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES_EXT'
+--
+-- == Promotion to Vulkan 1.3
+--
+-- Functionality in this extension is included in core Vulkan 1.3, with the
+-- EXT suffix omitted. However, only the properties structure is promoted.
+-- The feature structure is not promoted. The original type name is still
+-- available as an alias of the core functionality.
 --
 -- == Version History
 --
@@ -86,13 +102,11 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_texel_buffer_alignment Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_texel_buffer_alignment Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_EXT_texel_buffer_alignment  ( PhysicalDeviceTexelBufferAlignmentFeaturesEXT
-                                                        , PhysicalDeviceTexelBufferAlignmentPropertiesEXT
-                                                        ) where
+module Vulkan.Extensions.VK_EXT_texel_buffer_alignment  (PhysicalDeviceTexelBufferAlignmentFeaturesEXT) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
@@ -104,12 +118,4 @@ instance ToCStruct PhysicalDeviceTexelBufferAlignmentFeaturesEXT
 instance Show PhysicalDeviceTexelBufferAlignmentFeaturesEXT
 
 instance FromCStruct PhysicalDeviceTexelBufferAlignmentFeaturesEXT
-
-
-data PhysicalDeviceTexelBufferAlignmentPropertiesEXT
-
-instance ToCStruct PhysicalDeviceTexelBufferAlignmentPropertiesEXT
-instance Show PhysicalDeviceTexelBufferAlignmentPropertiesEXT
-
-instance FromCStruct PhysicalDeviceTexelBufferAlignmentPropertiesEXT
 

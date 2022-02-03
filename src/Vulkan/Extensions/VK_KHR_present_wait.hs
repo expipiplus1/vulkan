@@ -135,7 +135,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_present_wait Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_present_wait Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -277,7 +277,7 @@ waitForPresentKHRSafeOrUnsafe mkVkWaitForPresentKHR device swapchain presentId t
 --     in the retired state
 --
 -- -   #VUID-vkWaitForPresentKHR-presentWait-06234# The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-presentWait presentWait>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-presentWait presentWait>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)

@@ -118,7 +118,7 @@ createPipelineLayout :: forall io
                         -- specifying the state of the pipeline layout object.
                         PipelineLayoutCreateInfo
                      -> -- | @pAllocator@ controls host memory allocation as described in the
-                        -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                        -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                         -- chapter.
                         ("allocator" ::: Maybe AllocationCallbacks)
                      -> io (PipelineLayout)
@@ -175,7 +175,7 @@ foreign import ccall
 -- -   #VUID-vkDestroyPipelineLayout-pipelineLayout-02004# @pipelineLayout@
 --     /must/ not have been passed to any @vkCmd*@ command for any command
 --     buffers that are still in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --     when 'destroyPipelineLayout' is called
 --
 -- == Valid Usage (Implicit)
@@ -212,7 +212,7 @@ destroyPipelineLayout :: forall io
                       -> -- | @pipelineLayout@ is the pipeline layout to destroy.
                          PipelineLayout
                       -> -- | @pAllocator@ controls host memory allocation as described in the
-                         -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                         -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                          -- chapter.
                          ("allocator" ::: Maybe AllocationCallbacks)
                       -> io ()
@@ -391,10 +391,10 @@ instance Zero PushConstantRange where
 --     number of bindings in descriptor set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     bit set with a @descriptorType@ of
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
 --     accessible to any given shader stage across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
---     'Vulkan.Extensions.VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockPropertiesEXT'::@maxPerStageDescriptorInlineUniformBlocks@
+--     'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockProperties'::@maxPerStageDescriptorInlineUniformBlocks@
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03022# The total
 --     number of descriptors with a @descriptorType@ of
@@ -450,10 +450,10 @@ instance Zero PushConstantRange where
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-02215# The total
 --     number of bindings with a @descriptorType@ of
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
 --     accessible to any given shader stage across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
---     'Vulkan.Extensions.VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockPropertiesEXT'::@maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks@
+--     'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockProperties'::@maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks@
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03028# The total
 --     number of descriptors in descriptor set layouts created without the
@@ -537,10 +537,10 @@ instance Zero PushConstantRange where
 --     number of bindings in descriptor set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     bit set with a @descriptorType@ of
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
---     'Vulkan.Extensions.VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockPropertiesEXT'::@maxDescriptorSetInlineUniformBlocks@
+--     'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockProperties'::@maxDescriptorSetInlineUniformBlocks@
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-03036# The total number
 --     of descriptors of the type
@@ -606,10 +606,10 @@ instance Zero PushConstantRange where
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-02217# The total
 --     number of bindings with a @descriptorType@ of
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
---     'Vulkan.Extensions.VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockPropertiesEXT'::@maxDescriptorSetUpdateAfterBindInlineUniformBlocks@
+--     'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockProperties'::@maxDescriptorSetUpdateAfterBindInlineUniformBlocks@
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-pPushConstantRanges-00292# Any two
 --     elements of @pPushConstantRanges@ /must/ not include the same stage
@@ -667,7 +667,7 @@ instance Zero PushConstantRange where
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT'
 --     across all shader stages and across all elements of @pSetLayouts@
 --     /must/ be less than or equal to
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxDescriptorSetSubsampledSamplers ::maxDescriptorSetSubsampledSamplers>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxDescriptorSetSubsampledSamplers ::maxDescriptorSetSubsampledSamplers>
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-04606# Any element of
 --     @pSetLayouts@ /must/ not have been created with the

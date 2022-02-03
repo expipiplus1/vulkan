@@ -149,7 +149,7 @@
 --     -   'MemoryAllocateFlagsInfoKHR'
 --
 -- -   Extending 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo',
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR':
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo':
 --
 --     -   'DeviceGroupRenderPassBeginInfoKHR'
 --
@@ -317,11 +317,11 @@
 --
 -- == New Built-in Variables
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-deviceindex DeviceIndex>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-deviceindex DeviceIndex>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-DeviceGroup DeviceGroup>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-DeviceGroup DeviceGroup>
 --
 -- == Version History
 --
@@ -358,7 +358,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_device_group Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_device_group Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

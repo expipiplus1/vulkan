@@ -14,7 +14,7 @@ module Vulkan.Core10.Enums.DescriptorType  (DescriptorType( DESCRIPTOR_TYPE_SAMP
                                                           , DESCRIPTOR_TYPE_MUTABLE_VALVE
                                                           , DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV
                                                           , DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR
-                                                          , DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT
+                                                          , DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK
                                                           , ..
                                                           )) where
 
@@ -33,43 +33,43 @@ import GHC.Show (Show(showsPrec))
 -- = Description
 --
 -- -   'DESCRIPTOR_TYPE_SAMPLER' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-sampler sampler descriptor>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sampler sampler descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-combinedimagesampler combined image sampler descriptor>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-combinedimagesampler combined image sampler descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_SAMPLED_IMAGE' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-sampledimage sampled image descriptor>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sampledimage sampled image descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_STORAGE_IMAGE' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage storage image descriptor>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storageimage storage image descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-uniformtexelbuffer uniform texel buffer descriptor>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformtexelbuffer uniform texel buffer descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer storage texel buffer descriptor>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer storage texel buffer descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_UNIFORM_BUFFER' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-uniformbuffer uniform buffer descriptor>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformbuffer uniform buffer descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_STORAGE_BUFFER' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storagebuffer storage buffer descriptor>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagebuffer storage buffer descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic dynamic uniform buffer descriptor>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic dynamic uniform buffer descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic dynamic storage buffer descriptor>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic dynamic storage buffer descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_INPUT_ATTACHMENT' specifies an
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-inputattachment input attachment descriptor>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-inputattachment input attachment descriptor>.
 --
--- -   'DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT' specifies an
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-inlineuniformblock inline uniform block>.
+-- -   'DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK' specifies an
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-inlineuniformblock inline uniform block>.
 --
 -- -   'DESCRIPTOR_TYPE_MUTABLE_VALVE' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-mutable descriptor of mutable type>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-mutable descriptor of mutable type>.
 --
 -- When a descriptor set is updated via elements of
 -- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet', members of
@@ -109,10 +109,10 @@ import GHC.Show (Show(showsPrec))
 --     is accessed.
 --
 -- When updating descriptors with a @descriptorType@ of
--- 'DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT', none of the @pImageInfo@,
+-- 'DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK', none of the @pImageInfo@,
 -- @pBufferInfo@, or @pTexelBufferView@ members are accessed, instead the
 -- source data of the descriptor update operation is taken from the
--- 'Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
+-- 'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlock'
 -- structure in the @pNext@ chain of
 -- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'. When updating
 -- descriptors with a @descriptorType@ of
@@ -170,8 +170,8 @@ pattern DESCRIPTOR_TYPE_MUTABLE_VALVE              = DescriptorType 1000351000
 pattern DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV  = DescriptorType 1000165000
 -- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR"
 pattern DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR = DescriptorType 1000150000
--- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT"
-pattern DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT   = DescriptorType 1000138000
+-- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK"
+pattern DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK       = DescriptorType 1000138000
 {-# complete DESCRIPTOR_TYPE_SAMPLER,
              DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
              DESCRIPTOR_TYPE_SAMPLED_IMAGE,
@@ -186,7 +186,7 @@ pattern DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT   = DescriptorType 1000138000
              DESCRIPTOR_TYPE_MUTABLE_VALVE,
              DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV,
              DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR,
-             DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT :: DescriptorType #-}
+             DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK :: DescriptorType #-}
 
 conNameDescriptorType :: String
 conNameDescriptorType = "DescriptorType"
@@ -210,7 +210,7 @@ showTableDescriptorType =
   , (DESCRIPTOR_TYPE_MUTABLE_VALVE             , "MUTABLE_VALVE")
   , (DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV , "ACCELERATION_STRUCTURE_NV")
   , (DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR, "ACCELERATION_STRUCTURE_KHR")
-  , (DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT  , "INLINE_UNIFORM_BLOCK_EXT")
+  , (DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK      , "INLINE_UNIFORM_BLOCK")
   ]
 
 instance Show DescriptorType where

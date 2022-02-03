@@ -34,37 +34,37 @@ newtype QueryType = QueryType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- | 'QUERY_TYPE_OCCLUSION' specifies an
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-occlusion occlusion query>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#queries-occlusion occlusion query>.
 pattern QUERY_TYPE_OCCLUSION                     = QueryType 0
 -- | 'QUERY_TYPE_PIPELINE_STATISTICS' specifies a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-pipestats pipeline statistics query>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#queries-pipestats pipeline statistics query>.
 pattern QUERY_TYPE_PIPELINE_STATISTICS           = QueryType 1
 -- | 'QUERY_TYPE_TIMESTAMP' specifies a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-timestamps timestamp query>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#queries-timestamps timestamp query>.
 pattern QUERY_TYPE_TIMESTAMP                     = QueryType 2
 -- | 'QUERY_TYPE_PERFORMANCE_QUERY_INTEL' specifies a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-performance-intel Intel performance query>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#queries-performance-intel Intel performance query>.
 pattern QUERY_TYPE_PERFORMANCE_QUERY_INTEL       = QueryType 1000210000
 -- | 'QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV' specifies a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-copying acceleration structure size query>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure-copying acceleration structure size query>
 -- for use with
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdWriteAccelerationStructuresPropertiesNV'.
 pattern QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV = QueryType 1000165000
 -- | 'QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR' specifies a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-copying serialization acceleration structure size query>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure-copying serialization acceleration structure size query>
 pattern QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR = QueryType 1000150001
 -- | 'QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR' specifies a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-copying acceleration structure size query>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure-copying acceleration structure size query>
 -- for use with
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.cmdWriteAccelerationStructuresPropertiesKHR'
 -- or
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.writeAccelerationStructuresPropertiesKHR'.
 pattern QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR = QueryType 1000150000
 -- | 'QUERY_TYPE_PERFORMANCE_QUERY_KHR' specifies a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-performance performance query>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#queries-performance performance query>.
 pattern QUERY_TYPE_PERFORMANCE_QUERY_KHR         = QueryType 1000116000
 -- | 'QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT' specifies a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-transform-feedback transform feedback query>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#queries-transform-feedback transform feedback query>.
 pattern QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT = QueryType 1000028004
 {-# complete QUERY_TYPE_OCCLUSION,
              QUERY_TYPE_PIPELINE_STATISTICS,

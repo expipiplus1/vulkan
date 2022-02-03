@@ -122,7 +122,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_push_descriptor Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_push_descriptor Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -208,15 +208,15 @@ foreign import ccall
 -- When a command buffer begins recording, all push descriptors are
 -- undefined. Push descriptors /can/ be updated incrementally and cause
 -- shaders to use the updated descriptors for subsequent
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-bindpoint-commands bound pipeline commands>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-bindpoint-commands bound pipeline commands>
 -- with the pipeline type set by @pipelineBindPoint@ until the descriptor
 -- is overwritten, or else until the set is disturbed as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>.
 -- When the set is disturbed or push descriptors with a different
 -- descriptor set layout are set, all push descriptors are undefined.
 --
 -- Push descriptors that are
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-staticuse statically used>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-staticuse statically used>
 -- by a pipeline /must/ not be undefined at the time that a drawing or
 -- dispatching command is recorded to execute using that pipeline. This
 -- includes immutable sampler descriptors, which /must/ be pushed before

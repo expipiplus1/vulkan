@@ -19,13 +19,12 @@ module Vulkan.Core10.Enums.Result  (Result( SUCCESS
                                           , ERROR_FORMAT_NOT_SUPPORTED
                                           , ERROR_FRAGMENTED_POOL
                                           , ERROR_UNKNOWN
-                                          , PIPELINE_COMPILE_REQUIRED_EXT
                                           , OPERATION_NOT_DEFERRED_KHR
                                           , OPERATION_DEFERRED_KHR
                                           , THREAD_DONE_KHR
                                           , THREAD_IDLE_KHR
                                           , ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT
-                                          , ERROR_NOT_PERMITTED_EXT
+                                          , ERROR_NOT_PERMITTED_KHR
                                           , ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT
                                           , ERROR_INVALID_SHADER_NV
                                           , ERROR_VALIDATION_FAILED_EXT
@@ -34,6 +33,7 @@ module Vulkan.Core10.Enums.Result  (Result( SUCCESS
                                           , SUBOPTIMAL_KHR
                                           , ERROR_NATIVE_WINDOW_IN_USE_KHR
                                           , ERROR_SURFACE_LOST_KHR
+                                          , PIPELINE_COMPILE_REQUIRED
                                           , ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS
                                           , ERROR_FRAGMENTATION
                                           , ERROR_INVALID_EXTERNAL_HANDLE
@@ -119,7 +119,7 @@ pattern ERROR_OUT_OF_DEVICE_MEMORY           = Result (-2)
 -- completed for implementation-specific reasons.
 pattern ERROR_INITIALIZATION_FAILED          = Result (-3)
 -- | 'ERROR_DEVICE_LOST' The logical or physical device has been lost. See
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>
 pattern ERROR_DEVICE_LOST                    = Result (-4)
 -- | 'ERROR_MEMORY_MAP_FAILED' Mapping of a memory object has failed.
 pattern ERROR_MEMORY_MAP_FAILED              = Result (-5)
@@ -150,10 +150,6 @@ pattern ERROR_FRAGMENTED_POOL                = Result (-12)
 -- | 'ERROR_UNKNOWN' An unknown error has occurred; either the application
 -- has provided invalid input, or an implementation failure has occurred.
 pattern ERROR_UNKNOWN                        = Result (-13)
--- | 'PIPELINE_COMPILE_REQUIRED_EXT' A requested pipeline creation would have
--- required compilation, but the application requested compilation to not
--- be performed.
-pattern PIPELINE_COMPILE_REQUIRED_EXT        = Result 1000297000
 -- | 'OPERATION_NOT_DEFERRED_KHR' A deferred operation was requested and no
 -- operations were deferred.
 pattern OPERATION_NOT_DEFERRED_KHR           = Result 1000268003
@@ -173,8 +169,8 @@ pattern THREAD_IDLE_KHR                      = Result 1000268000
 -- due to implementation-dependent reasons, outside of the application’s
 -- control.
 pattern ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT = Result (-1000255000)
--- No documentation found for Nested "VkResult" "VK_ERROR_NOT_PERMITTED_EXT"
-pattern ERROR_NOT_PERMITTED_EXT              = Result (-1000174001)
+-- No documentation found for Nested "VkResult" "VK_ERROR_NOT_PERMITTED_KHR"
+pattern ERROR_NOT_PERMITTED_KHR              = Result (-1000174001)
 -- No documentation found for Nested "VkResult" "VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT"
 pattern ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT = Result (-1000158000)
 -- | 'ERROR_INVALID_SHADER_NV' One or more shaders failed to compile or link.
@@ -202,6 +198,10 @@ pattern SUBOPTIMAL_KHR                       = Result 1000001003
 pattern ERROR_NATIVE_WINDOW_IN_USE_KHR       = Result (-1000000001)
 -- | 'ERROR_SURFACE_LOST_KHR' A surface is no longer available.
 pattern ERROR_SURFACE_LOST_KHR               = Result (-1000000000)
+-- | 'PIPELINE_COMPILE_REQUIRED' A requested pipeline creation would have
+-- required compilation, but the application requested compilation to not
+-- be performed.
+pattern PIPELINE_COMPILE_REQUIRED            = Result 1000297000
 -- | 'ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS' A buffer creation or memory
 -- allocation failed because the requested address is not available. A
 -- shader group handle assignment failed because the requested shader group
@@ -238,13 +238,12 @@ pattern ERROR_OUT_OF_POOL_MEMORY             = Result (-1000069000)
              ERROR_FORMAT_NOT_SUPPORTED,
              ERROR_FRAGMENTED_POOL,
              ERROR_UNKNOWN,
-             PIPELINE_COMPILE_REQUIRED_EXT,
              OPERATION_NOT_DEFERRED_KHR,
              OPERATION_DEFERRED_KHR,
              THREAD_DONE_KHR,
              THREAD_IDLE_KHR,
              ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT,
-             ERROR_NOT_PERMITTED_EXT,
+             ERROR_NOT_PERMITTED_KHR,
              ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT,
              ERROR_INVALID_SHADER_NV,
              ERROR_VALIDATION_FAILED_EXT,
@@ -253,6 +252,7 @@ pattern ERROR_OUT_OF_POOL_MEMORY             = Result (-1000069000)
              SUBOPTIMAL_KHR,
              ERROR_NATIVE_WINDOW_IN_USE_KHR,
              ERROR_SURFACE_LOST_KHR,
+             PIPELINE_COMPILE_REQUIRED,
              ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS,
              ERROR_FRAGMENTATION,
              ERROR_INVALID_EXTERNAL_HANDLE,
@@ -285,13 +285,12 @@ showTableResult =
   , (ERROR_FORMAT_NOT_SUPPORTED          , "ERROR_FORMAT_NOT_SUPPORTED")
   , (ERROR_FRAGMENTED_POOL               , "ERROR_FRAGMENTED_POOL")
   , (ERROR_UNKNOWN                       , "ERROR_UNKNOWN")
-  , (PIPELINE_COMPILE_REQUIRED_EXT       , "PIPELINE_COMPILE_REQUIRED_EXT")
   , (OPERATION_NOT_DEFERRED_KHR          , "OPERATION_NOT_DEFERRED_KHR")
   , (OPERATION_DEFERRED_KHR              , "OPERATION_DEFERRED_KHR")
   , (THREAD_DONE_KHR                     , "THREAD_DONE_KHR")
   , (THREAD_IDLE_KHR                     , "THREAD_IDLE_KHR")
   , (ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT, "ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT")
-  , (ERROR_NOT_PERMITTED_EXT             , "ERROR_NOT_PERMITTED_EXT")
+  , (ERROR_NOT_PERMITTED_KHR             , "ERROR_NOT_PERMITTED_KHR")
   , (ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT, "ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT")
   , (ERROR_INVALID_SHADER_NV             , "ERROR_INVALID_SHADER_NV")
   , (ERROR_VALIDATION_FAILED_EXT         , "ERROR_VALIDATION_FAILED_EXT")
@@ -300,6 +299,7 @@ showTableResult =
   , (SUBOPTIMAL_KHR                      , "SUBOPTIMAL_KHR")
   , (ERROR_NATIVE_WINDOW_IN_USE_KHR      , "ERROR_NATIVE_WINDOW_IN_USE_KHR")
   , (ERROR_SURFACE_LOST_KHR              , "ERROR_SURFACE_LOST_KHR")
+  , (PIPELINE_COMPILE_REQUIRED           , "PIPELINE_COMPILE_REQUIRED")
   , (ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS, "ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS")
   , (ERROR_FRAGMENTATION                 , "ERROR_FRAGMENTATION")
   , (ERROR_INVALID_EXTERNAL_HANDLE       , "ERROR_INVALID_EXTERNAL_HANDLE")

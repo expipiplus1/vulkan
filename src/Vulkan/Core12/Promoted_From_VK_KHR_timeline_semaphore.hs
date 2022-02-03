@@ -101,7 +101,7 @@ foreign import ccall
 -- Note
 --
 -- If a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-submission queue submission>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-submission queue submission>
 -- command is pending execution, then the value returned by this command
 -- /may/ immediately be out of date.
 --
@@ -221,7 +221,7 @@ waitSemaphoresSafeOrUnsafe mkVkWaitSemaphores device waitInfo timeout = liftIO .
 -- after the @timeout@ has expired.
 --
 -- If device loss occurs (see
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>)
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>)
 -- before the timeout has expired, 'waitSemaphores' /must/ return in finite
 -- time with either 'Vulkan.Core10.Enums.Result.SUCCESS' or
 -- 'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'.
@@ -304,7 +304,7 @@ foreign import ccall
 --
 -- When 'signalSemaphore' is executed on the host, it defines and
 -- immediately executes a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
 -- which sets the timeline semaphore to the given value.
 --
 -- The first synchronization scope is defined by the host execution model,
@@ -508,7 +508,7 @@ instance Zero PhysicalDeviceTimelineSemaphoreProperties where
 -- == Valid Usage
 --
 -- -   #VUID-VkSemaphoreTypeCreateInfo-timelineSemaphore-03252# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-timelineSemaphore timelineSemaphore>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-timelineSemaphore timelineSemaphore>
 --     feature is not enabled, @semaphoreType@ /must/ not equal
 --     'Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE'
 --
@@ -838,7 +838,7 @@ data SemaphoreSignalInfo = SemaphoreSignalInfo
     -- which does not differ from the current value of the semaphore or the
     -- value of any outstanding semaphore wait or signal operation on
     -- @semaphore@ by more than
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
     value :: Word64
   }
   deriving (Typeable, Eq)

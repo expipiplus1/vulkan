@@ -19,9 +19,9 @@ import GHC.Show (Show(showsPrec))
 -- = Description
 --
 -- The formulae for these conversions is described in the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-sampler-YCbCr-conversion-rangeexpand Sampler Y′CBCR Range Expansion>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-sampler-YCbCr-conversion-rangeexpand Sampler Y′CBCR Range Expansion>
 -- section of the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures Image Operations>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures Image Operations>
 -- chapter.
 --
 -- No range modification takes place if @ycbcrModel@ is

@@ -31,7 +31,7 @@ type ColorComponentFlags = ColorComponentFlagBits
 -- is enabled.
 --
 -- The color write mask operation is applied only if
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-color-write-enable Color Write Enable>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-color-write-enable Color Write Enable>
 -- is enabled for the respective attachment. Otherwise the color write mask
 -- is ignored and writes to all components of the attachment are disabled.
 --

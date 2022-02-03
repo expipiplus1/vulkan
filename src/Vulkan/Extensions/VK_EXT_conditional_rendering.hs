@@ -156,7 +156,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_conditional_rendering Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_conditional_rendering Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -244,7 +244,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBeginConditionalRenderingEXT-None-01980# Conditional
 --     rendering /must/ not already be
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#active-conditional-rendering active>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#active-conditional-rendering active>
 --
 -- == Valid Usage (Implicit)
 --
@@ -334,17 +334,17 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdEndConditionalRenderingEXT-None-01985# Conditional
 --     rendering /must/ be
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#active-conditional-rendering active>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#active-conditional-rendering active>
 --
 -- -   #VUID-vkCmdEndConditionalRenderingEXT-None-01986# If conditional
 --     rendering was made
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#active-conditional-rendering active>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#active-conditional-rendering active>
 --     outside of a render pass instance, it /must/ not be ended inside a
 --     render pass instance
 --
 -- -   #VUID-vkCmdEndConditionalRenderingEXT-None-01987# If conditional
 --     rendering was made
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#active-conditional-rendering active>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#active-conditional-rendering active>
 --     within a subpass it /must/ be ended in the same subpass
 --
 -- == Valid Usage (Implicit)
@@ -518,7 +518,7 @@ instance Zero ConditionalRenderingBeginInfoEXT where
 --
 -- -   #VUID-VkCommandBufferInheritanceConditionalRenderingInfoEXT-conditionalRenderingEnable-01977#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-inheritedConditionalRendering inherited conditional rendering>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-inheritedConditionalRendering inherited conditional rendering>
 --     feature is not enabled, @conditionalRenderingEnable@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --

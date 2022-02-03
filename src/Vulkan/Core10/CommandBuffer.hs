@@ -76,7 +76,7 @@ import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_conditional_rendering (CommandBufferInheritanceConditionalRenderingInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_render_pass_transform (CommandBufferInheritanceRenderPassTransformInfoQCOM)
-import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (CommandBufferInheritanceRenderingInfoKHR)
+import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering (CommandBufferInheritanceRenderingInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_inherited_viewport_scissor (CommandBufferInheritanceViewportScissorInfoNV)
 import Vulkan.Core10.Enums.CommandBufferLevel (CommandBufferLevel)
 import Vulkan.Core10.Enums.CommandBufferResetFlagBits (CommandBufferResetFlagBits(..))
@@ -149,7 +149,7 @@ foreign import ccall
 -- contents.
 --
 -- When command buffers are first allocated, they are in the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>.
 --
 -- == Valid Usage (Implicit)
 --
@@ -239,15 +239,15 @@ foreign import ccall
 -- = Description
 --
 -- Any primary command buffer that is in the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
 -- and has any element of @pCommandBuffers@ recorded into it, becomes
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
 --
 -- == Valid Usage
 --
 -- -   #VUID-vkFreeCommandBuffers-pCommandBuffers-00047# All elements of
 --     @pCommandBuffers@ /must/ not be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
 -- -   #VUID-vkFreeCommandBuffers-pCommandBuffers-00048# @pCommandBuffers@
 --     /must/ be a valid pointer to an array of @commandBufferCount@
@@ -319,14 +319,14 @@ foreign import ccall
 --
 -- -   #VUID-vkBeginCommandBuffer-commandBuffer-00049# @commandBuffer@
 --     /must/ not be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording or pending state>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle recording or pending state>
 --
 -- -   #VUID-vkBeginCommandBuffer-commandBuffer-00050# If @commandBuffer@
 --     was allocated from a 'Vulkan.Core10.Handles.CommandPool' which did
 --     not have the
 --     'Vulkan.Core10.Enums.CommandPoolCreateFlagBits.COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT'
 --     flag set, @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>
 --
 -- -   #VUID-vkBeginCommandBuffer-commandBuffer-00051# If @commandBuffer@
 --     is a secondary command buffer, the @pInheritanceInfo@ member of
@@ -426,28 +426,28 @@ foreign import ccall
 -- /must/ be reset.
 --
 -- The command buffer /must/ have been in the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>,
 -- and is moved to the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle executable state>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle executable state>.
 --
 -- == Valid Usage
 --
 -- -   #VUID-vkEndCommandBuffer-commandBuffer-00059# @commandBuffer@ /must/
 --     be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   #VUID-vkEndCommandBuffer-commandBuffer-00060# If @commandBuffer@ is
 --     a primary command buffer, there /must/ not be an active render pass
 --     instance
 --
 -- -   #VUID-vkEndCommandBuffer-commandBuffer-00061# All queries made
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-operation-active active>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#queries-operation-active active>
 --     during the recording of @commandBuffer@ /must/ have been made
 --     inactive
 --
 -- -   #VUID-vkEndCommandBuffer-None-01978# Conditional rendering /must/
 --     not be
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#active-conditional-rendering active>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#active-conditional-rendering active>
 --
 -- -   #VUID-vkEndCommandBuffer-commandBuffer-01815# If @commandBuffer@ is
 --     a secondary command buffer, there /must/ not be an outstanding
@@ -517,15 +517,15 @@ foreign import ccall
 -- = Description
 --
 -- Any primary command buffer that is in the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
 -- and has @commandBuffer@ recorded into it, becomes
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
 --
 -- == Valid Usage
 --
 -- -   #VUID-vkResetCommandBuffer-commandBuffer-00045# @commandBuffer@
 --     /must/ not be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
 -- -   #VUID-vkResetCommandBuffer-commandBuffer-00046# @commandBuffer@
 --     /must/ have been allocated from a pool that was created with the
@@ -567,9 +567,9 @@ resetCommandBuffer :: forall io
                     . (MonadIO io)
                    => -- | @commandBuffer@ is the command buffer to reset. The command buffer /can/
                       -- be in any state other than
-                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending>,
+                      -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle pending>,
                       -- and is moved into the
-                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>.
+                      -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>.
                       CommandBuffer
                    -> -- | @flags@ is a bitmask of
                       -- 'Vulkan.Core10.Enums.CommandBufferResetFlagBits.CommandBufferResetFlagBits'
@@ -667,30 +667,30 @@ instance Zero CommandBufferAllocateInfo where
 --
 -- If the 'Vulkan.Core10.Handles.CommandBuffer' will not be executed within
 -- a render pass instance, or if the render pass instance was begun with
--- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 -- @renderPass@, @subpass@, and @framebuffer@ are ignored.
 --
 -- == Valid Usage
 --
 -- -   #VUID-VkCommandBufferInheritanceInfo-occlusionQueryEnable-00056# If
 --     the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-inheritedQueries inherited queries>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-inheritedQueries inherited queries>
 --     feature is not enabled, @occlusionQueryEnable@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   #VUID-VkCommandBufferInheritanceInfo-queryFlags-00057# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-inheritedQueries inherited queries>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-inheritedQueries inherited queries>
 --     feature is enabled, @queryFlags@ /must/ be a valid combination of
 --     'Vulkan.Core10.Enums.QueryControlFlagBits.QueryControlFlagBits'
 --     values
 --
 -- -   #VUID-VkCommandBufferInheritanceInfo-queryFlags-02788# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-inheritedQueries inherited queries>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-inheritedQueries inherited queries>
 --     feature is not enabled, @queryFlags@ /must/ be @0@
 --
 -- -   #VUID-VkCommandBufferInheritanceInfo-pipelineStatistics-02789# If
 --     the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineStatisticsQuery pipeline statistics queries>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineStatisticsQuery pipeline statistics queries>
 --     feature is enabled, @pipelineStatistics@ /must/ be a valid
 --     combination of
 --     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QueryPipelineStatisticFlagBits'
@@ -698,7 +698,7 @@ instance Zero CommandBufferAllocateInfo where
 --
 -- -   #VUID-VkCommandBufferInheritanceInfo-pipelineStatistics-00058# If
 --     the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineStatisticsQuery pipeline statistics queries>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineStatisticsQuery pipeline statistics queries>
 --     feature is not enabled, @pipelineStatistics@ /must/ be @0@
 --
 -- == Valid Usage (Implicit)
@@ -712,7 +712,7 @@ instance Zero CommandBufferAllocateInfo where
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD',
 --     'Vulkan.Extensions.VK_EXT_conditional_rendering.CommandBufferInheritanceConditionalRenderingInfoEXT',
 --     'Vulkan.Extensions.VK_QCOM_render_pass_transform.CommandBufferInheritanceRenderPassTransformInfoQCOM',
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfoKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfo',
 --     'Vulkan.Extensions.VK_NV_inherited_viewport_scissor.CommandBufferInheritanceViewportScissorInfoNV',
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.MultiviewPerViewAttributesInfoNVX'
@@ -739,7 +739,7 @@ data CommandBufferInheritanceInfo (es :: [Type]) = CommandBufferInheritanceInfo
     next :: Chain es
   , -- | @renderPass@ is a 'Vulkan.Core10.Handles.RenderPass' object defining
     -- which render passes the 'Vulkan.Core10.Handles.CommandBuffer' will be
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-compatibility compatible>
     -- with and /can/ be executed within.
     renderPass :: RenderPass
   , -- | @subpass@ is the index of the subpass within the render pass instance
@@ -799,7 +799,7 @@ instance Extensible CommandBufferInheritanceInfo where
   extends _ f
     | Just Refl <- eqT @e @MultiviewPerViewAttributesInfoNVX = Just f
     | Just Refl <- eqT @e @AttachmentSampleCountInfoAMD = Just f
-    | Just Refl <- eqT @e @CommandBufferInheritanceRenderingInfoKHR = Just f
+    | Just Refl <- eqT @e @CommandBufferInheritanceRenderingInfo = Just f
     | Just Refl <- eqT @e @CommandBufferInheritanceViewportScissorInfoNV = Just f
     | Just Refl <- eqT @e @CommandBufferInheritanceRenderPassTransformInfoQCOM = Just f
     | Just Refl <- eqT @e @CommandBufferInheritanceConditionalRenderingInfoEXT = Just f
@@ -882,7 +882,7 @@ instance es ~ '[] => Zero (CommandBufferInheritanceInfo es) where
 --     and the @renderPass@ member of @pInheritanceInfo@ is
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', the @pNext@ chain of
 --     @pInheritanceInfo@ /must/ include a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfoKHR'
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfo'
 --     structure
 --
 -- -   #VUID-VkCommandBufferBeginInfo-flags-06003# If @flags@ contains
@@ -895,7 +895,7 @@ instance es ~ '[] => Zero (CommandBufferInheritanceInfo es) where
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
 --     structure, the @colorAttachmentCount@ member of that structure
 --     /must/ be equal to the value of
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfoKHR'::@colorAttachmentCount@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfo'::@colorAttachmentCount@
 --
 -- == Valid Usage (Implicit)
 --

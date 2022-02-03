@@ -67,7 +67,7 @@ pattern IMAGE_USAGE_COLOR_ATTACHMENT_BIT                     = ImageUsageFlagBit
 pattern IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT             = ImageUsageFlagBits 0x00000020
 -- | 'IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT' specifies that implementations
 -- /may/ support using
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory memory allocations>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory memory allocations>
 -- with the
 -- 'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT'
 -- to back an image with this usage. This bit /can/ be set for any image
@@ -87,14 +87,14 @@ pattern IMAGE_USAGE_INVOCATION_MASK_BIT_HUAWEI               = ImageUsageFlagBit
 -- | 'IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR' specifies that
 -- the image /can/ be used to create a 'Vulkan.Core10.Handles.ImageView'
 -- suitable for use as a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
 -- or
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-shading-rate-image shading rate image>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-shading-rate-image shading rate image>
 pattern IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = ImageUsageFlagBits 0x00000100
 -- | 'IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT' specifies that the image
 -- /can/ be used to create a 'Vulkan.Core10.Handles.ImageView' suitable for
 -- use as a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragmentdensitymapops fragment density map image>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragmentdensitymapops fragment density map image>.
 pattern IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT             = ImageUsageFlagBits 0x00000200
 
 conNameImageUsageFlagBits :: String

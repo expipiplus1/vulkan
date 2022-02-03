@@ -39,7 +39,7 @@ newtype CommandPoolCreateFlagBits = CommandPoolCreateFlagBits Flags
 pattern COMMAND_POOL_CREATE_TRANSIENT_BIT            = CommandPoolCreateFlagBits 0x00000001
 -- | 'COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT' allows any command buffer
 -- allocated from a pool to be individually reset to the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>;
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>;
 -- either by calling 'Vulkan.Core10.CommandBuffer.resetCommandBuffer', or
 -- via the implicit reset when calling
 -- 'Vulkan.Core10.CommandBuffer.beginCommandBuffer'. If this flag is not

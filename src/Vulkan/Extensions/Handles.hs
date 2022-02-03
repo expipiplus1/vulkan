@@ -7,7 +7,6 @@ module Vulkan.Extensions.Handles  ( IndirectCommandsLayoutNV(..)
                                   , PerformanceConfigurationINTEL(..)
                                   , BufferCollectionFUCHSIA(..)
                                   , DeferredOperationKHR(..)
-                                  , PrivateDataSlotEXT(..)
                                   , CuModuleNVX(..)
                                   , CuFunctionNVX(..)
                                   , DisplayKHR(..)
@@ -42,6 +41,7 @@ module Vulkan.Extensions.Handles  ( IndirectCommandsLayoutNV(..)
                                   , PipelineCache(..)
                                   , DescriptorUpdateTemplate(..)
                                   , SamplerYcbcrConversion(..)
+                                  , PrivateDataSlot(..)
                                   ) where
 
 import GHC.Show (showParen)
@@ -63,7 +63,6 @@ import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DISPLAY_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DISPLAY_MODE_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL))
-import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SURFACE_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SWAPCHAIN_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_VALIDATION_CACHE_EXT))
@@ -86,6 +85,7 @@ import Vulkan.Core10.Handles (PhysicalDevice(..))
 import Vulkan.Core10.Handles (Pipeline(..))
 import Vulkan.Core10.Handles (PipelineCache(..))
 import Vulkan.Core10.Handles (PipelineLayout(..))
+import Vulkan.Core13.Handles (PrivateDataSlot(..))
 import Vulkan.Core10.Handles (QueryPool(..))
 import Vulkan.Core10.Handles (Queue(..))
 import Vulkan.Core10.Handles (RenderPass(..))
@@ -247,24 +247,6 @@ instance HasObjectType DeferredOperationKHR where
   objectTypeAndHandle (DeferredOperationKHR h) = (OBJECT_TYPE_DEFERRED_OPERATION_KHR, h)
 instance Show DeferredOperationKHR where
   showsPrec p (DeferredOperationKHR x) = showParen (p >= 11) (showString "DeferredOperationKHR 0x" . showHex x)
-
-
--- | VkPrivateDataSlotEXT - Opaque handle to a private data slot object
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data VK_EXT_private_data>,
--- 'Vulkan.Extensions.VK_EXT_private_data.createPrivateDataSlotEXT',
--- 'Vulkan.Extensions.VK_EXT_private_data.destroyPrivateDataSlotEXT',
--- 'Vulkan.Extensions.VK_EXT_private_data.getPrivateDataEXT',
--- 'Vulkan.Extensions.VK_EXT_private_data.setPrivateDataEXT'
-newtype PrivateDataSlotEXT = PrivateDataSlotEXT Word64
-  deriving newtype (Eq, Ord, Storable, Zero)
-  deriving anyclass (IsHandle)
-instance HasObjectType PrivateDataSlotEXT where
-  objectTypeAndHandle (PrivateDataSlotEXT h) = (OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT, h)
-instance Show PrivateDataSlotEXT where
-  showsPrec p (PrivateDataSlotEXT x) = showParen (p >= 11) (showString "PrivateDataSlotEXT 0x" . showHex x)
 
 
 -- | VkCuModuleNVX - Stub description of VkCuModuleNVX

@@ -60,9 +60,9 @@ data PhysicalDeviceShaderSubgroupExtendedTypesFeatures = PhysicalDeviceShaderSub
     -- @shaderSubgroupExtendedTypes@ is a boolean specifying whether subgroup
     -- operations can use 8-bit integer, 16-bit integer, 64-bit integer, 16-bit
     -- floating-point, and vectors of these types in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-group-operations group operations>
     -- with
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>,
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>,
     -- if the implementation supports the types.
     shaderSubgroupExtendedTypes :: Bool }
   deriving (Typeable, Eq)

@@ -45,7 +45,7 @@ newtype BufferUsageFlagBits = BufferUsageFlagBits Flags
 
 -- | 'BUFFER_USAGE_TRANSFER_SRC_BIT' specifies that the buffer /can/ be used
 -- as the source of a /transfer command/ (see the definition of
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-transfer >).
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages-transfer >).
 pattern BUFFER_USAGE_TRANSFER_SRC_BIT                          = BufferUsageFlagBits 0x00000001
 -- | 'BUFFER_USAGE_TRANSFER_DST_BIT' specifies that the buffer /can/ be used
 -- as the destination of a transfer command.
@@ -97,7 +97,7 @@ pattern BUFFER_USAGE_VERTEX_BUFFER_BIT                         = BufferUsageFlag
 pattern BUFFER_USAGE_INDIRECT_BUFFER_BIT                       = BufferUsageFlagBits 0x00000100
 -- | 'BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR' specifies that the buffer is
 -- suitable for use as a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shader-binding-table Shader Binding Table>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shader-binding-table Shader Binding Table>.
 pattern BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR              = BufferUsageFlagBits 0x00000400
 -- | 'BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR' specifies that the
 -- buffer is suitable for storage space for a
@@ -105,7 +105,7 @@ pattern BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR              = BufferUsageFlag
 pattern BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR    = BufferUsageFlagBits 0x00100000
 -- | 'BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR'
 -- specifies that the buffer is suitable for use as a read-only input to an
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-building acceleration structure build>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure-building acceleration structure build>.
 pattern BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR = BufferUsageFlagBits 0x00080000
 -- | 'BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT' specifies that the buffer
 -- is suitable for passing as the @buffer@ parameter to

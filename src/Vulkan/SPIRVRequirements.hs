@@ -29,11 +29,13 @@ import Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (PhysicalDeviceRayTracing
 import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelineFeaturesKHR(..))
 import Vulkan.Extensions.VK_EXT_shader_atomic_float2 (PhysicalDeviceShaderAtomicFloat2FeaturesEXT(..))
 import Vulkan.Extensions.VK_EXT_shader_atomic_float (PhysicalDeviceShaderAtomicFloatFeaturesEXT(..))
-import Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation (PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT(..))
+import Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation (PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT)
+import Vulkan.Core13.Promoted_From_VK_EXT_shader_demote_to_helper_invocation (PhysicalDeviceShaderDemoteToHelperInvocationFeatures(..))
 import Vulkan.Core11.Promoted_From_VK_KHR_shader_draw_parameters (PhysicalDeviceShaderDrawParametersFeatures(..))
 import Vulkan.Extensions.VK_EXT_shader_image_atomic_int64 (PhysicalDeviceShaderImageAtomicInt64FeaturesEXT(..))
 import Vulkan.Extensions.VK_NV_shader_image_footprint (PhysicalDeviceShaderImageFootprintFeaturesNV(..))
-import Vulkan.Extensions.VK_KHR_shader_integer_dot_product (PhysicalDeviceShaderIntegerDotProductFeaturesKHR(..))
+import Vulkan.Extensions.VK_KHR_shader_integer_dot_product (PhysicalDeviceShaderIntegerDotProductFeaturesKHR)
+import Vulkan.Core13.Promoted_From_VK_KHR_shader_integer_dot_product (PhysicalDeviceShaderIntegerDotProductFeatures(..))
 import Vulkan.Extensions.VK_INTEL_shader_integer_functions2 (PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL(..))
 import Vulkan.Extensions.VK_NV_shader_sm_builtins (PhysicalDeviceShaderSMBuiltinsFeaturesNV(..))
 import Vulkan.Extensions.VK_NV_shading_rate_image (PhysicalDeviceShadingRateImageFeaturesNV(..))
@@ -45,6 +47,7 @@ import Vulkan.Core12 (PhysicalDeviceVulkan11Properties(..))
 import Vulkan.Core12 (PhysicalDeviceVulkan12Features(..))
 import Vulkan.Core12 (PhysicalDeviceVulkan12Properties)
 import Vulkan.Core12 (PhysicalDeviceVulkan12Properties(..))
+import Vulkan.Core13 (PhysicalDeviceVulkan13Features(..))
 import Vulkan.Extensions.VK_KHR_workgroup_memory_explicit_layout (PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR(..))
 import Vulkan.Extensions.VK_AMD_gcn_shader (pattern AMD_GCN_SHADER_EXTENSION_NAME)
 import Vulkan.Extensions.VK_AMD_gpu_shader_half_float (pattern AMD_GPU_SHADER_HALF_FLOAT_EXTENSION_NAME)
@@ -532,17 +535,8 @@ spirvExtensionRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     ]
-  "SPV_EXT_demote_to_helper_invocation" -> (,)
-    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
-                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = 0
-                               }
-    ]
-    [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = EXT_SHADER_DEMOTE_TO_HELPER_INVOCATION_EXTENSION_NAME
-                             , deviceExtensionMinVersion = 0
-                             }
-    ]
+  "SPV_EXT_demote_to_helper_invocation" ->
+    (,) [RequireInstanceVersion $ MAKE_API_VERSION 1 3 0] [RequireDeviceVersion $ MAKE_API_VERSION 1 3 0]
   "SPV_KHR_fragment_shading_rate" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
@@ -566,13 +560,8 @@ spirvExtensionRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     ]
-  "SPV_KHR_non_semantic_info" -> (,)
-    []
-    [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_SHADER_NON_SEMANTIC_INFO_EXTENSION_NAME
-                             , deviceExtensionMinVersion = 0
-                             }
-    ]
+  "SPV_KHR_non_semantic_info" ->
+    (,) [RequireInstanceVersion $ MAKE_API_VERSION 1 3 0] [RequireDeviceVersion $ MAKE_API_VERSION 1 3 0]
   "SPV_EXT_shader_image_int64" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
@@ -584,17 +573,8 @@ spirvExtensionRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     ]
-  "SPV_KHR_terminate_invocation" -> (,)
-    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
-                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = 0
-                               }
-    ]
-    [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_SHADER_TERMINATE_INVOCATION_EXTENSION_NAME
-                             , deviceExtensionMinVersion = 0
-                             }
-    ]
+  "SPV_KHR_terminate_invocation" ->
+    (,) [RequireInstanceVersion $ MAKE_API_VERSION 1 3 0] [RequireDeviceVersion $ MAKE_API_VERSION 1 3 0]
   "SPV_KHR_multiview" ->
     (,) [RequireInstanceVersion $ MAKE_API_VERSION 1 1 0] [RequireDeviceVersion $ MAKE_API_VERSION 1 1 0]
   "SPV_KHR_workgroup_memory_explicit_layout" -> (,)
@@ -619,13 +599,8 @@ spirvExtensionRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     ]
-  "SPV_KHR_subgroup_uniform_control_flow" -> (,)
-    []
-    [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_SHADER_SUBGROUP_UNIFORM_CONTROL_FLOW_EXTENSION_NAME
-                             , deviceExtensionMinVersion = 0
-                             }
-    ]
+  "SPV_KHR_subgroup_uniform_control_flow" ->
+    (,) [RequireInstanceVersion $ MAKE_API_VERSION 1 3 0] [RequireDeviceVersion $ MAKE_API_VERSION 1 3 0]
   "SPV_EXT_shader_atomic_float_min_max" -> (,)
     [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
@@ -656,17 +631,8 @@ spirvExtensionRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     ]
-  "SPV_KHR_integer_dot_product" -> (,)
-    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
-                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
-                               , instanceExtensionMinVersion = 0
-                               }
-    ]
-    [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
-                             , deviceExtensionName       = KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME
-                             , deviceExtensionMinVersion = 0
-                             }
-    ]
+  "SPV_KHR_integer_dot_product" ->
+    (,) [RequireInstanceVersion $ MAKE_API_VERSION 1 3 0] [RequireDeviceVersion $ MAKE_API_VERSION 1 3 0]
   _ -> ([], [])
 
 spirvCapabilityRequirements :: ByteString -> ([InstanceRequirement], [DeviceRequirement])
@@ -2345,18 +2311,20 @@ spirvCapabilityRequirements = \case
                              }
     ]
   "DemoteToHelperInvocationEXT" -> (,)
-    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+    [ RequireInstanceVersion $ MAKE_API_VERSION 1 3 0
+    , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
                                , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderDemoteToHelperInvocation"
-      , checkFeature  = \PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT { shaderDemoteToHelperInvocation } ->
+      , checkFeature  = \PhysicalDeviceVulkan13Features { shaderDemoteToHelperInvocation } ->
                           shaderDemoteToHelperInvocation
-      , enableFeature = \_ ->
-        PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT { shaderDemoteToHelperInvocation = True }
+      , enableFeature = \PhysicalDeviceVulkan13Features {..} ->
+                          PhysicalDeviceVulkan13Features { shaderDemoteToHelperInvocation = True, .. }
       }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 3 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_SHADER_DEMOTE_TO_HELPER_INVOCATION_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
@@ -2457,68 +2425,76 @@ spirvCapabilityRequirements = \case
                              }
     ]
   "DotProductInputAllKHR" -> (,)
-    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+    [ RequireInstanceVersion $ MAKE_API_VERSION 1 3 0
+    , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
                                , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderIntegerDotProduct"
-      , checkFeature  = \PhysicalDeviceShaderIntegerDotProductFeaturesKHR { shaderIntegerDotProduct } ->
-                          shaderIntegerDotProduct
-      , enableFeature = \_ -> PhysicalDeviceShaderIntegerDotProductFeaturesKHR { shaderIntegerDotProduct = True }
+      , checkFeature  = \PhysicalDeviceVulkan13Features { shaderIntegerDotProduct } -> shaderIntegerDotProduct
+      , enableFeature = \PhysicalDeviceVulkan13Features {..} ->
+                          PhysicalDeviceVulkan13Features { shaderIntegerDotProduct = True, .. }
       }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 3 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
   "DotProductInput4x8BitKHR" -> (,)
-    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+    [ RequireInstanceVersion $ MAKE_API_VERSION 1 3 0
+    , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
                                , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderIntegerDotProduct"
-      , checkFeature  = \PhysicalDeviceShaderIntegerDotProductFeaturesKHR { shaderIntegerDotProduct } ->
-                          shaderIntegerDotProduct
-      , enableFeature = \_ -> PhysicalDeviceShaderIntegerDotProductFeaturesKHR { shaderIntegerDotProduct = True }
+      , checkFeature  = \PhysicalDeviceVulkan13Features { shaderIntegerDotProduct } -> shaderIntegerDotProduct
+      , enableFeature = \PhysicalDeviceVulkan13Features {..} ->
+                          PhysicalDeviceVulkan13Features { shaderIntegerDotProduct = True, .. }
       }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 3 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
   "DotProductInput4x8BitPackedKHR" -> (,)
-    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+    [ RequireInstanceVersion $ MAKE_API_VERSION 1 3 0
+    , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
                                , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderIntegerDotProduct"
-      , checkFeature  = \PhysicalDeviceShaderIntegerDotProductFeaturesKHR { shaderIntegerDotProduct } ->
-                          shaderIntegerDotProduct
-      , enableFeature = \_ -> PhysicalDeviceShaderIntegerDotProductFeaturesKHR { shaderIntegerDotProduct = True }
+      , checkFeature  = \PhysicalDeviceVulkan13Features { shaderIntegerDotProduct } -> shaderIntegerDotProduct
+      , enableFeature = \PhysicalDeviceVulkan13Features {..} ->
+                          PhysicalDeviceVulkan13Features { shaderIntegerDotProduct = True, .. }
       }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 3 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]
   "DotProductKHR" -> (,)
-    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+    [ RequireInstanceVersion $ MAKE_API_VERSION 1 3 0
+    , RequireInstanceExtension { instanceExtensionLayerName  = Nothing
                                , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
                                , instanceExtensionMinVersion = 0
                                }
     ]
     [ RequireDeviceFeature
       { featureName   = "shaderIntegerDotProduct"
-      , checkFeature  = \PhysicalDeviceShaderIntegerDotProductFeaturesKHR { shaderIntegerDotProduct } ->
-                          shaderIntegerDotProduct
-      , enableFeature = \_ -> PhysicalDeviceShaderIntegerDotProductFeaturesKHR { shaderIntegerDotProduct = True }
+      , checkFeature  = \PhysicalDeviceVulkan13Features { shaderIntegerDotProduct } -> shaderIntegerDotProduct
+      , enableFeature = \PhysicalDeviceVulkan13Features {..} ->
+                          PhysicalDeviceVulkan13Features { shaderIntegerDotProduct = True, .. }
       }
+    , RequireDeviceVersion $ MAKE_API_VERSION 1 3 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0

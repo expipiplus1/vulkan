@@ -244,7 +244,7 @@ data LayerProperties = LayerProperties
     layerName :: ByteString
   , -- | @specVersion@ is the Vulkan version the layer was written to, encoded as
     -- described in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#extendingvulkan-coreversions-versionnumbers>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-coreversions-versionnumbers>.
     specVersion :: Word32
   , -- | @implementationVersion@ is the version of this layer. It is an integer,
     -- increasing with backward compatible changes.

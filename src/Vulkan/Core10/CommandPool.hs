@@ -128,7 +128,7 @@ createCommandPool :: forall io
                      -- specifying the state of the command pool object.
                      CommandPoolCreateInfo
                   -> -- | @pAllocator@ controls host memory allocation as described in the
-                     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                     -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                      -- chapter.
                      ("allocator" ::: Maybe AllocationCallbacks)
                   -> io (CommandPool)
@@ -177,17 +177,17 @@ foreign import ccall
 --
 -- Any primary command buffer allocated from another
 -- 'Vulkan.Core10.Handles.CommandPool' that is in the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
 -- and has a secondary command buffer allocated from @commandPool@ recorded
 -- into it, becomes
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
 --
 -- == Valid Usage
 --
 -- -   #VUID-vkDestroyCommandPool-commandPool-00041# All
 --     'Vulkan.Core10.Handles.CommandBuffer' objects allocated from
 --     @commandPool@ /must/ not be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
 -- -   #VUID-vkDestroyCommandPool-commandPool-00042# If
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' were
@@ -232,7 +232,7 @@ destroyCommandPool :: forall io
                    -> -- | @commandPool@ is the handle of the command pool to destroy.
                       CommandPool
                    -> -- | @pAllocator@ controls host memory allocation as described in the
-                      -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                      -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                       -- chapter.
                       ("allocator" ::: Maybe AllocationCallbacks)
                    -> io ()
@@ -263,21 +263,21 @@ foreign import ccall
 -- command buffers allocated from the command pool back to the command
 -- pool. All command buffers that have been allocated from the command pool
 -- are put in the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>.
 --
 -- Any primary command buffer allocated from another
 -- 'Vulkan.Core10.Handles.CommandPool' that is in the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
 -- and has a secondary command buffer allocated from @commandPool@ recorded
 -- into it, becomes
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
 --
 -- == Valid Usage
 --
 -- -   #VUID-vkResetCommandPool-commandPool-00040# All
 --     'Vulkan.Core10.Handles.CommandBuffer' objects allocated from
 --     @commandPool@ /must/ not be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
 -- == Valid Usage (Implicit)
 --
@@ -369,7 +369,7 @@ data CommandPoolCreateInfo = CommandPoolCreateInfo
     -- from it.
     flags :: CommandPoolCreateFlags
   , -- | @queueFamilyIndex@ designates a queue family as described in section
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-queueprops Queue Family Properties>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-queueprops Queue Family Properties>.
     -- All command buffers allocated from this command pool /must/ be submitted
     -- on queues from the same queue family.
     queueFamilyIndex :: Word32

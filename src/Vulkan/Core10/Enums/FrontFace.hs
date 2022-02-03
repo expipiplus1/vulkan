@@ -25,6 +25,7 @@ import GHC.Show (Show(showsPrec))
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo',
+-- 'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetFrontFace',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetFrontFaceEXT'
 newtype FrontFace = FrontFace Int32
   deriving newtype (Eq, Ord, Storable, Zero)

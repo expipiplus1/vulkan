@@ -130,7 +130,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VALVE_mutable_descriptor_type Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_VALVE_mutable_descriptor_type Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -335,7 +335,7 @@ instance Zero PhysicalDeviceMutableDescriptorTypeFeaturesVALVE where
 --
 -- -   #VUID-VkMutableDescriptorTypeListVALVE-pDescriptorTypes-04603#
 --     @pDescriptorTypes@ /must/ not contain
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
 --
 -- == Valid Usage (Implicit)
 --

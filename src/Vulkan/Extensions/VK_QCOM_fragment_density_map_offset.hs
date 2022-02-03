@@ -104,7 +104,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_fragment_density_map_offset Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_QCOM_fragment_density_map_offset Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -245,7 +245,7 @@ instance Zero PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM where
 data PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM = PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM
   { -- | #limits-fragmentdensityoffsetgranularity#
     -- @fragmentDensityOffsetGranularity@ is the granularity for
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-fragmentdensitymapoffsets fragment density offsets>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-fragmentdensitymapoffsets fragment density offsets>.
     fragmentDensityOffsetGranularity :: Extent2D }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -291,7 +291,7 @@ instance Zero PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM where
 -- = Description
 --
 -- The array elements are given per @layer@ as defined by
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragmentdensitymap-fetch-density-value Fetch Density Value>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragmentdensitymap-fetch-density-value Fetch Density Value>,
 -- where index = layer. Each (x,y) offset is in framebuffer pixels and
 -- shifts the fetch of the fragment density map by that amount. Offsets can
 -- be positive or negative.
@@ -302,13 +302,13 @@ instance Zero PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM where
 -- chain for the last subpass of a renderpass does not include
 -- 'SubpassFragmentDensityMapOffsetEndInfoQCOM', or if
 -- @fragmentDensityOffsetCount@ is zero, then the offset (0,0) is used for
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragmentdensitymap-fetch-density-value Fetch Density Value>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragmentdensitymap-fetch-density-value Fetch Density Value>.
 --
 -- == Valid Usage
 --
 -- -   #VUID-VkSubpassFragmentDensityMapOffsetEndInfoQCOM-fragmentDensityMapOffsets-06503#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMapOffsets fragmentDensityMapOffsets>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-fragmentDensityMapOffsets fragmentDensityMapOffsets>
 --     feature is not enabled or fragment density map is not enabled in the
 --     render pass, @fragmentDensityOffsetCount@ /must/ equal @0@.
 --

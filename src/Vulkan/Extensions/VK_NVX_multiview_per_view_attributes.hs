@@ -57,14 +57,14 @@
 -- This extension adds a new way to write shaders to be used with multiview
 -- subpasses, where the attributes for all views are written out by a
 -- single invocation of the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stages>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stages>.
 -- Related SPIR-V and GLSL extensions
 -- @SPV_NVX_multiview_per_view_attributes@ and
 -- @GL_NVX_multiview_per_view_attributes@ introduce per-view position and
 -- viewport mask attributes arrays, and this extension defines how those
 -- per-view attribute arrays are interpreted by Vulkan. Pipelines using
 -- per-view attributes /may/ only execute the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stages>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stages>
 -- once for all views rather than once per-view, which reduces redundant
 -- shading work.
 --
@@ -113,13 +113,13 @@
 --
 -- == New Built-In Variables
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-positionperview PositionPerViewNV>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-positionperview PositionPerViewNV>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-viewportmaskperview ViewportMaskPerViewNV>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-viewportmaskperview ViewportMaskPerViewNV>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-PerViewAttributesNV PerViewAttributesNV>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-PerViewAttributesNV PerViewAttributesNV>
 --
 -- == Examples
 --
@@ -153,7 +153,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NVX_multiview_per_view_attributes Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NVX_multiview_per_view_attributes Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

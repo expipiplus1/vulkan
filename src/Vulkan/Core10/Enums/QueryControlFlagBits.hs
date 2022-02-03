@@ -29,7 +29,7 @@ newtype QueryControlFlagBits = QueryControlFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'QUERY_CONTROL_PRECISE_BIT' specifies the precision of
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-occlusion occlusion queries>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#queries-occlusion occlusion queries>.
 pattern QUERY_CONTROL_PRECISE_BIT = QueryControlFlagBits 0x00000001
 
 conNameQueryControlFlagBits :: String

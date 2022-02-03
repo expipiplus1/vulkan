@@ -172,7 +172,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_calibrated_timestamps Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_calibrated_timestamps Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -481,7 +481,8 @@ instance Zero CalibratedTimestampInfoEXT where
 -- timestamp values reported for 'TIME_DOMAIN_DEVICE_EXT' can be matched to
 -- any timestamp captured through
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdWriteTimestamp' or
--- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdWriteTimestamp2KHR' .
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.cmdWriteTimestamp2'
+-- .
 --
 -- > struct timespec tv;
 -- > clock_gettime(CLOCK_MONOTONIC, &tv);
@@ -507,9 +508,9 @@ newtype TimeDomainEXT = TimeDomainEXT Int32
 -- values in this time domain use the same units and are comparable with
 -- device timestamp values captured using
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdWriteTimestamp' or
--- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdWriteTimestamp2KHR' and
--- are defined to be incrementing according to the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-timestampPeriod timestampPeriod>
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.cmdWriteTimestamp2'
+-- and are defined to be incrementing according to the
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-timestampPeriod timestampPeriod>
 -- of the device.
 pattern TIME_DOMAIN_DEVICE_EXT                    = TimeDomainEXT 0
 -- | 'TIME_DOMAIN_CLOCK_MONOTONIC_EXT' specifies the CLOCK_MONOTONIC time

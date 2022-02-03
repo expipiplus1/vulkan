@@ -48,7 +48,7 @@ type QueueFlags = QueueFlagBits
 -- /optional/.
 --
 -- For further details see
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-queues Queues>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-queues Queues>.
 --
 -- = See Also
 --
@@ -68,7 +68,7 @@ pattern QUEUE_COMPUTE_BIT        = QueueFlagBits 0x00000002
 pattern QUEUE_TRANSFER_BIT       = QueueFlagBits 0x00000004
 -- | 'QUEUE_SPARSE_BINDING_BIT' specifies that queues in this queue family
 -- support sparse memory management operations (see
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#sparsememory Sparse Resources>).
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory Sparse Resources>).
 -- If any of the sparse resource features are enabled, then at least one
 -- queue family /must/ support this bit.
 pattern QUEUE_SPARSE_BINDING_BIT = QueueFlagBits 0x00000008
@@ -76,7 +76,7 @@ pattern QUEUE_SPARSE_BINDING_BIT = QueueFlagBits 0x00000008
 -- the
 -- 'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DEVICE_QUEUE_CREATE_PROTECTED_BIT'
 -- bit. (see
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-memory Protected Memory>).
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-protected-memory Protected Memory>).
 -- If the physical device supports the @protectedMemory@ feature, at least
 -- one of its queue families /must/ support this bit.
 pattern QUEUE_PROTECTED_BIT      = QueueFlagBits 0x00000010

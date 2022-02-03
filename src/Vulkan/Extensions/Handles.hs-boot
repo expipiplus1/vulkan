@@ -12,7 +12,6 @@ module Vulkan.Extensions.Handles  ( AccelerationStructureKHR
                                   , DisplayModeKHR
                                   , IndirectCommandsLayoutNV
                                   , PerformanceConfigurationINTEL
-                                  , PrivateDataSlotEXT
                                   , SurfaceKHR
                                   , SwapchainKHR
                                   , ValidationCacheEXT
@@ -54,9 +53,6 @@ data IndirectCommandsLayoutNV
 
 
 data PerformanceConfigurationINTEL
-
-
-data PrivateDataSlotEXT
 
 
 data SurfaceKHR

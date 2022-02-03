@@ -77,10 +77,9 @@
 --
 -- -   'HUAWEI_INVOCATION_MASK_SPEC_VERSION'
 --
--- -   Extending
---     'Vulkan.Extensions.VK_KHR_synchronization2.AccessFlagBits2KHR':
+-- -   Extending 'Vulkan.Core13.Enums.AccessFlags2.AccessFlagBits2':
 --
---     -   'Vulkan.Extensions.VK_KHR_synchronization2.ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI'
+--     -   'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits':
@@ -88,9 +87,9 @@
 --     -   'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INVOCATION_MASK_BIT_HUAWEI'
 --
 -- -   Extending
---     'Vulkan.Extensions.VK_KHR_synchronization2.PipelineStageFlagBits2KHR':
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2':
 --
---     -   'Vulkan.Extensions.VK_KHR_synchronization2.PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
+--     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -141,7 +140,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_HUAWEI_invocation_mask Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_HUAWEI_invocation_mask Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

@@ -7,6 +7,7 @@ module Vulkan.Core10.APIConstants  ( pattern LOD_CLAMP_NONE
                                    , MAX_DRIVER_NAME_SIZE_KHR
                                    , MAX_DRIVER_INFO_SIZE_KHR
                                    , SHADER_UNUSED_NV
+                                   , MAX_GLOBAL_PRIORITY_SIZE_EXT
                                    , MAX_PHYSICAL_DEVICE_NAME_SIZE
                                    , pattern MAX_PHYSICAL_DEVICE_NAME_SIZE
                                    , UUID_SIZE
@@ -45,8 +46,8 @@ module Vulkan.Core10.APIConstants  ( pattern LOD_CLAMP_NONE
                                    , pattern MAX_DRIVER_INFO_SIZE
                                    , SHADER_UNUSED_KHR
                                    , pattern SHADER_UNUSED_KHR
-                                   , MAX_GLOBAL_PRIORITY_SIZE_EXT
-                                   , pattern MAX_GLOBAL_PRIORITY_SIZE_EXT
+                                   , MAX_GLOBAL_PRIORITY_SIZE_KHR
+                                   , pattern MAX_GLOBAL_PRIORITY_SIZE_KHR
                                    , pattern NULL_HANDLE
                                    , IsHandle
                                    , HasObjectType(..)
@@ -91,6 +92,10 @@ type MAX_DRIVER_INFO_SIZE_KHR = MAX_DRIVER_INFO_SIZE
 
 -- No documentation found for TopLevel "VK_SHADER_UNUSED_NV"
 type SHADER_UNUSED_NV = SHADER_UNUSED_KHR
+
+
+-- No documentation found for TopLevel "VK_MAX_GLOBAL_PRIORITY_SIZE_EXT"
+type MAX_GLOBAL_PRIORITY_SIZE_EXT = MAX_GLOBAL_PRIORITY_SIZE_KHR
 
 
 type MAX_PHYSICAL_DEVICE_NAME_SIZE = 256
@@ -316,11 +321,16 @@ pattern SHADER_UNUSED_KHR :: Word32
 pattern SHADER_UNUSED_KHR = 0xffffffff
 
 
-type MAX_GLOBAL_PRIORITY_SIZE_EXT = 16
+type MAX_GLOBAL_PRIORITY_SIZE_KHR = 16
 
--- No documentation found for TopLevel "VK_MAX_GLOBAL_PRIORITY_SIZE_EXT"
-pattern MAX_GLOBAL_PRIORITY_SIZE_EXT :: forall a . Integral a => a
-pattern MAX_GLOBAL_PRIORITY_SIZE_EXT = 16
+-- | VK_MAX_GLOBAL_PRIORITY_SIZE_KHR - Length of an array of global queue
+-- priorities
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_global_priority VK_KHR_global_priority>
+pattern MAX_GLOBAL_PRIORITY_SIZE_KHR :: forall a . Integral a => a
+pattern MAX_GLOBAL_PRIORITY_SIZE_KHR = 16
 
 
 -- | VK_NULL_HANDLE - Reserved non-valid object handle

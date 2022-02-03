@@ -23,6 +23,11 @@
 --
 --     -   Requires @VK_KHR_get_physical_device_properties2@
 --
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3-promotions Vulkan 1.3>
+--
 -- [__Contact__]
 --
 --     -   Jan-Harald Fredriksen
@@ -32,6 +37,10 @@
 --
 -- [__Last Modified Date__]
 --     2019-05-28
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.3 Core
 --
 -- [__IP Status__]
 --     No known issues.
@@ -47,7 +56,7 @@
 --
 -- When this extension is enabled, the HDR profile is supported for all
 -- ASTC formats listed in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#appendix-compressedtex-astc ASTC Compressed Image Formats>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#appendix-compressedtex-astc ASTC Compressed Image Formats>.
 --
 -- == New Structures
 --
@@ -65,37 +74,45 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.Format.Format':
 --
---     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT'
+--     -   'FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT'
 --
---     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_10x5_SFLOAT_BLOCK_EXT'
+--     -   'FORMAT_ASTC_10x5_SFLOAT_BLOCK_EXT'
 --
---     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_10x6_SFLOAT_BLOCK_EXT'
+--     -   'FORMAT_ASTC_10x6_SFLOAT_BLOCK_EXT'
 --
---     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_10x8_SFLOAT_BLOCK_EXT'
+--     -   'FORMAT_ASTC_10x8_SFLOAT_BLOCK_EXT'
 --
---     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT'
+--     -   'FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT'
 --
---     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT'
+--     -   'FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT'
 --
---     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_4x4_SFLOAT_BLOCK_EXT'
+--     -   'FORMAT_ASTC_4x4_SFLOAT_BLOCK_EXT'
 --
---     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_5x4_SFLOAT_BLOCK_EXT'
+--     -   'FORMAT_ASTC_5x4_SFLOAT_BLOCK_EXT'
 --
---     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_5x5_SFLOAT_BLOCK_EXT'
+--     -   'FORMAT_ASTC_5x5_SFLOAT_BLOCK_EXT'
 --
---     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_6x5_SFLOAT_BLOCK_EXT'
+--     -   'FORMAT_ASTC_6x5_SFLOAT_BLOCK_EXT'
 --
---     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_6x6_SFLOAT_BLOCK_EXT'
+--     -   'FORMAT_ASTC_6x6_SFLOAT_BLOCK_EXT'
 --
---     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_8x5_SFLOAT_BLOCK_EXT'
+--     -   'FORMAT_ASTC_8x5_SFLOAT_BLOCK_EXT'
 --
---     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_8x6_SFLOAT_BLOCK_EXT'
+--     -   'FORMAT_ASTC_8x6_SFLOAT_BLOCK_EXT'
 --
---     -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_8x8_SFLOAT_BLOCK_EXT'
+--     -   'FORMAT_ASTC_8x8_SFLOAT_BLOCK_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES_EXT'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES_EXT'
+--
+-- == Promotion to Vulkan 1.3
+--
+-- This extension has been partially promoted. Functionality in this
+-- extension is included in core Vulkan 1.3, with the EXT suffix omitted.
+-- However, the feature is made optional in Vulkan 1.3. The original type,
+-- enum and command names are still available as aliases of the core
+-- functionality.
 --
 -- == Issues
 --
@@ -136,148 +153,111 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_texture_compression_astc_hdr Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_texture_compression_astc_hdr Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_EXT_texture_compression_astc_hdr  ( PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT(..)
+module Vulkan.Extensions.VK_EXT_texture_compression_astc_hdr  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES_EXT
+                                                              , pattern FORMAT_ASTC_4x4_SFLOAT_BLOCK_EXT
+                                                              , pattern FORMAT_ASTC_5x4_SFLOAT_BLOCK_EXT
+                                                              , pattern FORMAT_ASTC_5x5_SFLOAT_BLOCK_EXT
+                                                              , pattern FORMAT_ASTC_6x5_SFLOAT_BLOCK_EXT
+                                                              , pattern FORMAT_ASTC_6x6_SFLOAT_BLOCK_EXT
+                                                              , pattern FORMAT_ASTC_8x5_SFLOAT_BLOCK_EXT
+                                                              , pattern FORMAT_ASTC_8x6_SFLOAT_BLOCK_EXT
+                                                              , pattern FORMAT_ASTC_8x8_SFLOAT_BLOCK_EXT
+                                                              , pattern FORMAT_ASTC_10x5_SFLOAT_BLOCK_EXT
+                                                              , pattern FORMAT_ASTC_10x6_SFLOAT_BLOCK_EXT
+                                                              , pattern FORMAT_ASTC_10x8_SFLOAT_BLOCK_EXT
+                                                              , pattern FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT
+                                                              , pattern FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT
+                                                              , pattern FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT
+                                                              , PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT
                                                               , EXT_TEXTURE_COMPRESSION_ASTC_HDR_SPEC_VERSION
                                                               , pattern EXT_TEXTURE_COMPRESSION_ASTC_HDR_SPEC_VERSION
                                                               , EXT_TEXTURE_COMPRESSION_ASTC_HDR_EXTENSION_NAME
                                                               , pattern EXT_TEXTURE_COMPRESSION_ASTC_HDR_EXTENSION_NAME
                                                               ) where
 
-import Foreign.Marshal.Alloc (allocaBytes)
-import Foreign.Ptr (nullPtr)
-import Foreign.Ptr (plusPtr)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero(..))
 import Data.String (IsString)
-import Data.Typeable (Typeable)
-import Foreign.Storable (Storable)
-import Foreign.Storable (Storable(peek))
-import Foreign.Storable (Storable(poke))
-import qualified Foreign.Storable (Storable(..))
-import GHC.Generics (Generic)
-import Foreign.Ptr (Ptr)
-import Data.Kind (Type)
-import Vulkan.Core10.FundamentalTypes (bool32ToBool)
-import Vulkan.Core10.FundamentalTypes (boolToBool32)
-import Vulkan.Core10.FundamentalTypes (Bool32)
-import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES_EXT))
--- | VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT - Structure
--- describing ASTC HDR features that can be supported by an implementation
---
--- = Members
---
--- This structure describes the following feature:
---
--- = Description
---
--- If the 'PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT' structure is
--- included in the @pNext@ chain of the
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
--- structure passed to
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
--- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT' /can/
--- also be used in the @pNext@ chain of
--- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
--- features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_texture_compression_astc_hdr VK_EXT_texture_compression_astc_hdr>,
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT = PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT
-  { -- | #features-textureCompressionASTC_HDR# @textureCompressionASTC_HDR@
-    -- indicates whether all of the ASTC HDR compressed texture formats are
-    -- supported. If this feature is enabled, then the
-    -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_BIT',
-    -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_SRC_BIT'
-    -- and
-    -- 'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
-    -- features /must/ be supported in @optimalTilingFeatures@ for the
-    -- following formats:
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_4x4_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_5x4_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_5x5_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_6x5_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_6x6_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_8x5_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_8x6_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_8x8_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_10x5_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_10x6_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_10x8_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT'
-    --
-    -- -   'Vulkan.Core10.Enums.Format.FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT'
-    --
-    -- To query for additional properties, or if the feature is not enabled,
-    -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'
-    -- and
-    -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceImageFormatProperties'
-    -- /can/ be used to check for supported properties of individual formats as
-    -- normal.
-    textureCompressionASTC_HDR :: Bool }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT)
-#endif
-deriving instance Show PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT
+import Vulkan.Core13.Promoted_From_VK_EXT_texture_compression_astc_hdr (PhysicalDeviceTextureCompressionASTCHDRFeatures)
+import Vulkan.Core10.Enums.Format (Format(FORMAT_ASTC_10x10_SFLOAT_BLOCK))
+import Vulkan.Core10.Enums.Format (Format(FORMAT_ASTC_10x5_SFLOAT_BLOCK))
+import Vulkan.Core10.Enums.Format (Format(FORMAT_ASTC_10x6_SFLOAT_BLOCK))
+import Vulkan.Core10.Enums.Format (Format(FORMAT_ASTC_10x8_SFLOAT_BLOCK))
+import Vulkan.Core10.Enums.Format (Format(FORMAT_ASTC_12x10_SFLOAT_BLOCK))
+import Vulkan.Core10.Enums.Format (Format(FORMAT_ASTC_12x12_SFLOAT_BLOCK))
+import Vulkan.Core10.Enums.Format (Format(FORMAT_ASTC_4x4_SFLOAT_BLOCK))
+import Vulkan.Core10.Enums.Format (Format(FORMAT_ASTC_5x4_SFLOAT_BLOCK))
+import Vulkan.Core10.Enums.Format (Format(FORMAT_ASTC_5x5_SFLOAT_BLOCK))
+import Vulkan.Core10.Enums.Format (Format(FORMAT_ASTC_6x5_SFLOAT_BLOCK))
+import Vulkan.Core10.Enums.Format (Format(FORMAT_ASTC_6x6_SFLOAT_BLOCK))
+import Vulkan.Core10.Enums.Format (Format(FORMAT_ASTC_8x5_SFLOAT_BLOCK))
+import Vulkan.Core10.Enums.Format (Format(FORMAT_ASTC_8x6_SFLOAT_BLOCK))
+import Vulkan.Core10.Enums.Format (Format(FORMAT_ASTC_8x8_SFLOAT_BLOCK))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES))
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES_EXT = STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES
 
-instance ToCStruct PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT where
-  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (textureCompressionASTC_HDR))
-    f
-  cStructSize = 24
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
-    f
 
-instance FromCStruct PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT where
-  peekCStruct p = do
-    textureCompressionASTC_HDR <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
-    pure $ PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT
-             (bool32ToBool textureCompressionASTC_HDR)
+-- No documentation found for TopLevel "VK_FORMAT_ASTC_4x4_SFLOAT_BLOCK_EXT"
+pattern FORMAT_ASTC_4x4_SFLOAT_BLOCK_EXT = FORMAT_ASTC_4x4_SFLOAT_BLOCK
 
-instance Storable PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
 
-instance Zero PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT where
-  zero = PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT
-           zero
+-- No documentation found for TopLevel "VK_FORMAT_ASTC_5x4_SFLOAT_BLOCK_EXT"
+pattern FORMAT_ASTC_5x4_SFLOAT_BLOCK_EXT = FORMAT_ASTC_5x4_SFLOAT_BLOCK
+
+
+-- No documentation found for TopLevel "VK_FORMAT_ASTC_5x5_SFLOAT_BLOCK_EXT"
+pattern FORMAT_ASTC_5x5_SFLOAT_BLOCK_EXT = FORMAT_ASTC_5x5_SFLOAT_BLOCK
+
+
+-- No documentation found for TopLevel "VK_FORMAT_ASTC_6x5_SFLOAT_BLOCK_EXT"
+pattern FORMAT_ASTC_6x5_SFLOAT_BLOCK_EXT = FORMAT_ASTC_6x5_SFLOAT_BLOCK
+
+
+-- No documentation found for TopLevel "VK_FORMAT_ASTC_6x6_SFLOAT_BLOCK_EXT"
+pattern FORMAT_ASTC_6x6_SFLOAT_BLOCK_EXT = FORMAT_ASTC_6x6_SFLOAT_BLOCK
+
+
+-- No documentation found for TopLevel "VK_FORMAT_ASTC_8x5_SFLOAT_BLOCK_EXT"
+pattern FORMAT_ASTC_8x5_SFLOAT_BLOCK_EXT = FORMAT_ASTC_8x5_SFLOAT_BLOCK
+
+
+-- No documentation found for TopLevel "VK_FORMAT_ASTC_8x6_SFLOAT_BLOCK_EXT"
+pattern FORMAT_ASTC_8x6_SFLOAT_BLOCK_EXT = FORMAT_ASTC_8x6_SFLOAT_BLOCK
+
+
+-- No documentation found for TopLevel "VK_FORMAT_ASTC_8x8_SFLOAT_BLOCK_EXT"
+pattern FORMAT_ASTC_8x8_SFLOAT_BLOCK_EXT = FORMAT_ASTC_8x8_SFLOAT_BLOCK
+
+
+-- No documentation found for TopLevel "VK_FORMAT_ASTC_10x5_SFLOAT_BLOCK_EXT"
+pattern FORMAT_ASTC_10x5_SFLOAT_BLOCK_EXT = FORMAT_ASTC_10x5_SFLOAT_BLOCK
+
+
+-- No documentation found for TopLevel "VK_FORMAT_ASTC_10x6_SFLOAT_BLOCK_EXT"
+pattern FORMAT_ASTC_10x6_SFLOAT_BLOCK_EXT = FORMAT_ASTC_10x6_SFLOAT_BLOCK
+
+
+-- No documentation found for TopLevel "VK_FORMAT_ASTC_10x8_SFLOAT_BLOCK_EXT"
+pattern FORMAT_ASTC_10x8_SFLOAT_BLOCK_EXT = FORMAT_ASTC_10x8_SFLOAT_BLOCK
+
+
+-- No documentation found for TopLevel "VK_FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT"
+pattern FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT = FORMAT_ASTC_10x10_SFLOAT_BLOCK
+
+
+-- No documentation found for TopLevel "VK_FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT"
+pattern FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT = FORMAT_ASTC_12x10_SFLOAT_BLOCK
+
+
+-- No documentation found for TopLevel "VK_FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT"
+pattern FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT = FORMAT_ASTC_12x12_SFLOAT_BLOCK
+
+
+-- No documentation found for TopLevel "VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT"
+type PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT = PhysicalDeviceTextureCompressionASTCHDRFeatures
 
 
 type EXT_TEXTURE_COMPRESSION_ASTC_HDR_SPEC_VERSION = 1

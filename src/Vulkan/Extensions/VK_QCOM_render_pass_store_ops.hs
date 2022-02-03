@@ -92,7 +92,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_render_pass_store_ops Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_QCOM_render_pass_store_ops Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -104,9 +104,9 @@ module Vulkan.Extensions.VK_QCOM_render_pass_store_ops  ( pattern ATTACHMENT_STO
                                                         ) where
 
 import Data.String (IsString)
-import Vulkan.Core10.Enums.AttachmentStoreOp (AttachmentStoreOp(ATTACHMENT_STORE_OP_NONE_KHR))
+import Vulkan.Core10.Enums.AttachmentStoreOp (AttachmentStoreOp(ATTACHMENT_STORE_OP_NONE))
 -- No documentation found for TopLevel "VK_ATTACHMENT_STORE_OP_NONE_QCOM"
-pattern ATTACHMENT_STORE_OP_NONE_QCOM = ATTACHMENT_STORE_OP_NONE_KHR
+pattern ATTACHMENT_STORE_OP_NONE_QCOM = ATTACHMENT_STORE_OP_NONE
 
 
 type QCOM_RENDER_PASS_STORE_OPS_SPEC_VERSION = 2

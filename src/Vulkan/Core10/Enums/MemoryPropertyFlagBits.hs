@@ -86,7 +86,7 @@ pattern MEMORY_PROPERTY_HOST_CACHED_BIT         = MemoryPropertyFlagBits 0x00000
 -- 'MEMORY_PROPERTY_HOST_VISIBLE_BIT' set. Additionally, the object’s
 -- backing memory /may/ be provided by the implementation lazily as
 -- specified in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-device-lazy_allocation Lazily Allocated Memory>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-device-lazy_allocation Lazily Allocated Memory>.
 pattern MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT    = MemoryPropertyFlagBits 0x00000010
 -- | 'MEMORY_PROPERTY_RDMA_CAPABLE_BIT_NV' bit specifies that external
 -- devices can access this memory directly.

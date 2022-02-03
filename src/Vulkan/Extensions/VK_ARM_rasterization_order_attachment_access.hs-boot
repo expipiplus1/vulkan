@@ -45,7 +45,7 @@
 -- == Description
 --
 -- Renderpasses, and specifically
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-barriers-subpass-self-dependencies subpass self-dependencies>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-barriers-subpass-self-dependencies subpass self-dependencies>
 -- enable much of the same functionality as the framebuffer fetch and pixel
 -- local storage extensions did for OpenGL ES. But certain techniques such
 -- as programmable blending are awkward or impractical to implement with
@@ -58,7 +58,7 @@
 -- rasterization order, without explicit synchronization.
 --
 -- See
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-feedbackloop renderpass feedback loops>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-feedbackloop renderpass feedback loops>
 -- for more information.
 --
 -- == New Structures
@@ -136,7 +136,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_rasterization_order_attachment_access Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_ARM_rasterization_order_attachment_access Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

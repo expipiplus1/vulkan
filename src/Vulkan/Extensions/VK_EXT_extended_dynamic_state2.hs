@@ -23,6 +23,11 @@
 --
 --     -   Requires @VK_KHR_get_physical_device_properties2@
 --
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3-promotions Vulkan 1.3>
+--
 -- [__Contact__]
 --
 --     -   Vikram Kushwaha
@@ -32,6 +37,10 @@
 --
 -- [__Last Modified Date__]
 --     2021-04-12
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.3 Core
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -78,19 +87,31 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
 --
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT'
+--     -   'DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT'
 --
 --     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_EXT'
 --
 --     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT'
 --
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
+--     -   'DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
 --
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT'
+--     -   'DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_2_FEATURES_EXT'
+--
+-- == Promotion to Vulkan 1.3
+--
+-- This extension has been partially promoted. The dynamic state enumerants
+-- 'DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT',
+-- 'DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT', and
+-- 'DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT'; and the corresponding
+-- entry points in this extension are included in core Vulkan 1.3, with the
+-- EXT suffix omitted. The enumerants and entry points for dynamic logic
+-- operation and patch control points are not promoted, nor is the feature
+-- structure. Extension interfaces that were promoted remain available as
+-- aliases of the core functionality.
 --
 -- == Version History
 --
@@ -108,14 +129,17 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state2 Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state2 Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_extended_dynamic_state2  ( cmdSetPatchControlPointsEXT
+                                                         , cmdSetLogicOpEXT
+                                                         , pattern DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT
+                                                         , pattern DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT
+                                                         , pattern DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT
                                                          , cmdSetRasterizerDiscardEnableEXT
                                                          , cmdSetDepthBiasEnableEXT
-                                                         , cmdSetLogicOpEXT
                                                          , cmdSetPrimitiveRestartEnableEXT
                                                          , PhysicalDeviceExtendedDynamicState2FeaturesEXT(..)
                                                          , EXT_EXTENDED_DYNAMIC_STATE_2_SPEC_VERSION
@@ -153,21 +177,23 @@ import Data.Word (Word32)
 import Data.Kind (Type)
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
+import Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2 (cmdSetDepthBiasEnable)
+import Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2 (cmdSetPrimitiveRestartEnable)
+import Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2 (cmdSetRasterizerDiscardEnable)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.FundamentalTypes (Bool32)
-import Vulkan.Core10.FundamentalTypes (Bool32(..))
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
-import Vulkan.Dynamic (DeviceCmds(pVkCmdSetDepthBiasEnableEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetLogicOpEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdSetPatchControlPointsEXT))
-import Vulkan.Dynamic (DeviceCmds(pVkCmdSetPrimitiveRestartEnableEXT))
-import Vulkan.Dynamic (DeviceCmds(pVkCmdSetRasterizerDiscardEnableEXT))
 import Vulkan.Core10.Enums.LogicOp (LogicOp)
 import Vulkan.Core10.Enums.LogicOp (LogicOp(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
+import Vulkan.Core10.Enums.DynamicState (DynamicState(DYNAMIC_STATE_DEPTH_BIAS_ENABLE))
+import Vulkan.Core10.Enums.DynamicState (DynamicState(DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE))
+import Vulkan.Core10.Enums.DynamicState (DynamicState(DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_2_FEATURES_EXT))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -193,7 +219,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdSetPatchControlPointsEXT-None-04873# The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState2PatchControlPoints extendedDynamicState2PatchControlPoints>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState2PatchControlPoints extendedDynamicState2PatchControlPoints>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdSetPatchControlPointsEXT-patchControlPoints-04874#
@@ -258,170 +284,6 @@ foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "dynamic" mkVkCmdSetRasterizerDiscardEnableEXT
-  :: FunPtr (Ptr CommandBuffer_T -> Bool32 -> IO ()) -> Ptr CommandBuffer_T -> Bool32 -> IO ()
-
--- | vkCmdSetRasterizerDiscardEnableEXT - Control whether primitives are
--- discarded before the rasterization stage dynamically for a command
--- buffer
---
--- = Description
---
--- This command sets the discard enable for subsequent drawing commands
--- when the graphics pipeline is created with
--- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT'
--- set in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
--- Otherwise, this state is specified by the
--- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@rasterizerDiscardEnable@
--- value used to create the currently active pipeline.
---
--- == Valid Usage
---
--- -   #VUID-vkCmdSetRasterizerDiscardEnableEXT-None-04871# The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState2 extendedDynamicState2>
---     feature /must/ be enabled
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCmdSetRasterizerDiscardEnableEXT-commandBuffer-parameter#
---     @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
---
--- -   #VUID-vkCmdSetRasterizerDiscardEnableEXT-commandBuffer-recording#
---     @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   #VUID-vkCmdSetRasterizerDiscardEnableEXT-commandBuffer-cmdpool# The
---     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state2 VK_EXT_extended_dynamic_state2>,
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdSetRasterizerDiscardEnableEXT :: forall io
-                                  . (MonadIO io)
-                                 => -- | @commandBuffer@ is the command buffer into which the command will be
-                                    -- recorded.
-                                    CommandBuffer
-                                 -> -- | @rasterizerDiscardEnable@ controls whether primitives are discarded
-                                    -- immediately before the rasterization stage.
-                                    ("rasterizerDiscardEnable" ::: Bool)
-                                 -> io ()
-cmdSetRasterizerDiscardEnableEXT commandBuffer rasterizerDiscardEnable = liftIO $ do
-  let vkCmdSetRasterizerDiscardEnableEXTPtr = pVkCmdSetRasterizerDiscardEnableEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
-  unless (vkCmdSetRasterizerDiscardEnableEXTPtr /= nullFunPtr) $
-    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetRasterizerDiscardEnableEXT is null" Nothing Nothing
-  let vkCmdSetRasterizerDiscardEnableEXT' = mkVkCmdSetRasterizerDiscardEnableEXT vkCmdSetRasterizerDiscardEnableEXTPtr
-  traceAroundEvent "vkCmdSetRasterizerDiscardEnableEXT" (vkCmdSetRasterizerDiscardEnableEXT' (commandBufferHandle (commandBuffer)) (boolToBool32 (rasterizerDiscardEnable)))
-  pure $ ()
-
-
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "dynamic" mkVkCmdSetDepthBiasEnableEXT
-  :: FunPtr (Ptr CommandBuffer_T -> Bool32 -> IO ()) -> Ptr CommandBuffer_T -> Bool32 -> IO ()
-
--- | vkCmdSetDepthBiasEnableEXT - Control whether to bias fragment depth
--- values dynamically for a command buffer
---
--- = Description
---
--- This command sets the depth bias enable for subsequent drawing commands
--- when the graphics pipeline is created with
--- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT'
--- set in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
--- Otherwise, this state is specified by the
--- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@depthBiasEnable@
--- value used to create the currently active pipeline.
---
--- == Valid Usage
---
--- -   #VUID-vkCmdSetDepthBiasEnableEXT-None-04872# The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState2 extendedDynamicState2>
---     feature /must/ be enabled
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCmdSetDepthBiasEnableEXT-commandBuffer-parameter#
---     @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
---
--- -   #VUID-vkCmdSetDepthBiasEnableEXT-commandBuffer-recording#
---     @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   #VUID-vkCmdSetDepthBiasEnableEXT-commandBuffer-cmdpool# The
---     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state2 VK_EXT_extended_dynamic_state2>,
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdSetDepthBiasEnableEXT :: forall io
-                          . (MonadIO io)
-                         => -- | @commandBuffer@ is the command buffer into which the command will be
-                            -- recorded.
-                            CommandBuffer
-                         -> -- | @depthBiasEnable@ controls whether to bias fragment depth values.
-                            ("depthBiasEnable" ::: Bool)
-                         -> io ()
-cmdSetDepthBiasEnableEXT commandBuffer depthBiasEnable = liftIO $ do
-  let vkCmdSetDepthBiasEnableEXTPtr = pVkCmdSetDepthBiasEnableEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
-  unless (vkCmdSetDepthBiasEnableEXTPtr /= nullFunPtr) $
-    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDepthBiasEnableEXT is null" Nothing Nothing
-  let vkCmdSetDepthBiasEnableEXT' = mkVkCmdSetDepthBiasEnableEXT vkCmdSetDepthBiasEnableEXTPtr
-  traceAroundEvent "vkCmdSetDepthBiasEnableEXT" (vkCmdSetDepthBiasEnableEXT' (commandBufferHandle (commandBuffer)) (boolToBool32 (depthBiasEnable)))
-  pure $ ()
-
-
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
   "dynamic" mkVkCmdSetLogicOpEXT
   :: FunPtr (Ptr CommandBuffer_T -> LogicOp -> IO ()) -> Ptr CommandBuffer_T -> LogicOp -> IO ()
 
@@ -441,7 +303,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdSetLogicOpEXT-None-04867# The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState2LogicOp extendedDynamicState2LogicOp>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState2LogicOp extendedDynamicState2LogicOp>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -500,88 +362,28 @@ cmdSetLogicOpEXT commandBuffer logicOp = liftIO $ do
   pure $ ()
 
 
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "dynamic" mkVkCmdSetPrimitiveRestartEnableEXT
-  :: FunPtr (Ptr CommandBuffer_T -> Bool32 -> IO ()) -> Ptr CommandBuffer_T -> Bool32 -> IO ()
+-- No documentation found for TopLevel "VK_DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT"
+pattern DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT = DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE
 
--- | vkCmdSetPrimitiveRestartEnableEXT - Set primitive assembly restart state
--- dynamically for a command buffer
---
--- = Description
---
--- This command sets the primitive restart enable for subsequent drawing
--- commands when the graphics pipeline is created with
--- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
--- set in
--- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
--- Otherwise, this state is specified by the
--- 'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@primitiveRestartEnable@
--- value used to create the currently active pipeline.
---
--- == Valid Usage
---
--- -   #VUID-vkCmdSetPrimitiveRestartEnableEXT-None-04866# The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-extendedDynamicState2 extendedDynamicState2>
---     feature /must/ be enabled
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkCmdSetPrimitiveRestartEnableEXT-commandBuffer-parameter#
---     @commandBuffer@ /must/ be a valid
---     'Vulkan.Core10.Handles.CommandBuffer' handle
---
--- -   #VUID-vkCmdSetPrimitiveRestartEnableEXT-commandBuffer-recording#
---     @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   #VUID-vkCmdSetPrimitiveRestartEnableEXT-commandBuffer-cmdpool# The
---     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
---     allocated from /must/ support graphics operations
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the 'Vulkan.Core10.Handles.CommandPool' that
---     @commandBuffer@ was allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state2 VK_EXT_extended_dynamic_state2>,
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Handles.CommandBuffer'
-cmdSetPrimitiveRestartEnableEXT :: forall io
-                                 . (MonadIO io)
-                                => -- | @commandBuffer@ is the command buffer into which the command will be
-                                   -- recorded.
-                                   CommandBuffer
-                                -> -- | @primitiveRestartEnable@ controls whether a special vertex index value
-                                   -- is treated as restarting the assembly of primitives. It behaves in the
-                                   -- same way as
-                                   -- 'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@primitiveRestartEnable@
-                                   ("primitiveRestartEnable" ::: Bool)
-                                -> io ()
-cmdSetPrimitiveRestartEnableEXT commandBuffer primitiveRestartEnable = liftIO $ do
-  let vkCmdSetPrimitiveRestartEnableEXTPtr = pVkCmdSetPrimitiveRestartEnableEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
-  unless (vkCmdSetPrimitiveRestartEnableEXTPtr /= nullFunPtr) $
-    throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetPrimitiveRestartEnableEXT is null" Nothing Nothing
-  let vkCmdSetPrimitiveRestartEnableEXT' = mkVkCmdSetPrimitiveRestartEnableEXT vkCmdSetPrimitiveRestartEnableEXTPtr
-  traceAroundEvent "vkCmdSetPrimitiveRestartEnableEXT" (vkCmdSetPrimitiveRestartEnableEXT' (commandBufferHandle (commandBuffer)) (boolToBool32 (primitiveRestartEnable)))
-  pure $ ()
+
+-- No documentation found for TopLevel "VK_DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT"
+pattern DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT = DYNAMIC_STATE_DEPTH_BIAS_ENABLE
+
+
+-- No documentation found for TopLevel "VK_DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT"
+pattern DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT = DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE
+
+
+-- No documentation found for TopLevel "vkCmdSetRasterizerDiscardEnableEXT"
+cmdSetRasterizerDiscardEnableEXT = cmdSetRasterizerDiscardEnable
+
+
+-- No documentation found for TopLevel "vkCmdSetDepthBiasEnableEXT"
+cmdSetDepthBiasEnableEXT = cmdSetDepthBiasEnable
+
+
+-- No documentation found for TopLevel "vkCmdSetPrimitiveRestartEnableEXT"
+cmdSetPrimitiveRestartEnableEXT = cmdSetPrimitiveRestartEnable
 
 
 -- | VkPhysicalDeviceExtendedDynamicState2FeaturesEXT - Structure describing
@@ -614,11 +416,11 @@ data PhysicalDeviceExtendedDynamicState2FeaturesEXT = PhysicalDeviceExtendedDyna
   { -- | #features-extendedDynamicState2# @extendedDynamicState2@ indicates that
     -- the implementation supports the following dynamic states:
     --
-    -- -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT'
+    -- -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS_ENABLE'
     --
-    -- -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
+    -- -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE'
     --
-    -- -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT'
+    -- -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE'
     extendedDynamicState2 :: Bool
   , -- | #features-extendedDynamicState2LogicOp# @extendedDynamicState2LogicOp@
     -- indicates that the implementation supports the following dynamic state:

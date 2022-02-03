@@ -87,7 +87,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@events@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then the implementation
 --     does not support
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-events events>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-events events>,
 --     and 'createEvent' /must/ not be used
 --
 -- == Valid Usage (Implicit)
@@ -131,7 +131,7 @@ createEvent :: forall io
                -- information about how the event is to be created.
                EventCreateInfo
             -> -- | @pAllocator@ controls host memory allocation as described in the
-               -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+               -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                -- chapter.
                ("allocator" ::: Maybe AllocationCallbacks)
             -> io (Event)
@@ -219,7 +219,7 @@ destroyEvent :: forall io
              -> -- | @event@ is the handle of the event to destroy.
                 Event
              -> -- | @pAllocator@ controls host memory allocation as described in the
-                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                 -- chapter.
                 ("allocator" ::: Maybe AllocationCallbacks)
              -> io ()
@@ -264,7 +264,7 @@ foreign import ccall
 -- If a 'Vulkan.Core10.CommandBufferBuilding.cmdSetEvent' or
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdResetEvent' command is in a
 -- command buffer that is in the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>,
 -- then the value returned by this command /may/ immediately be out of
 -- date.
 --
@@ -304,7 +304,7 @@ getEventStatus :: forall io
                   --
                   -- #VUID-vkGetEventStatus-event-03940# @event@ /must/ not have been created
                   -- with
-                  -- 'Vulkan.Core10.Enums.EventCreateFlagBits.EVENT_CREATE_DEVICE_ONLY_BIT_KHR'
+                  -- 'Vulkan.Core10.Enums.EventCreateFlagBits.EVENT_CREATE_DEVICE_ONLY_BIT'
                   --
                   -- #VUID-vkGetEventStatus-event-parameter# @event@ /must/ be a valid
                   -- 'Vulkan.Core10.Handles.Event' handle
@@ -344,7 +344,7 @@ foreign import ccall
 --
 -- -   #VUID-vkSetEvent-event-03941# @event@ /must/ not have been created
 --     with
---     'Vulkan.Core10.Enums.EventCreateFlagBits.EVENT_CREATE_DEVICE_ONLY_BIT_KHR'
+--     'Vulkan.Core10.Enums.EventCreateFlagBits.EVENT_CREATE_DEVICE_ONLY_BIT'
 --
 -- == Valid Usage (Implicit)
 --
@@ -420,12 +420,12 @@ foreign import ccall
 --
 -- -   #VUID-vkResetEvent-event-03822# There /must/ be an execution
 --     dependency between 'resetEvent' and the execution of any
---     'Vulkan.Extensions.VK_KHR_synchronization2.cmdWaitEvents2KHR' that
---     includes @event@ in its @pEvents@ parameter
+--     'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.cmdWaitEvents2'
+--     that includes @event@ in its @pEvents@ parameter
 --
 -- -   #VUID-vkResetEvent-event-03823# @event@ /must/ not have been created
 --     with
---     'Vulkan.Core10.Enums.EventCreateFlagBits.EVENT_CREATE_DEVICE_ONLY_BIT_KHR'
+--     'Vulkan.Core10.Enums.EventCreateFlagBits.EVENT_CREATE_DEVICE_ONLY_BIT'
 --
 -- == Valid Usage (Implicit)
 --
