@@ -1,6 +1,6 @@
 cabal-version: 2.0
 
--- This file has been generated from package.yaml by hpack version 0.34.4.
+-- This file has been generated from package.yaml by hpack version 0.34.6.
 --
 -- see: https://github.com/sol/hpack
 
@@ -21,7 +21,6 @@ library
       Bespoke
       Bespoke.MarshalParams
       Bespoke.RenderParams
-      Bespoke.Seeds
       Bespoke.Utils
       Bracket
       CType
@@ -82,6 +81,8 @@ library
       VkModulePrefix
       Write.Segment
   other-modules:
+      Paths_generate_new
+  autogen-modules:
       Paths_generate_new
   hs-source-dirs:
       src
@@ -188,6 +189,8 @@ library khronos-spec
       Khronos.Versions.OpenXR
   other-modules:
       Paths_generate_new
+  autogen-modules:
+      Paths_generate_new
   hs-source-dirs:
       khronos-spec
   default-extensions:
@@ -288,6 +291,8 @@ executable vk
   main-is: Main.hs
   other-modules:
       VK.Bracket
+      Paths_generate_new
+  autogen-modules:
       Paths_generate_new
   hs-source-dirs:
       vk
@@ -394,6 +399,8 @@ executable vma
       VMA.Render
       VMA.RenderParams
       Paths_generate_new
+  autogen-modules:
+      Paths_generate_new
   hs-source-dirs:
       vma
   default-extensions:
@@ -496,6 +503,8 @@ executable xr
   other-modules:
       XR.Bracket
       XR.RenderParams
+      Paths_generate_new
+  autogen-modules:
       Paths_generate_new
   hs-source-dirs:
       xr
