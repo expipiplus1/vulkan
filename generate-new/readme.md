@@ -251,6 +251,11 @@ Optional TODOs:
   AccelerationStructureGeometryKHR too)
 - [x] Now is the time to remove the top level tuple from TransformMatrixKHR
 
+### 1.3.204
+
+- [ ] Check VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT
+- [ ] VkPhysicalDeviceShaderIntegerDotProductFeaturesKHR
+
 
 # VMA TODOs
 
