@@ -38,6 +38,7 @@ Options:
                        latest
   --no-doc-diff file.patch : Generate a diff between the existing and new
                              version without documentaiton comments
+  --force : regenerate and commit even with no version update
 EOF
   exit
 fi
