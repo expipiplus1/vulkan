@@ -24,8 +24,10 @@ import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytes)
 import GHC.IO (throwIO)
+import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -40,6 +42,7 @@ import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
+import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -55,12 +58,17 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
+import Vulkan.CStruct.Extends (peekSomeCStruct)
+import Vulkan.CStruct.Extends (pokeSomeCStruct)
 import Vulkan.Core10.Handles (Buffer)
+import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import Vulkan.Core10.Handles (CommandBuffer_T)
+import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_rotated_copy_commands (CopyCommandTransformInfoQCOM)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBlitImage2))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdCopyBuffer2))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdCopyBufferToImage2))
@@ -68,12 +76,20 @@ import Vulkan.Dynamic (DeviceCmds(pVkCmdCopyImage2))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdCopyImageToBuffer2))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdResolveImage2))
 import Vulkan.Core10.FundamentalTypes (DeviceSize)
+import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
+import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.FundamentalTypes (Extent3D)
 import Vulkan.Core10.Enums.Filter (Filter)
 import Vulkan.Core10.Handles (Image)
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
 import Vulkan.Core10.CommandBufferBuilding (ImageSubresourceLayers)
 import Vulkan.Core10.FundamentalTypes (Offset3D)
+import Vulkan.CStruct.Extends (PeekChain)
+import Vulkan.CStruct.Extends (PeekChain(..))
+import Vulkan.CStruct.Extends (PokeChain)
+import Vulkan.CStruct.Extends (PokeChain(..))
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BLIT_IMAGE_INFO_2))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BUFFER_COPY_2))
@@ -886,8 +902,10 @@ instance Zero ImageCopy2 where
 -- 'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers',
 -- 'Vulkan.Core10.FundamentalTypes.Offset3D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data ImageBlit2 = ImageBlit2
-  { -- | @srcSubresource@ is the subresource to blit from.
+data ImageBlit2 (es :: [Type]) = ImageBlit2
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @srcSubresource@ is the subresource to blit from.
     srcSubresource :: ImageSubresourceLayers
   , -- | @srcOffsets@ is a pointer to an array of two
     -- 'Vulkan.Core10.FundamentalTypes.Offset3D' structures specifying the
@@ -902,49 +920,62 @@ data ImageBlit2 = ImageBlit2
   }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (ImageBlit2)
+deriving instance Generic (ImageBlit2 (es :: [Type]))
 #endif
-deriving instance Show ImageBlit2
+deriving instance Show (Chain es) => Show (ImageBlit2 es)
 
-instance ToCStruct ImageBlit2 where
+instance Extensible ImageBlit2 where
+  extensibleTypeName = "ImageBlit2"
+  setNext ImageBlit2{..} next' = ImageBlit2{next = next', ..}
+  getNext ImageBlit2{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageBlit2 e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @CopyCommandTransformInfoQCOM = Just f
+    | otherwise = Nothing
+
+instance (Extendss ImageBlit2 es, PokeChain es) => ToCStruct (ImageBlit2 es) where
   withCStruct x f = allocaBytes 96 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p ImageBlit2{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_BLIT_2)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr ImageSubresourceLayers)) (srcSubresource)
+  pokeCStruct p ImageBlit2{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_BLIT_2)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr ImageSubresourceLayers)) (srcSubresource)
     let pSrcOffsets' = lowerArrayPtr ((p `plusPtr` 32 :: Ptr (FixedArray 2 Offset3D)))
-    case (srcOffsets) of
+    lift $ case (srcOffsets) of
       (e0, e1) -> do
         poke (pSrcOffsets' :: Ptr Offset3D) (e0)
         poke (pSrcOffsets' `plusPtr` 12 :: Ptr Offset3D) (e1)
-    poke ((p `plusPtr` 56 :: Ptr ImageSubresourceLayers)) (dstSubresource)
+    lift $ poke ((p `plusPtr` 56 :: Ptr ImageSubresourceLayers)) (dstSubresource)
     let pDstOffsets' = lowerArrayPtr ((p `plusPtr` 72 :: Ptr (FixedArray 2 Offset3D)))
-    case (dstOffsets) of
+    lift $ case (dstOffsets) of
       (e0, e1) -> do
         poke (pDstOffsets' :: Ptr Offset3D) (e0)
         poke (pDstOffsets' `plusPtr` 12 :: Ptr Offset3D) (e1)
-    f
+    lift $ f
   cStructSize = 96
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_BLIT_2)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr ImageSubresourceLayers)) (zero)
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_BLIT_2)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ poke ((p `plusPtr` 16 :: Ptr ImageSubresourceLayers)) (zero)
     let pSrcOffsets' = lowerArrayPtr ((p `plusPtr` 32 :: Ptr (FixedArray 2 Offset3D)))
-    case ((zero, zero)) of
+    lift $ case ((zero, zero)) of
       (e0, e1) -> do
         poke (pSrcOffsets' :: Ptr Offset3D) (e0)
         poke (pSrcOffsets' `plusPtr` 12 :: Ptr Offset3D) (e1)
-    poke ((p `plusPtr` 56 :: Ptr ImageSubresourceLayers)) (zero)
+    lift $ poke ((p `plusPtr` 56 :: Ptr ImageSubresourceLayers)) (zero)
     let pDstOffsets' = lowerArrayPtr ((p `plusPtr` 72 :: Ptr (FixedArray 2 Offset3D)))
-    case ((zero, zero)) of
+    lift $ case ((zero, zero)) of
       (e0, e1) -> do
         poke (pDstOffsets' :: Ptr Offset3D) (e0)
         poke (pDstOffsets' `plusPtr` 12 :: Ptr Offset3D) (e1)
-    f
+    lift $ f
 
-instance FromCStruct ImageBlit2 where
+instance (Extendss ImageBlit2 es, PeekChain es) => FromCStruct (ImageBlit2 es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     srcSubresource <- peekCStruct @ImageSubresourceLayers ((p `plusPtr` 16 :: Ptr ImageSubresourceLayers))
     let psrcOffsets = lowerArrayPtr @Offset3D ((p `plusPtr` 32 :: Ptr (FixedArray 2 Offset3D)))
     srcOffsets0 <- peekCStruct @Offset3D ((psrcOffsets `advancePtrBytes` 0 :: Ptr Offset3D))
@@ -954,16 +985,11 @@ instance FromCStruct ImageBlit2 where
     dstOffsets0 <- peekCStruct @Offset3D ((pdstOffsets `advancePtrBytes` 0 :: Ptr Offset3D))
     dstOffsets1 <- peekCStruct @Offset3D ((pdstOffsets `advancePtrBytes` 12 :: Ptr Offset3D))
     pure $ ImageBlit2
-             srcSubresource ((srcOffsets0, srcOffsets1)) dstSubresource ((dstOffsets0, dstOffsets1))
+             next srcSubresource ((srcOffsets0, srcOffsets1)) dstSubresource ((dstOffsets0, dstOffsets1))
 
-instance Storable ImageBlit2 where
-  sizeOf ~_ = 96
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero ImageBlit2 where
+instance es ~ '[] => Zero (ImageBlit2 es) where
   zero = ImageBlit2
+           ()
            zero
            (zero, zero)
            zero
@@ -1013,8 +1039,10 @@ instance Zero ImageBlit2 where
 -- 'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers',
 -- 'Vulkan.Core10.FundamentalTypes.Offset3D',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data BufferImageCopy2 = BufferImageCopy2
-  { -- | @bufferOffset@ is the offset in bytes from the start of the buffer
+data BufferImageCopy2 (es :: [Type]) = BufferImageCopy2
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @bufferOffset@ is the offset in bytes from the start of the buffer
     -- object where the image data is copied from or to.
     bufferOffset :: DeviceSize
   , -- | @bufferRowLength@ and @bufferImageHeight@ specify in texels a subregion
@@ -1039,37 +1067,50 @@ data BufferImageCopy2 = BufferImageCopy2
   }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (BufferImageCopy2)
+deriving instance Generic (BufferImageCopy2 (es :: [Type]))
 #endif
-deriving instance Show BufferImageCopy2
+deriving instance Show (Chain es) => Show (BufferImageCopy2 es)
 
-instance ToCStruct BufferImageCopy2 where
+instance Extensible BufferImageCopy2 where
+  extensibleTypeName = "BufferImageCopy2"
+  setNext BufferImageCopy2{..} next' = BufferImageCopy2{next = next', ..}
+  getNext BufferImageCopy2{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends BufferImageCopy2 e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @CopyCommandTransformInfoQCOM = Just f
+    | otherwise = Nothing
+
+instance (Extendss BufferImageCopy2 es, PokeChain es) => ToCStruct (BufferImageCopy2 es) where
   withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p BufferImageCopy2{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (bufferOffset)
-    poke ((p `plusPtr` 24 :: Ptr Word32)) (bufferRowLength)
-    poke ((p `plusPtr` 28 :: Ptr Word32)) (bufferImageHeight)
-    poke ((p `plusPtr` 32 :: Ptr ImageSubresourceLayers)) (imageSubresource)
-    poke ((p `plusPtr` 48 :: Ptr Offset3D)) (imageOffset)
-    poke ((p `plusPtr` 60 :: Ptr Extent3D)) (imageExtent)
-    f
+  pokeCStruct p BufferImageCopy2{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (bufferOffset)
+    lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (bufferRowLength)
+    lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) (bufferImageHeight)
+    lift $ poke ((p `plusPtr` 32 :: Ptr ImageSubresourceLayers)) (imageSubresource)
+    lift $ poke ((p `plusPtr` 48 :: Ptr Offset3D)) (imageOffset)
+    lift $ poke ((p `plusPtr` 60 :: Ptr Extent3D)) (imageExtent)
+    lift $ f
   cStructSize = 72
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (zero)
-    poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 28 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 32 :: Ptr ImageSubresourceLayers)) (zero)
-    poke ((p `plusPtr` 48 :: Ptr Offset3D)) (zero)
-    poke ((p `plusPtr` 60 :: Ptr Extent3D)) (zero)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (zero)
+    lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 32 :: Ptr ImageSubresourceLayers)) (zero)
+    lift $ poke ((p `plusPtr` 48 :: Ptr Offset3D)) (zero)
+    lift $ poke ((p `plusPtr` 60 :: Ptr Extent3D)) (zero)
+    lift $ f
 
-instance FromCStruct BufferImageCopy2 where
+instance (Extendss BufferImageCopy2 es, PeekChain es) => FromCStruct (BufferImageCopy2 es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     bufferOffset <- peek @DeviceSize ((p `plusPtr` 16 :: Ptr DeviceSize))
     bufferRowLength <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
     bufferImageHeight <- peek @Word32 ((p `plusPtr` 28 :: Ptr Word32))
@@ -1077,16 +1118,11 @@ instance FromCStruct BufferImageCopy2 where
     imageOffset <- peekCStruct @Offset3D ((p `plusPtr` 48 :: Ptr Offset3D))
     imageExtent <- peekCStruct @Extent3D ((p `plusPtr` 60 :: Ptr Extent3D))
     pure $ BufferImageCopy2
-             bufferOffset bufferRowLength bufferImageHeight imageSubresource imageOffset imageExtent
+             next bufferOffset bufferRowLength bufferImageHeight imageSubresource imageOffset imageExtent
 
-instance Storable BufferImageCopy2 where
-  sizeOf ~_ = 72
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero BufferImageCopy2 where
+instance es ~ '[] => Zero (BufferImageCopy2 es) where
   zero = BufferImageCopy2
+           ()
            zero
            zero
            zero
@@ -2045,7 +2081,7 @@ data BlitImageInfo2 = BlitImageInfo2
     dstImageLayout :: ImageLayout
   , -- | @pRegions@ is a pointer to an array of 'ImageBlit2' structures
     -- specifying the regions to blit.
-    regions :: Vector ImageBlit2
+    regions :: Vector (SomeStruct ImageBlit2)
   , -- | @filter@ is a 'Vulkan.Core10.Enums.Filter.Filter' specifying the filter
     -- to apply if the blits require scaling.
     filter' :: Filter
@@ -2066,9 +2102,9 @@ instance ToCStruct BlitImageInfo2 where
     lift $ poke ((p `plusPtr` 32 :: Ptr Image)) (dstImage)
     lift $ poke ((p `plusPtr` 40 :: Ptr ImageLayout)) (dstImageLayout)
     lift $ poke ((p `plusPtr` 44 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
-    pPRegions' <- ContT $ allocaBytes @ImageBlit2 ((Data.Vector.length (regions)) * 96)
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions' `plusPtr` (96 * (i)) :: Ptr ImageBlit2) (e)) (regions)
-    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr ImageBlit2))) (pPRegions')
+    pPRegions' <- ContT $ allocaBytes @(ImageBlit2 _) ((Data.Vector.length (regions)) * 96)
+    Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPRegions' `plusPtr` (96 * (i)) :: Ptr (ImageBlit2 _))) (e) . ($ ())) (regions)
+    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr (ImageBlit2 _)))) (pPRegions')
     lift $ poke ((p `plusPtr` 56 :: Ptr Filter)) (filter')
     lift $ f
   cStructSize = 64
@@ -2090,8 +2126,8 @@ instance FromCStruct BlitImageInfo2 where
     dstImage <- peek @Image ((p `plusPtr` 32 :: Ptr Image))
     dstImageLayout <- peek @ImageLayout ((p `plusPtr` 40 :: Ptr ImageLayout))
     regionCount <- peek @Word32 ((p `plusPtr` 44 :: Ptr Word32))
-    pRegions <- peek @(Ptr ImageBlit2) ((p `plusPtr` 48 :: Ptr (Ptr ImageBlit2)))
-    pRegions' <- generateM (fromIntegral regionCount) (\i -> peekCStruct @ImageBlit2 ((pRegions `advancePtrBytes` (96 * (i)) :: Ptr ImageBlit2)))
+    pRegions <- peek @(Ptr (ImageBlit2 _)) ((p `plusPtr` 48 :: Ptr (Ptr (ImageBlit2 _))))
+    pRegions' <- generateM (fromIntegral regionCount) (\i -> peekSomeCStruct (forgetExtensions ((pRegions `advancePtrBytes` (96 * (i)) :: Ptr (ImageBlit2 _)))))
     filter' <- peek @Filter ((p `plusPtr` 56 :: Ptr Filter))
     pure $ BlitImageInfo2
              srcImage srcImageLayout dstImage dstImageLayout pRegions' filter'
@@ -2405,7 +2441,7 @@ data CopyBufferToImageInfo2 = CopyBufferToImageInfo2
     dstImageLayout :: ImageLayout
   , -- | @pRegions@ is a pointer to an array of 'BufferImageCopy2' structures
     -- specifying the regions to copy.
-    regions :: Vector BufferImageCopy2
+    regions :: Vector (SomeStruct BufferImageCopy2)
   }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -2422,9 +2458,9 @@ instance ToCStruct CopyBufferToImageInfo2 where
     lift $ poke ((p `plusPtr` 24 :: Ptr Image)) (dstImage)
     lift $ poke ((p `plusPtr` 32 :: Ptr ImageLayout)) (dstImageLayout)
     lift $ poke ((p `plusPtr` 36 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
-    pPRegions' <- ContT $ allocaBytes @BufferImageCopy2 ((Data.Vector.length (regions)) * 72)
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions' `plusPtr` (72 * (i)) :: Ptr BufferImageCopy2) (e)) (regions)
-    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr BufferImageCopy2))) (pPRegions')
+    pPRegions' <- ContT $ allocaBytes @(BufferImageCopy2 _) ((Data.Vector.length (regions)) * 72)
+    Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPRegions' `plusPtr` (72 * (i)) :: Ptr (BufferImageCopy2 _))) (e) . ($ ())) (regions)
+    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr (BufferImageCopy2 _)))) (pPRegions')
     lift $ f
   cStructSize = 48
   cStructAlignment = 8
@@ -2442,8 +2478,8 @@ instance FromCStruct CopyBufferToImageInfo2 where
     dstImage <- peek @Image ((p `plusPtr` 24 :: Ptr Image))
     dstImageLayout <- peek @ImageLayout ((p `plusPtr` 32 :: Ptr ImageLayout))
     regionCount <- peek @Word32 ((p `plusPtr` 36 :: Ptr Word32))
-    pRegions <- peek @(Ptr BufferImageCopy2) ((p `plusPtr` 40 :: Ptr (Ptr BufferImageCopy2)))
-    pRegions' <- generateM (fromIntegral regionCount) (\i -> peekCStruct @BufferImageCopy2 ((pRegions `advancePtrBytes` (72 * (i)) :: Ptr BufferImageCopy2)))
+    pRegions <- peek @(Ptr (BufferImageCopy2 _)) ((p `plusPtr` 40 :: Ptr (Ptr (BufferImageCopy2 _))))
+    pRegions' <- generateM (fromIntegral regionCount) (\i -> peekSomeCStruct (forgetExtensions ((pRegions `advancePtrBytes` (72 * (i)) :: Ptr (BufferImageCopy2 _)))))
     pure $ CopyBufferToImageInfo2
              srcBuffer dstImage dstImageLayout pRegions'
 
@@ -2751,7 +2787,7 @@ data CopyImageToBufferInfo2 = CopyImageToBufferInfo2
     dstBuffer :: Buffer
   , -- | @pRegions@ is a pointer to an array of 'BufferImageCopy2' structures
     -- specifying the regions to copy.
-    regions :: Vector BufferImageCopy2
+    regions :: Vector (SomeStruct BufferImageCopy2)
   }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -2768,9 +2804,9 @@ instance ToCStruct CopyImageToBufferInfo2 where
     lift $ poke ((p `plusPtr` 24 :: Ptr ImageLayout)) (srcImageLayout)
     lift $ poke ((p `plusPtr` 32 :: Ptr Buffer)) (dstBuffer)
     lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
-    pPRegions' <- ContT $ allocaBytes @BufferImageCopy2 ((Data.Vector.length (regions)) * 72)
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions' `plusPtr` (72 * (i)) :: Ptr BufferImageCopy2) (e)) (regions)
-    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr BufferImageCopy2))) (pPRegions')
+    pPRegions' <- ContT $ allocaBytes @(BufferImageCopy2 _) ((Data.Vector.length (regions)) * 72)
+    Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPRegions' `plusPtr` (72 * (i)) :: Ptr (BufferImageCopy2 _))) (e) . ($ ())) (regions)
+    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr (BufferImageCopy2 _)))) (pPRegions')
     lift $ f
   cStructSize = 56
   cStructAlignment = 8
@@ -2788,8 +2824,8 @@ instance FromCStruct CopyImageToBufferInfo2 where
     srcImageLayout <- peek @ImageLayout ((p `plusPtr` 24 :: Ptr ImageLayout))
     dstBuffer <- peek @Buffer ((p `plusPtr` 32 :: Ptr Buffer))
     regionCount <- peek @Word32 ((p `plusPtr` 40 :: Ptr Word32))
-    pRegions <- peek @(Ptr BufferImageCopy2) ((p `plusPtr` 48 :: Ptr (Ptr BufferImageCopy2)))
-    pRegions' <- generateM (fromIntegral regionCount) (\i -> peekCStruct @BufferImageCopy2 ((pRegions `advancePtrBytes` (72 * (i)) :: Ptr BufferImageCopy2)))
+    pRegions <- peek @(Ptr (BufferImageCopy2 _)) ((p `plusPtr` 48 :: Ptr (Ptr (BufferImageCopy2 _))))
+    pRegions' <- generateM (fromIntegral regionCount) (\i -> peekSomeCStruct (forgetExtensions ((pRegions `advancePtrBytes` (72 * (i)) :: Ptr (BufferImageCopy2 _)))))
     pure $ CopyImageToBufferInfo2
              srcImage srcImageLayout dstBuffer pRegions'
 

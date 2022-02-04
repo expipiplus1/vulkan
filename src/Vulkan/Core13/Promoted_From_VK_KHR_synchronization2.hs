@@ -73,6 +73,7 @@ import Vulkan.CStruct.Utils (advancePtrBytes)
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Extends (forgetExtensions)
+import Vulkan.CStruct.Extends (peekSomeCStruct)
 import Vulkan.CStruct.Extends (pokeSomeCStruct)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core13.Enums.AccessFlags2 (AccessFlags2)
@@ -116,6 +117,7 @@ import Vulkan.Core10.Handles (Queue(Queue))
 import Vulkan.Core10.Handles (Queue_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (SampleLocationsInfoEXT)
 import Vulkan.Core10.Handles (Semaphore)
 import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -3193,8 +3195,10 @@ instance Zero MemoryBarrier2 where
 -- 'Vulkan.Core10.ImageView.ImageSubresourceRange',
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlags2',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data ImageMemoryBarrier2 = ImageMemoryBarrier2
-  { -- | @srcStageMask@ is a
+data ImageMemoryBarrier2 (es :: [Type]) = ImageMemoryBarrier2
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @srcStageMask@ is a
     -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlags2' mask of
     -- pipeline stages to be included in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-scopes first synchronization scope>.
@@ -3233,41 +3237,54 @@ data ImageMemoryBarrier2 = ImageMemoryBarrier2
   }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (ImageMemoryBarrier2)
+deriving instance Generic (ImageMemoryBarrier2 (es :: [Type]))
 #endif
-deriving instance Show ImageMemoryBarrier2
+deriving instance Show (Chain es) => Show (ImageMemoryBarrier2 es)
 
-instance ToCStruct ImageMemoryBarrier2 where
+instance Extensible ImageMemoryBarrier2 where
+  extensibleTypeName = "ImageMemoryBarrier2"
+  setNext ImageMemoryBarrier2{..} next' = ImageMemoryBarrier2{next = next', ..}
+  getNext ImageMemoryBarrier2{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageMemoryBarrier2 e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @SampleLocationsInfoEXT = Just f
+    | otherwise = Nothing
+
+instance (Extendss ImageMemoryBarrier2 es, PokeChain es) => ToCStruct (ImageMemoryBarrier2 es) where
   withCStruct x f = allocaBytes 96 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p ImageMemoryBarrier2{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr PipelineStageFlags2)) (srcStageMask)
-    poke ((p `plusPtr` 24 :: Ptr AccessFlags2)) (srcAccessMask)
-    poke ((p `plusPtr` 32 :: Ptr PipelineStageFlags2)) (dstStageMask)
-    poke ((p `plusPtr` 40 :: Ptr AccessFlags2)) (dstAccessMask)
-    poke ((p `plusPtr` 48 :: Ptr ImageLayout)) (oldLayout)
-    poke ((p `plusPtr` 52 :: Ptr ImageLayout)) (newLayout)
-    poke ((p `plusPtr` 56 :: Ptr Word32)) (srcQueueFamilyIndex)
-    poke ((p `plusPtr` 60 :: Ptr Word32)) (dstQueueFamilyIndex)
-    poke ((p `plusPtr` 64 :: Ptr Image)) (image)
-    poke ((p `plusPtr` 72 :: Ptr ImageSubresourceRange)) (subresourceRange)
-    f
+  pokeCStruct p ImageMemoryBarrier2{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr PipelineStageFlags2)) (srcStageMask)
+    lift $ poke ((p `plusPtr` 24 :: Ptr AccessFlags2)) (srcAccessMask)
+    lift $ poke ((p `plusPtr` 32 :: Ptr PipelineStageFlags2)) (dstStageMask)
+    lift $ poke ((p `plusPtr` 40 :: Ptr AccessFlags2)) (dstAccessMask)
+    lift $ poke ((p `plusPtr` 48 :: Ptr ImageLayout)) (oldLayout)
+    lift $ poke ((p `plusPtr` 52 :: Ptr ImageLayout)) (newLayout)
+    lift $ poke ((p `plusPtr` 56 :: Ptr Word32)) (srcQueueFamilyIndex)
+    lift $ poke ((p `plusPtr` 60 :: Ptr Word32)) (dstQueueFamilyIndex)
+    lift $ poke ((p `plusPtr` 64 :: Ptr Image)) (image)
+    lift $ poke ((p `plusPtr` 72 :: Ptr ImageSubresourceRange)) (subresourceRange)
+    lift $ f
   cStructSize = 96
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 48 :: Ptr ImageLayout)) (zero)
-    poke ((p `plusPtr` 52 :: Ptr ImageLayout)) (zero)
-    poke ((p `plusPtr` 56 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 60 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 64 :: Ptr Image)) (zero)
-    poke ((p `plusPtr` 72 :: Ptr ImageSubresourceRange)) (zero)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ poke ((p `plusPtr` 48 :: Ptr ImageLayout)) (zero)
+    lift $ poke ((p `plusPtr` 52 :: Ptr ImageLayout)) (zero)
+    lift $ poke ((p `plusPtr` 56 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 60 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 64 :: Ptr Image)) (zero)
+    lift $ poke ((p `plusPtr` 72 :: Ptr ImageSubresourceRange)) (zero)
+    lift $ f
 
-instance FromCStruct ImageMemoryBarrier2 where
+instance (Extendss ImageMemoryBarrier2 es, PeekChain es) => FromCStruct (ImageMemoryBarrier2 es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     srcStageMask <- peek @PipelineStageFlags2 ((p `plusPtr` 16 :: Ptr PipelineStageFlags2))
     srcAccessMask <- peek @AccessFlags2 ((p `plusPtr` 24 :: Ptr AccessFlags2))
     dstStageMask <- peek @PipelineStageFlags2 ((p `plusPtr` 32 :: Ptr PipelineStageFlags2))
@@ -3279,16 +3296,11 @@ instance FromCStruct ImageMemoryBarrier2 where
     image <- peek @Image ((p `plusPtr` 64 :: Ptr Image))
     subresourceRange <- peekCStruct @ImageSubresourceRange ((p `plusPtr` 72 :: Ptr ImageSubresourceRange))
     pure $ ImageMemoryBarrier2
-             srcStageMask srcAccessMask dstStageMask dstAccessMask oldLayout newLayout srcQueueFamilyIndex dstQueueFamilyIndex image subresourceRange
+             next srcStageMask srcAccessMask dstStageMask dstAccessMask oldLayout newLayout srcQueueFamilyIndex dstQueueFamilyIndex image subresourceRange
 
-instance Storable ImageMemoryBarrier2 where
-  sizeOf ~_ = 96
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero ImageMemoryBarrier2 where
+instance es ~ '[] => Zero (ImageMemoryBarrier2 es) where
   zero = ImageMemoryBarrier2
+           ()
            zero
            zero
            zero
@@ -4260,7 +4272,7 @@ data DependencyInfo = DependencyInfo
     bufferMemoryBarriers :: Vector BufferMemoryBarrier2
   , -- | @pImageMemoryBarriers@ is a pointer to an array of 'ImageMemoryBarrier2'
     -- structures defining memory dependencies between image subresources.
-    imageMemoryBarriers :: Vector ImageMemoryBarrier2
+    imageMemoryBarriers :: Vector (SomeStruct ImageMemoryBarrier2)
   }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -4283,9 +4295,9 @@ instance ToCStruct DependencyInfo where
     lift $ Data.Vector.imapM_ (\i e -> poke (pPBufferMemoryBarriers' `plusPtr` (80 * (i)) :: Ptr BufferMemoryBarrier2) (e)) (bufferMemoryBarriers)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr BufferMemoryBarrier2))) (pPBufferMemoryBarriers')
     lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (imageMemoryBarriers)) :: Word32))
-    pPImageMemoryBarriers' <- ContT $ allocaBytes @ImageMemoryBarrier2 ((Data.Vector.length (imageMemoryBarriers)) * 96)
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPImageMemoryBarriers' `plusPtr` (96 * (i)) :: Ptr ImageMemoryBarrier2) (e)) (imageMemoryBarriers)
-    lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr ImageMemoryBarrier2))) (pPImageMemoryBarriers')
+    pPImageMemoryBarriers' <- ContT $ allocaBytes @(ImageMemoryBarrier2 _) ((Data.Vector.length (imageMemoryBarriers)) * 96)
+    Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPImageMemoryBarriers' `plusPtr` (96 * (i)) :: Ptr (ImageMemoryBarrier2 _))) (e) . ($ ())) (imageMemoryBarriers)
+    lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr (ImageMemoryBarrier2 _)))) (pPImageMemoryBarriers')
     lift $ f
   cStructSize = 64
   cStructAlignment = 8
@@ -4304,8 +4316,8 @@ instance FromCStruct DependencyInfo where
     pBufferMemoryBarriers <- peek @(Ptr BufferMemoryBarrier2) ((p `plusPtr` 40 :: Ptr (Ptr BufferMemoryBarrier2)))
     pBufferMemoryBarriers' <- generateM (fromIntegral bufferMemoryBarrierCount) (\i -> peekCStruct @BufferMemoryBarrier2 ((pBufferMemoryBarriers `advancePtrBytes` (80 * (i)) :: Ptr BufferMemoryBarrier2)))
     imageMemoryBarrierCount <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
-    pImageMemoryBarriers <- peek @(Ptr ImageMemoryBarrier2) ((p `plusPtr` 56 :: Ptr (Ptr ImageMemoryBarrier2)))
-    pImageMemoryBarriers' <- generateM (fromIntegral imageMemoryBarrierCount) (\i -> peekCStruct @ImageMemoryBarrier2 ((pImageMemoryBarriers `advancePtrBytes` (96 * (i)) :: Ptr ImageMemoryBarrier2)))
+    pImageMemoryBarriers <- peek @(Ptr (ImageMemoryBarrier2 _)) ((p `plusPtr` 56 :: Ptr (Ptr (ImageMemoryBarrier2 _))))
+    pImageMemoryBarriers' <- generateM (fromIntegral imageMemoryBarrierCount) (\i -> peekSomeCStruct (forgetExtensions ((pImageMemoryBarriers `advancePtrBytes` (96 * (i)) :: Ptr (ImageMemoryBarrier2 _)))))
     pure $ DependencyInfo
              dependencyFlags pMemoryBarriers' pBufferMemoryBarriers' pImageMemoryBarriers'
 

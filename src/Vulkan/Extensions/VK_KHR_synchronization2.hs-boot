@@ -443,24 +443,19 @@
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_synchronization2  ( CheckpointData2NV
-                                                  , ImageMemoryBarrier2KHR
                                                   , QueueFamilyCheckpointProperties2NV
                                                   ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
-import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 (ImageMemoryBarrier2)
+
 data CheckpointData2NV
 
 instance ToCStruct CheckpointData2NV
 instance Show CheckpointData2NV
 
 instance FromCStruct CheckpointData2NV
-
-
--- No documentation found for TopLevel "VkImageMemoryBarrier2KHR"
-type ImageMemoryBarrier2KHR = ImageMemoryBarrier2
 
 
 data QueueFamilyCheckpointProperties2NV
