@@ -26,15 +26,22 @@ loadAllDocumentation
   -- ^ Path to the @VulkanMemoryAllocator/docs/docbook@ directory
   -> Sem r (Documentee -> Maybe Documentation)
 loadAllDocumentation docbookDir = do
-  allDocs <-
+  allStructDocs <-
     liftIO
     $   filter (("struct" `isPrefixOf`) . takeFileName)
     .   fmap (docbookDir </>)
     .   filter (".xml" `List.isSuffixOf`)
     <$> listDirectory docbookDir
+  allGroupDocs <-
+    liftIO
+    $   filter (("group__" `isPrefixOf`) . takeFileName)
+    .   fmap (docbookDir </>)
+    .   filter (".xml" `List.isSuffixOf`)
+    <$> listDirectory docbookDir
   (errors, docs) <- partitionEithers <$> sequence
-    ( runErr (loadHeaderDocumentation (docbookDir </> "vk__mem__alloc_8h.xml"))
-    : (allDocs <&> \d -> runErr (loadDocumentation d))
+    (  runErr (loadHeaderDocumentation (docbookDir </> "vk__mem__alloc_8h.xml"))
+    : (allStructDocs <&> (runErr . loadDocumentation))
+    <> (allGroupDocs <&> (runErr . loadHeaderDocumentation))
     )
   unless (null errors) $ do
     sayErr "Errors while loading documentation:"
@@ -163,7 +170,7 @@ splitHeaderDocumentation isValid (Pandoc meta bs) =
       NamedSection name sectionBlocks rem
         | documentee <- TopLevel (CName name)
         , isValid documentee
-        , Plain [Str name1] : Plain [Str "vk_mem_alloc.h"] : Plain [Str "vk_mem_alloc.h"] : Plain [Str name2] : Para [Code ("", [], []) enumName] : sectionRem <-
+        , Plain [Str name1] : Plain _ : Plain _ : Plain [Str name2] : Para [Code ("", [], []) enumName] : sectionRem <-
           sectionBlocks
         , name == name1
         , name == name2
@@ -188,7 +195,7 @@ splitHeaderDocumentation isValid (Pandoc meta bs) =
         | Just name <- T.dropSuffix "()" nameWithParens
         , documentee <- TopLevel (CName name)
         , isValid documentee
-        , Plain [Str name1] : Plain [Str "vk_mem_alloc.h"] : Plain [Str "vk_mem_alloc.h"] : Plain [Str name2] : Para [Code ("", [], []) _funDecl] : sectionRem <-
+        , Plain [Str name1] : Plain _ : Plain _ : Plain [Str name2] : Para [Code ("", [], []) _funDecl] : sectionRem <-
           sectionBlocks
         , name == name1
         , name == name2
