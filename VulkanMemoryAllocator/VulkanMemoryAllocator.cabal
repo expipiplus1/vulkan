@@ -96,7 +96,7 @@ library
     , bytestring
     , transformers
     , vector
-    , vulkan >=3.6 && <3.16
+    , vulkan >=3.6 && <3.17
   if flag(safe-foreign-calls)
     cpp-options: -DSAFE_FOREIGN_CALLS
   if flag(vma-ndebug)
