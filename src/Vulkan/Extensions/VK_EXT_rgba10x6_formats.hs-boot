@@ -49,7 +49,7 @@
 -- This extension enables the
 -- 'Vulkan.Core10.Enums.Format.FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16'
 -- format to be used without a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 -- enabled.
 --
 -- == New Structures
@@ -103,7 +103,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_rgba10x6_formats Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_rgba10x6_formats Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

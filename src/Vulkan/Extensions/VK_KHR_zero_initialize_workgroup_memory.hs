@@ -23,6 +23,11 @@
 --
 --     -   Requires @VK_KHR_get_physical_device_properties2@
 --
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3-promotions Vulkan 1.3>
+--
 -- [__Contact__]
 --
 --     -   Alan Baker
@@ -33,11 +38,12 @@
 -- [__Last Modified Date__]
 --     2020-11-18
 --
+-- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.3 Core
+--
 -- [__IP Status__]
 --     No known IP claims.
---
--- [__Interactions and External Dependencies__]
---     None
 --
 -- [__Contributors__]
 --
@@ -71,7 +77,13 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES_KHR'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES_KHR'
+--
+-- == Promotion to Vulkan 1.3
+--
+-- Functionality in this extension is included in core Vulkan 1.3, with the
+-- KHR suffix omitted. The original type, enum and command names are still
+-- available as aliases of the core functionality.
 --
 -- == Version History
 --
@@ -86,109 +98,27 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_zero_initialize_workgroup_memory Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_zero_initialize_workgroup_memory Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_KHR_zero_initialize_workgroup_memory  ( PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR(..)
+module Vulkan.Extensions.VK_KHR_zero_initialize_workgroup_memory  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES_KHR
+                                                                  , PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR
                                                                   , KHR_ZERO_INITIALIZE_WORKGROUP_MEMORY_SPEC_VERSION
                                                                   , pattern KHR_ZERO_INITIALIZE_WORKGROUP_MEMORY_SPEC_VERSION
                                                                   , KHR_ZERO_INITIALIZE_WORKGROUP_MEMORY_EXTENSION_NAME
                                                                   , pattern KHR_ZERO_INITIALIZE_WORKGROUP_MEMORY_EXTENSION_NAME
                                                                   ) where
 
-import Foreign.Marshal.Alloc (allocaBytes)
-import Foreign.Ptr (nullPtr)
-import Foreign.Ptr (plusPtr)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero(..))
 import Data.String (IsString)
-import Data.Typeable (Typeable)
-import Foreign.Storable (Storable)
-import Foreign.Storable (Storable(peek))
-import Foreign.Storable (Storable(poke))
-import qualified Foreign.Storable (Storable(..))
-import GHC.Generics (Generic)
-import Foreign.Ptr (Ptr)
-import Data.Kind (Type)
-import Vulkan.Core10.FundamentalTypes (bool32ToBool)
-import Vulkan.Core10.FundamentalTypes (boolToBool32)
-import Vulkan.Core10.FundamentalTypes (Bool32)
-import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES_KHR))
--- | VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR - Structure
--- describing support for zero initialization of workgroup memory by an
--- implementation
---
--- = Members
---
--- This structure describes the following feature:
---
--- = Description
---
--- If the 'PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR'
--- structure is included in the @pNext@ chain of the
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
--- structure passed to
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
--- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR'
--- /can/ also be used in the @pNext@ chain of
--- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
--- features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_zero_initialize_workgroup_memory VK_KHR_zero_initialize_workgroup_memory>,
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR = PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR
-  { -- | #features-shaderZeroInitializeWorkgroupMemory#
-    -- @shaderZeroInitializeWorkgroupMemory@ specifies whether the
-    -- implementation supports initializing a variable in Workgroup storage
-    -- class.
-    shaderZeroInitializeWorkgroupMemory :: Bool }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR)
-#endif
-deriving instance Show PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR
+import Vulkan.Core13.Promoted_From_VK_KHR_zero_initialize_workgroup_memory (PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures)
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES))
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES_KHR = STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES
 
-instance ToCStruct PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR where
-  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES_KHR)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (shaderZeroInitializeWorkgroupMemory))
-    f
-  cStructSize = 24
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES_KHR)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
-    f
 
-instance FromCStruct PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR where
-  peekCStruct p = do
-    shaderZeroInitializeWorkgroupMemory <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
-    pure $ PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR
-             (bool32ToBool shaderZeroInitializeWorkgroupMemory)
-
-instance Storable PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR where
-  zero = PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR
-           zero
+-- No documentation found for TopLevel "VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR"
+type PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR = PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures
 
 
 type KHR_ZERO_INITIALIZE_WORKGROUP_MEMORY_SPEC_VERSION = 1

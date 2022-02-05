@@ -93,10 +93,13 @@ parseSpec bs = do
         specHandles <- V.filter ((`V.notElem` disabledTypeNames) . hName)
           <$> parseHandles @t types
         specFuncPointers <- parseFuncPointers types
-        unsizedStructs   <- V.filter ((`V.notElem` disabledTypeNames) . sName)
-          <$> parseStructs types
+        typeAliases      <- parseTypeAliases
+          ["handle", "enum", "bitmask", "struct"]
+          types
+        unsizedStructs <- V.filter ((`V.notElem` disabledTypeNames) . sName)
+          <$> parseStructs typeAliases types
         unsizedUnions <- V.filter ((`V.notElem` disabledTypeNames) . sName)
-          <$> parseUnions types
+          <$> parseUnions typeAliases types
         specCommands <-
           fmap (V.filter ((`V.notElem` disabledCommandNames) . cName))
           .   parseCommands
@@ -107,10 +110,7 @@ parseSpec bs = do
         requires        <- allRequires NotDisabled . contents $ n
         enumExtensions  <- parseEnumExtensions requires
         constantAliases <- parseConstantAliases (contents n)
-        typeAliases     <- parseTypeAliases
-          ["handle", "enum", "bitmask", "struct"]
-          types
-        enumAliases <-
+        enumAliases     <-
           (<>) <$> parseEnumAliases (fst <$> requires) <*> parseEnumAliases
             (V.fromList $ [ c | Element c <- contents n, "enums" == name c ])
         commandAliases <-
@@ -954,30 +954,39 @@ appendEnumExtensions extensions =
 ----------------------------------------------------------------
 
 parseStructs
-  :: [Content] -> P (Vector (StructOrUnion AStruct WithoutSize WithoutChildren))
-parseStructs = onTypes "struct" parseStruct
+  :: Vector Alias -> [Content] -> P (Vector (StructOrUnion AStruct WithoutSize WithoutChildren))
+parseStructs = onTypes "struct" . parseStruct
 
 parseUnions
-  :: [Content] -> P (Vector (StructOrUnion AUnion WithoutSize WithoutChildren))
-parseUnions = onTypes "union" parseStruct
+  :: Vector Alias -> [Content] -> P (Vector (StructOrUnion AUnion WithoutSize WithoutChildren))
+parseUnions = onTypes "union" . parseStruct
 
-parseStruct :: Node -> P (StructOrUnion a WithoutSize WithoutChildren)
-parseStruct n = do
-  sName <- nameAttr "struct" n
-  case find (\s -> sName == Spec.Types.sName s) bespokeStructsAndUnions of
-    Just s  -> pure s
-    Nothing -> context (unCName sName) $ do
-      sMembers <-
-        fmap fromList
-        . traverseV (parseStructMember sName)
-        $ [ m | Element m <- contents n, name m == "member" ]
-      let sSize        = ()
-          sAlignment   = ()
-          sExtendedBy  = ()
-          sInheritedBy = ()
-      sExtends  <- listAttr (fmap CName . decode) "structextends" n
-      sInherits <- listAttr (fmap CName . decode) "parentstruct" n
-      pure Struct { .. }
+parseStruct
+  :: Vector Alias -> Node -> P (StructOrUnion a WithoutSize WithoutChildren)
+parseStruct aliases =
+  let
+    aliasMap =
+      Map.fromList [ (n, t) | Alias n t TypeAlias <- V.toList aliases ]
+    unAlias n = fromMaybe n $ Map.lookup n aliasMap
+  in
+    \n -> do
+      sName <- nameAttr "struct" n
+      case find (\s -> sName == Spec.Types.sName s) bespokeStructsAndUnions of
+        Just s  -> pure s
+        Nothing -> context (unCName sName) $ do
+          sMembers <-
+            fmap fromList
+            . traverseV (parseStructMember sName)
+            $ [ m | Element m <- contents n, name m == "member" ]
+          let sSize        = ()
+              sAlignment   = ()
+              sExtendedBy  = ()
+              sInheritedBy = ()
+          sExtends <-
+            fmap unAlias <$> listAttr (fmap CName . decode) "structextends" n
+          sInherits <-
+            fmap unAlias <$> listAttr (fmap CName . decode) "parentstruct" n
+          pure Struct { .. }
  where
 
   parseStructMember :: CName -> Node -> P (StructMember' WithoutSize)

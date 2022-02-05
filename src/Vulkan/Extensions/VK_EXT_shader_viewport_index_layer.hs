@@ -96,13 +96,13 @@
 --
 -- The single @ShaderViewportIndexLayerEXT@ capability from the
 -- @SPV_EXT_shader_viewport_index_layer@ extension is replaced by the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-ShaderViewportIndex ShaderViewportIndex>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ShaderViewportIndex ShaderViewportIndex>
 -- and
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-ShaderLayer ShaderLayer>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ShaderLayer ShaderLayer>
 -- capabilities from SPIR-V 1.5 which are enabled by the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderOutputViewportIndex shaderOutputViewportIndex>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderOutputViewportIndex shaderOutputViewportIndex>
 -- and
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderOutputLayer shaderOutputLayer>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderOutputLayer shaderOutputLayer>
 -- features, respectively. Additionally, if Vulkan 1.2 is supported but
 -- this extension is not, these capabilities are optional.
 --
@@ -118,14 +118,14 @@
 -- == New or Modified Built-In Variables
 --
 -- -   (modified)
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-layer Layer>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-layer Layer>
 --
 -- -   (modified)
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-viewportindex ViewportIndex>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-viewportindex ViewportIndex>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-ShaderViewportIndexLayerEXT ShaderViewportIndexLayerEXT>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ShaderViewportIndexLayerEXT ShaderViewportIndexLayerEXT>
 --
 -- == Version History
 --
@@ -140,7 +140,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_viewport_index_layer Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_shader_viewport_index_layer Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

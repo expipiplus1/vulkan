@@ -118,7 +118,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_validation_cache Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_validation_cache Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -300,7 +300,7 @@ createValidationCacheEXT :: forall io
                             -- containing the initial parameters for the validation cache object.
                             ValidationCacheCreateInfoEXT
                          -> -- | @pAllocator@ controls host memory allocation as described in the
-                            -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                            -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                             -- chapter.
                             ("allocator" ::: Maybe AllocationCallbacks)
                          -> io (ValidationCacheEXT)
@@ -391,7 +391,7 @@ destroyValidationCacheEXT :: forall io
                           -> -- | @validationCache@ is the handle of the validation cache to destroy.
                              ValidationCacheEXT
                           -> -- | @pAllocator@ controls host memory allocation as described in the
-                             -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                             -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                              -- chapter.
                              ("allocator" ::: Maybe AllocationCallbacks)
                           -> io ()

@@ -34,7 +34,7 @@ newtype PipelineDepthStencilStateCreateFlagBits = PipelineDepthStencilStateCreat
 -- indicates that access to the stencil aspects of depth\/stencil and input
 -- attachments will have implicit framebuffer-local memory dependencies.
 -- See
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-feedbackloop renderpass feedback loops>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-feedbackloop renderpass feedback loops>
 -- for more information.
 pattern PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM =
   PipelineDepthStencilStateCreateFlagBits 0x00000002
@@ -42,7 +42,7 @@ pattern PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENC
 -- indicates that access to the depth aspects of depth\/stencil and input
 -- attachments will have implicit framebuffer-local memory dependencies.
 -- See
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-feedbackloop renderpass feedback loops>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-feedbackloop renderpass feedback loops>
 -- for more information.
 pattern PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM =
   PipelineDepthStencilStateCreateFlagBits 0x00000001

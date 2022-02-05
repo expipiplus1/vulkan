@@ -132,25 +132,32 @@ renderSpec spec@Spec {..} getDoc brackets ss us cs = do
     , rsAPIConstants       = renderConstant <$> filterConstants specAPIConstants
     , rsExtensionConstants = renderConstant
                                <$> filterConstants specExtensionConstants
-    , rsOthers             = bespokeElements spec
-                             <> V.singleton (renderDynamicLoader (specFlavor @t) cs)
-                             <> V.singleton marshalUtils
-                             <> V.singleton hasObjectTypeClass
-                             <> V.singleton (vkExceptionRenderElement getDoc vkResult)
-                             <> case sSpecFlavor @t of
-                                  SSpecVk -> Vk.specVersions spec
-                                  SSpecXr -> Xr.specVersions spec
-                             <> V.singleton (structExtends spec)
-                             <> case specFlavor @t of
-                                  SpecVk -> V.singleton
-                                    (renderSPIRVElements
-                                      specSPIRVExtensions
-                                      specSPIRVCapabilities
-                                      (HashMap.fromList [ (msName s, s) | s <- V.toList ss ]
-                                      )
-                                    )
-                                  SpecXr -> mempty
-                             <> V.singleton (renderExtensionDepElements specExtensions)
+    , rsOthers             =
+      bespokeElements spec
+      <> V.singleton (renderDynamicLoader (specFlavor @t) cs)
+      <> V.singleton marshalUtils
+      <> V.singleton hasObjectTypeClass
+      <> V.singleton (vkExceptionRenderElement getDoc vkResult)
+      <> case sSpecFlavor @t of
+           SSpecVk -> Vk.specVersions spec
+           SSpecXr -> Xr.specVersions spec
+      <> V.singleton (structExtends spec)
+      <> case specFlavor @t of
+           SpecVk -> V.singleton
+             (renderSPIRVElements
+               specSPIRVExtensions
+               specSPIRVCapabilities
+               (let m = HashMap.fromList [ (msName s, s) | s <- V.toList ss ]
+                    a = HashMap.fromList
+                      [ (n, s)
+                      | Alias n t TypeAlias <- V.toList specAliases
+                      , Just s              <- pure $ HashMap.lookup t m
+                      ]
+                in  m <> a
+               )
+             )
+           SpecXr -> mempty
+      <> V.singleton (renderExtensionDepElements specExtensions)
     }
 
 -- | Render a command along with any associated bracketing function

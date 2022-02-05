@@ -166,6 +166,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_KHR_get_memory_requirements2
                           , module Vulkan.Extensions.VK_KHR_get_physical_device_properties2
                           , module Vulkan.Extensions.VK_KHR_get_surface_capabilities2
+                          , module Vulkan.Extensions.VK_KHR_global_priority
                           , module Vulkan.Extensions.VK_KHR_image_format_list
                           , module Vulkan.Extensions.VK_KHR_imageless_framebuffer
                           , module Vulkan.Extensions.VK_KHR_incremental_present
@@ -433,6 +434,7 @@ import Vulkan.Extensions.VK_KHR_get_display_properties2
 import Vulkan.Extensions.VK_KHR_get_memory_requirements2
 import Vulkan.Extensions.VK_KHR_get_physical_device_properties2
 import Vulkan.Extensions.VK_KHR_get_surface_capabilities2
+import Vulkan.Extensions.VK_KHR_global_priority
 import Vulkan.Extensions.VK_KHR_image_format_list
 import Vulkan.Extensions.VK_KHR_imageless_framebuffer
 import Vulkan.Extensions.VK_KHR_incremental_present

@@ -143,7 +143,7 @@ renderReq = \case
     (otherInstReqs, otherDevReqs) <- minVersionAndExtensionsReqs rs
     getStruct                     <- input
     oneMember                     <- case getStruct s of
-      Nothing -> throw "SPIRV features aren't in a struct"
+      Nothing -> throw $ "SPIRV features " <> show s <> " aren't in a struct"
       Just str ->
         pure
           . null

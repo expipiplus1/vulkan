@@ -144,7 +144,7 @@ createQueryPool :: forall a io
                    -- containing the number and type of queries to be managed by the pool.
                    (QueryPoolCreateInfo a)
                 -> -- | @pAllocator@ controls host memory allocation as described in the
-                   -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                   -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                    -- chapter.
                    ("allocator" ::: Maybe AllocationCallbacks)
                 -> io (QueryPool)
@@ -241,7 +241,7 @@ destroyQueryPool :: forall io
                  -> -- | @queryPool@ is the query pool to destroy.
                     QueryPool
                  -> -- | @pAllocator@ controls host memory allocation as described in the
-                    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                     -- chapter.
                     ("allocator" ::: Maybe AllocationCallbacks)
                  -> io ()
@@ -278,7 +278,7 @@ foreign import ccall
 -- available state, results are written as an array of 32-bit unsigned
 -- integer values. The behavior when not all queries are available, is
 -- described
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-wait-bit-not-set below>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#queries-wait-bit-not-set below>.
 --
 -- If 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT' is not
 -- set and the result overflows a 32-bit value, the value /may/ either wrap
@@ -403,7 +403,7 @@ foreign import ccall
 --
 -- -   #VUID-vkGetQueryPoolResults-dataSize-00817# @dataSize@ /must/ be
 --     large enough to contain the result of each query, as described
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-operation-memorylayout here>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#queries-operation-memorylayout here>
 --
 -- -   #VUID-vkGetQueryPoolResults-queryType-00818# If the @queryType@ used
 --     to create @queryPool@ was
@@ -515,7 +515,7 @@ getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride
 -- == Valid Usage
 --
 -- -   #VUID-VkQueryPoolCreateInfo-queryType-00791# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineStatisticsQuery pipeline statistics queries>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineStatisticsQuery pipeline statistics queries>
 --     feature is not enabled, @queryType@ /must/ not be
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PIPELINE_STATISTICS'
 --
@@ -580,7 +580,7 @@ data QueryPoolCreateInfo (es :: [Type]) = QueryPoolCreateInfo
     -- 'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QueryPipelineStatisticFlagBits'
     -- specifying which counters will be returned in queries on the new pool,
     -- as described below in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-pipestats>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#queries-pipestats>.
     pipelineStatistics :: QueryPipelineStatisticFlags
   }
   deriving (Typeable)

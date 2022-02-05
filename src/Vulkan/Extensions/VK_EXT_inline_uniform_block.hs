@@ -25,6 +25,11 @@
 --
 --     -   Requires @VK_KHR_maintenance1@
 --
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3-promotions Vulkan 1.3>
+--
 -- [__Contact__]
 --
 --     -   Daniel Rakos
@@ -34,6 +39,10 @@
 --
 -- [__Last Modified Date__]
 --     2018-08-01
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.3 Core
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -86,17 +95,29 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.DescriptorType.DescriptorType':
 --
---     -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+--     -   'DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO_EXT'
+--     -   'STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO_EXT'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES_EXT'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES_EXT'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES_EXT'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES_EXT'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK_EXT'
+--     -   'STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK_EXT'
+--
+-- == Promotion to Vulkan 1.3
+--
+-- Functionality in this extension is included in core Vulkan 1.3, with the
+-- EXT suffix omitted. The original type, enum and command names are still
+-- available as aliases of the core functionality.
+--
+-- Vulkan 1.3 adds
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#versions-1.3-new-features additional functionality related to this extension>
+-- in the form of the
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxInlineUniformTotalSize maxInlineUniformTotalSize>
+-- limit.
 --
 -- == Issues
 --
@@ -170,356 +191,69 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_inline_uniform_block Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_inline_uniform_block Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_EXT_inline_uniform_block  ( PhysicalDeviceInlineUniformBlockFeaturesEXT(..)
-                                                      , PhysicalDeviceInlineUniformBlockPropertiesEXT(..)
-                                                      , WriteDescriptorSetInlineUniformBlockEXT(..)
-                                                      , DescriptorPoolInlineUniformBlockCreateInfoEXT(..)
+module Vulkan.Extensions.VK_EXT_inline_uniform_block  ( pattern DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT
+                                                      , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES_EXT
+                                                      , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES_EXT
+                                                      , pattern STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK_EXT
+                                                      , pattern STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO_EXT
+                                                      , PhysicalDeviceInlineUniformBlockFeaturesEXT
+                                                      , PhysicalDeviceInlineUniformBlockPropertiesEXT
+                                                      , WriteDescriptorSetInlineUniformBlockEXT
+                                                      , DescriptorPoolInlineUniformBlockCreateInfoEXT
                                                       , EXT_INLINE_UNIFORM_BLOCK_SPEC_VERSION
                                                       , pattern EXT_INLINE_UNIFORM_BLOCK_SPEC_VERSION
                                                       , EXT_INLINE_UNIFORM_BLOCK_EXTENSION_NAME
                                                       , pattern EXT_INLINE_UNIFORM_BLOCK_EXTENSION_NAME
                                                       ) where
 
-import Foreign.Marshal.Alloc (allocaBytes)
-import Foreign.Ptr (nullPtr)
-import Foreign.Ptr (plusPtr)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero(..))
 import Data.String (IsString)
-import Data.Typeable (Typeable)
-import Foreign.Storable (Storable)
-import Foreign.Storable (Storable(peek))
-import Foreign.Storable (Storable(poke))
-import qualified Foreign.Storable (Storable(..))
-import GHC.Generics (Generic)
-import Foreign.Ptr (Ptr)
-import Data.Word (Word32)
-import Data.Kind (Type)
-import Vulkan.Core10.FundamentalTypes (bool32ToBool)
-import Vulkan.Core10.FundamentalTypes (boolToBool32)
-import Vulkan.Core10.FundamentalTypes (Bool32)
-import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO_EXT))
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES_EXT))
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES_EXT))
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK_EXT))
--- | VkPhysicalDeviceInlineUniformBlockFeaturesEXT - Structure describing
--- inline uniform block features that can be supported by an implementation
---
--- = Members
---
--- This structure describes the following features:
---
--- = Description
---
--- If the 'PhysicalDeviceInlineUniformBlockFeaturesEXT' structure is
--- included in the @pNext@ chain of the
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
--- structure passed to
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
--- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceInlineUniformBlockFeaturesEXT' /can/ also be
--- used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo' to
--- selectively enable these features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_inline_uniform_block VK_EXT_inline_uniform_block>,
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data PhysicalDeviceInlineUniformBlockFeaturesEXT = PhysicalDeviceInlineUniformBlockFeaturesEXT
-  { -- | #features-inlineUniformBlock# @inlineUniformBlock@ indicates whether the
-    -- implementation supports inline uniform block descriptors. If this
-    -- feature is not enabled,
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
-    -- /must/ not be used.
-    inlineUniformBlock :: Bool
-  , -- | #features-descriptorBindingInlineUniformBlockUpdateAfterBind#
-    -- @descriptorBindingInlineUniformBlockUpdateAfterBind@ indicates whether
-    -- the implementation supports updating inline uniform block descriptors
-    -- after a set is bound. If this feature is not enabled,
-    -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
-    -- /must/ not be used with
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'.
-    descriptorBindingInlineUniformBlockUpdateAfterBind :: Bool
-  }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (PhysicalDeviceInlineUniformBlockFeaturesEXT)
-#endif
-deriving instance Show PhysicalDeviceInlineUniformBlockFeaturesEXT
-
-instance ToCStruct PhysicalDeviceInlineUniformBlockFeaturesEXT where
-  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceInlineUniformBlockFeaturesEXT{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (inlineUniformBlock))
-    poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (descriptorBindingInlineUniformBlockUpdateAfterBind))
-    f
-  cStructSize = 24
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
-    poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (zero))
-    f
-
-instance FromCStruct PhysicalDeviceInlineUniformBlockFeaturesEXT where
-  peekCStruct p = do
-    inlineUniformBlock <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
-    descriptorBindingInlineUniformBlockUpdateAfterBind <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
-    pure $ PhysicalDeviceInlineUniformBlockFeaturesEXT
-             (bool32ToBool inlineUniformBlock) (bool32ToBool descriptorBindingInlineUniformBlockUpdateAfterBind)
-
-instance Storable PhysicalDeviceInlineUniformBlockFeaturesEXT where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero PhysicalDeviceInlineUniformBlockFeaturesEXT where
-  zero = PhysicalDeviceInlineUniformBlockFeaturesEXT
-           zero
-           zero
+import Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block (DescriptorPoolInlineUniformBlockCreateInfo)
+import Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block (PhysicalDeviceInlineUniformBlockFeatures)
+import Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block (PhysicalDeviceInlineUniformBlockProperties)
+import Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block (WriteDescriptorSetInlineUniformBlock)
+import Vulkan.Core10.Enums.DescriptorType (DescriptorType(DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK))
+-- No documentation found for TopLevel "VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT"
+pattern DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT = DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK
 
 
--- | VkPhysicalDeviceInlineUniformBlockPropertiesEXT - Structure describing
--- inline uniform block properties that can be supported by an
--- implementation
---
--- = Description
---
--- If the 'PhysicalDeviceInlineUniformBlockPropertiesEXT' structure is
--- included in the @pNext@ chain of the
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2'
--- structure passed to
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceProperties2',
--- it is filled in with each corresponding implementation-dependent
--- property.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_inline_uniform_block VK_EXT_inline_uniform_block>,
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data PhysicalDeviceInlineUniformBlockPropertiesEXT = PhysicalDeviceInlineUniformBlockPropertiesEXT
-  { -- | #limits-maxInlineUniformBlockSize# @maxInlineUniformBlockSize@ is the
-    -- maximum size in bytes of an
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-inlineuniformblock inline uniform block>
-    -- binding.
-    maxInlineUniformBlockSize :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceInlineUniformBlockPropertiesEXT" "maxPerStageDescriptorInlineUniformBlocks"
-    maxPerStageDescriptorInlineUniformBlocks :: Word32
-  , -- | #limits-maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks#
-    -- @maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks@ is similar to
-    -- @maxPerStageDescriptorInlineUniformBlocks@ but counts descriptor
-    -- bindings from descriptor sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
-    maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks :: Word32
-  , -- | #limits-maxDescriptorSetInlineUniformBlocks#
-    -- @maxDescriptorSetInlineUniformBlocks@ is the maximum number of inline
-    -- uniform block bindings that /can/ be included in descriptor bindings in
-    -- a pipeline layout across all pipeline shader stages and descriptor set
-    -- numbers. Descriptor bindings with a descriptor type of
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
-    -- count against this limit. Only descriptor bindings in descriptor set
-    -- layouts created without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set count against this limit.
-    maxDescriptorSetInlineUniformBlocks :: Word32
-  , -- | #limits-maxDescriptorSetUpdateAfterBindInlineUniformBlocks#
-    -- @maxDescriptorSetUpdateAfterBindInlineUniformBlocks@ is similar to
-    -- @maxDescriptorSetInlineUniformBlocks@ but counts descriptor bindings
-    -- from descriptor sets created with or without the
-    -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
-    -- bit set.
-    maxDescriptorSetUpdateAfterBindInlineUniformBlocks :: Word32
-  }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (PhysicalDeviceInlineUniformBlockPropertiesEXT)
-#endif
-deriving instance Show PhysicalDeviceInlineUniformBlockPropertiesEXT
-
-instance ToCStruct PhysicalDeviceInlineUniformBlockPropertiesEXT where
-  withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceInlineUniformBlockPropertiesEXT{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Word32)) (maxInlineUniformBlockSize)
-    poke ((p `plusPtr` 20 :: Ptr Word32)) (maxPerStageDescriptorInlineUniformBlocks)
-    poke ((p `plusPtr` 24 :: Ptr Word32)) (maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks)
-    poke ((p `plusPtr` 28 :: Ptr Word32)) (maxDescriptorSetInlineUniformBlocks)
-    poke ((p `plusPtr` 32 :: Ptr Word32)) (maxDescriptorSetUpdateAfterBindInlineUniformBlocks)
-    f
-  cStructSize = 40
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 28 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
-    f
-
-instance FromCStruct PhysicalDeviceInlineUniformBlockPropertiesEXT where
-  peekCStruct p = do
-    maxInlineUniformBlockSize <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
-    maxPerStageDescriptorInlineUniformBlocks <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
-    maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
-    maxDescriptorSetInlineUniformBlocks <- peek @Word32 ((p `plusPtr` 28 :: Ptr Word32))
-    maxDescriptorSetUpdateAfterBindInlineUniformBlocks <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
-    pure $ PhysicalDeviceInlineUniformBlockPropertiesEXT
-             maxInlineUniformBlockSize maxPerStageDescriptorInlineUniformBlocks maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks maxDescriptorSetInlineUniformBlocks maxDescriptorSetUpdateAfterBindInlineUniformBlocks
-
-instance Storable PhysicalDeviceInlineUniformBlockPropertiesEXT where
-  sizeOf ~_ = 40
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero PhysicalDeviceInlineUniformBlockPropertiesEXT where
-  zero = PhysicalDeviceInlineUniformBlockPropertiesEXT
-           zero
-           zero
-           zero
-           zero
-           zero
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES_EXT = STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES
 
 
--- | VkWriteDescriptorSetInlineUniformBlockEXT - Structure specifying inline
--- uniform block data
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_inline_uniform_block VK_EXT_inline_uniform_block>,
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data WriteDescriptorSetInlineUniformBlockEXT = WriteDescriptorSetInlineUniformBlockEXT
-  { -- | @dataSize@ is the number of bytes of inline uniform block data pointed
-    -- to by @pData@.
-    --
-    -- #VUID-VkWriteDescriptorSetInlineUniformBlockEXT-dataSize-02222#
-    -- @dataSize@ /must/ be an integer multiple of @4@
-    --
-    -- #VUID-VkWriteDescriptorSetInlineUniformBlockEXT-dataSize-arraylength#
-    -- @dataSize@ /must/ be greater than @0@
-    dataSize :: Word32
-  , -- | @pData@ is a pointer to @dataSize@ number of bytes of data to write to
-    -- the inline uniform block.
-    --
-    -- #VUID-VkWriteDescriptorSetInlineUniformBlockEXT-pData-parameter# @pData@
-    -- /must/ be a valid pointer to an array of @dataSize@ bytes
-    data' :: Ptr ()
-  }
-  deriving (Typeable)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (WriteDescriptorSetInlineUniformBlockEXT)
-#endif
-deriving instance Show WriteDescriptorSetInlineUniformBlockEXT
-
-instance ToCStruct WriteDescriptorSetInlineUniformBlockEXT where
-  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p WriteDescriptorSetInlineUniformBlockEXT{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Word32)) (dataSize)
-    poke ((p `plusPtr` 24 :: Ptr (Ptr ()))) (data')
-    f
-  cStructSize = 32
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 24 :: Ptr (Ptr ()))) (zero)
-    f
-
-instance FromCStruct WriteDescriptorSetInlineUniformBlockEXT where
-  peekCStruct p = do
-    dataSize <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
-    pData <- peek @(Ptr ()) ((p `plusPtr` 24 :: Ptr (Ptr ())))
-    pure $ WriteDescriptorSetInlineUniformBlockEXT
-             dataSize pData
-
-instance Storable WriteDescriptorSetInlineUniformBlockEXT where
-  sizeOf ~_ = 32
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero WriteDescriptorSetInlineUniformBlockEXT where
-  zero = WriteDescriptorSetInlineUniformBlockEXT
-           zero
-           zero
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES_EXT = STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES
 
 
--- | VkDescriptorPoolInlineUniformBlockCreateInfoEXT - Structure specifying
--- the maximum number of inline uniform block bindings of a newly created
--- descriptor pool
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_inline_uniform_block VK_EXT_inline_uniform_block>,
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data DescriptorPoolInlineUniformBlockCreateInfoEXT = DescriptorPoolInlineUniformBlockCreateInfoEXT
-  { -- | @maxInlineUniformBlockBindings@ is the number of inline uniform block
-    -- bindings to allocate.
-    maxInlineUniformBlockBindings :: Word32 }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (DescriptorPoolInlineUniformBlockCreateInfoEXT)
-#endif
-deriving instance Show DescriptorPoolInlineUniformBlockCreateInfoEXT
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK_EXT"
+pattern STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK_EXT = STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK
 
-instance ToCStruct DescriptorPoolInlineUniformBlockCreateInfoEXT where
-  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p DescriptorPoolInlineUniformBlockCreateInfoEXT{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Word32)) (maxInlineUniformBlockBindings)
-    f
-  cStructSize = 24
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
-    f
 
-instance FromCStruct DescriptorPoolInlineUniformBlockCreateInfoEXT where
-  peekCStruct p = do
-    maxInlineUniformBlockBindings <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
-    pure $ DescriptorPoolInlineUniformBlockCreateInfoEXT
-             maxInlineUniformBlockBindings
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO_EXT"
+pattern STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO_EXT = STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO
 
-instance Storable DescriptorPoolInlineUniformBlockCreateInfoEXT where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
 
-instance Zero DescriptorPoolInlineUniformBlockCreateInfoEXT where
-  zero = DescriptorPoolInlineUniformBlockCreateInfoEXT
-           zero
+-- No documentation found for TopLevel "VkPhysicalDeviceInlineUniformBlockFeaturesEXT"
+type PhysicalDeviceInlineUniformBlockFeaturesEXT = PhysicalDeviceInlineUniformBlockFeatures
+
+
+-- No documentation found for TopLevel "VkPhysicalDeviceInlineUniformBlockPropertiesEXT"
+type PhysicalDeviceInlineUniformBlockPropertiesEXT = PhysicalDeviceInlineUniformBlockProperties
+
+
+-- No documentation found for TopLevel "VkWriteDescriptorSetInlineUniformBlockEXT"
+type WriteDescriptorSetInlineUniformBlockEXT = WriteDescriptorSetInlineUniformBlock
+
+
+-- No documentation found for TopLevel "VkDescriptorPoolInlineUniformBlockCreateInfoEXT"
+type DescriptorPoolInlineUniformBlockCreateInfoEXT = DescriptorPoolInlineUniformBlockCreateInfo
 
 
 type EXT_INLINE_UNIFORM_BLOCK_SPEC_VERSION = 1

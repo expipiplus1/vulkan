@@ -20,12 +20,12 @@ import GHC.Show (Show(showsPrec))
 -- = Description
 --
 -- These filters are described in detail in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-texel-filtering Texel Filtering>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-texel-filtering Texel Filtering>.
 --
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
--- 'Vulkan.Extensions.VK_KHR_copy_commands2.BlitImageInfo2KHR',
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.BlitImageInfo2',
 -- 'Vulkan.Core10.Sampler.SamplerCreateInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage'

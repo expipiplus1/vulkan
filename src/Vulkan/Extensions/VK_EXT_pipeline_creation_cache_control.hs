@@ -21,6 +21,11 @@
 --
 --     -   Requires Vulkan 1.0
 --
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3-promotions Vulkan 1.3>
+--
 -- [__Contact__]
 --
 --     -   Gregory Grebe
@@ -30,6 +35,10 @@
 --
 -- [__Last Modified Date__]
 --     2020-03-23
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.3 Core
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -109,29 +118,27 @@
 -- rather than forcing an unexpected wait.
 --
 -- Applications can prevent unexpected compilation by setting
--- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT'
--- on @Vk*PipelineCreateInfo@::@flags@. When set, an ICD must not attempt
+-- 'PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT' on
+-- @Vk*PipelineCreateInfo@::@flags@. When set, an ICD must not attempt
 -- pipeline or shader compilation to create the pipeline object. The ICD
--- will return the result
--- 'Vulkan.Core10.Enums.Result.PIPELINE_COMPILE_REQUIRED_EXT'. An ICD may
--- still return a valid 'Vulkan.Core10.Handles.Pipeline' object by either
+-- will return the result 'PIPELINE_COMPILE_REQUIRED_EXT'. An ICD may still
+-- return a valid 'Vulkan.Core10.Handles.Pipeline' object by either
 -- re-using existing pre-compiled objects such as those from a pipeline
 -- cache, or derivative pipelines.
 --
 -- By default @vkCreate*Pipelines@ calls must attempt to create all
 -- pipelines before returning. Setting
--- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT'
--- on @Vk*PipelineCreateInfo@::@flags@ can be used as an escape hatch for
+-- 'PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT' on
+-- @Vk*PipelineCreateInfo@::@flags@ can be used as an escape hatch for
 -- batched pipeline creates.
 --
 -- Hidden locks also add to the unpredictability of the cost of pipeline
 -- creation. The most common case of locks inside the @vkCreate*Pipelines@
 -- is internal synchronization of the 'Vulkan.Core10.Handles.PipelineCache'
--- object.
--- 'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT'
--- can be set when calling
--- 'Vulkan.Core10.PipelineCache.createPipelineCache' to state the cache is
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>.
+-- object. 'PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT' can be
+-- set when calling 'Vulkan.Core10.PipelineCache.createPipelineCache' to
+-- state the cache is
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>.
 --
 -- The hope is that armed with this information application and engine
 -- developers can leverage existing asset streaming systems to recover from
@@ -158,24 +165,30 @@
 -- -   Extending
 --     'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PipelineCacheCreateFlagBits':
 --
---     -   'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT'
+--     -   'PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits':
 --
---     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT'
+--     -   'PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT'
 --
---     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT'
+--     -   'PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.Result.Result':
 --
 --     -   'ERROR_PIPELINE_COMPILE_REQUIRED_EXT'
 --
---     -   'Vulkan.Core10.Enums.Result.PIPELINE_COMPILE_REQUIRED_EXT'
+--     -   'PIPELINE_COMPILE_REQUIRED_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT'
+--
+-- == Promotion to Vulkan 1.3
+--
+-- Functionality in this extension is included in core Vulkan 1.3, with the
+-- EXT suffix omitted. The original type, enum and command names are still
+-- available as aliases of the core functionality.
 --
 -- == Version History
 --
@@ -189,9 +202,8 @@
 --
 -- -   Revision 3, 2020-03-23 (Tobias Hector)
 --
---     -   Changed
---         'Vulkan.Core10.Enums.Result.PIPELINE_COMPILE_REQUIRED_EXT' to a
---         success code, adding an alias for the original
+--     -   Changed 'PIPELINE_COMPILE_REQUIRED_EXT' to a success code,
+--         adding an alias for the original
 --         'ERROR_PIPELINE_COMPILE_REQUIRED_EXT'. Also updated the xml to
 --         include these codes as return values.
 --
@@ -203,124 +215,59 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_creation_cache_control Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_pipeline_creation_cache_control Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control  ( pattern ERROR_PIPELINE_COMPILE_REQUIRED_EXT
-                                                                 , PhysicalDevicePipelineCreationCacheControlFeaturesEXT(..)
+module Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT
+                                                                 , pattern PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT
+                                                                 , pattern PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT
+                                                                 , pattern PIPELINE_COMPILE_REQUIRED_EXT
+                                                                 , pattern ERROR_PIPELINE_COMPILE_REQUIRED_EXT
+                                                                 , pattern PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT
+                                                                 , PhysicalDevicePipelineCreationCacheControlFeaturesEXT
                                                                  , EXT_PIPELINE_CREATION_CACHE_CONTROL_SPEC_VERSION
                                                                  , pattern EXT_PIPELINE_CREATION_CACHE_CONTROL_SPEC_VERSION
                                                                  , EXT_PIPELINE_CREATION_CACHE_CONTROL_EXTENSION_NAME
                                                                  , pattern EXT_PIPELINE_CREATION_CACHE_CONTROL_EXTENSION_NAME
                                                                  ) where
 
-import Foreign.Marshal.Alloc (allocaBytes)
-import Foreign.Ptr (nullPtr)
-import Foreign.Ptr (plusPtr)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero(..))
 import Data.String (IsString)
-import Data.Typeable (Typeable)
-import Foreign.Storable (Storable)
-import Foreign.Storable (Storable(peek))
-import Foreign.Storable (Storable(poke))
-import qualified Foreign.Storable (Storable(..))
-import GHC.Generics (Generic)
-import Foreign.Ptr (Ptr)
-import Data.Kind (Type)
-import Vulkan.Core10.FundamentalTypes (bool32ToBool)
-import Vulkan.Core10.FundamentalTypes (boolToBool32)
-import Vulkan.Core10.FundamentalTypes (Bool32)
-import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.Core10.Enums.Result (Result(PIPELINE_COMPILE_REQUIRED_EXT))
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT))
+import Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_cache_control (PhysicalDevicePipelineCreationCacheControlFeatures)
+import Vulkan.Core10.Enums.PipelineCacheCreateFlagBits (PipelineCacheCreateFlags)
+import Vulkan.Core10.Enums.PipelineCacheCreateFlagBits (PipelineCacheCreateFlagBits(PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT))
+import Vulkan.Core10.Enums.Result (Result(PIPELINE_COMPILE_REQUIRED))
+import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)
+import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlagBits(PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT))
+import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlags)
+import Vulkan.Core10.Enums.PipelineCreateFlagBits (PipelineCreateFlagBits(PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES))
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT = STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT"
+pattern PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT = PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT"
+pattern PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT = PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_COMPILE_REQUIRED_EXT"
+pattern PIPELINE_COMPILE_REQUIRED_EXT = PIPELINE_COMPILE_REQUIRED
+
+
 -- No documentation found for TopLevel "VK_ERROR_PIPELINE_COMPILE_REQUIRED_EXT"
-pattern ERROR_PIPELINE_COMPILE_REQUIRED_EXT = PIPELINE_COMPILE_REQUIRED_EXT
+pattern ERROR_PIPELINE_COMPILE_REQUIRED_EXT = PIPELINE_COMPILE_REQUIRED
 
 
--- | VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT - Structure
--- describing whether pipeline cache control can be supported by an
--- implementation
---
--- = Members
---
--- This structure describes the following feature:
---
--- = Description
---
--- If the 'PhysicalDevicePipelineCreationCacheControlFeaturesEXT' structure
--- is included in the @pNext@ chain of the
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
--- structure passed to
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
--- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDevicePipelineCreationCacheControlFeaturesEXT' /can/
--- also be used in the @pNext@ chain of
--- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
--- features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_creation_cache_control VK_EXT_pipeline_creation_cache_control>,
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data PhysicalDevicePipelineCreationCacheControlFeaturesEXT = PhysicalDevicePipelineCreationCacheControlFeaturesEXT
-  { -- | #features-pipelineCreationCacheControl# @pipelineCreationCacheControl@
-    -- indicates that the implementation supports:
-    --
-    -- -   The following /can/ be used in @Vk*PipelineCreateInfo@::@flags@:
-    --
-    --     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT'
-    --
-    --     -   'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT_EXT'
-    --
-    -- -   The following /can/ be used in
-    --     'Vulkan.Core10.PipelineCache.PipelineCacheCreateInfo'::@flags@:
-    --
-    --     -   'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT'
-    pipelineCreationCacheControl :: Bool }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (PhysicalDevicePipelineCreationCacheControlFeaturesEXT)
-#endif
-deriving instance Show PhysicalDevicePipelineCreationCacheControlFeaturesEXT
+-- No documentation found for TopLevel "VK_PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT"
+pattern PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT = PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT
 
-instance ToCStruct PhysicalDevicePipelineCreationCacheControlFeaturesEXT where
-  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDevicePipelineCreationCacheControlFeaturesEXT{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (pipelineCreationCacheControl))
-    f
-  cStructSize = 24
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
-    f
 
-instance FromCStruct PhysicalDevicePipelineCreationCacheControlFeaturesEXT where
-  peekCStruct p = do
-    pipelineCreationCacheControl <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
-    pure $ PhysicalDevicePipelineCreationCacheControlFeaturesEXT
-             (bool32ToBool pipelineCreationCacheControl)
-
-instance Storable PhysicalDevicePipelineCreationCacheControlFeaturesEXT where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero PhysicalDevicePipelineCreationCacheControlFeaturesEXT where
-  zero = PhysicalDevicePipelineCreationCacheControlFeaturesEXT
-           zero
+-- No documentation found for TopLevel "VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT"
+type PhysicalDevicePipelineCreationCacheControlFeaturesEXT = PhysicalDevicePipelineCreationCacheControlFeatures
 
 
 type EXT_PIPELINE_CREATION_CACHE_CONTROL_SPEC_VERSION = 3

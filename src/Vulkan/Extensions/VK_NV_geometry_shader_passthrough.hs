@@ -84,13 +84,13 @@
 --
 -- == New Variable Decoration
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#geometry-passthrough-passthrough PassthroughNV>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#geometry-passthrough-passthrough PassthroughNV>
 --     in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#geometry-passthrough Geometry Shader Passthrough>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#geometry-passthrough Geometry Shader Passthrough>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-GeometryShaderPassthroughNV GeometryShaderPassthroughNV>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-GeometryShaderPassthroughNV GeometryShaderPassthroughNV>
 --
 -- == Issues
 --
@@ -117,7 +117,7 @@
 -- 2) How does interface matching work with passthrough geometry shaders?
 --
 -- __RESOLVED__: This is described in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#geometry-passthrough-interface Passthrough Interface Matching>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#geometry-passthrough-interface Passthrough Interface Matching>.
 -- In GL when using passthough geometry shaders in separable mode, all
 -- inputs must also be explicitly assigned location layout qualifiers. In
 -- Vulkan all SPIR-V shader inputs (except built-ins) must also have
@@ -201,7 +201,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_geometry_shader_passthrough Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_geometry_shader_passthrough Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

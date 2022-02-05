@@ -185,26 +185,6 @@ module Vulkan.Core10.Enums.Format  (Format( FORMAT_UNDEFINED
                                           , FORMAT_ASTC_12x10_SRGB_BLOCK
                                           , FORMAT_ASTC_12x12_UNORM_BLOCK
                                           , FORMAT_ASTC_12x12_SRGB_BLOCK
-                                          , FORMAT_A4B4G4R4_UNORM_PACK16_EXT
-                                          , FORMAT_A4R4G4B4_UNORM_PACK16_EXT
-                                          , FORMAT_G16_B16R16_2PLANE_444_UNORM_EXT
-                                          , FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16_EXT
-                                          , FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16_EXT
-                                          , FORMAT_G8_B8R8_2PLANE_444_UNORM_EXT
-                                          , FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT
-                                          , FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT
-                                          , FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT
-                                          , FORMAT_ASTC_10x8_SFLOAT_BLOCK_EXT
-                                          , FORMAT_ASTC_10x6_SFLOAT_BLOCK_EXT
-                                          , FORMAT_ASTC_10x5_SFLOAT_BLOCK_EXT
-                                          , FORMAT_ASTC_8x8_SFLOAT_BLOCK_EXT
-                                          , FORMAT_ASTC_8x6_SFLOAT_BLOCK_EXT
-                                          , FORMAT_ASTC_8x5_SFLOAT_BLOCK_EXT
-                                          , FORMAT_ASTC_6x6_SFLOAT_BLOCK_EXT
-                                          , FORMAT_ASTC_6x5_SFLOAT_BLOCK_EXT
-                                          , FORMAT_ASTC_5x5_SFLOAT_BLOCK_EXT
-                                          , FORMAT_ASTC_5x4_SFLOAT_BLOCK_EXT
-                                          , FORMAT_ASTC_4x4_SFLOAT_BLOCK_EXT
                                           , FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG
                                           , FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG
                                           , FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG
@@ -213,6 +193,26 @@ module Vulkan.Core10.Enums.Format  (Format( FORMAT_UNDEFINED
                                           , FORMAT_PVRTC2_2BPP_UNORM_BLOCK_IMG
                                           , FORMAT_PVRTC1_4BPP_UNORM_BLOCK_IMG
                                           , FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG
+                                          , FORMAT_ASTC_12x12_SFLOAT_BLOCK
+                                          , FORMAT_ASTC_12x10_SFLOAT_BLOCK
+                                          , FORMAT_ASTC_10x10_SFLOAT_BLOCK
+                                          , FORMAT_ASTC_10x8_SFLOAT_BLOCK
+                                          , FORMAT_ASTC_10x6_SFLOAT_BLOCK
+                                          , FORMAT_ASTC_10x5_SFLOAT_BLOCK
+                                          , FORMAT_ASTC_8x8_SFLOAT_BLOCK
+                                          , FORMAT_ASTC_8x6_SFLOAT_BLOCK
+                                          , FORMAT_ASTC_8x5_SFLOAT_BLOCK
+                                          , FORMAT_ASTC_6x6_SFLOAT_BLOCK
+                                          , FORMAT_ASTC_6x5_SFLOAT_BLOCK
+                                          , FORMAT_ASTC_5x5_SFLOAT_BLOCK
+                                          , FORMAT_ASTC_5x4_SFLOAT_BLOCK
+                                          , FORMAT_ASTC_4x4_SFLOAT_BLOCK
+                                          , FORMAT_A4B4G4R4_UNORM_PACK16
+                                          , FORMAT_A4R4G4B4_UNORM_PACK16
+                                          , FORMAT_G16_B16R16_2PLANE_444_UNORM
+                                          , FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16
+                                          , FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16
+                                          , FORMAT_G8_B8R8_2PLANE_444_UNORM
                                           , FORMAT_G16_B16_R16_3PLANE_444_UNORM
                                           , FORMAT_G16_B16R16_2PLANE_422_UNORM
                                           , FORMAT_G16_B16_R16_3PLANE_422_UNORM
@@ -270,7 +270,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core10.Pass.AttachmentDescription',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentDescription2',
 -- 'Vulkan.Core10.BufferView.BufferViewCreateInfo',
--- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfoKHR',
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfo',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentImageInfo',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.GeometryTrianglesNV',
 -- 'Vulkan.Core10.Image.ImageCreateInfo',
@@ -279,7 +279,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core10.ImageView.ImageViewCreateInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceSparseImageFormatInfo2',
--- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR',
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo',
 -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceFormatKHR',
@@ -833,9 +833,9 @@ pattern FORMAT_R64G64B64A64_SFLOAT                = Format 121
 -- packed unsigned floating-point format that has a 10-bit B component in
 -- bits 22..31, an 11-bit G component in bits 11..21, an 11-bit R component
 -- in bits 0..10. See
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-fp10>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-fp10>
 -- and
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-fp11>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-fp11>.
 pattern FORMAT_B10G11R11_UFLOAT_PACK32            = Format 122
 -- | 'FORMAT_E5B9G9R9_UFLOAT_PACK32' specifies a three-component, 32-bit
 -- packed unsigned floating-point format that has a 5-bit shared exponent
@@ -1120,127 +1120,6 @@ pattern FORMAT_ASTC_12x12_UNORM_BLOCK             = Format 183
 -- 12×12 rectangle of unsigned normalized RGBA texel data with sRGB
 -- nonlinear encoding applied to the RGB components.
 pattern FORMAT_ASTC_12x12_SRGB_BLOCK              = Format 184
--- | 'FORMAT_A4B4G4R4_UNORM_PACK16_EXT' specifies a four-component, 16-bit
--- packed unsigned normalized format that has a 4-bit A component in bits
--- 12..15, a 4-bit B component in bits 8..11, a 4-bit G component in bits
--- 4..7, and a 4-bit R component in bits 0..3.
-pattern FORMAT_A4B4G4R4_UNORM_PACK16_EXT          = Format 1000340001
--- | 'FORMAT_A4R4G4B4_UNORM_PACK16_EXT' specifies a four-component, 16-bit
--- packed unsigned normalized format that has a 4-bit A component in bits
--- 12..15, a 4-bit R component in bits 8..11, a 4-bit G component in bits
--- 4..7, and a 4-bit B component in bits 0..3.
-pattern FORMAT_A4R4G4B4_UNORM_PACK16_EXT          = Format 1000340000
--- | 'FORMAT_G16_B16R16_2PLANE_444_UNORM_EXT' specifies an unsigned
--- normalized /multi-planar format/ that has a 16-bit G component in each
--- 16-bit word of plane 0, and a two-component, 32-bit BR plane 1
--- consisting of a 16-bit B component in the word in bytes 0..1, and a
--- 16-bit R component in the word in bytes 2..3. Both planes have the same
--- dimensions and each R, G and B component contributes to a single texel.
--- The location of each plane when this image is in linear layout can be
--- determined via 'Vulkan.Core10.Image.getImageSubresourceLayout', using
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
--- the G plane, and
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
--- the BR plane.
-pattern FORMAT_G16_B16R16_2PLANE_444_UNORM_EXT    = Format 1000330003
--- | 'FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16_EXT' specifies an
--- unsigned normalized /multi-planar format/ that has a 12-bit G component
--- in the top 12 bits of each 16-bit word of plane 0, and a two-component,
--- 32-bit BR plane 1 consisting of a 12-bit B component in the top 12 bits
--- of the word in bytes 0..1, and a 12-bit R component in the top 12 bits
--- of the word in bytes 2..3, the bottom 4 bits of each word unused. Both
--- planes have the same dimensions and each R, G and B component
--- contributes to a single texel. The location of each plane when this
--- image is in linear layout can be determined via
--- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
--- the G plane, and
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
--- the BR plane.
-pattern FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16_EXT = Format 1000330002
--- | 'FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16_EXT' specifies an
--- unsigned normalized /multi-planar format/ that has a 10-bit G component
--- in the top 10 bits of each 16-bit word of plane 0, and a two-component,
--- 32-bit BR plane 1 consisting of a 10-bit B component in the top 10 bits
--- of the word in bytes 0..1, and a 10-bit R component in the top 10 bits
--- of the word in bytes 2..3, the bottom 6 bits of each word unused. Both
--- planes have the same dimensions and each R, G and B component
--- contributes to a single texel. The location of each plane when this
--- image is in linear layout can be determined via
--- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
--- the G plane, and
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
--- the BR plane.
-pattern FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16_EXT = Format 1000330001
--- | 'FORMAT_G8_B8R8_2PLANE_444_UNORM_EXT' specifies an unsigned normalized
--- /multi-planar format/ that has an 8-bit G component in plane 0, and a
--- two-component, 16-bit BR plane 1 consisting of an 8-bit B component in
--- byte 0 and an 8-bit R component in byte 1. Both planes have the same
--- dimensions and each R, G and B component contributes to a single texel.
--- The location of each plane when this image is in linear layout can be
--- determined via 'Vulkan.Core10.Image.getImageSubresourceLayout', using
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
--- the G plane, and
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
--- the BR plane.
-pattern FORMAT_G8_B8R8_2PLANE_444_UNORM_EXT       = Format 1000330000
--- | 'FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT' specifies a four-component, ASTC
--- compressed format where each 128-bit compressed texel block encodes a
--- 12×12 rectangle of signed floating-point RGBA texel data.
-pattern FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT        = Format 1000066013
--- | 'FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT' specifies a four-component, ASTC
--- compressed format where each 128-bit compressed texel block encodes a
--- 12×10 rectangle of signed floating-point RGBA texel data.
-pattern FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT        = Format 1000066012
--- | 'FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT' specifies a four-component, ASTC
--- compressed format where each 128-bit compressed texel block encodes a
--- 10×10 rectangle of signed floating-point RGBA texel data.
-pattern FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT        = Format 1000066011
--- | 'FORMAT_ASTC_10x8_SFLOAT_BLOCK_EXT' specifies a four-component, ASTC
--- compressed format where each 128-bit compressed texel block encodes a
--- 10×8 rectangle of signed floating-point RGBA texel data.
-pattern FORMAT_ASTC_10x8_SFLOAT_BLOCK_EXT         = Format 1000066010
--- | 'FORMAT_ASTC_10x6_SFLOAT_BLOCK_EXT' specifies a four-component, ASTC
--- compressed format where each 128-bit compressed texel block encodes a
--- 10×6 rectangle of signed floating-point RGBA texel data.
-pattern FORMAT_ASTC_10x6_SFLOAT_BLOCK_EXT         = Format 1000066009
--- | 'FORMAT_ASTC_10x5_SFLOAT_BLOCK_EXT' specifies a four-component, ASTC
--- compressed format where each 128-bit compressed texel block encodes a
--- 10×5 rectangle of signed floating-point RGBA texel data.
-pattern FORMAT_ASTC_10x5_SFLOAT_BLOCK_EXT         = Format 1000066008
--- | 'FORMAT_ASTC_8x8_SFLOAT_BLOCK_EXT' specifies a four-component, ASTC
--- compressed format where each 128-bit compressed texel block encodes a
--- 8×8 rectangle of signed floating-point RGBA texel data.
-pattern FORMAT_ASTC_8x8_SFLOAT_BLOCK_EXT          = Format 1000066007
--- | 'FORMAT_ASTC_8x6_SFLOAT_BLOCK_EXT' specifies a four-component, ASTC
--- compressed format where each 128-bit compressed texel block encodes a
--- 8×6 rectangle of signed floating-point RGBA texel data.
-pattern FORMAT_ASTC_8x6_SFLOAT_BLOCK_EXT          = Format 1000066006
--- | 'FORMAT_ASTC_8x5_SFLOAT_BLOCK_EXT' specifies a four-component, ASTC
--- compressed format where each 128-bit compressed texel block encodes a
--- 8×5 rectangle of signed floating-point RGBA texel data.
-pattern FORMAT_ASTC_8x5_SFLOAT_BLOCK_EXT          = Format 1000066005
--- | 'FORMAT_ASTC_6x6_SFLOAT_BLOCK_EXT' specifies a four-component, ASTC
--- compressed format where each 128-bit compressed texel block encodes a
--- 6×6 rectangle of signed floating-point RGBA texel data.
-pattern FORMAT_ASTC_6x6_SFLOAT_BLOCK_EXT          = Format 1000066004
--- | 'FORMAT_ASTC_6x5_SFLOAT_BLOCK_EXT' specifies a four-component, ASTC
--- compressed format where each 128-bit compressed texel block encodes a
--- 6×5 rectangle of signed floating-point RGBA texel data.
-pattern FORMAT_ASTC_6x5_SFLOAT_BLOCK_EXT          = Format 1000066003
--- | 'FORMAT_ASTC_5x5_SFLOAT_BLOCK_EXT' specifies a four-component, ASTC
--- compressed format where each 128-bit compressed texel block encodes a
--- 5×5 rectangle of signed floating-point RGBA texel data.
-pattern FORMAT_ASTC_5x5_SFLOAT_BLOCK_EXT          = Format 1000066002
--- | 'FORMAT_ASTC_5x4_SFLOAT_BLOCK_EXT' specifies a four-component, ASTC
--- compressed format where each 128-bit compressed texel block encodes a
--- 5×4 rectangle of signed floating-point RGBA texel data.
-pattern FORMAT_ASTC_5x4_SFLOAT_BLOCK_EXT          = Format 1000066001
--- | 'FORMAT_ASTC_4x4_SFLOAT_BLOCK_EXT' specifies a four-component, ASTC
--- compressed format where each 128-bit compressed texel block encodes a
--- 4×4 rectangle of signed floating-point RGBA texel data.
-pattern FORMAT_ASTC_4x4_SFLOAT_BLOCK_EXT          = Format 1000066000
 -- | 'FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG' specifies a four-component, PVRTC
 -- compressed format where each 64-bit compressed texel block encodes a 4×4
 -- rectangle of unsigned normalized RGBA texel data with sRGB nonlinear
@@ -1277,6 +1156,127 @@ pattern FORMAT_PVRTC1_4BPP_UNORM_BLOCK_IMG        = Format 1000054001
 -- compressed format where each 64-bit compressed texel block encodes an
 -- 8×4 rectangle of unsigned normalized RGBA texel data.
 pattern FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG        = Format 1000054000
+-- | 'FORMAT_ASTC_12x12_SFLOAT_BLOCK' specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 12×12 rectangle of signed floating-point RGBA texel data.
+pattern FORMAT_ASTC_12x12_SFLOAT_BLOCK            = Format 1000066013
+-- | 'FORMAT_ASTC_12x10_SFLOAT_BLOCK' specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 12×10 rectangle of signed floating-point RGBA texel data.
+pattern FORMAT_ASTC_12x10_SFLOAT_BLOCK            = Format 1000066012
+-- | 'FORMAT_ASTC_10x10_SFLOAT_BLOCK' specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 10×10 rectangle of signed floating-point RGBA texel data.
+pattern FORMAT_ASTC_10x10_SFLOAT_BLOCK            = Format 1000066011
+-- | 'FORMAT_ASTC_10x8_SFLOAT_BLOCK' specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 10×8 rectangle of signed floating-point RGBA texel data.
+pattern FORMAT_ASTC_10x8_SFLOAT_BLOCK             = Format 1000066010
+-- | 'FORMAT_ASTC_10x6_SFLOAT_BLOCK' specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 10×6 rectangle of signed floating-point RGBA texel data.
+pattern FORMAT_ASTC_10x6_SFLOAT_BLOCK             = Format 1000066009
+-- | 'FORMAT_ASTC_10x5_SFLOAT_BLOCK' specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 10×5 rectangle of signed floating-point RGBA texel data.
+pattern FORMAT_ASTC_10x5_SFLOAT_BLOCK             = Format 1000066008
+-- | 'FORMAT_ASTC_8x8_SFLOAT_BLOCK' specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 8×8 rectangle of signed floating-point RGBA texel data.
+pattern FORMAT_ASTC_8x8_SFLOAT_BLOCK              = Format 1000066007
+-- | 'FORMAT_ASTC_8x6_SFLOAT_BLOCK' specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 8×6 rectangle of signed floating-point RGBA texel data.
+pattern FORMAT_ASTC_8x6_SFLOAT_BLOCK              = Format 1000066006
+-- | 'FORMAT_ASTC_8x5_SFLOAT_BLOCK' specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 8×5 rectangle of signed floating-point RGBA texel data.
+pattern FORMAT_ASTC_8x5_SFLOAT_BLOCK              = Format 1000066005
+-- | 'FORMAT_ASTC_6x6_SFLOAT_BLOCK' specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 6×6 rectangle of signed floating-point RGBA texel data.
+pattern FORMAT_ASTC_6x6_SFLOAT_BLOCK              = Format 1000066004
+-- | 'FORMAT_ASTC_6x5_SFLOAT_BLOCK' specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 6×5 rectangle of signed floating-point RGBA texel data.
+pattern FORMAT_ASTC_6x5_SFLOAT_BLOCK              = Format 1000066003
+-- | 'FORMAT_ASTC_5x5_SFLOAT_BLOCK' specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 5×5 rectangle of signed floating-point RGBA texel data.
+pattern FORMAT_ASTC_5x5_SFLOAT_BLOCK              = Format 1000066002
+-- | 'FORMAT_ASTC_5x4_SFLOAT_BLOCK' specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 5×4 rectangle of signed floating-point RGBA texel data.
+pattern FORMAT_ASTC_5x4_SFLOAT_BLOCK              = Format 1000066001
+-- | 'FORMAT_ASTC_4x4_SFLOAT_BLOCK' specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 4×4 rectangle of signed floating-point RGBA texel data.
+pattern FORMAT_ASTC_4x4_SFLOAT_BLOCK              = Format 1000066000
+-- | 'FORMAT_A4B4G4R4_UNORM_PACK16' specifies a four-component, 16-bit packed
+-- unsigned normalized format that has a 4-bit A component in bits 12..15,
+-- a 4-bit B component in bits 8..11, a 4-bit G component in bits 4..7, and
+-- a 4-bit R component in bits 0..3.
+pattern FORMAT_A4B4G4R4_UNORM_PACK16              = Format 1000340001
+-- | 'FORMAT_A4R4G4B4_UNORM_PACK16' specifies a four-component, 16-bit packed
+-- unsigned normalized format that has a 4-bit A component in bits 12..15,
+-- a 4-bit R component in bits 8..11, a 4-bit G component in bits 4..7, and
+-- a 4-bit B component in bits 0..3.
+pattern FORMAT_A4R4G4B4_UNORM_PACK16              = Format 1000340000
+-- | 'FORMAT_G16_B16R16_2PLANE_444_UNORM' specifies an unsigned normalized
+-- /multi-planar format/ that has a 16-bit G component in each 16-bit word
+-- of plane 0, and a two-component, 32-bit BR plane 1 consisting of a
+-- 16-bit B component in the word in bytes 0..1, and a 16-bit R component
+-- in the word in bytes 2..3. Both planes have the same dimensions and each
+-- R, G and B component contributes to a single texel. The location of each
+-- plane when this image is in linear layout can be determined via
+-- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
+-- the G plane, and
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
+-- the BR plane.
+pattern FORMAT_G16_B16R16_2PLANE_444_UNORM        = Format 1000330003
+-- | 'FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16' specifies an unsigned
+-- normalized /multi-planar format/ that has a 12-bit G component in the
+-- top 12 bits of each 16-bit word of plane 0, and a two-component, 32-bit
+-- BR plane 1 consisting of a 12-bit B component in the top 12 bits of the
+-- word in bytes 0..1, and a 12-bit R component in the top 12 bits of the
+-- word in bytes 2..3, the bottom 4 bits of each word unused. Both planes
+-- have the same dimensions and each R, G and B component contributes to a
+-- single texel. The location of each plane when this image is in linear
+-- layout can be determined via
+-- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
+-- the G plane, and
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
+-- the BR plane.
+pattern FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16 = Format 1000330002
+-- | 'FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16' specifies an unsigned
+-- normalized /multi-planar format/ that has a 10-bit G component in the
+-- top 10 bits of each 16-bit word of plane 0, and a two-component, 32-bit
+-- BR plane 1 consisting of a 10-bit B component in the top 10 bits of the
+-- word in bytes 0..1, and a 10-bit R component in the top 10 bits of the
+-- word in bytes 2..3, the bottom 6 bits of each word unused. Both planes
+-- have the same dimensions and each R, G and B component contributes to a
+-- single texel. The location of each plane when this image is in linear
+-- layout can be determined via
+-- 'Vulkan.Core10.Image.getImageSubresourceLayout', using
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
+-- the G plane, and
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
+-- the BR plane.
+pattern FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16 = Format 1000330001
+-- | 'FORMAT_G8_B8R8_2PLANE_444_UNORM' specifies an unsigned normalized
+-- /multi-planar format/ that has an 8-bit G component in plane 0, and a
+-- two-component, 16-bit BR plane 1 consisting of an 8-bit B component in
+-- byte 0 and an 8-bit R component in byte 1. Both planes have the same
+-- dimensions and each R, G and B component contributes to a single texel.
+-- The location of each plane when this image is in linear layout can be
+-- determined via 'Vulkan.Core10.Image.getImageSubresourceLayout', using
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT' for
+-- the G plane, and
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' for
+-- the BR plane.
+pattern FORMAT_G8_B8R8_2PLANE_444_UNORM           = Format 1000330000
 -- | 'FORMAT_G16_B16_R16_3PLANE_444_UNORM' specifies an unsigned normalized
 -- /multi-planar format/ that has a 16-bit G component in each 16-bit word
 -- of plane 0, a 16-bit B component in each 16-bit word of plane 1, and a
@@ -1964,26 +1964,6 @@ pattern FORMAT_G8B8G8R8_422_UNORM                 = Format 1000156000
              FORMAT_ASTC_12x10_SRGB_BLOCK,
              FORMAT_ASTC_12x12_UNORM_BLOCK,
              FORMAT_ASTC_12x12_SRGB_BLOCK,
-             FORMAT_A4B4G4R4_UNORM_PACK16_EXT,
-             FORMAT_A4R4G4B4_UNORM_PACK16_EXT,
-             FORMAT_G16_B16R16_2PLANE_444_UNORM_EXT,
-             FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16_EXT,
-             FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16_EXT,
-             FORMAT_G8_B8R8_2PLANE_444_UNORM_EXT,
-             FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT,
-             FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT,
-             FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT,
-             FORMAT_ASTC_10x8_SFLOAT_BLOCK_EXT,
-             FORMAT_ASTC_10x6_SFLOAT_BLOCK_EXT,
-             FORMAT_ASTC_10x5_SFLOAT_BLOCK_EXT,
-             FORMAT_ASTC_8x8_SFLOAT_BLOCK_EXT,
-             FORMAT_ASTC_8x6_SFLOAT_BLOCK_EXT,
-             FORMAT_ASTC_8x5_SFLOAT_BLOCK_EXT,
-             FORMAT_ASTC_6x6_SFLOAT_BLOCK_EXT,
-             FORMAT_ASTC_6x5_SFLOAT_BLOCK_EXT,
-             FORMAT_ASTC_5x5_SFLOAT_BLOCK_EXT,
-             FORMAT_ASTC_5x4_SFLOAT_BLOCK_EXT,
-             FORMAT_ASTC_4x4_SFLOAT_BLOCK_EXT,
              FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG,
              FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG,
              FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG,
@@ -1992,6 +1972,26 @@ pattern FORMAT_G8B8G8R8_422_UNORM                 = Format 1000156000
              FORMAT_PVRTC2_2BPP_UNORM_BLOCK_IMG,
              FORMAT_PVRTC1_4BPP_UNORM_BLOCK_IMG,
              FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG,
+             FORMAT_ASTC_12x12_SFLOAT_BLOCK,
+             FORMAT_ASTC_12x10_SFLOAT_BLOCK,
+             FORMAT_ASTC_10x10_SFLOAT_BLOCK,
+             FORMAT_ASTC_10x8_SFLOAT_BLOCK,
+             FORMAT_ASTC_10x6_SFLOAT_BLOCK,
+             FORMAT_ASTC_10x5_SFLOAT_BLOCK,
+             FORMAT_ASTC_8x8_SFLOAT_BLOCK,
+             FORMAT_ASTC_8x6_SFLOAT_BLOCK,
+             FORMAT_ASTC_8x5_SFLOAT_BLOCK,
+             FORMAT_ASTC_6x6_SFLOAT_BLOCK,
+             FORMAT_ASTC_6x5_SFLOAT_BLOCK,
+             FORMAT_ASTC_5x5_SFLOAT_BLOCK,
+             FORMAT_ASTC_5x4_SFLOAT_BLOCK,
+             FORMAT_ASTC_4x4_SFLOAT_BLOCK,
+             FORMAT_A4B4G4R4_UNORM_PACK16,
+             FORMAT_A4R4G4B4_UNORM_PACK16,
+             FORMAT_G16_B16R16_2PLANE_444_UNORM,
+             FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16,
+             FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16,
+             FORMAT_G8_B8R8_2PLANE_444_UNORM,
              FORMAT_G16_B16_R16_3PLANE_444_UNORM,
              FORMAT_G16_B16R16_2PLANE_422_UNORM,
              FORMAT_G16_B16_R16_3PLANE_422_UNORM,
@@ -2220,26 +2220,6 @@ showTableFormat =
   , (FORMAT_ASTC_12x10_SRGB_BLOCK             , "ASTC_12x10_SRGB_BLOCK")
   , (FORMAT_ASTC_12x12_UNORM_BLOCK            , "ASTC_12x12_UNORM_BLOCK")
   , (FORMAT_ASTC_12x12_SRGB_BLOCK             , "ASTC_12x12_SRGB_BLOCK")
-  , (FORMAT_A4B4G4R4_UNORM_PACK16_EXT         , "A4B4G4R4_UNORM_PACK16_EXT")
-  , (FORMAT_A4R4G4B4_UNORM_PACK16_EXT         , "A4R4G4B4_UNORM_PACK16_EXT")
-  , (FORMAT_G16_B16R16_2PLANE_444_UNORM_EXT   , "G16_B16R16_2PLANE_444_UNORM_EXT")
-  , (FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16_EXT, "G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16_EXT")
-  , (FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16_EXT, "G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16_EXT")
-  , (FORMAT_G8_B8R8_2PLANE_444_UNORM_EXT      , "G8_B8R8_2PLANE_444_UNORM_EXT")
-  , (FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT       , "ASTC_12x12_SFLOAT_BLOCK_EXT")
-  , (FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT       , "ASTC_12x10_SFLOAT_BLOCK_EXT")
-  , (FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT       , "ASTC_10x10_SFLOAT_BLOCK_EXT")
-  , (FORMAT_ASTC_10x8_SFLOAT_BLOCK_EXT        , "ASTC_10x8_SFLOAT_BLOCK_EXT")
-  , (FORMAT_ASTC_10x6_SFLOAT_BLOCK_EXT        , "ASTC_10x6_SFLOAT_BLOCK_EXT")
-  , (FORMAT_ASTC_10x5_SFLOAT_BLOCK_EXT        , "ASTC_10x5_SFLOAT_BLOCK_EXT")
-  , (FORMAT_ASTC_8x8_SFLOAT_BLOCK_EXT         , "ASTC_8x8_SFLOAT_BLOCK_EXT")
-  , (FORMAT_ASTC_8x6_SFLOAT_BLOCK_EXT         , "ASTC_8x6_SFLOAT_BLOCK_EXT")
-  , (FORMAT_ASTC_8x5_SFLOAT_BLOCK_EXT         , "ASTC_8x5_SFLOAT_BLOCK_EXT")
-  , (FORMAT_ASTC_6x6_SFLOAT_BLOCK_EXT         , "ASTC_6x6_SFLOAT_BLOCK_EXT")
-  , (FORMAT_ASTC_6x5_SFLOAT_BLOCK_EXT         , "ASTC_6x5_SFLOAT_BLOCK_EXT")
-  , (FORMAT_ASTC_5x5_SFLOAT_BLOCK_EXT         , "ASTC_5x5_SFLOAT_BLOCK_EXT")
-  , (FORMAT_ASTC_5x4_SFLOAT_BLOCK_EXT         , "ASTC_5x4_SFLOAT_BLOCK_EXT")
-  , (FORMAT_ASTC_4x4_SFLOAT_BLOCK_EXT         , "ASTC_4x4_SFLOAT_BLOCK_EXT")
   , (FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG        , "PVRTC2_4BPP_SRGB_BLOCK_IMG")
   , (FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG        , "PVRTC2_2BPP_SRGB_BLOCK_IMG")
   , (FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG        , "PVRTC1_4BPP_SRGB_BLOCK_IMG")
@@ -2248,6 +2228,26 @@ showTableFormat =
   , (FORMAT_PVRTC2_2BPP_UNORM_BLOCK_IMG       , "PVRTC2_2BPP_UNORM_BLOCK_IMG")
   , (FORMAT_PVRTC1_4BPP_UNORM_BLOCK_IMG       , "PVRTC1_4BPP_UNORM_BLOCK_IMG")
   , (FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG       , "PVRTC1_2BPP_UNORM_BLOCK_IMG")
+  , (FORMAT_ASTC_12x12_SFLOAT_BLOCK           , "ASTC_12x12_SFLOAT_BLOCK")
+  , (FORMAT_ASTC_12x10_SFLOAT_BLOCK           , "ASTC_12x10_SFLOAT_BLOCK")
+  , (FORMAT_ASTC_10x10_SFLOAT_BLOCK           , "ASTC_10x10_SFLOAT_BLOCK")
+  , (FORMAT_ASTC_10x8_SFLOAT_BLOCK            , "ASTC_10x8_SFLOAT_BLOCK")
+  , (FORMAT_ASTC_10x6_SFLOAT_BLOCK            , "ASTC_10x6_SFLOAT_BLOCK")
+  , (FORMAT_ASTC_10x5_SFLOAT_BLOCK            , "ASTC_10x5_SFLOAT_BLOCK")
+  , (FORMAT_ASTC_8x8_SFLOAT_BLOCK             , "ASTC_8x8_SFLOAT_BLOCK")
+  , (FORMAT_ASTC_8x6_SFLOAT_BLOCK             , "ASTC_8x6_SFLOAT_BLOCK")
+  , (FORMAT_ASTC_8x5_SFLOAT_BLOCK             , "ASTC_8x5_SFLOAT_BLOCK")
+  , (FORMAT_ASTC_6x6_SFLOAT_BLOCK             , "ASTC_6x6_SFLOAT_BLOCK")
+  , (FORMAT_ASTC_6x5_SFLOAT_BLOCK             , "ASTC_6x5_SFLOAT_BLOCK")
+  , (FORMAT_ASTC_5x5_SFLOAT_BLOCK             , "ASTC_5x5_SFLOAT_BLOCK")
+  , (FORMAT_ASTC_5x4_SFLOAT_BLOCK             , "ASTC_5x4_SFLOAT_BLOCK")
+  , (FORMAT_ASTC_4x4_SFLOAT_BLOCK             , "ASTC_4x4_SFLOAT_BLOCK")
+  , (FORMAT_A4B4G4R4_UNORM_PACK16             , "A4B4G4R4_UNORM_PACK16")
+  , (FORMAT_A4R4G4B4_UNORM_PACK16             , "A4R4G4B4_UNORM_PACK16")
+  , (FORMAT_G16_B16R16_2PLANE_444_UNORM       , "G16_B16R16_2PLANE_444_UNORM")
+  , (FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16, "G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16")
+  , (FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16, "G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16")
+  , (FORMAT_G8_B8R8_2PLANE_444_UNORM          , "G8_B8R8_2PLANE_444_UNORM")
   , (FORMAT_G16_B16_R16_3PLANE_444_UNORM      , "G16_B16_R16_3PLANE_444_UNORM")
   , (FORMAT_G16_B16R16_2PLANE_422_UNORM       , "G16_B16R16_2PLANE_422_UNORM")
   , (FORMAT_G16_B16_R16_3PLANE_422_UNORM      , "G16_B16_R16_3PLANE_422_UNORM")

@@ -51,9 +51,8 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 -- = Description
 --
 -- These values all have the same meaning as the equivalently named values
--- for
--- 'Vulkan.Extensions.VK_KHR_acceleration_structure.FormatFeatureFlags2KHR'
--- and /may/ be set in @linearTilingFeatures@, @optimalTilingFeatures@, and
+-- for 'Vulkan.Core13.Enums.FormatFeatureFlags2.FormatFeatureFlags2' and
+-- /may/ be set in @linearTilingFeatures@, @optimalTilingFeatures@, and
 -- 'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.DrmFormatModifierPropertiesEXT'::@drmFormatModifierTilingFeatures@,
 -- specifying that the features are supported by <VkImage.html images> or
 -- <VkImageView.html image views> or
@@ -63,11 +62,11 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --
 -- -   'FORMAT_FEATURE_SAMPLED_IMAGE_BIT' specifies that an image view
 --     /can/ be
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-sampledimage sampled from>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sampledimage sampled from>.
 --
 -- -   'FORMAT_FEATURE_STORAGE_IMAGE_BIT' specifies that an image view
 --     /can/ be used as a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage storage image>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storageimage storage image>.
 --
 -- -   'FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT' specifies that an image
 --     view /can/ be used as storage image that supports atomic operations.
@@ -86,13 +85,13 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --
 -- -   'FORMAT_FEATURE_BLIT_SRC_BIT' specifies that an image /can/ be used
 --     as @srcImage@ for the
---     'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR' and
---     'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' commands.
+--     'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.cmdBlitImage2'
+--     and 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' commands.
 --
 -- -   'FORMAT_FEATURE_BLIT_DST_BIT' specifies that an image /can/ be used
 --     as @dstImage@ for the
---     'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR' and
---     'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' commands.
+--     'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.cmdBlitImage2'
+--     and 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' commands.
 --
 -- -   'FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT' specifies that if
 --     'FORMAT_FEATURE_SAMPLED_IMAGE_BIT' is also set, an image view /can/
@@ -102,10 +101,10 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'.
 --     If 'FORMAT_FEATURE_BLIT_SRC_BIT' is also set, an image can be used
 --     as the @srcImage@ to
---     'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR' and
---     'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' with a @filter@
---     of 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR'. This bit /must/ only
---     be exposed for formats that also support the
+--     'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.cmdBlitImage2'
+--     and 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' with a
+--     @filter@ of 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR'. This bit
+--     /must/ only be exposed for formats that also support the
 --     'FORMAT_FEATURE_SAMPLED_IMAGE_BIT' or 'FORMAT_FEATURE_BLIT_SRC_BIT'.
 --
 --     If the format being queried is a depth\/stencil format, this bit
@@ -122,13 +121,13 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --
 -- -   'FORMAT_FEATURE_TRANSFER_SRC_BIT' specifies that an image /can/ be
 --     used as a source image for
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies copy commands>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#copies copy commands>.
 --
 -- -   'FORMAT_FEATURE_TRANSFER_DST_BIT' specifies that an image /can/ be
 --     used as a destination image for
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies copy commands>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#copies copy commands>
 --     and
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#clears clear commands>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#clears clear commands>.
 --
 -- -   'FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT' specifies
 --     'Vulkan.Core10.Handles.Image' /can/ be used as a sampled image with
@@ -150,7 +149,7 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --
 -- -   'FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT' specifies that an
 --     application /can/ define a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 --     using this format as a source, and that an image of this format
 --     /can/ be used with a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'
@@ -165,7 +164,7 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --
 -- -   'FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT' specifies that an
 --     application /can/ define a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 --     using this format as a source, and that an image of this format
 --     /can/ be used with a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'
@@ -176,12 +175,12 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --     neither 'FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT' nor
 --     'FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT' is set, the application
 --     /must/ not define a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 --     using this format as a source.
 --
 -- -   'FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT'
 --     specifies that an application /can/ define a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 --     using this format as a source with @chromaFilter@ set to
 --     'Vulkan.Core10.Enums.Filter.FILTER_LINEAR'.
 --
@@ -191,7 +190,7 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --
 -- -   'FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT'
 --     specifies that reconstruction is explicit, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-chroma-reconstruction>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-chroma-reconstruction>.
 --     If this bit is not present, reconstruction is implicit by default.
 --
 -- -   'FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT'
@@ -212,11 +211,11 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --
 -- -   'FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT' specifies that an
 --     image view /can/ be used as a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>.
 --
 -- -   'FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR' specifies
 --     that an image view /can/ be used as a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>.
 --     An implementation /must/ not set this feature for formats with
 --     numeric type other than @*UINT@, or set it as a buffer feature.
 --
@@ -247,11 +246,11 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 -- -   'FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR'
 --     specifies that the format /can/ be used as the vertex format when
 --     creating an
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure acceleration structure>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure acceleration structure>
 --     ('Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryTrianglesDataKHR'::@vertexFormat@).
 --     This format /can/ also be used as the vertex format in host memory
 --     when doing
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#host-acceleration-structure host acceleration structure>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#host-acceleration-structure host acceleration structure>
 --     builds.
 --
 -- = See Also
@@ -262,11 +261,11 @@ newtype FormatFeatureFlagBits = FormatFeatureFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'FORMAT_FEATURE_SAMPLED_IMAGE_BIT' specifies that an image view /can/ be
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-sampledimage sampled from>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sampledimage sampled from>.
 pattern FORMAT_FEATURE_SAMPLED_IMAGE_BIT                        = FormatFeatureFlagBits 0x00000001
 -- | 'FORMAT_FEATURE_STORAGE_IMAGE_BIT' specifies that an image view /can/ be
 -- used as a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-storageimage storage image>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storageimage storage image>.
 pattern FORMAT_FEATURE_STORAGE_IMAGE_BIT                        = FormatFeatureFlagBits 0x00000002
 -- | 'FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT' specifies that an image view
 -- /can/ be used as storage image that supports atomic operations.
@@ -303,12 +302,12 @@ pattern FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT               = FormatFeatureF
 pattern FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT             = FormatFeatureFlagBits 0x00000200
 -- | 'FORMAT_FEATURE_BLIT_SRC_BIT' specifies that an image /can/ be used as
 -- @srcImage@ for the
--- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR' and
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.cmdBlitImage2' and
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' commands.
 pattern FORMAT_FEATURE_BLIT_SRC_BIT                             = FormatFeatureFlagBits 0x00000400
 -- | 'FORMAT_FEATURE_BLIT_DST_BIT' specifies that an image /can/ be used as
 -- @dstImage@ for the
--- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR' and
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.cmdBlitImage2' and
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' commands.
 pattern FORMAT_FEATURE_BLIT_DST_BIT                             = FormatFeatureFlagBits 0x00000800
 -- | 'FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT' specifies that if
@@ -317,9 +316,10 @@ pattern FORMAT_FEATURE_BLIT_DST_BIT                             = FormatFeatureF
 -- 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR', or @mipmapMode@ set to
 -- 'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'. If
 -- 'FORMAT_FEATURE_BLIT_SRC_BIT' is also set, an image can be used as the
--- @srcImage@ to 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR'
--- and 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' with a @filter@
--- of 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR'. This bit /must/ only be
+-- @srcImage@ to
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.cmdBlitImage2' and
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' with a @filter@ of
+-- 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR'. This bit /must/ only be
 -- exposed for formats that also support the
 -- 'FORMAT_FEATURE_SAMPLED_IMAGE_BIT' or 'FORMAT_FEATURE_BLIT_SRC_BIT'.
 --
@@ -337,21 +337,21 @@ pattern FORMAT_FEATURE_BLIT_DST_BIT                             = FormatFeatureF
 pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT          = FormatFeatureFlagBits 0x00001000
 -- | 'FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR' specifies that
 -- an image view /can/ be used as a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>.
 -- An implementation /must/ not set this feature for formats with numeric
 -- type other than @*UINT@, or set it as a buffer feature.
 pattern FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = FormatFeatureFlagBits 0x40000000
 -- | 'FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT' specifies that an image
 -- view /can/ be used as a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>.
 pattern FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT             = FormatFeatureFlagBits 0x01000000
 -- | 'FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR' specifies
 -- that the format /can/ be used as the vertex format when creating an
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure acceleration structure>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure acceleration structure>
 -- ('Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryTrianglesDataKHR'::@vertexFormat@).
 -- This format /can/ also be used as the vertex format in host memory when
 -- doing
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#host-acceleration-structure host acceleration structure>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#host-acceleration-structure host acceleration structure>
 -- builds.
 pattern FORMAT_FEATURE_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR = FormatFeatureFlagBits 0x20000000
 -- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG"
@@ -365,7 +365,7 @@ pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG       = FormatFeatureF
 pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT          = FormatFeatureFlagBits 0x00010000
 -- | 'FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT' specifies that an
 -- application /can/ define a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 -- using this format as a source, and that an image of this format /can/ be
 -- used with a
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'
@@ -376,7 +376,7 @@ pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT          = FormatFeatureF
 -- neither 'FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT' nor
 -- 'FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT' is set, the application
 -- /must/ not define a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 -- using this format as a source.
 pattern FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT               = FormatFeatureFlagBits 0x00800000
 -- | 'FORMAT_FEATURE_DISJOINT_BIT' specifies that a multi-planar image /can/
@@ -397,7 +397,7 @@ pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPL
   FormatFeatureFlagBits 0x00200000
 -- | 'FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT'
 -- specifies that reconstruction is explicit, as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-chroma-reconstruction>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-chroma-reconstruction>.
 -- If this bit is not present, reconstruction is implicit by default.
 pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT =
   FormatFeatureFlagBits 0x00100000
@@ -408,13 +408,13 @@ pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FI
   FormatFeatureFlagBits 0x00080000
 -- | 'FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT'
 -- specifies that an application /can/ define a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 -- using this format as a source with @chromaFilter@ set to
 -- 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR'.
 pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT = FormatFeatureFlagBits 0x00040000
 -- | 'FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT' specifies that an
 -- application /can/ define a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 -- using this format as a source, and that an image of this format /can/ be
 -- used with a
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'
@@ -429,13 +429,13 @@ pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT = Format
 pattern FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT = FormatFeatureFlagBits 0x00020000
 -- | 'FORMAT_FEATURE_TRANSFER_DST_BIT' specifies that an image /can/ be used
 -- as a destination image for
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies copy commands>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#copies copy commands>
 -- and
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#clears clear commands>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#clears clear commands>.
 pattern FORMAT_FEATURE_TRANSFER_DST_BIT            = FormatFeatureFlagBits 0x00008000
 -- | 'FORMAT_FEATURE_TRANSFER_SRC_BIT' specifies that an image /can/ be used
 -- as a source image for
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies copy commands>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#copies copy commands>.
 pattern FORMAT_FEATURE_TRANSFER_SRC_BIT            = FormatFeatureFlagBits 0x00004000
 
 conNameFormatFeatureFlagBits :: String

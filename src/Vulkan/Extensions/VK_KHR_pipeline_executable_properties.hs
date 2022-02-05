@@ -172,7 +172,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_executable_properties Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_pipeline_executable_properties Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -312,7 +312,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetPipelineExecutablePropertiesKHR-pipelineExecutableInfo-03270#
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
 --     /must/ be enabled
 --
 -- -   #VUID-vkGetPipelineExecutablePropertiesKHR-pipeline-03271#
@@ -410,7 +410,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetPipelineExecutableStatisticsKHR-pipelineExecutableInfo-03272#
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
 --     /must/ be enabled
 --
 -- -   #VUID-vkGetPipelineExecutableStatisticsKHR-pipeline-03273#
@@ -519,7 +519,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetPipelineExecutableInternalRepresentationsKHR-pipelineExecutableInfo-03276#
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
 --     /must/ be enabled
 --
 -- -   #VUID-vkGetPipelineExecutableInternalRepresentationsKHR-pipeline-03277#

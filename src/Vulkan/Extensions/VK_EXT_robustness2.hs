@@ -48,9 +48,9 @@
 -- return zero. Rather than allowing multiple possible (0,0,0,x) vectors,
 -- the out of bounds values are treated as zero, and then missing
 -- components are inserted based on the format as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-conversion-to-rgba Conversion to RGBA>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-conversion-to-rgba Conversion to RGBA>
 -- and
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input-extraction vertex input attribute extraction>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex-input-extraction vertex input attribute extraction>.
 --
 -- These additional requirements /may/ be expensive on some
 -- implementations, and should only be enabled when truly necessary.
@@ -120,7 +120,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_robustness2 Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_robustness2 Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -175,10 +175,10 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --     of the descriptor. Uniform buffers /must/ be bounds-checked to the
 --     range of the descriptor, where the range is rounded up to a multiple
 --     of
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-robustUniformBufferAccessSizeAlignment robustUniformBufferAccessSizeAlignment>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustUniformBufferAccessSizeAlignment robustUniformBufferAccessSizeAlignment>.
 --     Storage buffers /must/ be bounds-checked to the range of the
 --     descriptor, where the range is rounded up to a multiple of
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-robustStorageBufferAccessSizeAlignment robustStorageBufferAccessSizeAlignment>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustStorageBufferAccessSizeAlignment robustStorageBufferAccessSizeAlignment>.
 --     Out of bounds buffer loads will return zero values, and formatted
 --     loads will have (0,0,1) values inserted for missing G, B, or A
 --     components based on the format.
@@ -210,7 +210,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- -   #VUID-VkPhysicalDeviceRobustness2FeaturesEXT-robustBufferAccess2-04000#
 --     If @robustBufferAccess2@ is enabled then
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
 --     /must/ also be enabled
 --
 -- == Valid Usage (Implicit)
@@ -303,14 +303,14 @@ data PhysicalDeviceRobustness2PropertiesEXT = PhysicalDeviceRobustness2Propertie
     -- @robustStorageBufferAccessSizeAlignment@ is the number of bytes that the
     -- range of a storage buffer descriptor is rounded up to when used for
     -- bounds-checking when
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
     -- is enabled. This value /must/ be either 1 or 4.
     robustStorageBufferAccessSizeAlignment :: DeviceSize
   , -- | #limits-robustUniformBufferAccessSizeAlignment#
     -- @robustUniformBufferAccessSizeAlignment@ is the number of bytes that the
     -- range of a uniform buffer descriptor is rounded up to when used for
     -- bounds-checking when
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
     -- is enabled. This value /must/ be a power of two in the range [1, 256].
     robustUniformBufferAccessSizeAlignment :: DeviceSize
   }

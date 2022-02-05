@@ -66,7 +66,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- -   #extension-features-multiview-gs# @multiviewGeometryShader@
 --     specifies whether the implementation supports multiview rendering
 --     within a render pass, with
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#geometry geometry shaders>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#geometry geometry shaders>.
 --     If this feature is not enabled, then a pipeline compiled against a
 --     subpass with a non-zero view mask /must/ not include a geometry
 --     shader.
@@ -74,7 +74,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- -   #extension-features-multiview-tess# @multiviewTessellationShader@
 --     specifies whether the implementation supports multiview rendering
 --     within a render pass, with
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#tessellation tessellation shaders>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#tessellation tessellation shaders>.
 --     If this feature is not enabled, then a pipeline compiled against a
 --     subpass with a non-zero view mask /must/ not include any
 --     tessellation shaders.
@@ -257,9 +257,9 @@ instance Zero PhysicalDeviceMultiviewProperties where
 -- additional broadcasting.
 --
 -- Some implementations /may/ not support multiview in conjunction with
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiview-gs geometry shaders>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview-gs geometry shaders>
 -- or
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiview-tess tessellation shaders>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview-tess tessellation shaders>.
 --
 -- When multiview is enabled, the
 -- 'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_VIEW_LOCAL_BIT' bit

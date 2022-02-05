@@ -248,6 +248,37 @@ library
       Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore
       Vulkan.Core12.Promoted_From_VK_KHR_uniform_buffer_standard_layout
       Vulkan.Core12.Promoted_From_VK_KHR_vulkan_memory_model
+      Vulkan.Core13
+      Vulkan.Core13.Enums
+      Vulkan.Core13.Enums.AccessFlags2
+      Vulkan.Core13.Enums.FormatFeatureFlags2
+      Vulkan.Core13.Enums.PipelineCreationFeedbackFlagBits
+      Vulkan.Core13.Enums.PipelineStageFlags2
+      Vulkan.Core13.Enums.PrivateDataSlotCreateFlagBits
+      Vulkan.Core13.Enums.RenderingFlagBits
+      Vulkan.Core13.Enums.SubmitFlagBits
+      Vulkan.Core13.Enums.ToolPurposeFlagBits
+      Vulkan.Core13.Handles
+      Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state
+      Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2
+      Vulkan.Core13.Promoted_From_VK_EXT_image_robustness
+      Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block
+      Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_cache_control
+      Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_feedback
+      Vulkan.Core13.Promoted_From_VK_EXT_private_data
+      Vulkan.Core13.Promoted_From_VK_EXT_shader_demote_to_helper_invocation
+      Vulkan.Core13.Promoted_From_VK_EXT_subgroup_size_control
+      Vulkan.Core13.Promoted_From_VK_EXT_texel_buffer_alignment
+      Vulkan.Core13.Promoted_From_VK_EXT_texture_compression_astc_hdr
+      Vulkan.Core13.Promoted_From_VK_EXT_tooling_info
+      Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2
+      Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering
+      Vulkan.Core13.Promoted_From_VK_KHR_format_feature_flags2
+      Vulkan.Core13.Promoted_From_VK_KHR_maintenance4
+      Vulkan.Core13.Promoted_From_VK_KHR_shader_integer_dot_product
+      Vulkan.Core13.Promoted_From_VK_KHR_shader_terminate_invocation
+      Vulkan.Core13.Promoted_From_VK_KHR_synchronization2
+      Vulkan.Core13.Promoted_From_VK_KHR_zero_initialize_workgroup_memory
       Vulkan.CStruct.Extends
       Vulkan.CStruct.Utils
       Vulkan.Dynamic
@@ -419,6 +450,7 @@ library
       Vulkan.Extensions.VK_KHR_get_memory_requirements2
       Vulkan.Extensions.VK_KHR_get_physical_device_properties2
       Vulkan.Extensions.VK_KHR_get_surface_capabilities2
+      Vulkan.Extensions.VK_KHR_global_priority
       Vulkan.Extensions.VK_KHR_image_format_list
       Vulkan.Extensions.VK_KHR_imageless_framebuffer
       Vulkan.Extensions.VK_KHR_incremental_present

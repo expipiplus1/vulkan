@@ -33,7 +33,7 @@ newtype PipelineColorBlendStateCreateFlagBits = PipelineColorBlendStateCreateFla
 -- indicates that access to color and input attachments will have implicit
 -- framebuffer-local memory dependencies, allowing applications to express
 -- custom blending operations in a fragment shader. See
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-feedbackloop renderpass feedback loops>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-feedbackloop renderpass feedback loops>
 -- for more information.
 pattern PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_ARM =
   PipelineColorBlendStateCreateFlagBits 0x00000001

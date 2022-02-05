@@ -127,7 +127,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_line_rasterization Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_line_rasterization Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -307,19 +307,19 @@ cmdSetLineStippleEXT commandBuffer lineStippleFactor lineStipplePattern = liftIO
 data PhysicalDeviceLineRasterizationFeaturesEXT = PhysicalDeviceLineRasterizationFeaturesEXT
   { -- | #features-rectangularLines# @rectangularLines@ indicates whether the
     -- implementation supports
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-lines rectangular line rasterization>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-lines rectangular line rasterization>.
     rectangularLines :: Bool
   , -- | #features-bresenhamLines# @bresenhamLines@ indicates whether the
     -- implementation supports
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-lines-bresenham Bresenham-style line rasterization>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-lines-bresenham Bresenham-style line rasterization>.
     bresenhamLines :: Bool
   , -- | #features-smoothLines# @smoothLines@ indicates whether the
     -- implementation supports
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-lines-smooth smooth line rasterization>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-lines-smooth smooth line rasterization>.
     smoothLines :: Bool
   , -- | #features-stippledRectangularLines# @stippledRectangularLines@ indicates
     -- whether the implementation supports
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-lines-stipple stippled line rasterization>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-lines-stipple stippled line rasterization>
     -- with 'LINE_RASTERIZATION_MODE_RECTANGULAR_EXT' lines, or with
     -- 'LINE_RASTERIZATION_MODE_DEFAULT_EXT' lines if
     -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@strictLines@
@@ -327,12 +327,12 @@ data PhysicalDeviceLineRasterizationFeaturesEXT = PhysicalDeviceLineRasterizatio
     stippledRectangularLines :: Bool
   , -- | #features-stippledBresenhamLines# @stippledBresenhamLines@ indicates
     -- whether the implementation supports
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-lines-stipple stippled line rasterization>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-lines-stipple stippled line rasterization>
     -- with 'LINE_RASTERIZATION_MODE_BRESENHAM_EXT' lines.
     stippledBresenhamLines :: Bool
   , -- | #features-stippledSmoothLines# @stippledSmoothLines@ indicates whether
     -- the implementation supports
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-lines-stipple stippled line rasterization>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-lines-stipple stippled line rasterization>
     -- with 'LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT' lines.
     stippledSmoothLines :: Bool
   }
@@ -417,7 +417,7 @@ data PhysicalDeviceLineRasterizationPropertiesEXT = PhysicalDeviceLineRasterizat
   { -- | #limits-lineSubPixelPrecisionBits# @lineSubPixelPrecisionBits@ is the
     -- number of bits of subpixel precision in framebuffer coordinates xf and
     -- yf when rasterizing
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-lines line segments>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-lines line segments>.
     lineSubPixelPrecisionBits :: Word32 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -470,47 +470,47 @@ instance Zero PhysicalDeviceLineRasterizationPropertiesEXT where
 -- -   #VUID-VkPipelineRasterizationLineStateCreateInfoEXT-lineRasterizationMode-02768#
 --     If @lineRasterizationMode@ is
 --     'LINE_RASTERIZATION_MODE_RECTANGULAR_EXT', then the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rectangularLines rectangularLines>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-rectangularLines rectangularLines>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkPipelineRasterizationLineStateCreateInfoEXT-lineRasterizationMode-02769#
 --     If @lineRasterizationMode@ is
 --     'LINE_RASTERIZATION_MODE_BRESENHAM_EXT', then the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bresenhamLines bresenhamLines>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-bresenhamLines bresenhamLines>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkPipelineRasterizationLineStateCreateInfoEXT-lineRasterizationMode-02770#
 --     If @lineRasterizationMode@ is
 --     'LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT', then the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bresenhamLines smoothLines>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-bresenhamLines smoothLines>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkPipelineRasterizationLineStateCreateInfoEXT-stippledLineEnable-02771#
 --     If @stippledLineEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE' and
 --     @lineRasterizationMode@ is
 --     'LINE_RASTERIZATION_MODE_RECTANGULAR_EXT', then the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkPipelineRasterizationLineStateCreateInfoEXT-stippledLineEnable-02772#
 --     If @stippledLineEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE' and
 --     @lineRasterizationMode@ is 'LINE_RASTERIZATION_MODE_BRESENHAM_EXT',
 --     then the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledBresenhamLines stippledBresenhamLines>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-stippledBresenhamLines stippledBresenhamLines>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkPipelineRasterizationLineStateCreateInfoEXT-stippledLineEnable-02773#
 --     If @stippledLineEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE' and
 --     @lineRasterizationMode@ is
 --     'LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT', then the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledSmoothLines stippledSmoothLines>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-stippledSmoothLines stippledSmoothLines>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkPipelineRasterizationLineStateCreateInfoEXT-stippledLineEnable-02774#
 --     If @stippledLineEnable@ is 'Vulkan.Core10.FundamentalTypes.TRUE' and
 --     @lineRasterizationMode@ is 'LINE_RASTERIZATION_MODE_DEFAULT_EXT',
 --     then the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>
 --     feature /must/ be enabled and
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@strictLines@
 --     /must/ be 'Vulkan.Core10.FundamentalTypes.TRUE'
@@ -535,7 +535,7 @@ data PipelineRasterizationLineStateCreateInfoEXT = PipelineRasterizationLineStat
     -- the style of line rasterization.
     lineRasterizationMode :: LineRasterizationModeEXT
   , -- | @stippledLineEnable@ enables
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-lines-stipple stippled line rasterization>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-lines-stipple stippled line rasterization>.
     stippledLineEnable :: Bool
   , -- | @lineStippleFactor@ is the repeat factor used in stippled line
     -- rasterization.
@@ -608,7 +608,7 @@ newtype LineRasterizationModeEXT = LineRasterizationModeEXT Int32
 -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@strictLines@
 -- is 'Vulkan.Core10.FundamentalTypes.TRUE', otherwise lines are drawn as
 -- non-@strictLines@ parallelograms. Both of these modes are defined in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-lines-basic Basic Line Segment Rasterization>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-lines-basic Basic Line Segment Rasterization>.
 pattern LINE_RASTERIZATION_MODE_DEFAULT_EXT            = LineRasterizationModeEXT 0
 -- | 'LINE_RASTERIZATION_MODE_RECTANGULAR_EXT' specifies lines drawn as if
 -- they were rectangles extruded from the line
@@ -616,12 +616,12 @@ pattern LINE_RASTERIZATION_MODE_RECTANGULAR_EXT        = LineRasterizationModeEX
 -- | 'LINE_RASTERIZATION_MODE_BRESENHAM_EXT' specifies lines drawn by
 -- determining which pixel diamonds the line intersects and exits, as
 -- defined in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-lines-bresenham Bresenham Line Segment Rasterization>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-lines-bresenham Bresenham Line Segment Rasterization>.
 pattern LINE_RASTERIZATION_MODE_BRESENHAM_EXT          = LineRasterizationModeEXT 2
 -- | 'LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT' specifies lines drawn
 -- if they were rectangles extruded from the line, with alpha falloff, as
 -- defined in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-lines-smooth Smooth Lines>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-lines-smooth Smooth Lines>.
 pattern LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT = LineRasterizationModeEXT 3
 {-# complete LINE_RASTERIZATION_MODE_DEFAULT_EXT,
              LINE_RASTERIZATION_MODE_RECTANGULAR_EXT,

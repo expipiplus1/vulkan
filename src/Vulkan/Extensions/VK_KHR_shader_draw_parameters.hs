@@ -96,7 +96,7 @@
 --
 -- All functionality in this extension is included in core Vulkan 1.1,
 -- however a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderDrawParameters feature bit was added>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderDrawParameters feature bit was added>
 -- to distinguish whether it is actually available or not.
 --
 -- == New Enum Constants
@@ -107,15 +107,15 @@
 --
 -- == New Built-In Variables
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-baseinstance BaseInstance>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-baseinstance BaseInstance>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-basevertex BaseVertex>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-basevertex BaseVertex>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-drawindex DrawIndex>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-drawindex DrawIndex>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-DrawParameters DrawParameters>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-DrawParameters DrawParameters>
 --
 -- == Issues
 --
@@ -149,7 +149,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_shader_draw_parameters Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_shader_draw_parameters Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

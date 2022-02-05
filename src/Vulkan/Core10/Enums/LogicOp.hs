@@ -89,7 +89,7 @@ import GHC.Show (Show(showsPrec))
 --
 -- The result of the logical operation is then written to the color
 -- attachment as controlled by the component write mask, described in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-blendoperations Blend Operations>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-blendoperations Blend Operations>.
 --
 -- = See Also
 --

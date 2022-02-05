@@ -9,12 +9,12 @@ module Vulkan.Core10.Enums.ImageLayout  (ImageLayout( IMAGE_LAYOUT_UNDEFINED
                                                     , IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
                                                     , IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
                                                     , IMAGE_LAYOUT_PREINITIALIZED
-                                                    , IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR
-                                                    , IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR
                                                     , IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR
                                                     , IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT
                                                     , IMAGE_LAYOUT_SHARED_PRESENT_KHR
                                                     , IMAGE_LAYOUT_PRESENT_SRC_KHR
+                                                    , IMAGE_LAYOUT_ATTACHMENT_OPTIMAL
+                                                    , IMAGE_LAYOUT_READ_ONLY_OPTIMAL
                                                     , IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL
                                                     , IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL
                                                     , IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL
@@ -46,15 +46,15 @@ import GHC.Show (Show(showsPrec))
 -- indicates which image layout the image subresource(s) are considered to
 -- be in when the image will be accessed. For transfer commands, this is a
 -- parameter to the command (see
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#clears>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#clears>
 -- and
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies>).
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#copies>).
 -- For use as a framebuffer attachment, this is a member in the
 -- substructures of the 'Vulkan.Core10.Pass.RenderPassCreateInfo' (see
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass Render Pass>).
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass Render Pass>).
 -- For use in a descriptor set, this is a member in the
 -- 'Vulkan.Core10.DescriptorSet.DescriptorImageInfo' structure (see
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-updates>).
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-updates>).
 --
 -- = See Also
 --
@@ -65,18 +65,18 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core10.Pass.AttachmentReference',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentReference2',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentReferenceStencilLayout',
--- 'Vulkan.Extensions.VK_KHR_copy_commands2.BlitImageInfo2KHR',
--- 'Vulkan.Extensions.VK_KHR_copy_commands2.CopyBufferToImageInfo2KHR',
--- 'Vulkan.Extensions.VK_KHR_copy_commands2.CopyImageInfo2KHR',
--- 'Vulkan.Extensions.VK_KHR_copy_commands2.CopyImageToBufferInfo2KHR',
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.BlitImageInfo2',
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.CopyBufferToImageInfo2',
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.CopyImageInfo2',
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.CopyImageToBufferInfo2',
 -- 'Vulkan.Core10.DescriptorSet.DescriptorImageInfo',
 -- 'Vulkan.Core10.Image.ImageCreateInfo',
 -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier',
--- 'Vulkan.Extensions.VK_KHR_synchronization2.ImageMemoryBarrier2KHR',
--- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingAttachmentInfoKHR',
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.ImageMemoryBarrier2',
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingAttachmentInfo',
 -- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR',
--- 'Vulkan.Extensions.VK_KHR_copy_commands2.ResolveImageInfo2KHR',
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.ResolveImageInfo2',
 -- 'Vulkan.Extensions.VK_HUAWEI_invocation_mask.cmdBindInvocationMaskHUAWEI',
 -- 'Vulkan.Extensions.VK_NV_shading_rate_image.cmdBindShadingRateImageNV',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage',
@@ -127,7 +127,7 @@ pattern IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL  = ImageLayout 4
 pattern IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL         = ImageLayout 5
 -- | 'IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL' /must/ only be used as a source
 -- image of a transfer command (see the definition of
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-transfer >).
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages-transfer >).
 -- This layout is valid only for image subresources of images created with
 -- the
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_SRC_BIT'
@@ -148,22 +148,15 @@ pattern IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL             = ImageLayout 7
 -- by the host, and hence the data /can/ be written to memory immediately,
 -- without first executing a layout transition. Currently,
 -- 'IMAGE_LAYOUT_PREINITIALIZED' is only useful with
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-linear-resource linear>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-linear-resource linear>
 -- images because there is not a standard layout defined for
 -- 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL' images.
 pattern IMAGE_LAYOUT_PREINITIALIZED                   = ImageLayout 8
--- | 'IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR' specifies a layout that /must/
--- only be used with attachment accesses in the graphics pipeline.
-pattern IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR           = ImageLayout 1000314001
--- | 'IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR' specifies a layout allowing read
--- only access as an attachment, or in shaders as a sampled image, combined
--- image\/sampler, or input attachment.
-pattern IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR            = ImageLayout 1000314000
 -- | 'IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR' /must/ only
 -- be used as a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
 -- or
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-shading-rate-image shading rate image>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-shading-rate-image shading rate image>.
 -- This layout is valid only for image subresources of images created with
 -- the
 -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
@@ -186,6 +179,13 @@ pattern IMAGE_LAYOUT_SHARED_PRESENT_KHR               = ImageLayout 1000111000
 -- transitioned away from this layout after calling
 -- 'Vulkan.Extensions.VK_KHR_swapchain.acquireNextImageKHR'.
 pattern IMAGE_LAYOUT_PRESENT_SRC_KHR                  = ImageLayout 1000001002
+-- | 'IMAGE_LAYOUT_ATTACHMENT_OPTIMAL' specifies a layout that /must/ only be
+-- used with attachment accesses in the graphics pipeline.
+pattern IMAGE_LAYOUT_ATTACHMENT_OPTIMAL               = ImageLayout 1000314001
+-- | 'IMAGE_LAYOUT_READ_ONLY_OPTIMAL' specifies a layout allowing read only
+-- access as an attachment, or in shaders as a sampled image, combined
+-- image\/sampler, or input attachment.
+pattern IMAGE_LAYOUT_READ_ONLY_OPTIMAL                = ImageLayout 1000314000
 -- | 'IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL' specifies a layout for the
 -- stencil aspect of a depth\/stencil format image allowing read-only
 -- access as a stencil attachment or in shaders as a sampled image,
@@ -229,12 +229,12 @@ pattern IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL = ImageLayout 10
              IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
              IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
              IMAGE_LAYOUT_PREINITIALIZED,
-             IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR,
-             IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR,
              IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR,
              IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT,
              IMAGE_LAYOUT_SHARED_PRESENT_KHR,
              IMAGE_LAYOUT_PRESENT_SRC_KHR,
+             IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
+             IMAGE_LAYOUT_READ_ONLY_OPTIMAL,
              IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL,
              IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL,
              IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL,
@@ -259,12 +259,12 @@ showTableImageLayout =
   , (IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL            , "TRANSFER_SRC_OPTIMAL")
   , (IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL            , "TRANSFER_DST_OPTIMAL")
   , (IMAGE_LAYOUT_PREINITIALIZED                  , "PREINITIALIZED")
-  , (IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR          , "ATTACHMENT_OPTIMAL_KHR")
-  , (IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR           , "READ_ONLY_OPTIMAL_KHR")
   , (IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR, "FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR")
   , (IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT, "FRAGMENT_DENSITY_MAP_OPTIMAL_EXT")
   , (IMAGE_LAYOUT_SHARED_PRESENT_KHR              , "SHARED_PRESENT_KHR")
   , (IMAGE_LAYOUT_PRESENT_SRC_KHR                 , "PRESENT_SRC_KHR")
+  , (IMAGE_LAYOUT_ATTACHMENT_OPTIMAL              , "ATTACHMENT_OPTIMAL")
+  , (IMAGE_LAYOUT_READ_ONLY_OPTIMAL               , "READ_ONLY_OPTIMAL")
   , (IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL       , "STENCIL_READ_ONLY_OPTIMAL")
   , (IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL      , "STENCIL_ATTACHMENT_OPTIMAL")
   , (IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL         , "DEPTH_READ_ONLY_OPTIMAL")

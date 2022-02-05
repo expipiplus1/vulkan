@@ -458,7 +458,7 @@ data PhysicalDeviceDescriptorIndexingProperties = PhysicalDeviceDescriptorIndexi
   , -- | #extension-limits-robustBufferAccessUpdateAfterBind#
     -- @robustBufferAccessUpdateAfterBind@ is a boolean value indicating
     -- whether
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
     -- /can/ be enabled in a device simultaneously with
     -- @descriptorBindingUniformBufferUpdateAfterBind@,
     -- @descriptorBindingStorageBufferUpdateAfterBind@,
@@ -473,7 +473,7 @@ data PhysicalDeviceDescriptorIndexingProperties = PhysicalDeviceDescriptorIndexi
     -- calculations for image operations have well-defined results when the
     -- image and\/or sampler objects used for the instruction are not uniform
     -- within a quad. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-derivative-image-operations Derivative Image Operations>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-derivative-image-operations Derivative Image Operations>.
     quadDivergentImplicitLod :: Bool
   , -- | #extension-limits-maxPerStageDescriptorUpdateAfterBindSamplers#
     -- @maxPerStageDescriptorUpdateAfterBindSamplers@ is similar to
@@ -806,9 +806,9 @@ instance Zero PhysicalDeviceDescriptorIndexingProperties where
 --
 -- -   #VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-descriptorBindingInlineUniformBlockUpdateAfterBind-02211#
 --     If
---     'Vulkan.Extensions.VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockFeaturesEXT'::@descriptorBindingInlineUniformBlockUpdateAfterBind@
+--     'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockFeatures'::@descriptorBindingInlineUniformBlockUpdateAfterBind@
 --     is not enabled, all bindings with descriptor type
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
 --     /must/ not use
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 --
@@ -927,7 +927,7 @@ instance Zero DescriptorSetLayoutBindingFlagsCreateInfo where
 -- variable count descriptor binding in the corresponding descriptor set
 -- layout. If the variable count descriptor binding in the corresponding
 -- descriptor set layout has a descriptor type of
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
 -- then @pDescriptorCounts@[i] specifies the binding’s capacity in bytes.
 -- If
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetAllocateInfo'::@pSetLayouts@[i]
@@ -1042,7 +1042,7 @@ data DescriptorSetVariableDescriptorCountLayoutSupport = DescriptorSetVariableDe
     -- supported in the highest numbered binding of the layout, if that binding
     -- is variable-sized. If the highest numbered binding of the layout has a
     -- descriptor type of
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
     -- then @maxVariableDescriptorCount@ indicates the maximum byte size
     -- supported for the binding, if that binding is variable-sized.
     maxVariableDescriptorCount :: Word32 }

@@ -48,24 +48,24 @@
 -- differs from a conventional image in the following ways:
 --
 -- -   Texels are centered on integer coordinates. See
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-unnormalized-to-integer Unnormalized Texel Coordinate Operations>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-unnormalized-to-integer Unnormalized Texel Coordinate Operations>
 --
 -- -   Normalized coordinates are scaled using coord × (dim - 1) rather
 --     than coord × dim, where dim is the size of one dimension of the
 --     image. See
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-normalized-to-unnormalized normalized texel coordinate transform>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-normalized-to-unnormalized normalized texel coordinate transform>.
 --
 -- -   Partial derivatives are scaled using coord × (dim - 1) rather than
 --     coord × dim. See
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-scale-factor Scale Factor Operation>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-scale-factor Scale Factor Operation>.
 --
 -- -   Calculation of the next higher lod size goes according to ⌈dim \/ 2⌉
 --     rather than ⌊dim \/ 2⌋. See
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>.
 --
 -- -   The minimum level size is 2x2 for 2D images and 2x2x2 for 3D images.
 --     See
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>.
 --
 -- This image organization is designed to facilitate a system like Ptex
 -- with separate textures for each face of a subdivision or polygon mesh.
@@ -148,7 +148,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_corner_sampled_image Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_corner_sampled_image Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -213,7 +213,7 @@ data PhysicalDeviceCornerSampledImageFeaturesNV = PhysicalDeviceCornerSampledIma
     -- 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ containing
     -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'.
     -- See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-images-corner-sampled Corner-Sampled Images>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-images-corner-sampled Corner-Sampled Images>.
     cornerSampledImage :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

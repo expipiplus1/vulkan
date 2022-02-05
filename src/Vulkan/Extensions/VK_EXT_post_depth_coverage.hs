@@ -55,18 +55,18 @@
 -- which allows the fragment shader to control whether values in the
 -- 'Vulkan.Core10.FundamentalTypes.SampleMask' built-in input variable
 -- reflect the coverage after early
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-depth depth>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-depth depth>
 -- and
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-stencil stencil>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-stencil stencil>
 -- tests are applied.
 --
 -- This extension adds a new @PostDepthCoverage@ execution mode under the
 -- @SampleMaskPostDepthCoverage@ capability. When this mode is specified
 -- along with @EarlyFragmentTests@, the value of an input variable
 -- decorated with the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-builtin-variables-samplemask >
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-samplemask >
 -- built-in reflects the coverage after the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-fragment-earlytest early fragment tests>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-fragment-earlytest early fragment tests>
 -- are applied. Otherwise, it reflects the coverage before the depth and
 -- stencil tests.
 --
@@ -83,7 +83,7 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-SampleMaskPostDepthCoverage SampleMaskPostDepthCoverage>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-SampleMaskPostDepthCoverage SampleMaskPostDepthCoverage>
 --
 -- == Version History
 --
@@ -98,7 +98,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_post_depth_coverage Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_post_depth_coverage Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

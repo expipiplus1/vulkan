@@ -71,7 +71,7 @@ foreign import ccall
 --     the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR'
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT'
 --
 -- -   #VUID-vkCmdDrawIndirectCount-None-02691# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
@@ -127,7 +127,7 @@ foreign import ccall
 --     or storage texel buffer where the image format field of the
 --     @OpTypeImage@ is @Unknown@ /must/ have image format features that
 --     support
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdDrawIndirectCount-OpTypeImage-06424# Any
 --     'Vulkan.Core10.Handles.ImageView' or
@@ -135,7 +135,7 @@ foreign import ccall
 --     storage texel buffer where the image format field of the
 --     @OpTypeImage@ is @Unknown@ /must/ have image format features that
 --     support
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdDrawIndirectCount-None-02697# For each set /n/ that is
 --     statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to the
@@ -336,50 +336,50 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirectCount-viewportCount-03417# If the bound
 --     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     dynamic state enabled, but not the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT'
 --     dynamic state enabled, then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command, and the @viewportCount@ parameter of
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@scissorCount@
 --     of the pipeline
 --
 -- -   #VUID-vkCmdDrawIndirectCount-scissorCount-03418# If the bound
 --     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT'
 --     dynamic state enabled, but not the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     dynamic state enabled, then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command, and the @scissorCount@ parameter of
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@viewportCount@
 --     of the pipeline
 --
 -- -   #VUID-vkCmdDrawIndirectCount-viewportCount-03419# If the bound
 --     graphics pipeline state was created with both the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT'
 --     and
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     dynamic states enabled then both
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --     and
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command, and the @viewportCount@ parameter of
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --     /must/ match the @scissorCount@ parameter of
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
 --
 -- -   #VUID-vkCmdDrawIndirectCount-viewportCount-04137# If the bound
 --     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_NV'
 --     dynamic state enabled, then the bound graphics pipeline /must/ have
@@ -387,11 +387,11 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_NV_clip_space_w_scaling.PipelineViewportWScalingStateCreateInfoNV'::@viewportCount@
 --     greater or equal to the @viewportCount@ parameter in the last call
 --     to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --
 -- -   #VUID-vkCmdDrawIndirectCount-viewportCount-04138# If the bound
 --     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_NV'
 --     dynamic states enabled then the @viewportCount@ parameter in the
@@ -399,11 +399,11 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_NV_clip_space_w_scaling.cmdSetViewportWScalingNV'
 --     /must/ be greater than or equal to the @viewportCount@ parameter in
 --     the last call to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --
 -- -   #VUID-vkCmdDrawIndirectCount-viewportCount-04139# If the bound
 --     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV'
 --     dynamic state enabled, then the bound graphics pipeline /must/ have
@@ -411,11 +411,11 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.PipelineViewportShadingRateImageStateCreateInfoNV'::@viewportCount@
 --     greater or equal to the @viewportCount@ parameter in the last call
 --     to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --
 -- -   #VUID-vkCmdDrawIndirectCount-viewportCount-04140# If the bound
 --     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV'
 --     dynamic states enabled then the @viewportCount@ parameter in the
@@ -423,11 +423,11 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.cmdSetViewportShadingRatePaletteNV'
 --     /must/ be greater than or equal to the @viewportCount@ parameter in
 --     the last call to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --
 -- -   #VUID-vkCmdDrawIndirectCount-VkPipelineVieportCreateInfo-04141# If
 --     the bound graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     dynamic state enabled and a
 --     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'
 --     structure chained from @VkPipelineVieportCreateInfo@, then the bound
@@ -435,11 +435,11 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'::@viewportCount@
 --     greater or equal to the @viewportCount@ parameter in the last call
 --     to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --
 -- -   #VUID-vkCmdDrawIndirectCount-VkPipelineVieportCreateInfo-04142# If
 --     the bound graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     dynamic state enabled and a
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'
 --     structure chained from @VkPipelineVieportCreateInfo@, then the bound
@@ -447,21 +447,21 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'::@exclusiveScissorCount@
 --     greater or equal to the @viewportCount@ parameter in the last call
 --     to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --
 -- -   #VUID-vkCmdDrawIndirectCount-None-04876# If the bound graphics
 --     pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE'
 --     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnableEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
 -- -   #VUID-vkCmdDrawIndirectCount-None-04877# If the bound graphics
 --     pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS_ENABLE'
 --     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnableEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnable'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
@@ -479,14 +479,14 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-primitiveFragmentShadingRateWithMultipleViewports primitiveFragmentShadingRateWithMultipleViewports>
 --     limit is not supported, the bound graphics pipeline was created with
 --     the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     dynamic state enabled, and any of the shader stages of the bound
 --     graphics pipeline write to the @PrimitiveShadingRateKHR@ built-in,
 --     then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command, and the @viewportCount@ parameter of
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --     /must/ be @1@
 --
 -- -   #VUID-vkCmdDrawIndirectCount-blendEnable-04727# If rasterization is
@@ -509,7 +509,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirectCount-imageView-06172# If the current render
 --     pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the @imageView@ member of @pDepthAttachment@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
 --     @pDepthAttachment@ is
@@ -518,7 +518,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirectCount-imageView-06173# If the current render
 --     pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the @imageView@ member of @pStencilAttachment@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
 --     @pStencilAttachment@ is
@@ -527,7 +527,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirectCount-imageView-06174# If the current render
 --     pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the @imageView@ member of @pDepthAttachment@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
 --     @pDepthAttachment@ is
@@ -536,7 +536,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirectCount-imageView-06175# If the current render
 --     pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the @imageView@ member of @pStencilAttachment@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
 --     @pStencilAttachment@ is
@@ -545,7 +545,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirectCount-imageView-06176# If the current render
 --     pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the @imageView@ member of @pDepthAttachment@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
 --     @pDepthAttachment@ is
@@ -554,7 +554,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirectCount-imageView-06177# If the current render
 --     pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the @imageView@ member of @pStencilAttachment@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
 --     @pStencilAttachment@ is
@@ -563,61 +563,61 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirectCount-viewMask-06178# If the current render
 --     pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound graphics pipeline /must/ have been created with
 --     a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@viewMask@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@viewMask@
 --     equal to
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@viewMask@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@viewMask@
 --
 -- -   #VUID-vkCmdDrawIndirectCount-colorAttachmentCount-06179# If the
 --     current render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound graphics pipeline /must/ have been created with
 --     a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@colorAttachmentCount@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@colorAttachmentCount@
 --     equal to
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
 --
 -- -   #VUID-vkCmdDrawIndirectCount-colorAttachmentCount-06180# If the
 --     current render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     and
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
 --     greater than @0@, then each element of the
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
 --     array with a @imageView@ not equal to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
 --     with a 'Vulkan.Core10.Enums.Format.Format' equal to the
 --     corresponding element of
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@pColorAttachmentFormats@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
 --     used to create the currently bound graphics pipeline
 --
 -- -   #VUID-vkCmdDrawIndirectCount-pDepthAttachment-06181# If the current
 --     render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     and
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->pname@:imageView
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@depthAttachmentFormat@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@depthAttachmentFormat@
 --     used to create the currently bound graphics pipeline /must/ be equal
 --     to the 'Vulkan.Core10.Enums.Format.Format' used to create
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->pname@:imageView
 --
 -- -   #VUID-vkCmdDrawIndirectCount-pStencilAttachment-06182# If the
 --     current render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     and
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->pname@:imageView
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@stencilAttachmentFormat@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@stencilAttachmentFormat@
 --     used to create the currently bound graphics pipeline /must/ be equal
 --     to the 'Vulkan.Core10.Enums.Format.Format' used to create
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->pname@:imageView
 --
 -- -   #VUID-vkCmdDrawIndirectCount-imageView-06183# If the current render
 --     pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     and
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'::@imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
@@ -626,7 +626,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirectCount-imageView-06184# If the current render
 --     pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     and
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'::@imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
@@ -639,11 +639,11 @@ foreign import ccall
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
 --     structure, and the current render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     with a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
 --     parameter greater than @0@, then each element of the
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
 --     array with a @imageView@ not equal to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
 --     with a sample count equal to the corresponding element of the
@@ -655,13 +655,13 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirectCount-pDepthAttachment-06186# If the current
 --     render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound pipeline was created with a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
 --     structure, and
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->pname@:imageView
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
 --     @depthStencilAttachmentSamples@ member of
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
@@ -669,17 +669,17 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
 --     used to create the currently bound graphics pipeline /must/ be equal
 --     to the sample count used to create
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->pname@:imageView
 --
 -- -   #VUID-vkCmdDrawIndirectCount-pStencilAttachment-06187# If the
 --     current render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound pipeline was created with a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
 --     structure, and
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->pname@:imageView
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
 --     @depthStencilAttachmentSamples@ member of
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
@@ -687,7 +687,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
 --     used to create the currently bound graphics pipeline /must/ be equal
 --     to the sample count used to create
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->pname@:imageView
 --
 -- -   #VUID-vkCmdDrawIndirectCount-colorAttachmentCount-06188# If the
 --     currently bound pipeline was created without a
@@ -695,11 +695,11 @@ foreign import ccall
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
 --     structure, and the current render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     with a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
 --     parameter greater than @0@, then each element of the
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
 --     array with a @imageView@ not equal to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
 --     with a sample count equal to the value of
@@ -708,37 +708,37 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirectCount-pDepthAttachment-06189# If the current
 --     render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound pipeline was created without a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
 --     structure, and
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->pname@:imageView
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     used to create the currently bound graphics pipeline /must/ be equal
 --     to the sample count used to create
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->pname@:imageView
 --
 -- -   #VUID-vkCmdDrawIndirectCount-pStencilAttachment-06190# If the
 --     current render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound pipeline was created without a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
 --     structure, and
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->pname@:imageView
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     used to create the currently bound graphics pipeline /must/ be equal
 --     to the sample count used to create
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->pname@:imageView
 --
 -- -   #VUID-vkCmdDrawIndirectCount-renderPass-06198# If the current render
 --     pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound pipeline /must/ have been created with a
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@renderPass@
 --     equal to 'Vulkan.Core10.APIConstants.NULL_HANDLE'
@@ -761,7 +761,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirectCount-primitiveTopology-03420# If the bound
 --     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
 --     /must/ have been called in the current command buffer prior to this
@@ -777,7 +777,7 @@ foreign import ccall
 --     pipeline was created with both the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
 --     and
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
 --     dynamic states enabled, then
 --     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
 --     /must/ have been called in the current command buffer prior to this
@@ -785,7 +785,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirectCount-pStrides-04913# If the bound graphics
 --     pipeline was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
 --     dynamic state enabled, then
@@ -813,7 +813,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirectCount-None-04879# If the bound graphics
 --     pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
@@ -1015,7 +1015,7 @@ foreign import ccall
 --     the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR'
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT'
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-None-02691# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using atomic
@@ -1071,7 +1071,7 @@ foreign import ccall
 --     or storage texel buffer where the image format field of the
 --     @OpTypeImage@ is @Unknown@ /must/ have image format features that
 --     support
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-OpTypeImage-06424# Any
 --     'Vulkan.Core10.Handles.ImageView' or
@@ -1079,7 +1079,7 @@ foreign import ccall
 --     storage texel buffer where the image format field of the
 --     @OpTypeImage@ is @Unknown@ /must/ have image format features that
 --     support
---     'Vulkan.Extensions.VK_KHR_acceleration_structure.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-None-02697# For each set /n/
 --     that is statically used by the 'Vulkan.Core10.Handles.Pipeline'
@@ -1282,50 +1282,50 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-viewportCount-03417# If the
 --     bound graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     dynamic state enabled, but not the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT'
 --     dynamic state enabled, then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command, and the @viewportCount@ parameter of
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@scissorCount@
 --     of the pipeline
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-scissorCount-03418# If the bound
 --     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT'
 --     dynamic state enabled, but not the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     dynamic state enabled, then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command, and the @scissorCount@ parameter of
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
 --     /must/ match the
 --     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@viewportCount@
 --     of the pipeline
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-viewportCount-03419# If the
 --     bound graphics pipeline state was created with both the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT'
 --     and
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     dynamic states enabled then both
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --     and
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command, and the @viewportCount@ parameter of
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --     /must/ match the @scissorCount@ parameter of
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetScissorWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetScissorWithCount'
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-viewportCount-04137# If the
 --     bound graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_NV'
 --     dynamic state enabled, then the bound graphics pipeline /must/ have
@@ -1333,11 +1333,11 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_NV_clip_space_w_scaling.PipelineViewportWScalingStateCreateInfoNV'::@viewportCount@
 --     greater or equal to the @viewportCount@ parameter in the last call
 --     to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-viewportCount-04138# If the
 --     bound graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_NV'
 --     dynamic states enabled then the @viewportCount@ parameter in the
@@ -1345,11 +1345,11 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_NV_clip_space_w_scaling.cmdSetViewportWScalingNV'
 --     /must/ be greater than or equal to the @viewportCount@ parameter in
 --     the last call to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-viewportCount-04139# If the
 --     bound graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV'
 --     dynamic state enabled, then the bound graphics pipeline /must/ have
@@ -1357,11 +1357,11 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.PipelineViewportShadingRateImageStateCreateInfoNV'::@viewportCount@
 --     greater or equal to the @viewportCount@ parameter in the last call
 --     to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-viewportCount-04140# If the
 --     bound graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV'
 --     dynamic states enabled then the @viewportCount@ parameter in the
@@ -1369,11 +1369,11 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.cmdSetViewportShadingRatePaletteNV'
 --     /must/ be greater than or equal to the @viewportCount@ parameter in
 --     the last call to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-VkPipelineVieportCreateInfo-04141#
 --     If the bound graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     dynamic state enabled and a
 --     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'
 --     structure chained from @VkPipelineVieportCreateInfo@, then the bound
@@ -1381,11 +1381,11 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'::@viewportCount@
 --     greater or equal to the @viewportCount@ parameter in the last call
 --     to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-VkPipelineVieportCreateInfo-04142#
 --     If the bound graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     dynamic state enabled and a
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'
 --     structure chained from @VkPipelineVieportCreateInfo@, then the bound
@@ -1393,21 +1393,21 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'::@exclusiveScissorCount@
 --     greater or equal to the @viewportCount@ parameter in the last call
 --     to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-None-04876# If the bound
 --     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE'
 --     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnableEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetRasterizerDiscardEnable'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-None-04877# If the bound
 --     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS_ENABLE_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS_ENABLE'
 --     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnableEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetDepthBiasEnable'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
@@ -1425,14 +1425,14 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-primitiveFragmentShadingRateWithMultipleViewports primitiveFragmentShadingRateWithMultipleViewports>
 --     limit is not supported, the bound graphics pipeline was created with
 --     the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     dynamic state enabled, and any of the shader stages of the bound
 --     graphics pipeline write to the @PrimitiveShadingRateKHR@ built-in,
 --     then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command, and the @viewportCount@ parameter of
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
 --     /must/ be @1@
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-blendEnable-04727# If
@@ -1456,7 +1456,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-imageView-06172# If the current
 --     render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the @imageView@ member of @pDepthAttachment@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
 --     @pDepthAttachment@ is
@@ -1465,7 +1465,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-imageView-06173# If the current
 --     render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the @imageView@ member of @pStencilAttachment@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
 --     @pStencilAttachment@ is
@@ -1474,7 +1474,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-imageView-06174# If the current
 --     render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the @imageView@ member of @pDepthAttachment@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
 --     @pDepthAttachment@ is
@@ -1483,7 +1483,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-imageView-06175# If the current
 --     render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the @imageView@ member of @pStencilAttachment@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
 --     @pStencilAttachment@ is
@@ -1492,7 +1492,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-imageView-06176# If the current
 --     render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the @imageView@ member of @pDepthAttachment@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
 --     @pDepthAttachment@ is
@@ -1501,7 +1501,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-imageView-06177# If the current
 --     render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the @imageView@ member of @pStencilAttachment@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', and the @layout@ member of
 --     @pStencilAttachment@ is
@@ -1510,61 +1510,61 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-viewMask-06178# If the current
 --     render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound graphics pipeline /must/ have been created with
 --     a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@viewMask@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@viewMask@
 --     equal to
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@viewMask@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@viewMask@
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-colorAttachmentCount-06179# If
 --     the current render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound graphics pipeline /must/ have been created with
 --     a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@colorAttachmentCount@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@colorAttachmentCount@
 --     equal to
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-colorAttachmentCount-06180# If
 --     the current render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     and
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
 --     greater than @0@, then each element of the
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
 --     array with a @imageView@ not equal to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
 --     with a 'Vulkan.Core10.Enums.Format.Format' equal to the
 --     corresponding element of
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@pColorAttachmentFormats@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
 --     used to create the currently bound graphics pipeline
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-pDepthAttachment-06181# If the
 --     current render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     and
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->pname@:imageView
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@depthAttachmentFormat@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@depthAttachmentFormat@
 --     used to create the currently bound graphics pipeline /must/ be equal
 --     to the 'Vulkan.Core10.Enums.Format.Format' used to create
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->pname@:imageView
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-pStencilAttachment-06182# If the
 --     current render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     and
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->pname@:imageView
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.PipelineRenderingCreateInfoKHR'::@stencilAttachmentFormat@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@stencilAttachmentFormat@
 --     used to create the currently bound graphics pipeline /must/ be equal
 --     to the 'Vulkan.Core10.Enums.Format.Format' used to create
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->pname@:imageView
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-imageView-06183# If the current
 --     render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     and
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR'::@imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
@@ -1573,7 +1573,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-imageView-06184# If the current
 --     render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     and
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT'::@imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the currently
@@ -1586,11 +1586,11 @@ foreign import ccall
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
 --     structure, and the current render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     with a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
 --     parameter greater than @0@, then each element of the
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
 --     array with a @imageView@ not equal to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
 --     with a sample count equal to the corresponding element of the
@@ -1602,13 +1602,13 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-pDepthAttachment-06186# If the
 --     current render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound pipeline was created with a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
 --     structure, and
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->pname@:imageView
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
 --     @depthStencilAttachmentSamples@ member of
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
@@ -1616,17 +1616,17 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
 --     used to create the currently bound graphics pipeline /must/ be equal
 --     to the sample count used to create
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->pname@:imageView
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-pStencilAttachment-06187# If the
 --     current render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound pipeline was created with a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
 --     structure, and
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->pname@:imageView
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
 --     @depthStencilAttachmentSamples@ member of
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
@@ -1634,7 +1634,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
 --     used to create the currently bound graphics pipeline /must/ be equal
 --     to the sample count used to create
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->pname@:imageView
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-colorAttachmentCount-06188# If
 --     the currently bound pipeline was created without a
@@ -1642,11 +1642,11 @@ foreign import ccall
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
 --     structure, and the current render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR'
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     with a
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@colorAttachmentCount@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
 --     parameter greater than @0@, then each element of the
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pColorAttachments@
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
 --     array with a @imageView@ not equal to
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have been created
 --     with a sample count equal to the value of
@@ -1655,37 +1655,37 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-pDepthAttachment-06189# If the
 --     current render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound pipeline was created without a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
 --     structure, and
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->pname@:imageView
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     used to create the currently bound graphics pipeline /must/ be equal
 --     to the sample count used to create
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pDepthAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->pname@:imageView
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-pStencilAttachment-06190# If the
 --     current render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound pipeline was created without a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
 --     structure, and
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->pname@:imageView
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     used to create the currently bound graphics pipeline /must/ be equal
 --     to the sample count used to create
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingInfoKHR'::@pStencilAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->pname@:imageView
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-renderPass-06198# If the current
 --     render pass instance was begun with
---     'Vulkan.Extensions.VK_KHR_dynamic_rendering.cmdBeginRenderingKHR',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound pipeline /must/ have been created with a
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@renderPass@
 --     equal to 'Vulkan.Core10.APIConstants.NULL_HANDLE'
@@ -1709,7 +1709,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-primitiveTopology-03420# If the
 --     bound graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
 --     /must/ have been called in the current command buffer prior to this
@@ -1725,7 +1725,7 @@ foreign import ccall
 --     graphics pipeline was created with both the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
 --     and
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
 --     dynamic states enabled, then
 --     'Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state.cmdSetVertexInputEXT'
 --     /must/ have been called in the current command buffer prior to this
@@ -1733,7 +1733,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-pStrides-04913# If the bound
 --     graphics pipeline was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
 --     dynamic state enabled, but not the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
 --     dynamic state enabled, then
@@ -1761,7 +1761,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-None-04879# If the bound
 --     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnableEXT'
 --     /must/ have been called in the current command buffer prior to this

@@ -67,7 +67,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkResetQueryPool-None-02665# The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-hostQueryReset hostQueryReset>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-hostQueryReset hostQueryReset>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkResetQueryPool-firstQuery-02666# @firstQuery@ /must/ be less

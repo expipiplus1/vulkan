@@ -146,7 +146,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_inherited_viewport_scissor Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_inherited_viewport_scissor Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -217,8 +217,8 @@ data PhysicalDeviceInheritedViewportScissorFeaturesNV = PhysicalDeviceInheritedV
   { -- | #features-inheritedViewportScissor2D# @inheritedViewportScissor2D@
     -- indicates whether secondary command buffers can inherit most of the
     -- dynamic state affected by
-    -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT',
-    -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT',
+    -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT',
+    -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT',
     -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT',
     -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT' or
     -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR', from a primary
@@ -275,7 +275,7 @@ instance Zero PhysicalDeviceInheritedViewportScissorFeaturesNV where
 --
 -- -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR'
 --
--- -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
+-- -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT'
 --
 -- -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
 --
@@ -284,7 +284,7 @@ instance Zero PhysicalDeviceInheritedViewportScissorFeaturesNV where
 --
 -- -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT'
 --
--- -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+-- -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --
 -- If @viewportScissor2D@ is 'Vulkan.Core10.FundamentalTypes.FALSE', then
 -- the command buffer does not inherit the listed dynamic state, and
@@ -349,13 +349,13 @@ instance Zero PhysicalDeviceInheritedViewportScissorFeaturesNV where
 --
 -- -   #VUID-VkCommandBufferInheritanceViewportScissorInfoNV-viewportScissor2D-04782#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-inheritedViewportScissor2D inherited viewport scissor>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-inheritedViewportScissor2D inherited viewport scissor>
 --     feature is not enabled, @viewportScissor2D@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   #VUID-VkCommandBufferInheritanceViewportScissorInfoNV-viewportScissor2D-04783#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled and @viewportScissor2D@ is
 --     'Vulkan.Core10.FundamentalTypes.TRUE', then @viewportDepthCount@
 --     /must/ be @1@

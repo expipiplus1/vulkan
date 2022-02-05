@@ -34,7 +34,7 @@ newtype CommandBufferResetFlagBits = CommandBufferResetFlagBits Flags
 -- returned to the parent command pool. If this flag is not set, then the
 -- command buffer /may/ hold onto memory resources and reuse them when
 -- recording commands. @commandBuffer@ is moved to the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>.
 pattern COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = CommandBufferResetFlagBits 0x00000001
 
 conNameCommandBufferResetFlagBits :: String

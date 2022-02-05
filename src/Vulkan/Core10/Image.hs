@@ -123,7 +123,7 @@ foreign import ccall
 -- -   #VUID-vkCreateImage-pNext-06389# If a
 --     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionImageCreateInfoFUCHSIA'
 --     has been chained to @pNext@, @pCreateInfo@ /must/ match the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#sysmem-chosen-create-infos Sysmem chosen >
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#sysmem-chosen-create-infos Sysmem chosen >
 --     excepting members 'ImageCreateInfo'::@extent@ and
 --     'ImageCreateInfo'::@usage@ in the match criteria
 --
@@ -168,7 +168,7 @@ createImage :: forall a io
                -- parameters to be used to create the image.
                (ImageCreateInfo a)
             -> -- | @pAllocator@ controls host memory allocation as described in the
-               -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+               -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                -- chapter.
                ("allocator" ::: Maybe AllocationCallbacks)
             -> io (Image)
@@ -261,7 +261,7 @@ destroyImage :: forall io
              -> -- | @image@ is the image to destroy.
                 Image
              -> -- | @pAllocator@ controls host memory allocation as described in the
-                -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                 -- chapter.
                 ("allocator" ::: Maybe AllocationCallbacks)
              -> io ()
@@ -290,14 +290,14 @@ foreign import ccall
 -- = Description
 --
 -- If the image is
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-linear-resource linear>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-linear-resource linear>,
 -- then the returned layout is valid for
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-device-hostaccess host access>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-device-hostaccess host access>.
 --
 -- If the image’s tiling is
 -- 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' and its format is
 -- a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 -- then 'getImageSubresourceLayout' describes one /format plane/ of the
 -- image. If the image’s tiling is
 -- 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
@@ -305,10 +305,10 @@ foreign import ccall
 -- image. If the image’s tiling is
 -- 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
 -- and the image is
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-linear-resource non-linear>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-linear-resource non-linear>,
 -- then the returned layout has an implementation-dependent meaning; the
 -- vendor of the image’s
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-drm-format-modifier DRM format modifier>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-drm-format-modifier DRM format modifier>
 -- /may/ provide documentation that explains how to interpret the returned
 -- layout.
 --
@@ -359,7 +359,7 @@ foreign import ccall
 -- -   #VUID-vkGetImageSubresourceLayout-format-01581# If the @tiling@ of
 --     the @image@ is 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR'
 --     and its @format@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
 --     with two planes, the @aspectMask@ member of @pSubresource@ /must/ be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
 --     or
@@ -368,7 +368,7 @@ foreign import ccall
 -- -   #VUID-vkGetImageSubresourceLayout-format-01582# If the @tiling@ of
 --     the @image@ is 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR'
 --     and its @format@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
 --     with three planes, the @aspectMask@ member of @pSubresource@ /must/
 --     be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
@@ -470,11 +470,11 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
 --
 -- Images created with one of the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>,
 -- have further restrictions on their limits and capabilities compared to
 -- images created with other formats. Creation of images with a format
 -- requiring
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion Y′CBCR conversion>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion Y′CBCR conversion>
 -- /may/ not be supported unless other parameters meet all of the
 -- constraints:
 --
@@ -511,7 +511,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 -- a @usage@ bit is valid if it is supported for at least one of the
 -- formats a 'Vulkan.Core10.Handles.ImageView' created from the image /can/
 -- have (see
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views Image Views>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views Image Views>
 -- for more detail).
 --
 -- == Image Creation Limits
@@ -528,7 +528,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 -- referenced by the relevant valid usage statements of 'ImageCreateInfo'.
 --
 -- -   Let @uint64_t imageCreateDrmFormatModifiers[]@ be the set of
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-drm-format-modifier Linux DRM format modifiers>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-drm-format-modifier Linux DRM format modifiers>
 --     that the resultant image /may/ have.
 --
 --     -   If @tiling@ is not
@@ -548,7 +548,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --
 -- -   Let @VkBool32 imageCreateMaybeLinear@ indicate if the resultant
 --     image may be
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-linear-resource linear>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-linear-resource linear>.
 --
 --     -   If @tiling@ is
 --         'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR', then
@@ -756,7 +756,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --
 -- -   #VUID-VkImageCreateInfo-imageCreateMaxMipLevels-02251# Each of the
 --     following values (as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --     /must/ not be undefined : @imageCreateMaxMipLevels@,
 --     @imageCreateMaxArrayLayers@, @imageCreateMaxExtent@, and
 --     @imageCreateSampleCounts@
@@ -819,15 +819,15 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --
 -- -   #VUID-VkImageCreateInfo-extent-02252# @extent.width@ /must/ be less
 --     than or equal to @imageCreateMaxExtent.width@ (as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --
 -- -   #VUID-VkImageCreateInfo-extent-02253# @extent.height@ /must/ be less
 --     than or equal to @imageCreateMaxExtent.height@ (as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --
 -- -   #VUID-VkImageCreateInfo-extent-02254# @extent.depth@ /must/ be less
 --     than or equal to @imageCreateMaxExtent.depth@ (as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --
 -- -   #VUID-VkImageCreateInfo-imageType-00954# If @imageType@ is
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' and @flags@ contains
@@ -849,11 +849,11 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --
 -- -   #VUID-VkImageCreateInfo-mipLevels-02255# @mipLevels@ /must/ be less
 --     than or equal to @imageCreateMaxMipLevels@ (as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --
 -- -   #VUID-VkImageCreateInfo-arrayLayers-02256# @arrayLayers@ /must/ be
 --     less than or equal to @imageCreateMaxArrayLayers@ (as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --
 -- -   #VUID-VkImageCreateInfo-imageType-00961# If @imageType@ is
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', @arrayLayers@ /must/
@@ -866,7 +866,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CUBE_COMPATIBLE_BIT',
 --     @mipLevels@ /must/ be equal to @1@, and @imageCreateMaybeLinear@ (as
 --     defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --     /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE',
 --
 -- -   #VUID-VkImageCreateInfo-samples-02558# If @samples@ is not
@@ -902,14 +902,14 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxFramebufferHeight@
 --
 -- -   #VUID-VkImageCreateInfo-fragmentDensityMapOffset-06514# If
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMapOffset fragmentDensityMapOffset>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-fragmentDensityMapOffset fragmentDensityMapOffset>
 --     is not enabled and @usage@ includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT',
 --     @extent.width@ /must/ be less than or equal to
 --     \(\left\lceil{\frac{maxFramebufferWidth}{minFragmentDensityTexelSize_{width}}}\right\rceil\)
 --
 -- -   #VUID-VkImageCreateInfo-fragmentDensityMapOffset-06515# If
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMapOffset fragmentDensityMapOffset>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-fragmentDensityMapOffset fragmentDensityMapOffset>
 --     is not enabled and @usage@ includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT',
 --     @extent.height@ /must/ be less than or equal to
@@ -925,22 +925,22 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --
 -- -   #VUID-VkImageCreateInfo-samples-02258# @samples@ /must/ be a bit
 --     value that is set in @imageCreateSampleCounts@ (as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --
 -- -   #VUID-VkImageCreateInfo-usage-00968# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderStorageImageMultisample multisampled storage images>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderStorageImageMultisample multisampled storage images>
 --     feature is not enabled, and @usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT',
 --     @samples@ /must/ be
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
 --
 -- -   #VUID-VkImageCreateInfo-flags-00969# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseBinding sparse bindings>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-sparseBinding sparse bindings>
 --     feature is not enabled, @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT'
 --
 -- -   #VUID-VkImageCreateInfo-flags-01924# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidencyAliased sparse aliased residency>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-sparseResidencyAliased sparse aliased residency>
 --     feature is not enabled, @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_ALIASED_BIT'
 --
@@ -955,21 +955,21 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --
 -- -   #VUID-VkImageCreateInfo-imageType-00971# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidencyImage2D sparse residency for 2D images>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-sparseResidencyImage2D sparse residency for 2D images>
 --     feature is not enabled, and @imageType@ is
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', @flags@ /must/ not
 --     contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --
 -- -   #VUID-VkImageCreateInfo-imageType-00972# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidencyImage3D sparse residency for 3D images>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-sparseResidencyImage3D sparse residency for 3D images>
 --     feature is not enabled, and @imageType@ is
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', @flags@ /must/ not
 --     contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --
 -- -   #VUID-VkImageCreateInfo-imageType-00973# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidency2Samples sparse residency for images with 2 samples>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-sparseResidency2Samples sparse residency for images with 2 samples>
 --     feature is not enabled, @imageType@ is
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', and @samples@ is
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_2_BIT',
@@ -977,7 +977,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --
 -- -   #VUID-VkImageCreateInfo-imageType-00974# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidency4Samples sparse residency for images with 4 samples>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-sparseResidency4Samples sparse residency for images with 4 samples>
 --     feature is not enabled, @imageType@ is
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', and @samples@ is
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_4_BIT',
@@ -985,7 +985,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --
 -- -   #VUID-VkImageCreateInfo-imageType-00975# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidency8Samples sparse residency for images with 8 samples>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-sparseResidency8Samples sparse residency for images with 8 samples>
 --     feature is not enabled, @imageType@ is
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', and @samples@ is
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_8_BIT',
@@ -993,7 +993,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --
 -- -   #VUID-VkImageCreateInfo-imageType-00976# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidency16Samples sparse residency for images with 16 samples>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-sparseResidency16Samples sparse residency for images with 16 samples>
 --     feature is not enabled, @imageType@ is
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', and @samples@ is
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_16_BIT',
@@ -1072,13 +1072,13 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     then @mipLevels@ /must/ be one, @arrayLayers@ /must/ be one,
 --     @imageType@ /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'.
 --     and @imageCreateMaybeLinear@ (as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --     /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   #VUID-VkImageCreateInfo-flags-01572# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT',
 --     then @format@ /must/ be a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#compressed_image_formats compressed image format>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#compressed_image_formats compressed image format>
 --
 -- -   #VUID-VkImageCreateInfo-flags-01573# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT',
@@ -1098,30 +1098,30 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --
 -- -   #VUID-VkImageCreateInfo-format-06410# If the image @format@ is one
 --     of the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>,
 --     @mipLevels@ /must/ be 1
 --
 -- -   #VUID-VkImageCreateInfo-format-06411# If the image @format@ is one
 --     of the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>,
 --     @samples@ /must/ be
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
 --
 -- -   #VUID-VkImageCreateInfo-format-06412# If the image @format@ is one
 --     of the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>,
 --     @imageType@ /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
 --
 -- -   #VUID-VkImageCreateInfo-format-06413# If the image @format@ is one
 --     of the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>,
 --     and the @ycbcrImageArrays@ feature is not enabled, @arrayLayers@
 --     /must/ be 1
 --
 -- -   #VUID-VkImageCreateInfo-imageCreateFormatFeatures-02260# If @format@
 --     is a /multi-planar/ format, and if @imageCreateFormatFeatures@ (as
 --     defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --     does not contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DISJOINT_BIT',
 --     then @flags@ /must/ not contain
@@ -1255,7 +1255,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxFramebufferHeight@
 --
 -- -   #VUID-VkImageCreateInfo-format-02538# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderStorageImageMultisample multisampled storage images>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderStorageImageMultisample multisampled storage images>
 --     feature is not enabled, @format@ is a depth-stencil format and the
 --     @pNext@ chain includes a
 --     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'
@@ -1344,7 +1344,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     is not zero, then all of the formats in
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@pViewFormats@
 --     /must/ be compatible with the @format@ as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility compatibility table>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility compatibility table>
 --
 -- -   #VUID-VkImageCreateInfo-flags-04738# If @flags@ does not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
@@ -1423,7 +1423,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
--- 'Vulkan.Extensions.VK_KHR_maintenance4.DeviceImageMemoryRequirementsKHR',
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.DeviceImageMemoryRequirements',
 -- 'Vulkan.Core10.FundamentalTypes.Extent3D',
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlags',
@@ -1460,7 +1460,7 @@ data ImageCreateInfo (es :: [Type]) = ImageCreateInfo
   , -- | @samples@ is a
     -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
     -- specifying the number of
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling samples per texel>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-multisampling samples per texel>.
     samples :: SampleCountFlagBits
   , -- | @tiling@ is a 'Vulkan.Core10.Enums.ImageTiling.ImageTiling' value
     -- specifying the tiling arrangement of the texel blocks in memory.
@@ -1480,7 +1480,7 @@ data ImageCreateInfo (es :: [Type]) = ImageCreateInfo
   , -- | @initialLayout@ is a 'Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
     -- specifying the initial 'Vulkan.Core10.Enums.ImageLayout.ImageLayout' of
     -- all image subresources of the image. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-layouts Image Layouts>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-layouts Image Layouts>.
     initialLayout :: ImageLayout
   }
   deriving (Typeable)
@@ -1590,7 +1590,7 @@ instance es ~ '[] => Zero (ImageCreateInfo es) where
 -- = Description
 --
 -- If the image is
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-linear-resource linear>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-linear-resource linear>,
 -- then @rowPitch@, @arrayPitch@ and @depthPitch@ describe the layout of
 -- the image subresource in linear memory. For uncompressed formats,
 -- @rowPitch@ is the number of bytes between texels with the same x
@@ -1636,7 +1636,7 @@ instance es ~ '[] => Zero (ImageCreateInfo es) where
 -- interleaved memory allocation.
 --
 -- If the image has a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
 -- and its tiling is 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR'
 -- , then the @aspectMask@ member of
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.ImageSubresource' /must/
@@ -1658,13 +1658,13 @@ instance es ~ '[] => Zero (ImageCreateInfo es) where
 -- allowed plane index /i/ is defined by the
 -- 'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.DrmFormatModifierPropertiesEXT'::@drmFormatModifierPlaneCount@
 -- associated with the image’s 'ImageCreateInfo'::@format@ and
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-drm-format-modifier modifier>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-drm-format-modifier modifier>.
 -- The memory range used by the subresource is described by @offset@ and
 -- @size@. If the image is /disjoint/, then the @offset@ is relative to the
 -- base address of the /memory plane/. If the image is /non-disjoint/, then
 -- the @offset@ is relative to the base address of the image. If the image
 -- is
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-linear-resource non-linear>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-linear-resource non-linear>,
 -- then @rowPitch@, @arrayPitch@, and @depthPitch@ have an
 -- implementation-dependent meaning.
 --

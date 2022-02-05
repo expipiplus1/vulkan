@@ -355,9 +355,10 @@
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
 -- is supported:
 --
--- -   Extending 'FormatFeatureFlagBits2KHR':
+-- -   Extending
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FormatFeatureFlagBits2':
 --
---     -   'FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR'
+--     -   'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR'
 --
 -- == Issues
 --
@@ -375,7 +376,7 @@
 --     'cmdCopyMemoryToAccelerationStructureKHR')
 --
 -- -   document
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#acceleration-structure-inactive-prims inactive primitives and instances>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure-inactive-prims inactive primitives and instances>
 --
 -- -   added 'PhysicalDeviceAccelerationStructureFeaturesKHR' structure
 --
@@ -383,7 +384,7 @@
 --     ('cmdBuildAccelerationStructuresIndirectKHR')
 --
 -- -   added
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#host-acceleration-structure host acceleration structure>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#host-acceleration-structure host acceleration structure>
 --     commands
 --
 -- -   reworked geometry structures so they could be better shared between
@@ -654,7 +655,7 @@
 --         structure and require one of them be @NULL@
 --
 -- -   added
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
 --     support for acceleration structures
 --
 -- -   changed the @update@ member of
@@ -1146,7 +1147,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_acceleration_structure Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

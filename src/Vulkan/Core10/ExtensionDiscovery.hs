@@ -184,6 +184,12 @@ foreign import ccall
 -- be enabled together due to behavioral differences, or any extension that
 -- cannot be enabled against the advertised version.
 --
+-- Implementations claiming support for the
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#roadmap-2022 Roadmap 2022>
+-- profile /must/ advertise the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_global_priority VK_KHR_global_priority>
+-- extension in @pProperties@.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkEnumerateDeviceExtensionProperties-physicalDevice-parameter#

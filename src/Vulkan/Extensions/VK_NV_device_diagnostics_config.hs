@@ -92,7 +92,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_device_diagnostics_config Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_device_diagnostics_config Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -288,7 +288,7 @@ pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV     = DeviceDi
 pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV     = DeviceDiagnosticsConfigFlagBitsNV 0x00000002
 -- | 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV' enables
 -- automatic insertion of
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#device-diagnostic-checkpoints diagnostic checkpoints>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#device-diagnostic-checkpoints diagnostic checkpoints>
 -- for draw calls, dispatches, trace rays, and copies. The CPU call stack
 -- at the time of the command will be associated as the marker data for the
 -- automatically inserted checkpoints.

@@ -37,7 +37,7 @@ type ImageAspectFlags = ImageAspectFlagBits
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo',
--- 'Vulkan.Extensions.VK_KHR_maintenance4.DeviceImageMemoryRequirementsKHR',
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.DeviceImageMemoryRequirements',
 -- 'ImageAspectFlags',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.ImagePlaneMemoryRequirementsInfo'
 newtype ImageAspectFlagBits = ImageAspectFlagBits Flags
@@ -50,7 +50,7 @@ pattern IMAGE_ASPECT_DEPTH_BIT              = ImageAspectFlagBits 0x00000002
 -- | 'IMAGE_ASPECT_STENCIL_BIT' specifies the stencil aspect.
 pattern IMAGE_ASPECT_STENCIL_BIT            = ImageAspectFlagBits 0x00000004
 -- | 'IMAGE_ASPECT_METADATA_BIT' specifies the metadata aspect, used for
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#sparsememory sparse resource>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory sparse resource>
 -- operations.
 pattern IMAGE_ASPECT_METADATA_BIT           = ImageAspectFlagBits 0x00000008
 -- | 'IMAGE_ASPECT_NONE_KHR' specifies no image aspect, or the image aspect

@@ -209,7 +209,7 @@
 --
 -- __RESOLVED__ We are specifying the pipeline stage to be between the
 -- final
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>
 -- ('Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT')
 -- and before the first stage used for fragment processing
 -- ('Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT'),
@@ -270,7 +270,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_shading_rate_image Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_shading_rate_image Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -397,7 +397,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdBindShadingRateImageNV-None-02058# The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdBindShadingRateImageNV-imageView-02059# If @imageView@ is
@@ -525,7 +525,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdSetViewportShadingRatePaletteNV-None-02064# The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdSetViewportShadingRatePaletteNV-firstViewport-02067# The
@@ -535,12 +535,12 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetViewportShadingRatePaletteNV-firstViewport-02068# If
 --     the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @firstViewport@ /must/ be @0@
 --
 -- -   #VUID-vkCmdSetViewportShadingRatePaletteNV-viewportCount-02069# If
 --     the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @viewportCount@ /must/ be @1@
 --
 -- == Valid Usage (Implicit)
@@ -795,7 +795,7 @@ instance Zero ShadingRatePaletteNV where
 --
 -- -   #VUID-VkPipelineViewportShadingRateImageStateCreateInfoNV-viewportCount-02054#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @viewportCount@ /must/ be @0@ or @1@
 --
 -- -   #VUID-VkPipelineViewportShadingRateImageStateCreateInfoNV-viewportCount-02055#
@@ -879,7 +879,7 @@ instance Zero PipelineViewportShadingRateImageStateCreateInfoNV where
 -- = Description
 --
 -- See
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-shading-rate-image Shading Rate Image>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-shading-rate-image Shading Rate Image>
 -- for more information.
 --
 -- If the 'PhysicalDeviceShadingRateImageFeaturesNV' structure is included
@@ -966,7 +966,7 @@ instance Zero PhysicalDeviceShadingRateImageFeaturesNV where
 -- property.
 --
 -- These properties are related to the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-shading-rate-image shading rate image>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-shading-rate-image shading rate image>
 -- feature.
 --
 -- == Valid Usage (Implicit)
@@ -1122,9 +1122,9 @@ instance Zero CoarseSampleLocationNV where
 --
 -- When using a custom sample ordering, element /j/ in @pSampleLocations@
 -- specifies a specific pixel location and
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>
 -- that corresponds to
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask coverage index>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask coverage index>
 -- /j/ in the multi-pixel fragment.
 --
 -- == Valid Usage
@@ -1464,11 +1464,11 @@ pattern COARSE_SAMPLE_ORDER_TYPE_CUSTOM_NV       = CoarseSampleOrderTypeNV 1
 -- | 'COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV' specifies that coverage
 -- samples will be ordered sequentially, sorted first by pixel coordinate
 -- (in row-major order) and then by
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>.
 pattern COARSE_SAMPLE_ORDER_TYPE_PIXEL_MAJOR_NV  = CoarseSampleOrderTypeNV 2
 -- | 'COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV' specifies that coverage
 -- samples will be ordered sequentially, sorted first by
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>
 -- and then by pixel coordinate (in row-major order).
 pattern COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV = CoarseSampleOrderTypeNV 3
 {-# complete COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV,

@@ -268,7 +268,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_marker Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_debug_marker Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -721,7 +721,7 @@ data DebugMarkerObjectNameInfoEXT = DebugMarkerObjectNameInfoEXT
     --
     -- #VUID-VkDebugMarkerObjectNameInfoEXT-object-01492# @object@ /must/ be a
     -- Vulkan object of the type associated with @objectType@ as defined in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debug-report-object-types>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#debug-report-object-types>
     object :: Word64
   , -- | @pObjectName@ is a null-terminated UTF-8 string specifying the name to
     -- apply to @object@.
@@ -809,7 +809,7 @@ data DebugMarkerObjectTagInfoEXT = DebugMarkerObjectTagInfoEXT
     --
     -- #VUID-VkDebugMarkerObjectTagInfoEXT-object-01495# @object@ /must/ be a
     -- Vulkan object of the type associated with @objectType@ as defined in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debug-report-object-types>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#debug-report-object-types>
     object :: Word64
   , -- | @tagName@ is a numerical identifier of the tag.
     tagName :: Word64

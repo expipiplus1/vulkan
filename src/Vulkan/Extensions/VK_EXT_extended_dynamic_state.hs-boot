@@ -23,6 +23,11 @@
 --
 --     -   Requires @VK_KHR_get_physical_device_properties2@
 --
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3-promotions Vulkan 1.3>
+--
 -- [__Contact__]
 --
 --     -   Piers Daniell
@@ -32,6 +37,10 @@
 --
 -- [__Last Modified Date__]
 --     2019-12-09
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.3 Core
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -106,33 +115,41 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.DynamicState.DynamicState':
 --
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CULL_MODE_EXT'
+--     -   'DYNAMIC_STATE_CULL_MODE_EXT'
 --
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT'
+--     -   'DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE_EXT'
 --
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT'
+--     -   'DYNAMIC_STATE_DEPTH_COMPARE_OP_EXT'
 --
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT'
+--     -   'DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT'
 --
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT'
+--     -   'DYNAMIC_STATE_DEPTH_WRITE_ENABLE_EXT'
 --
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRONT_FACE_EXT'
+--     -   'DYNAMIC_STATE_FRONT_FACE_EXT'
 --
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
+--     -   'DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT'
 --
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
+--     -   'DYNAMIC_STATE_SCISSOR_WITH_COUNT_EXT'
 --
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_OP_EXT'
+--     -   'DYNAMIC_STATE_STENCIL_OP_EXT'
 --
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT'
+--     -   'DYNAMIC_STATE_STENCIL_TEST_ENABLE_EXT'
 --
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+--     -   'DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
 --
---     -   'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
+--     -   'DYNAMIC_STATE_VIEWPORT_WITH_COUNT_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_FEATURES_EXT'
+--
+-- == Promotion to Vulkan 1.3
+--
+-- This extension has been partially promoted. All dynamic state enumerants
+-- and entry points in this extension are included in core Vulkan 1.3, with
+-- the EXT suffix omitted. The feature structure is not promoted. Extension
+-- interfaces that were promoted remain available as aliases of the core
+-- functionality.
 --
 -- == Version History
 --
@@ -153,7 +170,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_extended_dynamic_state Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

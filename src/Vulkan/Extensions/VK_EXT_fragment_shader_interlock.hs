@@ -101,11 +101,11 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-FragmentShaderSampleInterlockEXT FragmentShaderInterlockEXT>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-FragmentShaderSampleInterlockEXT FragmentShaderInterlockEXT>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-FragmentShaderPixelInterlockEXT FragmentShaderPixelInterlockEXT>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-FragmentShaderPixelInterlockEXT FragmentShaderPixelInterlockEXT>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-FragmentShaderShadingRateInterlockEXT FragmentShaderShadingRateInterlockEXT>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-FragmentShaderShadingRateInterlockEXT FragmentShaderShadingRateInterlockEXT>
 --
 -- == Version History
 --
@@ -120,7 +120,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_fragment_shader_interlock Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_fragment_shader_interlock Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

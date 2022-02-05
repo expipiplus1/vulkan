@@ -23,6 +23,11 @@
 --
 --     -   Requires @VK_KHR_get_physical_device_properties2@
 --
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3-promotions Vulkan 1.3>
+--
 -- [__Contact__]
 --
 --     -   Jeff Bolz
@@ -32,6 +37,10 @@
 --
 -- [__Last Modified Date__]
 --     2019-06-01
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.3 Core
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -58,7 +67,7 @@
 -- The demoted invocation will have no further side effects and will not
 -- output to the framebuffer, but remains active and can participate in
 -- computing derivatives and in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-group-operations group operations>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-group-operations group operations>.
 -- This is a better match for the “discard” instruction in HLSL.
 --
 -- == New Structures
@@ -77,11 +86,17 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES_EXT'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES_EXT'
 --
 -- == New SPIR-V Capability
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-DemoteToHelperInvocationEXT DemoteToHelperInvocationEXT>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-DemoteToHelperInvocationEXT DemoteToHelperInvocationEXT>
+--
+-- == Promotion to Vulkan 1.3
+--
+-- Functionality in this extension is included in core Vulkan 1.3, with the
+-- EXT suffix omitted. The original type, enum and command names are still
+-- available as aliases of the core functionality.
 --
 -- == Version History
 --
@@ -96,108 +111,27 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_demote_to_helper_invocation Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_shader_demote_to_helper_invocation Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation  ( PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT(..)
+module Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES_EXT
+                                                                    , PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT
                                                                     , EXT_SHADER_DEMOTE_TO_HELPER_INVOCATION_SPEC_VERSION
                                                                     , pattern EXT_SHADER_DEMOTE_TO_HELPER_INVOCATION_SPEC_VERSION
                                                                     , EXT_SHADER_DEMOTE_TO_HELPER_INVOCATION_EXTENSION_NAME
                                                                     , pattern EXT_SHADER_DEMOTE_TO_HELPER_INVOCATION_EXTENSION_NAME
                                                                     ) where
 
-import Foreign.Marshal.Alloc (allocaBytes)
-import Foreign.Ptr (nullPtr)
-import Foreign.Ptr (plusPtr)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero(..))
 import Data.String (IsString)
-import Data.Typeable (Typeable)
-import Foreign.Storable (Storable)
-import Foreign.Storable (Storable(peek))
-import Foreign.Storable (Storable(poke))
-import qualified Foreign.Storable (Storable(..))
-import GHC.Generics (Generic)
-import Foreign.Ptr (Ptr)
-import Data.Kind (Type)
-import Vulkan.Core10.FundamentalTypes (bool32ToBool)
-import Vulkan.Core10.FundamentalTypes (boolToBool32)
-import Vulkan.Core10.FundamentalTypes (Bool32)
-import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES_EXT))
--- | VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT - Structure
--- describing the shader demote to helper invocations features that can be
--- supported by an implementation
---
--- = Members
---
--- This structure describes the following feature:
---
--- = Description
---
--- If the 'PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT'
--- structure is included in the @pNext@ chain of the
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
--- structure passed to
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
--- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT'
--- /can/ also be used in the @pNext@ chain of
--- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
--- features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_demote_to_helper_invocation VK_EXT_shader_demote_to_helper_invocation>,
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT = PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT
-  { -- | #features-shaderDemoteToHelperInvocation#
-    -- @shaderDemoteToHelperInvocation@ indicates whether the implementation
-    -- supports the SPIR-V @DemoteToHelperInvocationEXT@ capability.
-    shaderDemoteToHelperInvocation :: Bool }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT)
-#endif
-deriving instance Show PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT
+import Vulkan.Core13.Promoted_From_VK_EXT_shader_demote_to_helper_invocation (PhysicalDeviceShaderDemoteToHelperInvocationFeatures)
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES))
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES_EXT = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES
 
-instance ToCStruct PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT where
-  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (shaderDemoteToHelperInvocation))
-    f
-  cStructSize = 24
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
-    f
 
-instance FromCStruct PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT where
-  peekCStruct p = do
-    shaderDemoteToHelperInvocation <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
-    pure $ PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT
-             (bool32ToBool shaderDemoteToHelperInvocation)
-
-instance Storable PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT where
-  zero = PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT
-           zero
+-- No documentation found for TopLevel "VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT"
+type PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT = PhysicalDeviceShaderDemoteToHelperInvocationFeatures
 
 
 type EXT_SHADER_DEMOTE_TO_HELPER_INVOCATION_SPEC_VERSION = 1

@@ -116,7 +116,7 @@
 --     -   'QueryPoolPerformanceCreateInfoKHR'
 --
 -- -   Extending 'Vulkan.Core10.Queue.SubmitInfo',
---     'Vulkan.Extensions.VK_KHR_synchronization2.SubmitInfo2KHR':
+--     'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.SubmitInfo2':
 --
 --     -   'PerformanceQuerySubmitInfoKHR'
 --
@@ -473,7 +473,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_performance_query Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_performance_query Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -1203,7 +1203,7 @@ instance Zero PerformanceCounterDescriptionKHR where
 --
 -- -   #VUID-VkQueryPoolPerformanceCreateInfoKHR-performanceCounterQueryPools-03237#
 --     The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-performanceCounterQueryPools performanceCounterQueryPools>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-performanceCounterQueryPools performanceCounterQueryPools>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkQueryPoolPerformanceCreateInfoKHR-pCounterIndices-03321#

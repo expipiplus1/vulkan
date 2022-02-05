@@ -29,9 +29,9 @@ type BufferCreateFlags = BufferCreateFlagBits
 -- = Description
 --
 -- See
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#sparsememory-sparseresourcefeatures Sparse Resource Features>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-sparseresourcefeatures Sparse Resource Features>
 -- and
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features Physical Device Features>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features Physical Device Features>
 -- for details of the sparse memory features supported on a device.
 --
 -- = See Also

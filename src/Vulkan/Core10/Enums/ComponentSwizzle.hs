@@ -55,7 +55,7 @@ pattern COMPONENT_SWIZZLE_ZERO     = ComponentSwizzle 1
 -- | 'COMPONENT_SWIZZLE_ONE' specifies that the component is set to either 1
 -- or 1.0, depending on whether the type of the image view format is
 -- integer or floating-point respectively, as determined by the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-definition Format Definition>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-definition Format Definition>
 -- section for each 'Vulkan.Core10.Enums.Format.Format'.
 pattern COMPONENT_SWIZZLE_ONE      = ComponentSwizzle 2
 -- | 'COMPONENT_SWIZZLE_R' specifies that the component is set to the value

@@ -30,14 +30,14 @@ import GHC.Show (Show(showsPrec))
 -- acquired upon first use within a queue. Once a resource using
 -- 'SHARING_MODE_EXCLUSIVE' is owned by some queue family, the application
 -- /must/ perform a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
 -- to make the memory contents of a range or image subresource accessible
 -- to a different queue family.
 --
 -- Note
 --
 -- Images still require a
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-layouts layout transition>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-layouts layout transition>
 -- from 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED' or
 -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PREINITIALIZED' before
 -- being used on the first queue.

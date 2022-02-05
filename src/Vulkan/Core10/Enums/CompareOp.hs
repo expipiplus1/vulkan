@@ -28,7 +28,9 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo',
 -- 'Vulkan.Core10.Sampler.SamplerCreateInfo',
 -- 'Vulkan.Core10.Pipeline.StencilOpState',
+-- 'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetDepthCompareOp',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetDepthCompareOpEXT',
+-- 'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetStencilOp',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetStencilOpEXT'
 newtype CompareOp = CompareOp Int32
   deriving newtype (Eq, Ord, Storable, Zero)

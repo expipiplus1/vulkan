@@ -87,7 +87,7 @@
 --
 -- All functionality in this extension is included in core Vulkan 1.1, with
 -- the KHR suffix omitted, however support for the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-variablePointersStorageBuffer variablePointersStorageBuffer>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-variablePointersStorageBuffer variablePointersStorageBuffer>
 -- feature is made optional. The original type, enum and command names are
 -- still available as aliases of the core functionality.
 --
@@ -115,9 +115,9 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-VariablePointers VariablePointers>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-VariablePointers VariablePointers>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-VariablePointersStorageBuffer VariablePointersStorageBuffer>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-VariablePointersStorageBuffer VariablePointersStorageBuffer>
 --
 -- == Issues
 --
@@ -155,7 +155,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_variable_pointers Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_variable_pointers Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

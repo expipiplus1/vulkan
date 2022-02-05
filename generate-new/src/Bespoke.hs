@@ -838,6 +838,7 @@ bespokeZeroInstances = flip
     , do
       tellImportWithAll (TyConName "Zero")
       tellDoc [qqi|
+        -- | The Identity Matrix
         instance Zero TransformMatrixKHR where
          zero = TransformMatrixKHR
                   (1,0,0,0)

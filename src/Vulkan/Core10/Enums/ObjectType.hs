@@ -27,7 +27,6 @@ module Vulkan.Core10.Enums.ObjectType  (ObjectType( OBJECT_TYPE_UNKNOWN
                                                   , OBJECT_TYPE_FRAMEBUFFER
                                                   , OBJECT_TYPE_COMMAND_POOL
                                                   , OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA
-                                                  , OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT
                                                   , OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV
                                                   , OBJECT_TYPE_DEFERRED_OPERATION_KHR
                                                   , OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL
@@ -42,6 +41,7 @@ module Vulkan.Core10.Enums.ObjectType  (ObjectType( OBJECT_TYPE_UNKNOWN
                                                   , OBJECT_TYPE_DISPLAY_KHR
                                                   , OBJECT_TYPE_SWAPCHAIN_KHR
                                                   , OBJECT_TYPE_SURFACE_KHR
+                                                  , OBJECT_TYPE_PRIVATE_DATA_SLOT
                                                   , OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE
                                                   , OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION
                                                   , ..
@@ -145,7 +145,7 @@ import GHC.Show (Show(showsPrec))
 -- +-----------------------------------------------+-----------------------------------------------------------+
 -- | 'OBJECT_TYPE_DEFERRED_OPERATION_KHR'          | 'Vulkan.Extensions.Handles.DeferredOperationKHR'          |
 -- +-----------------------------------------------+-----------------------------------------------------------+
--- | 'OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT'           | 'Vulkan.Extensions.Handles.PrivateDataSlotEXT'            |
+-- | 'OBJECT_TYPE_PRIVATE_DATA_SLOT'               | 'Vulkan.Core13.Handles.PrivateDataSlot'                   |
 -- +-----------------------------------------------+-----------------------------------------------------------+
 --
 -- 'ObjectType' and Vulkan Handle Relationship
@@ -156,7 +156,9 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsObjectNameInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsObjectTagInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_device_memory_report.DeviceMemoryReportCallbackDataEXT',
+-- 'Vulkan.Core13.Promoted_From_VK_EXT_private_data.getPrivateData',
 -- 'Vulkan.Extensions.VK_EXT_private_data.getPrivateDataEXT',
+-- 'Vulkan.Core13.Promoted_From_VK_EXT_private_data.setPrivateData',
 -- 'Vulkan.Extensions.VK_EXT_private_data.setPrivateDataEXT'
 newtype ObjectType = ObjectType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -215,8 +217,6 @@ pattern OBJECT_TYPE_FRAMEBUFFER                     = ObjectType 24
 pattern OBJECT_TYPE_COMMAND_POOL                    = ObjectType 25
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA"
 pattern OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA       = ObjectType 1000366000
--- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT"
-pattern OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT           = ObjectType 1000295000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV"
 pattern OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV     = ObjectType 1000277000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DEFERRED_OPERATION_KHR"
@@ -245,6 +245,8 @@ pattern OBJECT_TYPE_DISPLAY_KHR                     = ObjectType 1000002000
 pattern OBJECT_TYPE_SWAPCHAIN_KHR                   = ObjectType 1000001000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_SURFACE_KHR"
 pattern OBJECT_TYPE_SURFACE_KHR                     = ObjectType 1000000000
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_PRIVATE_DATA_SLOT"
+pattern OBJECT_TYPE_PRIVATE_DATA_SLOT               = ObjectType 1000295000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE"
 pattern OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE      = ObjectType 1000085000
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION"
@@ -276,7 +278,6 @@ pattern OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION        = ObjectType 1000156000
              OBJECT_TYPE_FRAMEBUFFER,
              OBJECT_TYPE_COMMAND_POOL,
              OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA,
-             OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT,
              OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV,
              OBJECT_TYPE_DEFERRED_OPERATION_KHR,
              OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL,
@@ -291,6 +292,7 @@ pattern OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION        = ObjectType 1000156000
              OBJECT_TYPE_DISPLAY_KHR,
              OBJECT_TYPE_SWAPCHAIN_KHR,
              OBJECT_TYPE_SURFACE_KHR,
+             OBJECT_TYPE_PRIVATE_DATA_SLOT,
              OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE,
              OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION :: ObjectType #-}
 
@@ -329,7 +331,6 @@ showTableObjectType =
   , (OBJECT_TYPE_FRAMEBUFFER                    , "FRAMEBUFFER")
   , (OBJECT_TYPE_COMMAND_POOL                   , "COMMAND_POOL")
   , (OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA      , "BUFFER_COLLECTION_FUCHSIA")
-  , (OBJECT_TYPE_PRIVATE_DATA_SLOT_EXT          , "PRIVATE_DATA_SLOT_EXT")
   , (OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV    , "INDIRECT_COMMANDS_LAYOUT_NV")
   , (OBJECT_TYPE_DEFERRED_OPERATION_KHR         , "DEFERRED_OPERATION_KHR")
   , (OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL, "PERFORMANCE_CONFIGURATION_INTEL")
@@ -344,6 +345,7 @@ showTableObjectType =
   , (OBJECT_TYPE_DISPLAY_KHR                    , "DISPLAY_KHR")
   , (OBJECT_TYPE_SWAPCHAIN_KHR                  , "SWAPCHAIN_KHR")
   , (OBJECT_TYPE_SURFACE_KHR                    , "SURFACE_KHR")
+  , (OBJECT_TYPE_PRIVATE_DATA_SLOT              , "PRIVATE_DATA_SLOT")
   , (OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE     , "DESCRIPTOR_UPDATE_TEMPLATE")
   , (OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION       , "SAMPLER_YCBCR_CONVERSION")
   ]

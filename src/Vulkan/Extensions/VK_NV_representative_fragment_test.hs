@@ -156,7 +156,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_representative_fragment_test Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_representative_fragment_test Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -223,7 +223,7 @@ data PhysicalDeviceRepresentativeFragmentTestFeaturesNV = PhysicalDeviceRepresen
   { -- | #features-representativeFragmentTest# @representativeFragmentTest@
     -- indicates whether the implementation supports the representative
     -- fragment test. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-rep-frag-test Representative Fragment Test>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-rep-frag-test Representative Fragment Test>.
     representativeFragmentTest :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

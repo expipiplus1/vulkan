@@ -23,6 +23,11 @@
 --
 --     -   Requires @VK_KHR_get_physical_device_properties2@
 --
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3-promotions Vulkan 1.3>
+--
 -- [__Contact__]
 --
 --     -   Tobias Hector
@@ -35,6 +40,10 @@
 --
 -- [__Last Modified Date__]
 --     2021-10-06
+--
+-- [__Interactions and External Dependencies__]
+--
+--     -   Promoted to Vulkan 1.3 Core
 --
 -- [__Contributors__]
 --
@@ -71,9 +80,8 @@
 -- Dynamic render passes can also span across multiple primary command
 -- buffers, rather than relying on secondary command buffers.
 --
--- This extension also incorporates
--- 'Vulkan.Core10.Enums.AttachmentStoreOp.ATTACHMENT_STORE_OP_NONE_KHR'
--- from <VK_QCOM_render_pass_store_ops.html VK_QCOM_render_pass_store_ops>,
+-- This extension also incorporates 'ATTACHMENT_STORE_OP_NONE_KHR' from
+-- <VK_QCOM_render_pass_store_ops.html VK_QCOM_render_pass_store_ops>,
 -- enabling applications to avoid unnecessary synchronization when an
 -- attachment is not written during a render pass.
 --
@@ -118,7 +126,8 @@
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_fragment_density_map VK_EXT_fragment_density_map>
 -- is supported:
 --
--- -   Extending 'RenderingInfoKHR':
+-- -   Extending
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo':
 --
 --     -   'RenderingFragmentDensityMapAttachmentInfoEXT'
 --
@@ -126,7 +135,8 @@
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_fragment_shading_rate VK_KHR_fragment_shading_rate>
 -- is supported:
 --
--- -   Extending 'RenderingInfoKHR':
+-- -   Extending
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo':
 --
 --     -   'RenderingFragmentShadingRateAttachmentInfoKHR'
 --
@@ -147,7 +157,7 @@
 -- -   Extending
 --     'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo',
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
---     'RenderingInfoKHR':
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo':
 --
 --     -   'MultiviewPerViewAttributesInfoNVX'
 --
@@ -167,19 +177,19 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.AttachmentStoreOp.AttachmentStoreOp':
 --
---     -   'Vulkan.Core10.Enums.AttachmentStoreOp.ATTACHMENT_STORE_OP_NONE_KHR'
+--     -   'ATTACHMENT_STORE_OP_NONE_KHR'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO_KHR'
+--     -   'STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES_KHR'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR'
+--     -   'STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR'
+--     -   'STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDERING_INFO_KHR'
+--     -   'STRUCTURE_TYPE_RENDERING_INFO_KHR'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_mixed_attachment_samples VK_AMD_mixed_attachment_samples>
@@ -235,6 +245,12 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MULTIVIEW_PER_VIEW_ATTRIBUTES_INFO_NVX'
 --
+-- == Promotion to Vulkan 1.3
+--
+-- Functionality in this extension is included in core Vulkan 1.3, with the
+-- KHR suffix omitted. The original type, enum and command names are still
+-- available as aliases of the core functionality.
+--
 -- == Version History
 --
 -- -   Revision 1, 2021-10-06 (Tobias Hector)
@@ -252,27 +268,20 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_dynamic_rendering Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_KHR_dynamic_rendering  ( AttachmentSampleCountInfoAMD
-                                                   , CommandBufferInheritanceRenderingInfoKHR
                                                    , MultiviewPerViewAttributesInfoNVX
-                                                   , PhysicalDeviceDynamicRenderingFeaturesKHR
-                                                   , PipelineRenderingCreateInfoKHR
-                                                   , RenderingAttachmentInfoKHR
                                                    , RenderingFragmentDensityMapAttachmentInfoEXT
                                                    , RenderingFragmentShadingRateAttachmentInfoKHR
-                                                   , RenderingInfoKHR
                                                    ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
-import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
-import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
-import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
+
 data AttachmentSampleCountInfoAMD
 
 instance ToCStruct AttachmentSampleCountInfoAMD
@@ -281,42 +290,12 @@ instance Show AttachmentSampleCountInfoAMD
 instance FromCStruct AttachmentSampleCountInfoAMD
 
 
-data CommandBufferInheritanceRenderingInfoKHR
-
-instance ToCStruct CommandBufferInheritanceRenderingInfoKHR
-instance Show CommandBufferInheritanceRenderingInfoKHR
-
-instance FromCStruct CommandBufferInheritanceRenderingInfoKHR
-
-
 data MultiviewPerViewAttributesInfoNVX
 
 instance ToCStruct MultiviewPerViewAttributesInfoNVX
 instance Show MultiviewPerViewAttributesInfoNVX
 
 instance FromCStruct MultiviewPerViewAttributesInfoNVX
-
-
-data PhysicalDeviceDynamicRenderingFeaturesKHR
-
-instance ToCStruct PhysicalDeviceDynamicRenderingFeaturesKHR
-instance Show PhysicalDeviceDynamicRenderingFeaturesKHR
-
-instance FromCStruct PhysicalDeviceDynamicRenderingFeaturesKHR
-
-
-data PipelineRenderingCreateInfoKHR
-
-instance ToCStruct PipelineRenderingCreateInfoKHR
-instance Show PipelineRenderingCreateInfoKHR
-
-instance FromCStruct PipelineRenderingCreateInfoKHR
-
-
-data RenderingAttachmentInfoKHR
-
-instance ToCStruct RenderingAttachmentInfoKHR
-instance Show RenderingAttachmentInfoKHR
 
 
 data RenderingFragmentDensityMapAttachmentInfoEXT
@@ -333,11 +312,4 @@ instance ToCStruct RenderingFragmentShadingRateAttachmentInfoKHR
 instance Show RenderingFragmentShadingRateAttachmentInfoKHR
 
 instance FromCStruct RenderingFragmentShadingRateAttachmentInfoKHR
-
-
-type role RenderingInfoKHR nominal
-data RenderingInfoKHR (es :: [Type])
-
-instance (Extendss RenderingInfoKHR es, PokeChain es) => ToCStruct (RenderingInfoKHR es)
-instance Show (Chain es) => Show (RenderingInfoKHR es)
 

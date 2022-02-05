@@ -117,7 +117,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_scissor_exclusive Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_scissor_exclusive Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -206,7 +206,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdSetExclusiveScissorNV-None-02031# The
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-exclusiveScissor exclusive scissor>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-exclusiveScissor exclusive scissor>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdSetExclusiveScissorNV-firstExclusiveScissor-02034# The
@@ -216,11 +216,11 @@ foreign import ccall
 --     inclusive
 --
 -- -   #VUID-vkCmdSetExclusiveScissorNV-firstExclusiveScissor-02035# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @firstExclusiveScissor@ /must/ be @0@
 --
 -- -   #VUID-vkCmdSetExclusiveScissorNV-exclusiveScissorCount-02036# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @exclusiveScissorCount@ /must/ be @1@
 --
 -- -   #VUID-vkCmdSetExclusiveScissorNV-x-02037# The @x@ and @y@ members of
@@ -316,7 +316,7 @@ cmdSetExclusiveScissorNV commandBuffer firstExclusiveScissor exclusiveScissors =
 -- = Description
 --
 -- See
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-exclusive-scissor Exclusive Scissor Test>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-exclusive-scissor Exclusive Scissor Test>
 -- for more information.
 --
 -- If the 'PhysicalDeviceExclusiveScissorFeaturesNV' structure is included
@@ -398,7 +398,7 @@ instance Zero PhysicalDeviceExclusiveScissorFeaturesNV where
 --
 -- -   #VUID-VkPipelineViewportExclusiveScissorStateCreateInfoNV-exclusiveScissorCount-02027#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiViewport multiple viewports>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @exclusiveScissorCount@ /must/ be @0@ or @1@
 --
 -- -   #VUID-VkPipelineViewportExclusiveScissorStateCreateInfoNV-exclusiveScissorCount-02028#

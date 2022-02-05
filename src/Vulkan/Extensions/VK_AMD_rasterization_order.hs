@@ -160,7 +160,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_rasterization_order Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_AMD_rasterization_order Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -274,11 +274,11 @@ newtype RasterizationOrderAMD = RasterizationOrderAMD Int32
 
 -- | 'RASTERIZATION_ORDER_STRICT_AMD' specifies that operations for each
 -- primitive in a subpass /must/ occur in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-order primitive order>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#drawing-primitive-order primitive order>.
 pattern RASTERIZATION_ORDER_STRICT_AMD  = RasterizationOrderAMD 0
 -- | 'RASTERIZATION_ORDER_RELAXED_AMD' specifies that operations for each
 -- primitive in a subpass /may/ not occur in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-order primitive order>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#drawing-primitive-order primitive order>.
 pattern RASTERIZATION_ORDER_RELAXED_AMD = RasterizationOrderAMD 1
 {-# complete RASTERIZATION_ORDER_STRICT_AMD,
              RASTERIZATION_ORDER_RELAXED_AMD :: RasterizationOrderAMD #-}

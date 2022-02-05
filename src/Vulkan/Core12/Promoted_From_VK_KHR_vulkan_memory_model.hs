@@ -58,7 +58,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 data PhysicalDeviceVulkanMemoryModelFeatures = PhysicalDeviceVulkanMemoryModelFeatures
   { -- | #extension-features-vulkanMemoryModel# @vulkanMemoryModel@ indicates
     -- whether the Vulkan Memory Model is supported, as defined in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-model Vulkan Memory Model>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-model Vulkan Memory Model>.
     -- This also indicates whether shader modules /can/ declare the
     -- @VulkanMemoryModel@ capability.
     vulkanMemoryModel :: Bool
@@ -71,7 +71,7 @@ data PhysicalDeviceVulkanMemoryModelFeatures = PhysicalDeviceVulkanMemoryModelFe
   , -- | #extension-features-vulkanMemoryModelAvailabilityVisibilityChains#
     -- @vulkanMemoryModelAvailabilityVisibilityChains@ indicates whether the
     -- Vulkan Memory Model can use
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-model-availability-visibility availability and visibility chains>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-model-availability-visibility availability and visibility chains>
     -- with more than one element.
     vulkanMemoryModelAvailabilityVisibilityChains :: Bool
   }

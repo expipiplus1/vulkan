@@ -94,11 +94,11 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-WorkgroupMemoryExplicitLayoutKHR WorkgroupMemoryExplicitLayoutKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-WorkgroupMemoryExplicitLayoutKHR WorkgroupMemoryExplicitLayoutKHR>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-WorkgroupMemoryExplicitLayout8BitAccessKHR WorkgroupMemoryExplicitLayout8BitAccessKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-WorkgroupMemoryExplicitLayout8BitAccessKHR WorkgroupMemoryExplicitLayout8BitAccessKHR>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#spirvenv-capabilities-table-WorkgroupMemoryExplicitLayout16BitAccessKHR WorkgroupMemoryExplicitLayout16BitAccessKHR>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-WorkgroupMemoryExplicitLayout16BitAccessKHR WorkgroupMemoryExplicitLayout16BitAccessKHR>
 --
 -- == Version History
 --
@@ -113,7 +113,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_workgroup_memory_explicit_layout Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_workgroup_memory_explicit_layout Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

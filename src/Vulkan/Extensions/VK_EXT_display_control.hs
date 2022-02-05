@@ -146,7 +146,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_display_control Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_display_control Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -361,7 +361,7 @@ registerDeviceEventEXT :: forall io
                           -- describing the event of interest to the application.
                           DeviceEventInfoEXT
                        -> -- | @pAllocator@ controls host memory allocation as described in the
-                          -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                          -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                           -- chapter.
                           ("allocator" ::: Maybe AllocationCallbacks)
                        -> io (Fence)
@@ -440,7 +440,7 @@ registerDisplayEventEXT :: forall io
                            -- describing the event of interest to the application.
                            DisplayEventInfoEXT
                         -> -- | @pAllocator@ controls host memory allocation as described in the
-                           -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                           -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                            -- chapter.
                            ("allocator" ::: Maybe AllocationCallbacks)
                         -> io (Fence)

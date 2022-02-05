@@ -176,7 +176,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_provoking_vertex Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_provoking_vertex Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -245,7 +245,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- When 'PhysicalDeviceProvokingVertexFeaturesEXT' is in the @pNext@ chain
 -- of 'Vulkan.Core10.Device.DeviceCreateInfo' but the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-transformFeedback transform feedback feature>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-transformFeedback transform feedback feature>
 -- is not enabled, the value of @transformFeedbackPreservesProvokingVertex@
 -- is ignored.
 --
@@ -266,7 +266,7 @@ data PhysicalDeviceProvokingVertexFeaturesEXT = PhysicalDeviceProvokingVertexFea
     -- vertices within each primitive written by transform feedback will
     -- preserve the provoking vertex. This does not apply to triangle fan
     -- primitives when
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-transformFeedbackPreservesTriangleFanProvokingVertex transformFeedbackPreservesTriangleFanProvokingVertex>
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-transformFeedbackPreservesTriangleFanProvokingVertex transformFeedbackPreservesTriangleFanProvokingVertex>
     -- is 'Vulkan.Core10.FundamentalTypes.FALSE'.
     -- @transformFeedbackPreservesProvokingVertex@ /must/ be
     -- 'Vulkan.Core10.FundamentalTypes.FALSE' when the
@@ -398,7 +398,7 @@ instance Zero PhysicalDeviceProvokingVertexPropertiesEXT where
 -- will use the 'PROVOKING_VERTEX_MODE_FIRST_VERTEX_EXT' mode.
 --
 -- If the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-provokingVertexModePerPipeline provokingVertexModePerPipeline>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-provokingVertexModePerPipeline provokingVertexModePerPipeline>
 -- limit is 'Vulkan.Core10.FundamentalTypes.FALSE', then all pipelines
 -- bound within a render pass instance /must/ have the same
 -- @provokingVertexMode@.
@@ -408,7 +408,7 @@ instance Zero PhysicalDeviceProvokingVertexPropertiesEXT where
 -- -   #VUID-VkPipelineRasterizationProvokingVertexStateCreateInfoEXT-provokingVertexMode-04883#
 --     If @provokingVertexMode@ is 'PROVOKING_VERTEX_MODE_LAST_VERTEX_EXT',
 --     then the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-provokingVertexLast provokingVertexLast>
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-provokingVertexLast provokingVertexLast>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -474,7 +474,7 @@ instance Zero PipelineRasterizationProvokingVertexStateCreateInfoEXT where
 -- = Description
 --
 -- These modes are described more precisely in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topologies Primitive Topologies>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#drawing-primitive-topologies Primitive Topologies>.
 --
 -- = See Also
 --

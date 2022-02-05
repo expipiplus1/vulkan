@@ -525,11 +525,11 @@ instance Zero ExternalBufferProperties where
 -- where such a restriction exists as defined in the compatibility table
 -- for the particular object type:
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-memory-handle-types-compatibility External memory handle types compatibility>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#external-memory-handle-types-compatibility External memory handle types compatibility>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility External semaphore handle types compatibility>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility External semaphore handle types compatibility>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-fence-handle-types-compatibility External fence handle types compatibility>
+-- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#external-fence-handle-types-compatibility External fence handle types compatibility>
 --
 -- If @deviceLUIDValid@ is 'Vulkan.Core10.FundamentalTypes.FALSE', the
 -- values of @deviceLUID@ and @deviceNodeMask@ are undefined. If

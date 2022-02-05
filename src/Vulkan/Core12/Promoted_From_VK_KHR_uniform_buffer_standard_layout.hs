@@ -59,7 +59,7 @@ data PhysicalDeviceUniformBufferStandardLayoutFeatures = PhysicalDeviceUniformBu
     -- @uniformBufferStandardLayout@ indicates that the implementation supports
     -- the same layouts for uniform buffers as for storage and other kinds of
     -- buffers. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#interfaces-resources-standard-layout Standard Buffer Layout>.
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-standard-layout Standard Buffer Layout>.
     uniformBufferStandardLayout :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

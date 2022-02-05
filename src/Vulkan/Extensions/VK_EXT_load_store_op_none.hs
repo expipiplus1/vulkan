@@ -84,7 +84,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_load_store_op_none Vulkan Specification>
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_load_store_op_none Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -96,9 +96,9 @@ module Vulkan.Extensions.VK_EXT_load_store_op_none  ( pattern ATTACHMENT_STORE_O
                                                     ) where
 
 import Data.String (IsString)
-import Vulkan.Core10.Enums.AttachmentStoreOp (AttachmentStoreOp(ATTACHMENT_STORE_OP_NONE_KHR))
+import Vulkan.Core10.Enums.AttachmentStoreOp (AttachmentStoreOp(ATTACHMENT_STORE_OP_NONE))
 -- No documentation found for TopLevel "VK_ATTACHMENT_STORE_OP_NONE_EXT"
-pattern ATTACHMENT_STORE_OP_NONE_EXT = ATTACHMENT_STORE_OP_NONE_KHR
+pattern ATTACHMENT_STORE_OP_NONE_EXT = ATTACHMENT_STORE_OP_NONE
 
 
 type EXT_LOAD_STORE_OP_NONE_SPEC_VERSION = 1
