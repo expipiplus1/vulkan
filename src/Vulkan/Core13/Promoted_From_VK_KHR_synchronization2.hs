@@ -3152,7 +3152,12 @@ instance Zero MemoryBarrier2 where
 -- -   #VUID-VkImageMemoryBarrier2-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2'
 --
--- -   #VUID-VkImageMemoryBarrier2-pNext-pNext# @pNext@ /must/ be @NULL@
+-- -   #VUID-VkImageMemoryBarrier2-pNext-pNext# @pNext@ /must/ be @NULL@ or
+--     a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_EXT_sample_locations.SampleLocationsInfoEXT'
+--
+-- -   #VUID-VkImageMemoryBarrier2-sType-unique# The @sType@ value of each
+--     struct in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkImageMemoryBarrier2-srcStageMask-parameter# @srcStageMask@
 --     /must/ be a valid combination of

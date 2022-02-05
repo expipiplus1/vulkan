@@ -382,6 +382,14 @@ instance Zero PhysicalDeviceGlobalPriorityQueryFeaturesKHR where
 --
 -- = Description
 --
+-- If the 'QueueFamilyGlobalPriorityPropertiesKHR' structure is included in
+-- the @pNext@ chain of the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.QueueFamilyProperties2'
+-- structure passed to
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceQueueFamilyProperties2',
+-- it is filled in with the list of supported global queue priorities for
+-- the indicated family.
+--
 -- The valid elements of @priorities@ /must/ not contain any duplicate
 -- values.
 --

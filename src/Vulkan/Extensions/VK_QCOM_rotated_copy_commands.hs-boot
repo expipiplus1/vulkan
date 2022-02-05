@@ -89,8 +89,8 @@
 -- == New Structures
 --
 -- -   Extending
---     'Vulkan.Extensions.VK_KHR_copy_commands2.BufferImageCopy2KHR',
---     'Vulkan.Extensions.VK_KHR_copy_commands2.ImageBlit2KHR':
+--     'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.BufferImageCopy2',
+--     'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.ImageBlit2':
 --
 --     -   'CopyCommandTransformInfoQCOM'
 --

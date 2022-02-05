@@ -882,7 +882,12 @@ instance Zero ImageCopy2 where
 -- -   #VUID-VkImageBlit2-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_BLIT_2'
 --
--- -   #VUID-VkImageBlit2-pNext-pNext# @pNext@ /must/ be @NULL@
+-- -   #VUID-VkImageBlit2-pNext-pNext# @pNext@ /must/ be @NULL@ or a
+--     pointer to a valid instance of
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--
+-- -   #VUID-VkImageBlit2-sType-unique# The @sType@ value of each struct in
+--     the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkImageBlit2-srcSubresource-parameter# @srcSubresource@ /must/
 --     be a valid
@@ -1022,7 +1027,12 @@ instance es ~ '[] => Zero (ImageBlit2 es) where
 -- -   #VUID-VkBufferImageCopy2-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2'
 --
--- -   #VUID-VkBufferImageCopy2-pNext-pNext# @pNext@ /must/ be @NULL@
+-- -   #VUID-VkBufferImageCopy2-pNext-pNext# @pNext@ /must/ be @NULL@ or a
+--     pointer to a valid instance of
+--     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
+--
+-- -   #VUID-VkBufferImageCopy2-sType-unique# The @sType@ value of each
+--     struct in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkBufferImageCopy2-imageSubresource-parameter#
 --     @imageSubresource@ /must/ be a valid

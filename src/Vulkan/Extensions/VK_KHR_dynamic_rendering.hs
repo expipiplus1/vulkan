@@ -700,18 +700,15 @@ instance Zero RenderingFragmentDensityMapAttachmentInfoEXT where
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ATTACHMENT_SAMPLE_COUNT_INFO_AMD'
 --
 -- -   #VUID-VkAttachmentSampleCountInfoAMD-pColorAttachmentSamples-parameter#
---     @pColorAttachmentSamples@ /must/ be a valid pointer to an array of
---     @colorAttachmentCount@ valid or
---     'Vulkan.Core10.APIConstants.NULL_HANDLE'
---     'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' values
+--     If @colorAttachmentCount@ is not @0@, @pColorAttachmentSamples@
+--     /must/ be a valid pointer to an array of @colorAttachmentCount@
+--     valid 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'
+--     values
 --
 -- -   #VUID-VkAttachmentSampleCountInfoAMD-depthStencilAttachmentSamples-parameter#
 --     If @depthStencilAttachmentSamples@ is not @0@,
 --     @depthStencilAttachmentSamples@ /must/ be a valid
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
---
--- -   #VUID-VkAttachmentSampleCountInfoAMD-colorAttachmentCount-arraylength#
---     @colorAttachmentCount@ /must/ be greater than @0@
 --
 -- = See Also
 --

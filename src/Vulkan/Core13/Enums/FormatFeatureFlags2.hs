@@ -220,14 +220,14 @@ type FormatFeatureFlags2 = FormatFeatureFlagBits2
 --     and as an input attachment.
 --
 -- -   'FORMAT_FEATURE_2_BLIT_SRC_BIT' specifies that an image /can/ be
---     used as @srcImage@ for the
---     'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR' and
---     'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' commands.
+--     used as the @srcImage@ for
+--     'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.cmdBlitImage2'
+--     and 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage'.
 --
 -- -   'FORMAT_FEATURE_2_BLIT_DST_BIT' specifies that an image /can/ be
---     used as @dstImage@ for the
---     'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR' and
---     'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' commands.
+--     used as the @dstImage@ for
+--     'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.cmdBlitImage2'
+--     and 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage'.
 --
 -- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT' specifies that if
 --     'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT' is also set, an image view
@@ -236,11 +236,11 @@ type FormatFeatureFlags2 = FormatFeatureFlagBits2
 --     @mipmapMode@ set to
 --     'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'.
 --     If 'FORMAT_FEATURE_2_BLIT_SRC_BIT' is also set, an image can be used
---     as the @srcImage@ to
---     'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR' and
---     'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' with a @filter@
---     of 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR'. This bit /must/ only
---     be exposed for formats that also support the
+--     as the @srcImage@ for
+--     'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.cmdBlitImage2'
+--     and 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' with a
+--     @filter@ of 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR'. This bit
+--     /must/ only be exposed for formats that also support the
 --     'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT' or
 --     'FORMAT_FEATURE_2_BLIT_SRC_BIT'.
 --
@@ -462,14 +462,14 @@ pattern FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT      = FormatFeatureFlagBits
 -- input attachment.
 pattern FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT    = FormatFeatureFlagBits2 0x0000000000000200
 -- | 'FORMAT_FEATURE_2_BLIT_SRC_BIT' specifies that an image /can/ be used as
--- @srcImage@ for the
--- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR' and
--- 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' commands.
+-- the @srcImage@ for
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.cmdBlitImage2' and
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage'.
 pattern FORMAT_FEATURE_2_BLIT_SRC_BIT                    = FormatFeatureFlagBits2 0x0000000000000400
 -- | 'FORMAT_FEATURE_2_BLIT_DST_BIT' specifies that an image /can/ be used as
--- @dstImage@ for the
--- 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR' and
--- 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' commands.
+-- the @dstImage@ for
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.cmdBlitImage2' and
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage'.
 pattern FORMAT_FEATURE_2_BLIT_DST_BIT                    = FormatFeatureFlagBits2 0x0000000000000800
 -- | 'FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT' specifies that if
 -- 'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT' is also set, an image view /can/ be
@@ -477,9 +477,10 @@ pattern FORMAT_FEATURE_2_BLIT_DST_BIT                    = FormatFeatureFlagBits
 -- 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR', or @mipmapMode@ set to
 -- 'Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_LINEAR'. If
 -- 'FORMAT_FEATURE_2_BLIT_SRC_BIT' is also set, an image can be used as the
--- @srcImage@ to 'Vulkan.Extensions.VK_KHR_copy_commands2.cmdBlitImage2KHR'
--- and 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' with a @filter@
--- of 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR'. This bit /must/ only be
+-- @srcImage@ for
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.cmdBlitImage2' and
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' with a @filter@ of
+-- 'Vulkan.Core10.Enums.Filter.FILTER_LINEAR'. This bit /must/ only be
 -- exposed for formats that also support the
 -- 'FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT' or 'FORMAT_FEATURE_2_BLIT_SRC_BIT'.
 --

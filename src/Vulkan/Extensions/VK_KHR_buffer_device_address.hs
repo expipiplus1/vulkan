@@ -122,9 +122,14 @@
 --
 -- All functionality in this extension is included in core Vulkan 1.2, with
 -- the KHR suffix omitted. However, if Vulkan 1.2 is supported and this
--- extension is not, the @bufferDeviceAddress@ capability is optional. The
+-- extension is not, the @bufferDeviceAddress@ feature is optional. The
 -- original type, enum and command names are still available as aliases of
 -- the core functionality.
+--
+-- == Promotion to Vulkan 1.3
+--
+-- Support for the @bufferDeviceAddress@ feature is mandatory in Vulkan
+-- 1.3, regardless of whether this extension is supported.
 --
 -- == New Commands
 --

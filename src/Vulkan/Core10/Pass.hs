@@ -2089,40 +2089,25 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --
 -- = Description
 --
--- Other than the exceptions listed below, applications /must/ ensure that
--- all accesses to memory that backs image subresources used as attachments
--- in a given render pass instance either happen-before the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-store-ops load operations>
--- for those attachments, or happen-after the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-store-ops store operations>
--- for those attachments.
---
--- The exceptions to the general rule are:
---
--- -   For depth\/stencil attachments, an aspect /can/ be used separately
---     as attachment and non-attachment if both accesses are read-only.
---
--- -   For depth\/stencil attachments, each aspect /can/ be used separately
---     as attachment and non-attachment as long as the non-attachment
---     accesses are also via an image subresource in either the
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
---     layout or the
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL'
---     layout, and the attachment resource uses whichever of those two
---     layouts the image accesses do not.
---
--- Use of non-attachment aspects in these cases is only well defined if the
--- attachment is used in the subpass where the non-attachment access is
--- being made, or the layout of the image subresource is constant
--- throughout the entire render pass instance, including the
--- @initialLayout@ and @finalLayout@.
+-- Applications /must/ ensure that all non-attachment writes to memory
+-- backing image subresources that are used as attachments in a render pass
+-- instance happen-before or happen-after the render pass instance. If an
+-- image subresource is written during a render pass instance by anything
+-- other than load operations, store operations, and layout transitions,
+-- applications /must/ ensure that all non-attachment reads from memory
+-- backing that image subresource happen-before or happen-after the render
+-- pass instance. For depth\/stencil images, the aspects are not treated
+-- independently for the above guarantees - writes to either aspect /must/
+-- be synchronized with accesses to the other aspect.
 --
 -- Note
 --
--- These restrictions mean that the render pass has full knowledge of all
--- uses of all of the attachments, so that the implementation is able to
--- make correct decisions about when and how to perform layout transitions,
--- when to overlap execution of subpasses, etc.
+-- An image subresource can be used as read-only as both an attachment and
+-- a non-attachment during a render pass instance, but care must still be
+-- taken to avoid data races with load\/store operations and layout
+-- transitions. The simplest way to achieve this is to keep the
+-- non-attachment and attachment accesses within the same subpass, or to
+-- avoid layout transitions and load\/store operations that perform writes.
 --
 -- It is legal for a subpass to use no color or depth\/stencil attachments,
 -- either because it has no attachment references or because all of them
