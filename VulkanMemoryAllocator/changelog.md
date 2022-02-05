@@ -2,6 +2,11 @@
 
 ## WIP
 
+## [0.9] - 2022-02-05
+- Bump VMA
+  - Vulkan 1.3 support
+- Raise upper bound on `vulkan`
+
 ## [0.8] - 2022-01-14
 - Bump VMA
   - lost allocations stuff removed
