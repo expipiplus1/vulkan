@@ -633,6 +633,8 @@ spirvExtensionRequirements = \case
     ]
   "SPV_KHR_integer_dot_product" ->
     (,) [RequireInstanceVersion $ MAKE_API_VERSION 1 3 0] [RequireDeviceVersion $ MAKE_API_VERSION 1 3 0]
+  "SPV_KHR_device_group" ->
+    (,) [RequireInstanceVersion $ MAKE_API_VERSION 1 1 0] [RequireDeviceVersion $ MAKE_API_VERSION 1 1 0]
   _ -> ([], [])
 
 spirvCapabilityRequirements :: ByteString -> ([InstanceRequirement], [DeviceRequirement])

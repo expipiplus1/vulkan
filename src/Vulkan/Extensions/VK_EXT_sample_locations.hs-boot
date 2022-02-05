@@ -100,7 +100,7 @@
 -- -   'SubpassSampleLocationsEXT'
 --
 -- -   Extending 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier',
---     'Vulkan.Extensions.VK_KHR_synchronization2.ImageMemoryBarrier2KHR':
+--     'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.ImageMemoryBarrier2':
 --
 --     -   'SampleLocationsInfoEXT'
 --

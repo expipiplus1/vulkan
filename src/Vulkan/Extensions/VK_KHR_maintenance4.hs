@@ -137,7 +137,7 @@
 -- -   Extending
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits':
 --
---     -   'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_NONE_KHR'
+--     -   'IMAGE_ASPECT_NONE_KHR'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -189,6 +189,7 @@ module Vulkan.Extensions.VK_KHR_maintenance4  ( pattern STRUCTURE_TYPE_PHYSICAL_
                                               , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES_KHR
                                               , pattern STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS_KHR
                                               , pattern STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS_KHR
+                                              , pattern IMAGE_ASPECT_NONE_KHR
                                               , getDeviceBufferMemoryRequirementsKHR
                                               , getDeviceImageMemoryRequirementsKHR
                                               , getDeviceImageSparseMemoryRequirementsKHR
@@ -210,6 +211,8 @@ import Vulkan.Core13.Promoted_From_VK_KHR_maintenance4 (DeviceBufferMemoryRequir
 import Vulkan.Core13.Promoted_From_VK_KHR_maintenance4 (DeviceImageMemoryRequirements)
 import Vulkan.Core13.Promoted_From_VK_KHR_maintenance4 (PhysicalDeviceMaintenance4Features)
 import Vulkan.Core13.Promoted_From_VK_KHR_maintenance4 (PhysicalDeviceMaintenance4Properties)
+import Vulkan.Core10.Enums.ImageAspectFlagBits (ImageAspectFlags)
+import Vulkan.Core10.Enums.ImageAspectFlagBits (ImageAspectFlagBits(IMAGE_ASPECT_NONE))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES))
@@ -228,6 +231,10 @@ pattern STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS_KHR = STRUCTURE_TYPE_DE
 
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS_KHR"
 pattern STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS_KHR = STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS
+
+
+-- No documentation found for TopLevel "VK_IMAGE_ASPECT_NONE_KHR"
+pattern IMAGE_ASPECT_NONE_KHR = IMAGE_ASPECT_NONE
 
 
 -- No documentation found for TopLevel "vkGetDeviceBufferMemoryRequirementsKHR"

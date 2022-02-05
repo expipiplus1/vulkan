@@ -196,9 +196,9 @@ foreign import ccall
 -- values used to create the currently active pipeline.
 --
 -- If the bound pipeline state object was also created with the
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE_EXT'
+-- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE'
 -- dynamic state enabled, then
--- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2EXT'
+-- 'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdBindVertexBuffers2'
 -- can be used instead of 'cmdSetVertexInputEXT' to dynamically set the
 -- stride.
 --

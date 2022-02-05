@@ -579,10 +579,11 @@ foreign import ccall
 -- components are
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input-extraction filled with (0,0,1)>.
 --
--- This command also \<pipelines-dynamic-state, dynamically sets>> the byte
--- strides between consecutive elements within buffer @pBuffers@[i] to the
--- corresponding @pStrides@[i] value when the graphics pipeline is created
--- with
+-- This command also
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-dynamic-state dynamically sets>
+-- the byte strides between consecutive elements within buffer
+-- @pBuffers@[i] to the corresponding @pStrides@[i] value when the graphics
+-- pipeline is created with
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE'
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.

@@ -702,7 +702,8 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' and @viewType@ is
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY' then
---     @flags@ /must/ not contain any of
+--     'Vulkan.Core10.Image.ImageCreateInfo'::@flags@ /must/ not contain
+--     any of
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT',
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT',
 --     and

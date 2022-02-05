@@ -43,6 +43,9 @@
 --
 -- [__Interactions and External Dependencies__]
 --
+--     -   This extension requires
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_device_group.html SPV_KHR_device_group>
+--
 --     -   Promoted to Vulkan 1.1 Core
 --
 -- [__Contributors__]

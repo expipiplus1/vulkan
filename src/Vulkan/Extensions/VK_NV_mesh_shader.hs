@@ -598,13 +598,20 @@ foreign import ccall
 --     by the current subpass /must/ be bound to the pipeline via a
 --     descriptor set
 --
--- -   #VUID-vkCmdDrawMeshTasksNV-None-04584# Image subresources used as
---     attachments in the current render pass /must/ not be accessed in any
---     way other than as an attachment by this command, except for cases
---     involving read-only access to depth\/stencil attachments as
---     described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-attachment-nonattachment Render Pass>
---     chapter
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-06537# Memory backing image
+--     subresources used as attachments in the current render pass /must/
+--     not be written in any way other than as an attachment by this
+--     command
+--
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-06538# If any recorded command in
+--     the current subpass will write to an image subresource as an
+--     attachment, this command /must/ not read from the memory backing
+--     that image subresource in any other way than as an attachment
+--
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-06539# If any recorded command in
+--     the current subpass will read from an image subresource used as an
+--     attachment in any way other than as an attachment, this command
+--     /must/ not write to that image subresource as an attachment
 --
 -- -   #VUID-vkCmdDrawMeshTasksNV-maxMultiviewInstanceIndex-02688# If the
 --     draw is recorded in a render pass instance with multiview enabled,
@@ -1394,13 +1401,20 @@ foreign import ccall
 --     attachment used by the current subpass /must/ be bound to the
 --     pipeline via a descriptor set
 --
--- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-04584# Image subresources
---     used as attachments in the current render pass /must/ not be
---     accessed in any way other than as an attachment by this command,
---     except for cases involving read-only access to depth\/stencil
---     attachments as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-attachment-nonattachment Render Pass>
---     chapter
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-06537# Memory backing image
+--     subresources used as attachments in the current render pass /must/
+--     not be written in any way other than as an attachment by this
+--     command
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-06538# If any recorded
+--     command in the current subpass will write to an image subresource as
+--     an attachment, this command /must/ not read from the memory backing
+--     that image subresource in any other way than as an attachment
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-06539# If any recorded
+--     command in the current subpass will read from an image subresource
+--     used as an attachment in any way other than as an attachment, this
+--     command /must/ not write to that image subresource as an attachment
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectNV-maxMultiviewInstanceIndex-02688#
 --     If the draw is recorded in a render pass instance with multiview
@@ -2235,13 +2249,20 @@ foreign import ccall
 --     attachment used by the current subpass /must/ be bound to the
 --     pipeline via a descriptor set
 --
--- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-04584# Image
---     subresources used as attachments in the current render pass /must/
---     not be accessed in any way other than as an attachment by this
---     command, except for cases involving read-only access to
---     depth\/stencil attachments as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-attachment-nonattachment Render Pass>
---     chapter
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-06537# Memory backing
+--     image subresources used as attachments in the current render pass
+--     /must/ not be written in any way other than as an attachment by this
+--     command
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-06538# If any recorded
+--     command in the current subpass will write to an image subresource as
+--     an attachment, this command /must/ not read from the memory backing
+--     that image subresource in any other way than as an attachment
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-06539# If any recorded
+--     command in the current subpass will read from an image subresource
+--     used as an attachment in any way other than as an attachment, this
+--     command /must/ not write to that image subresource as an attachment
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-maxMultiviewInstanceIndex-02688#
 --     If the draw is recorded in a render pass instance with multiview

@@ -983,13 +983,20 @@ foreign import ccall
 --     attachment used by the current subpass /must/ be bound to the
 --     pipeline via a descriptor set
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04584# Image subresources
---     used as attachments in the current render pass /must/ not be
---     accessed in any way other than as an attachment by this command,
---     except for cases involving read-only access to depth\/stencil
---     attachments as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-attachment-nonattachment Render Pass>
---     chapter
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-06537# Memory backing
+--     image subresources used as attachments in the current render pass
+--     /must/ not be written in any way other than as an attachment by this
+--     command
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-06538# If any recorded
+--     command in the current subpass will write to an image subresource as
+--     an attachment, this command /must/ not read from the memory backing
+--     that image subresource in any other way than as an attachment
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-06539# If any recorded
+--     command in the current subpass will read from an image subresource
+--     used as an attachment in any way other than as an attachment, this
+--     command /must/ not write to that image subresource as an attachment
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-maxMultiviewInstanceIndex-02688#
 --     If the draw is recorded in a render pass instance with multiview
@@ -2119,7 +2126,8 @@ data PhysicalDeviceDeviceGeneratedCommandsPropertiesNV = PhysicalDeviceDeviceGen
     -- 'GeneratedCommandsInfoNV' and in
     -- 'GeneratedCommandsMemoryRequirementsInfoNV'.
     maxIndirectSequenceCount :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceDeviceGeneratedCommandsPropertiesNV" "maxIndirectCommandsTokenCount"
+  , -- | @maxIndirectCommandsTokenCount@ is the maximum number of tokens in
+    -- 'IndirectCommandsLayoutCreateInfoNV'.
     maxIndirectCommandsTokenCount :: Word32
   , -- | @maxIndirectCommandsStreamCount@ is the maximum number of streams in
     -- 'IndirectCommandsLayoutCreateInfoNV'.
@@ -2130,9 +2138,11 @@ data PhysicalDeviceDeviceGeneratedCommandsPropertiesNV = PhysicalDeviceDeviceGen
   , -- | @maxIndirectCommandsStreamStride@ is the maximum stream stride in
     -- 'IndirectCommandsLayoutCreateInfoNV'.
     maxIndirectCommandsStreamStride :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceDeviceGeneratedCommandsPropertiesNV" "minSequencesCountBufferOffsetAlignment"
+  , -- | @minSequencesCountBufferOffsetAlignment@ is the minimum alignment for
+    -- memory addresses which /can/ be used in 'GeneratedCommandsInfoNV'.
     minSequencesCountBufferOffsetAlignment :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceDeviceGeneratedCommandsPropertiesNV" "minSequencesIndexBufferOffsetAlignment"
+  , -- | @minSequencesIndexBufferOffsetAlignment@ is the minimum alignment for
+    -- memory addresses which /can/ be used in 'GeneratedCommandsInfoNV'.
     minSequencesIndexBufferOffsetAlignment :: Word32
   , -- | @minIndirectCommandsBufferOffsetAlignment@ is the minimum alignment for
     -- memory addresses used in 'IndirectCommandsStreamNV', and as preprocess

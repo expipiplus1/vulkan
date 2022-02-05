@@ -162,7 +162,7 @@ foreign import ccall
 --
 -- If the buffer was created with a non-zero value of
 -- 'BufferOpaqueCaptureAddressCreateInfo'::@opaqueCaptureAddress@ or
--- 'Vulkan.Extensions.VK_EXT_buffer_device_address.BufferDeviceAddressCreateInfoEXT'::@deviceAddress@
+-- 'Vulkan.Extensions.VK_EXT_buffer_device_address.BufferDeviceAddressCreateInfoEXT'::@deviceAddress@,
 -- the return value will be the same address that was returned at capture
 -- time.
 --

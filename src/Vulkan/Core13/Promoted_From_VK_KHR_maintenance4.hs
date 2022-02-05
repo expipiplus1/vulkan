@@ -8,6 +8,8 @@ module Vulkan.Core13.Promoted_From_VK_KHR_maintenance4  ( getDeviceBufferMemoryR
                                                         , PhysicalDeviceMaintenance4Features(..)
                                                         , PhysicalDeviceMaintenance4Properties(..)
                                                         , StructureType(..)
+                                                        , ImageAspectFlagBits(..)
+                                                        , ImageAspectFlags
                                                         ) where
 
 import Vulkan.Internal.Utils (traceAroundEvent)
@@ -76,6 +78,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_BU
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES))
+import Vulkan.Core10.Enums.ImageAspectFlagBits (ImageAspectFlagBits(..))
+import Vulkan.Core10.Enums.ImageAspectFlagBits (ImageAspectFlags)
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -294,16 +298,11 @@ instance Zero DeviceBufferMemoryRequirements where
 --     structure
 --
 -- -   #VUID-VkDeviceImageMemoryRequirementsKHR-pCreateInfo-06417# If
+--     @pCreateInfo@::@format@ specifies a /multi-planar/ format and
 --     @pCreateInfo@::@flags@ has
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
 --     set then @planeAspect@ /must/ not be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_NONE_KHR'
---
--- -   #VUID-VkDeviceImageMemoryRequirementsKHR-pCreateInfo-06418# If
---     @pCreateInfo@::@flags@ has
---     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
---     set then @planeAspect@ /must/ not be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_NONE_KHR'
+--     'Vulkan.Extensions.VK_KHR_maintenance4.IMAGE_ASPECT_NONE_KHR'
 --
 -- -   #VUID-VkDeviceImageMemoryRequirementsKHR-pCreateInfo-06419# If
 --     @pCreateInfo@::@flags@ has
@@ -323,9 +322,7 @@ instance Zero DeviceBufferMemoryRequirements where
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT')
 --
 -- -   #VUID-VkDeviceImageMemoryRequirementsKHR-pCreateInfo-06420# If
---     @pCreateInfo@::@flags@ has
---     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
---     set and the @pCreateInfo@::@tiling@ is
+--     @pCreateInfo@::@tiling@ is
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
 --     then @planeAspect@ /must/ be a single valid /memory plane/ for the
 --     image (that is, @aspectMask@ /must/ specify a plane index that is
@@ -369,10 +366,10 @@ data DeviceImageMemoryRequirements = DeviceImageMemoryRequirements
   , -- | @planeAspect@ is a
     -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' value
     -- specifying the aspect corresponding to the image plane to query. This
-    -- parameter is ignored unless @pCreateInfo@::@flags@ has
-    -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT' or
-    -- 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
-    -- set.
+    -- parameter is ignored unless @pCreateInfo@::@tiling@ is
+    -- 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
+    -- or @pCreateInfo@::@flags@ has
+    -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT' set.
     planeAspect :: ImageAspectFlagBits
   }
   deriving (Typeable)

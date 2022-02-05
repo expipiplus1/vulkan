@@ -619,7 +619,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --         equal to 'ImageCreateInfo'::@format@ and with
 --         'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.DrmFormatModifierPropertiesListEXT'
 --         chained into
---         'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.ImageFormatProperties2';
+--         'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.FormatProperties2';
 --         by collecting all members of the returned array
 --         'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.DrmFormatModifierPropertiesListEXT'::@pDrmFormatModifierProperties@
 --         whose @drmFormatModifier@ belongs to

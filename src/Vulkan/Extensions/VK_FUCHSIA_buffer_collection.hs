@@ -1381,15 +1381,13 @@ data ImageFormatConstraintsInfoFUCHSIA = ImageFormatConstraintsInfoFUCHSIA
   , -- | @sysmemPixelFormat@ is a @PixelFormatType@ value from the
     -- @fuchsia.sysmem\/image_formats.fidl@ FIDL interface
     sysmemPixelFormat :: Word64
-  , -- | @colorSpaceCount@ the element count of @pColorSpaces@
-    colorSpaceCount :: Word32
   , -- | @pColorSpaces@ is a pointer to an array of 'SysmemColorSpaceFUCHSIA'
     -- structs of size @colorSpaceCount@
     --
     -- #VUID-VkImageFormatConstraintsInfoFUCHSIA-pColorSpaces-parameter#
-    -- @pColorSpaces@ /must/ be a valid pointer to a valid
-    -- 'SysmemColorSpaceFUCHSIA' structure
-    colorSpaces :: SysmemColorSpaceFUCHSIA
+    -- @pColorSpaces@ /must/ be a valid pointer to an array of
+    -- @colorSpaceCount@ valid 'SysmemColorSpaceFUCHSIA' structures
+    colorSpaces :: Vector SysmemColorSpaceFUCHSIA
   }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -1406,9 +1404,10 @@ instance ToCStruct ImageFormatConstraintsInfoFUCHSIA where
     lift $ poke ((p `plusPtr` 104 :: Ptr FormatFeatureFlags)) (requiredFormatFeatures)
     lift $ poke ((p `plusPtr` 108 :: Ptr ImageFormatConstraintsFlagsFUCHSIA)) (flags)
     lift $ poke ((p `plusPtr` 112 :: Ptr Word64)) (sysmemPixelFormat)
-    lift $ poke ((p `plusPtr` 120 :: Ptr Word32)) (colorSpaceCount)
-    pColorSpaces'' <- ContT $ withCStruct (colorSpaces)
-    lift $ poke ((p `plusPtr` 128 :: Ptr (Ptr SysmemColorSpaceFUCHSIA))) pColorSpaces''
+    lift $ poke ((p `plusPtr` 120 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (colorSpaces)) :: Word32))
+    pPColorSpaces' <- ContT $ allocaBytes @SysmemColorSpaceFUCHSIA ((Data.Vector.length (colorSpaces)) * 24)
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPColorSpaces' `plusPtr` (24 * (i)) :: Ptr SysmemColorSpaceFUCHSIA) (e)) (colorSpaces)
+    lift $ poke ((p `plusPtr` 128 :: Ptr (Ptr SysmemColorSpaceFUCHSIA))) (pPColorSpaces')
     lift $ f
   cStructSize = 136
   cStructAlignment = 8
@@ -1417,9 +1416,6 @@ instance ToCStruct ImageFormatConstraintsInfoFUCHSIA where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     ContT $ pokeSomeCStruct (forgetExtensions ((p `plusPtr` 16 :: Ptr (ImageCreateInfo _)))) ((SomeStruct zero)) . ($ ())
     lift $ poke ((p `plusPtr` 104 :: Ptr FormatFeatureFlags)) (zero)
-    lift $ poke ((p `plusPtr` 120 :: Ptr Word32)) (zero)
-    pColorSpaces'' <- ContT $ withCStruct (zero)
-    lift $ poke ((p `plusPtr` 128 :: Ptr (Ptr SysmemColorSpaceFUCHSIA))) pColorSpaces''
     lift $ f
 
 instance FromCStruct ImageFormatConstraintsInfoFUCHSIA where
@@ -1429,9 +1425,10 @@ instance FromCStruct ImageFormatConstraintsInfoFUCHSIA where
     flags <- peek @ImageFormatConstraintsFlagsFUCHSIA ((p `plusPtr` 108 :: Ptr ImageFormatConstraintsFlagsFUCHSIA))
     sysmemPixelFormat <- peek @Word64 ((p `plusPtr` 112 :: Ptr Word64))
     colorSpaceCount <- peek @Word32 ((p `plusPtr` 120 :: Ptr Word32))
-    pColorSpaces <- peekCStruct @SysmemColorSpaceFUCHSIA =<< peek ((p `plusPtr` 128 :: Ptr (Ptr SysmemColorSpaceFUCHSIA)))
+    pColorSpaces <- peek @(Ptr SysmemColorSpaceFUCHSIA) ((p `plusPtr` 128 :: Ptr (Ptr SysmemColorSpaceFUCHSIA)))
+    pColorSpaces' <- generateM (fromIntegral colorSpaceCount) (\i -> peekCStruct @SysmemColorSpaceFUCHSIA ((pColorSpaces `advancePtrBytes` (24 * (i)) :: Ptr SysmemColorSpaceFUCHSIA)))
     pure $ ImageFormatConstraintsInfoFUCHSIA
-             imageCreateInfo requiredFormatFeatures flags sysmemPixelFormat colorSpaceCount pColorSpaces
+             imageCreateInfo requiredFormatFeatures flags sysmemPixelFormat pColorSpaces'
 
 instance Zero ImageFormatConstraintsInfoFUCHSIA where
   zero = ImageFormatConstraintsInfoFUCHSIA
@@ -1439,8 +1436,7 @@ instance Zero ImageFormatConstraintsInfoFUCHSIA where
            zero
            zero
            zero
-           zero
-           zero
+           mempty
 
 
 -- | VkImageConstraintsInfoFUCHSIA - Structure of image-based buffer

@@ -1181,7 +1181,7 @@ import GHC.Show (Show(showsPrec))
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265CapabilitiesEXT VkVideoEncodeH265CapabilitiesEXT>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265DpbSlotInfoEXT VkVideoEncodeH265DpbSlotInfoEXT>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265EmitPictureParametersEXT VkVideoEncodeH265EmitPictureParametersEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265NaluSliceEXT VkVideoEncodeH265NaluSliceEXT>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265NaluSliceSegmentEXT VkVideoEncodeH265NaluSliceSegmentEXT>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265ProfileEXT VkVideoEncodeH265ProfileEXT>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265RateControlInfoEXT VkVideoEncodeH265RateControlInfoEXT>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265RateControlLayerInfoEXT VkVideoEncodeH265RateControlLayerInfoEXT>,

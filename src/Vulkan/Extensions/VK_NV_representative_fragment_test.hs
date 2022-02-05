@@ -273,7 +273,7 @@ instance Zero PhysicalDeviceRepresentativeFragmentTestFeaturesNV where
 -- 'Vulkan.Core10.FundamentalTypes.FALSE', and the representative fragment
 -- test is disabled.
 --
--- If the active fragment shader specifies the @EarlyFragmentTests@
+-- If the active fragment shader does not specify the @EarlyFragmentTests@
 -- execution mode, the representative fragment shader test has no effect,
 -- even if enabled.
 --

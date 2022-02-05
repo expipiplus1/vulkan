@@ -819,7 +819,7 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BIAS' set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the corresponding
--- 'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo'::@depthBiasConstantFactor@,
+-- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo'::@depthBiasConstantFactor@,
 -- @depthBiasClamp@, and @depthBiasSlopeFactor@ values used to create the
 -- currently active pipeline.
 --
@@ -1330,9 +1330,9 @@ foreign import ccall
 --
 -- = Description
 --
--- 'cmdBindDescriptorSets' causes the sets numbered [@firstSet@..
--- @firstSet@+@descriptorSetCount@-1] to use the bindings stored in
--- @pDescriptorSets@[0..descriptorSetCount-1] for subsequent
+-- 'cmdBindDescriptorSets' binds descriptor sets
+-- @pDescriptorSets@[0..@descriptorSetCount@-1] to set numbers
+-- [@firstSet@..@firstSet@+@descriptorSetCount@-1] for subsequent
 -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-bindpoint-commands bound pipeline commands>
 -- set by @pipelineBindPoint@. Any bindings that were previously applied
 -- via these sets are no longer valid.
@@ -2072,12 +2072,19 @@ foreign import ccall
 -- -   #VUID-vkCmdDraw-None-02686# Every input attachment used by the
 --     current subpass /must/ be bound to the pipeline via a descriptor set
 --
--- -   #VUID-vkCmdDraw-None-04584# Image subresources used as attachments
---     in the current render pass /must/ not be accessed in any way other
---     than as an attachment by this command, except for cases involving
---     read-only access to depth\/stencil attachments as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-attachment-nonattachment Render Pass>
---     chapter
+-- -   #VUID-vkCmdDraw-None-06537# Memory backing image subresources used
+--     as attachments in the current render pass /must/ not be written in
+--     any way other than as an attachment by this command
+--
+-- -   #VUID-vkCmdDraw-None-06538# If any recorded command in the current
+--     subpass will write to an image subresource as an attachment, this
+--     command /must/ not read from the memory backing that image
+--     subresource in any other way than as an attachment
+--
+-- -   #VUID-vkCmdDraw-None-06539# If any recorded command in the current
+--     subpass will read from an image subresource used as an attachment in
+--     any way other than as an attachment, this command /must/ not write
+--     to that image subresource as an attachment
 --
 -- -   #VUID-vkCmdDraw-maxMultiviewInstanceIndex-02688# If the draw is
 --     recorded in a render pass instance with multiview enabled, the
@@ -2973,13 +2980,19 @@ foreign import ccall
 --     the current subpass /must/ be bound to the pipeline via a descriptor
 --     set
 --
--- -   #VUID-vkCmdDrawIndexed-None-04584# Image subresources used as
---     attachments in the current render pass /must/ not be accessed in any
---     way other than as an attachment by this command, except for cases
---     involving read-only access to depth\/stencil attachments as
---     described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-attachment-nonattachment Render Pass>
---     chapter
+-- -   #VUID-vkCmdDrawIndexed-None-06537# Memory backing image subresources
+--     used as attachments in the current render pass /must/ not be written
+--     in any way other than as an attachment by this command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-06538# If any recorded command in the
+--     current subpass will write to an image subresource as an attachment,
+--     this command /must/ not read from the memory backing that image
+--     subresource in any other way than as an attachment
+--
+-- -   #VUID-vkCmdDrawIndexed-None-06539# If any recorded command in the
+--     current subpass will read from an image subresource used as an
+--     attachment in any way other than as an attachment, this command
+--     /must/ not write to that image subresource as an attachment
 --
 -- -   #VUID-vkCmdDrawIndexed-maxMultiviewInstanceIndex-02688# If the draw
 --     is recorded in a render pass instance with multiview enabled, the
@@ -3869,13 +3882,20 @@ foreign import ccall
 --     the current subpass /must/ be bound to the pipeline via a descriptor
 --     set
 --
--- -   #VUID-vkCmdDrawIndirect-None-04584# Image subresources used as
---     attachments in the current render pass /must/ not be accessed in any
---     way other than as an attachment by this command, except for cases
---     involving read-only access to depth\/stencil attachments as
---     described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-attachment-nonattachment Render Pass>
---     chapter
+-- -   #VUID-vkCmdDrawIndirect-None-06537# Memory backing image
+--     subresources used as attachments in the current render pass /must/
+--     not be written in any way other than as an attachment by this
+--     command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-06538# If any recorded command in the
+--     current subpass will write to an image subresource as an attachment,
+--     this command /must/ not read from the memory backing that image
+--     subresource in any other way than as an attachment
+--
+-- -   #VUID-vkCmdDrawIndirect-None-06539# If any recorded command in the
+--     current subpass will read from an image subresource used as an
+--     attachment in any way other than as an attachment, this command
+--     /must/ not write to that image subresource as an attachment
 --
 -- -   #VUID-vkCmdDrawIndirect-maxMultiviewInstanceIndex-02688# If the draw
 --     is recorded in a render pass instance with multiview enabled, the
@@ -4788,13 +4808,20 @@ foreign import ccall
 --     used by the current subpass /must/ be bound to the pipeline via a
 --     descriptor set
 --
--- -   #VUID-vkCmdDrawIndexedIndirect-None-04584# Image subresources used
---     as attachments in the current render pass /must/ not be accessed in
---     any way other than as an attachment by this command, except for
---     cases involving read-only access to depth\/stencil attachments as
---     described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-attachment-nonattachment Render Pass>
---     chapter
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-06537# Memory backing image
+--     subresources used as attachments in the current render pass /must/
+--     not be written in any way other than as an attachment by this
+--     command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-06538# If any recorded command
+--     in the current subpass will write to an image subresource as an
+--     attachment, this command /must/ not read from the memory backing
+--     that image subresource in any other way than as an attachment
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-06539# If any recorded command
+--     in the current subpass will read from an image subresource used as
+--     an attachment in any way other than as an attachment, this command
+--     /must/ not write to that image subresource as an attachment
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-maxMultiviewInstanceIndex-02688# If
 --     the draw is recorded in a render pass instance with multiview
@@ -8006,7 +8033,7 @@ foreign import ccall
 -- when the command is called.
 --
 -- 'cmdUpdateBuffer' is only allowed outside of a render pass. This command
--- is treated as “transfer” operation, for the purposes of synchronization
+-- is treated as a “transfer” operation for the purposes of synchronization
 -- barriers. The
 -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFER_DST_BIT'
 -- /must/ be specified in @usage@ of
@@ -8140,7 +8167,7 @@ foreign import ccall
 --
 -- = Description
 --
--- 'cmdFillBuffer' is treated as “transfer” operation for the purposes of
+-- 'cmdFillBuffer' is treated as a “transfer” operation for the purposes of
 -- synchronization barriers. The
 -- 'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFER_DST_BIT'
 -- /must/ be specified in @usage@ of
@@ -10893,7 +10920,7 @@ foreign import ccall
 -- -   #VUID-vkCmdWriteTimestamp-synchronization2-06489# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature is not enabled, @pipelineStage@ /must/ not be
---     'Vulkan.Extensions.VK_KHR_synchronization2.PIPELINE_STAGE_NONE_KHR'
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_NONE'
 --
 -- -   #VUID-vkCmdWriteTimestamp-queryPool-01416# @queryPool@ /must/ have
 --     been created with a @queryType@ of
@@ -11959,6 +11986,37 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdExecuteCommands-None-02286# This command /must/ not be
 --     recorded when transform feedback is active
+--
+-- -   #VUID-vkCmdExecuteCommands-commandBuffer-06533# If
+--     'cmdExecuteCommands' is being called within a render pass instance
+--     and any recorded command in @commandBuffer@ in the current subpass
+--     will write to an image subresource as an attachment, commands
+--     recorded in elements of @pCommandBuffers@ /must/ not read from the
+--     memory backing that image subresource in any other way
+--
+-- -   #VUID-vkCmdExecuteCommands-commandBuffer-06534# If
+--     'cmdExecuteCommands' is being called within a render pass instance
+--     and any recorded command in @commandBuffer@ in the current subpass
+--     will read from an image subresource used as an attachment in any way
+--     other than as an attachment, commands recorded in elements of
+--     @pCommandBuffers@ /must/ not write to that image subresource as an
+--     attachment
+--
+-- -   #VUID-vkCmdExecuteCommands-pCommandBuffers-06535# If
+--     'cmdExecuteCommands' is being called within a render pass instance
+--     and any recorded command in a given element of @pCommandBuffers@
+--     will write to an image subresource as an attachment, commands
+--     recorded in elements of @pCommandBuffers@ at a higher index /must/
+--     not read from the memory backing that image subresource in any other
+--     way
+--
+-- -   #VUID-vkCmdExecuteCommands-pCommandBuffers-06536# If
+--     'cmdExecuteCommands' is being called within a render pass instance
+--     and any recorded command in a given element of @pCommandBuffers@
+--     will read from an image subresource used as an attachment in any way
+--     other than as an attachment, commands recorded in elements of
+--     @pCommandBuffers@ at a higher index /must/ not write to that image
+--     subresource as an attachment
 --
 -- -   #VUID-vkCmdExecuteCommands-pCommandBuffers-06021# If
 --     @pCommandBuffers@ contains any
