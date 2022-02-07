@@ -52,16 +52,20 @@ let
       fd 'html$' --type f --exec \
         sed -i 's|<a href="/package/|<a href="'$remote'|g'
 
+      # Since GHC 9 haddock requres the haddock-interface file to be adjacent to doc-index.json
+      # link it there and then delete the links after running haddock
+      ${concatMapStringsSep "\n"
+      (s: "ln -s ${haddockInterface s}/haddock-interface ${s.name}-docs/") ps}
       haddock \
         --quickjump \
         --gen-contents \
         --gen-index \
         ${
           concatMapStringsSep " " (s:
-            "--read-interface=${s.name}-docs,${
-              haddockInterface s
-            }/haddock-interface") ps
+            "--read-interface=${s.name}-docs,${s.name}-docs/haddock-interface")
+          ps
         }
+      ${concatMapStringsSep "\n" (s: "rm ${s.name}-docs/haddock-interface") ps}
 
       mkdir -p "$out"
       mv * "$out/"
