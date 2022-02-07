@@ -33,6 +33,9 @@ import Data.Word (Word8)
 class Zero a where
   zero :: a
 
+instance Zero () where
+  zero = ()
+
 instance Zero Bool where
   zero = False
 
