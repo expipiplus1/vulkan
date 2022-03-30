@@ -48,7 +48,9 @@
 --
 -- == New Structures
 --
--- -   'PipelineLibraryCreateInfoKHR'
+-- -   Extending 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo':
+--
+--     -   'PipelineLibraryCreateInfoKHR'
 --
 -- == New Enum Constants
 --

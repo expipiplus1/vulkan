@@ -914,10 +914,38 @@ foreign import ccall
 --     the @index@ parameter /must/ be less than
 --     'PhysicalDeviceTransformFeedbackPropertiesEXT'::@maxTransformFeedbackStreams@
 --
--- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-02340# If the @queryType@
+-- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-06689# If the @queryType@
+--     used to create @queryPool@ was
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT'
+--     the 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+--     allocated from /must/ support graphics operations
+--
+-- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-06690# If the @queryType@
+--     used to create @queryPool@ was
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT'
+--     the @index@ parameter /must/ be less than
+--     'PhysicalDeviceTransformFeedbackPropertiesEXT'::@maxTransformFeedbackStreams@
+--
+-- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-06691# If the @queryType@
+--     used to create @queryPool@ was
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT'
+--     and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-primitivesGeneratedQueryWithNonZeroStreams primitivesGeneratedQueryWithNonZeroStreams>
+--     feature is not enabled, the @index@ parameter /must/ be zero.
+--
+-- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-06692# If the @queryType@
 --     used to create @queryPool@ was not
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT'
+--     and not
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT',
 --     the @index@ /must/ be zero
+--
+-- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-06693# If the @queryType@
+--     used to create @queryPool@ was
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT'
+--     then
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-primitivesGeneratedQuery primitivesGeneratedQuery>
+--     /must/ be enabled
 --
 -- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-02341# If the @queryType@
 --     used to create @queryPool@ was
@@ -1036,6 +1064,7 @@ cmdBeginQueryIndexedEXT :: forall io
                            QueryControlFlags
                         -> -- | @index@ is the query type specific index. When the query type is
                            -- 'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT'
+                           -- or 'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT',
                            -- the index represents the vertex stream.
                            ("index" ::: Word32)
                         -> io ()
@@ -1090,20 +1119,26 @@ foreign import ccall
 --     view mask /must/ be less than or equal to the number of queries in
 --     @queryPool@
 --
--- -   #VUID-vkCmdEndQueryIndexedEXT-queryType-02346# If the @queryType@
+-- -   #VUID-vkCmdEndQueryIndexedEXT-queryType-06694# If the @queryType@
 --     used to create @queryPool@ was
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT'
+--     or
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT',
 --     the @index@ parameter /must/ be less than
 --     'PhysicalDeviceTransformFeedbackPropertiesEXT'::@maxTransformFeedbackStreams@
 --
--- -   #VUID-vkCmdEndQueryIndexedEXT-queryType-02347# If the @queryType@
+-- -   #VUID-vkCmdEndQueryIndexedEXT-queryType-06695# If the @queryType@
 --     used to create @queryPool@ was not
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT'
+--     and not
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT',
 --     the @index@ /must/ be zero
 --
--- -   #VUID-vkCmdEndQueryIndexedEXT-queryType-02723# If the @queryType@
+-- -   #VUID-vkCmdEndQueryIndexedEXT-queryType-06696# If the @queryType@
 --     used to create @queryPool@ was
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT'
+--     or
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT',
 --     @index@ /must/ equal the @index@ used to begin the query
 --
 -- == Valid Usage (Implicit)
@@ -1279,16 +1314,16 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.ImageView' or
 --     'Vulkan.Core10.Handles.BufferView' being written as a storage image
 --     or storage texel buffer where the image format field of the
---     @OpTypeImage@ is @Unknown@ /must/ have image format features that
---     support
+--     @OpTypeImage@ is @Unknown@ then the view’s format feature /must/
+--     contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-OpTypeImage-06424# Any
 --     'Vulkan.Core10.Handles.ImageView' or
 --     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
 --     storage texel buffer where the image format field of the
---     @OpTypeImage@ is @Unknown@ /must/ have image format features that
---     support
+--     @OpTypeImage@ is @Unknown@ then the view’s format feature /must/
+--     contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-02697# For each set /n/
@@ -1387,6 +1422,23 @@ foreign import ccall
 --     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be a protected resource
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-06550# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
+--     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
+--     object that enables
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
+--     that object /must/ only be used with @OpImageSample*@ or
+--     @OpImageSparseSample*@ instructions
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-ConstOffset-06551# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
+--     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
+--     object that enables
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
+--     that object /must/ not use the @ConstOffset@ and @Offset@ operands
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-04115# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
@@ -1496,6 +1548,14 @@ foreign import ccall
 --     been created with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-06666# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-viewportCount-03417# If the
 --     bound graphics pipeline state was created with the
@@ -1757,6 +1817,18 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
 --     used to create the currently bound graphics pipeline
 --
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-attachmentCount-06667# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @attachmentCount@ parameter of
+--     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
+--     /must/ be equal to the
+--     'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo'::@attachmentCount@
+--     of the currently bound graphics pipeline
+--
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-pDepthAttachment-06181# If the
 --     current render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
@@ -1906,6 +1978,24 @@ foreign import ccall
 --     the currently bound pipeline /must/ have been created with a
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@renderPass@
 --     equal to 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-primitivesGeneratedQueryWithRasterizerDiscard-06708#
+--     If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-primitivesGeneratedQueryWithRasterizerDiscard primitivesGeneratedQueryWithRasterizerDiscard>
+--     feature is not enabled and the
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT'
+--     query is active,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-discard rasterization discard>
+--     /must/ not be enabled.
+--
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-primitivesGeneratedQueryWithNonZeroStreams-06709#
+--     If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-primitivesGeneratedQueryWithNonZeroStreams primitivesGeneratedQueryWithNonZeroStreams>
+--     feature is not enabled and the
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT'
+--     query is active, the bound graphics pipeline /must/ not have been
+--     created with a non-zero value in
+--     'PipelineRasterizationStateStreamCreateInfoEXT'::@rasterizationStream@.
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-04007# All vertex input
 --     bindings accessed via vertex input variables declared in the vertex

@@ -151,13 +151,15 @@
 --
 -- -   'DebugUtilsMessengerCallbackDataEXT'
 --
--- -   'DebugUtilsObjectNameInfoEXT'
---
 -- -   'DebugUtilsObjectTagInfoEXT'
 --
 -- -   Extending 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo':
 --
 --     -   'DebugUtilsMessengerCreateInfoEXT'
+--
+-- -   Extending 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo':
+--
+--     -   'DebugUtilsObjectNameInfoEXT'
 --
 -- == New Function Pointers
 --
@@ -1393,6 +1395,15 @@ submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData =
 -- @pObjectName@ is either @NULL@ or an empty string, then any previously
 -- set name is removed.
 --
+-- The
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-graphicsPipelineLibrary graphicsPipelineLibrary>
+-- feature allows the specification of pipelines without the creation of
+-- 'Vulkan.Core10.Handles.ShaderModule' objects beforehand. In order to
+-- continue to allow naming these shaders independently,
+-- 'DebugUtilsObjectNameInfoEXT' /can/ be included in the @pNext@ chain of
+-- 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo', which associates
+-- a static name with that particular shader.
+--
 -- == Valid Usage
 --
 -- -   #VUID-VkDebugUtilsObjectNameInfoEXT-objectType-02589# If
@@ -1412,9 +1423,6 @@ submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData =
 --
 -- -   #VUID-VkDebugUtilsObjectNameInfoEXT-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT'
---
--- -   #VUID-VkDebugUtilsObjectNameInfoEXT-pNext-pNext# @pNext@ /must/ be
---     @NULL@
 --
 -- -   #VUID-VkDebugUtilsObjectNameInfoEXT-objectType-parameter#
 --     @objectType@ /must/ be a valid

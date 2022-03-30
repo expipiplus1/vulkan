@@ -129,33 +129,6 @@ instance Zero PipelineCreationFeedback where
 -- element of @pPipelineStageCreationFeedbacks@ corresponds to
 -- 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo'::@stage@.
 --
--- == Valid Usage
---
--- -   #VUID-VkPipelineCreationFeedbackCreateInfo-pipelineStageCreationFeedbackCount-02668#
---     When chained to 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
---     'PipelineCreationFeedback'::@pipelineStageCreationFeedbackCount@
---     /must/ equal
---     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@stageCount@
---
--- -   #VUID-VkPipelineCreationFeedbackCreateInfo-pipelineStageCreationFeedbackCount-02669#
---     When chained to 'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
---     'PipelineCreationFeedback'::@pipelineStageCreationFeedbackCount@
---     /must/ equal 1
---
--- -   #VUID-VkPipelineCreationFeedbackCreateInfo-pipelineStageCreationFeedbackCount-02670#
---     When chained to
---     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
---     'PipelineCreationFeedback'::@pipelineStageCreationFeedbackCount@
---     /must/ equal
---     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR'::@stageCount@
---
--- -   #VUID-VkPipelineCreationFeedbackCreateInfo-pipelineStageCreationFeedbackCount-02969#
---     When chained to
---     'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV',
---     'PipelineCreationFeedback'::@pipelineStageCreationFeedbackCount@
---     /must/ equal
---     'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingPipelineCreateInfoNV'::@stageCount@
---
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkPipelineCreationFeedbackCreateInfo-sType-sType# @sType@
@@ -167,12 +140,10 @@ instance Zero PipelineCreationFeedback where
 --     'PipelineCreationFeedback' structure
 --
 -- -   #VUID-VkPipelineCreationFeedbackCreateInfo-pPipelineStageCreationFeedbacks-parameter#
+--     If @pipelineStageCreationFeedbackCount@ is not @0@,
 --     @pPipelineStageCreationFeedbacks@ /must/ be a valid pointer to an
 --     array of @pipelineStageCreationFeedbackCount@
 --     'PipelineCreationFeedback' structures
---
--- -   #VUID-VkPipelineCreationFeedbackCreateInfo-pipelineStageCreationFeedbackCount-arraylength#
---     @pipelineStageCreationFeedbackCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
@@ -217,7 +188,6 @@ instance ToCStruct PipelineCreationFeedbackCreateInfo where
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr (Ptr PipelineCreationFeedback))) (zero)
-    poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
     poke ((p `plusPtr` 32 :: Ptr (Ptr PipelineCreationFeedback))) (zero)
     f
 

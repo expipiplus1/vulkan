@@ -91,10 +91,6 @@
 --
 --     -   'PhysicalDevicePrivateDataFeaturesEXT'
 --
--- == New Enums
---
--- -   'PrivateDataSlotCreateFlagBitsEXT'
---
 -- == New Bitmasks
 --
 -- -   'PrivateDataSlotCreateFlagsEXT'
@@ -136,8 +132,7 @@
 -- == See Also
 --
 -- 'DevicePrivateDataCreateInfoEXT',
--- 'PhysicalDevicePrivateDataFeaturesEXT',
--- 'PrivateDataSlotCreateFlagBitsEXT', 'PrivateDataSlotCreateFlagsEXT',
+-- 'PhysicalDevicePrivateDataFeaturesEXT', 'PrivateDataSlotCreateFlagsEXT',
 -- 'PrivateDataSlotCreateInfoEXT', 'PrivateDataSlotEXT',
 -- 'createPrivateDataSlotEXT', 'destroyPrivateDataSlotEXT',
 -- 'getPrivateDataEXT', 'setPrivateDataEXT'
@@ -159,7 +154,6 @@ module Vulkan.Extensions.VK_EXT_private_data  ( pattern STRUCTURE_TYPE_PHYSICAL_
                                               , getPrivateDataEXT
                                               , PrivateDataSlotCreateFlagsEXT
                                               , PrivateDataSlotEXT
-                                              , PrivateDataSlotCreateFlagBitsEXT
                                               , DevicePrivateDataCreateInfoEXT
                                               , PrivateDataSlotCreateInfoEXT
                                               , PhysicalDevicePrivateDataFeaturesEXT
@@ -177,8 +171,7 @@ import Vulkan.Core13.Promoted_From_VK_EXT_private_data (setPrivateData)
 import Vulkan.Core13.Promoted_From_VK_EXT_private_data (DevicePrivateDataCreateInfo)
 import Vulkan.Core13.Promoted_From_VK_EXT_private_data (PhysicalDevicePrivateDataFeatures)
 import Vulkan.Core13.Handles (PrivateDataSlot)
-import Vulkan.Core13.Enums.PrivateDataSlotCreateFlagBits (PrivateDataSlotCreateFlagBits)
-import Vulkan.Core13.Enums.PrivateDataSlotCreateFlagBits (PrivateDataSlotCreateFlags)
+import Vulkan.Core13.Enums.PrivateDataSlotCreateFlags (PrivateDataSlotCreateFlags)
 import Vulkan.Core13.Promoted_From_VK_EXT_private_data (PrivateDataSlotCreateInfo)
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_PRIVATE_DATA_SLOT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO))
@@ -222,10 +215,6 @@ type PrivateDataSlotCreateFlagsEXT = PrivateDataSlotCreateFlags
 
 -- No documentation found for TopLevel "VkPrivateDataSlotEXT"
 type PrivateDataSlotEXT = PrivateDataSlot
-
-
--- No documentation found for TopLevel "VkPrivateDataSlotCreateFlagBitsEXT"
-type PrivateDataSlotCreateFlagBitsEXT = PrivateDataSlotCreateFlagBits
 
 
 -- No documentation found for TopLevel "VkDevicePrivateDataCreateInfoEXT"

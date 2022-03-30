@@ -122,8 +122,10 @@ import {-# SOURCE #-} Vulkan.Core10.DescriptorSet (DescriptorPoolCreateInfo)
 import {-# SOURCE #-} Vulkan.Core10.Enums.DescriptorPoolResetFlags (DescriptorPoolResetFlags)
 import {-# SOURCE #-} Vulkan.Core10.Handles (DescriptorSet)
 import {-# SOURCE #-} Vulkan.Core10.DescriptorSet (DescriptorSetAllocateInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping (DescriptorSetBindingReferenceVALVE)
 import {-# SOURCE #-} Vulkan.Core10.Handles (DescriptorSetLayout)
 import {-# SOURCE #-} Vulkan.Core10.DescriptorSet (DescriptorSetLayoutCreateInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping (DescriptorSetLayoutHostMappingInfoVALVE)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance3 (DescriptorSetLayoutSupport)
 import {-# SOURCE #-} Vulkan.Core11.Handles (DescriptorUpdateTemplate)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template (DescriptorUpdateTemplateCreateInfo)
@@ -1039,6 +1041,8 @@ data DeviceCmds = DeviceCmds
   , pVkGetBufferCollectionPropertiesFUCHSIA :: FunPtr (Ptr Device_T -> BufferCollectionFUCHSIA -> ("pProperties" ::: Ptr BufferCollectionPropertiesFUCHSIA) -> IO Result)
   , pVkCmdBeginRendering :: FunPtr (Ptr CommandBuffer_T -> ("pRenderingInfo" ::: Ptr (SomeStruct RenderingInfo)) -> IO ())
   , pVkCmdEndRendering :: FunPtr (Ptr CommandBuffer_T -> IO ())
+  , pVkGetDescriptorSetLayoutHostMappingInfoVALVE :: FunPtr (Ptr Device_T -> ("pBindingReference" ::: Ptr DescriptorSetBindingReferenceVALVE) -> ("pHostMapping" ::: Ptr DescriptorSetLayoutHostMappingInfoVALVE) -> IO ())
+  , pVkGetDescriptorSetHostMappingVALVE :: FunPtr (Ptr Device_T -> DescriptorSet -> ("ppData" ::: Ptr (Ptr ())) -> IO ())
   }
 
 deriving instance Eq DeviceCmds
@@ -1089,7 +1093,8 @@ instance Zero DeviceCmds where
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1468,6 +1473,8 @@ initDeviceCmds instanceCmds handle = do
   vkGetBufferCollectionPropertiesFUCHSIA <- getDeviceProcAddr' handle (Ptr "vkGetBufferCollectionPropertiesFUCHSIA"#)
   vkCmdBeginRendering <- getFirstDeviceProcAddr [(Ptr "vkCmdBeginRenderingKHR"#), (Ptr "vkCmdBeginRendering"#)]
   vkCmdEndRendering <- getFirstDeviceProcAddr [(Ptr "vkCmdEndRenderingKHR"#), (Ptr "vkCmdEndRendering"#)]
+  vkGetDescriptorSetLayoutHostMappingInfoVALVE <- getDeviceProcAddr' handle (Ptr "vkGetDescriptorSetLayoutHostMappingInfoVALVE"#)
+  vkGetDescriptorSetHostMappingVALVE <- getDeviceProcAddr' handle (Ptr "vkGetDescriptorSetHostMappingVALVE"#)
   pure $ DeviceCmds handle
     (castFunPtr @_ @(Ptr Device_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction) vkGetDeviceProcAddr)
     (castFunPtr @_ @(Ptr Device_T -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyDevice)
@@ -1827,4 +1834,6 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr Device_T -> BufferCollectionFUCHSIA -> ("pProperties" ::: Ptr BufferCollectionPropertiesFUCHSIA) -> IO Result) vkGetBufferCollectionPropertiesFUCHSIA)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pRenderingInfo" ::: Ptr (SomeStruct RenderingInfo)) -> IO ()) vkCmdBeginRendering)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> IO ()) vkCmdEndRendering)
+    (castFunPtr @_ @(Ptr Device_T -> ("pBindingReference" ::: Ptr DescriptorSetBindingReferenceVALVE) -> ("pHostMapping" ::: Ptr DescriptorSetLayoutHostMappingInfoVALVE) -> IO ()) vkGetDescriptorSetLayoutHostMappingInfoVALVE)
+    (castFunPtr @_ @(Ptr Device_T -> DescriptorSet -> ("ppData" ::: Ptr (Ptr ())) -> IO ()) vkGetDescriptorSetHostMappingVALVE)
 

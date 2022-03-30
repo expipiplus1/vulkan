@@ -1274,11 +1274,90 @@ foreign import ccall
 --
 -- = Description
 --
+-- As mentioned above, if 'createSwapchainKHR' succeeds, it will return a
+-- handle to a swapchain containing an array of at least
+-- @pCreateInfo->minImageCount@ presentable images.
+--
+-- While acquired by the application, presentable images /can/ be used in
+-- any way that equivalent non-presentable images /can/ be used. A
+-- presentable image is equivalent to a non-presentable image created with
+-- the following 'Vulkan.Core10.Image.ImageCreateInfo' parameters:
+--
+-- +---------------------------------------+----------------------------------------------------------------------------------------+
+-- | 'Vulkan.Core10.Image.ImageCreateInfo' | Value                                                                                  |
+-- | Field                                 |                                                                                        |
+-- +=======================================+========================================================================================+
+-- | @flags@                               | 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT' |
+-- |                                       | is set if 'SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR' is set                |
+-- |                                       |                                                                                        |
+-- |                                       | 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_PROTECTED_BIT' is set if         |
+-- |                                       | 'SWAPCHAIN_CREATE_PROTECTED_BIT_KHR' is set                                            |
+-- |                                       |                                                                                        |
+-- |                                       | 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT' and          |
+-- |                                       | 'Vulkan.Extensions.VK_KHR_maintenance2.IMAGE_CREATE_EXTENDED_USAGE_BIT_KHR' are both   |
+-- |                                       | set if 'SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR' is set                                |
+-- |                                       |                                                                                        |
+-- |                                       | all other bits are unset                                                               |
+-- +---------------------------------------+----------------------------------------------------------------------------------------+
+-- | @imageType@                           | 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'                                          |
+-- +---------------------------------------+----------------------------------------------------------------------------------------+
+-- | @format@                              | @pCreateInfo->imageFormat@                                                             |
+-- +---------------------------------------+----------------------------------------------------------------------------------------+
+-- | @extent@                              | {@pCreateInfo->imageExtent.width@, @pCreateInfo->imageExtent.height@, @1@}             |
+-- +---------------------------------------+----------------------------------------------------------------------------------------+
+-- | @mipLevels@                           | 1                                                                                      |
+-- +---------------------------------------+----------------------------------------------------------------------------------------+
+-- | @arrayLayers@                         | @pCreateInfo->imageArrayLayers@                                                        |
+-- +---------------------------------------+----------------------------------------------------------------------------------------+
+-- | @samples@                             | 'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'                           |
+-- +---------------------------------------+----------------------------------------------------------------------------------------+
+-- | @tiling@                              | 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL'                                 |
+-- +---------------------------------------+----------------------------------------------------------------------------------------+
+-- | @usage@                               | @pCreateInfo->imageUsage@                                                              |
+-- +---------------------------------------+----------------------------------------------------------------------------------------+
+-- | @sharingMode@                         | @pCreateInfo->imageSharingMode@                                                        |
+-- +---------------------------------------+----------------------------------------------------------------------------------------+
+-- | @queueFamilyIndexCount@               | @pCreateInfo->queueFamilyIndexCount@                                                   |
+-- +---------------------------------------+----------------------------------------------------------------------------------------+
+-- | @pQueueFamilyIndices@                 | @pCreateInfo->pQueueFamilyIndices@                                                     |
+-- +---------------------------------------+----------------------------------------------------------------------------------------+
+-- | @initialLayout@                       | 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED'                               |
+-- +---------------------------------------+----------------------------------------------------------------------------------------+
+--
+-- The @pCreateInfo->surface@ /must/ not be destroyed until after the
+-- swapchain is destroyed.
+--
+-- If @pCreateInfo->oldSwapchain@ is
+-- 'Vulkan.Core10.APIConstants.NULL_HANDLE', and the native window referred
+-- to by @pCreateInfo->surface@ is already associated with a Vulkan
+-- swapchain, 'Vulkan.Core10.Enums.Result.ERROR_NATIVE_WINDOW_IN_USE_KHR'
+-- /must/ be returned.
+--
+-- If the native window referred to by @pCreateInfo->surface@ is already
+-- associated with a non-Vulkan graphics API surface,
+-- 'Vulkan.Core10.Enums.Result.ERROR_NATIVE_WINDOW_IN_USE_KHR' /must/ be
+-- returned.
+--
+-- The native window referred to by @pCreateInfo->surface@ /must/ not
+-- become associated with a non-Vulkan graphics API surface before all
+-- associated Vulkan swapchains have been destroyed.
+--
+-- 'createSwapchainKHR' will return
+-- 'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST' if the logical device was
+-- lost. The 'Vulkan.Extensions.Handles.SwapchainKHR' is a child of the
+-- @device@, and /must/ not be destroyed before the @device@. However,
+-- 'Vulkan.Extensions.Handles.SurfaceKHR' is not a child of any
+-- 'Vulkan.Core10.Handles.Device' and is not affected by the lost device.
+-- After successfully recreating a 'Vulkan.Core10.Handles.Device', the same
+-- 'Vulkan.Extensions.Handles.SurfaceKHR' /can/ be used to create a new
+-- 'Vulkan.Extensions.Handles.SwapchainKHR', provided the previous one was
+-- destroyed.
+--
 -- If the @oldSwapchain@ parameter of @pCreateInfo@ is a valid swapchain,
 -- which has exclusive full-screen access, that access is released from
--- @oldSwapchain@. If the command succeeds in this case, the newly created
--- swapchain will automatically acquire exclusive full-screen access from
--- @oldSwapchain@.
+-- @pCreateInfo->oldSwapchain@. If the command succeeds in this case, the
+-- newly created swapchain will automatically acquire exclusive full-screen
+-- access from @pCreateInfo->oldSwapchain@.
 --
 -- Note
 --

@@ -3180,13 +3180,13 @@ foreign import ccall
 --     non-sparse buffer then it /must/ be bound completely and
 --     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03815# For any
+-- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-06707# For any
 --     element of @pInfos@[i].@pGeometries@ or @pInfos@[i].@ppGeometries@
 --     with a @geometryType@ of 'GEOMETRY_TYPE_INSTANCES_KHR', each
 --     'AccelerationStructureInstanceKHR'::@accelerationStructureReference@
 --     value in @geometry.instances.data.deviceAddress@ /must/ be a valid
 --     device address containing a value obtained from
---     'getAccelerationStructureDeviceAddressKHR'
+--     'getAccelerationStructureDeviceAddressKHR' or @0@
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-pInfos-03675# For each
 --     @pInfos@[i], @dstAccelerationStructure@ /must/ have been created
@@ -3762,14 +3762,14 @@ foreign import ccall
 --     non-sparse buffer then it /must/ be bound completely and
 --     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-03815# For
+-- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pInfos-06707# For
 --     any element of @pInfos@[i].@pGeometries@ or
 --     @pInfos@[i].@ppGeometries@ with a @geometryType@ of
 --     'GEOMETRY_TYPE_INSTANCES_KHR', each
 --     'AccelerationStructureInstanceKHR'::@accelerationStructureReference@
 --     value in @geometry.instances.data.deviceAddress@ /must/ be a valid
 --     device address containing a value obtained from
---     'getAccelerationStructureDeviceAddressKHR'
+--     'getAccelerationStructureDeviceAddressKHR' or @0@
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pIndirectDeviceAddresses-03645#
 --     For any element of @pIndirectDeviceAddresses@, if the buffer from

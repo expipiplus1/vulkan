@@ -766,6 +766,12 @@ instance Zero BufferCopy2 where
 --     /must/ match the number of slices of the @extent@ (for 3D) or layers
 --     of the @dstSubresource@ (for non-3D)
 --
+-- -   #VUID-VkImageCopy2-extent-06668# @extent.width@ /must/ not be 0
+--
+-- -   #VUID-VkImageCopy2-extent-06669# @extent.height@ /must/ not be 0
+--
+-- -   #VUID-VkImageCopy2-extent-06670# @extent.depth@ /must/ not be 0
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkImageCopy2-sType-sType# @sType@ /must/ be
@@ -1021,6 +1027,15 @@ instance es ~ '[] => Zero (ImageBlit2 es) where
 --
 -- -   #VUID-VkBufferImageCopy2-aspectMask-00212# The @aspectMask@ member
 --     of @imageSubresource@ /must/ only have a single bit set
+--
+-- -   #VUID-VkBufferImageCopy2-imageExtent-06659# @imageExtent.width@
+--     /must/ not be 0
+--
+-- -   #VUID-VkBufferImageCopy2-imageExtent-06660# @imageExtent.height@
+--     /must/ not be 0
+--
+-- -   #VUID-VkBufferImageCopy2-imageExtent-06661# @imageExtent.depth@
+--     /must/ not be 0
 --
 -- == Valid Usage (Implicit)
 --
@@ -1398,11 +1413,6 @@ instance Zero CopyBufferInfo2 where
 --     of @srcImage@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_SRC_BIT'
 --
--- -   #VUID-VkCopyImageInfo2-srcImage-00126# @srcImage@ /must/ have been
---     created with
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_SRC_BIT'
---     usage flag
---
 -- -   #VUID-VkCopyImageInfo2-srcImage-01546# If @srcImage@ is non-sparse
 --     then the image or /disjoint/ plane to be copied /must/ be bound
 --     completely and contiguously to a single
@@ -1423,11 +1433,6 @@ instance Zero CopyBufferInfo2 where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @dstImage@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_DST_BIT'
---
--- -   #VUID-VkCopyImageInfo2-dstImage-00131# @dstImage@ /must/ have been
---     created with
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
---     usage flag
 --
 -- -   #VUID-VkCopyImageInfo2-dstImage-01547# If @dstImage@ is non-sparse
 --     then the image or /disjoint/ plane that is the destination of the
@@ -1703,6 +1708,46 @@ instance Zero CopyBufferInfo2 where
 --     @dstOffset.z@) /must/ equal the depth of the specified
 --     @dstSubresource@ of @dstImage@
 --
+-- -   #VUID-VkCopyImageInfo2-aspect-06662# If the @aspect@ member of any
+--     element of @pRegions@ includes any flag other than
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
+--     or @srcImage@ was not created with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageStencilUsageCreateInfo separate stencil usage>,
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_SRC_BIT'
+--     /must/ have been included in the
+--     'Vulkan.Core10.Image.ImageCreateInfo'::@usage@ used to create
+--     @srcImage@
+--
+-- -   #VUID-VkCopyImageInfo2-aspect-06663# If the @aspect@ member of any
+--     element of @pRegions@ includes any flag other than
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
+--     or @dstImage@ was not created with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageStencilUsageCreateInfo separate stencil usage>,
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
+--     /must/ have been included in the
+--     'Vulkan.Core10.Image.ImageCreateInfo'::@usage@ used to create
+--     @dstImage@
+--
+-- -   #VUID-VkCopyImageInfo2-aspect-06664# If the @aspect@ member of any
+--     element of @pRegions@ includes
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
+--     and @srcImage@ was created with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageStencilUsageCreateInfo separate stencil usage>,
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_SRC_BIT'
+--     /must/ have been included in the
+--     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'::@stencilUsage@
+--     used to create @srcImage@
+--
+-- -   #VUID-VkCopyImageInfo2-aspect-06665# If the @aspect@ member of any
+--     element of @pRegions@ includes
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
+--     and @dstImage@ was created with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageStencilUsageCreateInfo separate stencil usage>,
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
+--     /must/ have been included in the
+--     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'::@stencilUsage@
+--     used to create @dstImage@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkCopyImageInfo2-sType-sType# @sType@ /must/ be
@@ -1832,7 +1877,7 @@ instance Zero CopyImageInfo2 where
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_SRC_BIT'
 --
 -- -   #VUID-VkBlitImageInfo2-srcImage-06421# @srcImage@ /must/ not use a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion format that requires a sampler Y’CBCR conversion>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion format that requires a sampler Y′CBCR conversion>
 --
 -- -   #VUID-VkBlitImageInfo2-srcImage-00219# @srcImage@ /must/ have been
 --     created with
@@ -1860,7 +1905,7 @@ instance Zero CopyImageInfo2 where
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_BLIT_DST_BIT'
 --
 -- -   #VUID-VkBlitImageInfo2-dstImage-06422# @dstImage@ /must/ not use a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion format that requires a sampler Y’CBCR conversion>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion format that requires a sampler Y′CBCR conversion>
 --
 -- -   #VUID-VkBlitImageInfo2-dstImage-00224# @dstImage@ /must/ have been
 --     created with

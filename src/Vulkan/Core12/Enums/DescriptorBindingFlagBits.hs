@@ -75,11 +75,13 @@ pattern DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT = DescriptorBindingFl
 -- this binding that are not /dynamically used/ need not contain valid
 -- descriptors at the time the descriptors are consumed. A descriptor is
 -- dynamically used if any shader invocation executes an instruction that
--- performs any memory access using the descriptor.
+-- performs any memory access using the descriptor. If a descriptor is not
+-- dynamically used, any resource referenced by the descriptor is not
+-- considered to be referenced during command execution.
 pattern DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT             = DescriptorBindingFlagBits 0x00000004
 -- | 'DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT' indicates that this
--- descriptor binding has a variable size that will be specified when a
--- descriptor set is allocated using this layout. The value of
+-- is a /variable-sized descriptor binding/ whose size will be specified
+-- when a descriptor set is allocated using this layout. The value of
 -- @descriptorCount@ is treated as an upper bound on the size of the
 -- binding. This /must/ only be used for the last binding in the descriptor
 -- set layout (i.e. the binding with the largest value of @binding@). For

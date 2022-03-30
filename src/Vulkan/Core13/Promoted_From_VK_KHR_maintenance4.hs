@@ -343,8 +343,8 @@ instance Zero DeviceBufferMemoryRequirements where
 --     @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.Image.ImageCreateInfo' structure
 --
--- -   #VUID-VkDeviceImageMemoryRequirements-planeAspect-parameter#
---     @planeAspect@ /must/ be a valid
+-- -   #VUID-VkDeviceImageMemoryRequirements-planeAspect-parameter# If
+--     @planeAspect@ is not @0@, @planeAspect@ /must/ be a valid
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits' value
 --
 -- = See Also
@@ -394,7 +394,6 @@ instance ToCStruct DeviceImageMemoryRequirements where
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     pCreateInfo'' <- ContT @_ @_ @(Ptr (ImageCreateInfo '[])) $ \cont -> withSomeCStruct @ImageCreateInfo ((SomeStruct zero)) (cont . castPtr)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr (ImageCreateInfo _)))) pCreateInfo''
-    lift $ poke ((p `plusPtr` 24 :: Ptr ImageAspectFlagBits)) (zero)
     lift $ f
 
 instance FromCStruct DeviceImageMemoryRequirements where

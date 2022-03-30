@@ -924,14 +924,14 @@ instance Zero DescriptorSetLayoutBindingFlagsCreateInfo where
 -- If @descriptorSetCount@ is zero or this structure is not included in the
 -- @pNext@ chain, then the variable lengths are considered to be zero.
 -- Otherwise, @pDescriptorCounts@[i] is the number of descriptors in the
--- variable count descriptor binding in the corresponding descriptor set
--- layout. If the variable count descriptor binding in the corresponding
+-- variable-sized descriptor binding in the corresponding descriptor set
+-- layout. If the variable-sized descriptor binding in the corresponding
 -- descriptor set layout has a descriptor type of
 -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
 -- then @pDescriptorCounts@[i] specifies the binding’s capacity in bytes.
 -- If
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetAllocateInfo'::@pSetLayouts@[i]
--- does not include a variable count descriptor binding, then
+-- does not include a variable-sized descriptor binding, then
 -- @pDescriptorCounts@[i] is ignored.
 --
 -- == Valid Usage
@@ -944,7 +944,7 @@ instance Zero DescriptorSetLayoutBindingFlagsCreateInfo where
 -- -   #VUID-VkDescriptorSetVariableDescriptorCountAllocateInfo-pSetLayouts-03046#
 --     If
 --     'Vulkan.Core10.DescriptorSet.DescriptorSetAllocateInfo'::@pSetLayouts@[i]
---     has a variable descriptor count binding, then @pDescriptorCounts@[i]
+--     has a variable-sized descriptor binding, then @pDescriptorCounts@[i]
 --     /must/ be less than or equal to the descriptor count specified for
 --     that binding when the descriptor set layout was created
 --
@@ -965,9 +965,8 @@ instance Zero DescriptorSetLayoutBindingFlagsCreateInfo where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DescriptorSetVariableDescriptorCountAllocateInfo = DescriptorSetVariableDescriptorCountAllocateInfo
   { -- | @pDescriptorCounts@ is a pointer to an array of descriptor counts, with
-    -- each member specifying the number of descriptors in a variable
-    -- descriptor count binding in the corresponding descriptor set being
-    -- allocated.
+    -- each member specifying the number of descriptors in a variable-sized
+    -- descriptor binding in the corresponding descriptor set being allocated.
     descriptorCounts :: Vector Word32 }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)

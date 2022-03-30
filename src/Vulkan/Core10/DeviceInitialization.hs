@@ -27,7 +27,6 @@ module Vulkan.Core10.DeviceInitialization  ( createInstance
                                            , Instance(..)
                                            , PhysicalDevice(..)
                                            , AllocationCallbacks(..)
-                                           , InstanceCreateFlags(..)
                                            , ImageType(..)
                                            , ImageTiling(..)
                                            , InternalAllocationType(..)
@@ -48,6 +47,8 @@ module Vulkan.Core10.DeviceInitialization  ( createInstance
                                            , FormatFeatureFlags
                                            , SampleCountFlagBits(..)
                                            , SampleCountFlags
+                                           , InstanceCreateFlagBits(..)
+                                           , InstanceCreateFlags
                                            , FN_vkInternalAllocationNotification
                                            , PFN_vkInternalAllocationNotification
                                            , FN_vkInternalFreeNotification
@@ -170,7 +171,7 @@ import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceImageFormatProperties))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceMemoryProperties))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceProperties))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceQueueFamilyProperties))
-import Vulkan.Core10.Enums.InstanceCreateFlags (InstanceCreateFlags)
+import Vulkan.Core10.Enums.InstanceCreateFlagBits (InstanceCreateFlags)
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.APIConstants (MAX_MEMORY_HEAPS)
 import Vulkan.Core10.APIConstants (MAX_MEMORY_TYPES)
@@ -219,7 +220,8 @@ import Vulkan.Core10.Enums.ImageType (ImageType(..))
 import Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlagBits(..))
 import Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
 import Vulkan.Core10.Handles (Instance(..))
-import Vulkan.Core10.Enums.InstanceCreateFlags (InstanceCreateFlags(..))
+import Vulkan.Core10.Enums.InstanceCreateFlagBits (InstanceCreateFlagBits(..))
+import Vulkan.Core10.Enums.InstanceCreateFlagBits (InstanceCreateFlags)
 import Vulkan.Core10.Enums.InternalAllocationType (InternalAllocationType(..))
 import Vulkan.Core10.Enums.MemoryHeapFlagBits (MemoryHeapFlagBits(..))
 import Vulkan.Core10.Enums.MemoryHeapFlagBits (MemoryHeapFlags)
@@ -624,9 +626,11 @@ foreign import ccall
 -- | non-@NULL@       |                       |                  |
 -- | instance         |                       |                  |
 -- +------------------+-----------------------+------------------+
+-- | @NULL@           | /global command/2     | fp               |
+-- +------------------+-----------------------+------------------+
 -- | @NULL@           | 'getInstanceProcAddr' | fp5              |
 -- +------------------+-----------------------+------------------+
--- | @NULL@           | /global command/2     | fp               |
+-- | instance         | 'getInstanceProcAddr' | fp               |
 -- +------------------+-----------------------+------------------+
 -- | instance         | core /dispatchable    | fp3              |
 -- |                  | command/              |                  |
@@ -1441,6 +1445,11 @@ instance Zero ApplicationInfo where
 --     @ppEnabledExtensionNames@ /must/ contain
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>
 --
+-- -   #VUID-VkInstanceCreateInfo-flags-06559# If @flags@ has the
+--     'Vulkan.Core10.Enums.InstanceCreateFlagBits.INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR'
+--     bit set, the list of enabled extensions in @ppEnabledExtensionNames@
+--     /must/ contain @VK_KHR_portability_enumeration@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkInstanceCreateInfo-sType-sType# @sType@ /must/ be
@@ -1459,7 +1468,10 @@ instance Zero ApplicationInfo where
 --     structures of type
 --     'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsMessengerCreateInfoEXT'
 --
--- -   #VUID-VkInstanceCreateInfo-flags-zerobitmask# @flags@ /must/ be @0@
+-- -   #VUID-VkInstanceCreateInfo-flags-parameter# @flags@ /must/ be a
+--     valid combination of
+--     'Vulkan.Core10.Enums.InstanceCreateFlagBits.InstanceCreateFlagBits'
+--     values
 --
 -- -   #VUID-VkInstanceCreateInfo-pApplicationInfo-parameter# If
 --     @pApplicationInfo@ is not @NULL@, @pApplicationInfo@ /must/ be a
@@ -1479,12 +1491,14 @@ instance Zero ApplicationInfo where
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'ApplicationInfo',
--- 'Vulkan.Core10.Enums.InstanceCreateFlags.InstanceCreateFlags',
+-- 'Vulkan.Core10.Enums.InstanceCreateFlagBits.InstanceCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createInstance'
 data InstanceCreateInfo (es :: [Type]) = InstanceCreateInfo
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
-  , -- | @flags@ is reserved for future use.
+  , -- | @flags@ is a bitmask of
+    -- 'Vulkan.Core10.Enums.InstanceCreateFlagBits.InstanceCreateFlagBits'
+    -- indicating the behavior of the instance.
     flags :: InstanceCreateFlags
   , -- | @pApplicationInfo@ is @NULL@ or a pointer to a 'ApplicationInfo'
     -- structure. If not @NULL@, this information helps implementations
@@ -2267,7 +2281,7 @@ instance Zero FormatProperties where
 --         member for which mipmap image support is not required
 --
 --     -   image @format@ is one of the
---         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>
+--         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y′CBCR conversion>
 --
 --     -   @flags@ contains
 --         'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
@@ -2286,7 +2300,7 @@ instance Zero FormatProperties where
 --         @type@ is 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D'
 --
 --     -   @format@ is one of the
---         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>
+--         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y′CBCR conversion>
 --
 -- -   If @tiling@ is
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',

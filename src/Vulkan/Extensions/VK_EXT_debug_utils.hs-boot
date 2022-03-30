@@ -151,13 +151,15 @@
 --
 -- -   'DebugUtilsMessengerCallbackDataEXT'
 --
--- -   'DebugUtilsObjectNameInfoEXT'
---
 -- -   'DebugUtilsObjectTagInfoEXT'
 --
 -- -   Extending 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo':
 --
 --     -   'DebugUtilsMessengerCreateInfoEXT'
+--
+-- -   Extending 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo':
+--
+--     -   'DebugUtilsObjectNameInfoEXT'
 --
 -- == New Function Pointers
 --

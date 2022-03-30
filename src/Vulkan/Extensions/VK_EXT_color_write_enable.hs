@@ -195,10 +195,10 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-colorWriteEnable colorWriteEnable>
 --     feature /must/ be enabled
 --
--- -   #VUID-vkCmdSetColorWriteEnableEXT-attachmentCount-04804#
---     @attachmentCount@ /must/ be equal to the @attachmentCount@ member of
---     the 'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo'
---     structure specified during pipeline creation
+-- -   #VUID-vkCmdSetColorWriteEnableEXT-attachmentCount-06656#
+--     @attachmentCount@ /must/ be less than or equal to the
+--     @maxColorAttachments@ member of
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'
 --
 -- == Valid Usage (Implicit)
 --
@@ -379,6 +379,11 @@ instance Zero PhysicalDeviceColorWriteEnableFeaturesEXT where
 --     @attachmentCount@ /must/ be equal to the @attachmentCount@ member of
 --     the 'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo'
 --     structure specified during pipeline creation
+--
+-- -   #VUID-VkPipelineColorWriteCreateInfoEXT-attachmentCount-06655#
+--     @attachmentCount@ /must/ be less than or equal to the
+--     @maxColorAttachments@ member of
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'
 --
 -- == Valid Usage (Implicit)
 --

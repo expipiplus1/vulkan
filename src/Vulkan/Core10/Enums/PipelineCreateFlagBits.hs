@@ -5,6 +5,8 @@ module Vulkan.Core10.Enums.PipelineCreateFlagBits  ( PipelineCreateFlags
                                                                            , PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT
                                                                            , PIPELINE_CREATE_DERIVATIVE_BIT
                                                                            , PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV
+                                                                           , PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT
+                                                                           , PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT
                                                                            , PIPELINE_CREATE_LIBRARY_BIT_KHR
                                                                            , PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV
                                                                            , PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR
@@ -86,7 +88,10 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --     'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.getPipelineExecutableInternalRepresentationsKHR'.
 --     Enabling this flag /must/ not affect the final compiled pipeline but
 --     /may/ disable pipeline caching or otherwise affect pipeline creation
---     time.
+--     time. When capturing IR from pipelines created with pipeline
+--     libraries, there is no guarantee that IR from libraries /can/ be
+--     retrieved from the linked pipeline. Applications /should/ retrieve
+--     IR from each library, and any linked pipelines, separately.
 --
 -- -   'PIPELINE_CREATE_LIBRARY_BIT_KHR' specifies that the pipeline
 --     /cannot/ be used directly, and instead defines a /pipeline library/
@@ -160,11 +165,42 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --     specifies that the pipeline will be used with a fragment density map
 --     attachment.
 --
+-- -   'PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT' specifies that
+--     pipeline libraries being linked into this library /should/ have link
+--     time optimizations applied. If this bit is omitted, implementations
+--     /should/ instead perform linking as rapidly as possible.
+--
+-- -   'PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT'
+--     specifies that pipeline libraries should retain any information
+--     necessary to later perform an optimal link with
+--     'PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT'.
+--
 -- It is valid to set both 'PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT' and
 -- 'PIPELINE_CREATE_DERIVATIVE_BIT'. This allows a pipeline to be both a
 -- parent and possibly a child in a pipeline hierarchy. See
 -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-pipeline-derivatives Pipeline Derivatives>
 -- for more information.
+--
+-- When an implementation is looking up a pipeline in a
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-cache pipeline cache>,
+-- if that pipeline is being created using linked libraries,
+-- implementations /should/ always return an equivalent pipeline created
+-- with 'PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT' if available,
+-- whether or not that bit was specified.
+--
+-- Note
+--
+-- Using 'PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT' (or not) when
+-- linking pipeline libraries is intended as a performance tradeoff between
+-- host and device. If the bit is omitted, linking should be faster and
+-- produce a pipeline more rapidly, but performance of the pipeline on the
+-- target device may be reduced. If the bit is included, linking may be
+-- slower but should produce a pipeline with device performance comparable
+-- to a monolithically created pipeline. Using both options can allow
+-- latency-sensitive applications to generate a suboptimal but usable
+-- pipeline quickly, and then perform an optimal link in the background,
+-- substituting the result for the suboptimally linked pipeline as soon as
+-- it is available.
 --
 -- = See Also
 --
@@ -181,6 +217,10 @@ pattern PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT                       = PipelineCr
 pattern PIPELINE_CREATE_DERIVATIVE_BIT                              = PipelineCreateFlagBits 0x00000004
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV"
 pattern PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV             = PipelineCreateFlagBits 0x00100000
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT"
+pattern PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT              = PipelineCreateFlagBits 0x00000400
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT"
+pattern PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT  = PipelineCreateFlagBits 0x00800000
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_LIBRARY_BIT_KHR"
 pattern PIPELINE_CREATE_LIBRARY_BIT_KHR                             = PipelineCreateFlagBits 0x00000800
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV"
@@ -226,15 +266,17 @@ enumPrefixPipelineCreateFlagBits = "PIPELINE_CREATE_"
 
 showTablePipelineCreateFlagBits :: [(PipelineCreateFlagBits, String)]
 showTablePipelineCreateFlagBits =
-  [ (PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT                , "DISABLE_OPTIMIZATION_BIT")
-  , (PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT                   , "ALLOW_DERIVATIVES_BIT")
-  , (PIPELINE_CREATE_DERIVATIVE_BIT                          , "DERIVATIVE_BIT")
-  , (PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV         , "RAY_TRACING_ALLOW_MOTION_BIT_NV")
-  , (PIPELINE_CREATE_LIBRARY_BIT_KHR                         , "LIBRARY_BIT_KHR")
-  , (PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV                , "INDIRECT_BINDABLE_BIT_NV")
-  , (PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR, "CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR")
-  , (PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR              , "CAPTURE_STATISTICS_BIT_KHR")
-  , (PIPELINE_CREATE_DEFER_COMPILE_BIT_NV                    , "DEFER_COMPILE_BIT_NV")
+  [ (PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT                  , "DISABLE_OPTIMIZATION_BIT")
+  , (PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT                     , "ALLOW_DERIVATIVES_BIT")
+  , (PIPELINE_CREATE_DERIVATIVE_BIT                            , "DERIVATIVE_BIT")
+  , (PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV           , "RAY_TRACING_ALLOW_MOTION_BIT_NV")
+  , (PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT            , "LINK_TIME_OPTIMIZATION_BIT_EXT")
+  , (PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT, "RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT")
+  , (PIPELINE_CREATE_LIBRARY_BIT_KHR                           , "LIBRARY_BIT_KHR")
+  , (PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV                  , "INDIRECT_BINDABLE_BIT_NV")
+  , (PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR  , "CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR")
+  , (PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR                , "CAPTURE_STATISTICS_BIT_KHR")
+  , (PIPELINE_CREATE_DEFER_COMPILE_BIT_NV                      , "DEFER_COMPILE_BIT_NV")
   , ( PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR
     , "RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR"
     )

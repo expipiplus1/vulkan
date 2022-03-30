@@ -958,16 +958,16 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.ImageView' or
 --     'Vulkan.Core10.Handles.BufferView' being written as a storage image
 --     or storage texel buffer where the image format field of the
---     @OpTypeImage@ is @Unknown@ /must/ have image format features that
---     support
+--     @OpTypeImage@ is @Unknown@ then the view’s format feature /must/
+--     contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdTraceRaysKHR-OpTypeImage-06424# Any
 --     'Vulkan.Core10.Handles.ImageView' or
 --     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
 --     storage texel buffer where the image format field of the
---     @OpTypeImage@ is @Unknown@ /must/ have image format features that
---     support
+--     @OpTypeImage@ is @Unknown@ then the view’s format feature /must/
+--     contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdTraceRaysKHR-None-02697# For each set /n/ that is
@@ -1066,6 +1066,23 @@ foreign import ccall
 --     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be a protected resource
+--
+-- -   #VUID-vkCmdTraceRaysKHR-None-06550# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
+--     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
+--     object that enables
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
+--     that object /must/ only be used with @OpImageSample*@ or
+--     @OpImageSparseSample*@ instructions
+--
+-- -   #VUID-vkCmdTraceRaysKHR-ConstOffset-06551# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
+--     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
+--     object that enables
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
+--     that object /must/ not use the @ConstOffset@ and @Offset@ operands
 --
 -- -   #VUID-vkCmdTraceRaysKHR-None-04115# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
@@ -1864,16 +1881,16 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.ImageView' or
 --     'Vulkan.Core10.Handles.BufferView' being written as a storage image
 --     or storage texel buffer where the image format field of the
---     @OpTypeImage@ is @Unknown@ /must/ have image format features that
---     support
+--     @OpTypeImage@ is @Unknown@ then the view’s format feature /must/
+--     contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-OpTypeImage-06424# Any
 --     'Vulkan.Core10.Handles.ImageView' or
 --     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
 --     storage texel buffer where the image format field of the
---     @OpTypeImage@ is @Unknown@ /must/ have image format features that
---     support
+--     @OpTypeImage@ is @Unknown@ then the view’s format feature /must/
+--     contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02697# For each set /n/ that is
@@ -1972,6 +1989,23 @@ foreign import ccall
 --     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be a protected resource
+--
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-None-06550# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
+--     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
+--     object that enables
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
+--     that object /must/ only be used with @OpImageSample*@ or
+--     @OpImageSparseSample*@ instructions
+--
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-ConstOffset-06551# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
+--     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
+--     object that enables
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
+--     that object /must/ not use the @ConstOffset@ and @Offset@ operands
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-None-04115# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
@@ -2855,6 +2889,12 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 --     feature is not enabled, @flags@ /must/ not include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR'
 --
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-06546# @flags@ /must/
+--     not include both
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR'
+--     and
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SKIP_AABBS_BIT_KHR'
+--
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-03598# If @flags@
 --     includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR',
@@ -2880,6 +2920,11 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-pDynamicStates-03602# Any
 --     element of the @pDynamicStates@ member of @pDynamicState@ /must/ be
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RAY_TRACING_PIPELINE_STACK_SIZE_KHR'
+--
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-pipelineStageCreationFeedbackCount-06652#
+--     If
+--     'Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_feedback.PipelineCreationFeedbackCreateInfo'::@pipelineStageCreationFeedbackCount@
+--     is not @0@, it /must/ be equal to @stageCount@
 --
 -- == Valid Usage (Implicit)
 --

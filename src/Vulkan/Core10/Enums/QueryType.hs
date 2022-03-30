@@ -3,6 +3,7 @@
 module Vulkan.Core10.Enums.QueryType  (QueryType( QUERY_TYPE_OCCLUSION
                                                 , QUERY_TYPE_PIPELINE_STATISTICS
                                                 , QUERY_TYPE_TIMESTAMP
+                                                , QUERY_TYPE_PRIMITIVES_GENERATED_EXT
                                                 , QUERY_TYPE_PERFORMANCE_QUERY_INTEL
                                                 , QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV
                                                 , QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR
@@ -42,6 +43,9 @@ pattern QUERY_TYPE_PIPELINE_STATISTICS           = QueryType 1
 -- | 'QUERY_TYPE_TIMESTAMP' specifies a
 -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#queries-timestamps timestamp query>.
 pattern QUERY_TYPE_TIMESTAMP                     = QueryType 2
+-- | 'QUERY_TYPE_PRIMITIVES_GENERATED_EXT' specifies a
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#queries-primitives-generated primitives generated query>.
+pattern QUERY_TYPE_PRIMITIVES_GENERATED_EXT      = QueryType 1000382000
 -- | 'QUERY_TYPE_PERFORMANCE_QUERY_INTEL' specifies a
 -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#queries-performance-intel Intel performance query>.
 pattern QUERY_TYPE_PERFORMANCE_QUERY_INTEL       = QueryType 1000210000
@@ -69,6 +73,7 @@ pattern QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT = QueryType 1000028004
 {-# complete QUERY_TYPE_OCCLUSION,
              QUERY_TYPE_PIPELINE_STATISTICS,
              QUERY_TYPE_TIMESTAMP,
+             QUERY_TYPE_PRIMITIVES_GENERATED_EXT,
              QUERY_TYPE_PERFORMANCE_QUERY_INTEL,
              QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV,
              QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR,
@@ -87,6 +92,7 @@ showTableQueryType =
   [ (QUERY_TYPE_OCCLUSION                    , "OCCLUSION")
   , (QUERY_TYPE_PIPELINE_STATISTICS          , "PIPELINE_STATISTICS")
   , (QUERY_TYPE_TIMESTAMP                    , "TIMESTAMP")
+  , (QUERY_TYPE_PRIMITIVES_GENERATED_EXT     , "PRIMITIVES_GENERATED_EXT")
   , (QUERY_TYPE_PERFORMANCE_QUERY_INTEL      , "PERFORMANCE_QUERY_INTEL")
   , (QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV, "ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV")
   , (QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR, "ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR")

@@ -109,6 +109,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasin
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clip_control (PhysicalDeviceDepthClipControlFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clip_enable (PhysicalDeviceDepthClipEnableFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing (PhysicalDeviceDescriptorIndexingFeatures)
+import {-# SOURCE #-} Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping (PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands (PhysicalDeviceDeviceGeneratedCommandsFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_device_memory_report (PhysicalDeviceDeviceMemoryReportFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_diagnostics_config (PhysicalDeviceDiagnosticsConfigFeaturesNV)
@@ -127,6 +128,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_shader_interlock (Physic
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_fragment_shading_rate_enums (PhysicalDeviceFragmentShadingRateEnumsFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDeviceFragmentShadingRateFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_global_priority (PhysicalDeviceGlobalPriorityQueryFeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_graphics_pipeline_library (PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset (PhysicalDeviceHostQueryResetFeatures)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_image_robustness (PhysicalDeviceImageRobustnessFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_view_min_lod (PhysicalDeviceImageViewMinLodFeaturesEXT)
@@ -151,6 +153,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_portability_subset (PhysicalDevic
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_present_id (PhysicalDevicePresentIdFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_present_wait (PhysicalDevicePresentWaitFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_primitive_topology_list_restart (PhysicalDevicePrimitiveTopologyListRestartFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_primitives_generated_query (PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_private_data (PhysicalDevicePrivateDataFeatures)
 import {-# SOURCE #-} Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory (PhysicalDeviceProtectedMemoryFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_provoking_vertex (PhysicalDeviceProvokingVertexFeaturesEXT)
@@ -574,6 +577,13 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     can share the same @queueFamilyIndex@ if one is a protected-capable
 --     queue and one is not a protected-capable queue
 --
+-- -   #VUID-VkDeviceCreateInfo-pQueueCreateInfos-06654# If multiple
+--     elements of @pQueueCreateInfos@ share the same @queueFamilyIndex@,
+--     then all of such elements /must/ have the same global priority
+--     level, which /can/ be specified explicitly by the including a
+--     'Vulkan.Extensions.VK_KHR_global_priority.DeviceQueueGlobalPriorityCreateInfoKHR'
+--     structure in the @pNext@ chain, or by the implicit default value
+--
 -- -   #VUID-VkDeviceCreateInfo-pNext-00373# If the @pNext@ chain includes
 --     a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
@@ -790,6 +800,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_EXT_depth_clip_control.PhysicalDeviceDepthClipControlFeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_depth_clip_enable.PhysicalDeviceDepthClipEnableFeaturesEXT',
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingFeatures',
+--     'Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping.PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE',
 --     'Vulkan.Extensions.VK_NV_device_generated_commands.PhysicalDeviceDeviceGeneratedCommandsFeaturesNV',
 --     'Vulkan.Extensions.VK_EXT_device_memory_report.PhysicalDeviceDeviceMemoryReportFeaturesEXT',
 --     'Vulkan.Extensions.VK_NV_device_diagnostics_config.PhysicalDeviceDiagnosticsConfigFeaturesNV',
@@ -807,6 +818,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_NV_fragment_shading_rate_enums.PhysicalDeviceFragmentShadingRateEnumsFeaturesNV',
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.PhysicalDeviceFragmentShadingRateFeaturesKHR',
 --     'Vulkan.Extensions.VK_KHR_global_priority.PhysicalDeviceGlobalPriorityQueryFeaturesKHR',
+--     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT',
 --     'Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset.PhysicalDeviceHostQueryResetFeatures',
 --     'Vulkan.Core13.Promoted_From_VK_EXT_image_robustness.PhysicalDeviceImageRobustnessFeatures',
 --     'Vulkan.Extensions.VK_EXT_image_view_min_lod.PhysicalDeviceImageViewMinLodFeaturesEXT',
@@ -831,6 +843,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_KHR_present_id.PhysicalDevicePresentIdFeaturesKHR',
 --     'Vulkan.Extensions.VK_KHR_present_wait.PhysicalDevicePresentWaitFeaturesKHR',
 --     'Vulkan.Extensions.VK_EXT_primitive_topology_list_restart.PhysicalDevicePrimitiveTopologyListRestartFeaturesEXT',
+--     'Vulkan.Extensions.VK_EXT_primitives_generated_query.PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT',
 --     'Vulkan.Core13.Promoted_From_VK_EXT_private_data.PhysicalDevicePrivateDataFeatures',
 --     'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.PhysicalDeviceProtectedMemoryFeatures',
 --     'Vulkan.Extensions.VK_EXT_provoking_vertex.PhysicalDeviceProvokingVertexFeaturesEXT',
@@ -960,6 +973,8 @@ instance Extensible DeviceCreateInfo where
   getNext DeviceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DeviceCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceLinearColorAttachmentFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM = Just f
     | Just Refl <- eqT @e @PhysicalDeviceImageViewMinLodFeaturesEXT = Just f
@@ -970,6 +985,7 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @PhysicalDeviceProvokingVertexFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceInheritedViewportScissorFeaturesNV = Just f
+    | Just Refl <- eqT @e @PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceSynchronization2Features = Just f
     | Just Refl <- eqT @e @PhysicalDeviceColorWriteEnableFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceExternalMemoryRDMAFeaturesNV = Just f

@@ -170,9 +170,11 @@ import {-# SOURCE #-} Vulkan.Core10.DescriptorSet (DescriptorPoolCreateInfo)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block (DescriptorPoolInlineUniformBlockCreateInfo)
 import {-# SOURCE #-} Vulkan.Core10.DescriptorSet (DescriptorPoolSize)
 import {-# SOURCE #-} Vulkan.Core10.DescriptorSet (DescriptorSetAllocateInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping (DescriptorSetBindingReferenceVALVE)
 import {-# SOURCE #-} Vulkan.Core10.DescriptorSet (DescriptorSetLayoutBinding)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing (DescriptorSetLayoutBindingFlagsCreateInfo)
 import {-# SOURCE #-} Vulkan.Core10.DescriptorSet (DescriptorSetLayoutCreateInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping (DescriptorSetLayoutHostMappingInfoVALVE)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance3 (DescriptorSetLayoutSupport)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing (DescriptorSetVariableDescriptorCountAllocateInfo)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing (DescriptorSetVariableDescriptorCountLayoutSupport)
@@ -265,6 +267,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing (GeometryDataNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing (GeometryNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing (GeometryTrianglesNV)
 import {-# SOURCE #-} Vulkan.Core10.Pipeline (GraphicsPipelineCreateInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_graphics_pipeline_library (GraphicsPipelineLibraryCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands (GraphicsPipelineShaderGroupsCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands (GraphicsShaderGroupCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_hdr_metadata (HdrMetadataEXT)
@@ -390,6 +393,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clip_enable (PhysicalDevice
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve (PhysicalDeviceDepthStencilResolveProperties)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing (PhysicalDeviceDescriptorIndexingFeatures)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing (PhysicalDeviceDescriptorIndexingProperties)
+import {-# SOURCE #-} Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping (PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands (PhysicalDeviceDeviceGeneratedCommandsFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands (PhysicalDeviceDeviceGeneratedCommandsPropertiesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_device_memory_report (PhysicalDeviceDeviceMemoryReportFeaturesEXT)
@@ -424,6 +428,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDe
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDeviceFragmentShadingRateKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDeviceFragmentShadingRatePropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_global_priority (PhysicalDeviceGlobalPriorityQueryFeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_graphics_pipeline_library (PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_graphics_pipeline_library (PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation (PhysicalDeviceGroupProperties)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset (PhysicalDeviceHostQueryResetFeatures)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities (PhysicalDeviceIDProperties)
@@ -469,6 +475,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_portability_subset (PhysicalDevic
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_present_id (PhysicalDevicePresentIdFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_present_wait (PhysicalDevicePresentWaitFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_primitive_topology_list_restart (PhysicalDevicePrimitiveTopologyListRestartFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_primitives_generated_query (PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_private_data (PhysicalDevicePrivateDataFeatures)
 import {-# SOURCE #-} Vulkan.Core10.DeviceInitialization (PhysicalDeviceProperties)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2 (PhysicalDeviceProperties2)
@@ -980,6 +987,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceExternalMemoryRDMAFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceColorWriteEnableFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceSynchronization2Features = ()
+  Extends DeviceCreateInfo PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceInheritedViewportScissorFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceProvokingVertexFeaturesEXT = ()
@@ -990,6 +998,8 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceImageViewMinLodFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM = ()
   Extends DeviceCreateInfo PhysicalDeviceLinearColorAttachmentFeaturesNV = ()
+  Extends DeviceCreateInfo PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT = ()
+  Extends DeviceCreateInfo PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE = ()
   Extends DeviceQueueCreateInfo DeviceQueueGlobalPriorityCreateInfoKHR = ()
   Extends FenceCreateInfo ExportFenceCreateInfo = ()
   Extends FenceCreateInfo ExportFenceWin32HandleInfoKHR = ()
@@ -1002,11 +1012,13 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends GraphicsPipelineCreateInfo PipelineRepresentativeFragmentTestStateCreateInfoNV = ()
   Extends GraphicsPipelineCreateInfo PipelineCreationFeedbackCreateInfo = ()
   Extends GraphicsPipelineCreateInfo PipelineCompilerControlCreateInfoAMD = ()
+  Extends GraphicsPipelineCreateInfo PipelineLibraryCreateInfoKHR = ()
   Extends GraphicsPipelineCreateInfo PipelineFragmentShadingRateStateCreateInfoKHR = ()
   Extends GraphicsPipelineCreateInfo PipelineFragmentShadingRateEnumStateCreateInfoNV = ()
   Extends GraphicsPipelineCreateInfo PipelineRenderingCreateInfo = ()
   Extends GraphicsPipelineCreateInfo AttachmentSampleCountInfoAMD = ()
   Extends GraphicsPipelineCreateInfo MultiviewPerViewAttributesInfoNVX = ()
+  Extends GraphicsPipelineCreateInfo GraphicsPipelineLibraryCreateInfoEXT = ()
   Extends ImageBlit2 CopyCommandTransformInfoQCOM = ()
   Extends ImageCreateInfo DedicatedAllocationImageCreateInfoNV = ()
   Extends ImageCreateInfo ExternalMemoryImageCreateInfoNV = ()
@@ -1151,6 +1163,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceExternalMemoryRDMAFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceColorWriteEnableFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceSynchronization2Features = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceInheritedViewportScissorFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceProvokingVertexFeaturesEXT = ()
@@ -1161,6 +1174,8 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceImageViewMinLodFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceLinearColorAttachmentFeaturesNV = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceExternalImageFormatInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 ImageFormatListCreateInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageDrmFormatModifierInfoEXT = ()
@@ -1221,6 +1236,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceProperties2 PhysicalDeviceProvokingVertexPropertiesEXT = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceShaderIntegerDotProductProperties = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceDrmPropertiesEXT = ()
+  Extends PhysicalDeviceProperties2 PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT = ()
   Extends PhysicalDeviceSurfaceInfo2KHR SurfaceFullScreenExclusiveInfoEXT = ()
   Extends PhysicalDeviceSurfaceInfo2KHR SurfaceFullScreenExclusiveWin32InfoEXT = ()
   Extends PipelineColorBlendStateCreateInfo PipelineColorBlendAdvancedStateCreateInfoEXT = ()
@@ -1235,6 +1251,8 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PipelineRasterizationStateCreateInfo PipelineRasterizationDepthClipStateCreateInfoEXT = ()
   Extends PipelineRasterizationStateCreateInfo PipelineRasterizationLineStateCreateInfoEXT = ()
   Extends PipelineRasterizationStateCreateInfo PipelineRasterizationProvokingVertexStateCreateInfoEXT = ()
+  Extends PipelineShaderStageCreateInfo (ShaderModuleCreateInfo '[]) = ()
+  Extends PipelineShaderStageCreateInfo DebugUtilsObjectNameInfoEXT = ()
   Extends PipelineShaderStageCreateInfo PipelineShaderStageRequiredSubgroupSizeCreateInfo = ()
   Extends PipelineTessellationStateCreateInfo PipelineTessellationDomainOriginStateCreateInfo = ()
   Extends PipelineVertexInputStateCreateInfo PipelineVertexInputDivisorStateCreateInfoEXT = ()
@@ -1407,6 +1425,7 @@ peekChainHead
   -> (forall e . (Extends a e, ToCStruct e, Show e) => e -> b)
   -> IO b
 peekChainHead ty p c = case ty of
+  STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO -> go @(ShaderModuleCreateInfo '[])
   STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR -> go @DisplayPresentInfoKHR
   STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT -> go @DebugReportCallbackCreateInfoEXT
   STRUCTURE_TYPE_VALIDATION_FLAGS_EXT -> go @ValidationFlagsEXT
@@ -1521,6 +1540,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_KHR -> go @DeviceQueueGlobalPriorityCreateInfoKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES_KHR -> go @PhysicalDeviceGlobalPriorityQueryFeaturesKHR
   STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES_KHR -> go @QueueFamilyGlobalPriorityPropertiesKHR
+  STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT -> go @DebugUtilsObjectNameInfoEXT
   STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT -> go @DebugUtilsMessengerCreateInfoEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_MEMORY_REPORT_FEATURES_EXT -> go @PhysicalDeviceDeviceMemoryReportFeaturesEXT
   STRUCTURE_TYPE_DEVICE_DEVICE_MEMORY_REPORT_CREATE_INFO_EXT -> go @DeviceDeviceMemoryReportCreateInfoEXT
@@ -1671,6 +1691,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_FEATURES_EXT -> go @PhysicalDeviceCustomBorderColorFeaturesEXT
   STRUCTURE_TYPE_SAMPLER_BORDER_COLOR_COMPONENT_MAPPING_CREATE_INFO_EXT -> go @SamplerBorderColorComponentMappingCreateInfoEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_BORDER_COLOR_SWIZZLE_FEATURES_EXT -> go @PhysicalDeviceBorderColorSwizzleFeaturesEXT
+  STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR -> go @PipelineLibraryCreateInfoKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_FEATURES_EXT -> go @PhysicalDeviceExtendedDynamicStateFeaturesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_2_FEATURES_EXT -> go @PhysicalDeviceExtendedDynamicState2FeaturesEXT
   STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM -> go @RenderPassTransformBeginInfoQCOM
@@ -1708,6 +1729,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_MEMORY_BARRIER_2 -> go @MemoryBarrier2
   STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV -> go @QueueFamilyCheckpointProperties2NV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES -> go @PhysicalDeviceSynchronization2Features
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVES_GENERATED_QUERY_FEATURES_EXT -> go @PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_INHERITED_VIEWPORT_SCISSOR_FEATURES_NV -> go @PhysicalDeviceInheritedViewportScissorFeaturesNV
   STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_VIEWPORT_SCISSOR_INFO_NV -> go @CommandBufferInheritanceViewportScissorInfoNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_YCBCR_2_PLANE_444_FORMATS_FEATURES_EXT -> go @PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT
@@ -1738,6 +1760,10 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_IMAGE_VIEW_MIN_LOD_CREATE_INFO_EXT -> go @ImageViewMinLodCreateInfoEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_ARM -> go @PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM
   STRUCTURE_TYPE_PHYSICAL_DEVICE_LINEAR_COLOR_ATTACHMENT_FEATURES_NV -> go @PhysicalDeviceLinearColorAttachmentFeaturesNV
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_FEATURES_EXT -> go @PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_PROPERTIES_EXT -> go @PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT
+  STRUCTURE_TYPE_GRAPHICS_PIPELINE_LIBRARY_CREATE_INFO_EXT -> go @GraphicsPipelineLibraryCreateInfoEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_SET_HOST_MAPPING_FEATURES_VALVE -> go @PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE
   t -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("Unrecognized struct type: " <> show t) Nothing Nothing
  where
   go :: forall e . (Typeable e, FromCStruct e, ToCStruct e, Show e) => IO b
@@ -1791,6 +1817,7 @@ pattern (::&) :: Extensible a => a es' -> Chain es -> a es
 pattern a ::& es <- (\a -> (a, getNext a) -> (a, es))
   where a ::& es = setNext a es
 infix 6 ::&
+{-# complete (::&) :: ShaderModuleCreateInfo #-}
 {-# complete (::&) :: DisplayPresentInfoKHR #-}
 {-# complete (::&) :: DebugReportCallbackCreateInfoEXT #-}
 {-# complete (::&) :: ValidationFlagsEXT #-}
@@ -1905,6 +1932,7 @@ infix 6 ::&
 {-# complete (::&) :: DeviceQueueGlobalPriorityCreateInfoKHR #-}
 {-# complete (::&) :: PhysicalDeviceGlobalPriorityQueryFeaturesKHR #-}
 {-# complete (::&) :: QueueFamilyGlobalPriorityPropertiesKHR #-}
+{-# complete (::&) :: DebugUtilsObjectNameInfoEXT #-}
 {-# complete (::&) :: DebugUtilsMessengerCreateInfoEXT #-}
 {-# complete (::&) :: PhysicalDeviceDeviceMemoryReportFeaturesEXT #-}
 {-# complete (::&) :: DeviceDeviceMemoryReportCreateInfoEXT #-}
@@ -2055,6 +2083,7 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceCustomBorderColorFeaturesEXT #-}
 {-# complete (::&) :: SamplerBorderColorComponentMappingCreateInfoEXT #-}
 {-# complete (::&) :: PhysicalDeviceBorderColorSwizzleFeaturesEXT #-}
+{-# complete (::&) :: PipelineLibraryCreateInfoKHR #-}
 {-# complete (::&) :: PhysicalDeviceExtendedDynamicStateFeaturesEXT #-}
 {-# complete (::&) :: PhysicalDeviceExtendedDynamicState2FeaturesEXT #-}
 {-# complete (::&) :: RenderPassTransformBeginInfoQCOM #-}
@@ -2092,6 +2121,7 @@ infix 6 ::&
 {-# complete (::&) :: MemoryBarrier2 #-}
 {-# complete (::&) :: QueueFamilyCheckpointProperties2NV #-}
 {-# complete (::&) :: PhysicalDeviceSynchronization2Features #-}
+{-# complete (::&) :: PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT #-}
 {-# complete (::&) :: PhysicalDeviceInheritedViewportScissorFeaturesNV #-}
 {-# complete (::&) :: CommandBufferInheritanceViewportScissorInfoNV #-}
 {-# complete (::&) :: PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT #-}
@@ -2122,6 +2152,10 @@ infix 6 ::&
 {-# complete (::&) :: ImageViewMinLodCreateInfoEXT #-}
 {-# complete (::&) :: PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM #-}
 {-# complete (::&) :: PhysicalDeviceLinearColorAttachmentFeaturesNV #-}
+{-# complete (::&) :: PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT #-}
+{-# complete (::&) :: PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT #-}
+{-# complete (::&) :: GraphicsPipelineLibraryCreateInfoEXT #-}
+{-# complete (::&) :: PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE #-}
 
 -- | View the head and tail of a 'Chain', see '::&'
 --

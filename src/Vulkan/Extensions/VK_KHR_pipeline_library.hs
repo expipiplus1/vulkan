@@ -48,7 +48,9 @@
 --
 -- == New Structures
 --
--- -   'PipelineLibraryCreateInfoKHR'
+-- -   Extending 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo':
+--
+--     -   'PipelineLibraryCreateInfoKHR'
 --
 -- == New Enum Constants
 --
@@ -129,9 +131,6 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- -   #VUID-VkPipelineLibraryCreateInfoKHR-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR'
---
--- -   #VUID-VkPipelineLibraryCreateInfoKHR-pNext-pNext# @pNext@ /must/ be
---     @NULL@
 --
 -- -   #VUID-VkPipelineLibraryCreateInfoKHR-pLibraries-parameter# If
 --     @libraryCount@ is not @0@, @pLibraries@ /must/ be a valid pointer to

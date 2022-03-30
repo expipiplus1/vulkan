@@ -563,16 +563,16 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.ImageView' or
 --     'Vulkan.Core10.Handles.BufferView' being written as a storage image
 --     or storage texel buffer where the image format field of the
---     @OpTypeImage@ is @Unknown@ /must/ have image format features that
---     support
+--     @OpTypeImage@ is @Unknown@ then the view’s format feature /must/
+--     contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-OpTypeImage-06424# Any
 --     'Vulkan.Core10.Handles.ImageView' or
 --     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
 --     storage texel buffer where the image format field of the
---     @OpTypeImage@ is @Unknown@ /must/ have image format features that
---     support
+--     @OpTypeImage@ is @Unknown@ then the view’s format feature /must/
+--     contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-None-02697# For each set /n/ that is
@@ -671,6 +671,23 @@ foreign import ccall
 --     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be a protected resource
+--
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-None-06550# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
+--     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
+--     object that enables
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
+--     that object /must/ only be used with @OpImageSample*@ or
+--     @OpImageSparseSample*@ instructions
+--
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-ConstOffset-06551# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
+--     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
+--     object that enables
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
+--     that object /must/ not use the @ConstOffset@ and @Offset@ operands
 --
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-None-04115# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@

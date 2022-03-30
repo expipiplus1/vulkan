@@ -665,10 +665,37 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
+-- -   #VUID-VkAttachmentDescription2-format-06701# @format@ /must/ not be
+--     VK_FORMAT_UNDEFINED
+--
 -- -   #VUID-VkAttachmentDescription2-finalLayout-03061# @finalLayout@
 --     /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED' or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PREINITIALIZED'
+--
+-- -   #VUID-VkAttachmentDescription2-format-06702# If @format@ includes a
+--     color or depth aspect and @loadOp@ is
+--     'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_LOAD', then
+--     @initialLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED'
+--
+-- -   #VUID-VkAttachmentDescription2-pNext-06704# If the @pNext@ chain
+--     does not include a
+--     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
+--     structure, @format@ includes a stencil aspect, and @stencilLoadOp@
+--     is 'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_LOAD',
+--     then @initialLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED'
+--
+-- -   #VUID-VkAttachmentDescription2-pNext-06705# If the @pNext@ chain
+--     does includes a
+--     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
+--     structure, @format@ includes a stencil aspect, and @stencilLoadOp@
+--     is 'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_LOAD',
+--     then
+--     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'::stencilInitialLayout
+--     /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED'
 --
 -- -   #VUID-VkAttachmentDescription2-format-03294# If @format@ is a color
 --     format, @initialLayout@ /must/ not be
@@ -777,6 +804,28 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
 --     or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkAttachmentDescription2-separateDepthStencilLayouts-06556# If
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
+--     feature is enabled and @format@ is a depth\/stencil format that
+--     includes a depth aspect and the @pNext@ chain includes a
+--     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
+--     structure, @initialLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkAttachmentDescription2-separateDepthStencilLayouts-06557# If
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
+--     feature is enabled and @format@ is a depth\/stencil format that
+--     includes a depth aspect and the @pNext@ chain includes a
+--     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
+--     structure, @finalLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
 --
 -- == Valid Usage (Implicit)
 --
@@ -1328,6 +1377,14 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 -- -   #VUID-VkSubpassDescription2-pDepthStencilAttachment-04440# An
 --     attachment /must/ not be used in both @pDepthStencilAttachment@ and
 --     @pColorAttachments@
+--
+-- -   #VUID-VkSubpassDescription2-multiview-06558# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview multiview>
+--     feature is not enabled, @viewMask@ /must/ be @0@
+--
+-- -   #VUID-VkSubpassDescription2-viewMask-06706# The index of the most
+--     significant bit in @viewMask@ /must/ be less than
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxMultiviewViewCount maxMultiviewViewCount>
 --
 -- == Valid Usage (Implicit)
 --
