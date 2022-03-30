@@ -614,7 +614,7 @@ definedConstant r =
 
 parseTypeAliases :: [ByteString] -> [Content] -> P (Vector Alias)
 parseTypeAliases categories es =
-  fmap fromList
+  fmap (stripForbiddenAliases . fromList)
     . sequenceV
     $ [ do
           aName   <- nameAttr "struct alias" n
@@ -630,7 +630,7 @@ parseTypeAliases categories es =
 
 parseEnumAliases :: Vector Node -> P (Vector Alias)
 parseEnumAliases rs =
-  fmap V.fromList
+  fmap (stripForbiddenAliases . fromList)
     . sequenceV
     $ [ do
           aName   <- nameAttr "enum alias" ee
@@ -645,7 +645,7 @@ parseEnumAliases rs =
 
 parseCommandAliases :: [Content] -> P (Vector Alias)
 parseCommandAliases es =
-  fmap V.fromList
+  fmap (stripForbiddenAliases . fromList)
     . sequenceV
     $ [ do
           aName   <- nameAttr "alias" ee
@@ -659,7 +659,7 @@ parseCommandAliases es =
 
 parseConstantAliases :: [Content] -> P (Vector Alias)
 parseConstantAliases es =
-  fmap V.fromList
+  fmap (stripForbiddenAliases . fromList)
     . sequenceV
     $ [ do
           aName   <- nameAttr "enum alias" ee
@@ -673,6 +673,10 @@ parseConstantAliases es =
       , Just alias <- pure $ getAttr "alias" ee
       , aType      <- [TypeAlias, PatternAlias]
       ]
+
+stripForbiddenAliases :: Vector Alias -> Vector Alias
+stripForbiddenAliases = V.filter $ \Alias {..} -> not $
+  isForbidden aName || isForbidden aTarget
 
 ----------------------------------------------------------------
 -- Defines
@@ -1208,9 +1212,13 @@ isForbidden n =
     , "VK_MAKE_VERSION"
     , "VK_MAKE_API_VERSION"
     , "VK_USE_64_BIT_PTR_DEFINES"
-    , "VkPipelineLayoutCreateFlagBits" -- https://github.com/KhronosGroup/Vulkan-Docs/pull/1556
+    -- TODO: These are really hacky, once bits are defined then they prevent
+    -- getting the size of structs.
+    -- https://github.com/KhronosGroup/Vulkan-Docs/pull/1556
     , "VkSemaphoreCreateFlagBits"
     , "VkShaderModuleCreateFlagBits"
+    , "VkPrivateDataSlotCreateFlagBits"
+    , "VkPrivateDataSlotCreateFlagBitsEXT"
     , "VkImageFormatConstraintsFlagBitsFUCHSIA"
     ]
   xrForbidden =
