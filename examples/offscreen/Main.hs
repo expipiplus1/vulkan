@@ -374,7 +374,7 @@ render = do
                                                      }
                                             ]
                                }
-      , rasterizationState = SomeStruct $ zero
+      , rasterizationState = Just . SomeStruct $ zero
                                { depthClampEnable        = False
                                , rasterizerDiscardEnable = False
                                , lineWidth               = 1
