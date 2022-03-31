@@ -45,10 +45,8 @@ jobs:
       shell: bash
       run: |
         brew install pkg-config sdl2
-        brew tap apenngrace/homebrew-vulkan
-        brew install --cask vulkan-sdk --verbose ||
-          brew install --cask vulkan-sdk --verbose ||
-          brew install --cask vulkan-sdk --verbose
+        brew install vulkan-headers
+        brew install molten-vk
 
     - name: Install system dependencies Windows
       if: matrix.os == 'windows-latest'
