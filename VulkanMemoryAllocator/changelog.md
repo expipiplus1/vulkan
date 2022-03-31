@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+- Bump VMA to 3.0.0
+  - Several breaking changes
 
 ## [0.9] - 2022-02-05
 - Bump VMA
