@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+
+## [0.10] - 2022-03-31
 - Bump VMA to 3.0.0
   - Several breaking changes
 - Raise upper bound on `vulkan`
