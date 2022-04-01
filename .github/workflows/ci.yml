@@ -38,15 +38,13 @@ jobs:
       if: matrix.os == 'ubuntu-20.04'
       run: |
         sudo apt-get update
-        sudo apt-get install libvulkan-dev glslang-tools libsdl2-dev
+        sudo apt-get install glslang-tools libsdl2-dev
 
     - name: Install system dependencies macOS
       if: matrix.os == 'macOS-latest'
       shell: bash
       run: |
         brew install pkg-config sdl2
-        brew install vulkan-headers
-        brew install molten-vk
 
     - name: Install system dependencies Windows
       if: matrix.os == 'windows-latest'
@@ -59,27 +57,18 @@ jobs:
         printf "%s\n" "$SDL2/bin" >> "$GITHUB_PATH"
         printf "%s\n" "PKG_CONFIG_PATH=$SDL2/lib/pkgconfig" >> "$GITHUB_ENV"
 
-        choco install vulkan-sdk
-        VulkanSDK=$(cygpath --windows --absolute /c/VulkanSDK/*/)
-        printf "%s\n" "$VulkanSDK/Bin" >> "$GITHUB_PATH"
-        curl -L https://sdk.lunarg.com/sdk/download/latest/windows/vulkan-runtime-components.zip?u= > vulkan-runtime-components.zip
-        unzip vulkan-runtime-components.zip
-        printf "%s\n" "$(cygpath --windows --absolute VulkanRT-*/x64)" >> "$GITHUB_PATH"
-
         cat >> cabal.project <<EOF
         package sdl2
           extra-lib-dirs: $SDL2/lib/
           extra-include-dirs: $SDL2/include/SDL2/
-
-        package vulkan
-          extra-lib-dirs: $VulkanSDK/Lib/
-
-        package vulkan-utils
-          extra-include-dirs: $VulkanSDK/Include/
-
-        package VulkanMemoryAllocator
-          extra-include-dirs: $VulkanSDK/Include/
         EOF
+
+    - name: Prepare Vulkan SDK
+      uses: humbletim/setup-vulkan-sdk@v1.2.0
+      with:
+        vulkan-query-version: 1.3.204.0
+        vulkan-components: Vulkan-Headers, Vulkan-Loader
+        vulkan-use-cache: true
 
     - name: Remove openxr
       run: |
@@ -159,7 +148,7 @@ jobs:
       if: matrix.os == 'ubuntu-20.04'
       run: |
         sudo apt-get update
-        sudo apt-get install libvulkan-dev glslang-tools libsdl2-dev
+        sudo apt-get install glslang-tools libsdl2-dev
 
     - name: Install system dependencies Windows
       if: matrix.os == 'windows-latest'
@@ -172,20 +161,11 @@ jobs:
         printf "%s\n" "$SDL2/bin" >> "$GITHUB_PATH"
         printf "%s\n" "PKG_CONFIG_PATH=$SDL2/lib/pkgconfig" >> "$GITHUB_ENV"
 
-        choco install vulkan-sdk
-        VulkanSDK=$(cygpath --windows --absolute /c/VulkanSDK/*/)
-        printf "%s\n" "$VulkanSDK/Bin" >> "$GITHUB_PATH"
-        curl -L https://sdk.lunarg.com/sdk/download/latest/windows/vulkan-runtime-components.zip?u= > vulkan-runtime-components.zip
-        unzip vulkan-runtime-components.zip
-        printf "%s\n" "$(cygpath --windows --absolute VulkanRT-*/x64)" >> "$GITHUB_PATH"
-
         cat >> stack.yaml <<EOF
         extra-lib-dirs:
           - $SDL2/lib/
-          - $VulkanSDK/Lib/
         extra-include-dirs:
           - $SDL2/include/SDL2/
-          - $VulkanSDK/Include/
         EOF
 
     - name: Install system dependencies macOS
@@ -193,10 +173,13 @@ jobs:
       shell: bash
       run: |
         brew install pkg-config sdl2
-        brew tap apenngrace/homebrew-vulkan --verbose
-        brew install --cask vulkan-sdk --verbose ||
-          brew install --cask vulkan-sdk --verbose ||
-          brew install --cask vulkan-sdk --verbose
+
+    - name: Prepare Vulkan SDK
+      uses: humbletim/setup-vulkan-sdk@v1.2.0
+      with:
+        vulkan-query-version: 1.3.204.0
+        vulkan-components: Vulkan-Headers, Vulkan-Loader
+        vulkan-use-cache: true
 
     - name: Remove openxr
       run: |
