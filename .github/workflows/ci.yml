@@ -71,6 +71,7 @@ jobs:
         vulkan-use-cache: true
 
     - name: Inform Cabal about Vulkan
+      shell: bash
       run: |
         cat >> cabal.project <<EOF
         package vulkan
@@ -78,6 +79,7 @@ jobs:
           extra-include-dirs: $VULKAN_SDK/include/
         EOF
         printf "%s\n" "$VULKAN_SDK/bin" >> "$GITHUB_PATH"
+        printf "%s\n" "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:+${PKG_CONFIG_PATH}:}$VULKAN_SDK/lib/pkgconfig" >> "$GITHUB_ENV"
 
     - name: Remove openxr
       run: |
@@ -173,8 +175,8 @@ jobs:
         printf "%s\n" "$SDL2/bin" >> "$GITHUB_PATH"
         printf "%s\n" "PKG_CONFIG_PATH=$SDL2/lib/pkgconfig" >> "$GITHUB_ENV"
 
-        yq --in-place --yml-roundtrip ".\"extra-lib-dirs\" += [\"$SDL2/lib/\"]" stack.yaml
-        yq --in-place --yml-roundtrip ".\"extra-include-dirs\" += [\"$SDL2/inlclude/\"]" stack.yaml
+        yq --inplace ".\"extra-lib-dirs\" += [\"$SDL2/lib/\"]" stack.yaml
+        yq --inplace ".\"extra-include-dirs\" += [\"$SDL2/inlclude/\"]" stack.yaml
 
     - name: Install system dependencies macOS
       if: matrix.os == 'macOS-latest'
@@ -191,8 +193,8 @@ jobs:
 
     - name: Inform Stack about Vulkan
       run: |
-        yq --in-place --yml-roundtrip ".\"extra-lib-dirs\" += [\"$VULKAN_SDK/lib/\"]" stack.yaml
-        yq --in-place --yml-roundtrip ".\"extra-include-dirs\" += [\"$VULKAN_SDK/inlclude/\"]" stack.yaml
+        yq --inplace ".\"extra-lib-dirs\" += [\"$VULKAN_SDK/lib/\"]" stack.yaml
+        yq --inplace ".\"extra-include-dirs\" += [\"$VULKAN_SDK/inlclude/\"]" stack.yaml
         printf "%s\n" "$VULKAN_SDK/bin" >> "$GITHUB_PATH"
 
     - name: Remove openxr
