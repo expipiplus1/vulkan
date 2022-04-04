@@ -74,9 +74,8 @@ jobs:
       shell: bash
       run: |
         cat >> cabal.project <<EOF
-        package vulkan
-          extra-lib-dirs: $VULKAN_SDK/lib/
-          extra-include-dirs: $VULKAN_SDK/include/
+        extra-lib-dirs: $VULKAN_SDK/lib/
+        extra-include-dirs: $VULKAN_SDK/include/
         EOF
         printf "%s\n" "$VULKAN_SDK/bin" >> "$GITHUB_PATH"
         if uname -s | grep -i mingw; then sep=';' else sep=':'; fi
