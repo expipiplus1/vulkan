@@ -79,7 +79,8 @@ jobs:
           extra-include-dirs: $VULKAN_SDK/include/
         EOF
         printf "%s\n" "$VULKAN_SDK/bin" >> "$GITHUB_PATH"
-        printf "%s\n" "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:+${PKG_CONFIG_PATH}:}$VULKAN_SDK/lib/pkgconfig" >> "$GITHUB_ENV"
+        if uname -s | grep -i mingw; then sep=';' else sep=':'; fi
+        printf "%s\n" "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:+${PKG_CONFIG_PATH}${sep}}$VULKAN_SDK/lib/pkgconfig" >> "$GITHUB_ENV"
 
     - name: Remove openxr
       run: |
@@ -197,7 +198,8 @@ jobs:
         yq --inplace ".\"extra-lib-dirs\" += [\"$VULKAN_SDK/lib/\"]" stack.yaml
         yq --inplace ".\"extra-include-dirs\" += [\"$VULKAN_SDK/inlclude/\"]" stack.yaml
         printf "%s\n" "$VULKAN_SDK/bin" >> "$GITHUB_PATH"
-        printf "%s\n" "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:+${PKG_CONFIG_PATH}:}$VULKAN_SDK/lib/pkgconfig" >> "$GITHUB_ENV"
+        if uname -s | grep -i mingw; then sep=';' else sep=':'; fi
+        printf "%s\n" "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:+${PKG_CONFIG_PATH}${sep}}$VULKAN_SDK/lib/pkgconfig" >> "$GITHUB_ENV"
 
     - name: Remove openxr
       run: |
