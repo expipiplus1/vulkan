@@ -192,6 +192,7 @@ jobs:
         vulkan-use-cache: true
 
     - name: Inform Stack about Vulkan
+      shell: bash
       run: |
         yq --inplace ".\"extra-lib-dirs\" += [\"$VULKAN_SDK/lib/\"]" stack.yaml
         yq --inplace ".\"extra-include-dirs\" += [\"$VULKAN_SDK/inlclude/\"]" stack.yaml
