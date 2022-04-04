@@ -131,7 +131,7 @@ jobs:
 
     - name: Create issue for failure
       if: ${{ failure() && steps.check_issue.outputs.create_issue == 'true' }}
-      uses: peter-evans/create-issue-from-file@v3
+      uses: peter-evans/create-issue-from-file@v4
       with:
         title: Failed to regenerate source for Vulkan ${{ steps.update.outputs.vulkan_version }}
         content-filepath: ${{ steps.init.outputs.issue_body }}
