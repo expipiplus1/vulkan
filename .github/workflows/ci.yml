@@ -70,6 +70,15 @@ jobs:
         vulkan-components: Vulkan-Headers, Vulkan-Loader, Glslang
         vulkan-use-cache: true
 
+    - name: Inform Cabal about Vulkan
+      run: |
+        cat >> cabal.project <<EOF
+        package vulkan
+          extra-lib-dirs: $VULKAN_SDK/lib/
+          extra-include-dirs: $VULKAN_SDK/include/
+        EOF
+        printf "%s\n" "$VULKAN_SDK/bin" >> "$GITHUB_PATH"
+
     - name: Remove openxr
       run: |
         sed -ibak '/openxr/d' cabal.project
@@ -144,6 +153,9 @@ jobs:
           ${{ runner.os }}-stack-global-${{ matrix.stack-args }}
           ${{ runner.os }}-stack-global
 
+    - name: Set up yq
+      uses: frenck/action-setup-yq@v1
+
     - name: Install system dependencies Linux
       if: matrix.os == 'ubuntu-20.04'
       run: |
@@ -161,12 +173,8 @@ jobs:
         printf "%s\n" "$SDL2/bin" >> "$GITHUB_PATH"
         printf "%s\n" "PKG_CONFIG_PATH=$SDL2/lib/pkgconfig" >> "$GITHUB_ENV"
 
-        cat >> stack.yaml <<EOF
-        extra-lib-dirs:
-          - $SDL2/lib/
-        extra-include-dirs:
-          - $SDL2/include/SDL2/
-        EOF
+        yq --in-place --yml-roundtrip ".\"extra-lib-dirs\" += [\"$SDL2/lib/\"]" stack.yaml
+        yq --in-place --yml-roundtrip ".\"extra-include-dirs\" += [\"$SDL2/inlclude/\"]" stack.yaml
 
     - name: Install system dependencies macOS
       if: matrix.os == 'macOS-latest'
@@ -180,6 +188,12 @@ jobs:
         vulkan-query-version: latest
         vulkan-components: Vulkan-Headers, Vulkan-Loader, Glslang
         vulkan-use-cache: true
+
+    - name: Inform Stack about Vulkan
+      run: |
+        yq --in-place --yml-roundtrip ".\"extra-lib-dirs\" += [\"$VULKAN_SDK/lib/\"]" stack.yaml
+        yq --in-place --yml-roundtrip ".\"extra-include-dirs\" += [\"$VULKAN_SDK/inlclude/\"]" stack.yaml
+        printf "%s\n" "$VULKAN_SDK/bin" >> "$GITHUB_PATH"
 
     - name: Remove openxr
       run: |
