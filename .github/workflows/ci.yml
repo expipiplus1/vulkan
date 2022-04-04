@@ -80,6 +80,8 @@ jobs:
         printf "%s\n" "$VULKAN_SDK/bin" >> "$GITHUB_PATH"
         if uname -s | grep -i mingw; then sep=';'; else sep=':'; fi
         printf "%s\n" "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:+${PKG_CONFIG_PATH}${sep}}$VULKAN_SDK/lib/pkgconfig" >> "$GITHUB_ENV"
+        # until this is fixed https://github.com/haskell/cabal/issues/7339
+        printf "%s\n" "DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH:+${DYLD_LIBRARY_PATH}${sep}}$VULKAN_SDK/lib" >> "$GITHUB_ENV"
 
     - name: Remove openxr
       run: |
@@ -199,22 +201,27 @@ jobs:
         printf "%s\n" "$VULKAN_SDK/bin" >> "$GITHUB_PATH"
         if uname -s | grep -i mingw; then sep=';'; else sep=':'; fi
         printf "%s\n" "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:+${PKG_CONFIG_PATH}${sep}}$VULKAN_SDK/lib/pkgconfig" >> "$GITHUB_ENV"
+        # until this is fixed https://github.com/haskell/cabal/issues/7339
+        printf "%s\n" "DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH:+${DYLD_LIBRARY_PATH}${sep}}$VULKAN_SDK/lib" >> "$GITHUB_ENV"
 
     - name: Remove openxr
       run: |
         sed -ibak '/openxr/d' stack.yaml
 
     - name: Install dependencies
+      shell: bash
       run: stack build $ARGS --test --bench --only-dependencies
       env:
         ARGS: ${{ matrix.stack-args }}
 
     - name: Build
+      shell: bash
       run: stack build $ARGS
       env:
         ARGS: ${{ matrix.stack-args }}
 
     - name: Build documentation
+      shell: bash
       run: stack haddock $ARGS
       env:
         ARGS: ${{ matrix.stack-args }}
