@@ -533,16 +533,17 @@ foreign import ccall
 -- +------------------+------------------+------------------+
 -- | device           | @NULL@           | undefined        |
 -- +------------------+------------------+------------------+
--- | device           | core             | fp3              |
+-- | device           | requested core   | fp4              |
+-- |                  | version2         |                  |
 -- |                  | device-level     |                  |
 -- |                  | dispatchable     |                  |
--- |                  | command2         |                  |
+-- |                  | command3         |                  |
 -- +------------------+------------------+------------------+
--- | device           | enabled          | fp3              |
+-- | device           | enabled          | fp4              |
 -- |                  | extension        |                  |
 -- |                  | device-level     |                  |
 -- |                  | dispatchable     |                  |
--- |                  | command2         |                  |
+-- |                  | command3         |                  |
 -- +------------------+------------------+------------------+
 -- | any other case,  |                  | @NULL@           |
 -- | not covered      |                  |                  |
@@ -556,10 +557,18 @@ foreign import ccall
 --     valid values, invalid values, and @NULL@).
 --
 -- [2]
+--     Device-level commands which are part of the core version specified
+--     by 'ApplicationInfo'::@apiVersion@ when creating the instance will
+--     always return a valid function pointer. Core commands beyond that
+--     version which are supported by the implementation /may/ either
+--     return @NULL@ or a function pointer, though the function pointer
+--     /must/ not be called.
+--
+-- [3]
 --     In this function, device-level excludes all physical-device-level
 --     commands.
 --
--- [3]
+-- [4]
 --     The returned function pointer /must/ only be called with a
 --     dispatchable object (the first parameter) that is @device@ or a
 --     child of @device@ e.g. 'Vulkan.Core10.Handles.Device',

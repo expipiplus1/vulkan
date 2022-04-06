@@ -6327,7 +6327,7 @@ instance Zero AccelerationStructureDeviceAddressInfoKHR where
 -- Note
 --
 -- @pVersionData@ is a /pointer/ to an array of
--- 2*'Vulkan.Core10.APIConstants.UUID_SIZE' @uint8_t@ values instead of two
+-- 2×'Vulkan.Core10.APIConstants.UUID_SIZE' @uint8_t@ values instead of two
 -- 'Vulkan.Core10.APIConstants.UUID_SIZE' arrays as the expected use case
 -- for this member is to be pointed at the header of an previously
 -- serialized acceleration structure (via

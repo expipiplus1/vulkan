@@ -1438,7 +1438,7 @@ foreign import ccall
 --     × @groupCount@
 --
 -- -   #VUID-vkGetRayTracingShaderGroupHandlesKHR-pipeline-03482#
---     @pipeline@ /must/ have not been created with
+--     @pipeline@ /must/ not have been created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'
 --
 -- == Valid Usage (Implicit)
@@ -1539,6 +1539,10 @@ foreign import ccall
 -- -   #VUID-vkGetRayTracingCaptureReplayShaderGroupHandlesKHR-pipeline-03607#
 --     @pipeline@ /must/ have been created with a @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR'
+--
+-- -   #VUID-vkGetRayTracingCaptureReplayShaderGroupHandlesKHR-pipeline-06720#
+--     @pipeline@ /must/ not have been created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'
 --
 -- == Valid Usage (Implicit)
 --

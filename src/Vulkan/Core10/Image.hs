@@ -1337,14 +1337,17 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT', then
 --     @arrayLayers@ /must/ be @1@
 --
--- -   #VUID-VkImageCreateInfo-pNext-04737# If a
+-- -   #VUID-VkImageCreateInfo-pNext-06722# If a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
 --     structure was included in the @pNext@ chain and
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@viewFormatCount@
---     is not zero, then all of the formats in
+--     is not zero, then each format in
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@pViewFormats@
---     /must/ be compatible with the @format@ as described in the
+--     /must/ either be compatible with the @format@ as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility compatibility table>
+--     or, if @flags@ contains
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT',
+--     be an uncompressed format that is size-compatible with @format@
 --
 -- -   #VUID-VkImageCreateInfo-flags-04738# If @flags@ does not contain
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'

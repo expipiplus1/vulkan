@@ -433,6 +433,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_graphics_pipeline_library (Physic
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation (PhysicalDeviceGroupProperties)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset (PhysicalDeviceHostQueryResetFeatures)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities (PhysicalDeviceIDProperties)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_2d_view_of_3d (PhysicalDeviceImage2DViewOf3DFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_drm_format_modifier (PhysicalDeviceImageDrmFormatModifierInfoEXT)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2 (PhysicalDeviceImageFormatInfo2)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_image_robustness (PhysicalDeviceImageRobustnessFeatures)
@@ -981,6 +982,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceFragmentShadingRateFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderTerminateInvocationFeatures = ()
   Extends DeviceCreateInfo PhysicalDeviceFragmentShadingRateEnumsFeaturesNV = ()
+  Extends DeviceCreateInfo PhysicalDeviceImage2DViewOf3DFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceMutableDescriptorTypeFeaturesVALVE = ()
   Extends DeviceCreateInfo PhysicalDeviceDepthClipControlFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceVertexInputDynamicStateFeaturesEXT = ()
@@ -1157,6 +1159,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceFragmentShadingRateFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderTerminateInvocationFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceFragmentShadingRateEnumsFeaturesNV = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceImage2DViewOf3DFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceMutableDescriptorTypeFeaturesVALVE = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceDepthClipControlFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceVertexInputDynamicStateFeaturesEXT = ()
@@ -1718,6 +1721,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_ENUMS_FEATURES_NV -> go @PhysicalDeviceFragmentShadingRateEnumsFeaturesNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_ENUMS_PROPERTIES_NV -> go @PhysicalDeviceFragmentShadingRateEnumsPropertiesNV
   STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_ENUM_STATE_CREATE_INFO_NV -> go @PipelineFragmentShadingRateEnumStateCreateInfoNV
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_2D_VIEW_OF_3D_FEATURES_EXT -> go @PhysicalDeviceImage2DViewOf3DFeaturesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_VALVE -> go @PhysicalDeviceMutableDescriptorTypeFeaturesVALVE
   STRUCTURE_TYPE_MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_VALVE -> go @MutableDescriptorTypeCreateInfoVALVE
   STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_CONTROL_FEATURES_EXT -> go @PhysicalDeviceDepthClipControlFeaturesEXT
@@ -2110,6 +2114,7 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceFragmentShadingRateEnumsFeaturesNV #-}
 {-# complete (::&) :: PhysicalDeviceFragmentShadingRateEnumsPropertiesNV #-}
 {-# complete (::&) :: PipelineFragmentShadingRateEnumStateCreateInfoNV #-}
+{-# complete (::&) :: PhysicalDeviceImage2DViewOf3DFeaturesEXT #-}
 {-# complete (::&) :: PhysicalDeviceMutableDescriptorTypeFeaturesVALVE #-}
 {-# complete (::&) :: MutableDescriptorTypeCreateInfoVALVE #-}
 {-# complete (::&) :: PhysicalDeviceDepthClipControlFeaturesEXT #-}

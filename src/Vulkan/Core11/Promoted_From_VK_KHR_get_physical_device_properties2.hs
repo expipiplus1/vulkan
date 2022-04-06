@@ -154,6 +154,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_graphics_pipeline_library (Physic
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_graphics_pipeline_library (PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset (PhysicalDeviceHostQueryResetFeatures)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities (PhysicalDeviceIDProperties)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_2d_view_of_3d (PhysicalDeviceImage2DViewOf3DFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_drm_format_modifier (PhysicalDeviceImageDrmFormatModifierInfoEXT)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_image_robustness (PhysicalDeviceImageRobustnessFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_filter_cubic (PhysicalDeviceImageViewImageFormatInfoEXT)
@@ -744,6 +745,7 @@ instance Extensible PhysicalDeviceFeatures2 where
     | Just Refl <- eqT @e @PhysicalDeviceVertexInputDynamicStateFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDepthClipControlFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMutableDescriptorTypeFeaturesVALVE = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceImage2DViewOf3DFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFragmentShadingRateEnumsFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderTerminateInvocationFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFragmentShadingRateFeaturesKHR = Just f

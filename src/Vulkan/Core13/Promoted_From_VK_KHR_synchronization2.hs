@@ -1170,7 +1170,7 @@ foreign import ccall
 -- Note
 --
 -- If an implementation is unable to detect completion and latch the timer
--- at any specific stage of the pipeline, it /may/ instead do so at any
+-- immediately after @stage@ has completed, it /may/ instead do so at any
 -- logically later stage.
 --
 -- Comparisons between timestamps are not meaningful if the timestamps are

@@ -333,6 +333,11 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_RAY_TRACING_KHR',
 --     @pipeline@ /must/ be a ray tracing pipeline
 --
+-- -   #VUID-vkCmdBindPipeline-pipelineBindPoint-06721# If
+--     @pipelineBindPoint@ is
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_RAY_TRACING_KHR',
+--     @commandBuffer@ /must/ not be a protected command buffer
+--
 -- -   #VUID-vkCmdBindPipeline-pipeline-03382# @pipeline@ /must/ not have
 --     been created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'
@@ -1080,9 +1085,8 @@ foreign import ccall
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
--- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@compareMask@
--- value used to create the currently active pipeline, for both front and
--- back faces.
+-- 'Vulkan.Core10.Pipeline.StencilOpState'::@compareMask@ value used to
+-- create the currently active pipeline, for both front and back faces.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1440,8 +1444,16 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBindDescriptorSets-pDescriptorSets-01979# For each
 --     dynamic uniform or storage buffer binding in @pDescriptorSets@, the
---     sum of the effective offset, as defined above, and the range of the
---     binding /must/ be less than or equal to the size of the buffer
+--     sum of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#dynamic-effective-offset effective offset>
+--     and the range of the binding /must/ be less than or equal to the
+--     size of the buffer
+--
+-- -   #VUID-vkCmdBindDescriptorSets-pDescriptorSets-06715# For each
+--     dynamic uniform or storage buffer binding in @pDescriptorSets@, if
+--     the range was set with 'Vulkan.Core10.APIConstants.WHOLE_SIZE' then
+--     @pDynamicOffsets@ which corresponds to the descriptor binding /must/
+--     be 0
 --
 -- -   #VUID-vkCmdBindDescriptorSets-pDescriptorSets-04616# Each element of
 --     @pDescriptorSets@ /must/ not have been allocated from a
@@ -1453,7 +1465,7 @@ foreign import ccall
 --     created with
 --     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT',
 --     each element of @pDescriptorSets@ /must/ be a valid
---     'Vulkan.Core10.Handles.DescriptorSetLayout'
+--     'Vulkan.Core10.Handles.DescriptorSet'
 --
 -- == Valid Usage (Implicit)
 --
@@ -6904,8 +6916,9 @@ foreign import ccall
 --     of @pRegions@, @srcOffset.y@ /must/ be @0@ and @extent.height@
 --     /must/ be @1@
 --
--- -   #VUID-vkCmdCopyImage-srcOffset-00147# For each element of
---     @pRegions@, @srcOffset.z@ and (@extent.depth@ + @srcOffset.z@)
+-- -   #VUID-vkCmdCopyImage-srcOffset-00147# If @srcImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each element
+--     of @pRegions@, @srcOffset.z@ and (@extent.depth@ + @srcOffset.z@)
 --     /must/ both be greater than or equal to @0@ and less than or equal
 --     to the depth of the specified @srcSubresource@ of @srcImage@
 --
@@ -6958,8 +6971,9 @@ foreign import ccall
 --     of @pRegions@, @dstOffset.y@ /must/ be @0@ and @extent.height@
 --     /must/ be @1@
 --
--- -   #VUID-vkCmdCopyImage-dstOffset-00153# For each element of
---     @pRegions@, @dstOffset.z@ and (@extent.depth@ + @dstOffset.z@)
+-- -   #VUID-vkCmdCopyImage-dstOffset-00153# If @dstImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each element
+--     of @pRegions@, @dstOffset.z@ and (@extent.depth@ + @dstOffset.z@)
 --     /must/ both be greater than or equal to @0@ and less than or equal
 --     to the depth of the specified @dstSubresource@ of @dstImage@
 --
@@ -11137,16 +11151,28 @@ foreign import ccall
 --
 -- = Description
 --
--- 'cmdWriteTimestamp' latches the value of the timer when all previous
--- commands have completed executing as far as the specified pipeline
--- stage, and writes the timestamp value to memory. When the timestamp
--- value is written, the availability status of the query is set to
--- available.
+-- When 'cmdWriteTimestamp' is submitted to a queue, it defines an
+-- execution dependency on commands that were submitted before it, and
+-- writes a timestamp to a query pool.
+--
+-- The first
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- includes all commands that occur earlier in
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-submission-order submission order>.
+-- The synchronization scope is limited to operations on the pipeline stage
+-- specified by @pipelineStage@.
+--
+-- The second
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- includes only the timestamp write operation.
+--
+-- When the timestamp value is written, the availability status of the
+-- query is set to available.
 --
 -- Note
 --
 -- If an implementation is unable to detect completion and latch the timer
--- at any specific stage of the pipeline, it /may/ instead do so at any
+-- immediately after @stage@ has completed, it /may/ instead do so at any
 -- logically later stage.
 --
 -- Comparisons between timestamps are not meaningful if the timestamps are
@@ -12886,7 +12912,9 @@ instance Zero BufferCopy where
 -- with different image types. If one image is
 -- 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' and the other image is
 -- 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' with multiple layers, then
--- each slice is copied to or from a different layer.
+-- each slice is copied to or from a different layer; @depth@ slices in the
+-- 3D image correspond to @layerCount@ layers in the 2D image, with an
+-- effective @depth@ of @1@ used for the 2D image.
 --
 -- Copies involving a
 -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>

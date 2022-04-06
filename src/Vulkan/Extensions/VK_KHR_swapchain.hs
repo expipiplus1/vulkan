@@ -1345,7 +1345,7 @@ foreign import ccall
 -- 'createSwapchainKHR' will return
 -- 'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST' if the logical device was
 -- lost. The 'Vulkan.Extensions.Handles.SwapchainKHR' is a child of the
--- @device@, and /must/ not be destroyed before the @device@. However,
+-- @device@, and /must/ be destroyed before the @device@. However,
 -- 'Vulkan.Extensions.Handles.SurfaceKHR' is not a child of any
 -- 'Vulkan.Core10.Handles.Device' and is not affected by the lost device.
 -- After successfully recreating a 'Vulkan.Core10.Handles.Device', the same

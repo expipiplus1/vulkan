@@ -685,12 +685,19 @@ instance Zero ImageSubresourceRange where
 --     feature is not enabled, @viewType@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY'
 --
--- -   #VUID-VkImageViewCreateInfo-image-01005# If @image@ was created with
+-- -   #VUID-VkImageViewCreateInfo-image-06723# If @image@ was created with
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' but without
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT'
 --     set then @viewType@ /must/ not be
---     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'
+--
+-- -   #VUID-VkImageViewCreateInfo-image-06728# If @image@ was created with
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' but without
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT'
+--     or
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT'
+--     set, then @viewType@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D'
 --
 -- -   #VUID-VkImageViewCreateInfo-image-04970# If @image@ was created with
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' and @viewType@ is
@@ -802,9 +809,11 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT',
 --     @subresourceRange.levelCount@ /must/ be @1@
 --
--- -   #VUID-VkImageViewCreateInfo-image-01482# If @image@ is not a 3D
+-- -   #VUID-VkImageViewCreateInfo-image-06724# If @image@ is not a 3D
 --     image created with
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT'
+--     or
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT'
 --     set, or @viewType@ is not
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY',
@@ -812,11 +821,13 @@ instance Zero ImageSubresourceRange where
 --     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
 --     when @image@ was created
 --
--- -   #VUID-VkImageViewCreateInfo-subresourceRange-01483# If
+-- -   #VUID-VkImageViewCreateInfo-subresourceRange-06725# If
 --     @subresourceRange.layerCount@ is not
 --     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', @image@ is not
 --     a 3D image created with
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT'
+--     or
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT'
 --     set, or @viewType@ is not
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY',
