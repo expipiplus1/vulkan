@@ -2,6 +2,13 @@
 
 ## WIP
 
+## [3.17] - 2022-03-31
+- Bump API version to v1.3.210
+  - A significant breaking change is that
+    `GraphicsPipelineCreateInfo.rasterizationState` is now optional (it's
+    unused when VK_EXT_graphics_pipeline_library is enabled). Hence, this
+    member is wrapped in `Maybe`
+
 ## [3.16.2] - 2022-02-07
 - Zero instance for ()
 

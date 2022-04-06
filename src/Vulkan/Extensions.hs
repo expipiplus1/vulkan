@@ -61,6 +61,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_full_screen_exclusive
                           , module Vulkan.Extensions.VK_EXT_global_priority
                           , module Vulkan.Extensions.VK_EXT_global_priority_query
+                          , module Vulkan.Extensions.VK_EXT_graphics_pipeline_library
                           , module Vulkan.Extensions.VK_EXT_hdr_metadata
                           , module Vulkan.Extensions.VK_EXT_headless_surface
                           , module Vulkan.Extensions.VK_EXT_host_query_reset
@@ -82,6 +83,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
                           , module Vulkan.Extensions.VK_EXT_post_depth_coverage
                           , module Vulkan.Extensions.VK_EXT_primitive_topology_list_restart
+                          , module Vulkan.Extensions.VK_EXT_primitives_generated_query
                           , module Vulkan.Extensions.VK_EXT_private_data
                           , module Vulkan.Extensions.VK_EXT_provoking_vertex
                           , module Vulkan.Extensions.VK_EXT_queue_family_foreign
@@ -178,6 +180,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_KHR_performance_query
                           , module Vulkan.Extensions.VK_KHR_pipeline_executable_properties
                           , module Vulkan.Extensions.VK_KHR_pipeline_library
+                          , module Vulkan.Extensions.VK_KHR_portability_enumeration
                           , module Vulkan.Extensions.VK_KHR_portability_subset
                           , module Vulkan.Extensions.VK_KHR_present_id
                           , module Vulkan.Extensions.VK_KHR_present_wait
@@ -266,6 +269,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_QCOM_render_pass_transform
                           , module Vulkan.Extensions.VK_QCOM_rotated_copy_commands
                           , module Vulkan.Extensions.VK_QNX_screen_surface
+                          , module Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping
                           , module Vulkan.Extensions.VK_VALVE_mutable_descriptor_type
                           ) where
 import Vulkan.Extensions.Dependencies
@@ -329,6 +333,7 @@ import Vulkan.Extensions.VK_EXT_fragment_shader_interlock
 import Vulkan.Extensions.VK_EXT_full_screen_exclusive
 import Vulkan.Extensions.VK_EXT_global_priority
 import Vulkan.Extensions.VK_EXT_global_priority_query
+import Vulkan.Extensions.VK_EXT_graphics_pipeline_library
 import Vulkan.Extensions.VK_EXT_hdr_metadata
 import Vulkan.Extensions.VK_EXT_headless_surface
 import Vulkan.Extensions.VK_EXT_host_query_reset
@@ -350,6 +355,7 @@ import Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
 import Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
 import Vulkan.Extensions.VK_EXT_post_depth_coverage
 import Vulkan.Extensions.VK_EXT_primitive_topology_list_restart
+import Vulkan.Extensions.VK_EXT_primitives_generated_query
 import Vulkan.Extensions.VK_EXT_private_data
 import Vulkan.Extensions.VK_EXT_provoking_vertex
 import Vulkan.Extensions.VK_EXT_queue_family_foreign
@@ -446,6 +452,7 @@ import Vulkan.Extensions.VK_KHR_multiview
 import Vulkan.Extensions.VK_KHR_performance_query
 import Vulkan.Extensions.VK_KHR_pipeline_executable_properties
 import Vulkan.Extensions.VK_KHR_pipeline_library
+import Vulkan.Extensions.VK_KHR_portability_enumeration
 import Vulkan.Extensions.VK_KHR_portability_subset
 import Vulkan.Extensions.VK_KHR_present_id
 import Vulkan.Extensions.VK_KHR_present_wait
@@ -534,5 +541,6 @@ import Vulkan.Extensions.VK_QCOM_render_pass_store_ops
 import Vulkan.Extensions.VK_QCOM_render_pass_transform
 import Vulkan.Extensions.VK_QCOM_rotated_copy_commands
 import Vulkan.Extensions.VK_QNX_screen_surface
+import Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping
 import Vulkan.Extensions.VK_VALVE_mutable_descriptor_type
 

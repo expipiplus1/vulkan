@@ -193,30 +193,39 @@ renderBracket paramName b@Bracket {..} =
           pure $ case ts of
             [x] -> x
             _   -> foldl' (:@) (TupleT (length ts)) ts
-        let noDestructorResource = not (any isResource bDestroyArguments)
-            noResource           = null bInnerTypes && noDestructorResource
-            ioVar                = VarT (mkName "io")
-            rVar                 = VarT (mkName "r")
-            rTy                  = case bDestroyReturnTypes of
-              [] -> rVar
-              ts -> foldl' (:@) (TupleT (length ts + 1)) (ts <> [rVar])
-            userParamType = case bBracketType of
-              BracketCPS -> if noResource
-                then ioVar :@ innerHsType ~> (ioVar :@ ConT ''()) ~> rVar
-                else
+        let
+          noDestructorResource = not (any isResource bDestroyArguments)
+          noResource           = null bInnerTypes && noDestructorResource
+          ioVar                = VarT (mkName "io")
+          rVar                 = VarT (mkName "r")
+          mkTuple ts = foldl' (:@) (TupleT (length ts)) ts
+          rTy = case bDestroyReturnTypes of
+            [] -> rVar
+            ts -> case bBracketType of
+              BracketCPS     -> rVar
+              BracketBookend -> mkTuple (ts <> [rVar])
+          userParamType = case bBracketType of
+            BracketCPS -> if noResource
+              then ioVar :@ innerHsType ~> (ioVar :@ ConT ''()) ~> rVar
+              else case bDestroyReturnTypes of
+                [] ->
                   ioVar
-                  :@ innerHsType
-                  ~> (innerHsType ~> ioVar :@ ConT ''())
-                  ~> rVar
-              BracketBookend -> if noResource
-                then ioVar :@ rVar
-                else innerHsType ~> ioVar :@ rVar
-            returnType = case bBracketType of
-              BracketCPS     -> rTy
-              BracketBookend -> ioVar :@ rTy
+                    :@ innerHsType
+                    ~> (innerHsType ~> ioVar :@ ConT ''())
+                    ~> rVar
+                _ ->
+                  ioVar
+                    :@ innerHsType
+                    ~> (innerHsType ~> ioVar :@ mkTuple bDestroyReturnTypes)
+                    ~> rVar
+            BracketBookend ->
+              if noResource then ioVar :@ rVar else innerHsType ~> ioVar :@ rVar
+          returnType = case bBracketType of
+            BracketCPS     -> rTy
+            BracketBookend -> ioVar :@ rTy
 
-            wrapperType = foldr (~>) returnType (argHsTypes <> [userParamType])
-            bracketSuffix = bool "" "_" noResource
+          wrapperType   = foldr (~>) returnType (argHsTypes <> [userParamType])
+          bracketSuffix = bool "" "_" noResource
         constrainedType <- addConstraints [ConT ''MonadIO :@ ioVar]
           <$> constrainStructVariables wrapperType
         wrapperTDoc <- renderType constrainedType
@@ -227,12 +236,9 @@ renderBracket paramName b@Bracket {..} =
         createCall  <- renderCreate paramName b
         destroyCall <- renderDestroy paramName b
         bracketRHS  <- case bBracketType of
-          BracketCPS -> case bDestroyReturnTypes of
-            [] -> pure $ "b" <+> indent
-              0
-              (vsep [parens createCall, parens destroyCall])
-            _ ->
-              throw "TODO: Handle destructor return values with CPS brackets"
+          BracketCPS -> pure $ "b" <+> indent
+            0
+            (vsep [parens createCall, parens destroyCall])
           BracketBookend
             | noResource -> pure $ case bDestroyReturnTypes of
               [] -> parens createCall <+> "*> a <*" <+> parens destroyCall

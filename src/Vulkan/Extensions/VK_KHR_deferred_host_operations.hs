@@ -106,9 +106,7 @@
 --
 -- The following examples will illustrate the concept of deferrable
 -- operations using a hypothetical example. The command
--- @vkDoSomethingExpensiveEXT@ denotes a deferrable command. The structure
--- @VkExpensiveOperationArgsEXT@ represents the arguments which it would
--- normally accept.
+-- @vkDoSomethingExpensive@ denotes a deferrable command.
 --
 -- The following example illustrates how a vulkan application might request
 -- deferral of an expensive operation:
@@ -159,7 +157,7 @@
 -- >                 // in a job system, a return of VK_THREAD_IDLE_KHR should queue another
 -- >                 // job, but it is not functionally required
 -- >     }
--- >   );
+-- >   ));
 -- > }
 -- >
 -- > for (auto &f : joins) {

@@ -470,7 +470,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
 --
 -- Images created with one of the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y′CBCR conversion>,
 -- have further restrictions on their limits and capabilities compared to
 -- images created with other formats. Creation of images with a format
 -- requiring
@@ -1098,23 +1098,23 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --
 -- -   #VUID-VkImageCreateInfo-format-06410# If the image @format@ is one
 --     of the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y′CBCR conversion>,
 --     @mipLevels@ /must/ be 1
 --
 -- -   #VUID-VkImageCreateInfo-format-06411# If the image @format@ is one
 --     of the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y′CBCR conversion>,
 --     @samples@ /must/ be
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
 --
 -- -   #VUID-VkImageCreateInfo-format-06412# If the image @format@ is one
 --     of the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y′CBCR conversion>,
 --     @imageType@ /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
 --
 -- -   #VUID-VkImageCreateInfo-format-06413# If the image @format@ is one
 --     of the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y′CBCR conversion>,
 --     and the @ycbcrImageArrays@ feature is not enabled, @arrayLayers@
 --     /must/ be 1
 --

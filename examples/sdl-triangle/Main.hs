@@ -289,7 +289,7 @@ createGraphicsPipeline dev renderPass swapchainExtent _swapchainImageFormat = do
         , scissors  =
           [Rect2D { offset = Offset2D 0 0, extent = swapchainExtent }]
         }
-      , rasterizationState = SomeStruct $ zero
+      , rasterizationState = Just . SomeStruct $ zero
                                { depthClampEnable        = False
                                , rasterizerDiscardEnable = False
                                , lineWidth               = 1

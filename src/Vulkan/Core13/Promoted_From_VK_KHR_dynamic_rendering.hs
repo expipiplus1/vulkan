@@ -294,66 +294,7 @@ cmdEndRendering commandBuffer = liftIO $ do
 -- indicate that an attachment /can/ be used - but it is still valid to set
 -- the attachment to @NULL@ when beginning rendering.
 --
--- == Valid Usage
---
--- -   #VUID-VkPipelineRenderingCreateInfoKHR-pColorAttachmentFormats-06495#
---     If any element of @pColorAttachmentFormats@ is not
---     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', it /must/ be a format
---     with
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
---     that includes either
---     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
---     or
---     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
---
--- -   #VUID-VkPipelineRenderingCreateInfo-depthAttachmentFormat-06065# If
---     @depthAttachmentFormat@ is not
---     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', it /must/ be a format
---     with
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
---     that include
---     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
---
--- -   #VUID-VkPipelineRenderingCreateInfo-stencilAttachmentFormat-06164#
---     If @stencilAttachmentFormat@ is not
---     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', it /must/ be a format
---     with
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
---     that include
---     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
---
--- -   #VUID-VkPipelineRenderingCreateInfo-depthAttachmentFormat-06165# If
---     @depthAttachmentFormat@ is not
---     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED' and
---     @stencilAttachmentFormat@ is not
---     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED',
---     @depthAttachmentFormat@ /must/ equal @stencilAttachmentFormat@
---
--- -   #VUID-VkPipelineRenderingCreateInfo-multiview-06066# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview multiview>
---     feature is not enabled, @viewMask@ /must/ be @0@
---
--- -   #VUID-VkPipelineRenderingCreateInfo-viewMask-06067# The index of the
---     most significant bit in @viewMask@ /must/ be less than
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxMultiviewViewCount maxMultiviewViewCount>
---
 -- == Valid Usage (Implicit)
---
--- -   #VUID-VkPipelineRenderingCreateInfo-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO'
---
--- -   #VUID-VkPipelineRenderingCreateInfo-pColorAttachmentFormats-parameter#
---     If @colorAttachmentCount@ is not @0@, @pColorAttachmentFormats@
---     /must/ be a valid pointer to an array of @colorAttachmentCount@
---     valid 'Vulkan.Core10.Enums.Format.Format' values
---
--- -   #VUID-VkPipelineRenderingCreateInfo-depthAttachmentFormat-parameter#
---     @depthAttachmentFormat@ /must/ be a valid
---     'Vulkan.Core10.Enums.Format.Format' value
---
--- -   #VUID-VkPipelineRenderingCreateInfo-stencilAttachmentFormat-parameter#
---     @stencilAttachmentFormat@ /must/ be a valid
---     'Vulkan.Core10.Enums.Format.Format' value
 --
 -- = See Also
 --
@@ -522,11 +463,24 @@ instance Zero PipelineRenderingCreateInfo where
 --     have been created with
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
 --
+-- -   #VUID-VkRenderingInfo-pDepthAttachment-06547# If @pDepthAttachment@
+--     is not @NULL@ and @pDepthAttachment->imageView@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @pDepthAttachment->imageView@ /must/ have been created with a format
+--     that includes a depth aspect
+--
 -- -   #VUID-VkRenderingInfo-pDepthAttachment-06088# If @pDepthAttachment@
 --     is not @NULL@ and @pDepthAttachment->imageView@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @pDepthAttachment->imageView@ /must/ have been created with
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--
+-- -   #VUID-VkRenderingInfo-pStencilAttachment-06548# If
+--     @pStencilAttachment@ is not @NULL@ and
+--     @pStencilAttachment->imageView@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @pStencilAttachment->imageView@ /must/ have been created with a
+--     format that includes a stencil aspect
 --
 -- -   #VUID-VkRenderingInfo-pStencilAttachment-06089# If
 --     @pStencilAttachment@ is not @NULL@ and
@@ -1369,6 +1323,11 @@ instance Zero PhysicalDeviceDynamicRenderingFeatures where
 --     that include
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --
+-- -   #VUID-VkCommandBufferInheritanceRenderingInfo-depthAttachmentFormat-06540#
+--     If @depthAttachmentFormat@ is not
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', it /must/ be a format
+--     that includes a depth aspect
+--
 -- -   #VUID-VkCommandBufferInheritanceRenderingInfo-depthAttachmentFormat-06007#
 --     If @depthAttachmentFormat@ is not
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', it /must/ be a format
@@ -1386,6 +1345,11 @@ instance Zero PhysicalDeviceDynamicRenderingFeatures where
 --     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
 --     that include
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
+--
+-- -   #VUID-VkCommandBufferInheritanceRenderingInfo-stencilAttachmentFormat-06541#
+--     If @stencilAttachmentFormat@ is not
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', it /must/ be a format
+--     that includes a stencil aspect
 --
 -- -   #VUID-VkCommandBufferInheritanceRenderingInfo-stencilAttachmentFormat-06199#
 --     If @stencilAttachmentFormat@ is not

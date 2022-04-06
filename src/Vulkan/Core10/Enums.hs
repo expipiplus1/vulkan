@@ -43,7 +43,7 @@ module Vulkan.Core10.Enums  ( module Vulkan.Core10.Enums.AccessFlagBits
                             , module Vulkan.Core10.Enums.ImageViewCreateFlagBits
                             , module Vulkan.Core10.Enums.ImageViewType
                             , module Vulkan.Core10.Enums.IndexType
-                            , module Vulkan.Core10.Enums.InstanceCreateFlags
+                            , module Vulkan.Core10.Enums.InstanceCreateFlagBits
                             , module Vulkan.Core10.Enums.InternalAllocationType
                             , module Vulkan.Core10.Enums.LogicOp
                             , module Vulkan.Core10.Enums.MemoryHeapFlagBits
@@ -59,7 +59,7 @@ module Vulkan.Core10.Enums  ( module Vulkan.Core10.Enums.AccessFlagBits
                             , module Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits
                             , module Vulkan.Core10.Enums.PipelineDynamicStateCreateFlags
                             , module Vulkan.Core10.Enums.PipelineInputAssemblyStateCreateFlags
-                            , module Vulkan.Core10.Enums.PipelineLayoutCreateFlags
+                            , module Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits
                             , module Vulkan.Core10.Enums.PipelineMultisampleStateCreateFlags
                             , module Vulkan.Core10.Enums.PipelineRasterizationStateCreateFlags
                             , module Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits
@@ -139,7 +139,7 @@ import Vulkan.Core10.Enums.ImageUsageFlagBits
 import Vulkan.Core10.Enums.ImageViewCreateFlagBits
 import Vulkan.Core10.Enums.ImageViewType
 import Vulkan.Core10.Enums.IndexType
-import Vulkan.Core10.Enums.InstanceCreateFlags
+import Vulkan.Core10.Enums.InstanceCreateFlagBits
 import Vulkan.Core10.Enums.InternalAllocationType
 import Vulkan.Core10.Enums.LogicOp
 import Vulkan.Core10.Enums.MemoryHeapFlagBits
@@ -155,7 +155,7 @@ import Vulkan.Core10.Enums.PipelineCreateFlagBits
 import Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits
 import Vulkan.Core10.Enums.PipelineDynamicStateCreateFlags
 import Vulkan.Core10.Enums.PipelineInputAssemblyStateCreateFlags
-import Vulkan.Core10.Enums.PipelineLayoutCreateFlags
+import Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits
 import Vulkan.Core10.Enums.PipelineMultisampleStateCreateFlags
 import Vulkan.Core10.Enums.PipelineRasterizationStateCreateFlags
 import Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits

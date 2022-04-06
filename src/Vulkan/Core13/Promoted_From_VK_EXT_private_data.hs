@@ -9,10 +9,9 @@ module Vulkan.Core13.Promoted_From_VK_EXT_private_data  ( createPrivateDataSlot
                                                         , PrivateDataSlotCreateInfo(..)
                                                         , PhysicalDevicePrivateDataFeatures(..)
                                                         , PrivateDataSlot(..)
+                                                        , PrivateDataSlotCreateFlags(..)
                                                         , StructureType(..)
                                                         , ObjectType(..)
-                                                        , PrivateDataSlotCreateFlagBits(..)
-                                                        , PrivateDataSlotCreateFlags
                                                         ) where
 
 import Vulkan.Internal.Utils (traceAroundEvent)
@@ -66,7 +65,7 @@ import Vulkan.Core10.Enums.ObjectType (ObjectType)
 import Vulkan.Core10.Enums.ObjectType (ObjectType(..))
 import Vulkan.Core13.Handles (PrivateDataSlot)
 import Vulkan.Core13.Handles (PrivateDataSlot(..))
-import Vulkan.Core13.Enums.PrivateDataSlotCreateFlagBits (PrivateDataSlotCreateFlags)
+import Vulkan.Core13.Enums.PrivateDataSlotCreateFlags (PrivateDataSlotCreateFlags)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
@@ -77,8 +76,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PRIVATE_D
 import Vulkan.Core10.Enums.Result (Result(SUCCESS))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(..))
 import Vulkan.Core13.Handles (PrivateDataSlot(..))
-import Vulkan.Core13.Enums.PrivateDataSlotCreateFlagBits (PrivateDataSlotCreateFlagBits(..))
-import Vulkan.Core13.Enums.PrivateDataSlotCreateFlagBits (PrivateDataSlotCreateFlags)
+import Vulkan.Core13.Enums.PrivateDataSlotCreateFlags (PrivateDataSlotCreateFlags(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -442,14 +440,12 @@ instance Zero DevicePrivateDataCreateInfo where
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_private_data VK_EXT_private_data>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_3 VK_VERSION_1_3>,
--- 'Vulkan.Core13.Enums.PrivateDataSlotCreateFlagBits.PrivateDataSlotCreateFlags',
+-- 'Vulkan.Core13.Enums.PrivateDataSlotCreateFlags.PrivateDataSlotCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createPrivateDataSlot',
 -- 'Vulkan.Extensions.VK_EXT_private_data.createPrivateDataSlotEXT'
 data PrivateDataSlotCreateInfo = PrivateDataSlotCreateInfo
-  { -- | @flags@ is a bitmask of
-    -- 'Vulkan.Core13.Enums.PrivateDataSlotCreateFlagBits.PrivateDataSlotCreateFlags'
-    -- specifying additional parameters of the new private data slot
+  { -- | @flags@ is reserved for future use.
     --
     -- #VUID-VkPrivateDataSlotCreateInfo-flags-zerobitmask# @flags@ /must/ be
     -- @0@

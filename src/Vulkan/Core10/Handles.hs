@@ -343,6 +343,8 @@ data Device_T
 -- 'Vulkan.Extensions.VK_EXT_calibrated_timestamps.getCalibratedTimestampsEXT',
 -- 'Vulkan.Extensions.VK_KHR_deferred_host_operations.getDeferredOperationMaxConcurrencyKHR',
 -- 'Vulkan.Extensions.VK_KHR_deferred_host_operations.getDeferredOperationResultKHR',
+-- 'Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping.getDescriptorSetHostMappingVALVE',
+-- 'Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping.getDescriptorSetLayoutHostMappingInfoVALVE',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.getDescriptorSetLayoutSupport',
 -- 'Vulkan.Extensions.VK_KHR_maintenance3.getDescriptorSetLayoutSupportKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.getDeviceAccelerationStructureCompatibilityKHR',
@@ -1035,6 +1037,7 @@ instance Show Sampler where
 -- 'Vulkan.Core10.DescriptorSet.allocateDescriptorSets',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets',
 -- 'Vulkan.Core10.DescriptorSet.freeDescriptorSets',
+-- 'Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping.getDescriptorSetHostMappingVALVE',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.updateDescriptorSetWithTemplate',
 -- 'Vulkan.Extensions.VK_KHR_descriptor_update_template.updateDescriptorSetWithTemplateKHR'
 newtype DescriptorSet = DescriptorSet Word64
@@ -1052,6 +1055,7 @@ instance Show DescriptorSet where
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetAllocateInfo',
+-- 'Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping.DescriptorSetBindingReferenceVALVE',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.DescriptorUpdateTemplateCreateInfo',
 -- 'Vulkan.Core10.PipelineLayout.PipelineLayoutCreateInfo',
 -- 'Vulkan.Core10.DescriptorSet.createDescriptorSetLayout',

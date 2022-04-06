@@ -57,7 +57,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkDestroyPipelineLayout))
 import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.Handles (PipelineLayout)
 import Vulkan.Core10.Handles (PipelineLayout(..))
-import Vulkan.Core10.Enums.PipelineLayoutCreateFlags (PipelineLayoutCreateFlags)
+import Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits (PipelineLayoutCreateFlags)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
@@ -674,6 +674,12 @@ instance Zero PushConstantRange where
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE'
 --     bit set
 --
+-- -   #VUID-VkPipelineLayoutCreateInfo-flags-06562# If @flags@: does not
+--     include
+--     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT',
+--     elements of @pSetLayouts@ /must/ be valid
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' objects
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-sType-sType# @sType@ /must/ be
@@ -682,12 +688,15 @@ instance Zero PushConstantRange where
 -- -   #VUID-VkPipelineLayoutCreateInfo-pNext-pNext# @pNext@ /must/ be
 --     @NULL@
 --
--- -   #VUID-VkPipelineLayoutCreateInfo-flags-zerobitmask# @flags@ /must/
---     be @0@
+-- -   #VUID-VkPipelineLayoutCreateInfo-flags-parameter# @flags@ /must/ be
+--     a valid combination of
+--     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PipelineLayoutCreateFlagBits'
+--     values
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-parameter# If
 --     @setLayoutCount@ is not @0@, @pSetLayouts@ /must/ be a valid pointer
---     to an array of @setLayoutCount@ valid
+--     to an array of @setLayoutCount@ valid or
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' handles
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-pPushConstantRanges-parameter# If
@@ -699,7 +708,7 @@ instance Zero PushConstantRange where
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.DescriptorSetLayout',
--- 'Vulkan.Core10.Enums.PipelineLayoutCreateFlags.PipelineLayoutCreateFlags',
+-- 'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PipelineLayoutCreateFlags',
 -- 'PushConstantRange', 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createPipelineLayout'
 data PipelineLayoutCreateInfo = PipelineLayoutCreateInfo

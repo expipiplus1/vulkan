@@ -912,6 +912,10 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
+-- -   #VUID-VkMemoryAllocateInfo-None-06657# The parameters /must/ not
+--     define more than one
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-import-operation import operation>
+--
 -- -   #VUID-VkMemoryAllocateInfo-buffer-06380# If the parameters define an
 --     import operation from an
 --     'Vulkan.Extensions.Handles.BufferCollectionFUCHSIA', and
@@ -1151,8 +1155,9 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     the Android hardware buffer’s
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AHardwareBuffer'::@usage@
 --     /must/ include at least one of
---     @AHARDWAREBUFFER_USAGE_GPU_FRAMEBUFFER@ or
---     @AHARDWAREBUFFER_USAGE_GPU_SAMPLED_IMAGE@
+--     @AHARDWAREBUFFER_USAGE_GPU_FRAMEBUFFER@,
+--     @AHARDWAREBUFFER_USAGE_GPU_SAMPLED_IMAGE@ or
+--     @AHARDWAREBUFFER_USAGE_GPU_DATA_BUFFER@
 --
 -- -   #VUID-VkMemoryAllocateInfo-pNext-02387# If the parameters define an
 --     import operation, the external handle is an Android hardware buffer,

@@ -330,6 +330,15 @@ instance Zero PhysicalDeviceMultiviewProperties where
 --     view index /must/ not be set in more than one element of
 --     @pCorrelationMasks@
 --
+-- -   #VUID-VkRenderPassMultiviewCreateInfo-multiview-06555# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview multiview>
+--     feature is not enabled, each element of @pViewMasks@ /must/ be @0@
+--
+-- -   #VUID-VkRenderPassMultiviewCreateInfo-pViewMasks-06697# The index of
+--     the most significant bit in each element of @pViewMasks@ /must/ be
+--     less than
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxMultiviewViewCount maxMultiviewViewCount>
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkRenderPassMultiviewCreateInfo-sType-sType# @sType@ /must/ be

@@ -367,7 +367,7 @@ type FormatFeatureFlags2 = FormatFeatureFlagBits2
 --
 -- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT' specifies that
 --     image views created with this format /can/ be used for depth
---     comparison performed by @OpImage*Dref@ instructions.
+--     comparison performed by @OpImage*Dref*@ instructions.
 --
 -- -   'FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV' specifies that the
 --     format is supported as a renderable
@@ -598,7 +598,7 @@ pattern FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT          = FormatFeatur
 pattern FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT         = FormatFeatureFlagBits2 0x0000000100000000
 -- | 'FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT' specifies that
 -- image views created with this format /can/ be used for depth comparison
--- performed by @OpImage*Dref@ instructions.
+-- performed by @OpImage*Dref*@ instructions.
 pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT       = FormatFeatureFlagBits2 0x0000000200000000
 -- | 'FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV' specifies that the
 -- format is supported as a renderable

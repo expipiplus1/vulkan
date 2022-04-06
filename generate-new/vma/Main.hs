@@ -323,6 +323,8 @@ unitCommands ds =
               pLengths = fromList $ case (cName, pName) of
                 ("vmaGetPoolName", "ppName") -> [NullTerminated]
                 ("vmaSetPoolName", "pName" ) -> [NullTerminated]
+                ("vmaSetAllocationName", "pName" ) -> [NullTerminated]
+                ("VmaAllocationInfo", "pName" ) -> [NullTerminated]
                 ("vmaGetBudget", "pBudget") ->
                   [NamedConstantLength "VK_MAX_MEMORY_HEAPS"]
                 _ -> lengths
@@ -361,23 +363,23 @@ unitStructs state ds = do
             do
               let smName = CName (T.pack n)
               (lengths, optionality, smType) <- case (sName, smName) of
-                ("VmaStats", "memoryType") -> pure
+                ("VmaTotalStatistics", "memoryType") -> pure
                   ( []
                   , []
                   , Array NonConst
                           (SymbolicArraySize "VK_MAX_MEMORY_TYPES")
-                          (TypeName "VmaStatInfo")
+                          (TypeName "VmaDetailedStatistics")
                   )
-                ("VmaStats", "memoryHeap") -> pure
+                ("VmaTotalStatistics", "memoryHeap") -> pure
                   ( []
                   , []
                   , Array NonConst
                           (SymbolicArraySize "VK_MAX_MEMORY_HEAPS")
-                          (TypeName "VmaStatInfo")
+                          (TypeName "VmaDetailedStatistics")
                   )
                 _ -> typeToCType ty
               let smValues  = mempty
-                  smLengths = if n == "pFilePath"
+                  smLengths = if n == "pFilePath" || n == "pName"
                     then fromList [NullTerminated]
                     else fromList lengths
                   smIsOptional = fromList $ case (sName, smName) of

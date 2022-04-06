@@ -62,7 +62,7 @@ assignModules spec rs = do
       initialState = mempty :: S
 
   exports <- execState initialState
-    $ assign (raise . getExporter) rel (closure rel) spec indexed
+    $ assign getExporter rel (closure rel) spec indexed
 
   --
   -- Check that everything is exported
@@ -184,13 +184,14 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
       -> (ModName -> ReqDeps -> Require -> Sem r a)
       -> Sem r [a]
     forRequires requires commentToModName f =
-      forV (sortOn (isNothing . rComment) . toList $ requires) $ \r -> do
-        commands   <- traverseV (getExporter . mkFunName) (rCommandNames r)
-        types      <- traverseV (getExporter . mkTyName) (rTypeNames r)
-        enumValues <- traverseV (getExporter . mkPatternName)
-                                (rEnumValueNames r)
-        let directExporters = commands <> types <> enumValues
-        f (commentToModName (rComment r)) ReqDeps { .. } r
+      forV (sortOn (isNothing . rComment) . toList $ requires) $ \r ->
+        context (fromMaybe "no 'require' comment" (rComment r)) $ do
+          commands   <- traverseV (getExporter . mkFunName) (rCommandNames r)
+          types      <- traverseV (getExporter . mkTyName) (rTypeNames r)
+          enumValues <- traverseV (getExporter . mkPatternName)
+                                  (rEnumValueNames r)
+          let directExporters = commands <> types <> enumValues
+          f (commentToModName (rComment r)) ReqDeps { .. } r
 
     forRequires_ requires commentToModName =
       void . forRequires requires commentToModName
@@ -282,7 +283,7 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
   ----------------------------------------------------------------
   -- Assign aliases to be with their targets if they're not already assigned
   ----------------------------------------------------------------
-  forV_ specAliases $ \Alias {..} -> do
+  forV_ specAliases $ \Alias {..} -> context ("Alias " <> unCName aName) $ do
     let mkName = case aType of
           TypeAlias    -> mkTyName
           TermAlias    -> mkFunName -- TODO, terms other than functions?

@@ -88,7 +88,7 @@
 --
 -- -   'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT_KHR'
 --     indicates that an implementation supports depth comparison performed
---     by @OpImage*Dref@ instructions on a given
+--     by @OpImage*Dref*@ instructions on a given
 --     'Vulkan.Core10.Enums.Format.Format'. Previously the result of
 --     executing a @OpImage*Dref*@ instruction on an image view, where the
 --     @format@ was not one of the depth\/stencil formats with a depth

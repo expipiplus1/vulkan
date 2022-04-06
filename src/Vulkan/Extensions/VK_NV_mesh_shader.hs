@@ -411,16 +411,16 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.ImageView' or
 --     'Vulkan.Core10.Handles.BufferView' being written as a storage image
 --     or storage texel buffer where the image format field of the
---     @OpTypeImage@ is @Unknown@ /must/ have image format features that
---     support
+--     @OpTypeImage@ is @Unknown@ then the view’s format feature /must/
+--     contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdDrawMeshTasksNV-OpTypeImage-06424# Any
 --     'Vulkan.Core10.Handles.ImageView' or
 --     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
 --     storage texel buffer where the image format field of the
---     @OpTypeImage@ is @Unknown@ /must/ have image format features that
---     support
+--     @OpTypeImage@ is @Unknown@ then the view’s format feature /must/
+--     contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdDrawMeshTasksNV-None-02697# For each set /n/ that is
@@ -519,6 +519,23 @@ foreign import ccall
 --     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be a protected resource
+--
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-06550# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
+--     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
+--     object that enables
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
+--     that object /must/ only be used with @OpImageSample*@ or
+--     @OpImageSparseSample*@ instructions
+--
+-- -   #VUID-vkCmdDrawMeshTasksNV-ConstOffset-06551# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
+--     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
+--     object that enables
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
+--     that object /must/ not use the @ConstOffset@ and @Offset@ operands
 --
 -- -   #VUID-vkCmdDrawMeshTasksNV-None-04115# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
@@ -626,6 +643,14 @@ foreign import ccall
 --     been created with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
+--
+-- -   #VUID-vkCmdDrawMeshTasksNV-None-06666# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
 --
 -- -   #VUID-vkCmdDrawMeshTasksNV-viewportCount-03417# If the bound
 --     graphics pipeline state was created with the
@@ -886,6 +911,18 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
 --     used to create the currently bound graphics pipeline
 --
+-- -   #VUID-vkCmdDrawMeshTasksNV-attachmentCount-06667# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @attachmentCount@ parameter of
+--     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
+--     /must/ be equal to the
+--     'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo'::@attachmentCount@
+--     of the currently bound graphics pipeline
+--
 -- -   #VUID-vkCmdDrawMeshTasksNV-pDepthAttachment-06181# If the current
 --     render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
@@ -1035,6 +1072,24 @@ foreign import ccall
 --     the currently bound pipeline /must/ have been created with a
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@renderPass@
 --     equal to 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   #VUID-vkCmdDrawMeshTasksNV-primitivesGeneratedQueryWithRasterizerDiscard-06708#
+--     If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-primitivesGeneratedQueryWithRasterizerDiscard primitivesGeneratedQueryWithRasterizerDiscard>
+--     feature is not enabled and the
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT'
+--     query is active,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-discard rasterization discard>
+--     /must/ not be enabled.
+--
+-- -   #VUID-vkCmdDrawMeshTasksNV-primitivesGeneratedQueryWithNonZeroStreams-06709#
+--     If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-primitivesGeneratedQueryWithNonZeroStreams primitivesGeneratedQueryWithNonZeroStreams>
+--     feature is not enabled and the
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT'
+--     query is active, the bound graphics pipeline /must/ not have been
+--     created with a non-zero value in
+--     'Vulkan.Extensions.VK_EXT_transform_feedback.PipelineRasterizationStateStreamCreateInfoEXT'::@rasterizationStream@.
 --
 -- -   #VUID-vkCmdDrawMeshTasksNV-stage-06480# The bound graphics pipeline
 --     /must/ not have been created with the
@@ -1212,16 +1267,16 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.ImageView' or
 --     'Vulkan.Core10.Handles.BufferView' being written as a storage image
 --     or storage texel buffer where the image format field of the
---     @OpTypeImage@ is @Unknown@ /must/ have image format features that
---     support
+--     @OpTypeImage@ is @Unknown@ then the view’s format feature /must/
+--     contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectNV-OpTypeImage-06424# Any
 --     'Vulkan.Core10.Handles.ImageView' or
 --     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
 --     storage texel buffer where the image format field of the
---     @OpTypeImage@ is @Unknown@ /must/ have image format features that
---     support
+--     @OpTypeImage@ is @Unknown@ then the view’s format feature /must/
+--     contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-02697# For each set /n/ that
@@ -1320,6 +1375,23 @@ foreign import ccall
 --     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be a protected resource
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-06550# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
+--     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
+--     object that enables
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
+--     that object /must/ only be used with @OpImageSample*@ or
+--     @OpImageSparseSample*@ instructions
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-ConstOffset-06551# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
+--     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
+--     object that enables
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
+--     that object /must/ not use the @ConstOffset@ and @Offset@ operands
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-04115# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
@@ -1429,6 +1501,14 @@ foreign import ccall
 --     been created with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-None-06666# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectNV-viewportCount-03417# If the bound
 --     graphics pipeline state was created with the
@@ -1690,6 +1770,18 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
 --     used to create the currently bound graphics pipeline
 --
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-attachmentCount-06667# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @attachmentCount@ parameter of
+--     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
+--     /must/ be equal to the
+--     'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo'::@attachmentCount@
+--     of the currently bound graphics pipeline
+--
 -- -   #VUID-vkCmdDrawMeshTasksIndirectNV-pDepthAttachment-06181# If the
 --     current render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
@@ -1839,6 +1931,24 @@ foreign import ccall
 --     the currently bound pipeline /must/ have been created with a
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@renderPass@
 --     equal to 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-primitivesGeneratedQueryWithRasterizerDiscard-06708#
+--     If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-primitivesGeneratedQueryWithRasterizerDiscard primitivesGeneratedQueryWithRasterizerDiscard>
+--     feature is not enabled and the
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT'
+--     query is active,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-discard rasterization discard>
+--     /must/ not be enabled.
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectNV-primitivesGeneratedQueryWithNonZeroStreams-06709#
+--     If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-primitivesGeneratedQueryWithNonZeroStreams primitivesGeneratedQueryWithNonZeroStreams>
+--     feature is not enabled and the
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT'
+--     query is active, the bound graphics pipeline /must/ not have been
+--     created with a non-zero value in
+--     'Vulkan.Extensions.VK_EXT_transform_feedback.PipelineRasterizationStateStreamCreateInfoEXT'::@rasterizationStream@.
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectNV-stage-06480# The bound graphics
 --     pipeline /must/ not have been created with the
@@ -2060,16 +2170,16 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.ImageView' or
 --     'Vulkan.Core10.Handles.BufferView' being written as a storage image
 --     or storage texel buffer where the image format field of the
---     @OpTypeImage@ is @Unknown@ /must/ have image format features that
---     support
+--     @OpTypeImage@ is @Unknown@ then the view’s format feature /must/
+--     contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-OpTypeImage-06424# Any
 --     'Vulkan.Core10.Handles.ImageView' or
 --     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
 --     storage texel buffer where the image format field of the
---     @OpTypeImage@ is @Unknown@ /must/ have image format features that
---     support
+--     @OpTypeImage@ is @Unknown@ then the view’s format feature /must/
+--     contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-02697# For each set /n/
@@ -2168,6 +2278,23 @@ foreign import ccall
 --     is not supported, any resource accessed by the
 --     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
 --     point used by this command /must/ not be a protected resource
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-06550# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
+--     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
+--     object that enables
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
+--     that object /must/ only be used with @OpImageSample*@ or
+--     @OpImageSparseSample*@ instructions
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-ConstOffset-06551# If the
+--     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
+--     point used by this command accesses a
+--     'Vulkan.Core10.Handles.Sampler' or 'Vulkan.Core10.Handles.ImageView'
+--     object that enables
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
+--     that object /must/ not use the @ConstOffset@ and @Offset@ operands
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-04115# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
@@ -2277,6 +2404,14 @@ foreign import ccall
 --     been created with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-None-06666# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-viewportCount-03417# If the
 --     bound graphics pipeline state was created with the
@@ -2538,6 +2673,18 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
 --     used to create the currently bound graphics pipeline
 --
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-attachmentCount-06667# If
+--     the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @attachmentCount@ parameter of
+--     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
+--     /must/ be equal to the
+--     'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo'::@attachmentCount@
+--     of the currently bound graphics pipeline
+--
 -- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-pDepthAttachment-06181# If
 --     the current render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
@@ -2687,6 +2834,24 @@ foreign import ccall
 --     the currently bound pipeline /must/ have been created with a
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@renderPass@
 --     equal to 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-primitivesGeneratedQueryWithRasterizerDiscard-06708#
+--     If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-primitivesGeneratedQueryWithRasterizerDiscard primitivesGeneratedQueryWithRasterizerDiscard>
+--     feature is not enabled and the
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT'
+--     query is active,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-discard rasterization discard>
+--     /must/ not be enabled.
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-primitivesGeneratedQueryWithNonZeroStreams-06709#
+--     If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-primitivesGeneratedQueryWithNonZeroStreams primitivesGeneratedQueryWithNonZeroStreams>
+--     feature is not enabled and the
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT'
+--     query is active, the bound graphics pipeline /must/ not have been
+--     created with a non-zero value in
+--     'Vulkan.Extensions.VK_EXT_transform_feedback.PipelineRasterizationStateStreamCreateInfoEXT'::@rasterizationStream@.
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectCountNV-stage-06480# The bound
 --     graphics pipeline /must/ not have been created with the

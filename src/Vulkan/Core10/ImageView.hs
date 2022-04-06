@@ -593,7 +593,7 @@ instance Zero ImageSubresourceRange where
 -- storage image descriptors, input attachment descriptors, framebuffer
 -- attachments, and any 'Vulkan.Core10.Handles.ImageView' used with a
 -- combined image sampler that enables
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>.
 --
 -- If the image view is to be used with a sampler which supports
 -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
@@ -916,10 +916,9 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT',
 --     @format@ /must/ be identical to the @format@ used to create @image@
 --
--- -   #VUID-VkImageViewCreateInfo-format-06415# If the image @format@ is
---     one of the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y’CBCR conversion>,
---     then the @pNext@ chain /must/ include a
+-- -   #VUID-VkImageViewCreateInfo-format-06415# If the image view
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#image-views-requiring-sampler-ycbcr-conversion requires a sampler Y′CBCR conversion>,
+--     the @pNext@ chain must include a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     structure with a conversion value other than
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
@@ -939,6 +938,14 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', all members of
 --     @components@ /must/ have the
 --     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
+--
+-- -   #VUID-VkImageViewCreateInfo-pNext-06658# If the @pNext@ chain
+--     includes a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
+--     structure with a @conversion@ value other than
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @format@ /must/ be the
+--     same used in
+--     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'::@format@
 --
 -- -   #VUID-VkImageViewCreateInfo-image-01020# If @image@ is non-sparse
 --     then it /must/ be bound completely and contiguously to a single

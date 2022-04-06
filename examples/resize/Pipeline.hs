@@ -38,7 +38,7 @@ createPipeline renderPass = do
                                }
       , viewportState      = Just
         $ SomeStruct zero { viewportCount = 1, scissorCount = 1 }
-      , rasterizationState = SomeStruct $ zero
+      , rasterizationState = Just . SomeStruct $ zero
                                { depthClampEnable        = False
                                , rasterizerDiscardEnable = False
                                , lineWidth               = 1

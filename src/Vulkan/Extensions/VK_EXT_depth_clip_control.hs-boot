@@ -95,10 +95,10 @@
 -- 1) Should this extension include an origin control option to match
 -- GL_LOWER_LEFT found in ARB_clip_control?
 --
--- __RESOLVED__: Yes. The fix for porting over the origin is a simple
--- y-axis flip. The depth clip control is a much harder problem to solve
--- than what this extension is aimed to solve. Adding an equivalent to
--- GL_LOWER_LEFT would require more testing.
+-- __RESOLVED__: No. The fix for porting over the origin is a simple y-axis
+-- flip. The depth clip control is a much harder problem to solve than what
+-- this extension is aimed to solve. Adding an equivalent to GL_LOWER_LEFT
+-- would require more testing.
 --
 -- 2) Should this pipeline state be dynamic?
 --
@@ -110,7 +110,7 @@
 -- 3) Should the control provided in this extension be an enum that could
 -- be extended in the future?
 --
--- __RESOLVED__: Yes. It is highly unlikely that the depth range is changed
+-- __RESOLVED__: No. It is highly unlikely that the depth range is changed
 -- to anything other than [0, 1] in the future. Should that happen a new
 -- extension will be required to extend such an enum, and that extension
 -- might as well add a new struct to chain to

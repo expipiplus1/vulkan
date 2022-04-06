@@ -15,7 +15,7 @@
 --     130
 --
 -- [__Revision__]
---     4
+--     5
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -229,7 +229,7 @@
 -- new AHB formats\/usages and existing Vulkan features. No new Vulkan
 -- features or implementation requirements can be added. The extension
 -- version number will be incremented when this additional documentation is
--- added, but the version number does not indicate that an implementaiton
+-- added, but the version number does not indicate that an implementation
 -- supports Vulkan memory or resources that map to the new
 -- 'AHardwareBuffer' features: support for that must be queried with
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
@@ -241,6 +241,10 @@
 -- existing Vulkan features map to that new Android feature.
 --
 -- == Version History
+--
+-- -   Revision 5, 2022-02-04 (Chris Forbes)
+--
+--     -   Describe mapping of flags for storage image support
 --
 -- -   Revision 4, 2021-09-30 (Jon Leech)
 --
@@ -1180,11 +1184,11 @@ instance Zero AndroidHardwareBufferFormatProperties2ANDROID where
            zero
 
 
-type ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_SPEC_VERSION = 4
+type ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_SPEC_VERSION = 5
 
 -- No documentation found for TopLevel "VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_SPEC_VERSION"
 pattern ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_SPEC_VERSION :: forall a . Integral a => a
-pattern ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_SPEC_VERSION = 4
+pattern ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_SPEC_VERSION = 5
 
 
 type ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME = "VK_ANDROID_external_memory_android_hardware_buffer"
