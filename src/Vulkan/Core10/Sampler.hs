@@ -391,12 +391,19 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     and @unnormalizedCoordinates@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
--- -   #VUID-VkSamplerCreateInfo-None-01647# The sampler reduction mode
---     /must/ be set to
---     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE'
---     if
+-- -   #VUID-VkSamplerCreateInfo-None-01647# if
 --     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
---     is enabled
+--     is enabled and the @pNext@ chain includes a
+--     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo'
+--     structure, then the sampler reduction mode /must/ be set to
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE'
+--
+-- -   #VUID-VkSamplerCreateInfo-pNext-06726# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-samplerFilterMinmax samplerFilterMinmax>
+--     is not enabled and the @pNext@ chain includes a
+--     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo'
+--     structure, then the sampler reduction mode /must/ be set to
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE'
 --
 -- -   #VUID-VkSamplerCreateInfo-addressModeU-01079# If
 --     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-samplerMirrorClampToEdge samplerMirrorClampToEdge>

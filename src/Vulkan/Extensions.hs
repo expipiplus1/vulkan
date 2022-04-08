@@ -65,6 +65,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_hdr_metadata
                           , module Vulkan.Extensions.VK_EXT_headless_surface
                           , module Vulkan.Extensions.VK_EXT_host_query_reset
+                          , module Vulkan.Extensions.VK_EXT_image_2d_view_of_3d
                           , module Vulkan.Extensions.VK_EXT_image_drm_format_modifier
                           , module Vulkan.Extensions.VK_EXT_image_robustness
                           , module Vulkan.Extensions.VK_EXT_image_view_min_lod
@@ -337,6 +338,7 @@ import Vulkan.Extensions.VK_EXT_graphics_pipeline_library
 import Vulkan.Extensions.VK_EXT_hdr_metadata
 import Vulkan.Extensions.VK_EXT_headless_surface
 import Vulkan.Extensions.VK_EXT_host_query_reset
+import Vulkan.Extensions.VK_EXT_image_2d_view_of_3d
 import Vulkan.Extensions.VK_EXT_image_drm_format_modifier
 import Vulkan.Extensions.VK_EXT_image_robustness
 import Vulkan.Extensions.VK_EXT_image_view_min_lod

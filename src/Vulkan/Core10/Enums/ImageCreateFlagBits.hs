@@ -7,6 +7,7 @@ module Vulkan.Core10.Enums.ImageCreateFlagBits  ( ImageCreateFlags
                                                                      , IMAGE_CREATE_MUTABLE_FORMAT_BIT
                                                                      , IMAGE_CREATE_CUBE_COMPATIBLE_BIT
                                                                      , IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM
+                                                                     , IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT
                                                                      , IMAGE_CREATE_SUBSAMPLED_BIT_EXT
                                                                      , IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT
                                                                      , IMAGE_CREATE_CORNER_SAMPLED_BIT_NV
@@ -87,6 +88,8 @@ pattern IMAGE_CREATE_CUBE_COMPATIBLE_BIT                  = ImageCreateFlagBits 
 -- attachments, and preserve attachments /must/ be created with
 -- VK_IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM.
 pattern IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM = ImageCreateFlagBits 0x00008000
+-- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT"
+pattern IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT           = ImageCreateFlagBits 0x00020000
 -- | 'IMAGE_CREATE_SUBSAMPLED_BIT_EXT' specifies that an image /can/ be in a
 -- subsampled format which /may/ be more optimal when written as an
 -- attachment by a render pass that has a fragment density map attachment.
@@ -195,6 +198,7 @@ showTableImageCreateFlagBits =
   , (IMAGE_CREATE_MUTABLE_FORMAT_BIT                  , "MUTABLE_FORMAT_BIT")
   , (IMAGE_CREATE_CUBE_COMPATIBLE_BIT                 , "CUBE_COMPATIBLE_BIT")
   , (IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM, "FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM")
+  , (IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT          , "2D_VIEW_COMPATIBLE_BIT_EXT")
   , (IMAGE_CREATE_SUBSAMPLED_BIT_EXT                  , "SUBSAMPLED_BIT_EXT")
   , (IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT, "SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT")
   , (IMAGE_CREATE_CORNER_SAMPLED_BIT_NV               , "CORNER_SAMPLED_BIT_NV")

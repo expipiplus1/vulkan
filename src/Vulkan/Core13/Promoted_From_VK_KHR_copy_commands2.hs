@@ -1595,8 +1595,9 @@ instance Zero CopyBufferInfo2 where
 --     of @pRegions@, @srcOffset.y@ /must/ be @0@ and @extent.height@
 --     /must/ be @1@
 --
--- -   #VUID-VkCopyImageInfo2-srcOffset-00147# For each element of
---     @pRegions@, @srcOffset.z@ and (@extent.depth@ + @srcOffset.z@)
+-- -   #VUID-VkCopyImageInfo2-srcOffset-00147# If @srcImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each element
+--     of @pRegions@, @srcOffset.z@ and (@extent.depth@ + @srcOffset.z@)
 --     /must/ both be greater than or equal to @0@ and less than or equal
 --     to the depth of the specified @srcSubresource@ of @srcImage@
 --
@@ -1649,8 +1650,9 @@ instance Zero CopyBufferInfo2 where
 --     of @pRegions@, @dstOffset.y@ /must/ be @0@ and @extent.height@
 --     /must/ be @1@
 --
--- -   #VUID-VkCopyImageInfo2-dstOffset-00153# For each element of
---     @pRegions@, @dstOffset.z@ and (@extent.depth@ + @dstOffset.z@)
+-- -   #VUID-VkCopyImageInfo2-dstOffset-00153# If @dstImage@ is of type
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', then for each element
+--     of @pRegions@, @dstOffset.z@ and (@extent.depth@ + @dstOffset.z@)
 --     /must/ both be greater than or equal to @0@ and less than or equal
 --     to the depth of the specified @dstSubresource@ of @dstImage@
 --

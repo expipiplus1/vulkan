@@ -807,10 +807,9 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --     formats supporting min\/max filtering as defined by the
 --     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-filterMinmaxSingleComponentFormats-minimum-requirements filterMinmaxSingleComponentFormats>
 --     property minimum requirements. If this feature is not enabled, then
---     no 'Vulkan.Core10.Sampler.SamplerCreateInfo' @pNext@ chain can
---     include a
 --     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo'
---     structure.
+--     /must/ only use
+--     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE'.
 --
 -- -   #features-scalarBlockLayout# @scalarBlockLayout@ indicates that the
 --     implementation supports the layout of resource blocks in shaders

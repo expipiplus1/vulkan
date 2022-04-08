@@ -304,6 +304,8 @@ waitForPresentKHRSafeOrUnsafe mkVkWaitForPresentKHR device swapchain presentId t
 --
 --     -   'Vulkan.Core10.Enums.Result.TIMEOUT'
 --
+--     -   'Vulkan.Core10.Enums.Result.SUBOPTIMAL_KHR'
+--
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
@@ -311,6 +313,12 @@ waitForPresentKHRSafeOrUnsafe mkVkWaitForPresentKHR device swapchain presentId t
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DATE_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT'
 --
 -- = See Also
 --

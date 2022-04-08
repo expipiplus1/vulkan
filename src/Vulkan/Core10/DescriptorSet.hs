@@ -948,13 +948,11 @@ updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalCon
 -- | VkDescriptorBufferInfo - Structure specifying descriptor buffer
 -- information
 --
--- = Description
---
--- Note
+-- = Members
 --
 -- When setting @range@ to 'Vulkan.Core10.APIConstants.WHOLE_SIZE', the
--- effective range /must/ not be larger than the maximum range for the
--- descriptor type
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#buffer-info-effective-range effective range>
+-- /must/ not be larger than the maximum range for the descriptor type
 -- (<https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxUniformBufferRange maxUniformBufferRange>
 -- or
 -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxStorageBufferRange maxStorageBufferRange>).
@@ -963,6 +961,8 @@ updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalCon
 -- suballocated from a buffer that is much larger than
 -- @maxUniformBufferRange@.
 --
+-- = Description
+--
 -- For
 -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
 -- and
@@ -970,6 +970,10 @@ updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalCon
 -- descriptor types, @offset@ is the base offset from which the dynamic
 -- offset is applied and @range@ is the static size used for all dynamic
 -- offsets.
+--
+-- When @range@ is 'Vulkan.Core10.APIConstants.WHOLE_SIZE' the effective
+-- range is calculated at 'updateDescriptorSets' is by taking the size of
+-- @buffer@ minus the @offset@.
 --
 -- == Valid Usage
 --
@@ -1068,8 +1072,22 @@ instance Zero DescriptorBufferInfo where
 --
 -- == Valid Usage
 --
--- -   #VUID-VkDescriptorImageInfo-imageView-00343# @imageView@ /must/ not
---     be 2D or 2D array image view created from a 3D image
+-- -   #VUID-VkDescriptorImageInfo-imageView-06712# @imageView@ /must/ not
+--     be a 2D array image view created from a 3D image
+--
+-- -   #VUID-VkDescriptorImageInfo-descriptorType-06713# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-image2DViewOf3D image2DViewOf3D>
+--     feature is not enabled and @descriptorType@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE'
+--     then @imageView@ /must/ not be a 2D view created from a 3D image
+--
+-- -   #VUID-VkDescriptorImageInfo-descriptorType-06714# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-sampler2DViewOf3D sampler2DViewOf3D>
+--     feature is not enabled and @descriptorType@ is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
+--     then @imageView@ /must/ not be a 2D view created from a 3D image
 --
 -- -   #VUID-VkDescriptorImageInfo-imageView-01976# If @imageView@ is
 --     created from a depth\/stencil image, the @aspectMask@ used to create
@@ -1461,9 +1479,9 @@ instance Zero DescriptorImageInfo where
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
 --     the @range@ member of each element of @pBufferInfo@, or the
---     effective range if @range@ is
---     'Vulkan.Core10.APIConstants.WHOLE_SIZE', /must/ be less than or
---     equal to
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#buffer-info-effective-range effective range>
+--     if @range@ is 'Vulkan.Core10.APIConstants.WHOLE_SIZE', /must/ be
+--     less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxUniformBufferRange@
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-00333# If @descriptorType@
@@ -1472,9 +1490,9 @@ instance Zero DescriptorImageInfo where
 --     or
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC',
 --     the @range@ member of each element of @pBufferInfo@, or the
---     effective range if @range@ is
---     'Vulkan.Core10.APIConstants.WHOLE_SIZE', /must/ be less than or
---     equal to
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#buffer-info-effective-range effective range>
+--     if @range@ is 'Vulkan.Core10.APIConstants.WHOLE_SIZE', /must/ be
+--     less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxStorageBufferRange@
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-00334# If @descriptorType@
@@ -1552,6 +1570,18 @@ instance Zero DescriptorImageInfo where
 --     the @imageView@ member of each element of @pImageInfo@ /must/ have
 --     been created with
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT' set
+--
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-06710# If @descriptorType@
+--     is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
+--     each @imageView@ member of each element of @pImageInfo@ that is a 2D
+--     image view created from a 3D image /must/ have been created from an
+--     image created with
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT'
+--     set
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-02752# If @descriptorType@
 --     is 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',

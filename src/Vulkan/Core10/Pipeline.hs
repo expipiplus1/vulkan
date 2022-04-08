@@ -949,7 +949,7 @@ instance Zero SpecializationInfo where
 -- @module@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the shader
 -- code used by the pipeline is defined by @module@. If @module@ is
 -- 'Vulkan.Core10.APIConstants.NULL_HANDLE', the shader code is defined by
--- the chained 'Vulkan.Core10.Shader.ShaderModuleCreateInfo'.
+-- the chained 'Vulkan.Core10.Shader.ShaderModuleCreateInfo' if present.
 --
 -- == Valid Usage
 --
@@ -1151,8 +1151,19 @@ instance Zero SpecializationInfo where
 --     in the X dimension of the pipeline /must/ be a multiple of
 --     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-subgroup-size subgroupSize>
 --
--- -   #VUID-VkPipelineShaderStageCreateInfo-module-04145# The SPIR-V code
---     that was used to create @module@ /must/ be valid as described by the
+-- -   #VUID-VkPipelineShaderStageCreateInfo-graphicsPipelineLibrary-06717#
+--     If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-graphicsPipelineLibrary graphicsPipelineLibrary>
+--     feature is not enabled, @module@ /must/ be a valid
+--     'Vulkan.Core10.Handles.ShaderModule'
+--
+-- -   #VUID-VkPipelineShaderStageCreateInfo-module-06718# If @module@ is
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', there /must/ be a valid
+--     'Vulkan.Core10.Shader.ShaderModuleCreateInfo' structure in the
+--     @pNext@ chain
+--
+-- -   #VUID-VkPipelineShaderStageCreateInfo-pSpecializationInfo-06719# The
+--     shader code used by the pipeline /must/ be valid as described by the
 --     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirv-spec Khronos SPIR-V Specification>
 --     after applying the specializations provided in
 --     @pSpecializationInfo@, if any, and then converting all
@@ -1215,8 +1226,8 @@ data PipelineShaderStageCreateInfo (es :: [Type]) = PipelineShaderStageCreateInf
     -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits' value
     -- specifying a single pipeline stage.
     stage :: ShaderStageFlagBits
-  , -- | @module@ is a 'Vulkan.Core10.Handles.ShaderModule' object containing the
-    -- shader for this stage.
+  , -- | @module@ is optionally a 'Vulkan.Core10.Handles.ShaderModule' object
+    -- containing the shader code for this stage.
     module' :: ShaderModule
   , -- | @pName@ is a pointer to a null-terminated UTF-8 string specifying the
     -- entry point name of the shader for this stage.
