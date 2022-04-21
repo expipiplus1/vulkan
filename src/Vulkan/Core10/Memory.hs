@@ -908,7 +908,14 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 -- parameters. If the external handle provided does not meet these
 -- requirements, the implementation /must/ fail the memory import operation
 -- with the error code
--- 'Vulkan.Core10.Enums.Result.ERROR_INVALID_EXTERNAL_HANDLE'.
+-- 'Vulkan.Core10.Enums.Result.ERROR_INVALID_EXTERNAL_HANDLE'. If the
+-- parameters define an export operation and the external handle type is
+-- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID',
+-- implementations /should/ not strictly follow @memoryTypeIndex@. Instead,
+-- they /should/ modify the allocation internally to use the required
+-- memory type for the application’s given usage. This is because for an
+-- export operation, there is currently no way for the client to know the
+-- memory type index before allocating.
 --
 -- == Valid Usage
 --

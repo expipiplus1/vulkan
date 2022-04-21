@@ -424,7 +424,7 @@ getImageSubresourceLayout :: forall io
                              Image
                           -> -- | @pSubresource@ is a pointer to a
                              -- 'Vulkan.Core10.SparseResourceMemoryManagement.ImageSubresource'
-                             -- structure selecting a specific image for the image subresource.
+                             -- structure selecting a specific image subresource from the image.
                              ImageSubresource
                           -> io (SubresourceLayout)
 getImageSubresourceLayout device image subresource = liftIO . evalContT $ do

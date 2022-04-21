@@ -485,7 +485,7 @@ instance Zero MemoryFdPropertiesKHR where
            zero
 
 
--- | VkMemoryGetFdInfoKHR - Structure describing a POSIX FD semaphore export
+-- | VkMemoryGetFdInfoKHR - Structure describing a POSIX FD memory export
 -- operation
 --
 -- = Description
