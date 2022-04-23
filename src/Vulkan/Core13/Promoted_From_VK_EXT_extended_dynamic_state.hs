@@ -956,7 +956,11 @@ cmdSetDepthCompareOp :: forall io
                      => -- | @commandBuffer@ is the command buffer into which the command will be
                         -- recorded.
                         CommandBuffer
-                     -> -- | @depthCompareOp@ specifies the depth comparison operator.
+                     -> -- | @depthCompareOp@ is a 'Vulkan.Core10.Enums.CompareOp.CompareOp' value
+                        -- specifying the comparison operator used for the
+                        -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-depth-comparison Depth Comparison>
+                        -- step of the
+                        -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-depth depth test>.
                         ("depthCompareOp" ::: CompareOp)
                      -> io ()
 cmdSetDepthCompareOp commandBuffer depthCompareOp = liftIO $ do

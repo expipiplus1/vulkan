@@ -97,7 +97,7 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --     /cannot/ be used directly, and instead defines a /pipeline library/
 --     that /can/ be combined with other pipelines using the
 --     'Vulkan.Extensions.VK_KHR_pipeline_library.PipelineLibraryCreateInfoKHR'
---     structure. This is available in ray tracing pipelines.
+--     structure. This is available in ray tracing and graphics pipelines.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR'
 --     specifies that an any-hit shader will always be present when an

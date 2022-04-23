@@ -3250,8 +3250,8 @@ data StencilOpState = StencilOpState
   , -- | @writeMask@ selects the bits of the unsigned integer stencil values
     -- updated by the stencil test in the stencil framebuffer attachment.
     writeMask :: Word32
-  , -- | @reference@ is an integer reference value that is used in the unsigned
-    -- stencil comparison.
+  , -- | @reference@ is an integer stencil reference value that is used in the
+    -- unsigned stencil comparison.
     reference :: Word32
   }
   deriving (Typeable, Eq)
@@ -3392,7 +3392,10 @@ data PipelineDepthStencilStateCreateInfo = PipelineDepthStencilStateCreateInfo
     -- 'Vulkan.Core10.FundamentalTypes.TRUE'. Depth writes are always disabled
     -- when @depthTestEnable@ is 'Vulkan.Core10.FundamentalTypes.FALSE'.
     depthWriteEnable :: Bool
-  , -- | @depthCompareOp@ is the comparison operator used in the
+  , -- | @depthCompareOp@ is a 'Vulkan.Core10.Enums.CompareOp.CompareOp' value
+    -- specifying the comparison operator to use in the
+    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-depth-comparison Depth Comparison>
+    -- step of the
     -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-depth depth test>.
     depthCompareOp :: CompareOp
   , -- | @depthBoundsTestEnable@ controls whether
@@ -3633,10 +3636,16 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- linked pipeline layouts. When binding descriptor sets for this pipeline,
 -- the pipeline layout used /must/ be compatible with this union. This
 -- pipeline layout /can/ be overridden when linking with
--- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT';
--- by providing a 'Vulkan.Core10.Handles.PipelineLayout' that is compatible
+-- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT'
+-- by providing a 'Vulkan.Core10.Handles.PipelineLayout' that is
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-compatibility compatible>
 -- with this union other than
--- 'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT'.
+-- 'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT',
+-- or when linking without
+-- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT'
+-- by providing a 'Vulkan.Core10.Handles.PipelineLayout' that is fully
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-compatibility compatible>
+-- with this union.
 --
 -- == Valid Usage
 --
@@ -5639,17 +5648,32 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Extensions.VK_NV_device_generated_commands.GraphicsPipelineShaderGroupsCreateInfoNV'::@groupCount@
 --     /must/ be greater than @0@
 --
--- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06650# If @flags@ includes
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT'
---     and the pipeline includes a
+-- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06729# If @flags@ includes
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT',
+--     the pipeline includes a
 --     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-complete complete set of state>
---     specified entirely by libraries, @pipelineLayout@ /must/ be either
---     'Vulkan.Core10.APIConstants.NULL_HANDLE', or a
---     'Vulkan.Core10.Handles.PipelineLayout' that was created without
+--     specified entirely by libraries, and each library was created with a
+--     'Vulkan.Core10.Handles.PipelineLayout' created with
+--     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT',
+--     then @pipelineLayout@ /must/ be a valid
+--     'Vulkan.Core10.Handles.PipelineLayout' that is
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-compatibility compatible>
+--     with the union of the libraries\' pipeline layouts other than the
+--     inclusion\/exclusion of
 --     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT'
---     but would be compatible with the union of the pipeline layouts used
---     in the libraries if it had included
---     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06730# If @flags@ does not
+--     include
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT',
+--     the pipeline includes a
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-complete complete set of state>
+--     specified entirely by libraries, and each library was created with a
+--     'Vulkan.Core10.Handles.PipelineLayout' created with
+--     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT',
+--     then @pipelineLayout@ /must/ be a valid
+--     'Vulkan.Core10.Handles.PipelineLayout' that is
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-compatibility compatible>
+--     with the union of the libraries\' pipeline layouts
 --
 -- == Valid Usage (Implicit)
 --

@@ -383,12 +383,12 @@
 --     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#ray-tracing-shader-call memory model interactions>
 --     with ray tracing and define how subgroups work and can be repacked
 --
--- (2) Can you give a more detailed comparision of differences and
+-- (2) Can you give a more detailed comparison of differences and
 -- similarities between VK_NV_ray_tracing and VK_KHR_ray_tracing_pipeline?
 --
 -- __DISCUSSION__:
 --
--- The following is a more detailed comparision of which commands,
+-- The following is a more detailed comparison of which commands,
 -- structures, and enums are aliased, changed, or removed.
 --
 -- -   Aliased functionality — enums, structures, and commands that are

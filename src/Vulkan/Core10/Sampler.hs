@@ -601,7 +601,7 @@ data SamplerCreateInfo (es :: [Type]) = SamplerCreateInfo
     --     member does not match.
     compareEnable :: Bool
   , -- | @compareOp@ is a 'Vulkan.Core10.Enums.CompareOp.CompareOp' value
-    -- specifying the comparison function to apply to fetched data before
+    -- specifying the comparison operator to apply to fetched data before
     -- filtering as described in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-depth-compare-operation Depth Compare Operation>
     -- section.

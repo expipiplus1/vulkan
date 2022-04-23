@@ -649,7 +649,7 @@ instance Zero MemoryWin32HandlePropertiesKHR where
 
 
 -- | VkMemoryGetWin32HandleInfoKHR - Structure describing a Win32 handle
--- semaphore export operation
+-- memory export operation
 --
 -- = Description
 --
