@@ -25,7 +25,7 @@ jobs:
       with:
         ghc-version: ${{ matrix.ghc }}
 
-    - uses: actions/cache@v3.0.2
+    - uses: actions/cache@v3.0.8
       with:
         path: |
           ${{ steps.setup-haskell-cabal.outputs.cabal-store }}
@@ -147,7 +147,7 @@ jobs:
         ghc-version: '8.10'
 
     - name: Cache stack things
-      uses: actions/cache@v3.0.2
+      uses: actions/cache@v3.0.8
       with:
         path: |
           ~/.stack
