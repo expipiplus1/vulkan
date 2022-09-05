@@ -13,6 +13,8 @@ let
     vulkan-validation-layers
   ];
 
+  generator-ghc-version = "8.10.7";
+
   packages = p:
     with p;
     if compiler == "ghcHEAD" then [
@@ -20,7 +22,7 @@ let
       (pkgs.haskell.lib.dontCheck VulkanMemoryAllocator)
     ] else
       [ vulkan vulkan-utils VulkanMemoryAllocator vulkan-examples openxr ]
-      ++ pkgs.lib.optional (p.ghc.version == "8.10.7") generate-new;
+      ++ pkgs.lib.optional (p.ghc.version == generator-ghc-version) generate-new;
 
 in if forShell then
   haskellPackages.shellFor {
