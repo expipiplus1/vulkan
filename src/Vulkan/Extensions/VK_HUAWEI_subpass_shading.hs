@@ -19,16 +19,18 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_create_renderpass2@
+--     -   Requires @VK_KHR_create_renderpass2@ to be enabled for any
+--         device-level functionality
 --
---     -   Requires @VK_KHR_synchronization2@
+--     -   Requires @VK_KHR_synchronization2@ to be enabled for any
+--         device-level functionality
 --
 -- [__Contact__]
 --
---     -   Hueilong Wang
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_HUAWEI_subpass_shading] @wyvernathuawei%0A<<Here describe the issue or question you have about the VK_HUAWEI_subpass_shading extension>> >
+--     -   Pan Gao
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_HUAWEI_subpass_shading] @PanGao-h%0A<<Here describe the issue or question you have about the VK_HUAWEI_subpass_shading extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -46,6 +48,12 @@
 -- [__Contributors__]
 --
 --     -   Hueilong Wang
+--
+--     -   Juntao Li, Huawei
+--
+--     -   Renmiao Lu, Huawei
+--
+--     -   Pan Gao, Huawei
 --
 -- == Description
 --
@@ -135,7 +143,7 @@
 -- > layout(constant_id = 0) const uint tileWidth = 8;
 -- > layout(constant_id = 1) const uint tileHeight = 8;
 -- > layout(local_size_x_id = 0, local_size_y_id = 1, local_size_z = 1) in;
--- > layout (set=0, binding=0, input_attachment_index=0) uniform subpassInput depth;
+-- > layout(set=0, binding=0, input_attachment_index=0) uniform subpassInput depth;
 -- >
 -- > void main()
 -- > {
@@ -335,7 +343,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_HUAWEI_subpass_shading Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_HUAWEI_subpass_shading Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -520,16 +528,16 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-None-02692# If a
 --     'Vulkan.Core10.Handles.ImageView' is sampled with
---     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' as a result
---     of this command, then the image view’s
+--     'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as a result of this
+--     command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
---     'Vulkan.Extensions.VK_EXT_filter_cubic.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT'
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT'
 --
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-filterCubic-02694# Any
 --     'Vulkan.Core10.Handles.ImageView' being sampled with
---     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' as a result
---     of this command /must/ have a
+--     'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as a result of this
+--     command /must/ have a
 --     'Vulkan.Core10.Enums.ImageViewType.ImageViewType' and format that
 --     supports cubic filtering, as specified by
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FilterCubicImageViewImageFormatPropertiesEXT'::@filterCubic@
@@ -538,8 +546,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-filterCubicMinmax-02695# Any
 --     'Vulkan.Core10.Handles.ImageView' being sampled with
---     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' with a
---     reduction mode of either
+--     'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' with a reduction mode
+--     of either
 --     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MIN'
 --     or
 --     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MAX'
@@ -559,20 +567,36 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
--- -   #VUID-vkCmdSubpassShadingHUAWEI-OpTypeImage-06423# Any
---     'Vulkan.Core10.Handles.ImageView' or
---     'Vulkan.Core10.Handles.BufferView' being written as a storage image
---     or storage texel buffer where the image format field of the
---     @OpTypeImage@ is @Unknown@ then the view’s format feature /must/
---     contain
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-OpTypeImage-07027# For any
+--     'Vulkan.Core10.Handles.ImageView' being written as a storage image
+--     where the image format field of the @OpTypeImage@ is @Unknown@, the
+--     view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT'
 --
--- -   #VUID-vkCmdSubpassShadingHUAWEI-OpTypeImage-06424# Any
---     'Vulkan.Core10.Handles.ImageView' or
---     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
---     storage texel buffer where the image format field of the
---     @OpTypeImage@ is @Unknown@ then the view’s format feature /must/
---     contain
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-OpTypeImage-07028# For any
+--     'Vulkan.Core10.Handles.ImageView' being read as a storage image
+--     where the image format field of the @OpTypeImage@ is @Unknown@, the
+--     view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
+--
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-OpTypeImage-07029# For any
+--     'Vulkan.Core10.Handles.BufferView' being written as a storage texel
+--     buffer where the image format field of the @OpTypeImage@ is
+--     @Unknown@, the view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkFormatProperties3 buffer features>
+--     /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT'
+--
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-OpTypeImage-07030# Any
+--     'Vulkan.Core10.Handles.BufferView' being read as a storage texel
+--     buffer where the image format field of the @OpTypeImage@ is
+--     @Unknown@ then the view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkFormatProperties3 buffer features>
+--     /must/ contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-None-02697# For each set /n/ that is
@@ -649,21 +673,31 @@ foreign import ccall
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
 --     includes a LOD bias or any offset values, in any shader stage
 --
--- -   #VUID-vkCmdSubpassShadingHUAWEI-None-02705# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and if the 'Vulkan.Core10.Handles.Pipeline'
---     object bound to the pipeline bind point used by this command
---     accesses a uniform buffer, it /must/ not access values outside of
---     the range of the buffer as specified in the descriptor set bound to
---     the same pipeline bind point
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-uniformBuffers-06935# If any stage
+--     of the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
+--     bind point used by this command accesses a uniform buffer, and that
+--     stage was created without enabling either
+--     'Vulkan.Extensions.VK_EXT_pipeline_robustness.PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT'
+--     or
+--     'Vulkan.Extensions.VK_EXT_pipeline_robustness.PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_2_EXT'
+--     for @uniformBuffers@, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     feature is not enabled, that stage /must/ not access values outside
+--     of the range of the buffer as specified in the descriptor set bound
+--     to the same pipeline bind point
 --
--- -   #VUID-vkCmdSubpassShadingHUAWEI-None-02706# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and if the 'Vulkan.Core10.Handles.Pipeline'
---     object bound to the pipeline bind point used by this command
---     accesses a storage buffer, it /must/ not access values outside of
---     the range of the buffer as specified in the descriptor set bound to
---     the same pipeline bind point
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-storageBuffers-06936# If any stage
+--     of the 'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline
+--     bind point used by this command accesses a storage buffer, and that
+--     stage was created without enabling either
+--     'Vulkan.Extensions.VK_EXT_pipeline_robustness.PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT'
+--     or
+--     'Vulkan.Extensions.VK_EXT_pipeline_robustness.PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_2_EXT'
+--     for @storageBuffers@, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     feature is not enabled, that stage /must/ not access values outside
+--     of the range of the buffer as specified in the descriptor set bound
+--     to the same pipeline bind point
 --
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-commandBuffer-02707# If
 --     @commandBuffer@ is an unprotected command buffer and
@@ -749,6 +783,67 @@ foreign import ccall
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
 --     command
 --
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-OpImageWeightedSampleQCOM-06971# If
+--     @OpImageWeightedSampleQCOM@ is used to sample a
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_WEIGHT_SAMPLED_IMAGE_BIT_QCOM'
+--
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-OpImageWeightedSampleQCOM-06972# If
+--     @OpImageWeightedSampleQCOM@ uses a 'Vulkan.Core10.Handles.ImageView'
+--     as a sample weight image as a result of this command, then the image
+--     view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_WEIGHT_IMAGE_BIT_QCOM'
+--
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-OpImageBoxFilterQCOM-06973# If
+--     @OpImageBoxFilterQCOM@ is used to sample a
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_BOX_FILTER_SAMPLED_BIT_QCOM'
+--
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-OpImageBlockMatchSSDQCOM-06974# If
+--     @OpImageBlockMatchSSDQCOM@ is used to read from an
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM'
+--
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-OpImageBlockMatchSADQCOM-06975# If
+--     @OpImageBlockMatchSADQCOM@ is used to read from an
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM'
+--
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-OpImageBlockMatchSADQCOM-06976# If
+--     @OpImageBlockMatchSADQCOM@ or OpImageBlockMatchSSDQCOM is used to
+--     read from a reference image as result of this command, then the
+--     specified reference coordinates /must/ not fail
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-integer-coordinate-validation integer texel coordinate validation>.
+--
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-OpImageWeightedSampleQCOM-06977# If
+--     @OpImageWeightedSampleQCOM@, @OpImageBoxFilterQCOM@,
+--     @OpImageBlockMatchSSDQCOM@, or @OpImageBlockMatchSADQCOM@ uses a
+--     'Vulkan.Core10.Handles.Sampler' as a result of this command, then
+--     the sampler /must/ have been created with
+--     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
+--
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-OpImageWeightedSampleQCOM-06978# If
+--     any command other than @OpImageWeightedSampleQCOM@,
+--     @OpImageBoxFilterQCOM@, @OpImageBlockMatchSSDQCOM@, or
+--     @OpImageBlockMatchSADQCOM@ uses a 'Vulkan.Core10.Handles.Sampler' as
+--     a result of this command, then the sampler /must/ not have been
+--     created with
+--     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
+--
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-None-04931# This command must be
 --     called in a subpass with bind point
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI'.
@@ -772,6 +867,9 @@ foreign import ccall
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-renderpass# This command /must/ only
 --     be called inside of a render pass instance
 --
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-videocoding# This command /must/
+--     only be called outside of a video coding scope
+--
 -- == Host Synchronization
 --
 -- -   Host access to @commandBuffer@ /must/ be externally synchronized
@@ -783,12 +881,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Inside                                                                                                                 | Outside                                                                                                                     | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -824,7 +922,7 @@ data SubpassShadingPipelineCreateInfoHUAWEI = SubpassShadingPipelineCreateInfoHU
     -- environment in which the pipeline will be used. The pipeline /must/ only
     -- be used with a render pass instance compatible with the one provided.
     -- See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-compatibility Render Pass Compatibility>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-compatibility Render Pass Compatibility>
     -- for more information.
     renderPass :: RenderPass
   , -- | @subpass@ is the index of the subpass in the render pass where this

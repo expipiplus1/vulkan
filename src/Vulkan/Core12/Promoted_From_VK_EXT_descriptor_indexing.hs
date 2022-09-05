@@ -458,7 +458,7 @@ data PhysicalDeviceDescriptorIndexingProperties = PhysicalDeviceDescriptorIndexi
   , -- | #extension-limits-robustBufferAccessUpdateAfterBind#
     -- @robustBufferAccessUpdateAfterBind@ is a boolean value indicating
     -- whether
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
     -- /can/ be enabled in a device simultaneously with
     -- @descriptorBindingUniformBufferUpdateAfterBind@,
     -- @descriptorBindingStorageBufferUpdateAfterBind@,
@@ -473,7 +473,7 @@ data PhysicalDeviceDescriptorIndexingProperties = PhysicalDeviceDescriptorIndexi
     -- calculations for image operations have well-defined results when the
     -- image and\/or sampler objects used for the instruction are not uniform
     -- within a quad. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-derivative-image-operations Derivative Image Operations>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-derivative-image-operations Derivative Image Operations>.
     quadDivergentImplicitLod :: Bool
   , -- | #extension-limits-maxPerStageDescriptorUpdateAfterBindSamplers#
     -- @maxPerStageDescriptorUpdateAfterBindSamplers@ is similar to

@@ -321,6 +321,14 @@ instance Zero FramebufferAttachmentImageInfo where
 --     'Vulkan.Core10.ImageView.ImageViewCreateInfo'::@viewType@ not equal
 --     to 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_3D'
 --
+-- -   #VUID-VkRenderPassAttachmentBeginInfo-pAttachments-07010# If
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#subpass-multisampledrendertosinglesampled multisampled-render-to-single-sampled>
+--     is enabled for any subpass, all element of @pAttachments@ which have
+--     a sample count equal to
+--     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT' /must/
+--     have a format that supports the sample count specified in
+--     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'::@rasterizationSamples@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkRenderPassAttachmentBeginInfo-sType-sType# @sType@ /must/ be

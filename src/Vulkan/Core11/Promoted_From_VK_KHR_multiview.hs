@@ -66,7 +66,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- -   #extension-features-multiview-gs# @multiviewGeometryShader@
 --     specifies whether the implementation supports multiview rendering
 --     within a render pass, with
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#geometry geometry shaders>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#geometry geometry shaders>.
 --     If this feature is not enabled, then a pipeline compiled against a
 --     subpass with a non-zero view mask /must/ not include a geometry
 --     shader.
@@ -74,7 +74,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- -   #extension-features-multiview-tess# @multiviewTessellationShader@
 --     specifies whether the implementation supports multiview rendering
 --     within a render pass, with
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#tessellation tessellation shaders>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#tessellation tessellation shaders>.
 --     If this feature is not enabled, then a pipeline compiled against a
 --     subpass with a non-zero view mask /must/ not include any
 --     tessellation shaders.
@@ -257,9 +257,10 @@ instance Zero PhysicalDeviceMultiviewProperties where
 -- additional broadcasting.
 --
 -- Some implementations /may/ not support multiview in conjunction with
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview-gs geometry shaders>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview-mesh mesh shaders>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview-gs geometry shaders>
 -- or
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview-tess tessellation shaders>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview-tess tessellation shaders>.
 --
 -- When multiview is enabled, the
 -- 'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_VIEW_LOCAL_BIT' bit
@@ -331,13 +332,13 @@ instance Zero PhysicalDeviceMultiviewProperties where
 --     @pCorrelationMasks@
 --
 -- -   #VUID-VkRenderPassMultiviewCreateInfo-multiview-06555# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview multiview>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview multiview>
 --     feature is not enabled, each element of @pViewMasks@ /must/ be @0@
 --
 -- -   #VUID-VkRenderPassMultiviewCreateInfo-pViewMasks-06697# The index of
 --     the most significant bit in each element of @pViewMasks@ /must/ be
 --     less than
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxMultiviewViewCount maxMultiviewViewCount>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxMultiviewViewCount maxMultiviewViewCount>
 --
 -- == Valid Usage (Implicit)
 --

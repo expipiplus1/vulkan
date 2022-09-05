@@ -19,7 +19,7 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
 -- [__Special Uses__]
 --
@@ -33,7 +33,7 @@
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_non_seamless_cube_map] @DadSchoorse%0A<<Here describe the issue or question you have about the VK_EXT_non_seamless_cube_map extension>> >
 --
 -- [__Extension Proposal__]
---     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_non_seamless_cube_map.asciidoc VK_EXT_non_seamless_cube_map>
+--     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_non_seamless_cube_map.adoc VK_EXT_non_seamless_cube_map>
 --
 -- == Other Extension Metadata
 --
@@ -50,7 +50,7 @@
 -- == Description
 --
 -- This extension provides functionality to disable
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-cubemapedge cube map edge handling>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-cubemapedge cube map edge handling>
 -- on a per sampler level which matches the behavior of other graphics
 -- APIs.
 --
@@ -93,7 +93,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_non_seamless_cube_map Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_non_seamless_cube_map Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

@@ -144,7 +144,7 @@ createDescriptorUpdateTemplate :: forall io
                                   -- or 'updateDescriptorSetWithTemplate'.
                                   DescriptorUpdateTemplateCreateInfo
                                -> -- | @pAllocator@ controls host memory allocation as described in the
-                                  -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                  -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                   -- chapter.
                                   ("allocator" ::: Maybe AllocationCallbacks)
                                -> io (DescriptorUpdateTemplate)
@@ -238,7 +238,7 @@ destroyDescriptorUpdateTemplate :: forall io
                                 -> -- | @descriptorUpdateTemplate@ is the descriptor update template to destroy.
                                    DescriptorUpdateTemplate
                                 -> -- | @pAllocator@ controls host memory allocation as described in the
-                                   -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                   -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                    -- chapter.
                                    ("allocator" ::: Maybe AllocationCallbacks)
                                 -> io ()
@@ -274,6 +274,11 @@ foreign import ccall
 --     @descriptorUpdateTemplate@ when it was created with
 --     'createDescriptorUpdateTemplate'
 --
+-- -   #VUID-vkUpdateDescriptorSetWithTemplate-descriptorSet-06995# Host
+--     access to @descriptorSet@ /must/ be
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>
+--     unless explicitly denoted otherwise for specific flags
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkUpdateDescriptorSetWithTemplate-device-parameter# @device@
@@ -290,10 +295,6 @@ foreign import ccall
 -- -   #VUID-vkUpdateDescriptorSetWithTemplate-descriptorUpdateTemplate-parent#
 --     @descriptorUpdateTemplate@ /must/ have been created, allocated, or
 --     retrieved from @device@
---
--- == Host Synchronization
---
--- -   Host access to @descriptorSet@ /must/ be externally synchronized
 --
 -- __API example__
 --
@@ -421,7 +422,7 @@ updateDescriptorSetWithTemplate device descriptorSet descriptorUpdateTemplate da
 --     implicitly specified when using a descriptor update template to
 --     update descriptors, and all applicable consecutive bindings, as
 --     described by
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-updates-consecutive>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-updates-consecutive>
 --
 -- -   #VUID-VkDescriptorUpdateTemplateEntry-descriptor-02226# If
 --     @descriptor@ type is
@@ -473,7 +474,7 @@ data DescriptorUpdateTemplateEntry = DescriptorUpdateTemplateEntry
     -- structure.
     offset :: Word64
   , -- | @stride@ is the stride in bytes between two consecutive array elements
-    -- of the descriptor update informations in the raw data structure. The
+    -- of the descriptor update information in the raw data structure. The
     -- actual pointer ptr for each array element j of update entry i is
     -- computed using the following formula:
     --

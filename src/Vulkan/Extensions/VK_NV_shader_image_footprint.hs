@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Contact__]
 --
@@ -84,8 +85,8 @@
 -- This extension should be useful for multi-pass rendering operations that
 -- do an initial expensive rendering pass to produce a first image that is
 -- then used as a texture for a second pass. If the second pass ends up
--- accessing only portions of the first image (e.g., due to visbility), the
--- work spent rendering the non-accessed portion of the first image was
+-- accessing only portions of the first image (e.g., due to visibility),
+-- the work spent rendering the non-accessed portion of the first image was
 -- wasted. With this feature, an application can limit this waste using an
 -- initial pass over the geometry in the second image that performs a
 -- footprint query for each visible pixel to determine the set of pixels
@@ -127,7 +128,7 @@
 --
 -- == New SPIR-V Capability
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ImageFootprintNV ImageFootprintNV>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ImageFootprintNV ImageFootprintNV>
 --
 -- == Issues
 --
@@ -190,7 +191,7 @@
 -- and y offset values and then atomically OR the updated mask bits into
 -- the contents of the corresponding footprint texel.
 --
--- >     uint64_t returnedMask = (uint64_t(footprint.mask.x) | (uint64_t(footprint.mask.y) link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html# 32));
+-- >     uint64_t returnedMask = (uint64_t(footprint.mask.x) | (uint64_t(footprint.mask.y) link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html# 32));
 -- >     uint64_t rightMask    = ((0xFF [^] footprint.offset.x) * 0x0101010101010101UL);
 -- >     uint64_t bottomMask   = 0xFFFFFFFFFFFFFFFFUL >> (8 * footprint.offset.y);
 -- >     uint64_t bottomRight  = returnedMask & bottomMask & rightMask;
@@ -262,7 +263,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_shader_image_footprint Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_shader_image_footprint Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -306,7 +307,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- = Description
 --
 -- See
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-footprint Texel Footprint Evaluation>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-footprint Texel Footprint Evaluation>
 -- for more information.
 --
 -- If the 'PhysicalDeviceShaderImageFootprintFeaturesNV' structure is

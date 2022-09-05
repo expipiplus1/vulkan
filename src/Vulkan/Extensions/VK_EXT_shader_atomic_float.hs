@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Contact__]
 --
@@ -79,9 +80,9 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat32AddEXT AtomicFloat32AddEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat32AddEXT AtomicFloat32AddEXT>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat64AddEXT AtomicFloat64AddEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat64AddEXT AtomicFloat64AddEXT>
 --
 -- == Version History
 --
@@ -96,7 +97,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_shader_atomic_float Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_shader_atomic_float Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -174,19 +175,19 @@ data PhysicalDeviceShaderAtomicFloatFeaturesEXT = PhysicalDeviceShaderAtomicFloa
     shaderBufferFloat64AtomicAdd :: Bool
   , -- | #features-shaderSharedFloat32Atomics# @shaderSharedFloat32Atomics@
     -- indicates whether shaders /can/ perform 32-bit floating-point load,
-    -- store and exchange atomic operations on shared memory.
+    -- store and exchange atomic operations on shared and payload memory.
     shaderSharedFloat32Atomics :: Bool
   , -- | #features-shaderSharedFloat32AtomicAdd# @shaderSharedFloat32AtomicAdd@
     -- indicates whether shaders /can/ perform 32-bit floating-point add atomic
-    -- operations on shared memory.
+    -- operations on shared and payload memory.
     shaderSharedFloat32AtomicAdd :: Bool
   , -- | #features-shaderSharedFloat64Atomics# @shaderSharedFloat64Atomics@
     -- indicates whether shaders /can/ perform 64-bit floating-point load,
-    -- store and exchange atomic operations on shared memory.
+    -- store and exchange atomic operations on shared and payload memory.
     shaderSharedFloat64Atomics :: Bool
   , -- | #features-shaderSharedFloat64AtomicAdd# @shaderSharedFloat64AtomicAdd@
     -- indicates whether shaders /can/ perform 64-bit floating-point add atomic
-    -- operations on shared memory.
+    -- operations on shared and payload memory.
     shaderSharedFloat64AtomicAdd :: Bool
   , -- | #features-shaderImageFloat32Atomics# @shaderImageFloat32Atomics@
     -- indicates whether shaders /can/ perform 32-bit floating-point load,

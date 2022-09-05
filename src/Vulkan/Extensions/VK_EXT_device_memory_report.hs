@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Special Use__]
 --
@@ -234,7 +235,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_device_memory_report Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_device_memory_report Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -532,7 +533,7 @@ data DeviceMemoryReportCallbackDataEXT = DeviceMemoryReportCallbackDataEXT
     -- 'DEVICE_MEMORY_REPORT_EVENT_TYPE_UNIMPORT_EXT', @objectHandle@ is a
     -- valid Vulkan handle of the type associated with @objectType@ as defined
     -- in the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#debugging-object-types  and Vulkan Handle Relationship>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#debugging-object-types  and Vulkan Handle Relationship>
     -- table. Otherwise, @objectHandle@ is undefined.
     objectHandle :: Word64
   , -- | @heapIndex@ describes which memory heap this device memory allocation is

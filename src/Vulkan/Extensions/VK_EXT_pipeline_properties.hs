@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Contact__]
 --
@@ -79,9 +80,7 @@
 --
 -- -   'PipelineInfoEXT'
 --
--- -   Extending 'Vulkan.CStruct.Extends.BaseOutStructure':
---
---     -   'PipelinePropertiesIdentifierEXT'
+-- -   'PipelinePropertiesIdentifierEXT'
 --
 -- -   Extending
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
@@ -128,7 +127,7 @@
 -- __RESOLVED__: Add a feature structure, and a feature for querying
 -- pipeline identifier, but allow it to be optional so that this extension
 -- can be used as the basis for other pipeline property queries without
--- requiring the pipeline identfier to be supported.
+-- requiring the pipeline identifier to be supported.
 --
 -- == Version History
 --
@@ -144,7 +143,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_pipeline_properties Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_pipeline_properties Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -234,15 +233,15 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkGetPipelinePropertiesEXT-pipeline-06738# @pipeline@ member
---     of @pPipelineInfo@ must have been created with @device@
+-- -   #VUID-vkGetPipelinePropertiesEXT-pipeline-06738# The @pipeline@
+--     member of @pPipelineInfo@ must have been created with @device@
 --
 -- -   #VUID-vkGetPipelinePropertiesEXT-pPipelineProperties-06739#
 --     @pPipelineProperties@ /must/ be a valid pointer to a
 --     'PipelinePropertiesIdentifierEXT' structure
 --
 -- -   #VUID-vkGetPipelinePropertiesEXT-None-06766# The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelinePropertiesIdentifier pipelinePropertiesIdentifier>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelinePropertiesIdentifier pipelinePropertiesIdentifier>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)

@@ -118,7 +118,7 @@ createPipelineLayout :: forall io
                         -- specifying the state of the pipeline layout object.
                         PipelineLayoutCreateInfo
                      -> -- | @pAllocator@ controls host memory allocation as described in the
-                        -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                        -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                         -- chapter.
                         ("allocator" ::: Maybe AllocationCallbacks)
                      -> io (PipelineLayout)
@@ -175,7 +175,7 @@ foreign import ccall
 -- -   #VUID-vkDestroyPipelineLayout-pipelineLayout-02004# @pipelineLayout@
 --     /must/ not have been passed to any @vkCmd*@ command for any command
 --     buffers that are still in the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --     when 'destroyPipelineLayout' is called
 --
 -- == Valid Usage (Implicit)
@@ -212,7 +212,7 @@ destroyPipelineLayout :: forall io
                       -> -- | @pipelineLayout@ is the pipeline layout to destroy.
                          PipelineLayout
                       -> -- | @pAllocator@ controls host memory allocation as described in the
-                         -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                         -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                          -- chapter.
                          ("allocator" ::: Maybe AllocationCallbacks)
                       -> io ()
@@ -355,14 +355,16 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxPerStageDescriptorStorageBuffers@
 --
--- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-03019# The total
+-- -   #VUID-VkPipelineLayoutCreateInfo-descriptorType-06939# The total
 --     number of descriptors in descriptor set layouts created without the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     bit set with a @descriptorType@ of
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM',
 --     and
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM'
 --     accessible to any given shader stage across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxPerStageDescriptorSampledImages@
@@ -667,7 +669,7 @@ instance Zero PushConstantRange where
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT'
 --     across all shader stages and across all elements of @pSetLayouts@
 --     /must/ be less than or equal to
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxDescriptorSetSubsampledSamplers ::maxDescriptorSetSubsampledSamplers>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxDescriptorSetSubsampledSamplers ::maxDescriptorSetSubsampledSamplers>
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-04606# Any element of
 --     @pSetLayouts@ /must/ not have been created with the
@@ -675,7 +677,7 @@ instance Zero PushConstantRange where
 --     bit set
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-graphicsPipelineLibrary-06753# If
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-graphicsPipelineLibrary graphicsPipelineLibrary>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-graphicsPipelineLibrary graphicsPipelineLibrary>
 --     is not enabled, elements of @pSetLayouts@ /must/ be valid
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' objects
 --

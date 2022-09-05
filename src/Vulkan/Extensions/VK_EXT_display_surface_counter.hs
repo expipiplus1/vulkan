@@ -19,9 +19,9 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_display@
+--     -   Requires @VK_KHR_display@ to be enabled
 --
 -- [__Contact__]
 --
@@ -96,7 +96,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_display_surface_counter Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_display_surface_counter Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -363,7 +363,7 @@ data SurfaceCapabilities2EXT = SurfaceCapabilities2EXT
     -- #VUID-VkSurfaceCapabilities2EXT-supportedSurfaceCounters-01246#
     -- @supportedSurfaceCounters@ /must/ not include
     -- 'SURFACE_COUNTER_VBLANK_BIT_EXT' unless the surface queried is a
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#wsi-display-surfaces display surface>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#wsi-display-surfaces display surface>
     supportedSurfaceCounters :: SurfaceCounterFlagsEXT
   }
   deriving (Typeable)

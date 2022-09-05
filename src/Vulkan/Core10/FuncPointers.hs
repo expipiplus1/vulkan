@@ -41,7 +41,7 @@ type FN_vkInternalFreeNotification = ("pUserData" ::: Ptr ()) -> CSize -> Intern
 --
 -- = Description
 --
--- > described link:https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-host-allocation-scope[here^].
+-- > described link:https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-host-allocation-scope[here^].
 --
 -- = See Also
 --
@@ -120,7 +120,7 @@ type FN_vkAllocationFunction = ("pUserData" ::: Ptr ()) -> CSize -> ("alignment"
 -- generate 'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY' at the
 -- appropriate time for the command in which the condition was detected, as
 -- described in
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-errorcodes Return Codes>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-errorcodes Return Codes>.
 --
 -- If the implementation is able to continue correct processing of the
 -- current command without the requested allocation, then it /may/ do so,

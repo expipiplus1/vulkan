@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Contact__]
 --
@@ -159,13 +160,13 @@
 --
 -- == New or Modified Built-In Variables
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-fraginvocationcount FragInvocationCountEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-fraginvocationcount FragInvocationCountEXT>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-fragsize FragSizeEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-fragsize FragSizeEXT>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-FragmentDensityEXT FragmentDensityEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-FragmentDensityEXT FragmentDensityEXT>
 --
 -- == Version History
 --
@@ -186,7 +187,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_fragment_density_map Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_fragment_density_map Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -272,9 +273,9 @@ data PhysicalDeviceFragmentDensityMapFeaturesEXT = PhysicalDeviceFragmentDensity
     -- implementation supports regular non-subsampled image attachments with
     -- fragment density map render passes. If this feature is not enabled,
     -- render passes with a
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>
     -- /must/ only have
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-subsamplesampler subsampled attachments>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-subsamplesampler subsampled attachments>
     -- bound.
     fragmentDensityMapNonSubsampledImages :: Bool
   }
@@ -349,7 +350,7 @@ instance Zero PhysicalDeviceFragmentDensityMapFeaturesEXT where
 data PhysicalDeviceFragmentDensityMapPropertiesEXT = PhysicalDeviceFragmentDensityMapPropertiesEXT
   { -- | #limits-minFragmentDensityTexelSize# @minFragmentDensityTexelSize@ is
     -- the minimum
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-fragment-density-texel-size fragment density texel size>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-fragment-density-texel-size fragment density texel size>.
     minFragmentDensityTexelSize :: Extent2D
   , -- | #limits-maxFragmentDensityTexelSize# @maxFragmentDensityTexelSize@ is
     -- the maximum fragment density texel size.

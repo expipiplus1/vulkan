@@ -19,7 +19,7 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
 -- [__Deprecation state__]
 --
@@ -47,7 +47,7 @@
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_gpu_shader_int16.html SPV_AMD_gpu_shader_int16>
 --
 --     -   This extension provides API support for
---         <https://www.khronos.org/registry/OpenGL/extensions/AMD/AMD_gpu_shader_int16.txt GL_AMD_gpu_shader_int16>
+--         <https://registry.khronos.org/OpenGL/extensions/AMD/AMD_gpu_shader_int16.txt GL_AMD_gpu_shader_int16>
 --
 -- [__Contributors__]
 --
@@ -100,7 +100,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_AMD_gpu_shader_int16 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_AMD_gpu_shader_int16 Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

@@ -1,7 +1,8 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "SamplerCreateFlagBits"
 module Vulkan.Core10.Enums.SamplerCreateFlagBits  ( SamplerCreateFlags
-                                                  , SamplerCreateFlagBits( SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT
+                                                  , SamplerCreateFlagBits( SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM
+                                                                         , SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT
                                                                          , SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT
                                                                          , SAMPLER_CREATE_SUBSAMPLED_BIT_EXT
                                                                          , ..
@@ -42,8 +43,14 @@ type SamplerCreateFlags = SamplerCreateFlagBits
 newtype SamplerCreateFlagBits = SamplerCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
+-- | #samplers-imageprocessingsampler#
+-- 'SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM' specifies that the sampler
+-- will read from images using only @OpImageWeightedSampleQCOM@,
+-- @OpImageBoxFilterQCOM@, @OpImageBlockMatchSSDQCOM@, or
+-- @OpImageBlockMatchSADQCOM@.
+pattern SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM                = SamplerCreateFlagBits 0x00000010
 -- | 'SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT' specifies that
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-cubemapedge cube map edge handling>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-cubemapedge cube map edge handling>
 -- is not performed.
 pattern SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT            = SamplerCreateFlagBits 0x00000004
 -- | 'SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT' specifies that
@@ -64,7 +71,8 @@ enumPrefixSamplerCreateFlagBits = "SAMPLER_CREATE_"
 
 showTableSamplerCreateFlagBits :: [(SamplerCreateFlagBits, String)]
 showTableSamplerCreateFlagBits =
-  [ (SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT           , "NON_SEAMLESS_CUBE_MAP_BIT_EXT")
+  [ (SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM               , "IMAGE_PROCESSING_BIT_QCOM")
+  , (SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT           , "NON_SEAMLESS_CUBE_MAP_BIT_EXT")
   , (SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT, "SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT")
   , (SAMPLER_CREATE_SUBSAMPLED_BIT_EXT                      , "SUBSAMPLED_BIT_EXT")
   ]

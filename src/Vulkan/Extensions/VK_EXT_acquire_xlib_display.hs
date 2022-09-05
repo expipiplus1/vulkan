@@ -19,9 +19,9 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_EXT_direct_mode_display@
+--     -   Requires @VK_EXT_direct_mode_display@ to be enabled
 --
 -- [__Contact__]
 --
@@ -108,7 +108,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_acquire_xlib_display Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_acquire_xlib_display Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -176,7 +176,7 @@ foreign import ccall
 -- Permission to access the display /may/ be temporarily revoked during
 -- periods when the X11 server from which control was acquired itself loses
 -- access to @display@. During such periods, operations which require
--- access to the display /must/ fail with an approriate error code. If the
+-- access to the display /must/ fail with an appropriate error code. If the
 -- X11 server associated with @dpy@ does not own @display@, or if
 -- permission to access it has already been acquired by another entity, the
 -- call /must/ return the error code

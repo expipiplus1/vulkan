@@ -30,17 +30,17 @@ import GHC.Show (Show(showsPrec))
 -- -   'SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709' specifies the color model
 --     conversion from Y′CBCR to R′G′B′ defined in BT.709 and described in
 --     the “BT.709 Y′CBCR conversion” section of the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#data-format Khronos Data Format Specification>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#data-format Khronos Data Format Specification>.
 --
 -- -   'SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601' specifies the color model
 --     conversion from Y′CBCR to R′G′B′ defined in BT.601 and described in
 --     the “BT.601 Y′CBCR conversion” section of the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#data-format Khronos Data Format Specification>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#data-format Khronos Data Format Specification>.
 --
 -- -   'SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020' specifies the color
 --     model conversion from Y′CBCR to R′G′B′ defined in BT.2020 and
 --     described in the “BT.2020 Y′CBCR conversion” section of the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#data-format Khronos Data Format Specification>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#data-format Khronos Data Format Specification>.
 --
 -- In the @VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_*@ color models, for the
 -- input to the sampler Y′CBCR range expansion and model conversion:

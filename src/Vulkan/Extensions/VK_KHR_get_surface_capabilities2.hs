@@ -19,9 +19,9 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_surface@
+--     -   Requires @VK_KHR_surface@ to be enabled
 --
 -- [__Contact__]
 --
@@ -137,7 +137,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_get_surface_capabilities2 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_get_surface_capabilities2 Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -681,7 +681,7 @@ instance es ~ '[] => Zero (SurfaceCapabilities2KHR es) where
 -- == Valid Usage
 --
 -- -   #VUID-VkSurfaceFormat2KHR-pNext-06750# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-imageCompressionControlSwapchain imageCompressionControlSwapchain>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-imageCompressionControlSwapchain imageCompressionControlSwapchain>
 --     feature is not enabled, the @pNext@ chain /must/ not include an
 --     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionPropertiesEXT'
 --     structure

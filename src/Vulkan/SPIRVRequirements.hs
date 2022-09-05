@@ -25,6 +25,7 @@ import Vulkan.Extensions.VK_NV_fragment_shader_barycentric (PhysicalDeviceFragme
 import Vulkan.Extensions.VK_KHR_fragment_shader_barycentric (PhysicalDeviceFragmentShaderBarycentricFeaturesKHR(..))
 import Vulkan.Extensions.VK_EXT_fragment_shader_interlock (PhysicalDeviceFragmentShaderInterlockFeaturesEXT(..))
 import Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDeviceFragmentShadingRateFeaturesKHR(..))
+import Vulkan.Extensions.VK_QCOM_image_processing (PhysicalDeviceImageProcessingFeaturesQCOM(..))
 import Vulkan.Core11.Promoted_From_VK_KHR_multiview (PhysicalDeviceMultiviewFeatures(..))
 import Vulkan.Extensions.VK_KHR_ray_query (PhysicalDeviceRayQueryFeaturesKHR(..))
 import Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1 (PhysicalDeviceRayTracingMaintenance1FeaturesKHR(..))
@@ -65,6 +66,7 @@ import Vulkan.Extensions.VK_EXT_buffer_device_address (pattern EXT_BUFFER_DEVICE
 import Vulkan.Extensions.VK_EXT_descriptor_indexing (pattern EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_fragment_density_map (pattern EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_fragment_shader_interlock (pattern EXT_FRAGMENT_SHADER_INTERLOCK_EXTENSION_NAME)
+import Vulkan.Extensions.VK_EXT_mesh_shader (pattern EXT_MESH_SHADER_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_post_depth_coverage (pattern EXT_POST_DEPTH_COVERAGE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_shader_atomic_float2 (pattern EXT_SHADER_ATOMIC_FLOAT_2_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_shader_atomic_float (pattern EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME)
@@ -127,6 +129,7 @@ import Vulkan.Extensions.VK_NV_shader_sm_builtins (pattern NV_SHADER_SM_BUILTINS
 import Vulkan.Extensions.VK_NV_shader_subgroup_partitioned (pattern NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_shading_rate_image (pattern NV_SHADING_RATE_IMAGE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_viewport_array2 (pattern NV_VIEWPORT_ARRAY_2_EXTENSION_NAME)
+import Vulkan.Extensions.VK_QCOM_image_processing (pattern QCOM_IMAGE_PROCESSING_EXTENSION_NAME)
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlagBits(SUBGROUP_FEATURE_ARITHMETIC_BIT))
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
@@ -693,6 +696,32 @@ spirvExtensionRequirements = \case
     ]
   "SPV_KHR_device_group" ->
     (,) [RequireInstanceVersion $ MAKE_API_VERSION 1 1 0] [RequireDeviceVersion $ MAKE_API_VERSION 1 1 0]
+  "SPV_QCOM_image_processing" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = QCOM_IMAGE_PROCESSING_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_FORMAT_FEATURE_FLAGS_2_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "SPV_EXT_mesh_shader" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = EXT_MESH_SHADER_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
   _ -> ([], [])
 
 spirvCapabilityRequirements :: ByteString -> ([InstanceRequirement], [DeviceRequirement])
@@ -2612,6 +2641,80 @@ spirvCapabilityRequirements = \case
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "TextureSampleWeightedQCOM" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceFeature
+      { featureName   = "textureSampleWeighted"
+      , checkFeature  = \PhysicalDeviceImageProcessingFeaturesQCOM { textureSampleWeighted } -> textureSampleWeighted
+      , enableFeature = \PhysicalDeviceImageProcessingFeaturesQCOM {..} ->
+                          PhysicalDeviceImageProcessingFeaturesQCOM { textureSampleWeighted = True, .. }
+      }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = QCOM_IMAGE_PROCESSING_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_FORMAT_FEATURE_FLAGS_2_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "TextureBoxFilterQCOM" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceFeature
+      { featureName   = "textureBoxFilter"
+      , checkFeature  = \PhysicalDeviceImageProcessingFeaturesQCOM { textureBoxFilter } -> textureBoxFilter
+      , enableFeature = \PhysicalDeviceImageProcessingFeaturesQCOM {..} ->
+                          PhysicalDeviceImageProcessingFeaturesQCOM { textureBoxFilter = True, .. }
+      }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = QCOM_IMAGE_PROCESSING_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_FORMAT_FEATURE_FLAGS_2_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "TextureBlockMatchQCOM" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceFeature
+      { featureName   = "textureBlockMatch"
+      , checkFeature  = \PhysicalDeviceImageProcessingFeaturesQCOM { textureBlockMatch } -> textureBlockMatch
+      , enableFeature = \PhysicalDeviceImageProcessingFeaturesQCOM {..} ->
+                          PhysicalDeviceImageProcessingFeaturesQCOM { textureBlockMatch = True, .. }
+      }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = QCOM_IMAGE_PROCESSING_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_FORMAT_FEATURE_FLAGS_2_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "MeshShadingEXT" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = EXT_MESH_SHADER_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]

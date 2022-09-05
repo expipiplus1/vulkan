@@ -114,7 +114,7 @@ foreign import ccall
 -- If @flags@ of @pCreateInfo@ includes
 -- 'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT',
 -- all commands that modify the returned pipeline cache object /must/ be
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>.
 --
 -- Note
 --
@@ -166,7 +166,7 @@ createPipelineCache :: forall io
                        -- containing initial parameters for the pipeline cache object.
                        PipelineCacheCreateInfo
                     -> -- | @pAllocator@ controls host memory allocation as described in the
-                       -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                       -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                        -- chapter.
                        ("allocator" ::: Maybe AllocationCallbacks)
                     -> io (PipelineCache)
@@ -254,7 +254,7 @@ destroyPipelineCache :: forall io
                      -> -- | @pipelineCache@ is the handle of the pipeline cache to destroy.
                         PipelineCache
                      -> -- | @pAllocator@ controls host memory allocation as described in the
-                        -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                        -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                         -- chapter.
                         ("allocator" ::: Maybe AllocationCallbacks)
                      -> io ()
@@ -302,7 +302,7 @@ foreign import ccall
 --
 -- The initial bytes written to @pData@ /must/ be a header as described in
 -- the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-cache-header Pipeline Cache Header>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-cache-header Pipeline Cache Header>
 -- section.
 --
 -- If @pDataSize@ is less than what is necessary to store this header,
@@ -473,7 +473,7 @@ mergePipelineCaches device dstCache srcCaches = liftIO . evalContT $ do
 --
 -- -   #VUID-VkPipelineCacheCreateInfo-pipelineCreationCacheControl-02892#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineCreationCacheControl pipelineCreationCacheControl>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineCreationCacheControl pipelineCreationCacheControl>
 --     feature is not enabled, @flags@ /must/ not include
 --     'Vulkan.Core10.Enums.PipelineCacheCreateFlagBits.PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT'
 --

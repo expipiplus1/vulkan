@@ -2,6 +2,7 @@
 -- No documentation found for Chapter "DependencyFlagBits"
 module Vulkan.Core10.Enums.DependencyFlagBits  ( DependencyFlags
                                                , DependencyFlagBits( DEPENDENCY_BY_REGION_BIT
+                                                                   , DEPENDENCY_FEEDBACK_LOOP_BIT_EXT
                                                                    , DEPENDENCY_VIEW_LOCAL_BIT
                                                                    , DEPENDENCY_DEVICE_GROUP_BIT
                                                                    , ..
@@ -32,14 +33,19 @@ newtype DependencyFlagBits = DependencyFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'DEPENDENCY_BY_REGION_BIT' specifies that dependencies will be
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-local>.
-pattern DEPENDENCY_BY_REGION_BIT    = DependencyFlagBits 0x00000001
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-local>.
+pattern DEPENDENCY_BY_REGION_BIT         = DependencyFlagBits 0x00000001
+-- | 'DEPENDENCY_FEEDBACK_LOOP_BIT_EXT' specifies that the render pass will
+-- write to and read from the same image using the
+-- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT'
+-- layout.
+pattern DEPENDENCY_FEEDBACK_LOOP_BIT_EXT = DependencyFlagBits 0x00000008
 -- | 'DEPENDENCY_VIEW_LOCAL_BIT' specifies that a
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-barriers-subpass-self-dependencies subpass has more than one view>.
-pattern DEPENDENCY_VIEW_LOCAL_BIT   = DependencyFlagBits 0x00000002
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-barriers-subpass-self-dependencies subpass has more than one view>.
+pattern DEPENDENCY_VIEW_LOCAL_BIT        = DependencyFlagBits 0x00000002
 -- | 'DEPENDENCY_DEVICE_GROUP_BIT' specifies that dependencies are
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-device-local-dependencies non-device-local>.
-pattern DEPENDENCY_DEVICE_GROUP_BIT = DependencyFlagBits 0x00000004
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-device-local-dependencies non-device-local>.
+pattern DEPENDENCY_DEVICE_GROUP_BIT      = DependencyFlagBits 0x00000004
 
 conNameDependencyFlagBits :: String
 conNameDependencyFlagBits = "DependencyFlagBits"
@@ -49,9 +55,10 @@ enumPrefixDependencyFlagBits = "DEPENDENCY_"
 
 showTableDependencyFlagBits :: [(DependencyFlagBits, String)]
 showTableDependencyFlagBits =
-  [ (DEPENDENCY_BY_REGION_BIT   , "BY_REGION_BIT")
-  , (DEPENDENCY_VIEW_LOCAL_BIT  , "VIEW_LOCAL_BIT")
-  , (DEPENDENCY_DEVICE_GROUP_BIT, "DEVICE_GROUP_BIT")
+  [ (DEPENDENCY_BY_REGION_BIT        , "BY_REGION_BIT")
+  , (DEPENDENCY_FEEDBACK_LOOP_BIT_EXT, "FEEDBACK_LOOP_BIT_EXT")
+  , (DEPENDENCY_VIEW_LOCAL_BIT       , "VIEW_LOCAL_BIT")
+  , (DEPENDENCY_DEVICE_GROUP_BIT     , "DEVICE_GROUP_BIT")
   ]
 
 instance Show DependencyFlagBits where

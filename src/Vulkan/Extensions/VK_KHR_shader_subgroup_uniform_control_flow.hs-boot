@@ -19,7 +19,7 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.1
+--     -   Requires support for Vulkan 1.1
 --
 -- [__Contact__]
 --
@@ -61,7 +61,7 @@
 -- to reduce the work performed by a uniform subgroup. This extension will
 -- guarantee that uniform subgroup will reconverge in the same manner as
 -- invocation groups (see “Uniform Control Flow” in the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirv-spec Khronos SPIR-V Specification>).
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirv-spec Khronos SPIR-V Specification>).
 --
 -- == New Structures
 --
@@ -94,7 +94,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_shader_subgroup_uniform_control_flow Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_shader_subgroup_uniform_control_flow Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

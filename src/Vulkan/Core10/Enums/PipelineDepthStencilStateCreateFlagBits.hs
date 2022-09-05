@@ -1,8 +1,8 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "PipelineDepthStencilStateCreateFlagBits"
 module Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits  ( PipelineDepthStencilStateCreateFlags
-                                                                    , PipelineDepthStencilStateCreateFlagBits( PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM
-                                                                                                             , PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM
+                                                                    , PipelineDepthStencilStateCreateFlagBits( PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT
+                                                                                                             , PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT
                                                                                                              , ..
                                                                                                              )
                                                                     ) where
@@ -25,26 +25,26 @@ type PipelineDepthStencilStateCreateFlags = PipelineDepthStencilStateCreateFlagB
 --
 -- = See Also
 --
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_rasterization_order_attachment_access VK_ARM_rasterization_order_attachment_access>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_rasterization_order_attachment_access VK_EXT_rasterization_order_attachment_access>,
 -- 'PipelineDepthStencilStateCreateFlags'
 newtype PipelineDepthStencilStateCreateFlagBits = PipelineDepthStencilStateCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM'
+-- | 'PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT'
 -- indicates that access to the stencil aspects of depth\/stencil and input
 -- attachments will have implicit framebuffer-local memory dependencies.
 -- See
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-feedbackloop renderpass feedback loops>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-feedbackloop renderpass feedback loops>
 -- for more information.
-pattern PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM =
+pattern PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT =
   PipelineDepthStencilStateCreateFlagBits 0x00000002
--- | 'PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM'
+-- | 'PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT'
 -- indicates that access to the depth aspects of depth\/stencil and input
 -- attachments will have implicit framebuffer-local memory dependencies.
 -- See
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-feedbackloop renderpass feedback loops>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-feedbackloop renderpass feedback loops>
 -- for more information.
-pattern PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM =
+pattern PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT =
   PipelineDepthStencilStateCreateFlagBits 0x00000001
 
 conNamePipelineDepthStencilStateCreateFlagBits :: String
@@ -56,10 +56,10 @@ enumPrefixPipelineDepthStencilStateCreateFlagBits =
 
 showTablePipelineDepthStencilStateCreateFlagBits :: [(PipelineDepthStencilStateCreateFlagBits, String)]
 showTablePipelineDepthStencilStateCreateFlagBits =
-  [ ( PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM
-    , "STENCIL_ACCESS_BIT_ARM"
+  [ ( PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT
+    , "STENCIL_ACCESS_BIT_EXT"
     )
-  , (PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM, "DEPTH_ACCESS_BIT_ARM")
+  , (PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT, "DEPTH_ACCESS_BIT_EXT")
   ]
 
 instance Show PipelineDepthStencilStateCreateFlagBits where

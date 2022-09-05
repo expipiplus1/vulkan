@@ -30,6 +30,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_acquire_drm_display
                           , module Vulkan.Extensions.VK_EXT_acquire_xlib_display
                           , module Vulkan.Extensions.VK_EXT_astc_decode_mode
+                          , module Vulkan.Extensions.VK_EXT_attachment_feedback_loop_layout
                           , module Vulkan.Extensions.VK_EXT_blend_operation_advanced
                           , module Vulkan.Extensions.VK_EXT_border_color_swizzle
                           , module Vulkan.Extensions.VK_EXT_buffer_device_address
@@ -41,6 +42,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_debug_marker
                           , module Vulkan.Extensions.VK_EXT_debug_report
                           , module Vulkan.Extensions.VK_EXT_debug_utils
+                          , module Vulkan.Extensions.VK_EXT_depth_clamp_zero_one
                           , module Vulkan.Extensions.VK_EXT_depth_clip_control
                           , module Vulkan.Extensions.VK_EXT_depth_clip_enable
                           , module Vulkan.Extensions.VK_EXT_depth_range_unrestricted
@@ -78,9 +80,11 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_load_store_op_none
                           , module Vulkan.Extensions.VK_EXT_memory_budget
                           , module Vulkan.Extensions.VK_EXT_memory_priority
+                          , module Vulkan.Extensions.VK_EXT_mesh_shader
                           , module Vulkan.Extensions.VK_EXT_metal_objects
                           , module Vulkan.Extensions.VK_EXT_metal_surface
                           , module Vulkan.Extensions.VK_EXT_multi_draw
+                          , module Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled
                           , module Vulkan.Extensions.VK_EXT_non_seamless_cube_map
                           , module Vulkan.Extensions.VK_EXT_pageable_device_local_memory
                           , module Vulkan.Extensions.VK_EXT_pci_bus_info
@@ -88,12 +92,14 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
                           , module Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
                           , module Vulkan.Extensions.VK_EXT_pipeline_properties
+                          , module Vulkan.Extensions.VK_EXT_pipeline_robustness
                           , module Vulkan.Extensions.VK_EXT_post_depth_coverage
                           , module Vulkan.Extensions.VK_EXT_primitive_topology_list_restart
                           , module Vulkan.Extensions.VK_EXT_primitives_generated_query
                           , module Vulkan.Extensions.VK_EXT_private_data
                           , module Vulkan.Extensions.VK_EXT_provoking_vertex
                           , module Vulkan.Extensions.VK_EXT_queue_family_foreign
+                          , module Vulkan.Extensions.VK_EXT_rasterization_order_attachment_access
                           , module Vulkan.Extensions.VK_EXT_rgba10x6_formats
                           , module Vulkan.Extensions.VK_EXT_robustness2
                           , module Vulkan.Extensions.VK_EXT_sample_locations
@@ -104,6 +110,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_shader_atomic_float2
                           , module Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation
                           , module Vulkan.Extensions.VK_EXT_shader_image_atomic_int64
+                          , module Vulkan.Extensions.VK_EXT_shader_module_identifier
                           , module Vulkan.Extensions.VK_EXT_shader_stencil_export
                           , module Vulkan.Extensions.VK_EXT_shader_subgroup_ballot
                           , module Vulkan.Extensions.VK_EXT_shader_subgroup_vote
@@ -274,11 +281,14 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_NV_viewport_swizzle
                           , module Vulkan.Extensions.VK_NV_win32_keyed_mutex
                           , module Vulkan.Extensions.VK_QCOM_fragment_density_map_offset
+                          , module Vulkan.Extensions.VK_QCOM_image_processing
                           , module Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
                           , module Vulkan.Extensions.VK_QCOM_render_pass_store_ops
                           , module Vulkan.Extensions.VK_QCOM_render_pass_transform
                           , module Vulkan.Extensions.VK_QCOM_rotated_copy_commands
+                          , module Vulkan.Extensions.VK_QCOM_tile_properties
                           , module Vulkan.Extensions.VK_QNX_screen_surface
+                          , module Vulkan.Extensions.VK_SEC_amigo_profiling
                           , module Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping
                           , module Vulkan.Extensions.VK_VALVE_mutable_descriptor_type
                           ) where
@@ -312,6 +322,7 @@ import Vulkan.Extensions.VK_EXT_4444_formats
 import Vulkan.Extensions.VK_EXT_acquire_drm_display
 import Vulkan.Extensions.VK_EXT_acquire_xlib_display
 import Vulkan.Extensions.VK_EXT_astc_decode_mode
+import Vulkan.Extensions.VK_EXT_attachment_feedback_loop_layout
 import Vulkan.Extensions.VK_EXT_blend_operation_advanced
 import Vulkan.Extensions.VK_EXT_border_color_swizzle
 import Vulkan.Extensions.VK_EXT_buffer_device_address
@@ -323,6 +334,7 @@ import Vulkan.Extensions.VK_EXT_custom_border_color
 import Vulkan.Extensions.VK_EXT_debug_marker
 import Vulkan.Extensions.VK_EXT_debug_report
 import Vulkan.Extensions.VK_EXT_debug_utils
+import Vulkan.Extensions.VK_EXT_depth_clamp_zero_one
 import Vulkan.Extensions.VK_EXT_depth_clip_control
 import Vulkan.Extensions.VK_EXT_depth_clip_enable
 import Vulkan.Extensions.VK_EXT_depth_range_unrestricted
@@ -360,9 +372,11 @@ import Vulkan.Extensions.VK_EXT_line_rasterization
 import Vulkan.Extensions.VK_EXT_load_store_op_none
 import Vulkan.Extensions.VK_EXT_memory_budget
 import Vulkan.Extensions.VK_EXT_memory_priority
+import Vulkan.Extensions.VK_EXT_mesh_shader
 import Vulkan.Extensions.VK_EXT_metal_objects
 import Vulkan.Extensions.VK_EXT_metal_surface
 import Vulkan.Extensions.VK_EXT_multi_draw
+import Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled
 import Vulkan.Extensions.VK_EXT_non_seamless_cube_map
 import Vulkan.Extensions.VK_EXT_pageable_device_local_memory
 import Vulkan.Extensions.VK_EXT_pci_bus_info
@@ -370,12 +384,14 @@ import Vulkan.Extensions.VK_EXT_physical_device_drm
 import Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
 import Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
 import Vulkan.Extensions.VK_EXT_pipeline_properties
+import Vulkan.Extensions.VK_EXT_pipeline_robustness
 import Vulkan.Extensions.VK_EXT_post_depth_coverage
 import Vulkan.Extensions.VK_EXT_primitive_topology_list_restart
 import Vulkan.Extensions.VK_EXT_primitives_generated_query
 import Vulkan.Extensions.VK_EXT_private_data
 import Vulkan.Extensions.VK_EXT_provoking_vertex
 import Vulkan.Extensions.VK_EXT_queue_family_foreign
+import Vulkan.Extensions.VK_EXT_rasterization_order_attachment_access
 import Vulkan.Extensions.VK_EXT_rgba10x6_formats
 import Vulkan.Extensions.VK_EXT_robustness2
 import Vulkan.Extensions.VK_EXT_sample_locations
@@ -386,6 +402,7 @@ import Vulkan.Extensions.VK_EXT_shader_atomic_float
 import Vulkan.Extensions.VK_EXT_shader_atomic_float2
 import Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation
 import Vulkan.Extensions.VK_EXT_shader_image_atomic_int64
+import Vulkan.Extensions.VK_EXT_shader_module_identifier
 import Vulkan.Extensions.VK_EXT_shader_stencil_export
 import Vulkan.Extensions.VK_EXT_shader_subgroup_ballot
 import Vulkan.Extensions.VK_EXT_shader_subgroup_vote
@@ -556,11 +573,14 @@ import Vulkan.Extensions.VK_NV_viewport_array2
 import Vulkan.Extensions.VK_NV_viewport_swizzle
 import Vulkan.Extensions.VK_NV_win32_keyed_mutex
 import Vulkan.Extensions.VK_QCOM_fragment_density_map_offset
+import Vulkan.Extensions.VK_QCOM_image_processing
 import Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
 import Vulkan.Extensions.VK_QCOM_render_pass_store_ops
 import Vulkan.Extensions.VK_QCOM_render_pass_transform
 import Vulkan.Extensions.VK_QCOM_rotated_copy_commands
+import Vulkan.Extensions.VK_QCOM_tile_properties
 import Vulkan.Extensions.VK_QNX_screen_surface
+import Vulkan.Extensions.VK_SEC_amigo_profiling
 import Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping
 import Vulkan.Extensions.VK_VALVE_mutable_descriptor_type
 

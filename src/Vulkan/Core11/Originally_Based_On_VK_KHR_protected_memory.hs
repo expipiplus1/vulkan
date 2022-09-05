@@ -209,7 +209,8 @@ instance Zero ProtectedSubmitInfo where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceProtectedMemoryFeatures = PhysicalDeviceProtectedMemoryFeatures
   { -- | #extension-features-protectedMemory# @protectedMemory@ specifies whether
-    -- protected memory is supported.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-protected-memory protected memory>
+    -- is supported.
     protectedMemory :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -279,7 +280,7 @@ data PhysicalDeviceProtectedMemoryProperties = PhysicalDeviceProtectedMemoryProp
     -- have undefined values written, reads and queries will return undefined
     -- values. If this limit is 'Vulkan.Core10.FundamentalTypes.FALSE',
     -- applications /must/ not perform these operations. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-protected-access-rules>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-protected-access-rules>
     -- for more information.
     protectedNoFault :: Bool }
   deriving (Typeable, Eq)

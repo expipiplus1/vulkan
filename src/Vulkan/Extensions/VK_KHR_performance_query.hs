@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Special Use__]
 --
@@ -473,7 +474,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_performance_query Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_performance_query Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -1203,7 +1204,7 @@ instance Zero PerformanceCounterDescriptionKHR where
 --
 -- -   #VUID-VkQueryPoolPerformanceCreateInfoKHR-performanceCounterQueryPools-03237#
 --     The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-performanceCounterQueryPools performanceCounterQueryPools>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-performanceCounterQueryPools performanceCounterQueryPools>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkQueryPoolPerformanceCreateInfoKHR-pCounterIndices-03321#
@@ -1285,7 +1286,7 @@ instance Zero QueryPoolPerformanceCreateInfoKHR where
 -- == Valid Usage (Implicit)
 --
 -- If @timeout@ is 0, 'acquireProfilingLockKHR' will not block while
--- attempting to acquire the profling lock. If @timeout@ is @UINT64_MAX@,
+-- attempting to acquire the profiling lock. If @timeout@ is @UINT64_MAX@,
 -- the function will not return until the profiling lock was acquired.
 --
 -- = See Also

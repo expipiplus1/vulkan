@@ -57,10 +57,10 @@ data PhysicalDeviceImageRobustnessFeatures = PhysicalDeviceImageRobustnessFeatur
   { -- | #extension-features-robustImageAccess# @robustImageAccess@ indicates
     -- whether image accesses are tightly bounds-checked against the dimensions
     -- of the image view.
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-input-validation Invalid texels>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-input-validation Invalid texels>
     -- resulting from out of bounds image loads will be replaced as described
     -- in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-texel-replacement Texel Replacement>,
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-texel-replacement Texel Replacement>,
     -- with either (0,0,1) or (0,0,0) values inserted for missing G, B, or A
     -- components based on the format.
     robustImageAccess :: Bool }

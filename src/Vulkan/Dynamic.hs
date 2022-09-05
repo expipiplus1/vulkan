@@ -340,6 +340,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (ShaderGroup
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_shader_info (ShaderInfoTypeAMD)
 import {-# SOURCE #-} Vulkan.Core10.Handles (ShaderModule)
 import {-# SOURCE #-} Vulkan.Core10.Shader (ShaderModuleCreateInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_module_identifier (ShaderModuleIdentifierEXT)
 import {-# SOURCE #-} Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlagBits)
 import {-# SOURCE #-} Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shading_rate_image (ShadingRatePaletteNV)
@@ -368,6 +369,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_surface (SurfaceFormatKHR)
 import {-# SOURCE #-} Vulkan.Extensions.Handles (SurfaceKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain (SwapchainCreateInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.Handles (SwapchainKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_tile_properties (TilePropertiesQCOM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_calibrated_timestamps (TimeDomainEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_validation_cache (ValidationCacheCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.Handles (ValidationCacheEXT)
@@ -929,6 +931,9 @@ data DeviceCmds = DeviceCmds
   , pVkCmdDrawMeshTasksNV :: FunPtr (Ptr CommandBuffer_T -> ("taskCount" ::: Word32) -> ("firstTask" ::: Word32) -> IO ())
   , pVkCmdDrawMeshTasksIndirectNV :: FunPtr (Ptr CommandBuffer_T -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
   , pVkCmdDrawMeshTasksIndirectCountNV :: FunPtr (Ptr CommandBuffer_T -> Buffer -> ("offset" ::: DeviceSize) -> ("countBuffer" ::: Buffer) -> ("countBufferOffset" ::: DeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
+  , pVkCmdDrawMeshTasksEXT :: FunPtr (Ptr CommandBuffer_T -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ())
+  , pVkCmdDrawMeshTasksIndirectEXT :: FunPtr (Ptr CommandBuffer_T -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
+  , pVkCmdDrawMeshTasksIndirectCountEXT :: FunPtr (Ptr CommandBuffer_T -> Buffer -> ("offset" ::: DeviceSize) -> ("countBuffer" ::: Buffer) -> ("countBufferOffset" ::: DeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
   , pVkCompileDeferredNV :: FunPtr (Ptr Device_T -> Pipeline -> ("shader" ::: Word32) -> IO Result)
   , pVkCreateAccelerationStructureNV :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr AccelerationStructureCreateInfoNV) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pAccelerationStructure" ::: Ptr AccelerationStructureNV) -> IO Result)
   , pVkCmdBindInvocationMaskHUAWEI :: FunPtr (Ptr CommandBuffer_T -> ImageView -> ImageLayout -> IO ())
@@ -1049,9 +1054,13 @@ data DeviceCmds = DeviceCmds
   , pVkCmdEndRendering :: FunPtr (Ptr CommandBuffer_T -> IO ())
   , pVkGetDescriptorSetLayoutHostMappingInfoVALVE :: FunPtr (Ptr Device_T -> ("pBindingReference" ::: Ptr DescriptorSetBindingReferenceVALVE) -> ("pHostMapping" ::: Ptr DescriptorSetLayoutHostMappingInfoVALVE) -> IO ())
   , pVkGetDescriptorSetHostMappingVALVE :: FunPtr (Ptr Device_T -> DescriptorSet -> ("ppData" ::: Ptr (Ptr ())) -> IO ())
+  , pVkGetShaderModuleIdentifierEXT :: FunPtr (Ptr Device_T -> ShaderModule -> ("pIdentifier" ::: Ptr ShaderModuleIdentifierEXT) -> IO ())
+  , pVkGetShaderModuleCreateInfoIdentifierEXT :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr (SomeStruct ShaderModuleCreateInfo)) -> ("pIdentifier" ::: Ptr ShaderModuleIdentifierEXT) -> IO ())
   , pVkGetImageSubresourceLayout2EXT :: FunPtr (Ptr Device_T -> Image -> ("pSubresource" ::: Ptr ImageSubresource2EXT) -> ("pLayout" ::: Ptr (SomeStruct SubresourceLayout2EXT)) -> IO ())
   , pVkGetPipelinePropertiesEXT :: FunPtr (Ptr Device_T -> ("pPipelineInfo" ::: Ptr PipelineInfoEXT) -> ("pPipelineProperties" ::: Ptr BaseOutStructure) -> IO Result)
   , pVkExportMetalObjectsEXT :: FunPtr (Ptr Device_T -> ("pMetalObjectsInfo" ::: Ptr (SomeStruct ExportMetalObjectsInfoEXT)) -> IO ())
+  , pVkGetFramebufferTilePropertiesQCOM :: FunPtr (Ptr Device_T -> Framebuffer -> ("pPropertiesCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr TilePropertiesQCOM) -> IO Result)
+  , pVkGetDynamicRenderingTilePropertiesQCOM :: FunPtr (Ptr Device_T -> ("pRenderingInfo" ::: Ptr (SomeStruct RenderingInfo)) -> ("pProperties" ::: Ptr TilePropertiesQCOM) -> IO Result)
   }
 
 deriving instance Eq DeviceCmds
@@ -1103,7 +1112,8 @@ instance Zero DeviceCmds where
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr nullFunPtr nullFunPtr nullFunPtr
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1365,6 +1375,9 @@ initDeviceCmds instanceCmds handle = do
   vkCmdDrawMeshTasksNV <- getDeviceProcAddr' handle (Ptr "vkCmdDrawMeshTasksNV"#)
   vkCmdDrawMeshTasksIndirectNV <- getDeviceProcAddr' handle (Ptr "vkCmdDrawMeshTasksIndirectNV"#)
   vkCmdDrawMeshTasksIndirectCountNV <- getDeviceProcAddr' handle (Ptr "vkCmdDrawMeshTasksIndirectCountNV"#)
+  vkCmdDrawMeshTasksEXT <- getDeviceProcAddr' handle (Ptr "vkCmdDrawMeshTasksEXT"#)
+  vkCmdDrawMeshTasksIndirectEXT <- getDeviceProcAddr' handle (Ptr "vkCmdDrawMeshTasksIndirectEXT"#)
+  vkCmdDrawMeshTasksIndirectCountEXT <- getDeviceProcAddr' handle (Ptr "vkCmdDrawMeshTasksIndirectCountEXT"#)
   vkCompileDeferredNV <- getDeviceProcAddr' handle (Ptr "vkCompileDeferredNV"#)
   vkCreateAccelerationStructureNV <- getDeviceProcAddr' handle (Ptr "vkCreateAccelerationStructureNV"#)
   vkCmdBindInvocationMaskHUAWEI <- getDeviceProcAddr' handle (Ptr "vkCmdBindInvocationMaskHUAWEI"#)
@@ -1485,9 +1498,13 @@ initDeviceCmds instanceCmds handle = do
   vkCmdEndRendering <- getFirstDeviceProcAddr [(Ptr "vkCmdEndRenderingKHR"#), (Ptr "vkCmdEndRendering"#)]
   vkGetDescriptorSetLayoutHostMappingInfoVALVE <- getDeviceProcAddr' handle (Ptr "vkGetDescriptorSetLayoutHostMappingInfoVALVE"#)
   vkGetDescriptorSetHostMappingVALVE <- getDeviceProcAddr' handle (Ptr "vkGetDescriptorSetHostMappingVALVE"#)
+  vkGetShaderModuleIdentifierEXT <- getDeviceProcAddr' handle (Ptr "vkGetShaderModuleIdentifierEXT"#)
+  vkGetShaderModuleCreateInfoIdentifierEXT <- getDeviceProcAddr' handle (Ptr "vkGetShaderModuleCreateInfoIdentifierEXT"#)
   vkGetImageSubresourceLayout2EXT <- getDeviceProcAddr' handle (Ptr "vkGetImageSubresourceLayout2EXT"#)
   vkGetPipelinePropertiesEXT <- getDeviceProcAddr' handle (Ptr "vkGetPipelinePropertiesEXT"#)
   vkExportMetalObjectsEXT <- getDeviceProcAddr' handle (Ptr "vkExportMetalObjectsEXT"#)
+  vkGetFramebufferTilePropertiesQCOM <- getDeviceProcAddr' handle (Ptr "vkGetFramebufferTilePropertiesQCOM"#)
+  vkGetDynamicRenderingTilePropertiesQCOM <- getDeviceProcAddr' handle (Ptr "vkGetDynamicRenderingTilePropertiesQCOM"#)
   pure $ DeviceCmds handle
     (castFunPtr @_ @(Ptr Device_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction) vkGetDeviceProcAddr)
     (castFunPtr @_ @(Ptr Device_T -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyDevice)
@@ -1730,6 +1747,9 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("taskCount" ::: Word32) -> ("firstTask" ::: Word32) -> IO ()) vkCmdDrawMeshTasksNV)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()) vkCmdDrawMeshTasksIndirectNV)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> Buffer -> ("offset" ::: DeviceSize) -> ("countBuffer" ::: Buffer) -> ("countBufferOffset" ::: DeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()) vkCmdDrawMeshTasksIndirectCountNV)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ()) vkCmdDrawMeshTasksEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()) vkCmdDrawMeshTasksIndirectEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> Buffer -> ("offset" ::: DeviceSize) -> ("countBuffer" ::: Buffer) -> ("countBufferOffset" ::: DeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()) vkCmdDrawMeshTasksIndirectCountEXT)
     (castFunPtr @_ @(Ptr Device_T -> Pipeline -> ("shader" ::: Word32) -> IO Result) vkCompileDeferredNV)
     (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr AccelerationStructureCreateInfoNV) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pAccelerationStructure" ::: Ptr AccelerationStructureNV) -> IO Result) vkCreateAccelerationStructureNV)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ImageView -> ImageLayout -> IO ()) vkCmdBindInvocationMaskHUAWEI)
@@ -1850,7 +1870,11 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr CommandBuffer_T -> IO ()) vkCmdEndRendering)
     (castFunPtr @_ @(Ptr Device_T -> ("pBindingReference" ::: Ptr DescriptorSetBindingReferenceVALVE) -> ("pHostMapping" ::: Ptr DescriptorSetLayoutHostMappingInfoVALVE) -> IO ()) vkGetDescriptorSetLayoutHostMappingInfoVALVE)
     (castFunPtr @_ @(Ptr Device_T -> DescriptorSet -> ("ppData" ::: Ptr (Ptr ())) -> IO ()) vkGetDescriptorSetHostMappingVALVE)
+    (castFunPtr @_ @(Ptr Device_T -> ShaderModule -> ("pIdentifier" ::: Ptr ShaderModuleIdentifierEXT) -> IO ()) vkGetShaderModuleIdentifierEXT)
+    (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr (SomeStruct ShaderModuleCreateInfo)) -> ("pIdentifier" ::: Ptr ShaderModuleIdentifierEXT) -> IO ()) vkGetShaderModuleCreateInfoIdentifierEXT)
     (castFunPtr @_ @(Ptr Device_T -> Image -> ("pSubresource" ::: Ptr ImageSubresource2EXT) -> ("pLayout" ::: Ptr (SomeStruct SubresourceLayout2EXT)) -> IO ()) vkGetImageSubresourceLayout2EXT)
     (castFunPtr @_ @(Ptr Device_T -> ("pPipelineInfo" ::: Ptr PipelineInfoEXT) -> ("pPipelineProperties" ::: Ptr BaseOutStructure) -> IO Result) vkGetPipelinePropertiesEXT)
     (castFunPtr @_ @(Ptr Device_T -> ("pMetalObjectsInfo" ::: Ptr (SomeStruct ExportMetalObjectsInfoEXT)) -> IO ()) vkExportMetalObjectsEXT)
+    (castFunPtr @_ @(Ptr Device_T -> Framebuffer -> ("pPropertiesCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr TilePropertiesQCOM) -> IO Result) vkGetFramebufferTilePropertiesQCOM)
+    (castFunPtr @_ @(Ptr Device_T -> ("pRenderingInfo" ::: Ptr (SomeStruct RenderingInfo)) -> ("pProperties" ::: Ptr TilePropertiesQCOM) -> IO Result) vkGetDynamicRenderingTilePropertiesQCOM)
 

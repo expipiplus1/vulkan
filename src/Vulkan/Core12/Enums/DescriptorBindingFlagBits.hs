@@ -64,7 +64,12 @@ pattern DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT           = DescriptorBindingFl
 -- descriptors in this binding /can/ be updated after a command buffer has
 -- bound this descriptor set, or while a command buffer that uses this
 -- descriptor set is pending execution, as long as the descriptors that are
--- updated are not used by those command buffers. If
+-- updated are not used by those command buffers. Descriptor bindings
+-- created with this flag are also partially exempt from the external
+-- synchronization requirement in
+-- 'Vulkan.Extensions.VK_KHR_descriptor_update_template.updateDescriptorSetWithTemplateKHR'
+-- and 'Vulkan.Core10.DescriptorSet.updateDescriptorSets' in the same way
+-- as for 'DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'. If
 -- 'DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT' is also set, then descriptors
 -- /can/ be updated as long as they are not dynamically used by any shader
 -- invocations. If 'DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT' is not set,
@@ -91,9 +96,9 @@ pattern DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT             = DescriptorBindingFl
 -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'.
 -- In this case, @descriptorCount@ specifies the upper bound on the byte
 -- size of the binding; thus it counts against the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxInlineUniformBlockSize maxInlineUniformBlockSize>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxInlineUniformBlockSize maxInlineUniformBlockSize>
 -- and
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxInlineUniformTotalSize maxInlineUniformTotalSize>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxInlineUniformTotalSize maxInlineUniformTotalSize>
 -- limits instead.
 pattern DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT   = DescriptorBindingFlagBits 0x00000008
 

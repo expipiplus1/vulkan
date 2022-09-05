@@ -19,7 +19,7 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
 -- [__Contact__]
 --
@@ -27,7 +27,7 @@
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_metal_objects] @billhollings%0A<<Here describe the issue or question you have about the VK_EXT_metal_objects extension>> >
 --
 -- [__Extension Proposal__]
---     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_metal_objects.asciidoc VK_EXT_metal_objects>
+--     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_metal_objects.adoc VK_EXT_metal_objects>
 --
 -- == Other Extension Metadata
 --
@@ -51,7 +51,7 @@
 -- objects.
 --
 -- As detailed in the
--- <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_metal_objects.asciidoc extension proposal document>,
+-- <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_metal_objects.adoc extension proposal document>,
 -- this extension adds one new Vulkan command, 'exportMetalObjectsEXT', to
 -- export underlying Metal objects from Vulkan objects, and supports
 -- importing the appropriate existing Metal objects when creating Vulkan
@@ -174,7 +174,7 @@
 --
 --     -   Initial draft.
 --
---     -   Incorported feedback from review by the Vulkan Working Group.
+--     -   Incorporated feedback from review by the Vulkan Working Group.
 --         Renamed many structures, moved import\/export of MTLBuffer to
 --         VkDeviceMemory, added export of MTLSharedEvent, added import of
 --         MTLSharedEvent for VkSemaphore and VkEvent, and changed used bit
@@ -196,7 +196,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_metal_objects Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_metal_objects Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

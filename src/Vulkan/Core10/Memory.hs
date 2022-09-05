@@ -142,7 +142,7 @@ foreign import ccall
 -- The maximum number of valid memory allocations that /can/ exist
 -- simultaneously within a 'Vulkan.Core10.Handles.Device' /may/ be
 -- restricted by implementation- or platform-dependent limits. The
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxMemoryAllocationCount maxMemoryAllocationCount>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxMemoryAllocationCount maxMemoryAllocationCount>
 -- feature describes the number of allocations that /can/ exist
 -- simultaneously before encountering these internal limits.
 --
@@ -230,7 +230,7 @@ foreign import ccall
 --     created from
 --
 -- -   #VUID-vkAllocateMemory-deviceCoherentMemory-02790# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceCoherentMemory deviceCoherentMemory>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceCoherentMemory deviceCoherentMemory>
 --     feature is not enabled, @pAllocateInfo->memoryTypeIndex@ /must/ not
 --     identify a memory type supporting
 --     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD'
@@ -287,7 +287,7 @@ allocateMemory :: forall a io
                   -- permitted by the implementation.
                   (MemoryAllocateInfo a)
                -> -- | @pAllocator@ controls host memory allocation as described in the
-                  -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                  -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                   -- chapter.
                   ("allocator" ::: Maybe AllocationCallbacks)
                -> io (DeviceMemory)
@@ -344,7 +344,7 @@ foreign import ccall
 --
 -- How memory objects are bound to Images and Buffers is described in
 -- detail in the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-association Resource Memory Association>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-association Resource Memory Association>
 -- section.
 --
 -- If a memory object is mapped at the time it is freed, it is implicitly
@@ -353,7 +353,7 @@ foreign import ccall
 -- Note
 --
 -- As described
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-device-unmap-does-not-flush below>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-device-unmap-does-not-flush below>,
 -- host writes are not implicitly flushed when the memory object is
 -- unmapped, but the implementation /must/ guarantee that writes that have
 -- not been flushed do not affect any other memory.
@@ -395,7 +395,7 @@ freeMemory :: forall io
            -> -- | @memory@ is the 'Vulkan.Core10.Handles.DeviceMemory' object to be freed.
               DeviceMemory
            -> -- | @pAllocator@ controls host memory allocation as described in the
-              -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+              -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
               -- chapter.
               ("allocator" ::: Maybe AllocationCallbacks)
            -> io ()
@@ -446,7 +446,7 @@ foreign import ccall
 -- range has completed before the host reads from or writes to that range,
 -- and that any previously submitted command that reads from that range has
 -- completed before the host writes to that region (see
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-submission-host-writes here>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-submission-host-writes here>
 -- for details on fulfilling such a guarantee). If the device memory was
 -- allocated without the
 -- 'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_HOST_COHERENT_BIT'
@@ -465,7 +465,7 @@ foreign import ccall
 --
 -- It is important for the application developer to become meticulously
 -- familiar with all of the mechanisms described in the chapter on
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization Synchronization and Cache Control>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization Synchronization and Cache Control>
 -- as they are crucial to maintaining memory access ordering.
 --
 -- == Valid Usage
@@ -637,9 +637,9 @@ foreign import ccall
 -- ranges described by @pMemoryRanges@ are made available to the host
 -- memory domain, such that they /can/ be made available to the device
 -- memory domain via
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-available-and-visible memory domain operations>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-available-and-visible memory domain operations>
 -- using the 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_HOST_WRITE_BIT'
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>.
 --
 -- Within each range described by @pMemoryRanges@, each set of
 -- @nonCoherentAtomSize@ bytes in that range is flushed if any byte in that
@@ -720,7 +720,7 @@ foreign import ccall
 -- available to the host memory domain using the
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_HOST_WRITE_BIT' and
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_HOST_READ_BIT'
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access types>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access types>,
 -- are made visible to the host. If a range of non-coherent memory is
 -- written by the host and then invalidated without first being flushed,
 -- its contents are undefined.
@@ -923,7 +923,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --
 -- -   #VUID-VkMemoryAllocateInfo-None-06657# The parameters /must/ not
 --     define more than one
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-import-operation import operation>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-import-operation import operation>
 --
 -- -   #VUID-VkMemoryAllocateInfo-buffer-06380# If the parameters define an
 --     import operation from an
@@ -1087,10 +1087,10 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     @memoryTypeIndex@ /must/ be one of those returned by
 --     'Vulkan.Extensions.VK_KHR_external_memory_fd.getMemoryFdPropertiesKHR'
 --
--- -   #VUID-VkMemoryAllocateInfo-memoryTypeIndex-01872# If the protected
---     memory feature is not enabled, the
---     'MemoryAllocateInfo'::@memoryTypeIndex@ /must/ not indicate a memory
---     type that reports
+-- -   #VUID-VkMemoryAllocateInfo-memoryTypeIndex-01872# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-protectedMemory protectedMemory>
+--     feature is not enabled, the 'MemoryAllocateInfo'::@memoryTypeIndex@
+--     /must/ not indicate a memory type that reports
 --     'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
 --
 -- -   #VUID-VkMemoryAllocateInfo-memoryTypeIndex-01744# If the parameters
@@ -1219,7 +1219,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     structure with @image@ that is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', each bit set in the usage
 --     of @image@ /must/ be listed in
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-usage AHardwareBuffer Usage Equivalence>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-usage AHardwareBuffer Usage Equivalence>,
 --     and if there is a corresponding @AHARDWAREBUFFER_USAGE@ bit listed
 --     that bit /must/ be included in the Android hardware buffer’s
 --     @AHardwareBuffer_Desc@::@usage@
@@ -1236,7 +1236,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     includes
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT',
 --     the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressCaptureReplay bufferDeviceAddressCaptureReplay>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressCaptureReplay bufferDeviceAddressCaptureReplay>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkMemoryAllocateInfo-flags-03331# If
@@ -1244,7 +1244,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     includes
 --     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT',
 --     the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddress bufferDeviceAddress>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddress bufferDeviceAddress>
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkMemoryAllocateInfo-pNext-03332# If the @pNext@ chain

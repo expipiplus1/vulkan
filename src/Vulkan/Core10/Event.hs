@@ -100,7 +100,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@events@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then the implementation
 --     does not support
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-events events>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-events events>,
 --     and 'createEvent' /must/ not be used
 --
 -- == Valid Usage (Implicit)
@@ -144,7 +144,7 @@ createEvent :: forall a io
                -- information about how the event is to be created.
                (EventCreateInfo a)
             -> -- | @pAllocator@ controls host memory allocation as described in the
-               -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+               -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                -- chapter.
                ("allocator" ::: Maybe AllocationCallbacks)
             -> io (Event)
@@ -232,7 +232,7 @@ destroyEvent :: forall io
              -> -- | @event@ is the handle of the event to destroy.
                 Event
              -> -- | @pAllocator@ controls host memory allocation as described in the
-                -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                 -- chapter.
                 ("allocator" ::: Maybe AllocationCallbacks)
              -> io ()
@@ -277,7 +277,7 @@ foreign import ccall
 -- If a 'Vulkan.Core10.CommandBufferBuilding.cmdSetEvent' or
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdResetEvent' command is in a
 -- command buffer that is in the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>,
 -- then the value returned by this command /may/ immediately be out of
 -- date.
 --

@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Contact__]
 --
@@ -148,7 +149,7 @@
 --
 -- __RESOLVED__: Unless the tick of each clock corresponding to the set of
 -- time domains coincides and all clocks can literally be sampled
--- simutaneously, there is not really a possibility for the maximum
+-- simultaneously, there is not really a possibility for the maximum
 -- deviation to be zero, so by convention the maximum deviation is always
 -- at least the maximum of the length of the ticks of the set of time
 -- domains calibrated and thus can never be zero.
@@ -172,7 +173,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_calibrated_timestamps Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_calibrated_timestamps Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

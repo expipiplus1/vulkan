@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_external_semaphore@
+--     -   Requires @VK_KHR_external_semaphore@ to be enabled for any
+--         device-level functionality
 --
 -- [__Contact__]
 --
@@ -103,7 +104,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_external_semaphore_fd Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_external_semaphore_fd Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -202,7 +203,7 @@ foreign import ccall
 -- Exporting a file descriptor from a semaphore /may/ have side effects
 -- depending on the transference of the specified handle type, as described
 -- in
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore State>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore State>.
 --
 -- == Return Codes
 --
@@ -331,12 +332,12 @@ importSemaphoreFdKHR device importSemaphoreFdInfo = liftIO . evalContT $ do
 --
 -- -   #VUID-VkImportSemaphoreFdInfoKHR-handleType-01143# @handleType@
 --     /must/ be a value included in the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphore-handletypes-fd Handle Types Supported by >
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphore-handletypes-fd Handle Types Supported by >
 --     table
 --
 -- -   #VUID-VkImportSemaphoreFdInfoKHR-fd-01544# @fd@ /must/ obey any
 --     requirements listed for @handleType@ in
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>
 --
 -- -   #VUID-VkImportSemaphoreFdInfoKHR-handleType-03263# If @handleType@
 --     is
@@ -497,7 +498,7 @@ instance Zero ImportSemaphoreFdInfoKHR where
 -- -   #VUID-VkSemaphoreGetFdInfoKHR-semaphore-01133# @semaphore@ /must/
 --     not currently have its payload replaced by an imported payload as
 --     described below in
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>
 --     unless that imported payload’s handle type was included in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore_capabilities.ExternalSemaphoreProperties'::@exportFromImportedHandleTypes@
 --     for @handleType@
@@ -505,13 +506,13 @@ instance Zero ImportSemaphoreFdInfoKHR where
 -- -   #VUID-VkSemaphoreGetFdInfoKHR-handleType-01134# If @handleType@
 --     refers to a handle type with copy payload transference semantics, as
 --     defined below in
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>,
 --     there /must/ be no queue waiting on @semaphore@
 --
 -- -   #VUID-VkSemaphoreGetFdInfoKHR-handleType-01135# If @handleType@
 --     refers to a handle type with copy payload transference semantics,
 --     @semaphore@ /must/ be signaled, or have an associated
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
 --     pending execution
 --
 -- -   #VUID-VkSemaphoreGetFdInfoKHR-handleType-01136# @handleType@ /must/

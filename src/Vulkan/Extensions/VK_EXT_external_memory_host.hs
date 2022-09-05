@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_external_memory@
+--     -   Requires @VK_KHR_external_memory@ to be enabled for any
+--         device-level functionality
 --
 -- [__Contact__]
 --
@@ -165,7 +166,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_external_memory_host Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_external_memory_host Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -323,7 +324,7 @@ getMemoryHostPointerPropertiesEXT device handleType hostPointer = liftIO . evalC
 -- continue to access the memory through the host pointer but it is the
 -- application’s responsibility to synchronize device and non-device access
 -- to the payload as defined in
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-device-hostaccess Host Access to Device Memory Objects>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-device-hostaccess Host Access to Device Memory Objects>.
 --
 -- Applications /can/ import the same payload into multiple instances of
 -- Vulkan and multiple times into a given Vulkan instance. However,

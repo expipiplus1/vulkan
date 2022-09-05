@@ -35,7 +35,7 @@ newtype SemaphoreImportFlagBits = SemaphoreImportFlagBits Flags
 
 -- | 'SEMAPHORE_IMPORT_TEMPORARY_BIT' specifies that the semaphore payload
 -- will be imported only temporarily, as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>,
 -- regardless of the permanence of @handleType@.
 pattern SEMAPHORE_IMPORT_TEMPORARY_BIT = SemaphoreImportFlagBits 0x00000001
 

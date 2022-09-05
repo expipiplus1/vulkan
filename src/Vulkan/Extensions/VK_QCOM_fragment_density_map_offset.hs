@@ -19,11 +19,13 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
---     -   Requires @VK_EXT_fragment_density_map@
+--     -   Requires @VK_EXT_fragment_density_map@ to be enabled for any
+--         device-level functionality
 --
 -- [__Contact__]
 --
@@ -104,7 +106,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_QCOM_fragment_density_map_offset Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_QCOM_fragment_density_map_offset Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -153,12 +155,12 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_PROPERTIES_QCOM))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SUBPASS_FRAGMENT_DENSITY_MAP_OFFSET_END_INFO_QCOM))
 -- | VkPhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM - Structure
--- describing fragment density map offet features that can be supported by
+-- describing fragment density map offset features that can be supported by
 -- an implementation
 --
 -- = Members
 --
--- This structure describes the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
@@ -245,7 +247,7 @@ instance Zero PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM where
 data PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM = PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM
   { -- | #limits-fragmentdensityoffsetgranularity#
     -- @fragmentDensityOffsetGranularity@ is the granularity for
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-fragmentdensitymapoffsets fragment density offsets>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-fragmentdensitymapoffsets fragment density offsets>.
     fragmentDensityOffsetGranularity :: Extent2D }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
@@ -291,7 +293,7 @@ instance Zero PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM where
 -- = Description
 --
 -- The array elements are given per @layer@ as defined by
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragmentdensitymap-fetch-density-value Fetch Density Value>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragmentdensitymap-fetch-density-value Fetch Density Value>,
 -- where index = layer. Each (x,y) offset is in framebuffer pixels and
 -- shifts the fetch of the fragment density map by that amount. Offsets can
 -- be positive or negative.
@@ -302,13 +304,13 @@ instance Zero PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM where
 -- chain for the last subpass of a renderpass does not include
 -- 'SubpassFragmentDensityMapOffsetEndInfoQCOM', or if
 -- @fragmentDensityOffsetCount@ is zero, then the offset (0,0) is used for
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragmentdensitymap-fetch-density-value Fetch Density Value>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragmentdensitymap-fetch-density-value Fetch Density Value>.
 --
 -- == Valid Usage
 --
 -- -   #VUID-VkSubpassFragmentDensityMapOffsetEndInfoQCOM-fragmentDensityMapOffsets-06503#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-fragmentDensityMapOffsets fragmentDensityMapOffsets>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-fragmentDensityMapOffsets fragmentDensityMapOffsets>
 --     feature is not enabled or fragment density map is not enabled in the
 --     render pass, @fragmentDensityOffsetCount@ /must/ equal @0@.
 --

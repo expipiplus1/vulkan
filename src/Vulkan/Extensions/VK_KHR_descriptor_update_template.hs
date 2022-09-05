@@ -19,7 +19,7 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
 -- [__Deprecation state__]
 --
@@ -54,7 +54,7 @@
 -- == Description
 --
 -- Applications may wish to update a fixed set of descriptors in a large
--- number of descriptor sets very frequently, i.e. during initializaton
+-- number of descriptor sets very frequently, i.e. during initialization
 -- phase or if it is required to rebuild descriptor sets for each frame.
 -- For those cases it is also not unlikely that all information required to
 -- update a single descriptor set is stored in a single struct. This
@@ -160,7 +160,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_descriptor_update_template Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_descriptor_update_template Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

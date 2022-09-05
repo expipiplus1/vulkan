@@ -19,11 +19,13 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_create_renderpass2@
+--     -   Requires @VK_KHR_create_renderpass2@ to be enabled for any
+--         device-level functionality
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Contact__]
 --
@@ -31,7 +33,7 @@
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_fragment_shading_rate] @tobski%0A<<Here describe the issue or question you have about the VK_KHR_fragment_shading_rate extension>> >
 --
 -- [__Extension Proposal__]
---     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_KHR_fragment_shading_rate.asciidoc VK_KHR_fragment_shading_rate>
+--     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_KHR_fragment_shading_rate.adoc VK_KHR_fragment_shading_rate>
 --
 -- == Other Extension Metadata
 --
@@ -80,14 +82,14 @@
 -- Up to three methods are available to the application to change the
 -- fragment shading rate:
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-pipeline>,
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-pipeline>,
 --     which allows the specification of a rate per-draw.
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-primitive>,
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-primitive>,
 --     which allows the specification of a rate per primitive, specified
 --     during shading.
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment>,
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment>,
 --     which allows the specification of a rate per-region of the
 --     framebuffer, specified in a specialized image attachment.
 --
@@ -101,7 +103,7 @@
 --
 -- This extension also adds support for the @SPV_KHR_fragment_shading_rate@
 -- extension which enables setting the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-primitive primitive fragment shading rate>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-primitive primitive fragment shading rate>,
 -- and allows querying the final shading rate from a fragment shader.
 --
 -- == New Commands
@@ -216,7 +218,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_fragment_shading_rate Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_fragment_shading_rate Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -346,37 +348,37 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateKHR-pipelineFragmentShadingRate-04507#
 --     If
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineFragmentShadingRate pipelineFragmentShadingRate>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineFragmentShadingRate pipelineFragmentShadingRate>
 --     is not enabled, @pFragmentSize->width@ /must/ be @1@
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateKHR-pipelineFragmentShadingRate-04508#
 --     If
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineFragmentShadingRate pipelineFragmentShadingRate>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineFragmentShadingRate pipelineFragmentShadingRate>
 --     is not enabled, @pFragmentSize->height@ /must/ be @1@
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateKHR-pipelineFragmentShadingRate-04509#
 --     One of
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineFragmentShadingRate pipelineFragmentShadingRate>,
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-primitiveFragmentShadingRate primitiveFragmentShadingRate>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineFragmentShadingRate pipelineFragmentShadingRate>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-primitiveFragmentShadingRate primitiveFragmentShadingRate>,
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
 --     /must/ be enabled
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateKHR-primitiveFragmentShadingRate-04510#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-primitiveFragmentShadingRate primitiveFragmentShadingRate feature>
---     is not enabled, @combinerOps@[0] /must/ be
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-primitiveFragmentShadingRate primitiveFragmentShadingRate>
+--     feature is not enabled, @combinerOps@[0] /must/ be
 --     'FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR'
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateKHR-attachmentFragmentShadingRate-04511#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate feature>
---     is not enabled, @combinerOps@[1] /must/ be
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
+--     feature is not enabled, @combinerOps@[1] /must/ be
 --     'FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR'
 --
 -- -   #VUID-vkCmdSetFragmentShadingRateKHR-fragmentSizeNonTrivialCombinerOps-04512#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-fragmentShadingRateNonTrivialCombinerOps fragmentSizeNonTrivialCombinerOps>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-fragmentShadingRateNonTrivialCombinerOps fragmentSizeNonTrivialCombinerOps>
 --     limit is not supported, elements of @combinerOps@ /must/ be either
 --     'FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR' or
 --     'FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR'
@@ -421,6 +423,9 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
+-- -   #VUID-vkCmdSetFragmentShadingRateKHR-videocoding# This command
+--     /must/ only be called outside of a video coding scope
+--
 -- == Host Synchronization
 --
 -- -   Host access to @commandBuffer@ /must/ be externally synchronized
@@ -432,12 +437,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -455,12 +460,12 @@ cmdSetFragmentShadingRateKHR :: forall io
                                 ("fragmentSize" ::: Extent2D)
                              -> -- | @combinerOps@ specifies a 'FragmentShadingRateCombinerOpKHR' determining
                                 -- how the
-                                -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-pipeline pipeline>,
-                                -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-primitive primitive>,
+                                -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-pipeline pipeline>,
+                                -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-primitive primitive>,
                                 -- and
-                                -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment attachment shading rates>
+                                -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment attachment shading rates>
                                 -- are
-                                -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-combining combined>
+                                -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-combining combined>
                                 -- for fragments generated by subsequent drawing commands.
                                 ("combinerOps" ::: (FragmentShadingRateCombinerOpKHR, FragmentShadingRateCombinerOpKHR))
                              -> io ()
@@ -513,7 +518,7 @@ foreign import ccall
 -- For any entry in the array, the following rules also apply:
 --
 -- -   The value of @fragmentSize.width@ /must/ be less than or equal to
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentSize maxFragmentSize.width>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentSize maxFragmentSize.width>.
 --
 -- -   The value of @fragmentSize.width@ /must/ be greater than or equal to
 --     @1@.
@@ -521,7 +526,7 @@ foreign import ccall
 -- -   The value of @fragmentSize.width@ /must/ be a power-of-two.
 --
 -- -   The value of @fragmentSize.height@ /must/ be less than or equal to
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentSize maxFragmentSize.height>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentSize maxFragmentSize.height>.
 --
 -- -   The value of @fragmentSize.height@ /must/ be greater than or equal
 --     to @1@.
@@ -530,12 +535,12 @@ foreign import ccall
 --
 -- -   The highest sample count in @sampleCounts@ /must/ be less than or
 --     equal to
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateRasterizationSamples maxFragmentShadingRateRasterizationSamples>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateRasterizationSamples maxFragmentShadingRateRasterizationSamples>.
 --
 -- -   The product of @fragmentSize.width@, @fragmentSize.height@, and the
 --     highest sample count in @sampleCounts@ /must/ be less than or equal
 --     to
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateCoverageSamples maxFragmentShadingRateCoverageSamples>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateCoverageSamples maxFragmentShadingRateCoverageSamples>.
 --
 -- Implementations /must/ support at least the following shading rates:
 --
@@ -554,7 +559,7 @@ foreign import ccall
 -- +--------------------------------------------------------------+-----------------------------------+
 --
 -- If
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-framebufferColorSampleCounts framebufferColorSampleCounts>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-framebufferColorSampleCounts framebufferColorSampleCounts>,
 -- includes 'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_2_BIT',
 -- the required rates /must/ also include
 -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_2_BIT'.
@@ -675,7 +680,7 @@ getPhysicalDeviceFragmentShadingRatesKHR physicalDevice = liftIO . evalContT $ d
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED',
 --     @shadingRateAttachmentTexelSize.width@ /must/ be less than or equal
 --     to
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateAttachmentTexelSize maxFragmentShadingRateAttachmentTexelSize.width>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateAttachmentTexelSize maxFragmentShadingRateAttachmentTexelSize.width>
 --
 -- -   #VUID-VkFragmentShadingRateAttachmentInfoKHR-pFragmentShadingRateAttachment-04527#
 --     If @pFragmentShadingRateAttachment@ is not @NULL@ and its
@@ -683,7 +688,7 @@ getPhysicalDeviceFragmentShadingRatesKHR physicalDevice = liftIO . evalContT $ d
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED',
 --     @shadingRateAttachmentTexelSize.width@ /must/ be greater than or
 --     equal to
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-minFragmentShadingRateAttachmentTexelSize minFragmentShadingRateAttachmentTexelSize.width>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-minFragmentShadingRateAttachmentTexelSize minFragmentShadingRateAttachmentTexelSize.width>
 --
 -- -   #VUID-VkFragmentShadingRateAttachmentInfoKHR-pFragmentShadingRateAttachment-04528#
 --     If @pFragmentShadingRateAttachment@ is not @NULL@ and its
@@ -698,7 +703,7 @@ getPhysicalDeviceFragmentShadingRatesKHR physicalDevice = liftIO . evalContT $ d
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED',
 --     @shadingRateAttachmentTexelSize.height@ /must/ be less than or equal
 --     to
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateAttachmentTexelSize maxFragmentShadingRateAttachmentTexelSize.height>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateAttachmentTexelSize maxFragmentShadingRateAttachmentTexelSize.height>
 --
 -- -   #VUID-VkFragmentShadingRateAttachmentInfoKHR-pFragmentShadingRateAttachment-04530#
 --     If @pFragmentShadingRateAttachment@ is not @NULL@ and its
@@ -706,7 +711,7 @@ getPhysicalDeviceFragmentShadingRatesKHR physicalDevice = liftIO . evalContT $ d
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED',
 --     @shadingRateAttachmentTexelSize.height@ /must/ be greater than or
 --     equal to
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-minFragmentShadingRateAttachmentTexelSize minFragmentShadingRateAttachmentTexelSize.height>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-minFragmentShadingRateAttachmentTexelSize minFragmentShadingRateAttachmentTexelSize.height>
 --
 -- -   #VUID-VkFragmentShadingRateAttachmentInfoKHR-pFragmentShadingRateAttachment-04531#
 --     If @pFragmentShadingRateAttachment@ is not @NULL@ and its
@@ -715,7 +720,7 @@ getPhysicalDeviceFragmentShadingRatesKHR physicalDevice = liftIO . evalContT $ d
 --     @shadingRateAttachmentTexelSize.width@ and
 --     @shadingRateAttachmentTexelSize.height@ /must/ be less than or equal
 --     to
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateAttachmentTexelSizeAspectRatio maxFragmentShadingRateAttachmentTexelSizeAspectRatio>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateAttachmentTexelSizeAspectRatio maxFragmentShadingRateAttachmentTexelSizeAspectRatio>
 --
 -- -   #VUID-VkFragmentShadingRateAttachmentInfoKHR-pFragmentShadingRateAttachment-04532#
 --     If @pFragmentShadingRateAttachment@ is not @NULL@ and its
@@ -724,7 +729,7 @@ getPhysicalDeviceFragmentShadingRatesKHR physicalDevice = liftIO . evalContT $ d
 --     @shadingRateAttachmentTexelSize.height@ and
 --     @shadingRateAttachmentTexelSize.width@ /must/ be less than or equal
 --     to
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateAttachmentTexelSizeAspectRatio maxFragmentShadingRateAttachmentTexelSizeAspectRatio>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateAttachmentTexelSizeAspectRatio maxFragmentShadingRateAttachmentTexelSizeAspectRatio>
 --
 -- == Valid Usage (Implicit)
 --
@@ -825,12 +830,12 @@ data PipelineFragmentShadingRateStateCreateInfoKHR = PipelineFragmentShadingRate
     fragmentSize :: Extent2D
   , -- | @combinerOps@ specifies a 'FragmentShadingRateCombinerOpKHR' value
     -- determining how the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-pipeline pipeline>,
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-primitive primitive>,
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-pipeline pipeline>,
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-primitive primitive>,
     -- and
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment attachment shading rates>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment attachment shading rates>
     -- are
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-combining combined>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-combining combined>
     -- for fragments generated by drawing commands using the created pipeline.
     combinerOps :: (FragmentShadingRateCombinerOpKHR, FragmentShadingRateCombinerOpKHR)
   }
@@ -915,15 +920,15 @@ instance Zero PipelineFragmentShadingRateStateCreateInfoKHR where
 data PhysicalDeviceFragmentShadingRateFeaturesKHR = PhysicalDeviceFragmentShadingRateFeaturesKHR
   { -- | #features-pipelineFragmentShadingRate# @pipelineFragmentShadingRate@
     -- indicates that the implementation supports the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-pipeline pipeline fragment shading rate>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-pipeline pipeline fragment shading rate>.
     pipelineFragmentShadingRate :: Bool
   , -- | #features-primitiveFragmentShadingRate# @primitiveFragmentShadingRate@
     -- indicates that the implementation supports the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-primitive primitive fragment shading rate>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-primitive primitive fragment shading rate>.
     primitiveFragmentShadingRate :: Bool
   , -- | #features-attachmentFragmentShadingRate# @attachmentFragmentShadingRate@
     -- indicates that the implementation supports the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment attachment fragment shading rate>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment attachment fragment shading rate>.
     attachmentFragmentShadingRate :: Bool
   }
   deriving (Typeable, Eq)
@@ -985,7 +990,7 @@ instance Zero PhysicalDeviceFragmentShadingRateFeaturesKHR where
 -- Some implementations inadvertently implemented an addition in linear
 -- space due to unclear requirements originating outside of this
 -- specification. This resulted in
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-fragmentShadingRateStrictMultiplyCombiner fragmentShadingRateStrictMultiplyCombiner>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-fragmentShadingRateStrictMultiplyCombiner fragmentShadingRateStrictMultiplyCombiner>
 -- being added. Fortunately, this only affects situations where a rate of 1
 -- in either dimension is combined with another rate of 1. All other
 -- combinations result in the exact same result as if multiplication was
@@ -1002,7 +1007,7 @@ instance Zero PhysicalDeviceFragmentShadingRateFeaturesKHR where
 -- property.
 --
 -- These properties are related to
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate fragment shading rates>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate fragment shading rates>.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1021,7 +1026,7 @@ data PhysicalDeviceFragmentShadingRatePropertiesKHR = PhysicalDeviceFragmentShad
     -- than or equal to the values in
     -- @maxFragmentShadingRateAttachmentTexelSize@. Each value /must/ be a
     -- power-of-two. It /must/ be (0,0) if the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
     -- feature is not supported.
     minFragmentShadingRateAttachmentTexelSize :: Extent2D
   , -- | #limits-maxFragmentShadingRateAttachmentTexelSize#
@@ -1031,7 +1036,7 @@ data PhysicalDeviceFragmentShadingRatePropertiesKHR = PhysicalDeviceFragmentShad
     -- greater than or equal to the values in
     -- @minFragmentShadingRateAttachmentTexelSize@. Each value /must/ be a
     -- power-of-two. It /must/ be (0,0) if the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
     -- feature is not supported.
     maxFragmentShadingRateAttachmentTexelSize :: Extent2D
   , -- | #limits-maxFragmentShadingRateAttachmentTexelSizeAspectRatio#
@@ -1045,23 +1050,23 @@ data PhysicalDeviceFragmentShadingRatePropertiesKHR = PhysicalDeviceFragmentShad
     -- @maxFragmentShadingRateAttachmentTexelSize.height@ \/
     -- @minFragmentShadingRateAttachmentTexelSize.width@). It /must/ be 0 if
     -- the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
     -- feature is not supported.
     maxFragmentShadingRateAttachmentTexelSizeAspectRatio :: Word32
   , -- | #limits-primitiveFragmentShadingRateWithMultipleViewports#
     -- @primitiveFragmentShadingRateWithMultipleViewports@ specifies whether
     -- the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-primitive primitive fragment shading rate>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-primitive primitive fragment shading rate>
     -- /can/ be used when multiple viewports are used. If this value is
     -- 'Vulkan.Core10.FundamentalTypes.FALSE', only a single viewport /must/ be
     -- used, and applications /must/ not write to the @ViewportMaskNV@ or
     -- @ViewportIndex@ built-in when setting @PrimitiveShadingRateKHR@. It
     -- /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE' if the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderOutputViewportIndex shaderOutputViewportIndex>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderOutputViewportIndex shaderOutputViewportIndex>
     -- feature, the @VK_EXT_shader_viewport_index_layer@ extension, or the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-geometryShader geometryShader>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-geometryShader geometryShader>
     -- feature is not supported, or if the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-primitiveFragmentShadingRate primitiveFragmentShadingRate>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-primitiveFragmentShadingRate primitiveFragmentShadingRate>
     -- feature is not supported.
     primitiveFragmentShadingRateWithMultipleViewports :: Bool
   , -- | #limits-layeredShadingRateAttachments# @layeredShadingRateAttachments@
@@ -1072,13 +1077,13 @@ data PhysicalDeviceFragmentShadingRatePropertiesKHR = PhysicalDeviceFragmentShad
     -- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR',
     -- @layerCount@ /must/ be @1@. It /must/ be
     -- 'Vulkan.Core10.FundamentalTypes.FALSE' if the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview multiview>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview multiview>
     -- feature, the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderOutputViewportIndex shaderOutputViewportIndex>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderOutputViewportIndex shaderOutputViewportIndex>
     -- feature, the @VK_EXT_shader_viewport_index_layer@ extension, or the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-geometryShader geometryShader>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-geometryShader geometryShader>
     -- feature is not supported, or if the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
     -- feature is not supported.
     layeredShadingRateAttachments :: Bool
   , -- | #limits-fragmentShadingRateNonTrivialCombinerOps#
@@ -1087,9 +1092,9 @@ data PhysicalDeviceFragmentShadingRatePropertiesKHR = PhysicalDeviceFragmentShad
     -- 'FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR' or
     -- 'FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR' /can/ be used. It /must/
     -- be 'Vulkan.Core10.FundamentalTypes.FALSE' unless either the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-primitiveFragmentShadingRate primitiveFragmentShadingRate>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-primitiveFragmentShadingRate primitiveFragmentShadingRate>
     -- or
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
     -- feature is supported.
     fragmentShadingRateNonTrivialCombinerOps :: Bool
   , -- | #limits-maxFragmentSize# @maxFragmentSize@ indicates the maximum
@@ -1146,32 +1151,32 @@ data PhysicalDeviceFragmentShadingRatePropertiesKHR = PhysicalDeviceFragmentShad
     fragmentShadingRateWithShaderSampleMask :: Bool
   , -- | #limits-fragmentShadingRateWithConservativeRasterization#
     -- @fragmentShadingRateWithConservativeRasterization@ specifies whether
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-conservativeraster conservative rasterization>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-conservativeraster conservative rasterization>
     -- is supported for multi-pixel fragments. It /must/ be
     -- 'Vulkan.Core10.FundamentalTypes.FALSE' if
     -- @VK_EXT_conservative_rasterization@ is not supported. If this value is
     -- 'Vulkan.Core10.FundamentalTypes.FALSE', using
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-conservativeraster conservative rasterization>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-conservativeraster conservative rasterization>
     -- will clamp the fragment shading rate to (1,1).
     fragmentShadingRateWithConservativeRasterization :: Bool
   , -- | #limits-fragmentShadingRateWithFragmentShaderInterlock#
     -- @fragmentShadingRateWithFragmentShaderInterlock@ specifies whether
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-shader-interlock fragment shader interlock>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-shader-interlock fragment shader interlock>
     -- is supported for multi-pixel fragments. It /must/ be
     -- 'Vulkan.Core10.FundamentalTypes.FALSE' if
     -- @VK_EXT_fragment_shader_interlock@ is not supported. If this value is
     -- 'Vulkan.Core10.FundamentalTypes.FALSE', using
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-shader-interlock fragment shader interlock>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-shader-interlock fragment shader interlock>
     -- will clamp the fragment shading rate to (1,1).
     fragmentShadingRateWithFragmentShaderInterlock :: Bool
   , -- | #limits-fragmentShadingRateWithCustomSampleLocations#
     -- @fragmentShadingRateWithCustomSampleLocations@ specifies whether
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-samplelocations custom sample locations>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-samplelocations custom sample locations>
     -- are supported for multi-pixel fragments. It /must/ be
     -- 'Vulkan.Core10.FundamentalTypes.FALSE' if @VK_EXT_sample_locations@ is
     -- not supported. If this value is 'Vulkan.Core10.FundamentalTypes.FALSE',
     -- using
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-samplelocations custom sample locations>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-samplelocations custom sample locations>
     -- will clamp the fragment shading rate to (1,1).
     fragmentShadingRateWithCustomSampleLocations :: Bool
   , -- | #limits-fragmentShadingRateStrictMultiplyCombiner#
@@ -1360,12 +1365,12 @@ instance Zero PhysicalDeviceFragmentShadingRateKHR where
 -- inputs to the operation.
 --
 -- If
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-fragmentShadingRateStrictMultiplyCombiner fragmentShadingRateStrictMultiplyCombiner>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-fragmentShadingRateStrictMultiplyCombiner fragmentShadingRateStrictMultiplyCombiner>
 -- is 'Vulkan.Core10.FundamentalTypes.FALSE', using
 -- 'FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR' with values of 1 for both A
 -- and B in the same dimension results in the value 2 being produced for
 -- that dimension. See the definition of
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-fragmentShadingRateStrictMultiplyCombiner fragmentShadingRateStrictMultiplyCombiner>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-fragmentShadingRateStrictMultiplyCombiner fragmentShadingRateStrictMultiplyCombiner>
 -- for more information.
 --
 -- These operations are performed in a component-wise fashion.

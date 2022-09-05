@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Contact__]
 --
@@ -101,7 +102,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_device_diagnostics_config Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_device_diagnostics_config Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -234,7 +235,7 @@ instance Zero PhysicalDeviceDiagnosticsConfigFeaturesNV where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceDiagnosticsConfigCreateInfoNV = DeviceDiagnosticsConfigCreateInfoNV
   { -- | @flags@ is a bitmask of 'DeviceDiagnosticsConfigFlagBitsNV' specifying
-    -- addtional parameters for configuring diagnostic tools.
+    -- additional parameters for configuring diagnostic tools.
     --
     -- #VUID-VkDeviceDiagnosticsConfigCreateInfoNV-flags-parameter# @flags@
     -- /must/ be a valid combination of 'DeviceDiagnosticsConfigFlagBitsNV'
@@ -298,7 +299,7 @@ pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV      = DeviceD
 pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV      = DeviceDiagnosticsConfigFlagBitsNV 0x00000002
 -- | 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV' enables
 -- automatic insertion of
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#device-diagnostic-checkpoints diagnostic checkpoints>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#device-diagnostic-checkpoints diagnostic checkpoints>
 -- for draw calls, dispatches, trace rays, and copies. The CPU call stack
 -- at the time of the command will be associated as the marker data for the
 -- automatically inserted checkpoints.

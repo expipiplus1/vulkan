@@ -32,7 +32,7 @@ newtype PipelineCacheCreateFlagBits = PipelineCacheCreateFlagBits Flags
 -- | 'PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT' specifies that all
 -- commands that modify the created 'Vulkan.Core10.Handles.PipelineCache'
 -- will be
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-threadingbehavior externally synchronized>.
 -- When set, the implementation /may/ skip any unnecessary processing
 -- needed to support simultaneous modification from multiple threads where
 -- allowed.

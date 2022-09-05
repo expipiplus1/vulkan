@@ -72,15 +72,15 @@ import Vulkan.Core10.Enums.VendorId (VendorId(..))
 -- = Description
 --
 -- The first
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- is limited to access types in the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks source access mask>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks source access mask>
 -- specified by @srcAccessMask@.
 --
 -- The second
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- is limited to access types in the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks destination access mask>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks destination access mask>
 -- specified by @dstAccessMask@.
 --
 -- == Valid Usage (Implicit)
@@ -95,7 +95,7 @@ import Vulkan.Core10.Enums.VendorId (VendorId(..))
 data MemoryBarrier = MemoryBarrier
   { -- | @srcAccessMask@ is a bitmask of
     -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits' specifying a
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks source access mask>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks source access mask>.
     --
     -- #VUID-VkMemoryBarrier-srcAccessMask-parameter# @srcAccessMask@ /must/ be
     -- a valid combination of
@@ -103,7 +103,7 @@ data MemoryBarrier = MemoryBarrier
     srcAccessMask :: AccessFlags
   , -- | @dstAccessMask@ is a bitmask of
     -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits' specifying a
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks destination access mask>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks destination access mask>.
     --
     -- #VUID-VkMemoryBarrier-dstAccessMask-parameter# @dstAccessMask@ /must/ be
     -- a valid combination of
@@ -155,20 +155,20 @@ instance Zero MemoryBarrier where
 -- = Description
 --
 -- The first
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- is limited to access to memory through the specified buffer range, via
 -- access types in the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks source access mask>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks source access mask>
 -- specified by @srcAccessMask@. If @srcAccessMask@ includes
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_HOST_WRITE_BIT', memory
 -- writes performed by that access type are also made visible, as that
 -- access type is not performed through a resource.
 --
 -- The second
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- is limited to access to memory through the specified buffer range, via
 -- access types in the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks destination access mask>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks destination access mask>
 -- specified by @dstAccessMask@. If @dstAccessMask@ includes
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_HOST_WRITE_BIT' or
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_HOST_READ_BIT', available
@@ -178,14 +178,14 @@ instance Zero MemoryBarrier where
 -- If @srcQueueFamilyIndex@ is not equal to @dstQueueFamilyIndex@, and
 -- @srcQueueFamilyIndex@ is equal to the current queue family, then the
 -- memory barrier defines a
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers-release queue family release operation>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers-release queue family release operation>
 -- for the specified buffer range, and the second access scope includes no
 -- access, as if @dstAccessMask@ was @0@.
 --
 -- If @dstQueueFamilyIndex@ is not equal to @srcQueueFamilyIndex@, and
 -- @dstQueueFamilyIndex@ is equal to the current queue family, then the
 -- memory barrier defines a
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers-acquire queue family acquire operation>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers-acquire queue family acquire operation>
 -- for the specified buffer range, and the first access scope includes no
 -- access, as if @srcAccessMask@ was @0@.
 --
@@ -231,11 +231,11 @@ instance Zero MemoryBarrier where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers ???>
 --
 -- -   #VUID-VkBufferMemoryBarrier-synchronization2-03853# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2 feature>
---     is not enabled, and @buffer@ was created with a sharing mode of
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', at least
---     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ /must/ be
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, and @buffer@ was created with a sharing mode
+--     of 'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', at
+--     least one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ /must/
+--     be 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
 --
 -- == Valid Usage (Implicit)
 --
@@ -259,17 +259,17 @@ instance Zero MemoryBarrier where
 data BufferMemoryBarrier = BufferMemoryBarrier
   { -- | @srcAccessMask@ is a bitmask of
     -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits' specifying a
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks source access mask>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks source access mask>.
     srcAccessMask :: AccessFlags
   , -- | @dstAccessMask@ is a bitmask of
     -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits' specifying a
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks destination access mask>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks destination access mask>.
     dstAccessMask :: AccessFlags
   , -- | @srcQueueFamilyIndex@ is the source queue family for a
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>.
     srcQueueFamilyIndex :: Word32
   , -- | @dstQueueFamilyIndex@ is the destination queue family for a
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>.
     dstQueueFamilyIndex :: Word32
   , -- | @buffer@ is a handle to the buffer whose backing memory is affected by
     -- the barrier.
@@ -351,20 +351,20 @@ instance Zero BufferMemoryBarrier where
 -- = Description
 --
 -- The first
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- is limited to access to memory through the specified image subresource
 -- range, via access types in the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks source access mask>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks source access mask>
 -- specified by @srcAccessMask@. If @srcAccessMask@ includes
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_HOST_WRITE_BIT', memory
 -- writes performed by that access type are also made visible, as that
 -- access type is not performed through a resource.
 --
 -- The second
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- is limited to access to memory through the specified image subresource
 -- range, via access types in the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks destination access mask>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks destination access mask>
 -- specified by @dstAccessMask@. If @dstAccessMask@ includes
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_HOST_WRITE_BIT' or
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_HOST_READ_BIT', available
@@ -374,31 +374,31 @@ instance Zero BufferMemoryBarrier where
 -- If @srcQueueFamilyIndex@ is not equal to @dstQueueFamilyIndex@, and
 -- @srcQueueFamilyIndex@ is equal to the current queue family, then the
 -- memory barrier defines a
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers-release queue family release operation>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers-release queue family release operation>
 -- for the specified image subresource range, and the second access scope
 -- includes no access, as if @dstAccessMask@ was @0@.
 --
 -- If @dstQueueFamilyIndex@ is not equal to @srcQueueFamilyIndex@, and
 -- @dstQueueFamilyIndex@ is equal to the current queue family, then the
 -- memory barrier defines a
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers-acquire queue family acquire operation>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers-acquire queue family acquire operation>
 -- for the specified image subresource range, and the first access scope
 -- includes no access, as if @srcAccessMask@ was @0@.
 --
 -- If the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2 feature>
--- is not enabled or @oldLayout@ is not equal to @newLayout@, @oldLayout@
--- and @newLayout@ define an
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+-- feature is not enabled or @oldLayout@ is not equal to @newLayout@,
+-- @oldLayout@ and @newLayout@ define an
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>
 -- for the specified image subresource range.
 --
 -- Note
 --
 -- If the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2 feature>
--- is enabled, when the old and new layout are equal, the layout values are
--- ignored - data is preserved no matter what values are specified, or what
--- layout the image is currently in.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+-- feature is enabled, when the old and new layout are equal, the layout
+-- values are ignored - data is preserved no matter what values are
+-- specified, or what layout the image is currently in.
 --
 -- If @image@ has a multi-planar format and the image is /disjoint/, then
 -- including
@@ -584,6 +584,13 @@ instance Zero BufferMemoryBarrier where
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --     set
 --
+-- -   #VUID-VkImageMemoryBarrier-synchronization2-06911# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @layout@ /must/ not be
+--     'Vulkan.Extensions.VK_KHR_synchronization2.IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR'
+--     or
+--     'Vulkan.Extensions.VK_KHR_synchronization2.IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR'
+--
 -- -   #VUID-VkImageMemoryBarrier-srcQueueFamilyIndex-03938# If
 --     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
@@ -680,12 +687,30 @@ instance Zero BufferMemoryBarrier where
 --     for external memory transfers, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers ???>
 --
+-- -   #VUID-VkImageMemoryBarrier-srcQueueFamilyIndex-07006# If
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define an
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     and @oldLayout@ or @newLayout@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT'
+--     then @image@ /must/ have been created with either the
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
+--     or
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--     usage bits, and the
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
+--     or 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT'
+--     usage bits, and the
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT'
+--     usage bit.
+--
 -- -   #VUID-VkImageMemoryBarrier-synchronization2-03857# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2 feature>
---     is not enabled, and @image@ was created with a sharing mode of
---     'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', at least
---     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ /must/ be
---     'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, and @image@ was created with a sharing mode
+--     of 'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT', at
+--     least one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ /must/
+--     be 'Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
 --
 -- == Valid Usage (Implicit)
 --
@@ -727,28 +752,28 @@ data ImageMemoryBarrier (es :: [Type]) = ImageMemoryBarrier
     next :: Chain es
   , -- | @srcAccessMask@ is a bitmask of
     -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits' specifying a
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks source access mask>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks source access mask>.
     srcAccessMask :: AccessFlags
   , -- | @dstAccessMask@ is a bitmask of
     -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits' specifying a
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks destination access mask>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks destination access mask>.
     dstAccessMask :: AccessFlags
   , -- | @oldLayout@ is the old layout in an
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>.
     oldLayout :: ImageLayout
   , -- | @newLayout@ is the new layout in an
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>.
     newLayout :: ImageLayout
   , -- | @srcQueueFamilyIndex@ is the source queue family for a
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>.
     srcQueueFamilyIndex :: Word32
   , -- | @dstQueueFamilyIndex@ is the destination queue family for a
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>.
     dstQueueFamilyIndex :: Word32
   , -- | @image@ is a handle to the image affected by this barrier.
     image :: Image
   , -- | @subresourceRange@ describes the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views image subresource range>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views image subresource range>
     -- within @image@ that is affected by this barrier.
     subresourceRange :: ImageSubresourceRange
   }
@@ -945,10 +970,10 @@ instance Zero PipelineCacheHeaderVersionOne where
 -- -   #VUID-VkDrawIndirectCommand-None-00500# For a given vertex buffer
 --     binding, any attribute data fetched /must/ be entirely contained
 --     within the corresponding vertex buffer binding, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex-input>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex-input>
 --
 -- -   #VUID-VkDrawIndirectCommand-firstInstance-00501# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-drawIndirectFirstInstance drawIndirectFirstInstance>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-drawIndirectFirstInstance drawIndirectFirstInstance>
 --     feature is not enabled, @firstInstance@ /must/ be @0@
 --
 -- = See Also
@@ -1026,7 +1051,7 @@ instance Zero DrawIndirectCommand where
 --     buffer binding, any attribute data fetched /must/ be entirely
 --     contained within the corresponding vertex buffer binding, as
 --     described in
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex-input>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex-input>
 --
 -- -   #VUID-VkDrawIndexedIndirectCommand-indexSize-00553# (@indexSize@ ×
 --     (@firstIndex@ + @indexCount@) + @offset@) /must/ be less than or
@@ -1036,7 +1061,7 @@ instance Zero DrawIndirectCommand where
 --     'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'
 --
 -- -   #VUID-VkDrawIndexedIndirectCommand-firstInstance-00554# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-drawIndirectFirstInstance drawIndirectFirstInstance>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-drawIndirectFirstInstance drawIndirectFirstInstance>
 --     feature is not enabled, @firstInstance@ /must/ be @0@
 --
 -- = See Also

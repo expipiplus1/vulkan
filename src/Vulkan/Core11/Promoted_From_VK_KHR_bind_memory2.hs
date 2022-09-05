@@ -456,7 +456,7 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     equal to @image@
 --
 -- -   #VUID-VkBindImageMemoryInfo-memory-02628# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicated allocation image aliasing>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicatedAllocationImageAliasing>
 --     feature is not enabled, and the
 --     'Vulkan.Core10.Memory.MemoryAllocateInfo' provided when @memory@ was
 --     allocated included a
@@ -469,7 +469,7 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     and @memoryOffset@ /must/ be zero
 --
 -- -   #VUID-VkBindImageMemoryInfo-memory-02629# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicated allocation image aliasing>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicatedAllocationImageAliasing>
 --     feature is enabled, and the
 --     'Vulkan.Core10.Memory.MemoryAllocateInfo' provided when @memory@ was
 --     allocated included a

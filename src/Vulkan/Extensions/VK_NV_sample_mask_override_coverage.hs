@@ -19,7 +19,7 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
 -- [__Contact__]
 --
@@ -40,7 +40,7 @@
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/NV/SPV_NV_sample_mask_override_coverage.html SPV_NV_sample_mask_override_coverage>
 --
 --     -   This extension provides API support for
---         <https://www.khronos.org/registry/OpenGL/extensions/NV/NV_sample_mask_override_coverage.txt GL_NV_sample_mask_override_coverage>
+--         <https://registry.khronos.org/OpenGL/extensions/NV/NV_sample_mask_override_coverage.txt GL_NV_sample_mask_override_coverage>
 --
 -- [__Contributors__]
 --
@@ -77,11 +77,11 @@
 --
 -- == New Variable Decoration
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-samplemask OverrideCoverageNV in SampleMask>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-samplemask OverrideCoverageNV in SampleMask>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-SampleMaskOverrideCoverageNV SampleMaskOverrideCoverageNV>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-SampleMaskOverrideCoverageNV SampleMaskOverrideCoverageNV>
 --
 -- == Version History
 --
@@ -96,7 +96,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_sample_mask_override_coverage Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_sample_mask_override_coverage Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

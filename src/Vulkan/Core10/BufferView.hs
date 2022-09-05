@@ -124,7 +124,7 @@ createBufferView :: forall a io
                     -- containing parameters to be used to create the buffer view.
                     (BufferViewCreateInfo a)
                  -> -- | @pAllocator@ controls host memory allocation as described in the
-                    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                     -- chapter.
                     ("allocator" ::: Maybe AllocationCallbacks)
                  -> io (BufferView)
@@ -214,7 +214,7 @@ destroyBufferView :: forall io
                   -> -- | @bufferView@ is the buffer view to destroy.
                      BufferView
                   -> -- | @pAllocator@ controls host memory allocation as described in the
-                     -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                      -- chapter.
                      ("allocator" ::: Maybe AllocationCallbacks)
                   -> io ()
@@ -251,7 +251,7 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 --     elements given by (⌊@range@ \/ (texel block size)⌋ × (texels per
 --     block)) where texel block size and texels per block are as defined
 --     in the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility Compatible Formats>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility Compatible Formats>
 --     table for @format@, /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxTexelBufferElements@
 --
@@ -264,7 +264,7 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 --     elements given by (⌊(size - @offset@) \/ (texel block size)⌋ ×
 --     (texels per block)) where size is the size of @buffer@, and texel
 --     block size and texels per block are as defined in the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility Compatible Formats>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility Compatible Formats>
 --     table for @format@, /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxTexelBufferElements@
 --
@@ -301,12 +301,12 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- -   #VUID-VkBufferViewCreateInfo-offset-02749# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-texelBufferAlignment texelBufferAlignment>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-texelBufferAlignment texelBufferAlignment>
 --     feature is not enabled, @offset@ /must/ be a multiple of
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@minTexelBufferOffsetAlignment@
 --
 -- -   #VUID-VkBufferViewCreateInfo-buffer-02750# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-texelBufferAlignment texelBufferAlignment>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-texelBufferAlignment texelBufferAlignment>
 --     feature is enabled and if @buffer@ was created with @usage@
 --     containing
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT',
@@ -320,7 +320,7 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 --     instead
 --
 -- -   #VUID-VkBufferViewCreateInfo-buffer-02751# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-texelBufferAlignment texelBufferAlignment>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-texelBufferAlignment texelBufferAlignment>
 --     feature is enabled and if @buffer@ was created with @usage@
 --     containing
 --     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT',
@@ -389,7 +389,7 @@ data BufferViewCreateInfo (es :: [Type]) = BufferViewCreateInfo
     -- 'Vulkan.Core10.APIConstants.WHOLE_SIZE', the range from @offset@ to the
     -- end of the buffer is used. If 'Vulkan.Core10.APIConstants.WHOLE_SIZE' is
     -- used and the remaining size of the buffer is not a multiple of the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#texel-block-size texel block size>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#texel-block-size texel block size>
     -- of @format@, the nearest smaller multiple is used.
     range :: DeviceSize
   }

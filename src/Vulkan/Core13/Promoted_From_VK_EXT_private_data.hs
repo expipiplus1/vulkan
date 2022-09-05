@@ -90,7 +90,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCreatePrivateDataSlot-privateData-04564# The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-privateData privateData>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-privateData privateData>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -135,7 +135,7 @@ createPrivateDataSlot :: forall io
                       -> -- | @pCreateInfo@ is a pointer to a 'PrivateDataSlotCreateInfo'
                          PrivateDataSlotCreateInfo
                       -> -- | @pAllocator@ controls host memory allocation as described in the
-                         -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                         -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                          -- chapter.
                          ("allocator" ::: Maybe AllocationCallbacks)
                       -> io (PrivateDataSlot)
@@ -225,7 +225,7 @@ destroyPrivateDataSlot :: forall io
                        -> -- | @privateDataSlot@ is the private data slot to destroy.
                           PrivateDataSlot
                        -> -- | @pAllocator@ controls host memory allocation as described in the
-                          -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                          -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                           -- chapter.
                           ("allocator" ::: Maybe AllocationCallbacks)
                        -> io ()
@@ -518,7 +518,7 @@ instance Zero PrivateDataSlotCreateInfo where
 data PhysicalDevicePrivateDataFeatures = PhysicalDevicePrivateDataFeatures
   { -- | #extension-features-privateData# @privateData@ indicates whether the
     -- implementation supports private data. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#private-data Private Data>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#private-data Private Data>.
     privateData :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

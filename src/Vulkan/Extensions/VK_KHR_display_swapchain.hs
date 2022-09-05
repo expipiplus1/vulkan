@@ -19,11 +19,13 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_swapchain@
+--     -   Requires @VK_KHR_swapchain@ to be enabled for any device-level
+--         functionality
 --
---     -   Requires @VK_KHR_display@
+--     -   Requires @VK_KHR_display@ to be enabled for any device-level
+--         functionality
 --
 -- [__Contact__]
 --
@@ -199,7 +201,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_display_swapchain Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_display_swapchain Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -393,7 +395,7 @@ createSharedSwapchainsKHR :: forall io
                           -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                              -- swapchain objects when there is no more specific allocator available
                              -- (see
-                             -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                             -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
                              ("allocator" ::: Maybe AllocationCallbacks)
                           -> io (("swapchains" ::: Vector SwapchainKHR))
 createSharedSwapchainsKHR device createInfos allocator = liftIO . evalContT $ do

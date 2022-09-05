@@ -385,7 +385,7 @@ foreign import ccall
 --     equal to @image@
 --
 -- -   #VUID-vkBindImageMemory-memory-02628# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicated allocation image aliasing>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicatedAllocationImageAliasing>
 --     feature is not enabled, and the
 --     'Vulkan.Core10.Memory.MemoryAllocateInfo' provided when @memory@ was
 --     allocated included a
@@ -398,7 +398,7 @@ foreign import ccall
 --     and @memoryOffset@ /must/ be zero
 --
 -- -   #VUID-vkBindImageMemory-memory-02629# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicated allocation image aliasing>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicatedAllocationImageAliasing>
 --     feature is enabled, and the
 --     'Vulkan.Core10.Memory.MemoryAllocateInfo' provided when @memory@ was
 --     allocated included a
@@ -558,6 +558,7 @@ bindImageMemory device image memory memoryOffset = liftIO $ do
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoSessionMemoryRequirementsKHR VkVideoSessionMemoryRequirementsKHR>,
 -- 'getBufferMemoryRequirements', 'getImageMemoryRequirements'
 data MemoryRequirements = MemoryRequirements
   { -- | @size@ is the size, in bytes, of the memory allocation /required/ for

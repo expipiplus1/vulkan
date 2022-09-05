@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_swapchain@
+--     -   Requires @VK_KHR_swapchain@ to be enabled for any device-level
+--         functionality
 --
 -- [__Contact__]
 --
@@ -135,7 +136,7 @@
 -- with the @preTransform@?
 --
 -- __RESOLVED__: No. The rectangular region in 'RectLayerKHR' should not be
--- tranformed. As such, it may not align with the extents of the
+-- transformed. As such, it may not align with the extents of the
 -- swapchain’s image(s). It is the responsibility of the presentation
 -- engine to transform the rectangular region. This matches the behavior of
 -- the Android presentation engine, which set the precedent.
@@ -158,7 +159,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_incremental_present Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_incremental_present Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_external_memory@
+--     -   Requires @VK_KHR_external_memory@ to be enabled for any
+--         device-level functionality
 --
 -- [__Contact__]
 --
@@ -131,7 +132,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_external_memory_win32 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_external_memory_win32 Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -407,11 +408,11 @@ getMemoryWin32HandlePropertiesKHR device handleType handle = liftIO . evalContT 
 -- -   #VUID-VkImportMemoryWin32HandleInfoKHR-handle-01518# If @handle@ is
 --     not @NULL@, it /must/ obey any requirements listed for @handleType@
 --     in
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>
 --
 -- -   #VUID-VkImportMemoryWin32HandleInfoKHR-name-01519# If @name@ is not
 --     @NULL@, it /must/ obey any requirements listed for @handleType@ in
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>
 --
 -- == Valid Usage (Implicit)
 --

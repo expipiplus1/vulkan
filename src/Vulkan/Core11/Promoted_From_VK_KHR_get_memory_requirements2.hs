@@ -473,7 +473,6 @@ instance Zero ImageSparseMemoryRequirementsInfo2 where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.MemoryManagement.MemoryRequirements',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoGetMemoryPropertiesKHR VkVideoGetMemoryPropertiesKHR>,
 -- 'getBufferMemoryRequirements2',
 -- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2KHR',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.getDeviceBufferMemoryRequirements',

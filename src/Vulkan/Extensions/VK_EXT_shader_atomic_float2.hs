@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_EXT_shader_atomic_float@
+--     -   Requires @VK_EXT_shader_atomic_float@ to be enabled for any
+--         device-level functionality
 --
 -- [__Contact__]
 --
@@ -97,13 +98,13 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat16AddEXT AtomicFloat32MinMaxEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat16AddEXT AtomicFloat32MinMaxEXT>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat16MinMaxEXT AtomicFloat32MinMaxEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat16MinMaxEXT AtomicFloat32MinMaxEXT>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat32MinMaxEXT AtomicFloat32MinMaxEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat32MinMaxEXT AtomicFloat32MinMaxEXT>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat64MinMaxEXT AtomicFloat64MinMaxEXT>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-AtomicFloat64MinMaxEXT AtomicFloat64MinMaxEXT>
 --
 -- == Version History
 --
@@ -118,7 +119,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_shader_atomic_float2 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_shader_atomic_float2 Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -203,26 +204,26 @@ data PhysicalDeviceShaderAtomicFloat2FeaturesEXT = PhysicalDeviceShaderAtomicFlo
     shaderBufferFloat64AtomicMinMax :: Bool
   , -- | #features-shaderSharedFloat16Atomics# @shaderSharedFloat16Atomics@
     -- indicates whether shaders /can/ perform 16-bit floating-point load,
-    -- store and exchange atomic operations on shared memory.
+    -- store and exchange atomic operations on shared and payload memory.
     shaderSharedFloat16Atomics :: Bool
   , -- | #features-shaderSharedFloat16AtomicAdd# @shaderSharedFloat16AtomicAdd@
     -- indicates whether shaders /can/ perform 16-bit floating-point add atomic
-    -- operations on shared memory.
+    -- operations on shared and payload memory.
     shaderSharedFloat16AtomicAdd :: Bool
   , -- | #features-shaderSharedFloat16AtomicMinMax#
     -- @shaderSharedFloat16AtomicMinMax@ indicates whether shaders /can/
     -- perform 16-bit floating-point min and max atomic operations on shared
-    -- memory.
+    -- and payload memory.
     shaderSharedFloat16AtomicMinMax :: Bool
   , -- | #features-shaderSharedFloat32AtomicMinMax#
     -- @shaderSharedFloat32AtomicMinMax@ indicates whether shaders /can/
     -- perform 32-bit floating-point min and max atomic operations on shared
-    -- memory.
+    -- and payload memory.
     shaderSharedFloat32AtomicMinMax :: Bool
   , -- | #features-shaderSharedFloat64AtomicMinMax#
     -- @shaderSharedFloat64AtomicMinMax@ indicates whether shaders /can/
     -- perform 64-bit floating-point min and max atomic operations on shared
-    -- memory.
+    -- and payload memory.
     shaderSharedFloat64AtomicMinMax :: Bool
   , -- | #features-shaderImageFloat32AtomicMinMax#
     -- @shaderImageFloat32AtomicMinMax@ indicates whether shaders /can/ perform

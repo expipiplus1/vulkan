@@ -322,7 +322,7 @@ pattern DYNAMIC_STATE_VIEWPORT_WITH_COUNT                 = DynamicState 1000267
 -- | 'DYNAMIC_STATE_PRIMITIVE_TOPOLOGY' specifies that the @topology@ state
 -- in 'Vulkan.Core10.Pipeline.PipelineInputAssemblyStateCreateInfo' only
 -- specifies the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>,
 -- and the specific topology order and adjacency /must/ be set dynamically
 -- with
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'

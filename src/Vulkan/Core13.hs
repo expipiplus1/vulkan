@@ -167,8 +167,8 @@ data PhysicalDeviceVulkan13Features = PhysicalDeviceVulkan13Features
     -- structure.
     subgroupSizeControl :: Bool
   , -- | #features-computeFullSubgroups# @computeFullSubgroups@ indicates whether
-    -- the implementation supports requiring full subgroups in compute shaders
-    -- via the
+    -- the implementation supports requiring full subgroups in compute , mesh,
+    -- or task shaders via the
     -- 'Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT'
     -- flag.
     computeFullSubgroups :: Bool

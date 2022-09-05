@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Special Use__]
 --
@@ -172,7 +173,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_pipeline_executable_properties Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_pipeline_executable_properties Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -312,10 +313,11 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetPipelineExecutablePropertiesKHR-pipelineExecutableInfo-03270#
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
---     /must/ be enabled
+--     The
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
+--     feature /must/ be enabled
 --
--- -   #VUID-vkGetPipelineExecutablePropertiesKHR-pipeline-03271#
+-- -   #VUID-vkGetPipelineExecutablePropertiesKHR-pipeline-03271# The
 --     @pipeline@ member of @pPipelineInfo@ /must/ have been created with
 --     @device@
 --
@@ -410,14 +412,15 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetPipelineExecutableStatisticsKHR-pipelineExecutableInfo-03272#
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
---     /must/ be enabled
+--     The
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
+--     feature /must/ be enabled
 --
--- -   #VUID-vkGetPipelineExecutableStatisticsKHR-pipeline-03273#
+-- -   #VUID-vkGetPipelineExecutableStatisticsKHR-pipeline-03273# The
 --     @pipeline@ member of @pExecutableInfo@ /must/ have been created with
 --     @device@
 --
--- -   #VUID-vkGetPipelineExecutableStatisticsKHR-pipeline-03274#
+-- -   #VUID-vkGetPipelineExecutableStatisticsKHR-pipeline-03274# The
 --     @pipeline@ member of @pExecutableInfo@ /must/ have been created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR'
 --
@@ -519,15 +522,17 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkGetPipelineExecutableInternalRepresentationsKHR-pipelineExecutableInfo-03276#
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
---     /must/ be enabled
+--     The
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
+--     feature /must/ be enabled
 --
 -- -   #VUID-vkGetPipelineExecutableInternalRepresentationsKHR-pipeline-03277#
---     @pipeline@ member of @pExecutableInfo@ /must/ have been created with
---     @device@
+--     The @pipeline@ member of @pExecutableInfo@ /must/ have been created
+--     with @device@
 --
 -- -   #VUID-vkGetPipelineExecutableInternalRepresentationsKHR-pipeline-03278#
---     @pipeline@ member of @pExecutableInfo@ /must/ have been created with
+--     The @pipeline@ member of @pExecutableInfo@ /must/ have been created
+--     with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR'
 --
 -- == Valid Usage (Implicit)

@@ -19,9 +19,9 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_surface@
+--     -   Requires @VK_KHR_surface@ to be enabled
 --
 -- [__Deprecation state__]
 --
@@ -94,7 +94,7 @@
 --
 -- -   Revision 3, 2020-07-31 (Bill Hollings)
 --
---     -   Update documentation on requirements for UIView.
+--     -   Update documentation on requirements for @UIView@.
 --
 --     -   Mark as deprecated by @VK_EXT_metal_surface@.
 --
@@ -106,7 +106,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_MVK_ios_surface Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_MVK_ios_surface Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

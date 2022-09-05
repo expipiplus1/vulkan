@@ -185,10 +185,16 @@ foreign import ccall
 -- cannot be enabled against the advertised version.
 --
 -- Implementations claiming support for the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#roadmap-2022 Roadmap 2022>
--- profile /must/ advertise the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_global_priority VK_KHR_global_priority>
--- extension in @pProperties@.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#roadmap-2022 Roadmap 2022>
+-- profile /must/ advertise the @VK_KHR_global_priority@ extension in
+-- @pProperties@.
+--
+-- Note
+--
+-- Due to platform details on Android, 'enumerateDeviceExtensionProperties'
+-- may be called with @physicalDevice@ equal to @NULL@ during layer
+-- discovery. This behaviour will only be observed by layer
+-- implementations, and not the underlying Vulkan driver.
 --
 -- == Valid Usage (Implicit)
 --

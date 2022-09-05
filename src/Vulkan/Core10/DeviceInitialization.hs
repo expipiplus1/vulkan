@@ -268,7 +268,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCreateInstance-ppEnabledExtensionNames-01388# All
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-extensions-extensiondependencies required extensions>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-extensions-extensiondependencies required extensions>
 --     for each extension in the
 --     'InstanceCreateInfo'::@ppEnabledExtensionNames@ list /must/ also be
 --     present in that list
@@ -316,7 +316,7 @@ createInstance :: forall a io
                   -- controlling creation of the instance.
                   (InstanceCreateInfo a)
                -> -- | @pAllocator@ controls host memory allocation as described in the
-                  -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                  -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                   -- chapter.
                   ("allocator" ::: Maybe AllocationCallbacks)
                -> io (Instance)
@@ -401,7 +401,7 @@ destroyInstance :: forall io
                 => -- | @instance@ is the handle of the instance to destroy.
                    Instance
                 -> -- | @pAllocator@ controls host memory allocation as described in the
-                   -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                   -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                    -- chapter.
                    ("allocator" ::: Maybe AllocationCallbacks)
                 -> io ()
@@ -1095,7 +1095,7 @@ getPhysicalDeviceImageFormatProperties physicalDevice format type' tiling usage 
 -- from @driverVersion@.
 --
 -- On implementations that claim support for the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#roadmap-2022 Roadmap 2022>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#roadmap-2022 Roadmap 2022>
 -- profile, the major and minor version expressed by @apiVersion@ /must/ be
 -- at least Vulkan 1.3.
 --
@@ -1124,7 +1124,7 @@ getPhysicalDeviceImageFormatProperties physicalDevice format type' tiling usage 
 -- 16 bits of @vendorID@ /must/ contain that PCI vendor ID, and the
 -- remaining bits /must/ be set to zero. Otherwise, the value returned
 -- /must/ be a valid Khronos vendor ID, obtained as described in the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#vulkan-styleguide Vulkan Documentation and Extensions: Procedures and Conventions>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vulkan-styleguide Vulkan Documentation and Extensions: Procedures and Conventions>
 -- document in the section “Registering a Vendor ID with Khronos”. Khronos
 -- vendor IDs are allocated starting at 0x10000, to distinguish them from
 -- the PCI vendor ID namespace. Khronos vendor IDs are symbolically defined
@@ -1158,7 +1158,7 @@ getPhysicalDeviceImageFormatProperties physicalDevice format type' tiling usage 
 data PhysicalDeviceProperties = PhysicalDeviceProperties
   { -- | @apiVersion@ is the version of Vulkan supported by the device, encoded
     -- as described in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-coreversions-versionnumbers>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-coreversions-versionnumbers>.
     apiVersion :: Word32
   , -- | @driverVersion@ is the vendor-specified version of the driver.
     driverVersion :: Word32
@@ -1183,12 +1183,12 @@ data PhysicalDeviceProperties = PhysicalDeviceProperties
     pipelineCacheUUID :: ByteString
   , -- | @limits@ is the 'PhysicalDeviceLimits' structure specifying
     -- device-specific limits of the physical device. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits Limits>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits Limits>
     -- for details.
     limits :: PhysicalDeviceLimits
   , -- | @sparseProperties@ is the 'PhysicalDeviceSparseProperties' structure
     -- specifying various sparse related properties of the physical device. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-physicalprops Sparse Properties>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-physicalprops Sparse Properties>
     -- for details.
     sparseProperties :: PhysicalDeviceSparseProperties
   }
@@ -1311,8 +1311,9 @@ instance Zero PhysicalDeviceProperties where
 -- the physical device that supports Vulkan 1.2.
 --
 -- Implicit layers /must/ be disabled if they do not support a version at
--- least as high as @apiVersion@. See the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#LoaderInterfaceArchitecture “Architecture of the Vulkan Loader Interfaces”>
+-- least as high as @apiVersion@ and their version is less than the highest
+-- version of the drivers on the system. See the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#LoaderInterfaceArchitecture “Architecture of the Vulkan Loader Interfaces”>
 -- document for additional information.
 --
 -- Note
@@ -1362,7 +1363,7 @@ data ApplicationInfo = ApplicationInfo
     engineVersion :: Word32
   , -- | @apiVersion@ /must/ be the highest version of Vulkan that the
     -- application is designed to use, encoded as described in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-coreversions-versionnumbers>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-coreversions-versionnumbers>.
     -- The patch version number specified in @apiVersion@ is ignored when
     -- creating an instance object. Only the major and minor versions of the
     -- instance /must/ match those requested in @apiVersion@.
@@ -1445,15 +1446,13 @@ instance Zero ApplicationInfo where
 --     'InstanceCreateInfo' includes a
 --     'Vulkan.Extensions.VK_EXT_debug_report.DebugReportCallbackCreateInfoEXT'
 --     structure, the list of enabled extensions in
---     @ppEnabledExtensionNames@ /must/ contain
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_report VK_EXT_debug_report>
+--     @ppEnabledExtensionNames@ /must/ contain @VK_EXT_debug_report@
 --
 -- -   #VUID-VkInstanceCreateInfo-pNext-04926# If the @pNext@ chain of
 --     'InstanceCreateInfo' includes a
 --     'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsMessengerCreateInfoEXT'
 --     structure, the list of enabled extensions in
---     @ppEnabledExtensionNames@ /must/ contain
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>
+--     @ppEnabledExtensionNames@ /must/ contain @VK_EXT_debug_utils@
 --
 -- -   #VUID-VkInstanceCreateInfo-pNext-06779# If the @pNext@ chain
 --     includes a
@@ -1532,7 +1531,7 @@ data InstanceCreateInfo (es :: [Type]) = InstanceCreateInfo
     -- listed in this array, with the first array element being the closest to
     -- the application, and the last array element being the closest to the
     -- driver. See the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-layers>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-layers>
     -- section for further details.
     enabledLayerNames :: Vector ByteString
   , -- | @ppEnabledExtensionNames@ is a pointer to an array of
@@ -1678,11 +1677,11 @@ instance es ~ '[] => Zero (InstanceCreateInfo es) where
 -- families /may/ be (0,0,0).
 --
 -- The
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-device Device Memory>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-device Device Memory>
 -- section describes memory properties queried from the physical device.
 --
 -- For physical device feature queries see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features Features>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features Features>
 -- chapter.
 --
 -- = See Also
@@ -1938,7 +1937,7 @@ instance Zero QueueFamilyProperties where
 -- type with the
 -- 'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_DEVICE_LOCAL_BIT'
 -- bit set in its @propertyFlags@. If the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceCoherentMemory deviceCoherentMemory>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceCoherentMemory deviceCoherentMemory>
 -- feature is enabled, there /must/ be at least one memory type with the
 -- 'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD'
 -- bit set in its @propertyFlags@.
@@ -1966,7 +1965,7 @@ instance Zero QueueFamilyProperties where
 -- the case their @propertyFlags@ members are not in a subset relation.
 -- That potentially allows more than one possible way to order the same set
 -- of memory types. Notice that the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-device-bitmask-list list of all allowed memory property flag combinations>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-device-bitmask-list list of all allowed memory property flag combinations>
 -- is written in a valid order. But if instead
 -- 'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_DEVICE_LOCAL_BIT'
 -- was before
@@ -2279,7 +2278,7 @@ instance Zero FormatProperties where
 -- = Members
 --
 -- -   @maxExtent@ are the maximum image dimensions. See the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-extentperimagetype Allowed Extent Values>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extentperimagetype Allowed Extent Values>
 --     section below for how these values are constrained by @type@.
 --
 -- -   @maxMipLevels@ is the maximum number of mipmap levels.
@@ -2303,7 +2302,7 @@ instance Zero FormatProperties where
 --         member for which mipmap image support is not required
 --
 --     -   image @format@ is one of the
---         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y′CBCR conversion>
+--         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y′CBCR conversion>
 --
 --     -   @flags@ contains
 --         'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
@@ -2322,7 +2321,7 @@ instance Zero FormatProperties where
 --         @type@ is 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D'
 --
 --     -   @format@ is one of the
---         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y′CBCR conversion>
+--         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion formats that require a sampler Y′CBCR conversion>
 --
 -- -   If @tiling@ is
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
@@ -2332,7 +2331,7 @@ instance Zero FormatProperties where
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'
 --     specifying all the supported sample counts for this image as
 --     described
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-supported-sample-counts below>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-supported-sample-counts below>.
 --
 -- -   @maxResourceSize@ is an upper bound on the total image size in
 --     bytes, inclusive of all image subresources. Implementations /may/
@@ -2475,7 +2474,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     --         so all accesses through such pointers are considered to be out
     --         of bounds. Buffer accesses through buffer device addresses are
     --         not bounds-checked. If the
-    --         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-cooperativeMatrixRobustBufferAccess cooperativeMatrixRobustBufferAccess>
+    --         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-cooperativeMatrixRobustBufferAccess cooperativeMatrixRobustBufferAccess>
     --         feature is not enabled, then accesses using
     --         @OpCooperativeMatrixLoadNV@ and @OpCooperativeMatrixStoreNV@
     --         /may/ not be bounds-checked.
@@ -2488,7 +2487,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     --         the end are not statically used.
     --
     --     -   If
-    --         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
     --         is not enabled and any buffer access is determined to be out of
     --         bounds, then any other access of the same type (load, store, or
     --         atomic) to the same buffer that accesses an address less than 16
@@ -2512,31 +2511,31 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- -   Out-of-bounds buffer loads will return any of the following values:
     --
     --     -   If the access is to a uniform buffer and
-    --         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
     --         is enabled, loads of offsets between the end of the descriptor
     --         range and the end of the descriptor range rounded up to a
     --         multiple of
-    --         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustUniformBufferAccessSizeAlignment robustUniformBufferAccessSizeAlignment>
+    --         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustUniformBufferAccessSizeAlignment robustUniformBufferAccessSizeAlignment>
     --         bytes /must/ return either zero values or the contents of the
     --         memory at the offset being loaded. Loads of offsets past the
     --         descriptor range rounded up to a multiple of
-    --         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustUniformBufferAccessSizeAlignment robustUniformBufferAccessSizeAlignment>
+    --         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustUniformBufferAccessSizeAlignment robustUniformBufferAccessSizeAlignment>
     --         bytes /must/ return zero values.
     --
     --     -   If the access is to a storage buffer and
-    --         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
     --         is enabled, loads of offsets between the end of the descriptor
     --         range and the end of the descriptor range rounded up to a
     --         multiple of
-    --         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustStorageBufferAccessSizeAlignment robustStorageBufferAccessSizeAlignment>
+    --         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustStorageBufferAccessSizeAlignment robustStorageBufferAccessSizeAlignment>
     --         bytes /must/ return either zero values or the contents of the
     --         memory at the offset being loaded. Loads of offsets past the
     --         descriptor range rounded up to a multiple of
-    --         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustStorageBufferAccessSizeAlignment robustStorageBufferAccessSizeAlignment>
+    --         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustStorageBufferAccessSizeAlignment robustStorageBufferAccessSizeAlignment>
     --         bytes /must/ return zero values. Similarly, stores to addresses
     --         between the end of the descriptor range and the end of the
     --         descriptor range rounded up to a multiple of
-    --         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustStorageBufferAccessSizeAlignment robustStorageBufferAccessSizeAlignment>
+    --         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-robustStorageBufferAccessSizeAlignment robustStorageBufferAccessSizeAlignment>
     --         bytes /may/ be discarded.
     --
     --     -   Non-atomic accesses to storage buffers that are a multiple of 32
@@ -2544,14 +2543,14 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     --         individually bounds-checked.
     --
     --     -   If the access is to an index buffer and
-    --         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
     --         is enabled, zero values /must/ be returned.
     --
     --     -   If the access is to a uniform texel buffer or storage texel
     --         buffer and
-    --         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
     --         is enabled, zero values /must/ be returned, and then
-    --         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-conversion-to-rgba Conversion to RGBA>
+    --         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-conversion-to-rgba Conversion to RGBA>
     --         is applied based on the buffer view’s format.
     --
     --     -   Values from anywhere within the memory range(s) bound to the
@@ -2571,7 +2570,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     --     bound to the buffer, but /must/ not modify any other memory.
     --
     --     -   If
-    --         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
     --         is enabled, out of bounds writes /must/ not modify any memory.
     --
     -- -   Out-of-bounds atomics /may/ modify values within the memory range(s)
@@ -2579,12 +2578,12 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     --     return an undefined value.
     --
     --     -   If
-    --         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
     --         is enabled, out of bounds atomics /must/ not modify any memory,
     --         and return an undefined value.
     --
     -- -   If
-    --     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
     --     is disabled, vertex input attributes are considered out of bounds if
     --     the offset of the attribute in the bound vertex buffer range plus
     --     the size of the attribute is greater than either:
@@ -2614,19 +2613,22 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     --         -   Zero values, or (0,0,0,x) vectors, as described above.
     --
     -- -   If
-    --     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+    --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
     --     is enabled, vertex input attributes are considered out of bounds if
     --     the offset of the attribute in the bound vertex buffer range plus
     --     the size of the attribute is greater than the byte size of the
     --     memory range bound to the vertex buffer binding.
     --
     --     -   If a vertex input attribute is out of bounds, the
-    --         <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex-input-extraction raw data>
+    --         <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex-input-extraction raw data>
     --         extracted are zero values, and missing G, B, or A components are
     --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input-extraction filled with (0,0,1)>.
     --
     -- -   If @robustBufferAccess@ is not enabled, applications /must/ not
-    --     perform out of bounds accesses.
+    --     perform out of bounds accesses except under the conditions enabled
+    --     by the
+    --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineRobustness pipelineRobustness>
+    --     feature. .
     robustBufferAccess :: Bool
   , -- | #features-fullDrawIndexUint32# @fullDrawIndexUint32@ specifies the full
     -- 32-bit range of indices is supported for indexed draw calls when using a
@@ -2638,7 +2640,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- 'Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT32'). If this feature is
     -- supported, @maxDrawIndexedIndexValue@ /must/ be 232-1; otherwise it
     -- /must/ be no smaller than 224-1. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxDrawIndexedIndexValue maxDrawIndexedIndexValue>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxDrawIndexedIndexValue maxDrawIndexedIndexValue>.
     fullDrawIndexUint32 :: Bool
   , -- | #features-imageCubeArray# @imageCubeArray@ specifies whether image views
     -- with a 'Vulkan.Core10.Enums.ImageViewType.ImageViewType' of
@@ -2674,7 +2676,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- modules /can/ declare the @Tessellation@ capability.
     tessellationShader :: Bool
   , -- | #features-sampleRateShading# @sampleRateShading@ specifies whether
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-sampleshading Sample Shading>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-sampleshading Sample Shading>
     -- and multisample interpolation are supported. If this feature is not
     -- enabled, the @sampleShadingEnable@ member of the
     -- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo' structure
@@ -2689,7 +2691,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- 'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_SRC1_ALPHA', and
     -- 'Vulkan.Core10.Enums.BlendFactor.BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA' enum
     -- values /must/ not be used as source or destination blending factors. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-dsb>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-dsb>.
     dualSrcBlend :: Bool
   , -- | #features-logicOp# @logicOp@ specifies whether logic operations are
     -- supported. If this feature is not enabled, the @logicOpEnable@ member of
@@ -2705,7 +2707,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- /must/ be 0 or 1. The @maxDrawIndirectCount@ member of the
     -- 'PhysicalDeviceLimits' structure /must/ also be 1 if this feature is not
     -- supported. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxDrawIndirectCount maxDrawIndirectCount>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxDrawIndirectCount maxDrawIndirectCount>.
     multiDrawIndirect :: Bool
   , -- | #features-drawIndirectFirstInstance# @drawIndirectFirstInstance@
     -- specifies whether indirect drawing calls support the @firstInstance@
@@ -2774,7 +2776,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
   , -- | #features-alphaToOne# @alphaToOne@ specifies whether the implementation
     -- is able to replace the alpha value of the fragment shader color output
     -- in the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-covg Multisample Coverage>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-covg Multisample Coverage>
     -- fragment operation. If this feature is not enabled, then the
     -- @alphaToOneEnable@ member of the
     -- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo' structure
@@ -3019,9 +3021,9 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- evaluation shaders, or if the shader modules /can/ declare the
     -- @GeometryPointSize@ capability for geometry shaders. An implementation
     -- supporting this feature /must/ also support one or both of the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
     -- or
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-geometryShader geometryShader>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-geometryShader geometryShader>
     -- features.
     shaderTessellationAndGeometryPointSize :: Bool
   , -- | #features-shaderImageGatherExtended# @shaderImageGatherExtended@
@@ -3102,7 +3104,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- 'Vulkan.Core10.Enums.Format.FORMAT_R32G32_SFLOAT' from
     -- @StorageImageExtendedFormats@ SPIR-V capability, are already covered by
     -- core Vulkan
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-mandatory-features-32bit mandatory format support>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-mandatory-features-32bit mandatory format support>.
     shaderStorageImageExtendedFormats :: Bool
   , -- | #features-shaderStorageImageMultisample# @shaderStorageImageMultisample@
     -- specifies whether multisampled storage images are supported. If this
@@ -3119,7 +3121,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- require a format qualifier to be specified when reading.
     -- @shaderStorageImageReadWithoutFormat@ applies only to formats listed in
     -- the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-without-shader-storage-format storage without format>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-without-shader-storage-format storage without format>
     -- list.
     shaderStorageImageReadWithoutFormat :: Bool
   , -- | #features-shaderStorageImageWriteWithoutFormat#
@@ -3127,7 +3129,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- require a format qualifier to be specified when writing.
     -- @shaderStorageImageWriteWithoutFormat@ applies only to formats listed in
     -- the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-without-shader-storage-format storage without format>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-without-shader-storage-format storage without format>
     -- list.
     shaderStorageImageWriteWithoutFormat :: Bool
   , -- | #features-shaderUniformBufferArrayDynamicIndexing#
@@ -3241,7 +3243,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- set in the @flags@ member of the 'Vulkan.Core10.Buffer.BufferCreateInfo'
     -- and 'Vulkan.Core10.Image.ImageCreateInfo' structures, respectively.
     -- Otherwise resource memory /can/ be managed as described in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-sparseresourcefeatures Sparse Resource Features>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-sparseresourcefeatures Sparse Resource Features>.
     sparseBinding :: Bool
   , -- | #features-sparseResidencyBuffer# @sparseResidencyBuffer@ specifies
     -- whether the device /can/ access partially resident buffers. If this
@@ -3325,7 +3327,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     sparseResidencyAliased :: Bool
   , -- | #features-variableMultisampleRate# @variableMultisampleRate@ specifies
     -- whether all pipelines that will be bound to a command buffer during a
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-noattachments subpass which uses no attachments>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-noattachments subpass which uses no attachments>
     -- /must/ have the same value for
     -- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@.
     -- If set to 'Vulkan.Core10.FundamentalTypes.TRUE', the implementation
@@ -3600,7 +3602,7 @@ data PhysicalDeviceSparseProperties = PhysicalDeviceSparseProperties
     -- if the physical device will access all single-sample 2D sparse resources
     -- using the standard sparse image block shapes (based on image format), as
     -- described in the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-sparseblockshapessingle Standard Sparse Image Block Shapes (Single Sample)>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-sparseblockshapessingle Standard Sparse Image Block Shapes (Single Sample)>
     -- table. If this property is not supported the value returned in the
     -- @imageGranularity@ member of the
     -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageFormatProperties'
@@ -3611,7 +3613,7 @@ data PhysicalDeviceSparseProperties = PhysicalDeviceSparseProperties
     -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the physical device will access
     -- all multisample 2D sparse resources using the standard sparse image
     -- block shapes (based on image format), as described in the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-sparseblockshapesmsaa Standard Sparse Image Block Shapes (MSAA)>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-sparseblockshapesmsaa Standard Sparse Image Block Shapes (MSAA)>
     -- table. If this property is not supported, the value returned in the
     -- @imageGranularity@ member of the
     -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageFormatProperties'
@@ -3622,7 +3624,7 @@ data PhysicalDeviceSparseProperties = PhysicalDeviceSparseProperties
     -- if the physical device will access all 3D sparse resources using the
     -- standard sparse image block shapes (based on image format), as described
     -- in the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-sparseblockshapessingle Standard Sparse Image Block Shapes (Single Sample)>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-sparseblockshapessingle Standard Sparse Image Block Shapes (Single Sample)>
     -- table. If this property is not supported, the value returned in the
     -- @imageGranularity@ member of the
     -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageFormatProperties'
@@ -3798,7 +3800,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- granularity, in bytes, at which buffer or linear image resources, and
     -- optimal image resources /can/ be bound to adjacent offsets in the same
     -- 'Vulkan.Core10.Handles.DeviceMemory' object without aliasing. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-bufferimagegranularity Buffer-Image Granularity>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-bufferimagegranularity Buffer-Image Granularity>
     -- for more details.
     bufferImageGranularity :: DeviceSize
   , -- | #limits-sparseAddressSpaceSize# @sparseAddressSpaceSize@ is the total
@@ -3811,7 +3813,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- pipeline. All 'Vulkan.Core10.Handles.DescriptorSet' decorations in
     -- shader modules /must/ have a value less than @maxBoundDescriptorSets@.
     -- See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sets>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sets>.
     maxBoundDescriptorSets :: Word32
   , -- | #limits-maxPerStageDescriptorSamplers# @maxPerStageDescriptorSamplers@
     -- is the maximum number of samplers that /can/ be accessible to a single
@@ -3825,9 +3827,9 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- stage when the @stageFlags@ member of the
     -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutBinding' structure has
     -- the bit for that shader stage set. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sampler>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sampler>
     -- and
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-combinedimagesampler>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-combinedimagesampler>.
     maxPerStageDescriptorSamplers :: Word32
   , -- | #limits-maxPerStageDescriptorUniformBuffers#
     -- @maxPerStageDescriptorUniformBuffers@ is the maximum number of uniform
@@ -3842,9 +3844,9 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- stage when the @stageFlags@ member of the
     -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutBinding' structure has
     -- the bit for that shader stage set. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformbuffer>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformbuffer>
     -- and
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic>.
     maxPerStageDescriptorUniformBuffers :: Word32
   , -- | #limits-maxPerStageDescriptorStorageBuffers#
     -- @maxPerStageDescriptorStorageBuffers@ is the maximum number of storage
@@ -3859,9 +3861,9 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- pipeline shader stage when the @stageFlags@ member of the
     -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutBinding' structure has
     -- the bit for that shader stage set. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagebuffer>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagebuffer>
     -- and
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic>.
     maxPerStageDescriptorStorageBuffers :: Word32
   , -- | #limits-maxPerStageDescriptorSampledImages#
     -- @maxPerStageDescriptorSampledImages@ is the maximum number of sampled
@@ -3877,10 +3879,10 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- pipeline shader stage when the @stageFlags@ member of the
     -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutBinding' structure has
     -- the bit for that shader stage set. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-combinedimagesampler>,
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sampledimage>,
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-combinedimagesampler>,
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sampledimage>,
     -- and
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformtexelbuffer>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformtexelbuffer>.
     maxPerStageDescriptorSampledImages :: Word32
   , -- | #limits-maxPerStageDescriptorStorageImages#
     -- @maxPerStageDescriptorStorageImages@ is the maximum number of storage
@@ -3895,9 +3897,9 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- pipeline shader stage when the @stageFlags@ member of the
     -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutBinding' structure has
     -- the bit for that shader stage set. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storageimage>,
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storageimage>,
     -- and
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer>.
     maxPerStageDescriptorStorageImages :: Word32
   , -- | #limits-maxPerStageDescriptorInputAttachments#
     -- @maxPerStageDescriptorInputAttachments@ is the maximum number of input
@@ -3912,7 +3914,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutBinding' structure has
     -- the bit for that shader stage set. These are only supported for the
     -- fragment stage. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-inputattachment>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-inputattachment>.
     maxPerStageDescriptorInputAttachments :: Word32
   , -- | #limits-maxPerStageResources# @maxPerStageResources@ is the maximum
     -- number of resources that /can/ be accessible to a single shader stage in
@@ -3942,9 +3944,9 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- created without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set count against this limit. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sampler>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sampler>
     -- and
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-combinedimagesampler>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-combinedimagesampler>.
     maxDescriptorSetSamplers :: Word32
   , -- | #limits-maxDescriptorSetUniformBuffers# @maxDescriptorSetUniformBuffers@
     -- is the maximum number of uniform buffers that /can/ be included in a
@@ -3955,9 +3957,9 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- created without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set count against this limit. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformbuffer>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformbuffer>
     -- and
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic>.
     maxDescriptorSetUniformBuffers :: Word32
   , -- | #limits-maxDescriptorSetUniformBuffersDynamic#
     -- @maxDescriptorSetUniformBuffersDynamic@ is the maximum number of dynamic
@@ -3968,7 +3970,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- created without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set count against this limit. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic>.
     maxDescriptorSetUniformBuffersDynamic :: Word32
   , -- | #limits-maxDescriptorSetStorageBuffers# @maxDescriptorSetStorageBuffers@
     -- is the maximum number of storage buffers that /can/ be included in a
@@ -3979,9 +3981,9 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- created without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set count against this limit. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagebuffer>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagebuffer>
     -- and
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic>.
     maxDescriptorSetStorageBuffers :: Word32
   , -- | #limits-maxDescriptorSetStorageBuffersDynamic#
     -- @maxDescriptorSetStorageBuffersDynamic@ is the maximum number of dynamic
@@ -3992,7 +3994,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- created without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set count against this limit. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic>.
     maxDescriptorSetStorageBuffersDynamic :: Word32
   , -- | #limits-maxDescriptorSetSampledImages# @maxDescriptorSetSampledImages@
     -- is the maximum number of sampled images that /can/ be included in a
@@ -4004,10 +4006,10 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- created without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set count against this limit. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-combinedimagesampler>,
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sampledimage>,
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-combinedimagesampler>,
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sampledimage>,
     -- and
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformtexelbuffer>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformtexelbuffer>.
     maxDescriptorSetSampledImages :: Word32
   , -- | #limits-maxDescriptorSetStorageImages# @maxDescriptorSetStorageImages@
     -- is the maximum number of storage images that /can/ be included in a
@@ -4018,9 +4020,9 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- created without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set count against this limit. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storageimage>,
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storageimage>,
     -- and
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer>.
     maxDescriptorSetStorageImages :: Word32
   , -- | #limits-maxDescriptorSetInputAttachments#
     -- @maxDescriptorSetInputAttachments@ is the maximum number of input
@@ -4031,7 +4033,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- created without the
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
     -- bit set count against this limit. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-inputattachment>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-inputattachment>.
     maxDescriptorSetInputAttachments :: Word32
   , -- | #limits-maxVertexInputAttributes# @maxVertexInputAttributes@ is the
     -- maximum number of vertex input attributes that /can/ be specified for a
@@ -4041,9 +4043,9 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- @pVertexAttributeDescriptions@ member of the
     -- 'Vulkan.Core10.Pipeline.PipelineVertexInputStateCreateInfo' structure.
     -- See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex-attrib>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex-attrib>
     -- and
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex-input>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex-input>.
     maxVertexInputAttributes :: Word32
   , -- | #limits-maxVertexInputBindings# @maxVertexInputBindings@ is the maximum
     -- number of vertex buffers that /can/ be specified for providing vertex
@@ -4055,31 +4057,31 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- The @binding@ member of
     -- 'Vulkan.Core10.Pipeline.VertexInputBindingDescription' /must/ be less
     -- than this limit. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex-input>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex-input>.
     maxVertexInputBindings :: Word32
   , -- | #limits-maxVertexInputAttributeOffset# @maxVertexInputAttributeOffset@
     -- is the maximum vertex input attribute offset that /can/ be added to the
     -- vertex input binding stride. The @offset@ member of the
     -- 'Vulkan.Core10.Pipeline.VertexInputAttributeDescription' structure
     -- /must/ be less than or equal to this limit. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex-input>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex-input>.
     maxVertexInputAttributeOffset :: Word32
   , -- | #limits-maxVertexInputBindingStride# @maxVertexInputBindingStride@ is
     -- the maximum vertex input binding stride that /can/ be specified in a
     -- vertex input binding. The @stride@ member of the
     -- 'Vulkan.Core10.Pipeline.VertexInputBindingDescription' structure /must/
     -- be less than or equal to this limit. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex-input>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex-input>.
     maxVertexInputBindingStride :: Word32
   , -- | #limits-maxVertexOutputComponents# @maxVertexOutputComponents@ is the
     -- maximum number of components of output variables which /can/ be output
     -- by a vertex shader. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-vertex>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-vertex>.
     maxVertexOutputComponents :: Word32
   , -- | #limits-maxTessellationGenerationLevel# @maxTessellationGenerationLevel@
     -- is the maximum tessellation generation level supported by the
     -- fixed-function tessellation primitive generator. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#tessellation>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#tessellation>.
     maxTessellationGenerationLevel :: Word32
   , -- | #limits-maxTessellationPatchSize# @maxTessellationPatchSize@ is the
     -- maximum patch size, in vertices, of patches that /can/ be processed by
@@ -4089,7 +4091,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- specified at pipeline creation time and the value provided in the
     -- @OutputVertices@ execution mode of shader modules /must/ be less than or
     -- equal to this limit. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#tessellation>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#tessellation>.
     maxTessellationPatchSize :: Word32
   , -- | #limits-maxTessellationControlPerVertexInputComponents#
     -- @maxTessellationControlPerVertexInputComponents@ is the maximum number
@@ -4125,7 +4127,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- the maximum invocation count supported for instanced geometry shaders.
     -- The value provided in the @Invocations@ execution mode of shader modules
     -- /must/ be less than or equal to this limit. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#geometry>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#geometry>.
     maxGeometryShaderInvocations :: Word32
   , -- | #limits-maxGeometryInputComponents# @maxGeometryInputComponents@ is the
     -- maximum number of components of input variables which /can/ be provided
@@ -4156,15 +4158,15 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- is the maximum number of output attachments which /can/ be written to by
     -- the fragment shader stage when blending is enabled and one of the dual
     -- source blend modes is in use. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-dsb>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#framebuffer-dsb>
     -- and
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-dualSrcBlend dualSrcBlend>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-dualSrcBlend dualSrcBlend>.
     maxFragmentDualSrcAttachments :: Word32
   , -- | #limits-maxFragmentCombinedOutputResources#
     -- @maxFragmentCombinedOutputResources@ is the total number of storage
     -- buffers, storage images, and output @Location@ decorated color
     -- attachments (described in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-fragmentoutput Fragment Output Interface>)
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-fragmentoutput Fragment Output Interface>)
     -- which /can/ be used in the fragment shader stage.
     maxFragmentCombinedOutputResources :: Word32
   , -- | #limits-maxComputeSharedMemorySize# @maxComputeSharedMemorySize@ is the
@@ -4181,7 +4183,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- non-Block variables declared with @Workgroup@ storage class were
     -- assigned offsets in an arbitrary order by successively taking the
     -- smallest valid offset according to the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-standard-layout Standard Storage Buffer Layout>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-standard-layout Standard Storage Buffer Layout>
     -- rules. (This is equivalent to using the GLSL std430 layout rules.)
     maxComputeSharedMemorySize :: Word32
   , -- | #limits-maxComputeWorkGroupCount# @maxComputeWorkGroupCount@[3] is the
@@ -4190,7 +4192,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- local workgroups for the X, Y, and Z dimensions, respectively. The
     -- workgroup count parameters to the dispatching commands /must/ be less
     -- than or equal to the corresponding limit. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#dispatch>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#dispatch>.
     maxComputeWorkGroupCount :: (Word32, Word32, Word32)
   , -- | #limits-maxComputeWorkGroupInvocations# @maxComputeWorkGroupInvocations@
     -- is the maximum total number of compute shader invocations in a single
@@ -4209,7 +4211,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     maxComputeWorkGroupSize :: (Word32, Word32, Word32)
   , -- | #limits-subPixelPrecisionBits# @subPixelPrecisionBits@ is the number of
     -- bits of subpixel precision in framebuffer coordinates xf and yf. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast>.
     subPixelPrecisionBits :: Word32
   , -- | #limits-subTexelPrecisionBits# @subTexelPrecisionBits@ is the number of
     -- bits of precision in the division along an axis of an image used for
@@ -4228,11 +4230,11 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- maximum index value that /can/ be used for indexed draw calls when using
     -- 32-bit indices. This excludes the primitive restart index value of
     -- 0xFFFFFFFF. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-fullDrawIndexUint32 fullDrawIndexUint32>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-fullDrawIndexUint32 fullDrawIndexUint32>.
     maxDrawIndexedIndexValue :: Word32
   , -- | #limits-maxDrawIndirectCount# @maxDrawIndirectCount@ is the maximum draw
     -- count that is supported for indirect drawing calls. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiDrawIndirect multiDrawIndirect>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiDrawIndirect multiDrawIndirect>.
     maxDrawIndirectCount :: Word32
   , -- | #limits-maxSamplerLodBias# @maxSamplerLodBias@ is the maximum absolute
     -- sampler LOD bias. The sum of the @mipLodBias@ member of the
@@ -4240,14 +4242,14 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- operand of image sampling operations in shader modules (or 0 if no
     -- @Bias@ operand is provided to an image sampling operation) are clamped
     -- to the range [-@maxSamplerLodBias@,+@maxSamplerLodBias@]. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-mipLodBias>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-mipLodBias>.
     maxSamplerLodBias :: Float
   , -- | #limits-maxSamplerAnisotropy# @maxSamplerAnisotropy@ is the maximum
     -- degree of sampler anisotropy. The maximum degree of anisotropic
     -- filtering used for an image sampling operation is the minimum of the
     -- @maxAnisotropy@ member of the 'Vulkan.Core10.Sampler.SamplerCreateInfo'
     -- structure and this limit. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-maxAnisotropy>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-maxAnisotropy>.
     maxSamplerAnisotropy :: Float
   , -- | #limits-maxViewports# @maxViewports@ is the maximum number of active
     -- viewports. The @viewportCount@ member of the
@@ -4260,14 +4262,14 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- respectively. The maximum viewport dimensions /must/ be greater than or
     -- equal to the largest image which /can/ be created and used as a
     -- framebuffer attachment. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-viewport Controlling the Viewport>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-viewport Controlling the Viewport>.
     maxViewportDimensions :: (Word32, Word32)
   , -- | #limits-viewportboundsrange# @viewportBoundsRange@[2] is the [minimum,
     -- maximum] range that the corners of a viewport /must/ be contained in.
     -- This range /must/ be at least [-2 × @size@, 2 × @size@ - 1], where
     -- @size@ = max(@maxViewportDimensions@[0], @maxViewportDimensions@[1]).
     -- See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-viewport Controlling the Viewport>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-viewport Controlling the Viewport>.
     --
     -- Note
     --
@@ -4291,26 +4293,26 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- 'Vulkan.Core10.Memory.mapMemory', subtracting @offset@ bytes from the
     -- returned pointer will always produce an integer multiple of this limit.
     -- See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-device-hostaccess>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-device-hostaccess>.
     -- The value /must/ be a power of two.
     minMemoryMapAlignment :: Word64
   , -- | #limits-minTexelBufferOffsetAlignment# @minTexelBufferOffsetAlignment@
     -- is the minimum /required/ alignment, in bytes, for the @offset@ member
     -- of the 'Vulkan.Core10.BufferView.BufferViewCreateInfo' structure for
     -- texel buffers. The value /must/ be a power of two. If
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-texelBufferAlignment texelBufferAlignment>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-texelBufferAlignment texelBufferAlignment>
     -- is enabled, this limit is equivalent to the maximum of the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-uniformTexelBufferOffsetAlignmentBytes uniformTexelBufferOffsetAlignmentBytes>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-uniformTexelBufferOffsetAlignmentBytes uniformTexelBufferOffsetAlignmentBytes>
     -- and
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-storageTexelBufferOffsetAlignmentBytes storageTexelBufferOffsetAlignmentBytes>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-storageTexelBufferOffsetAlignmentBytes storageTexelBufferOffsetAlignmentBytes>
     -- members of
     -- 'Vulkan.Core13.Promoted_From_VK_EXT_texel_buffer_alignment.PhysicalDeviceTexelBufferAlignmentProperties',
     -- but smaller alignment is /optionally/ allowed by
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-storageTexelBufferOffsetSingleTexelAlignment storageTexelBufferOffsetSingleTexelAlignment>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-storageTexelBufferOffsetSingleTexelAlignment storageTexelBufferOffsetSingleTexelAlignment>
     -- and
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-uniformTexelBufferOffsetSingleTexelAlignment uniformTexelBufferOffsetSingleTexelAlignment>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-uniformTexelBufferOffsetSingleTexelAlignment uniformTexelBufferOffsetSingleTexelAlignment>.
     -- If
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-texelBufferAlignment texelBufferAlignment>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-texelBufferAlignment texelBufferAlignment>
     -- is not enabled,
     -- 'Vulkan.Core10.BufferView.BufferViewCreateInfo'::@offset@ /must/ be a
     -- multiple of this value.
@@ -4387,7 +4389,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- the color sample counts that are supported for all framebuffer color
     -- attachments with floating- or fixed-point formats. For color attachments
     -- with integer formats, see
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-framebufferIntegerColorSampleCounts framebufferIntegerColorSampleCounts>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-framebufferIntegerColorSampleCounts framebufferIntegerColorSampleCounts>.
     framebufferColorSampleCounts :: SampleCountFlags
   , -- | #limits-framebufferDepthSampleCounts# @framebufferDepthSampleCounts@ is
     -- a bitmask1 of
@@ -4405,7 +4407,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- @framebufferNoAttachmentsSampleCounts@ is a bitmask1 of
     -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' indicating
     -- the supported sample counts for a
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-noattachments subpass which uses no attachments>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-noattachments subpass which uses no attachments>.
     framebufferNoAttachmentsSampleCounts :: SampleCountFlags
   , -- | #limits-maxColorAttachments# @maxColorAttachments@ is the maximum number
     -- of color attachments that /can/ be used by a subpass in a render pass.
@@ -4470,11 +4472,11 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT' in the
     -- 'QueueFamilyProperties'::@queueFlags@ support
     -- 'QueueFamilyProperties'::@timestampValidBits@ of at least 36. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#queries-timestamps Timestamp Queries>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#queries-timestamps Timestamp Queries>.
     timestampComputeAndGraphics :: Bool
   , -- | #limits-timestampPeriod# @timestampPeriod@ is the number of nanoseconds
     -- /required/ for a timestamp query to be incremented by 1. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#queries-timestamps Timestamp Queries>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#queries-timestamps Timestamp Queries>.
     timestampPeriod :: Float
   , -- | #limits-maxClipDistances# @maxClipDistances@ is the maximum number of
     -- clip distances that /can/ be used in a single shader stage. The size of
@@ -4499,7 +4501,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- 'Vulkan.Core10.Device.DeviceQueueCreateInfo'::@pQueuePriorities@. This
     -- /must/ be at least 2, and levels /must/ be spread evenly over the range,
     -- with at least one level at 1.0, and another at 0.0. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-priority>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-priority>.
     discreteQueuePriorities :: Word32
   , -- | #limits-pointSizeRange# @pointSizeRange@[2] is the range
     -- [@minimum@,@maximum@] of supported sizes for points. Values written to
@@ -4529,12 +4531,12 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- 'Vulkan.Core10.FundamentalTypes.FALSE', lines /may/ be rasterized under
     -- a relaxed set of rules. If set to 'Vulkan.Core10.FundamentalTypes.TRUE',
     -- lines are rasterized as per the strict definition. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-lines-basic Basic Line Segment Rasterization>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-lines-basic Basic Line Segment Rasterization>.
     strictLines :: Bool
   , -- | #limits-standardSampleLocations# @standardSampleLocations@ specifies
     -- whether rasterization uses the standard sample locations as documented
     -- in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-multisampling Multisampling>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-multisampling Multisampling>.
     -- If set to 'Vulkan.Core10.FundamentalTypes.TRUE', the implementation uses
     -- the documented sample locations. If set to
     -- 'Vulkan.Core10.FundamentalTypes.FALSE', the implementation /may/ use
@@ -4566,7 +4568,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     optimalBufferCopyRowPitchAlignment :: DeviceSize
   , -- | #limits-nonCoherentAtomSize# @nonCoherentAtomSize@ is the size and
     -- alignment in bytes that bounds concurrent access to
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-device-hostaccess host-mapped device memory>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-device-hostaccess host-mapped device memory>.
     -- The value /must/ be a power of two.
     --
     -- [1]
@@ -4576,7 +4578,7 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     --     sample counts for each image type. Individual images /may/ support
     --     additional sample counts, which are queried using
     --     'getPhysicalDeviceImageFormatProperties' as described in
-    --     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-supported-sample-counts Supported Sample Counts>.
+    --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-supported-sample-counts Supported Sample Counts>.
     nonCoherentAtomSize :: DeviceSize
   }
   deriving (Typeable, Eq)

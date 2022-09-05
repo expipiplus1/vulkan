@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.1
+--     -   Requires support for Vulkan 1.1
 --
---     -   Requires @VK_KHR_buffer_device_address@
+--     -   Requires @VK_KHR_buffer_device_address@ to be enabled for any
+--         device-level functionality
 --
 -- [__Contact__]
 --
@@ -291,7 +292,7 @@
 --
 -- 5) Should the input be provided as SoA or AoS?
 --
--- Both ways are desireable. AoS can provide portability to other APIs and
+-- Both ways are desirable. AoS can provide portability to other APIs and
 -- easier to setup, while SoA allows to update individual inputs in a
 -- cache-efficient manner, when others remain static.
 --
@@ -540,7 +541,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_device_generated_commands Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_device_generated_commands Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -582,6 +583,7 @@ module Vulkan.Extensions.VK_NV_device_generated_commands  ( cmdExecuteGeneratedC
                                                                                        , INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV
                                                                                        , INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV
                                                                                        , INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV
+                                                                                       , INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_NV
                                                                                        , ..
                                                                                        )
                                                           , NV_DEVICE_GENERATED_COMMANDS_SPEC_VERSION
@@ -751,16 +753,16 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02692# If a
 --     'Vulkan.Core10.Handles.ImageView' is sampled with
---     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' as a result
---     of this command, then the image view’s
+--     'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as a result of this
+--     command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
---     'Vulkan.Extensions.VK_EXT_filter_cubic.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT'
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT'
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-filterCubic-02694# Any
 --     'Vulkan.Core10.Handles.ImageView' being sampled with
---     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' as a result
---     of this command /must/ have a
+--     'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' as a result of this
+--     command /must/ have a
 --     'Vulkan.Core10.Enums.ImageViewType.ImageViewType' and format that
 --     supports cubic filtering, as specified by
 --     'Vulkan.Extensions.VK_EXT_filter_cubic.FilterCubicImageViewImageFormatPropertiesEXT'::@filterCubic@
@@ -769,8 +771,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-filterCubicMinmax-02695# Any
 --     'Vulkan.Core10.Handles.ImageView' being sampled with
---     'Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT' with a
---     reduction mode of either
+--     'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_EXT' with a reduction mode
+--     of either
 --     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MIN'
 --     or
 --     'Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_MAX'
@@ -790,20 +792,36 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode' of
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-OpTypeImage-06423# Any
---     'Vulkan.Core10.Handles.ImageView' or
---     'Vulkan.Core10.Handles.BufferView' being written as a storage image
---     or storage texel buffer where the image format field of the
---     @OpTypeImage@ is @Unknown@ then the view’s format feature /must/
---     contain
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-OpTypeImage-07027# For any
+--     'Vulkan.Core10.Handles.ImageView' being written as a storage image
+--     where the image format field of the @OpTypeImage@ is @Unknown@, the
+--     view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT'
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-OpTypeImage-06424# Any
---     'Vulkan.Core10.Handles.ImageView' or
---     'Vulkan.Core10.Handles.BufferView' being read as a storage image or
---     storage texel buffer where the image format field of the
---     @OpTypeImage@ is @Unknown@ then the view’s format feature /must/
---     contain
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-OpTypeImage-07028# For any
+--     'Vulkan.Core10.Handles.ImageView' being read as a storage image
+--     where the image format field of the @OpTypeImage@ is @Unknown@, the
+--     view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-OpTypeImage-07029# For any
+--     'Vulkan.Core10.Handles.BufferView' being written as a storage texel
+--     buffer where the image format field of the @OpTypeImage@ is
+--     @Unknown@, the view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkFormatProperties3 buffer features>
+--     /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT'
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-OpTypeImage-07030# Any
+--     'Vulkan.Core10.Handles.BufferView' being read as a storage texel
+--     buffer where the image format field of the @OpTypeImage@ is
+--     @Unknown@ then the view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkFormatProperties3 buffer features>
+--     /must/ contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT'
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02697# For each set /n/
@@ -880,21 +898,31 @@ foreign import ccall
 --     @OpImageSample*@ or @OpImageSparseSample*@ instructions that
 --     includes a LOD bias or any offset values, in any shader stage
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02705# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and if the 'Vulkan.Core10.Handles.Pipeline'
---     object bound to the pipeline bind point used by this command
---     accesses a uniform buffer, it /must/ not access values outside of
---     the range of the buffer as specified in the descriptor set bound to
---     the same pipeline bind point
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-uniformBuffers-06935# If any
+--     stage of the 'Vulkan.Core10.Handles.Pipeline' object bound to the
+--     pipeline bind point used by this command accesses a uniform buffer,
+--     and that stage was created without enabling either
+--     'Vulkan.Extensions.VK_EXT_pipeline_robustness.PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT'
+--     or
+--     'Vulkan.Extensions.VK_EXT_pipeline_robustness.PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_2_EXT'
+--     for @uniformBuffers@, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     feature is not enabled, that stage /must/ not access values outside
+--     of the range of the buffer as specified in the descriptor set bound
+--     to the same pipeline bind point
 --
--- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02706# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and if the 'Vulkan.Core10.Handles.Pipeline'
---     object bound to the pipeline bind point used by this command
---     accesses a storage buffer, it /must/ not access values outside of
---     the range of the buffer as specified in the descriptor set bound to
---     the same pipeline bind point
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-storageBuffers-06936# If any
+--     stage of the 'Vulkan.Core10.Handles.Pipeline' object bound to the
+--     pipeline bind point used by this command accesses a storage buffer,
+--     and that stage was created without enabling either
+--     'Vulkan.Extensions.VK_EXT_pipeline_robustness.PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT'
+--     or
+--     'Vulkan.Extensions.VK_EXT_pipeline_robustness.PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_2_EXT'
+--     for @storageBuffers@, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
+--     feature is not enabled, that stage /must/ not access values outside
+--     of the range of the buffer as specified in the descriptor set bound
+--     to the same pipeline bind point
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-commandBuffer-02707# If
 --     @commandBuffer@ is an unprotected command buffer and
@@ -980,6 +1008,67 @@ foreign import ccall
 --     @OpTypeImage@ with a @SampledType@ with a @Width@ of 64 by this
 --     command
 --
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-OpImageWeightedSampleQCOM-06971#
+--     If @OpImageWeightedSampleQCOM@ is used to sample a
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_WEIGHT_SAMPLED_IMAGE_BIT_QCOM'
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-OpImageWeightedSampleQCOM-06972#
+--     If @OpImageWeightedSampleQCOM@ uses a
+--     'Vulkan.Core10.Handles.ImageView' as a sample weight image as a
+--     result of this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_WEIGHT_IMAGE_BIT_QCOM'
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-OpImageBoxFilterQCOM-06973# If
+--     @OpImageBoxFilterQCOM@ is used to sample a
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_BOX_FILTER_SAMPLED_BIT_QCOM'
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-OpImageBlockMatchSSDQCOM-06974#
+--     If @OpImageBlockMatchSSDQCOM@ is used to read from an
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM'
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-OpImageBlockMatchSADQCOM-06975#
+--     If @OpImageBlockMatchSADQCOM@ is used to read from an
+--     'Vulkan.Core10.Handles.ImageView' as a result of this command, then
+--     the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM'
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-OpImageBlockMatchSADQCOM-06976#
+--     If @OpImageBlockMatchSADQCOM@ or OpImageBlockMatchSSDQCOM is used to
+--     read from a reference image as result of this command, then the
+--     specified reference coordinates /must/ not fail
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-integer-coordinate-validation integer texel coordinate validation>.
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-OpImageWeightedSampleQCOM-06977#
+--     If @OpImageWeightedSampleQCOM@, @OpImageBoxFilterQCOM@,
+--     @OpImageBlockMatchSSDQCOM@, or @OpImageBlockMatchSADQCOM@ uses a
+--     'Vulkan.Core10.Handles.Sampler' as a result of this command, then
+--     the sampler /must/ have been created with
+--     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-OpImageWeightedSampleQCOM-06978#
+--     If any command other than @OpImageWeightedSampleQCOM@,
+--     @OpImageBoxFilterQCOM@, @OpImageBlockMatchSSDQCOM@, or
+--     @OpImageBlockMatchSADQCOM@ uses a 'Vulkan.Core10.Handles.Sampler' as
+--     a result of this command, then the sampler /must/ not have been
+--     created with
+--     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
+--
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-renderPass-02684# The current
 --     render pass /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
@@ -1014,6 +1103,18 @@ foreign import ccall
 --     command in the current subpass will read from an image subresource
 --     used as an attachment in any way other than as an attachment, this
 --     command /must/ not write to that image subresource as an attachment
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-06886# If the current
+--     render pass instance uses a depth\/stencil attachment with a
+--     read-only layout for the depth aspect,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-depth-write depth writes>
+--     /must/ be disabled
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-06887# If the current
+--     render pass instance uses a depth\/stencil attachment with a
+--     read-only layout for the stencil aspect and stencil test is enabled,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-stencil all stencil ops>
+--     /must/ be 'Vulkan.Core10.Enums.StencilOp.STENCIL_OP_KEEP'
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-maxMultiviewInstanceIndex-02688#
 --     If the draw is recorded in a render pass instance with multiview
@@ -1133,8 +1234,9 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     dynamic state enabled and a
 --     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'
---     structure chained from @VkPipelineVieportCreateInfo@, then the bound
---     graphics pipeline /must/ have been created with
+--     structure chained from
+--     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo', then the
+--     bound graphics pipeline /must/ have been created with
 --     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'::@viewportCount@
 --     greater or equal to the @viewportCount@ parameter in the last call
 --     to
@@ -1145,8 +1247,9 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     dynamic state enabled and a
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'
---     structure chained from @VkPipelineVieportCreateInfo@, then the bound
---     graphics pipeline /must/ have been created with
+--     structure chained from
+--     'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo', then the
+--     bound graphics pipeline /must/ have been created with
 --     'Vulkan.Extensions.VK_NV_scissor_exclusive.PipelineViewportExclusiveScissorStateCreateInfoNV'::@exclusiveScissorCount@
 --     greater or equal to the @viewportCount@ parameter in the last call
 --     to
@@ -1305,31 +1408,42 @@ foreign import ccall
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command, and the @attachmentCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
---     /must/ be equal to the
+--     /must/ be greater than or equal to the
 --     'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo'::@attachmentCount@
 --     of the currently bound graphics pipeline
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-attachmentCount-06815# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the @attachmentCount@ parameter of
+--     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
+--     /must/ be less than or equal to the @maxColorAttachments@ member of
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-pDepthAttachment-06181# If the
 --     current render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     and
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@depthAttachmentFormat@
 --     used to create the currently bound graphics pipeline /must/ be equal
 --     to the 'Vulkan.Core10.Enums.Format.Format' used to create
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-pStencilAttachment-06182# If
 --     the current render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     and
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@stencilAttachmentFormat@
 --     used to create the currently bound graphics pipeline /must/ be equal
 --     to the 'Vulkan.Core10.Enums.Format.Format' used to create
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-imageView-06183# If the
 --     current render pass instance was begun with
@@ -1377,7 +1491,7 @@ foreign import ccall
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
 --     structure, and
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
 --     @depthStencilAttachmentSamples@ member of
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
@@ -1385,7 +1499,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
 --     used to create the currently bound graphics pipeline /must/ be equal
 --     to the sample count used to create
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-pStencilAttachment-06187# If
 --     the current render pass instance was begun with
@@ -1395,7 +1509,7 @@ foreign import ccall
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
 --     structure, and
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
 --     @depthStencilAttachmentSamples@ member of
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
@@ -1403,7 +1517,7 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
 --     used to create the currently bound graphics pipeline /must/ be equal
 --     to the sample count used to create
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-colorAttachmentCount-06188# If
 --     the currently bound pipeline was created without a
@@ -1430,12 +1544,12 @@ foreign import ccall
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
 --     structure, and
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     used to create the currently bound graphics pipeline /must/ be equal
 --     to the sample count used to create
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-pStencilAttachment-06190# If
 --     the current render pass instance was begun with
@@ -1445,12 +1559,12 @@ foreign import ccall
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
 --     structure, and
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     used to create the currently bound graphics pipeline /must/ be equal
 --     to the sample count used to create
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->pname@:imageView
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-renderPass-06198# If the
 --     current render pass instance was begun with
@@ -1476,6 +1590,21 @@ foreign import ccall
 --     query is active, the bound graphics pipeline /must/ not have been
 --     created with a non-zero value in
 --     'Vulkan.Extensions.VK_EXT_transform_feedback.PipelineRasterizationStateStreamCreateInfoEXT'::@rasterizationStream@.
+--
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-stage-07073# If the currently
+--     bound pipeline was created with the
+--     'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo'::@stage@
+--     member of an element of
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pStages@ set
+--     to
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
+--     or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT',
+--     then
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-mesh-shader Mesh Shader Queries>
+--     must not be active
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04007# All vertex input
 --     bindings accessed via vertex input variables declared in the vertex
@@ -1560,9 +1689,9 @@ foreign import ccall
 --     member of an element of
 --     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pStages@ set
 --     to
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_NV'
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT'
 --     or
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_NV'
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-commandBuffer-02970#
 --     @commandBuffer@ /must/ not be a protected command buffer
@@ -1586,7 +1715,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-deviceGeneratedCommands-02911#
 --     The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -1610,6 +1739,9 @@ foreign import ccall
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-renderpass# This command
 --     /must/ only be called inside of a render pass instance
 --
+-- -   #VUID-vkCmdExecuteGeneratedCommandsNV-videocoding# This command
+--     /must/ only be called outside of a video coding scope
+--
 -- == Host Synchronization
 --
 -- -   Host access to @commandBuffer@ /must/ be externally synchronized
@@ -1621,12 +1753,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Inside                                                                                                                 | Outside                                                                                                                     | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -1679,7 +1811,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdPreprocessGeneratedCommandsNV-deviceGeneratedCommands-02928#
 --     The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -1703,6 +1835,9 @@ foreign import ccall
 -- -   #VUID-vkCmdPreprocessGeneratedCommandsNV-renderpass# This command
 --     /must/ only be called outside of a render pass instance
 --
+-- -   #VUID-vkCmdPreprocessGeneratedCommandsNV-videocoding# This command
+--     /must/ only be called outside of a video coding scope
+--
 -- == Host Synchronization
 --
 -- -   Host access to @commandBuffer@ /must/ be externally synchronized
@@ -1714,12 +1849,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -1771,7 +1906,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBindPipelineShaderGroupNV-deviceGeneratedCommands-02896#
 --     The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommands deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -1795,6 +1930,9 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics, or compute operations
 --
+-- -   #VUID-vkCmdBindPipelineShaderGroupNV-videocoding# This command
+--     /must/ only be called outside of a video coding scope
+--
 -- -   #VUID-vkCmdBindPipelineShaderGroupNV-commonparent# Both of
 --     @commandBuffer@, and @pipeline@ /must/ have been created, allocated,
 --     or retrieved from the same 'Vulkan.Core10.Handles.Device'
@@ -1810,12 +1948,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -1859,7 +1997,7 @@ foreign import ccall
 --
 -- -   #VUID-vkGetGeneratedCommandsMemoryRequirementsNV-deviceGeneratedCommands-02906#
 --     The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -1917,7 +2055,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCreateIndirectCommandsLayoutNV-deviceGeneratedCommands-02929#
 --     The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -1965,7 +2103,7 @@ createIndirectCommandsLayoutNV :: forall io
                                   -- command layout.
                                   IndirectCommandsLayoutCreateInfoNV
                                -> -- | @pAllocator@ controls host memory allocation as described in the
-                                  -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                  -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                   -- chapter.
                                   ("allocator" ::: Maybe AllocationCallbacks)
                                -> io (IndirectCommandsLayoutNV)
@@ -2025,7 +2163,7 @@ foreign import ccall
 --
 -- -   #VUID-vkDestroyIndirectCommandsLayoutNV-deviceGeneratedCommands-02941#
 --     The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -2066,7 +2204,7 @@ destroyIndirectCommandsLayoutNV :: forall io
                                 -> -- | @indirectCommandsLayout@ is the layout to destroy.
                                    IndirectCommandsLayoutNV
                                 -> -- | @pAllocator@ controls host memory allocation as described in the
-                                   -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                   -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                    -- chapter.
                                    ("allocator" ::: Maybe AllocationCallbacks)
                                 -> io ()
@@ -2113,7 +2251,7 @@ data PhysicalDeviceDeviceGeneratedCommandsFeaturesNV = PhysicalDeviceDeviceGener
   { -- | #features-deviceGeneratedCommands# @deviceGeneratedCommands@ indicates
     -- whether the implementation supports functionality to generate commands
     -- on the device. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#device-generated-commands Device-Generated Commands>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#device-generated-commands Device-Generated Commands>.
     deviceGeneratedCommands :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -2437,7 +2575,7 @@ instance Zero GraphicsShaderGroupCreateInfoNV where
 --
 -- -   #VUID-VkGraphicsPipelineShaderGroupsCreateInfoNV-deviceGeneratedCommands-02887#
 --     The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommands ::deviceGeneratedCommands>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-deviceGeneratedCommands deviceGeneratedCommands>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -2865,6 +3003,10 @@ instance Zero IndirectCommandsStreamNV where
 --     be less than or equal to
 --     'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV'::@maxIndirectCommandsTokenOffset@
 --
+-- -   #VUID-VkIndirectCommandsLayoutTokenNV-offset-06888# @offset@ /must/
+--     be aligned to the scalar alignment of @tokenType@ or
+--     @minIndirectCommandsBufferOffsetAlignment@, whichever is lower
+--
 -- -   #VUID-VkIndirectCommandsLayoutTokenNV-tokenType-02976# If
 --     @tokenType@ is 'INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV',
 --     @vertexBindingUnit@ /must/ stay within device supported limits for
@@ -3097,6 +3239,22 @@ instance Zero IndirectCommandsLayoutTokenNV where
 -- >   }
 -- > }
 --
+-- When tokens are consumed, an offset is computed based on token offset
+-- and stream stride. The resulting offset is required to be aligned. The
+-- alignment for a specific token is equal to the scalar alignment of the
+-- data type as defined in
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-alignment-requirements Alignment Requirements>,
+-- or
+-- 'PhysicalDeviceDeviceGeneratedCommandsPropertiesNV'::@minIndirectCommandsBufferOffsetAlignment@,
+-- whichever is lower.
+--
+-- Note
+--
+-- A @minIndirectCommandsBufferOffsetAlignment@ of 4 allows
+-- 'Vulkan.Core10.FundamentalTypes.DeviceAddress' to be packed as @uvec2@
+-- with scalar layout instead of @uint64_t@ with 8 byte alignment. This
+-- enables direct compatibility with D3D12 command signature layouts.
+--
 -- == Valid Usage
 --
 -- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-pipelineBindPoint-02930#
@@ -3119,10 +3277,11 @@ instance Zero IndirectCommandsLayoutTokenNV where
 --     single element of such token type
 --
 -- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-pTokens-02934# All state
---     tokens in @pTokens@ /must/ occur prior work provoking tokens
+--     tokens in @pTokens@ /must/ occur before any work provoking tokens
 --     ('INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV',
 --     'INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV',
---     'INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV')
+--     'INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV',
+--     'INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_NV')
 --
 -- -   #VUID-VkIndirectCommandsLayoutCreateInfoNV-pTokens-02935# The
 --     content of @pTokens@ /must/ include one single work provoking token
@@ -3347,6 +3506,18 @@ instance Zero IndirectCommandsLayoutCreateInfoNV where
 --     /must/ be bound completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
 --
+-- -   #VUID-VkGeneratedCommandsInfoNV-indirectCommandsLayout-07078# If the
+--     @indirectCommandsLayout@ uses a token of
+--     'INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV', then the @pipeline@
+--     /must/ contain a shader stage using the @MeshNV@ @Execution@
+--     @Model@.
+--
+-- -   #VUID-VkGeneratedCommandsInfoNV-indirectCommandsLayout-07079# If the
+--     @indirectCommandsLayout@ uses a token of
+--     'INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_NV', then the
+--     @pipeline@ /must/ contain a shader stage using the @MeshEXT@
+--     @Execution@ @Model@.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkGeneratedCommandsInfoNV-sType-sType# @sType@ /must/ be
@@ -3427,7 +3598,9 @@ data GeneratedCommandsInfoNV = GeneratedCommandsInfoNV
     -- for preprocessing the input data for execution. If this structure is
     -- used with 'cmdExecuteGeneratedCommandsNV' with its @isPreprocessed@ set
     -- to 'Vulkan.Core10.FundamentalTypes.TRUE', then the preprocessing step is
-    -- skipped and data is only read from this buffer.
+    -- skipped and data is only read from this buffer. The contents and the
+    -- layout of this buffer is opaque to applications and /must/ not be
+    -- modified or copied to another buffer for reuse.
     preprocessBuffer :: Buffer
   , -- | @preprocessOffset@ is the byte offset into @preprocessBuffer@ where the
     -- preprocessed data is stored.
@@ -3693,8 +3866,8 @@ instance Read IndirectCommandsLayoutUsageFlagBitsNV where
 
 type IndirectStateFlagsNV = IndirectStateFlagBitsNV
 
--- | VkIndirectStateFlagBitsNV - Bitmask specifiying state that can be
--- altered on the device
+-- | VkIndirectStateFlagBitsNV - Bitmask specifying state that can be altered
+-- on the device
 --
 -- = See Also
 --
@@ -3737,25 +3910,27 @@ instance Read IndirectStateFlagBitsNV where
 --
 -- \'
 --
--- +-------------------------------------------------+------------------------------------------------------------------+
--- | Token type                                      | Equivalent command                                               |
--- +=================================================+==================================================================+
--- | 'INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV'  | 'cmdBindPipelineShaderGroupNV'                                   |
--- +-------------------------------------------------+------------------------------------------------------------------+
--- | 'INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV'   | -                                                                |
--- +-------------------------------------------------+------------------------------------------------------------------+
--- | 'INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV'  | 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'         |
--- +-------------------------------------------------+------------------------------------------------------------------+
--- | 'INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV' | 'Vulkan.Core10.CommandBufferBuilding.cmdBindVertexBuffers'       |
--- +-------------------------------------------------+------------------------------------------------------------------+
--- | 'INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV' | 'Vulkan.Core10.CommandBufferBuilding.cmdPushConstants'           |
--- +-------------------------------------------------+------------------------------------------------------------------+
--- | 'INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV'  | 'Vulkan.Core10.CommandBufferBuilding.cmdDrawIndexedIndirect'     |
--- +-------------------------------------------------+------------------------------------------------------------------+
--- | 'INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV'          | 'Vulkan.Core10.CommandBufferBuilding.cmdDrawIndirect'            |
--- +-------------------------------------------------+------------------------------------------------------------------+
--- | 'INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV'    | 'Vulkan.Extensions.VK_NV_mesh_shader.cmdDrawMeshTasksIndirectNV' |
--- +-------------------------------------------------+------------------------------------------------------------------+
+-- +---------------------------------------------------+--------------------------------------------------------------------+
+-- | Token type                                        | Equivalent command                                                 |
+-- +===================================================+====================================================================+
+-- | 'INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV'    | 'cmdBindPipelineShaderGroupNV'                                     |
+-- +---------------------------------------------------+--------------------------------------------------------------------+
+-- | 'INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV'     | -                                                                  |
+-- +---------------------------------------------------+--------------------------------------------------------------------+
+-- | 'INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV'    | 'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'           |
+-- +---------------------------------------------------+--------------------------------------------------------------------+
+-- | 'INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV'   | 'Vulkan.Core10.CommandBufferBuilding.cmdBindVertexBuffers'         |
+-- +---------------------------------------------------+--------------------------------------------------------------------+
+-- | 'INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV'   | 'Vulkan.Core10.CommandBufferBuilding.cmdPushConstants'             |
+-- +---------------------------------------------------+--------------------------------------------------------------------+
+-- | 'INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV'    | 'Vulkan.Core10.CommandBufferBuilding.cmdDrawIndexedIndirect'       |
+-- +---------------------------------------------------+--------------------------------------------------------------------+
+-- | 'INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV'            | 'Vulkan.Core10.CommandBufferBuilding.cmdDrawIndirect'              |
+-- +---------------------------------------------------+--------------------------------------------------------------------+
+-- | 'INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV'      | 'Vulkan.Extensions.VK_NV_mesh_shader.cmdDrawMeshTasksIndirectNV'   |
+-- +---------------------------------------------------+--------------------------------------------------------------------+
+-- | 'INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_NV' | 'Vulkan.Extensions.VK_EXT_mesh_shader.cmdDrawMeshTasksIndirectEXT' |
+-- +---------------------------------------------------+--------------------------------------------------------------------+
 --
 -- Supported indirect command tokens
 --
@@ -3767,21 +3942,23 @@ newtype IndirectCommandsTokenTypeNV = IndirectCommandsTokenTypeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV"
-pattern INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV  = IndirectCommandsTokenTypeNV 0
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV    = IndirectCommandsTokenTypeNV 0
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV"
-pattern INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV   = IndirectCommandsTokenTypeNV 1
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV     = IndirectCommandsTokenTypeNV 1
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV"
-pattern INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV  = IndirectCommandsTokenTypeNV 2
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV    = IndirectCommandsTokenTypeNV 2
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV"
-pattern INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV = IndirectCommandsTokenTypeNV 3
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV   = IndirectCommandsTokenTypeNV 3
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV"
-pattern INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV = IndirectCommandsTokenTypeNV 4
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV   = IndirectCommandsTokenTypeNV 4
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV"
-pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV  = IndirectCommandsTokenTypeNV 5
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV    = IndirectCommandsTokenTypeNV 5
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV"
-pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV          = IndirectCommandsTokenTypeNV 6
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV            = IndirectCommandsTokenTypeNV 6
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV"
-pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV    = IndirectCommandsTokenTypeNV 7
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV      = IndirectCommandsTokenTypeNV 7
+-- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_NV"
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_NV = IndirectCommandsTokenTypeNV 1000328000
 {-# complete INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV,
              INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV,
              INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV,
@@ -3789,7 +3966,8 @@ pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV    = IndirectCommandsTokenTyp
              INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV,
              INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV,
              INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV,
-             INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV :: IndirectCommandsTokenTypeNV #-}
+             INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV,
+             INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_NV :: IndirectCommandsTokenTypeNV #-}
 
 conNameIndirectCommandsTokenTypeNV :: String
 conNameIndirectCommandsTokenTypeNV = "IndirectCommandsTokenTypeNV"
@@ -3799,14 +3977,15 @@ enumPrefixIndirectCommandsTokenTypeNV = "INDIRECT_COMMANDS_TOKEN_TYPE_"
 
 showTableIndirectCommandsTokenTypeNV :: [(IndirectCommandsTokenTypeNV, String)]
 showTableIndirectCommandsTokenTypeNV =
-  [ (INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV , "SHADER_GROUP_NV")
-  , (INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV  , "STATE_FLAGS_NV")
-  , (INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV , "INDEX_BUFFER_NV")
-  , (INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV, "VERTEX_BUFFER_NV")
-  , (INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV, "PUSH_CONSTANT_NV")
-  , (INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV , "DRAW_INDEXED_NV")
-  , (INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV         , "DRAW_NV")
-  , (INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV   , "DRAW_TASKS_NV")
+  [ (INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV   , "SHADER_GROUP_NV")
+  , (INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV    , "STATE_FLAGS_NV")
+  , (INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV   , "INDEX_BUFFER_NV")
+  , (INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV  , "VERTEX_BUFFER_NV")
+  , (INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV  , "PUSH_CONSTANT_NV")
+  , (INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV   , "DRAW_INDEXED_NV")
+  , (INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV           , "DRAW_NV")
+  , (INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV     , "DRAW_TASKS_NV")
+  , (INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_NV, "DRAW_MESH_TASKS_NV")
   ]
 
 instance Show IndirectCommandsTokenTypeNV where

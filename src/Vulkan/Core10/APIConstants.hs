@@ -48,6 +48,8 @@ module Vulkan.Core10.APIConstants  ( pattern LOD_CLAMP_NONE
                                    , pattern SHADER_UNUSED_KHR
                                    , MAX_GLOBAL_PRIORITY_SIZE_KHR
                                    , pattern MAX_GLOBAL_PRIORITY_SIZE_KHR
+                                   , MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT
+                                   , pattern MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT
                                    , pattern NULL_HANDLE
                                    , IsHandle
                                    , HasObjectType(..)
@@ -331,6 +333,13 @@ type MAX_GLOBAL_PRIORITY_SIZE_KHR = 16
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_global_priority VK_KHR_global_priority>
 pattern MAX_GLOBAL_PRIORITY_SIZE_KHR :: forall a . Integral a => a
 pattern MAX_GLOBAL_PRIORITY_SIZE_KHR = 16
+
+
+type MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT = 32
+
+-- No documentation found for TopLevel "VK_MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT"
+pattern MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT :: forall a . Integral a => a
+pattern MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT = 32
 
 
 -- | VK_NULL_HANDLE - Reserved non-valid object handle

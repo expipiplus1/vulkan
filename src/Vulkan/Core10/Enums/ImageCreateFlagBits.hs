@@ -8,6 +8,7 @@ module Vulkan.Core10.Enums.ImageCreateFlagBits  ( ImageCreateFlags
                                                                      , IMAGE_CREATE_CUBE_COMPATIBLE_BIT
                                                                      , IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM
                                                                      , IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT
+                                                                     , IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT
                                                                      , IMAGE_CREATE_SUBSAMPLED_BIT_EXT
                                                                      , IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT
                                                                      , IMAGE_CREATE_CORNER_SAMPLED_BIT_NV
@@ -41,9 +42,9 @@ type ImageCreateFlags = ImageCreateFlagBits
 -- = Description
 --
 -- See
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-sparseresourcefeatures Sparse Resource Features>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-sparseresourcefeatures Sparse Resource Features>
 -- and
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-physicalfeatures Sparse Physical Device Features>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory-physicalfeatures Sparse Physical Device Features>
 -- for more details.
 --
 -- = See Also
@@ -70,7 +71,7 @@ pattern IMAGE_CREATE_SPARSE_ALIASED_BIT                   = ImageCreateFlagBits 
 -- | 'IMAGE_CREATE_MUTABLE_FORMAT_BIT' specifies that the image /can/ be used
 -- to create a 'Vulkan.Core10.Handles.ImageView' with a different format
 -- from the image. For
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
 -- formats, 'IMAGE_CREATE_MUTABLE_FORMAT_BIT' specifies that a
 -- 'Vulkan.Core10.Handles.ImageView' can be created of a /plane/ of the
 -- image.
@@ -82,14 +83,18 @@ pattern IMAGE_CREATE_MUTABLE_FORMAT_BIT                   = ImageCreateFlagBits 
 pattern IMAGE_CREATE_CUBE_COMPATIBLE_BIT                  = ImageCreateFlagBits 0x00000010
 -- | 'IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM' specifies that an
 -- image /can/ be used in a render pass with non-zero
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-fragmentdensitymapoffsets fragment density map offsets>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-fragmentdensitymapoffsets fragment density map offsets>.
 -- In a renderpass with non-zero offsets, fragment density map attachments,
 -- input attachments, color attachments, depth\/stencil attachment, resolve
 -- attachments, and preserve attachments /must/ be created with
--- VK_IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM.
+-- 'IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM'.
 pattern IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM = ImageCreateFlagBits 0x00008000
 -- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT"
 pattern IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT           = ImageCreateFlagBits 0x00020000
+-- | 'IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT' specifies
+-- that an image /can/ be used with
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#multisampled-render-to-single-sampled multisampled rendering as a single-sampled framebuffer attachment>
+pattern IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT = ImageCreateFlagBits 0x00040000
 -- | 'IMAGE_CREATE_SUBSAMPLED_BIT_EXT' specifies that an image /can/ be in a
 -- subsampled format which /may/ be more optimal when written as an
 -- attachment by a render pass that has a fragment density map attachment.
@@ -110,14 +115,14 @@ pattern IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT           = ImageCreateFlagBits 
 --     additionally be read by the device during
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_VERTEX_SHADER_BIT'
 --     if
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-subsampledCoarseReconstructionEarlyAccess ::subsampledCoarseReconstructionEarlyAccess>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-subsampledCoarseReconstructionEarlyAccess ::subsampledCoarseReconstructionEarlyAccess>
 --     is 'Vulkan.Core10.FundamentalTypes.TRUE' and the sampler was created
 --     with @flags@ containing
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT'.
 --
 -- -   Image data read with load operations are resampled to the fragment
 --     density of the render pass if
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-subsampledLoads ::subsampledLoads>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-subsampledLoads ::subsampledLoads>
 --     is 'Vulkan.Core10.FundamentalTypes.TRUE'. Otherwise, values of image
 --     data are undefined.
 --
@@ -129,10 +134,10 @@ pattern IMAGE_CREATE_SUBSAMPLED_BIT_EXT                   = ImageCreateFlagBits 
 -- sample locations when used as a depth\/stencil attachment.
 pattern IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT = ImageCreateFlagBits 0x00001000
 -- | 'IMAGE_CREATE_CORNER_SAMPLED_BIT_NV' specifies that the image is a
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-images-corner-sampled corner-sampled image>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-images-corner-sampled corner-sampled image>.
 pattern IMAGE_CREATE_CORNER_SAMPLED_BIT_NV                = ImageCreateFlagBits 0x00002000
 -- | 'IMAGE_CREATE_DISJOINT_BIT' specifies that an image with a
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
 -- /must/ have each plane separately bound to memory, rather than having a
 -- single memory binding for the whole image; the presence of this bit
 -- distinguishes a /disjoint image/ from an image without this bit set.
@@ -169,13 +174,13 @@ pattern IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT      = ImageCreateFlagBits 
 -- creation parameters and aliased to the same memory /can/ interpret the
 -- contents of the memory consistently with each other, subject to the
 -- rules described in the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-memory-aliasing Memory Aliasing>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-memory-aliasing Memory Aliasing>
 -- section. This flag further specifies that each plane of a /disjoint/
 -- image /can/ share an in-memory non-linear representation with
 -- single-plane images, and that a single-plane image /can/ share an
 -- in-memory non-linear representation with a plane of a multi-planar
 -- disjoint image, according to the rules in
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatible-planes>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatible-planes>.
 -- If the @pNext@ chain includes a
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'
 -- or
@@ -199,6 +204,7 @@ showTableImageCreateFlagBits =
   , (IMAGE_CREATE_CUBE_COMPATIBLE_BIT                 , "CUBE_COMPATIBLE_BIT")
   , (IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM, "FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM")
   , (IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT          , "2D_VIEW_COMPATIBLE_BIT_EXT")
+  , (IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT, "MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT")
   , (IMAGE_CREATE_SUBSAMPLED_BIT_EXT                  , "SUBSAMPLED_BIT_EXT")
   , (IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT, "SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT")
   , (IMAGE_CREATE_CORNER_SAMPLED_BIT_NV               , "CORNER_SAMPLED_BIT_NV")

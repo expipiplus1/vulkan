@@ -19,13 +19,16 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.1
+--     -   Requires support for Vulkan 1.1
 --
---     -   Requires @VK_EXT_descriptor_indexing@
+--     -   Requires @VK_EXT_descriptor_indexing@ to be enabled for any
+--         device-level functionality
 --
---     -   Requires @VK_KHR_buffer_device_address@
+--     -   Requires @VK_KHR_buffer_device_address@ to be enabled for any
+--         device-level functionality
 --
---     -   Requires @VK_KHR_deferred_host_operations@
+--     -   Requires @VK_KHR_deferred_host_operations@ to be enabled for any
+--         device-level functionality
 --
 -- [__Contact__]
 --
@@ -376,7 +379,7 @@
 --     'cmdCopyMemoryToAccelerationStructureKHR')
 --
 -- -   document
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure-inactive-prims inactive primitives and instances>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure-inactive-prims inactive primitives and instances>
 --
 -- -   added 'PhysicalDeviceAccelerationStructureFeaturesKHR' structure
 --
@@ -384,7 +387,7 @@
 --     ('cmdBuildAccelerationStructuresIndirectKHR')
 --
 -- -   added
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#host-acceleration-structure host acceleration structure>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#host-acceleration-structure host acceleration structure>
 --     commands
 --
 -- -   reworked geometry structures so they could be better shared between
@@ -655,7 +658,7 @@
 --         structure and require one of them be @NULL@
 --
 -- -   added
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
 --     support for acceleration structures
 --
 -- -   changed the @update@ member of
@@ -844,13 +847,14 @@
 --
 --     -   Resolve Vulkan-hpp issues (!3543)
 --
---     -   add missing require for VkGeometryInstanceFlagsKHR
+--         -   add missing require for VkGeometryInstanceFlagsKHR
 --
---     -   de-alias VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_NV
---         since the KHR structure is no longer equivalent
+--         -   de-alias
+--             VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_NV
+--             since the KHR structure is no longer equivalent
 --
---     -   add len to pDataSize attribute for
---         vkWriteAccelerationStructuresPropertiesKHR
+--         -   add len to pDataSize attribute for
+--             vkWriteAccelerationStructuresPropertiesKHR
 --
 -- -   Revision 4, 2020-01-23 (Daniel Koch, Eric Werness)
 --
@@ -1147,7 +1151,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_acceleration_structure Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_acceleration_structure Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -1475,7 +1479,7 @@ destroyAccelerationStructureKHR :: forall io
                                 -> -- | @accelerationStructure@ is the acceleration structure to destroy.
                                    AccelerationStructureKHR
                                 -> -- | @pAllocator@ controls host memory allocation as described in the
-                                   -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                   -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                    -- chapter.
                                    ("allocator" ::: Maybe AllocationCallbacks)
                                 -> io ()
@@ -1507,12 +1511,12 @@ foreign import ccall
 -- @pInfo->mode@.
 --
 -- Accesses to @pInfo->src@ and @pInfo->dst@ /must/ be
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
 -- and an
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
 -- of
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR'
 -- or
@@ -1548,6 +1552,9 @@ foreign import ccall
 -- -   #VUID-vkCmdCopyAccelerationStructureKHR-renderpass# This command
 --     /must/ only be called outside of a render pass instance
 --
+-- -   #VUID-vkCmdCopyAccelerationStructureKHR-videocoding# This command
+--     /must/ only be called outside of a video coding scope
+--
 -- == Host Synchronization
 --
 -- -   Host access to @commandBuffer@ /must/ be externally synchronized
@@ -1559,12 +1566,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Compute                                                                                                               |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -1624,7 +1631,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCopyAccelerationStructureKHR-accelerationStructureHostCommands-03582#
 --     The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-accelerationStructureHostCommands ::accelerationStructureHostCommands>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-accelerationStructureHostCommands ::accelerationStructureHostCommands>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCopyAccelerationStructureKHR-buffer-03780# The @buffer@ used
@@ -1681,7 +1688,7 @@ copyAccelerationStructureKHR :: forall io
                                 Device
                              -> -- | @deferredOperation@ is an optional
                                 -- 'Vulkan.Extensions.Handles.DeferredOperationKHR' to
-                                -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#deferred-host-operations-requesting request deferral>
+                                -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#deferred-host-operations-requesting request deferral>
                                 -- for this command.
                                 DeferredOperationKHR
                              -> -- | @pInfo@ is a pointer to a 'CopyAccelerationStructureInfoKHR' structure
@@ -1712,12 +1719,12 @@ foreign import ccall
 -- = Description
 --
 -- Accesses to @pInfo->src@ /must/ be
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
 -- and an
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
 -- of
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR'.
 -- Accesses to the buffer indicated by @pInfo->dst.deviceAddress@ /must/ be
@@ -1806,6 +1813,9 @@ foreign import ccall
 -- -   #VUID-vkCmdCopyAccelerationStructureToMemoryKHR-renderpass# This
 --     command /must/ only be called outside of a render pass instance
 --
+-- -   #VUID-vkCmdCopyAccelerationStructureToMemoryKHR-videocoding# This
+--     command /must/ only be called outside of a video coding scope
+--
 -- == Host Synchronization
 --
 -- -   Host access to @commandBuffer@ /must/ be externally synchronized
@@ -1817,12 +1827,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Compute                                                                                                               |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -1894,7 +1904,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCopyAccelerationStructureToMemoryKHR-accelerationStructureHostCommands-03584#
 --     The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-accelerationStructureHostCommands ::accelerationStructureHostCommands>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-accelerationStructureHostCommands ::accelerationStructureHostCommands>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCopyAccelerationStructureToMemoryKHR-buffer-03783# The
@@ -1947,7 +1957,7 @@ copyAccelerationStructureToMemoryKHR :: forall io
                                         Device
                                      -> -- | @deferredOperation@ is an optional
                                         -- 'Vulkan.Extensions.Handles.DeferredOperationKHR' to
-                                        -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#deferred-host-operations-requesting request deferral>
+                                        -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#deferred-host-operations-requesting request deferral>
                                         -- for this command.
                                         DeferredOperationKHR
                                      -> -- | @pInfo@ is a pointer to a 'CopyAccelerationStructureToMemoryInfoKHR'
@@ -1978,12 +1988,12 @@ foreign import ccall
 -- = Description
 --
 -- Accesses to @pInfo->dst@ /must/ be
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
 -- and an
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
 -- of
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR'.
 -- Accesses to the buffer indicated by @pInfo->src.deviceAddress@ /must/ be
@@ -2041,6 +2051,9 @@ foreign import ccall
 -- -   #VUID-vkCmdCopyMemoryToAccelerationStructureKHR-renderpass# This
 --     command /must/ only be called outside of a render pass instance
 --
+-- -   #VUID-vkCmdCopyMemoryToAccelerationStructureKHR-videocoding# This
+--     command /must/ only be called outside of a video coding scope
+--
 -- == Host Synchronization
 --
 -- -   Host access to @commandBuffer@ /must/ be externally synchronized
@@ -2052,12 +2065,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Compute                                                                                                               |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -2125,7 +2138,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCopyMemoryToAccelerationStructureKHR-accelerationStructureHostCommands-03583#
 --     The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-accelerationStructureHostCommands ::accelerationStructureHostCommands>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-accelerationStructureHostCommands ::accelerationStructureHostCommands>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCopyMemoryToAccelerationStructureKHR-buffer-03782# The
@@ -2178,7 +2191,7 @@ copyMemoryToAccelerationStructureKHR :: forall io
                                         Device
                                      -> -- | @deferredOperation@ is an optional
                                         -- 'Vulkan.Extensions.Handles.DeferredOperationKHR' to
-                                        -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#deferred-host-operations-requesting request deferral>
+                                        -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#deferred-host-operations-requesting request deferral>
                                         -- for this command.
                                         DeferredOperationKHR
                                      -> -- | @pInfo@ is a pointer to a 'CopyMemoryToAccelerationStructureInfoKHR'
@@ -2210,12 +2223,12 @@ foreign import ccall
 --
 -- Accesses to any of the acceleration structures listed in
 -- @pAccelerationStructures@ /must/ be
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
 -- and an
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
 -- of
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR'.
 --
@@ -2296,6 +2309,9 @@ foreign import ccall
 -- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-renderpass# This
 --     command /must/ only be called outside of a render pass instance
 --
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-videocoding#
+--     This command /must/ only be called outside of a video coding scope
+--
 -- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-accelerationStructureCount-arraylength#
 --     @accelerationStructureCount@ /must/ be greater than @0@
 --
@@ -2315,12 +2331,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Compute                                                                                                               |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -2453,7 +2469,7 @@ foreign import ccall
 --
 -- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-accelerationStructureHostCommands-03585#
 --     The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-accelerationStructureHostCommands ::accelerationStructureHostCommands>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-accelerationStructureHostCommands ::accelerationStructureHostCommands>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-buffer-03784# The
@@ -2551,9 +2567,9 @@ foreign import ccall
 --
 -- -   #VUID-vkGetDeviceAccelerationStructureCompatibilityKHR-rayTracingPipeline-03661#
 --     The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline>
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-rayQuery rayQuery>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-rayQuery rayQuery>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -2629,18 +2645,18 @@ foreign import ccall
 --
 -- -   #VUID-vkCreateAccelerationStructureKHR-accelerationStructure-03611#
 --     The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-accelerationStructure accelerationStructure>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-accelerationStructure accelerationStructure>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCreateAccelerationStructureKHR-deviceAddress-03488# If
 --     'AccelerationStructureCreateInfoKHR'::@deviceAddress@ is not zero,
 --     the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-accelerationStructureCaptureReplay accelerationStructureCaptureReplay>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-accelerationStructureCaptureReplay accelerationStructureCaptureReplay>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCreateAccelerationStructureKHR-device-03489# If @device@ was
 --     created with multiple physical devices, then the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -2690,7 +2706,7 @@ createAccelerationStructureKHR :: forall a io
                                   -- structure.
                                   (AccelerationStructureCreateInfoKHR a)
                                -> -- | @pAllocator@ controls host memory allocation as described in the
-                                  -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                  -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                   -- chapter.
                                   ("allocator" ::: Maybe AllocationCallbacks)
                                -> io (AccelerationStructureKHR)
@@ -2751,12 +2767,12 @@ foreign import ccall
 -- Accesses to the acceleration structure scratch buffers as identified by
 -- the 'AccelerationStructureBuildGeometryInfoKHR'::@scratchData@ buffer
 -- device addresses /must/ be
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
 -- and an
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
 -- of
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR'
 -- or
@@ -2773,12 +2789,12 @@ foreign import ccall
 -- 'AccelerationStructureGeometryTrianglesDataKHR'::@transformData@,
 -- 'AccelerationStructureGeometryAabbsDataKHR'::@data@, and
 -- 'AccelerationStructureGeometryInstancesDataKHR'::@data@ /must/ be
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
 -- and an
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
 -- of 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_SHADER_READ_BIT'.
 --
 -- == Valid Usage
@@ -3259,6 +3275,9 @@ foreign import ccall
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-renderpass# This command
 --     /must/ only be called outside of a render pass instance
 --
+-- -   #VUID-vkCmdBuildAccelerationStructuresKHR-videocoding# This command
+--     /must/ only be called outside of a video coding scope
+--
 -- -   #VUID-vkCmdBuildAccelerationStructuresKHR-infoCount-arraylength#
 --     @infoCount@ /must/ be greater than @0@
 --
@@ -3273,12 +3292,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Compute                                                                                                               |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -3339,12 +3358,12 @@ foreign import ccall
 -- 'cmdBuildAccelerationStructuresKHR'.
 --
 -- Accesses to any element of @pIndirectDeviceAddresses@ /must/ be
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
 -- with the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
 -- and an
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
 -- of
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_INDIRECT_COMMAND_READ_BIT'.
 --
@@ -3833,7 +3852,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-accelerationStructureIndirectBuild-03650#
 --     The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-accelerationStructureIndirectBuild ::accelerationStructureIndirectBuild>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-accelerationStructureIndirectBuild ::accelerationStructureIndirectBuild>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-pIndirectDeviceAddresses-03651#
@@ -3888,6 +3907,9 @@ foreign import ccall
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-renderpass# This
 --     command /must/ only be called outside of a render pass instance
 --
+-- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-videocoding# This
+--     command /must/ only be called outside of a video coding scope
+--
 -- -   #VUID-vkCmdBuildAccelerationStructuresIndirectKHR-infoCount-arraylength#
 --     @infoCount@ /must/ be greater than @0@
 --
@@ -3902,12 +3924,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Compute                                                                                                               |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -4276,7 +4298,7 @@ foreign import ccall
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-accelerationStructureHostCommands-03581#
 --     The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-accelerationStructureHostCommands ::accelerationStructureHostCommands>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-accelerationStructureHostCommands ::accelerationStructureHostCommands>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkBuildAccelerationStructuresKHR-pInfos-03725# If
@@ -4419,7 +4441,7 @@ buildAccelerationStructuresKHR :: forall io
                                   Device
                                -> -- | @deferredOperation@ is an optional
                                   -- 'Vulkan.Extensions.Handles.DeferredOperationKHR' to
-                                  -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#deferred-host-operations-requesting request deferral>
+                                  -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#deferred-host-operations-requesting request deferral>
                                   -- for this command.
                                   DeferredOperationKHR
                                -> -- | @pInfos@ is a pointer to an array of @infoCount@
@@ -4483,6 +4505,8 @@ foreign import ccall
 -- addresses between the two /must/ be the same as the difference in
 -- offsets provided at acceleration structure creation.
 --
+-- The returned address /must/ be aligned to 256 bytes.
+--
 -- Note
 --
 -- The acceleration structure device address /may/ be different from the
@@ -4494,7 +4518,7 @@ foreign import ccall
 --
 -- -   #VUID-vkGetAccelerationStructureDeviceAddressKHR-device-03504# If
 --     @device@ was created with multiple physical devices, then the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -4577,6 +4601,10 @@ foreign import ccall
 --         @pBuildInfo->geometryType@.
 --
 --     -   For each element of either @pGeometries@ or @ppGeometries@ at a
+--         given index, its @flags@ member is equal to the corresponding
+--         member of the same element in @pBuildInfo@.
+--
+--     -   For each element of either @pGeometries@ or @ppGeometries@ at a
 --         given index, with a @geometryType@ member equal to
 --         'GEOMETRY_TYPE_TRIANGLES_KHR', the @vertexFormat@ and
 --         @indexType@ members of @geometry.triangles@ are equal to the
@@ -4612,14 +4640,14 @@ foreign import ccall
 --
 -- -   #VUID-vkGetAccelerationStructureBuildSizesKHR-rayTracingPipeline-03617#
 --     The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-rayTracingPipeline rayTracingPipeline>
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-rayQuery rayQuery>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-rayQuery rayQuery>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetAccelerationStructureBuildSizesKHR-device-03618# If
 --     @device@ was created with multiple physical devices, then the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkGetAccelerationStructureBuildSizesKHR-pBuildInfo-03619# If
@@ -4717,7 +4745,7 @@ pattern GEOMETRY_INSTANCE_TRIANGLE_FRONT_COUNTERCLOCKWISE_BIT_KHR = GEOMETRY_INS
 --
 -- -   #VUID-VkWriteDescriptorSetAccelerationStructureKHR-pAccelerationStructures-03580#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
 --     feature is not enabled, each element of @pAccelerationStructures@
 --     /must/ not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
@@ -4813,7 +4841,7 @@ data PhysicalDeviceAccelerationStructureFeaturesKHR = PhysicalDeviceAcceleration
   { -- | #features-accelerationStructure# @accelerationStructure@ indicates
     -- whether the implementation supports the acceleration structure
     -- functionality. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure Acceleration Structures>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure Acceleration Structures>.
     accelerationStructure :: Bool
   , -- | #features-accelerationStructureCaptureReplay#
     -- @accelerationStructureCaptureReplay@ indicates whether the
@@ -4903,10 +4931,10 @@ instance Zero PhysicalDeviceAccelerationStructureFeaturesKHR where
 --
 -- Due to the fact that the geometry, instance, and primitive counts are
 -- specified at acceleration structure creation as 32-bit values,
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxGeometryCount maxGeometryCount>,
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxInstanceCount maxInstanceCount>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxGeometryCount maxGeometryCount>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxInstanceCount maxInstanceCount>,
 -- and
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxPrimitiveCount maxPrimitiveCount>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxPrimitiveCount maxPrimitiveCount>
 -- /must/ not exceed 232-1.
 --
 -- If the 'PhysicalDeviceAccelerationStructurePropertiesKHR' structure is
@@ -5269,7 +5297,7 @@ data AccelerationStructureGeometryInstancesDataKHR = AccelerationStructureGeomet
   , -- | @data@ is either the address of an array of device or host addresses
     -- referencing individual 'AccelerationStructureInstanceKHR' structures or
     -- packed motion instance information as described in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure-motion-instances motion instances>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure-motion-instances motion instances>
     -- if @arrayOfPointers@ is 'Vulkan.Core10.FundamentalTypes.TRUE', or the
     -- address of an array of 'AccelerationStructureInstanceKHR' or
     -- 'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureMotionInstanceNV'
@@ -5402,9 +5430,9 @@ instance Zero AccelerationStructureGeometryKHR where
 -- of 'AccelerationStructureBuildGeometryInfoKHR' is used as the /geometry
 -- index/ during ray traversal. The geometry index is available in ray
 -- shaders via the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-raygeometryindex RayGeometryIndexKHR built-in>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-raygeometryindex RayGeometryIndexKHR built-in>,
 -- and is
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shader-binding-table-hit-shader-indexing used to determine hit and intersection shaders executed during traversal>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shader-binding-table-hit-shader-indexing used to determine hit and intersection shaders executed during traversal>.
 -- The geometry index is available to ray queries via the
 -- @OpRayQueryGetIntersectionGeometryIndexKHR@ instruction.
 --
@@ -5818,6 +5846,16 @@ instance Zero AccelerationStructureBuildRangeInfoKHR where
 -- 'AccelerationStructureTypeKHR' other than
 -- 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR'.
 --
+-- Note
+--
+-- 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR' is intended to be used by API
+-- translation layers. This can be used at acceleration structure creation
+-- time in cases where the actual acceleration structure type (top or
+-- bottom) is not yet known. The actual acceleration structure type must be
+-- specified as 'ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR' or
+-- 'ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR' when the build is
+-- performed.
+--
 -- If the acceleration structure will be the target of a build operation,
 -- the required size for an acceleration structure /can/ be queried with
 -- 'getAccelerationStructureBuildSizesKHR'. If the acceleration structure
@@ -5923,7 +5961,7 @@ data AccelerationStructureCreateInfoKHR (es :: [Type]) = AccelerationStructureCr
     type' :: AccelerationStructureTypeKHR
   , -- | @deviceAddress@ is the device address requested for the acceleration
     -- structure if the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-accelerationStructureCaptureReplay accelerationStructureCaptureReplay>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-accelerationStructureCaptureReplay accelerationStructureCaptureReplay>
     -- feature is being used.
     deviceAddress :: DeviceAddress
   }
@@ -6853,7 +6891,7 @@ newtype GeometryInstanceFlagBitsKHR = GeometryInstanceFlagBitsKHR Flags
 -- culling for this instance.
 pattern GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR = GeometryInstanceFlagBitsKHR 0x00000001
 -- | 'GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR' indicates that the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#ray-traversal-culling-face facing determination>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#ray-traversal-culling-face facing determination>
 -- for geometry in this instance is inverted. Because the facing is
 -- determined in object space, an instance transform does not change the
 -- winding, but a geometry transform does.
@@ -7211,6 +7249,8 @@ pattern ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR    = AccelerationStructureType
 pattern ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR = AccelerationStructureTypeKHR 1
 -- | 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR' is an acceleration structure
 -- whose type is determined at build time used for special circumstances.
+-- In these cases, the acceleration structure type is not known at creation
+-- time, but /must/ be specified at build time as either top or bottom.
 pattern ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR      = AccelerationStructureTypeKHR 2
 {-# complete ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR,
              ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR,

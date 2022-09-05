@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_NV_external_memory_capabilities@
+--     -   Requires @VK_NV_external_memory_capabilities@ to be enabled for
+--         any device-level functionality
 --
 -- [__Deprecation state__]
 --
@@ -85,7 +86,7 @@
 --
 -- 1) If memory objects are shared between processes and APIs, is this
 -- considered aliasing according to the rules outlined in the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-memory-aliasing Memory Aliasing>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-memory-aliasing Memory Aliasing>
 -- section?
 --
 -- __RESOLVED__: Yes, but strict exceptions to the rules are added to allow
@@ -100,7 +101,7 @@
 --
 -- __RESOLVED__: No. Separate instances of the same Vulkan driver running
 -- on the same GPU should have identical internal layout semantics, so
--- applictions have the tools they need to ensure views of images are
+-- applications have the tools they need to ensure views of images are
 -- consistent between the two instances. Other APIs will fall into two
 -- categories: Those that are Vulkan compatible (a term to be defined by
 -- subsequent interopability extensions), or Vulkan incompatible. When
@@ -130,7 +131,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_external_memory Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_external_memory Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

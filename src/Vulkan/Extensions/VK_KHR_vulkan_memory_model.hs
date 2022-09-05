@@ -19,7 +19,7 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
 -- [__Deprecation state__]
 --
@@ -63,7 +63,7 @@
 -- == Description
 --
 -- The @VK_KHR_vulkan_memory_model@ extension allows use of the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-model Vulkan Memory Model>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-model Vulkan Memory Model>,
 -- which formally defines how to synchronize memory accesses to the same
 -- memory locations performed by multiple shader invocations.
 --
@@ -102,7 +102,7 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-VulkanMemoryModel VulkanMemoryModelKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-VulkanMemoryModel VulkanMemoryModelKHR>
 --
 -- == Version History
 --
@@ -122,7 +122,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_vulkan_memory_model Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_vulkan_memory_model Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

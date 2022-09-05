@@ -4,6 +4,8 @@ module Vulkan.Core10.Enums.PipelineCreateFlagBits  ( PipelineCreateFlags
                                                    , PipelineCreateFlagBits( PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT
                                                                            , PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT
                                                                            , PIPELINE_CREATE_DERIVATIVE_BIT
+                                                                           , PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT
+                                                                           , PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT
                                                                            , PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV
                                                                            , PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT
                                                                            , PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT
@@ -139,7 +141,7 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --
 -- -   'PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV' specifies that the
 --     pipeline can be used in combination with
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#device-generated-commands>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#device-generated-commands>.
 --
 -- -   'PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT' specifies
 --     that pipeline creation will fail if a compile is required for
@@ -175,14 +177,22 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --     necessary to later perform an optimal link with
 --     'PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT'.
 --
+-- -   'PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT' specifies
+--     that the pipeline /may/ be used with an attachment feedback loop
+--     including color attachments.
+--
+-- -   'PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT'
+--     specifies that the pipeline /may/ be used with an attachment
+--     feedback loop including depth-stencil attachments.
+--
 -- It is valid to set both 'PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT' and
 -- 'PIPELINE_CREATE_DERIVATIVE_BIT'. This allows a pipeline to be both a
 -- parent and possibly a child in a pipeline hierarchy. See
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-pipeline-derivatives Pipeline Derivatives>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-pipeline-derivatives Pipeline Derivatives>
 -- for more information.
 --
 -- When an implementation is looking up a pipeline in a
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-cache pipeline cache>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-cache pipeline cache>,
 -- if that pipeline is being created using linked libraries,
 -- implementations /should/ always return an equivalent pipeline created
 -- with 'PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT' if available,
@@ -215,6 +225,10 @@ pattern PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT                    = PipelineCr
 pattern PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT                       = PipelineCreateFlagBits 0x00000002
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_DERIVATIVE_BIT"
 pattern PIPELINE_CREATE_DERIVATIVE_BIT                              = PipelineCreateFlagBits 0x00000004
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"
+pattern PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT = PipelineCreateFlagBits 0x04000000
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"
+pattern PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT      = PipelineCreateFlagBits 0x02000000
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV"
 pattern PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV             = PipelineCreateFlagBits 0x00100000
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT"
@@ -269,6 +283,8 @@ showTablePipelineCreateFlagBits =
   [ (PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT                  , "DISABLE_OPTIMIZATION_BIT")
   , (PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT                     , "ALLOW_DERIVATIVES_BIT")
   , (PIPELINE_CREATE_DERIVATIVE_BIT                            , "DERIVATIVE_BIT")
+  , (PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT, "DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT")
+  , (PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT    , "COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT")
   , (PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV           , "RAY_TRACING_ALLOW_MOTION_BIT_NV")
   , (PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT            , "LINK_TIME_OPTIMIZATION_BIT_EXT")
   , (PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT, "RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT")

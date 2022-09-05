@@ -15,13 +15,14 @@
 --     361
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Deprecation state__]
 --
@@ -95,6 +96,17 @@
 --     component, was undefined. This bit clarifies on which formats such
 --     instructions can be used.
 --
+-- Prior to version 2 of this extension, implementations exposing the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderStorageImageReadWithoutFormat shaderStorageImageReadWithoutFormat>
+-- and
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderStorageImageWriteWithoutFormat shaderStorageImageWriteWithoutFormat>
+-- implementations may not report
+-- 'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
+-- and
+-- 'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'
+-- in 'FormatProperties3KHR'::@bufferFeatures@. Despite this, buffer
+-- reads\/writes are supported as intended by the original features.
+--
 -- == New Structures
 --
 -- -   Extending
@@ -128,6 +140,12 @@
 --
 -- == Version History
 --
+-- -   Revision 2, 2022-07-20 (Lionel Landwerlin)
+--
+--     -   Clarify that
+--         VK_FORMAT_FEATURE_2_STORAGE_(READ|WRITE)_WITHOUT_FORMAT_BIT also
+--         apply to buffer views.
+--
 -- -   Revision 1, 2020-07-21 (Lionel Landwerlin)
 --
 --     -   Initial draft
@@ -140,7 +158,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -175,11 +193,11 @@ type FormatFeatureFlagBits2KHR = FormatFeatureFlagBits2
 type FormatProperties3KHR = FormatProperties3
 
 
-type KHR_FORMAT_FEATURE_FLAGS_2_SPEC_VERSION = 1
+type KHR_FORMAT_FEATURE_FLAGS_2_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_KHR_FORMAT_FEATURE_FLAGS_2_SPEC_VERSION"
 pattern KHR_FORMAT_FEATURE_FLAGS_2_SPEC_VERSION :: forall a . Integral a => a
-pattern KHR_FORMAT_FEATURE_FLAGS_2_SPEC_VERSION = 1
+pattern KHR_FORMAT_FEATURE_FLAGS_2_SPEC_VERSION = 2
 
 
 type KHR_FORMAT_FEATURE_FLAGS_2_EXTENSION_NAME = "VK_KHR_format_feature_flags2"

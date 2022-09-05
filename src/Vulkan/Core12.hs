@@ -192,8 +192,9 @@ data PhysicalDeviceVulkan11Features = PhysicalDeviceVulkan11Features
     -- this feature is not enabled, shader modules /must/ not declare the
     -- @VariablePointers@ capability.
     variablePointers :: Bool
-  , -- | #features-protectedMemory# @protectedMemory@ specifies whether protected
-    -- memory is supported.
+  , -- | #features-protectedMemory# @protectedMemory@ specifies whether
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-protected-memory protected memory>
+    -- is supported.
     protectedMemory :: Bool
   , -- | #features-samplerYcbcrConversion# @samplerYcbcrConversion@ specifies
     -- whether the implementation supports
@@ -358,9 +359,9 @@ data PhysicalDeviceVulkan11Properties = PhysicalDeviceVulkan11Properties
   , -- | #limits-subgroupSupportedStages# @subgroupSupportedStages@ is a bitfield
     -- of 'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits'
     -- describing the shader stages that
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-group-operations group operations>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-group-operations group operations>
     -- with
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>
     -- are supported in. @subgroupSupportedStages@ will have the
     -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_COMPUTE_BIT' bit
     -- set if any of the physical device’s queues support
@@ -369,9 +370,9 @@ data PhysicalDeviceVulkan11Properties = PhysicalDeviceVulkan11Properties
   , -- | @subgroupSupportedOperations@ is a bitmask of
     -- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SubgroupFeatureFlagBits'
     -- specifying the sets of
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-group-operations group operations>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-group-operations group operations>
     -- with
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-scope-subgroup subgroup scope>
     -- supported on this device. @subgroupSupportedOperations@ will have the
     -- 'Vulkan.Core11.Enums.SubgroupFeatureFlagBits.SUBGROUP_FEATURE_BASIC_BIT'
     -- bit set if any of the physical device’s queues support
@@ -380,7 +381,7 @@ data PhysicalDeviceVulkan11Properties = PhysicalDeviceVulkan11Properties
     subgroupSupportedOperations :: SubgroupFeatureFlags
   , -- | #limits-subgroupQuadOperationsInAllStages#
     -- @subgroupQuadOperationsInAllStages@ is a boolean specifying whether
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-quad-operations quad group operations>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-quad-operations quad group operations>
     -- are available in all stages, or are restricted to fragment and compute
     -- stages.
     subgroupQuadOperationsInAllStages :: Bool
@@ -573,7 +574,7 @@ instance Zero PhysicalDeviceVulkan11Properties where
 --
 -- -   #features-shaderSharedInt64Atomics# @shaderSharedInt64Atomics@
 --     indicates whether shaders /can/ perform 64-bit unsigned and signed
---     integer atomic operations on shared memory.
+--     integer atomic operations on shared and payload memory.
 --
 -- -   #features-shaderFloat16# @shaderFloat16@ indicates whether 16-bit
 --     floats (halfs) are supported in shader code. This also indicates
@@ -600,7 +601,7 @@ instance Zero PhysicalDeviceVulkan11Properties where
 -- -   #features-descriptorIndexing# @descriptorIndexing@ indicates whether
 --     the implementation supports the minimum set of descriptor indexing
 --     features as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-requirements Feature Requirements>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-requirements Feature Requirements>
 --     section. Enabling the @descriptorIndexing@ member when
 --     'Vulkan.Core10.Device.createDevice' is called does not imply the
 --     other minimum descriptor indexing features are also enabled. Those
@@ -805,7 +806,7 @@ instance Zero PhysicalDeviceVulkan11Properties where
 -- -   #features-samplerFilterMinmax# @samplerFilterMinmax@ indicates
 --     whether the implementation supports a minimum set of required
 --     formats supporting min\/max filtering as defined by the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-filterMinmaxSingleComponentFormats-minimum-requirements filterMinmaxSingleComponentFormats>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-filterMinmaxSingleComponentFormats-minimum-requirements filterMinmaxSingleComponentFormats>
 --     property minimum requirements. If this feature is not enabled, then
 --     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo'
 --     /must/ only use
@@ -898,17 +899,18 @@ instance Zero PhysicalDeviceVulkan11Properties where
 -- -   #features-shaderOutputViewportIndex# @shaderOutputViewportIndex@
 --     indicates whether the implementation supports the
 --     @ShaderViewportIndex@ SPIR-V capability enabling variables decorated
---     with the @ViewportIndex@ built-in to be exported from vertex or
---     tessellation evaluation shaders. If this feature is not enabled, the
---     @ViewportIndex@ built-in decoration /must/ not be used on outputs in
---     vertex or tessellation evaluation shaders.
+--     with the @ViewportIndex@ built-in to be exported from mesh, vertex
+--     or tessellation evaluation shaders. If this feature is not enabled,
+--     the @ViewportIndex@ built-in decoration /must/ not be used on
+--     outputs in mesh, vertex or tessellation evaluation shaders.
 --
 -- -   #features-shaderOutputLayer# @shaderOutputLayer@ indicates whether
 --     the implementation supports the @ShaderLayer@ SPIR-V capability
 --     enabling variables decorated with the @Layer@ built-in to be
---     exported from vertex or tessellation evaluation shaders. If this
---     feature is not enabled, the @Layer@ built-in decoration /must/ not
---     be used on outputs in vertex or tessellation evaluation shaders.
+--     exported from mesh, vertex or tessellation evaluation shaders. If
+--     this feature is not enabled, the @Layer@ built-in decoration /must/
+--     not be used on outputs in mesh, vertex or tessellation evaluation
+--     shaders.
 --
 -- -   #features-subgroupBroadcastDynamicId# If
 --     @subgroupBroadcastDynamicId@ is

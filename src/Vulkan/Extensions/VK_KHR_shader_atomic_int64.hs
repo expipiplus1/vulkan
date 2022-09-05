@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Deprecation state__]
 --
@@ -43,7 +44,7 @@
 --     -   Promoted to Vulkan 1.2 Core
 --
 --     -   This extension provides API support for
---         <https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_gpu_shader_int64.txt GL_ARB_gpu_shader_int64>
+--         <https://registry.khronos.org/OpenGL/extensions/ARB/ARB_gpu_shader_int64.txt GL_ARB_gpu_shader_int64>
 --         and
 --         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GL_EXT_shader_atomic_int64.txt GL_EXT_shader_atomic_int64>
 --
@@ -93,7 +94,7 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-Int64Atomics Int64Atomics>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-Int64Atomics Int64Atomics>
 --
 -- == Version History
 --
@@ -108,7 +109,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_shader_atomic_int64 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_shader_atomic_int64 Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

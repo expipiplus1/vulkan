@@ -60,7 +60,7 @@ data PhysicalDeviceShaderAtomicInt64Features = PhysicalDeviceShaderAtomicInt64Fe
     shaderBufferInt64Atomics :: Bool
   , -- | #extension-features-shaderSharedInt64Atomics# @shaderSharedInt64Atomics@
     -- indicates whether shaders /can/ perform 64-bit unsigned and signed
-    -- integer atomic operations on shared memory.
+    -- integer atomic operations on shared and payload memory.
     shaderSharedInt64Atomics :: Bool
   }
   deriving (Typeable, Eq)

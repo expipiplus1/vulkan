@@ -1,9 +1,9 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "SubpassDescriptionFlagBits"
 module Vulkan.Core10.Enums.SubpassDescriptionFlagBits  ( SubpassDescriptionFlags
-                                                       , SubpassDescriptionFlagBits( SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM
-                                                                                   , SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM
-                                                                                   , SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_ARM
+                                                       , SubpassDescriptionFlagBits( SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT
+                                                                                   , SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT
+                                                                                   , SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_EXT
                                                                                    , SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM
                                                                                    , SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM
                                                                                    , SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX
@@ -34,8 +34,8 @@ type SubpassDescriptionFlags = SubpassDescriptionFlagBits
 -- Shader resolve operations allow for custom resolve operations, but
 -- overdrawing pixels /may/ have a performance and\/or power cost.
 -- Furthermore, since the content of any depth stencil attachment or color
--- attachment is undefined at the begining of a shader resolve subpass, any
--- depth testing, stencil testing, or blending operation which sources
+-- attachment is undefined at the beginning of a shader resolve subpass,
+-- any depth testing, stencil testing, or blending operation which sources
 -- these undefined values also has undefined result value.
 --
 -- = See Also
@@ -45,19 +45,19 @@ type SubpassDescriptionFlags = SubpassDescriptionFlagBits
 newtype SubpassDescriptionFlagBits = SubpassDescriptionFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM'
+-- | 'SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT'
 -- specifies that this subpass supports pipelines created with
--- 'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM'.
-pattern SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM =
+-- 'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT'.
+pattern SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT =
   SubpassDescriptionFlagBits 0x00000040
--- | 'SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM'
+-- | 'SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT'
 -- specifies that this subpass supports pipelines created with
--- 'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM'.
-pattern SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM = SubpassDescriptionFlagBits 0x00000020
--- | 'SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_ARM'
+-- 'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT'.
+pattern SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT = SubpassDescriptionFlagBits 0x00000020
+-- | 'SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_EXT'
 -- specifies that this subpass supports pipelines created with
--- 'Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits.PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_ARM'.
-pattern SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_ARM = SubpassDescriptionFlagBits 0x00000010
+-- 'Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits.PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_EXT'.
+pattern SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_EXT = SubpassDescriptionFlagBits 0x00000010
 -- | 'SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM' specifies that the subpass
 -- performs shader resolve operations.
 pattern SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM                             = SubpassDescriptionFlagBits 0x00000008
@@ -75,7 +75,7 @@ pattern SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX                    
 -- | 'SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX' specifies that shaders
 -- compiled for this subpass write the attributes for all views in a single
 -- invocation of each
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>.
 -- All pipelines compiled against a subpass that includes this bit /must/
 -- write per-view attributes to the @*PerViewNV[]@ shader outputs, in
 -- addition to the non-per-view (e.g. @Position@) outputs.
@@ -89,14 +89,14 @@ enumPrefixSubpassDescriptionFlagBits = "SUBPASS_DESCRIPTION_"
 
 showTableSubpassDescriptionFlagBits :: [(SubpassDescriptionFlagBits, String)]
 showTableSubpassDescriptionFlagBits =
-  [ ( SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM
-    , "RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM"
+  [ ( SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT
+    , "RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT"
     )
-  , ( SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM
-    , "RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM"
+  , ( SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT
+    , "RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT"
     )
-  , ( SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_ARM
-    , "RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_ARM"
+  , ( SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_EXT
+    , "RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_EXT"
     )
   , (SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM         , "SHADER_RESOLVE_BIT_QCOM")
   , (SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM        , "FRAGMENT_REGION_BIT_QCOM")

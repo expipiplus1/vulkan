@@ -367,10 +367,12 @@ data Device_T
 -- 'Vulkan.Core10.Queue.getDeviceQueue',
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.getDeviceQueue2',
 -- 'Vulkan.Extensions.VK_HUAWEI_subpass_shading.getDeviceSubpassShadingMaxWorkgroupSizeHUAWEI',
+-- 'Vulkan.Extensions.VK_QCOM_tile_properties.getDynamicRenderingTilePropertiesQCOM',
 -- 'Vulkan.Core10.Event.getEventStatus',
 -- 'Vulkan.Extensions.VK_KHR_external_fence_fd.getFenceFdKHR',
 -- 'Vulkan.Core10.Fence.getFenceStatus',
 -- 'Vulkan.Extensions.VK_KHR_external_fence_win32.getFenceWin32HandleKHR',
+-- 'Vulkan.Extensions.VK_QCOM_tile_properties.getFramebufferTilePropertiesQCOM',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.getGeneratedCommandsMemoryRequirementsNV',
 -- 'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.getImageDrmFormatModifierPropertiesEXT',
 -- 'Vulkan.Core10.MemoryManagement.getImageMemoryRequirements',
@@ -415,6 +417,8 @@ data Device_T
 -- 'Vulkan.Extensions.VK_KHR_external_semaphore_win32.getSemaphoreWin32HandleKHR',
 -- 'Vulkan.Extensions.VK_FUCHSIA_external_semaphore.getSemaphoreZirconHandleFUCHSIA',
 -- 'Vulkan.Extensions.VK_AMD_shader_info.getShaderInfoAMD',
+-- 'Vulkan.Extensions.VK_EXT_shader_module_identifier.getShaderModuleCreateInfoIdentifierEXT',
+-- 'Vulkan.Extensions.VK_EXT_shader_module_identifier.getShaderModuleIdentifierEXT',
 -- 'Vulkan.Extensions.VK_EXT_display_control.getSwapchainCounterEXT',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.getSwapchainImagesKHR',
 -- 'Vulkan.Extensions.VK_KHR_shared_presentable_image.getSwapchainStatusKHR',
@@ -590,7 +594,10 @@ data CommandBuffer_T
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_draw_indirect_count.cmdDrawIndirectCount',
 -- 'Vulkan.Extensions.VK_AMD_draw_indirect_count.cmdDrawIndirectCountAMD',
 -- 'Vulkan.Extensions.VK_KHR_draw_indirect_count.cmdDrawIndirectCountKHR',
+-- 'Vulkan.Extensions.VK_EXT_mesh_shader.cmdDrawMeshTasksEXT',
+-- 'Vulkan.Extensions.VK_EXT_mesh_shader.cmdDrawMeshTasksIndirectCountEXT',
 -- 'Vulkan.Extensions.VK_NV_mesh_shader.cmdDrawMeshTasksIndirectCountNV',
+-- 'Vulkan.Extensions.VK_EXT_mesh_shader.cmdDrawMeshTasksIndirectEXT',
 -- 'Vulkan.Extensions.VK_NV_mesh_shader.cmdDrawMeshTasksIndirectNV',
 -- 'Vulkan.Extensions.VK_NV_mesh_shader.cmdDrawMeshTasksNV',
 -- 'Vulkan.Extensions.VK_EXT_multi_draw.cmdDrawMultiEXT',
@@ -727,6 +734,7 @@ instance HasObjectType CommandBuffer where
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindBufferMemoryInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindImageMemoryInfo',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkBindVideoSessionMemoryInfoKHR VkBindVideoSessionMemoryInfoKHR>,
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.DeviceMemoryOpaqueCaptureAddressInfo',
 -- 'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalBufferInfoEXT',
 -- 'Vulkan.Core10.Memory.MappedMemoryRange',
@@ -737,7 +745,6 @@ instance HasObjectType CommandBuffer where
 -- 'Vulkan.Extensions.VK_FUCHSIA_external_memory.MemoryGetZirconHandleInfoFUCHSIA',
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryBind',
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseMemoryBind',
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoBindMemoryKHR VkVideoBindMemoryKHR>,
 -- 'Vulkan.Extensions.VK_KHR_win32_keyed_mutex.Win32KeyedMutexAcquireReleaseInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_win32_keyed_mutex.Win32KeyedMutexAcquireReleaseInfoNV',
 -- 'Vulkan.Core10.Memory.allocateMemory',
@@ -827,7 +834,9 @@ instance Show CommandPool where
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_draw_indirect_count.cmdDrawIndirectCount',
 -- 'Vulkan.Extensions.VK_AMD_draw_indirect_count.cmdDrawIndirectCountAMD',
 -- 'Vulkan.Extensions.VK_KHR_draw_indirect_count.cmdDrawIndirectCountKHR',
+-- 'Vulkan.Extensions.VK_EXT_mesh_shader.cmdDrawMeshTasksIndirectCountEXT',
 -- 'Vulkan.Extensions.VK_NV_mesh_shader.cmdDrawMeshTasksIndirectCountNV',
+-- 'Vulkan.Extensions.VK_EXT_mesh_shader.cmdDrawMeshTasksIndirectEXT',
 -- 'Vulkan.Extensions.VK_NV_mesh_shader.cmdDrawMeshTasksIndirectNV',
 -- 'Vulkan.Extensions.VK_EXT_transform_feedback.cmdEndTransformFeedbackEXT',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdFillBuffer',
@@ -924,7 +933,7 @@ instance Show Image where
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingAttachmentInfo',
 -- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentDensityMapAttachmentInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.RenderingFragmentShadingRateAttachmentInfoKHR',
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoPictureResourceKHR VkVideoPictureResourceKHR>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoPictureResourceInfoKHR VkVideoPictureResourceInfoKHR>,
 -- 'Vulkan.Extensions.VK_HUAWEI_invocation_mask.cmdBindInvocationMaskHUAWEI',
 -- 'Vulkan.Extensions.VK_NV_shading_rate_image.cmdBindShadingRateImageNV',
 -- 'Vulkan.Core10.ImageView.createImageView',
@@ -946,7 +955,8 @@ instance Show ImageView where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo',
 -- 'Vulkan.Core10.Shader.createShaderModule',
--- 'Vulkan.Core10.Shader.destroyShaderModule'
+-- 'Vulkan.Core10.Shader.destroyShaderModule',
+-- 'Vulkan.Extensions.VK_EXT_shader_module_identifier.getShaderModuleIdentifierEXT'
 newtype ShaderModule = ShaderModule Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
@@ -1226,7 +1236,8 @@ instance Show QueryPool where
 -- 'Vulkan.Core10.CommandBuffer.CommandBufferInheritanceInfo',
 -- 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo',
 -- 'Vulkan.Core10.Pass.createFramebuffer',
--- 'Vulkan.Core10.Pass.destroyFramebuffer'
+-- 'Vulkan.Core10.Pass.destroyFramebuffer',
+-- 'Vulkan.Extensions.VK_QCOM_tile_properties.getFramebufferTilePropertiesQCOM'
 newtype Framebuffer = Framebuffer Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)

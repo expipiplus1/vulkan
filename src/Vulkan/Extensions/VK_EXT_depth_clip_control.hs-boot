@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Special Use__]
 --
@@ -80,16 +81,6 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLIP_CONTROL_CREATE_INFO_EXT'
 --
--- == Version History
---
--- -   Revision 0, 2020-10-01 (Spencer Fricke)
---
---     -   Internal revisions
---
--- -   Revision 1, 2020-11-26 (Shahbaz Youssefi)
---
---     -   Language fixes
---
 -- == Issues
 --
 -- 1) Should this extension include an origin control option to match
@@ -117,6 +108,16 @@
 -- 'Vulkan.Core10.Pipeline.PipelineViewportStateCreateInfo'::@pNext@
 -- instead.
 --
+-- == Version History
+--
+-- -   Revision 0, 2020-10-01 (Spencer Fricke)
+--
+--     -   Internal revisions
+--
+-- -   Revision 1, 2020-11-26 (Shahbaz Youssefi)
+--
+--     -   Language fixes
+--
 -- == See Also
 --
 -- 'PhysicalDeviceDepthClipControlFeaturesEXT',
@@ -125,7 +126,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_depth_clip_control Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_depth_clip_control Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

@@ -19,16 +19,18 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_create_renderpass2@
+--     -   Requires @VK_KHR_create_renderpass2@ to be enabled for any
+--         device-level functionality
 --
---     -   Requires @VK_KHR_synchronization2@
+--     -   Requires @VK_KHR_synchronization2@ to be enabled for any
+--         device-level functionality
 --
 -- [__Contact__]
 --
---     -   Hueilong Wang
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_HUAWEI_subpass_shading] @wyvernathuawei%0A<<Here describe the issue or question you have about the VK_HUAWEI_subpass_shading extension>> >
+--     -   Pan Gao
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_HUAWEI_subpass_shading] @PanGao-h%0A<<Here describe the issue or question you have about the VK_HUAWEI_subpass_shading extension>> >
 --
 -- == Other Extension Metadata
 --
@@ -46,6 +48,12 @@
 -- [__Contributors__]
 --
 --     -   Hueilong Wang
+--
+--     -   Juntao Li, Huawei
+--
+--     -   Renmiao Lu, Huawei
+--
+--     -   Pan Gao, Huawei
 --
 -- == Description
 --
@@ -135,7 +143,7 @@
 -- > layout(constant_id = 0) const uint tileWidth = 8;
 -- > layout(constant_id = 1) const uint tileHeight = 8;
 -- > layout(local_size_x_id = 0, local_size_y_id = 1, local_size_z = 1) in;
--- > layout (set=0, binding=0, input_attachment_index=0) uniform subpassInput depth;
+-- > layout(set=0, binding=0, input_attachment_index=0) uniform subpassInput depth;
 -- >
 -- > void main()
 -- > {
@@ -335,7 +343,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_HUAWEI_subpass_shading Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_HUAWEI_subpass_shading Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

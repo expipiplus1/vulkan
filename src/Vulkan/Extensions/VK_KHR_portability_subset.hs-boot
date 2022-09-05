@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 --     -   __This is a /provisional/ extension and /must/ be used with
 --         caution. See the
@@ -81,7 +82,7 @@
 -- The intent is that this extension will be advertised only on
 -- implementations of the Vulkan 1.0 Portability Subset, and not on
 -- conformant implementations of Vulkan 1.0. Fully-conformant Vulkan
--- implementations provide all the required capabilies, and so will not
+-- implementations provide all the required capabilities, and so will not
 -- provide this extension. Therefore, the existence of this extension can
 -- be used to determine that an implementation is likely not fully
 -- conformant with the Vulkan spec.
@@ -136,7 +137,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_portability_subset Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_portability_subset Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

@@ -12,6 +12,8 @@ module Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits  ( QueryPipelineStatis
                                                                                            , QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT
                                                                                            , QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT
                                                                                            , QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT
+                                                                                           , QUERY_PIPELINE_STATISTIC_MESH_SHADER_INVOCATIONS_BIT_EXT
+                                                                                           , QUERY_PIPELINE_STATISTIC_TASK_SHADER_INVOCATIONS_BIT_EXT
                                                                                            , ..
                                                                                            )
                                                            ) where
@@ -38,7 +40,11 @@ type QueryPipelineStatisticFlags = QueryPipelineStatisticFlagBits
 -- implementation. Various device architectures will count these values
 -- differently. Any or all counters /may/ be affected by the issues
 -- described in
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#queries-operation-undefined Query Operation>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#queries-operation-undefined Query Operation>.
+--
+-- This counting difference is especially true if the pipeline contains
+-- mesh or task shaders, which may affect several of the counters in
+-- unexpected ways.
 --
 -- Note
 --
@@ -47,7 +53,7 @@ type QueryPipelineStatisticFlags = QueryPipelineStatisticFlagBits
 --
 -- If a pipeline has @rasterizerDiscardEnable@ enabled, implementations
 -- /may/ discard primitives after the final
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>.
 -- As a result, if @rasterizerDiscardEnable@ is enabled, the clipping input
 -- and output primitives counters /may/ not be incremented.
 --
@@ -67,14 +73,14 @@ newtype QueryPipelineStatisticFlagBits = QueryPipelineStatisticFlagBits Flags
 -- | 'QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT' specifies that
 -- queries managed by the pool will count the number of vertices processed
 -- by the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#drawing input assembly>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#drawing input assembly>
 -- stage. Vertices corresponding to incomplete primitives /may/ contribute
 -- to the count.
 pattern QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT             = QueryPipelineStatisticFlagBits 0x00000001
 -- | 'QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT' specifies that
 -- queries managed by the pool will count the number of primitives
 -- processed by the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#drawing input assembly>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#drawing input assembly>
 -- stage. If primitive restart is enabled, restarting the primitive
 -- topology has no effect on the count. Incomplete primitives /may/ be
 -- counted.
@@ -83,15 +89,15 @@ pattern QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT           = Query
 -- queries managed by the pool will count the number of vertex shader
 -- invocations. This counter’s value is incremented each time a vertex
 -- shader is
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-vertex-execution invoked>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-vertex-execution invoked>.
 pattern QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT           = QueryPipelineStatisticFlagBits 0x00000004
 -- | 'QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT' specifies
 -- that queries managed by the pool will count the number of geometry
 -- shader invocations. This counter’s value is incremented each time a
 -- geometry shader is
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-geometry-execution invoked>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-geometry-execution invoked>.
 -- In the case of
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#geometry-invocations instanced geometry shaders>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#geometry-invocations instanced geometry shaders>,
 -- the geometry shader invocations count is incremented for each separate
 -- instanced invocation.
 pattern QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT         = QueryPipelineStatisticFlagBits 0x00000008
@@ -106,14 +112,14 @@ pattern QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT          = Query
 -- | 'QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT' specifies that
 -- queries managed by the pool will count the number of primitives
 -- processed by the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-clipping Primitive Clipping>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-clipping Primitive Clipping>
 -- stage of the pipeline. The counter’s value is incremented each time a
 -- primitive reaches the primitive clipping stage.
 pattern QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT                = QueryPipelineStatisticFlagBits 0x00000020
 -- | 'QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT' specifies that
 -- queries managed by the pool will count the number of primitives output
 -- by the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-clipping Primitive Clipping>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-clipping Primitive Clipping>
 -- stage of the pipeline. The counter’s value is incremented each time a
 -- primitive passes the primitive clipping stage. The actual number of
 -- primitives output by the primitive clipping stage for a particular input
@@ -129,20 +135,20 @@ pattern QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT                 = Query
 -- that queries managed by the pool will count the number of fragment
 -- shader invocations. The counter’s value is incremented each time the
 -- fragment shader is
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-shader invoked>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-shader invoked>.
 pattern QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT         = QueryPipelineStatisticFlagBits 0x00000080
 -- | 'QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT'
 -- specifies that queries managed by the pool will count the number of
 -- patches processed by the tessellation control shader. The counter’s
 -- value is incremented once for each patch for which a tessellation
 -- control shader is
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-tessellation-control-execution invoked>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-tessellation-control-execution invoked>.
 pattern QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT = QueryPipelineStatisticFlagBits 0x00000100
 -- | 'QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT'
 -- specifies that queries managed by the pool will count the number of
 -- invocations of the tessellation evaluation shader. The counter’s value
 -- is incremented each time the tessellation evaluation shader is
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-tessellation-evaluation-execution invoked>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-tessellation-evaluation-execution invoked>.
 pattern QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT =
   QueryPipelineStatisticFlagBits 0x00000200
 -- | 'QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT' specifies that
@@ -152,7 +158,17 @@ pattern QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT 
 -- compute shader invocations or execute additional compute shader
 -- invocations for implementation-dependent reasons as long as the results
 -- of rendering otherwise remain unchanged.
-pattern QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT = QueryPipelineStatisticFlagBits 0x00000400
+pattern QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT  = QueryPipelineStatisticFlagBits 0x00000400
+-- | 'QUERY_PIPELINE_STATISTIC_MESH_SHADER_INVOCATIONS_BIT_EXT' specifies
+-- that queries managed by the pool will count the number of mesh shader
+-- invocations. The counter’s value is incremented every time the mesh
+-- shader is invoked.
+pattern QUERY_PIPELINE_STATISTIC_MESH_SHADER_INVOCATIONS_BIT_EXT = QueryPipelineStatisticFlagBits 0x00001000
+-- | 'QUERY_PIPELINE_STATISTIC_TASK_SHADER_INVOCATIONS_BIT_EXT' specifies
+-- that queries managed by the pool will count the number of task shader
+-- invocations. The counter’s value is incremented every time the task
+-- shader is invoked.
+pattern QUERY_PIPELINE_STATISTIC_TASK_SHADER_INVOCATIONS_BIT_EXT = QueryPipelineStatisticFlagBits 0x00000800
 
 conNameQueryPipelineStatisticFlagBits :: String
 conNameQueryPipelineStatisticFlagBits = "QueryPipelineStatisticFlagBits"
@@ -174,7 +190,9 @@ showTableQueryPipelineStatisticFlagBits =
   , ( QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT
     , "TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT"
     )
-  , (QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT, "COMPUTE_SHADER_INVOCATIONS_BIT")
+  , (QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT , "COMPUTE_SHADER_INVOCATIONS_BIT")
+  , (QUERY_PIPELINE_STATISTIC_MESH_SHADER_INVOCATIONS_BIT_EXT, "MESH_SHADER_INVOCATIONS_BIT_EXT")
+  , (QUERY_PIPELINE_STATISTIC_TASK_SHADER_INVOCATIONS_BIT_EXT, "TASK_SHADER_INVOCATIONS_BIT_EXT")
   ]
 
 instance Show QueryPipelineStatisticFlagBits where

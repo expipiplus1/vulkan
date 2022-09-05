@@ -19,7 +19,7 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
 -- [__Contact__]
 --
@@ -52,12 +52,12 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.Filter.Filter':
 --
---     -   'Vulkan.Core10.Enums.Filter.FILTER_CUBIC_IMG'
+--     -   'FILTER_CUBIC_IMG'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits':
 --
---     -   'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG'
+--     -   'FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG'
 --
 -- == Example
 --
@@ -92,17 +92,29 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_IMG_filter_cubic Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_IMG_filter_cubic Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_IMG_filter_cubic  ( IMG_FILTER_CUBIC_SPEC_VERSION
+module Vulkan.Extensions.VK_IMG_filter_cubic  ( pattern FILTER_CUBIC_IMG
+                                              , pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG
+                                              , IMG_FILTER_CUBIC_SPEC_VERSION
                                               , pattern IMG_FILTER_CUBIC_SPEC_VERSION
                                               , IMG_FILTER_CUBIC_EXTENSION_NAME
                                               , pattern IMG_FILTER_CUBIC_EXTENSION_NAME
                                               ) where
 
 import Data.String (IsString)
+import Vulkan.Core10.Enums.Filter (Filter(FILTER_CUBIC_EXT))
+import Vulkan.Core10.Enums.FormatFeatureFlagBits (FormatFeatureFlags)
+import Vulkan.Core10.Enums.FormatFeatureFlagBits (FormatFeatureFlagBits(FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT))
+-- No documentation found for TopLevel "VK_FILTER_CUBIC_IMG"
+pattern FILTER_CUBIC_IMG = FILTER_CUBIC_EXT
+
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG"
+pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG = FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT
+
 
 type IMG_FILTER_CUBIC_SPEC_VERSION = 1
 

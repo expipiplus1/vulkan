@@ -40,7 +40,7 @@ resultString = \case
   OPERATION_DEFERRED_KHR -> "A deferred operation was requested and at least some of the work was deferred"
   THREAD_DONE_KHR -> "A deferred operation is not complete but there is no work remaining to assign to additional threads"
   THREAD_IDLE_KHR -> "A deferred operation is not complete but there is currently no work for this thread to do at the time of this call"
-  ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT -> "An operation on a swapchain created with VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT failed as it did not have exlusive full-screen access"
+  ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT -> "An operation on a swapchain created with VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT failed as it did not have exclusive full-screen access"
   ERROR_INVALID_SHADER_NV -> "One or more shaders failed to compile or link"
   ERROR_INCOMPATIBLE_DISPLAY_KHR -> "The display used by a swapchain does not use the same presentable image layout, or is incompatible in a way that prevents sharing an image"
   ERROR_OUT_OF_DATE_KHR -> "A surface has changed in such a way that it is no longer compatible with the swapchain, and further presentation requests using the swapchain will fail"

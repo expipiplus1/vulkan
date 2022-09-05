@@ -120,7 +120,7 @@ pattern ERROR_OUT_OF_DEVICE_MEMORY           = Result (-2)
 -- completed for implementation-specific reasons.
 pattern ERROR_INITIALIZATION_FAILED          = Result (-3)
 -- | 'ERROR_DEVICE_LOST' The logical or physical device has been lost. See
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>
 pattern ERROR_DEVICE_LOST                    = Result (-4)
 -- | 'ERROR_MEMORY_MAP_FAILED' Mapping of a memory object has failed.
 pattern ERROR_MEMORY_MAP_FAILED              = Result (-5)
@@ -170,7 +170,7 @@ pattern THREAD_IDLE_KHR                      = Result 1000268000
 -- | 'ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT' An operation on a swapchain
 -- created with
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT'
--- failed as it did not have exlusive full-screen access. This /may/ occur
+-- failed as it did not have exclusive full-screen access. This /may/ occur
 -- due to implementation-dependent reasons, outside of the application’s
 -- control.
 pattern ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT = Result (-1000255000)

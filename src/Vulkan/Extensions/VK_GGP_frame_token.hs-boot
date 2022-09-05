@@ -19,11 +19,13 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_swapchain@
+--     -   Requires @VK_KHR_swapchain@ to be enabled for any device-level
+--         functionality
 --
---     -   Requires @VK_GGP_stream_descriptor_surface@
+--     -   Requires @VK_GGP_stream_descriptor_surface@ to be enabled for
+--         any device-level functionality
 --
 -- [__Contact__]
 --
@@ -80,7 +82,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_GGP_frame_token Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_GGP_frame_token Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

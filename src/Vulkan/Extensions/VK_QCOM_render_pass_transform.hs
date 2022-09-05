@@ -15,15 +15,17 @@
 --     283
 --
 -- [__Revision__]
---     2
+--     3
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_swapchain@
+--     -   Requires @VK_KHR_swapchain@ to be enabled for any device-level
+--         functionality
 --
---     -   Requires @VK_KHR_surface@
+--     -   Requires @VK_KHR_surface@ to be enabled for any device-level
+--         functionality
 --
 -- [__Contact__]
 --
@@ -33,7 +35,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2021-03-09
+--     2022-07-21
 --
 -- [__Interactions and External Dependencies__]
 --
@@ -42,6 +44,8 @@
 --     -   This extension interacts with @VK_EXT_fragment_density_map@
 --
 --     -   This extension interacts with @VK_KHR_fragment_shading_rate@
+--
+--     -   This extension interacts with @VK_QCOM_tile_properties@
 --
 -- [__Contributors__]
 --
@@ -55,7 +59,7 @@
 --
 -- This extension provides a mechanism for applications to enable driver
 -- support for
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-renderpass-transform render pass transform>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-renderpass-transform render pass transform>.
 --
 -- Mobile devices can be rotated and mobile applications need to render
 -- properly when a device is held in a landscape or portrait orientation.
@@ -63,7 +67,7 @@
 -- orientation, a rotation is required so that the “up” direction of the
 -- rendered scene matches the current orientation.
 --
--- If the Display Processing Unit (DPU) doesnt natively support rotation,
+-- If the Display Processing Unit (DPU) does not natively support rotation,
 -- the Vulkan presentation engine can handle this rotation in a separate
 -- composition pass. Alternatively, the application can render frames
 -- “pre-rotated” to avoid this extra pass. The latter is preferred to
@@ -119,6 +123,12 @@
 --
 -- -   The implementation is responsible for transforming @position@ to the
 --     rotated coordinate system.
+--
+-- -   If this extension is used with @VK_QCOM_tile_properties@, then
+--     'Vulkan.Extensions.VK_QCOM_tile_properties.getFramebufferTilePropertiesQCOM'
+--     and
+--     'Vulkan.Extensions.VK_QCOM_tile_properties.getDynamicRenderingTilePropertiesQCOM'
+--     return tile properties in the rotated coordinate space.
 --
 -- == New Structures
 --
@@ -225,7 +235,7 @@
 -- coordinate system.
 --
 -- The
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate set of supported shading rates>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate set of supported shading rates>
 -- /may/ be different per transform. Supported rates queried from
 -- 'Vulkan.Extensions.VK_KHR_fragment_shading_rate.getPhysicalDeviceFragmentShadingRatesKHR'
 -- are in the native (rotated) coordinate system. This means that the
@@ -240,6 +250,10 @@
 --
 --     -   Adds interactions with VK_KHR_fragment_shading_rate
 --
+-- -   Revision 3, 2022-07-11 (Arpit Agarwal)
+--
+--     -   Adds interactions with VK_QCOM_tile_properties
+--
 -- == See Also
 --
 -- 'CommandBufferInheritanceRenderPassTransformInfoQCOM',
@@ -248,7 +262,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_QCOM_render_pass_transform Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_QCOM_render_pass_transform Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -437,11 +451,11 @@ instance Zero CommandBufferInheritanceRenderPassTransformInfoQCOM where
            zero
 
 
-type QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION = 2
+type QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION = 3
 
 -- No documentation found for TopLevel "VK_QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION"
 pattern QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION :: forall a . Integral a => a
-pattern QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION = 2
+pattern QCOM_RENDER_PASS_TRANSFORM_SPEC_VERSION = 3
 
 
 type QCOM_RENDER_PASS_TRANSFORM_EXTENSION_NAME = "VK_QCOM_render_pass_transform"

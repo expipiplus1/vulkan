@@ -52,7 +52,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- single component of the format is used instead.
 --
 -- These limits /must/ not advertise a larger alignment than the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-required required>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-required required>
 -- maximum minimum value of
 -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@minTexelBufferOffsetAlignment@,
 -- for any format that supports use as a texel buffer.
