@@ -322,6 +322,7 @@ data Device_T
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkDestroyVideoSessionParametersKHR vkDestroyVideoSessionParametersKHR>,
 -- 'Vulkan.Core10.Queue.deviceWaitIdle',
 -- 'Vulkan.Extensions.VK_EXT_display_control.displayPowerControlEXT',
+-- 'Vulkan.Extensions.VK_EXT_metal_objects.exportMetalObjectsEXT',
 -- 'Vulkan.Core10.Memory.flushMappedMemoryRanges',
 -- 'Vulkan.Core10.CommandBuffer.freeCommandBuffers',
 -- 'Vulkan.Core10.DescriptorSet.freeDescriptorSets',
@@ -483,6 +484,7 @@ data Queue_T
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
+-- 'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalCommandQueueInfoEXT',
 -- 'Vulkan.Core10.Queue.getDeviceQueue',
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.getDeviceQueue2',
 -- 'Vulkan.Extensions.VK_KHR_synchronization2.getQueueCheckpointData2NV',
@@ -726,6 +728,7 @@ instance HasObjectType CommandBuffer where
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindBufferMemoryInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindImageMemoryInfo',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.DeviceMemoryOpaqueCaptureAddressInfo',
+-- 'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalBufferInfoEXT',
 -- 'Vulkan.Core10.Memory.MappedMemoryRange',
 -- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.MemoryGetAndroidHardwareBufferInfoANDROID',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_fd.MemoryGetFdInfoKHR',
@@ -849,6 +852,7 @@ instance Show Buffer where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
+-- 'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalTextureInfoEXT',
 -- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet',
 -- 'Vulkan.Core10.BufferView.createBufferView',
 -- 'Vulkan.Core10.BufferView.destroyBufferView'
@@ -872,6 +876,8 @@ instance Show BufferView where
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.CopyImageInfo2',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.CopyImageToBufferInfo2',
 -- 'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV',
+-- 'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalIOSurfaceInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalTextureInfoEXT',
 -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.ImageMemoryBarrier2',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.ImageMemoryRequirementsInfo2',
@@ -911,6 +917,7 @@ instance Show Image where
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.DescriptorSet.DescriptorImageInfo',
+-- 'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalTextureInfoEXT',
 -- 'Vulkan.Core10.Pass.FramebufferCreateInfo',
 -- 'Vulkan.Extensions.VK_NVX_image_view_handle.ImageViewHandleInfoNVX',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.RenderPassAttachmentBeginInfo',
@@ -1128,6 +1135,7 @@ instance Show Fence where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_KHR_swapchain.AcquireNextImageInfoKHR',
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.BindSparseInfo',
+-- 'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalSharedEventInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_external_semaphore_fd.ImportSemaphoreFdInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_external_semaphore_win32.ImportSemaphoreWin32HandleInfoKHR',
 -- 'Vulkan.Extensions.VK_FUCHSIA_external_semaphore.ImportSemaphoreZirconHandleInfoFUCHSIA',
@@ -1158,6 +1166,7 @@ instance Show Semaphore where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
+-- 'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalSharedEventInfoEXT',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdResetEvent',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.cmdResetEvent2',
 -- 'Vulkan.Extensions.VK_KHR_synchronization2.cmdResetEvent2KHR',

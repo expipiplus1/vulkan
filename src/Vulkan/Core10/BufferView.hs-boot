@@ -5,11 +5,15 @@ module Vulkan.Core10.BufferView  (BufferViewCreateInfo) where
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
+type role BufferViewCreateInfo nominal
+data BufferViewCreateInfo (es :: [Type])
 
-data BufferViewCreateInfo
+instance (Extendss BufferViewCreateInfo es, PokeChain es) => ToCStruct (BufferViewCreateInfo es)
+instance Show (Chain es) => Show (BufferViewCreateInfo es)
 
-instance ToCStruct BufferViewCreateInfo
-instance Show BufferViewCreateInfo
-
-instance FromCStruct BufferViewCreateInfo
+instance (Extendss BufferViewCreateInfo es, PeekChain es) => FromCStruct (BufferViewCreateInfo es)
 

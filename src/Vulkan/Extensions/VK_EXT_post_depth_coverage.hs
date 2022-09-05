@@ -65,9 +65,8 @@
 -- along with @EarlyFragmentTests@, the value of an input variable
 -- decorated with the
 -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-samplemask >
--- built-in reflects the coverage after the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-fragment-earlytest early fragment tests>
--- are applied. Otherwise, it reflects the coverage before the depth and
+-- built-in reflects the coverage after the early fragment tests are
+-- applied. Otherwise, it reflects the coverage before the depth and
 -- stencil tests.
 --
 -- When using GLSL source-based shading languages, the

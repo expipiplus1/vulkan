@@ -144,6 +144,7 @@ import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetDeviceProcAddr))
 import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ExportMetalObjectCreateInfoEXT)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
@@ -1454,6 +1455,14 @@ instance Zero ApplicationInfo where
 --     @ppEnabledExtensionNames@ /must/ contain
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>
 --
+-- -   #VUID-VkInstanceCreateInfo-pNext-06779# If the @pNext@ chain
+--     includes a
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
+--     structure, its @exportObjectType@ member /must/ be either
+--     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_DEVICE_BIT_EXT'
+--     or
+--     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_COMMAND_QUEUE_BIT_EXT'.
+--
 -- -   #VUID-VkInstanceCreateInfo-flags-06559# If @flags@ has the
 --     'Vulkan.Core10.Enums.InstanceCreateFlagBits.INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR'
 --     bit set, the list of enabled extensions in @ppEnabledExtensionNames@
@@ -1469,6 +1478,7 @@ instance Zero ApplicationInfo where
 --     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_EXT_debug_report.DebugReportCallbackCreateInfoEXT',
 --     'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsMessengerCreateInfoEXT',
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT',
 --     'Vulkan.Extensions.VK_EXT_validation_features.ValidationFeaturesEXT',
 --     or 'Vulkan.Extensions.VK_EXT_validation_flags.ValidationFlagsEXT'
 --
@@ -1476,6 +1486,8 @@ instance Zero ApplicationInfo where
 --     struct in the @pNext@ chain /must/ be unique, with the exception of
 --     structures of type
 --     'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsMessengerCreateInfoEXT'
+--     or
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
 --
 -- -   #VUID-VkInstanceCreateInfo-flags-parameter# @flags@ /must/ be a
 --     valid combination of
@@ -1540,6 +1552,7 @@ instance Extensible InstanceCreateInfo where
   getNext InstanceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends InstanceCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @ExportMetalObjectCreateInfoEXT = Just f
     | Just Refl <- eqT @e @DebugUtilsMessengerCreateInfoEXT = Just f
     | Just Refl <- eqT @e @ValidationFeaturesEXT = Just f
     | Just Refl <- eqT @e @ValidationFlagsEXT = Just f

@@ -4997,13 +4997,10 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     to the value of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@colorAttachmentCount@
 --
--- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06591# If the pipeline is
---     being created with
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>,
---     and the fragment shader code enables
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-fragment-earlytest early fragment tests>,
---     the @flags@ member of 'PipelineDepthStencilStateCreateInfo' /must/
---     not include
+-- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06591# If @pStages@
+--     includes a fragment shader stage, and the fragment shader declares
+--     the @EarlyFragmentTests@ execution mode, the @flags@ member of
+--     'PipelineDepthStencilStateCreateInfo' /must/ not include
 --     'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM'
 --     or
 --     'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM'

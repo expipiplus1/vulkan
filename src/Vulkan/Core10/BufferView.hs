@@ -12,11 +12,13 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -28,11 +30,10 @@ import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
+import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
-import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
-import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
@@ -40,12 +41,14 @@ import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.Handles (Buffer)
 import Vulkan.Core10.Handles (BufferView)
 import Vulkan.Core10.Handles (BufferView(..))
 import Vulkan.Core10.Enums.BufferViewCreateFlags (BufferViewCreateFlags)
+import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Core10.Handles (Device(Device))
@@ -53,9 +56,18 @@ import Vulkan.Dynamic (DeviceCmds(pVkCreateBufferView))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyBufferView))
 import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ExportMetalObjectCreateInfoEXT)
+import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
+import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.Enums.Format (Format)
+import Vulkan.CStruct.Extends (PeekChain)
+import Vulkan.CStruct.Extends (PeekChain(..))
+import Vulkan.CStruct.Extends (PokeChain)
+import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO))
@@ -67,7 +79,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateBufferView
-  :: FunPtr (Ptr Device_T -> Ptr BufferViewCreateInfo -> Ptr AllocationCallbacks -> Ptr BufferView -> IO Result) -> Ptr Device_T -> Ptr BufferViewCreateInfo -> Ptr AllocationCallbacks -> Ptr BufferView -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct BufferViewCreateInfo) -> Ptr AllocationCallbacks -> Ptr BufferView -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct BufferViewCreateInfo) -> Ptr AllocationCallbacks -> Ptr BufferView -> IO Result
 
 -- | vkCreateBufferView - Create a new buffer view object
 --
@@ -104,13 +116,13 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.BufferView', 'BufferViewCreateInfo',
 -- 'Vulkan.Core10.Handles.Device'
-createBufferView :: forall io
-                  . (MonadIO io)
+createBufferView :: forall a io
+                  . (Extendss BufferViewCreateInfo a, PokeChain a, MonadIO io)
                  => -- | @device@ is the logical device that creates the buffer view.
                     Device
                  -> -- | @pCreateInfo@ is a pointer to a 'BufferViewCreateInfo' structure
                     -- containing parameters to be used to create the buffer view.
-                    BufferViewCreateInfo
+                    (BufferViewCreateInfo a)
                  -> -- | @pAllocator@ controls host memory allocation as described in the
                     -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                     -- chapter.
@@ -126,7 +138,7 @@ createBufferView device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPView <- ContT $ bracket (callocBytes @BufferView 8) free
-  r <- lift $ traceAroundEvent "vkCreateBufferView" (vkCreateBufferView' (deviceHandle (device)) pCreateInfo pAllocator (pPView))
+  r <- lift $ traceAroundEvent "vkCreateBufferView" (vkCreateBufferView' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPView))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pView <- lift $ peek @BufferView pPView
   pure $ (pView)
@@ -139,7 +151,7 @@ createBufferView device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the last argument.
 -- To just extract the pair pass '(,)' as the last argument.
 --
-withBufferView :: forall io r . MonadIO io => Device -> BufferViewCreateInfo -> Maybe AllocationCallbacks -> (io BufferView -> (BufferView -> io ()) -> r) -> r
+withBufferView :: forall a io r . (Extendss BufferViewCreateInfo a, PokeChain a, MonadIO io) => Device -> BufferViewCreateInfo a -> Maybe AllocationCallbacks -> (io BufferView -> (BufferView -> io ()) -> r) -> r
 withBufferView device pCreateInfo pAllocator b =
   b (createBufferView device pCreateInfo pAllocator)
     (\(o0) -> destroyBufferView device o0 pAllocator)
@@ -321,12 +333,25 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 --     bytes, then the size of a single component of @format@ is used
 --     instead
 --
+-- -   #VUID-VkBufferViewCreateInfo-pNext-06782# If the @pNext@ chain
+--     includes a
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
+--     structure, its @exportObjectType@ member /must/ be
+--     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT'.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkBufferViewCreateInfo-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO'
 --
 -- -   #VUID-VkBufferViewCreateInfo-pNext-pNext# @pNext@ /must/ be @NULL@
+--     or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
+--
+-- -   #VUID-VkBufferViewCreateInfo-sType-unique# The @sType@ value of each
+--     struct in the @pNext@ chain /must/ be unique, with the exception of
+--     structures of type
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
 --
 -- -   #VUID-VkBufferViewCreateInfo-flags-zerobitmask# @flags@ /must/ be
 --     @0@
@@ -345,8 +370,10 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.Format.Format',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createBufferView'
-data BufferViewCreateInfo = BufferViewCreateInfo
-  { -- | @flags@ is reserved for future use.
+data BufferViewCreateInfo (es :: [Type]) = BufferViewCreateInfo
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @flags@ is reserved for future use.
     flags :: BufferViewCreateFlags
   , -- | @buffer@ is a 'Vulkan.Core10.Handles.Buffer' on which the view will be
     -- created.
@@ -366,52 +393,60 @@ data BufferViewCreateInfo = BufferViewCreateInfo
     -- of @format@, the nearest smaller multiple is used.
     range :: DeviceSize
   }
-  deriving (Typeable, Eq)
+  deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (BufferViewCreateInfo)
+deriving instance Generic (BufferViewCreateInfo (es :: [Type]))
 #endif
-deriving instance Show BufferViewCreateInfo
+deriving instance Show (Chain es) => Show (BufferViewCreateInfo es)
 
-instance ToCStruct BufferViewCreateInfo where
+instance Extensible BufferViewCreateInfo where
+  extensibleTypeName = "BufferViewCreateInfo"
+  setNext BufferViewCreateInfo{..} next' = BufferViewCreateInfo{next = next', ..}
+  getNext BufferViewCreateInfo{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends BufferViewCreateInfo e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @ExportMetalObjectCreateInfoEXT = Just f
+    | otherwise = Nothing
+
+instance (Extendss BufferViewCreateInfo es, PokeChain es) => ToCStruct (BufferViewCreateInfo es) where
   withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p BufferViewCreateInfo{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr BufferViewCreateFlags)) (flags)
-    poke ((p `plusPtr` 24 :: Ptr Buffer)) (buffer)
-    poke ((p `plusPtr` 32 :: Ptr Format)) (format)
-    poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (offset)
-    poke ((p `plusPtr` 48 :: Ptr DeviceSize)) (range)
-    f
+  pokeCStruct p BufferViewCreateInfo{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr BufferViewCreateFlags)) (flags)
+    lift $ poke ((p `plusPtr` 24 :: Ptr Buffer)) (buffer)
+    lift $ poke ((p `plusPtr` 32 :: Ptr Format)) (format)
+    lift $ poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (offset)
+    lift $ poke ((p `plusPtr` 48 :: Ptr DeviceSize)) (range)
+    lift $ f
   cStructSize = 56
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 24 :: Ptr Buffer)) (zero)
-    poke ((p `plusPtr` 32 :: Ptr Format)) (zero)
-    poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (zero)
-    poke ((p `plusPtr` 48 :: Ptr DeviceSize)) (zero)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ poke ((p `plusPtr` 24 :: Ptr Buffer)) (zero)
+    lift $ poke ((p `plusPtr` 32 :: Ptr Format)) (zero)
+    lift $ poke ((p `plusPtr` 40 :: Ptr DeviceSize)) (zero)
+    lift $ poke ((p `plusPtr` 48 :: Ptr DeviceSize)) (zero)
+    lift $ f
 
-instance FromCStruct BufferViewCreateInfo where
+instance (Extendss BufferViewCreateInfo es, PeekChain es) => FromCStruct (BufferViewCreateInfo es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     flags <- peek @BufferViewCreateFlags ((p `plusPtr` 16 :: Ptr BufferViewCreateFlags))
     buffer <- peek @Buffer ((p `plusPtr` 24 :: Ptr Buffer))
     format <- peek @Format ((p `plusPtr` 32 :: Ptr Format))
     offset <- peek @DeviceSize ((p `plusPtr` 40 :: Ptr DeviceSize))
     range <- peek @DeviceSize ((p `plusPtr` 48 :: Ptr DeviceSize))
     pure $ BufferViewCreateInfo
-             flags buffer format offset range
+             next flags buffer format offset range
 
-instance Storable BufferViewCreateInfo where
-  sizeOf ~_ = 56
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero BufferViewCreateInfo where
+instance es ~ '[] => Zero (BufferViewCreateInfo es) where
   zero = BufferViewCreateInfo
+           ()
            zero
            zero
            zero

@@ -60,6 +60,7 @@ import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateImageView))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyImageView))
 import Vulkan.Core10.Handles (Device_T)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ExportMetalObjectCreateInfoEXT)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
@@ -1151,6 +1152,12 @@ instance Zero ImageSubresourceRange where
 --     each component, than the format of the 'Vulkan.Core10.Handles.Image'
 --     in @image@
 --
+-- -   #VUID-VkImageViewCreateInfo-pNext-06787# If the @pNext@ chain
+--     includes a
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
+--     structure, its @exportObjectType@ member /must/ be
+--     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT'.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkImageViewCreateInfo-sType-sType# @sType@ /must/ be
@@ -1159,6 +1166,7 @@ instance Zero ImageSubresourceRange where
 -- -   #VUID-VkImageViewCreateInfo-pNext-pNext# Each @pNext@ member of any
 --     structure (including this one) in the @pNext@ chain /must/ be either
 --     @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT',
 --     'Vulkan.Extensions.VK_EXT_astc_decode_mode.ImageViewASTCDecodeModeEXT',
 --     'Vulkan.Extensions.VK_EXT_image_view_min_lod.ImageViewMinLodCreateInfoEXT',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.ImageViewUsageCreateInfo',
@@ -1172,7 +1180,9 @@ instance Zero ImageSubresourceRange where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfilesKHR VkVideoProfilesKHR>
 --
 -- -   #VUID-VkImageViewCreateInfo-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique
+--     struct in the @pNext@ chain /must/ be unique, with the exception of
+--     structures of type
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
 --
 -- -   #VUID-VkImageViewCreateInfo-flags-parameter# @flags@ /must/ be a
 --     valid combination of
@@ -1239,6 +1249,7 @@ instance Extensible ImageViewCreateInfo where
   getNext ImageViewCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageViewCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @ExportMetalObjectCreateInfoEXT = Just f
     | Just Refl <- eqT @e @ImageViewMinLodCreateInfoEXT = Just f
     | Just Refl <- eqT @e @ImageViewASTCDecodeModeEXT = Just f
     | Just Refl <- eqT @e @SamplerYcbcrConversionInfo = Just f

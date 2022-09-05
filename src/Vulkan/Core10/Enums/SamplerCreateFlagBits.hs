@@ -1,7 +1,8 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "SamplerCreateFlagBits"
 module Vulkan.Core10.Enums.SamplerCreateFlagBits  ( SamplerCreateFlags
-                                                  , SamplerCreateFlagBits( SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT
+                                                  , SamplerCreateFlagBits( SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT
+                                                                         , SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT
                                                                          , SAMPLER_CREATE_SUBSAMPLED_BIT_EXT
                                                                          , ..
                                                                          )
@@ -41,6 +42,10 @@ type SamplerCreateFlags = SamplerCreateFlagBits
 newtype SamplerCreateFlagBits = SamplerCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
+-- | 'SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT' specifies that
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-cubemapedge cube map edge handling>
+-- is not performed.
+pattern SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT            = SamplerCreateFlagBits 0x00000004
 -- | 'SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT' specifies that
 -- the implementation /may/ use approximations when reconstructing a full
 -- color value for texture access from a subsampled image.
@@ -55,12 +60,13 @@ conNameSamplerCreateFlagBits :: String
 conNameSamplerCreateFlagBits = "SamplerCreateFlagBits"
 
 enumPrefixSamplerCreateFlagBits :: String
-enumPrefixSamplerCreateFlagBits = "SAMPLER_CREATE_SUBSAMPLED_"
+enumPrefixSamplerCreateFlagBits = "SAMPLER_CREATE_"
 
 showTableSamplerCreateFlagBits :: [(SamplerCreateFlagBits, String)]
 showTableSamplerCreateFlagBits =
-  [ (SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT, "COARSE_RECONSTRUCTION_BIT_EXT")
-  , (SAMPLER_CREATE_SUBSAMPLED_BIT_EXT                      , "BIT_EXT")
+  [ (SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT           , "NON_SEAMLESS_CUBE_MAP_BIT_EXT")
+  , (SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT, "SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT")
+  , (SAMPLER_CREATE_SUBSAMPLED_BIT_EXT                      , "SUBSAMPLED_BIT_EXT")
   ]
 
 instance Show SamplerCreateFlagBits where

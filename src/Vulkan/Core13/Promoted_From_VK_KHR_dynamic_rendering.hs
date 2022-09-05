@@ -218,6 +218,9 @@ foreign import ccall
 -- -   #VUID-vkCmdEndRendering-commandBuffer-06162# The current render pass
 --     instance /must/ have been begun in @commandBuffer@
 --
+-- -   #VUID-vkCmdEndRendering-None-06781# This command /must/ not be
+--     recorded when transform feedback is active
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdEndRendering-commandBuffer-parameter# @commandBuffer@

@@ -603,6 +603,17 @@
 -- -   there is no “baseInstance” relevant for these shaders, and so ID
 --     makes it more obvious that this is zero-based.
 --
+-- (6) Why is @VK_KHR_pipeline_library@ an interaction instead of a
+-- required dependency, particularly when the \"Feature Requirements\"
+-- section says it is required to be supported anyhow?
+--
+-- __RESOLVED__: If @VK_KHR_pipeline_library@ were a required extension
+-- dependency, then every application would need to enable the extension
+-- whether or not they actually want to use the pipeline library
+-- functionality. Developers found this to be annoying and unfriendly
+-- behavior. We do wish to require all __implementations__ to support it
+-- though, and thus it is listed in the feature requirements section.
+--
 -- == Sample Code
 --
 -- Example ray generation GLSL shader

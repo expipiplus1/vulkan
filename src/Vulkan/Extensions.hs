@@ -78,8 +78,10 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_load_store_op_none
                           , module Vulkan.Extensions.VK_EXT_memory_budget
                           , module Vulkan.Extensions.VK_EXT_memory_priority
+                          , module Vulkan.Extensions.VK_EXT_metal_objects
                           , module Vulkan.Extensions.VK_EXT_metal_surface
                           , module Vulkan.Extensions.VK_EXT_multi_draw
+                          , module Vulkan.Extensions.VK_EXT_non_seamless_cube_map
                           , module Vulkan.Extensions.VK_EXT_pageable_device_local_memory
                           , module Vulkan.Extensions.VK_EXT_pci_bus_info
                           , module Vulkan.Extensions.VK_EXT_physical_device_drm
@@ -358,8 +360,10 @@ import Vulkan.Extensions.VK_EXT_line_rasterization
 import Vulkan.Extensions.VK_EXT_load_store_op_none
 import Vulkan.Extensions.VK_EXT_memory_budget
 import Vulkan.Extensions.VK_EXT_memory_priority
+import Vulkan.Extensions.VK_EXT_metal_objects
 import Vulkan.Extensions.VK_EXT_metal_surface
 import Vulkan.Extensions.VK_EXT_multi_draw
+import Vulkan.Extensions.VK_EXT_non_seamless_cube_map
 import Vulkan.Extensions.VK_EXT_pageable_device_local_memory
 import Vulkan.Extensions.VK_EXT_pci_bus_info
 import Vulkan.Extensions.VK_EXT_physical_device_drm

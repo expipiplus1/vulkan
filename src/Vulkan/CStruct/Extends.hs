@@ -233,6 +233,14 @@ import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_memory (Export
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory (ExportMemoryAllocateInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_win32 (ExportMemoryWin32HandleInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_win32 (ExportMemoryWin32HandleInfoNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ExportMetalBufferInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ExportMetalCommandQueueInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ExportMetalDeviceInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ExportMetalIOSurfaceInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ExportMetalObjectCreateInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ExportMetalObjectsInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ExportMetalSharedEventInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ExportMetalTextureInfoEXT)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore (ExportSemaphoreCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_semaphore_win32 (ExportSemaphoreWin32HandleInfoKHR)
 import {-# SOURCE #-} Vulkan.Core10.ExtensionDiscovery (ExtensionProperties)
@@ -317,6 +325,10 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_external_memory_host (ImportMemor
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_win32 (ImportMemoryWin32HandleInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_win32 (ImportMemoryWin32HandleInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_external_memory (ImportMemoryZirconHandleInfoFUCHSIA)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ImportMetalBufferInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ImportMetalIOSurfaceInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ImportMetalSharedEventInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ImportMetalTextureInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_semaphore_fd (ImportSemaphoreFdInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_semaphore_win32 (ImportSemaphoreWin32HandleInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_external_semaphore (ImportSemaphoreZirconHandleInfoFUCHSIA)
@@ -470,6 +482,7 @@ import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_multiview (PhysicalDevi
 import {-# SOURCE #-} Vulkan.Extensions.VK_NVX_multiview_per_view_attributes (PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_multiview (PhysicalDeviceMultiviewProperties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_VALVE_mutable_descriptor_type (PhysicalDeviceMutableDescriptorTypeFeaturesVALVE)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_non_seamless_cube_map (PhysicalDeviceNonSeamlessCubeMapFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pci_bus_info (PhysicalDevicePCIBusInfoPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pageable_device_local_memory (PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (PhysicalDevicePerformanceQueryFeaturesKHR)
@@ -887,6 +900,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends BufferCreateInfo BufferDeviceAddressCreateInfoEXT = ()
   Extends BufferCreateInfo BufferCollectionBufferCreateInfoFUCHSIA = ()
   Extends BufferImageCopy2 CopyCommandTransformInfoQCOM = ()
+  Extends BufferViewCreateInfo ExportMetalObjectCreateInfoEXT = ()
   Extends CommandBufferBeginInfo DeviceGroupCommandBufferBeginInfo = ()
   Extends CommandBufferInheritanceInfo CommandBufferInheritanceConditionalRenderingInfoEXT = ()
   Extends CommandBufferInheritanceInfo CommandBufferInheritanceRenderPassTransformInfoQCOM = ()
@@ -1028,7 +1042,16 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceSubpassMergeFeedbackFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDevicePipelinePropertiesFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD = ()
+  Extends DeviceCreateInfo PhysicalDeviceNonSeamlessCubeMapFeaturesEXT = ()
   Extends DeviceQueueCreateInfo DeviceQueueGlobalPriorityCreateInfoKHR = ()
+  Extends EventCreateInfo ExportMetalObjectCreateInfoEXT = ()
+  Extends EventCreateInfo ImportMetalSharedEventInfoEXT = ()
+  Extends ExportMetalObjectsInfoEXT ExportMetalDeviceInfoEXT = ()
+  Extends ExportMetalObjectsInfoEXT ExportMetalCommandQueueInfoEXT = ()
+  Extends ExportMetalObjectsInfoEXT ExportMetalBufferInfoEXT = ()
+  Extends ExportMetalObjectsInfoEXT ExportMetalTextureInfoEXT = ()
+  Extends ExportMetalObjectsInfoEXT ExportMetalIOSurfaceInfoEXT = ()
+  Extends ExportMetalObjectsInfoEXT ExportMetalSharedEventInfoEXT = ()
   Extends FenceCreateInfo ExportFenceCreateInfo = ()
   Extends FenceCreateInfo ExportFenceWin32HandleInfoKHR = ()
   Extends FormatProperties2 DrmFormatModifierPropertiesListEXT = ()
@@ -1059,6 +1082,9 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends ImageCreateInfo ImageStencilUsageCreateInfo = ()
   Extends ImageCreateInfo BufferCollectionImageCreateInfoFUCHSIA = ()
   Extends ImageCreateInfo ImageCompressionControlEXT = ()
+  Extends ImageCreateInfo ExportMetalObjectCreateInfoEXT = ()
+  Extends ImageCreateInfo ImportMetalTextureInfoEXT = ()
+  Extends ImageCreateInfo ImportMetalIOSurfaceInfoEXT = ()
   Extends ImageFormatProperties2 ExternalImageFormatProperties = ()
   Extends ImageFormatProperties2 SamplerYcbcrConversionImageFormatProperties = ()
   Extends ImageFormatProperties2 TextureLODGatherFormatPropertiesAMD = ()
@@ -1072,10 +1098,12 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends ImageViewCreateInfo SamplerYcbcrConversionInfo = ()
   Extends ImageViewCreateInfo ImageViewASTCDecodeModeEXT = ()
   Extends ImageViewCreateInfo ImageViewMinLodCreateInfoEXT = ()
+  Extends ImageViewCreateInfo ExportMetalObjectCreateInfoEXT = ()
   Extends InstanceCreateInfo DebugReportCallbackCreateInfoEXT = ()
   Extends InstanceCreateInfo ValidationFlagsEXT = ()
   Extends InstanceCreateInfo ValidationFeaturesEXT = ()
   Extends InstanceCreateInfo DebugUtilsMessengerCreateInfoEXT = ()
+  Extends InstanceCreateInfo ExportMetalObjectCreateInfoEXT = ()
   Extends MemoryAllocateInfo DedicatedAllocationMemoryAllocateInfoNV = ()
   Extends MemoryAllocateInfo ExportMemoryAllocateInfoNV = ()
   Extends MemoryAllocateInfo ImportMemoryWin32HandleInfoNV = ()
@@ -1092,6 +1120,8 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends MemoryAllocateInfo MemoryPriorityAllocateInfoEXT = ()
   Extends MemoryAllocateInfo MemoryOpaqueCaptureAddressAllocateInfo = ()
   Extends MemoryAllocateInfo ImportMemoryBufferCollectionFUCHSIA = ()
+  Extends MemoryAllocateInfo ExportMetalObjectCreateInfoEXT = ()
+  Extends MemoryAllocateInfo ImportMetalBufferInfoEXT = ()
   Extends MemoryRequirements2 MemoryDedicatedRequirements = ()
   Extends PhysicalDeviceExternalSemaphoreInfo SemaphoreTypeCreateInfo = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceDeviceGeneratedCommandsFeaturesNV = ()
@@ -1213,6 +1243,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceSubpassMergeFeedbackFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDevicePipelinePropertiesFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceNonSeamlessCubeMapFeaturesEXT = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceExternalImageFormatInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 ImageFormatListCreateInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageDrmFormatModifierInfoEXT = ()
@@ -1336,6 +1367,8 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends SemaphoreCreateInfo ExportSemaphoreCreateInfo = ()
   Extends SemaphoreCreateInfo ExportSemaphoreWin32HandleInfoKHR = ()
   Extends SemaphoreCreateInfo SemaphoreTypeCreateInfo = ()
+  Extends SemaphoreCreateInfo ExportMetalObjectCreateInfoEXT = ()
+  Extends SemaphoreCreateInfo ImportMetalSharedEventInfoEXT = ()
   Extends ShaderModuleCreateInfo ShaderModuleValidationCacheCreateInfoEXT = ()
   Extends SubmitInfo Win32KeyedMutexAcquireReleaseInfoNV = ()
   Extends SubmitInfo Win32KeyedMutexAcquireReleaseInfoKHR = ()
@@ -1824,6 +1857,18 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PIPELINE_PROPERTIES_IDENTIFIER_EXT -> go @PipelinePropertiesIdentifierEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROPERTIES_FEATURES_EXT -> go @PhysicalDevicePipelinePropertiesFeaturesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EARLY_AND_LATE_FRAGMENT_TESTS_FEATURES_AMD -> go @PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD
+  STRUCTURE_TYPE_EXPORT_METAL_OBJECT_CREATE_INFO_EXT -> go @ExportMetalObjectCreateInfoEXT
+  STRUCTURE_TYPE_EXPORT_METAL_DEVICE_INFO_EXT -> go @ExportMetalDeviceInfoEXT
+  STRUCTURE_TYPE_EXPORT_METAL_COMMAND_QUEUE_INFO_EXT -> go @ExportMetalCommandQueueInfoEXT
+  STRUCTURE_TYPE_EXPORT_METAL_BUFFER_INFO_EXT -> go @ExportMetalBufferInfoEXT
+  STRUCTURE_TYPE_IMPORT_METAL_BUFFER_INFO_EXT -> go @ImportMetalBufferInfoEXT
+  STRUCTURE_TYPE_EXPORT_METAL_TEXTURE_INFO_EXT -> go @ExportMetalTextureInfoEXT
+  STRUCTURE_TYPE_IMPORT_METAL_TEXTURE_INFO_EXT -> go @ImportMetalTextureInfoEXT
+  STRUCTURE_TYPE_EXPORT_METAL_IO_SURFACE_INFO_EXT -> go @ExportMetalIOSurfaceInfoEXT
+  STRUCTURE_TYPE_IMPORT_METAL_IO_SURFACE_INFO_EXT -> go @ImportMetalIOSurfaceInfoEXT
+  STRUCTURE_TYPE_EXPORT_METAL_SHARED_EVENT_INFO_EXT -> go @ExportMetalSharedEventInfoEXT
+  STRUCTURE_TYPE_IMPORT_METAL_SHARED_EVENT_INFO_EXT -> go @ImportMetalSharedEventInfoEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_NON_SEAMLESS_CUBE_MAP_FEATURES_EXT -> go @PhysicalDeviceNonSeamlessCubeMapFeaturesEXT
   t -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("Unrecognized struct type: " <> show t) Nothing Nothing
  where
   go :: forall e . (Typeable e, FromCStruct e, ToCStruct e, Show e) => IO b
@@ -2230,6 +2275,18 @@ infix 6 ::&
 {-# complete (::&) :: PipelinePropertiesIdentifierEXT #-}
 {-# complete (::&) :: PhysicalDevicePipelinePropertiesFeaturesEXT #-}
 {-# complete (::&) :: PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD #-}
+{-# complete (::&) :: ExportMetalObjectCreateInfoEXT #-}
+{-# complete (::&) :: ExportMetalDeviceInfoEXT #-}
+{-# complete (::&) :: ExportMetalCommandQueueInfoEXT #-}
+{-# complete (::&) :: ExportMetalBufferInfoEXT #-}
+{-# complete (::&) :: ImportMetalBufferInfoEXT #-}
+{-# complete (::&) :: ExportMetalTextureInfoEXT #-}
+{-# complete (::&) :: ImportMetalTextureInfoEXT #-}
+{-# complete (::&) :: ExportMetalIOSurfaceInfoEXT #-}
+{-# complete (::&) :: ImportMetalIOSurfaceInfoEXT #-}
+{-# complete (::&) :: ExportMetalSharedEventInfoEXT #-}
+{-# complete (::&) :: ImportMetalSharedEventInfoEXT #-}
+{-# complete (::&) :: PhysicalDeviceNonSeamlessCubeMapFeaturesEXT #-}
 
 -- | View the head and tail of a 'Chain', see '::&'
 --

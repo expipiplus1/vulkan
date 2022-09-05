@@ -65,6 +65,7 @@ import Vulkan.Dynamic (DeviceCmds(pVkDestroyImage))
 import Vulkan.Dynamic (DeviceCmds(pVkGetImageSubresourceLayout))
 import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ExportMetalObjectCreateInfoEXT)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
@@ -87,6 +88,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain (ImageSwapchainCreateIn
 import Vulkan.Core10.Enums.ImageTiling (ImageTiling)
 import Vulkan.Core10.Enums.ImageType (ImageType)
 import Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ImportMetalIOSurfaceInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ImportMetalTextureInfoEXT)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.CStruct.Extends (PokeChain)
@@ -1407,6 +1410,36 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierExplicitCreateInfoEXT'
 --     structure
 --
+-- -   #VUID-VkImageCreateInfo-pNext-06783# If the @pNext@ chain includes a
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
+--     structure, its @exportObjectType@ member /must/ be either
+--     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT'
+--     or
+--     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_IOSURFACE_BIT_EXT'.
+--
+-- -   #VUID-VkImageCreateInfo-pNext-06784# If the @pNext@ chain includes a
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalTextureInfoEXT'
+--     structure its @plane@ member /must/ be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
+--     or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'.
+--
+-- -   #VUID-VkImageCreateInfo-pNext-06785# If the @pNext@ chain includes a
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalTextureInfoEXT'
+--     structure and the image does not have a multi-planar format, then
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalTextureInfoEXT'::@plane@
+--     /must/ be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'.
+--
+-- -   #VUID-VkImageCreateInfo-pNext-06786# If the @pNext@ chain includes a
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalTextureInfoEXT'
+--     structure and the image has a multi-planar format with only two
+--     planes, then
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalTextureInfoEXT'::@plane@
+--     /must/ not be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkImageCreateInfo-sType-sType# @sType@ /must/ be
@@ -1417,6 +1450,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionImageCreateInfoFUCHSIA',
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationImageCreateInfoNV',
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT',
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo',
 --     'Vulkan.Extensions.VK_NV_external_memory.ExternalMemoryImageCreateInfoNV',
@@ -1426,6 +1460,8 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo',
 --     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo',
 --     'Vulkan.Extensions.VK_KHR_swapchain.ImageSwapchainCreateInfoKHR',
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalIOSurfaceInfoEXT',
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalTextureInfoEXT',
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264ProfileEXT VkVideoDecodeH264ProfileEXT>,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH265ProfileEXT VkVideoDecodeH265ProfileEXT>,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264ProfileEXT VkVideoEncodeH264ProfileEXT>,
@@ -1435,7 +1471,11 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfilesKHR VkVideoProfilesKHR>
 --
 -- -   #VUID-VkImageCreateInfo-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique
+--     struct in the @pNext@ chain /must/ be unique, with the exception of
+--     structures of type
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
+--     or
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalTextureInfoEXT'
 --
 -- -   #VUID-VkImageCreateInfo-flags-parameter# @flags@ /must/ be a valid
 --     combination of
@@ -1543,6 +1583,9 @@ instance Extensible ImageCreateInfo where
   getNext ImageCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @ImportMetalIOSurfaceInfoEXT = Just f
+    | Just Refl <- eqT @e @ImportMetalTextureInfoEXT = Just f
+    | Just Refl <- eqT @e @ExportMetalObjectCreateInfoEXT = Just f
     | Just Refl <- eqT @e @ImageCompressionControlEXT = Just f
     | Just Refl <- eqT @e @BufferCollectionImageCreateInfoFUCHSIA = Just f
     | Just Refl <- eqT @e @ImageStencilUsageCreateInfo = Just f

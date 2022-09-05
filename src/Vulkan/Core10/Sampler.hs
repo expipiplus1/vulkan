@@ -462,6 +462,11 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     then @unnormalizedCoordinates@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
+-- -   #VUID-VkSamplerCreateInfo-nonSeamlessCubeMap-06788# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-nonSeamlessCubeMap nonSeamlessCubeMap>
+--     feature is not enabled, @flags@ /must/ not include
+--     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT'
+--
 -- -   #VUID-VkSamplerCreateInfo-borderColor-04011# If @borderColor@ is one
 --     of 'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_CUSTOM_EXT'
 --     or 'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_INT_CUSTOM_EXT',

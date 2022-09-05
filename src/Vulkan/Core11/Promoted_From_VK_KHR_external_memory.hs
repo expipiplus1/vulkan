@@ -53,7 +53,7 @@ import Vulkan.Core10.APIConstants (pattern QUEUE_FAMILY_EXTERNAL)
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExternalMemoryImageCreateInfo = ExternalMemoryImageCreateInfo
-  { -- | @handleTypes@ is zero, or a bitmask of
+  { -- | @handleTypes@ is zero or a bitmask of
     -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
     -- specifying one or more external memory handle types.
     --
@@ -118,7 +118,7 @@ instance Zero ExternalMemoryImageCreateInfo where
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExternalMemoryBufferCreateInfo = ExternalMemoryBufferCreateInfo
-  { -- | @handleTypes@ is zero, or a bitmask of
+  { -- | @handleTypes@ is zero or a bitmask of
     -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
     -- specifying one or more external memory handle types.
     --
@@ -191,7 +191,7 @@ instance Zero ExternalMemoryBufferCreateInfo where
 -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data ExportMemoryAllocateInfo = ExportMemoryAllocateInfo
-  { -- | @handleTypes@ is a bitmask of
+  { -- | @handleTypes@ is zero or a bitmask of
     -- 'Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
     -- specifying one or more memory handle types the application /can/ export
     -- from the resulting allocation. The application /can/ request multiple

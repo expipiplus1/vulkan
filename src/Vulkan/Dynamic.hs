@@ -161,6 +161,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_display (DisplayPropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_display (DisplaySurfaceCreateInfoKHR)
 import {-# SOURCE #-} Vulkan.Core10.Handles (Event)
 import {-# SOURCE #-} Vulkan.Core10.Event (EventCreateInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ExportMetalObjectsInfoEXT)
 import {-# SOURCE #-} Vulkan.Core10.ExtensionDiscovery (ExtensionProperties)
 import {-# SOURCE #-} Vulkan.Core10.FundamentalTypes (Extent2D)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities (ExternalBufferProperties)
@@ -713,7 +714,7 @@ data DeviceCmds = DeviceCmds
   , pVkWaitForFences :: FunPtr (Ptr Device_T -> ("fenceCount" ::: Word32) -> ("pFences" ::: Ptr Fence) -> ("waitAll" ::: Bool32) -> ("timeout" ::: Word64) -> IO Result)
   , pVkCreateSemaphore :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr (SomeStruct SemaphoreCreateInfo)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pSemaphore" ::: Ptr Semaphore) -> IO Result)
   , pVkDestroySemaphore :: FunPtr (Ptr Device_T -> Semaphore -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
-  , pVkCreateEvent :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr EventCreateInfo) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pEvent" ::: Ptr Event) -> IO Result)
+  , pVkCreateEvent :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr (SomeStruct EventCreateInfo)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pEvent" ::: Ptr Event) -> IO Result)
   , pVkDestroyEvent :: FunPtr (Ptr Device_T -> Event -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
   , pVkGetEventStatus :: FunPtr (Ptr Device_T -> Event -> IO Result)
   , pVkSetEvent :: FunPtr (Ptr Device_T -> Event -> IO Result)
@@ -724,7 +725,7 @@ data DeviceCmds = DeviceCmds
   , pVkResetQueryPool :: FunPtr (Ptr Device_T -> QueryPool -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> IO ())
   , pVkCreateBuffer :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr (SomeStruct BufferCreateInfo)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pBuffer" ::: Ptr Buffer) -> IO Result)
   , pVkDestroyBuffer :: FunPtr (Ptr Device_T -> Buffer -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
-  , pVkCreateBufferView :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr BufferViewCreateInfo) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pView" ::: Ptr BufferView) -> IO Result)
+  , pVkCreateBufferView :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr (SomeStruct BufferViewCreateInfo)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pView" ::: Ptr BufferView) -> IO Result)
   , pVkDestroyBufferView :: FunPtr (Ptr Device_T -> BufferView -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
   , pVkCreateImage :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr (SomeStruct ImageCreateInfo)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pImage" ::: Ptr Image) -> IO Result)
   , pVkDestroyImage :: FunPtr (Ptr Device_T -> Image -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
@@ -1050,6 +1051,7 @@ data DeviceCmds = DeviceCmds
   , pVkGetDescriptorSetHostMappingVALVE :: FunPtr (Ptr Device_T -> DescriptorSet -> ("ppData" ::: Ptr (Ptr ())) -> IO ())
   , pVkGetImageSubresourceLayout2EXT :: FunPtr (Ptr Device_T -> Image -> ("pSubresource" ::: Ptr ImageSubresource2EXT) -> ("pLayout" ::: Ptr (SomeStruct SubresourceLayout2EXT)) -> IO ())
   , pVkGetPipelinePropertiesEXT :: FunPtr (Ptr Device_T -> ("pPipelineInfo" ::: Ptr PipelineInfoEXT) -> ("pPipelineProperties" ::: Ptr BaseOutStructure) -> IO Result)
+  , pVkExportMetalObjectsEXT :: FunPtr (Ptr Device_T -> ("pMetalObjectsInfo" ::: Ptr (SomeStruct ExportMetalObjectsInfoEXT)) -> IO ())
   }
 
 deriving instance Eq DeviceCmds
@@ -1101,7 +1103,7 @@ instance Zero DeviceCmds where
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1485,6 +1487,7 @@ initDeviceCmds instanceCmds handle = do
   vkGetDescriptorSetHostMappingVALVE <- getDeviceProcAddr' handle (Ptr "vkGetDescriptorSetHostMappingVALVE"#)
   vkGetImageSubresourceLayout2EXT <- getDeviceProcAddr' handle (Ptr "vkGetImageSubresourceLayout2EXT"#)
   vkGetPipelinePropertiesEXT <- getDeviceProcAddr' handle (Ptr "vkGetPipelinePropertiesEXT"#)
+  vkExportMetalObjectsEXT <- getDeviceProcAddr' handle (Ptr "vkExportMetalObjectsEXT"#)
   pure $ DeviceCmds handle
     (castFunPtr @_ @(Ptr Device_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction) vkGetDeviceProcAddr)
     (castFunPtr @_ @(Ptr Device_T -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyDevice)
@@ -1512,7 +1515,7 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr Device_T -> ("fenceCount" ::: Word32) -> ("pFences" ::: Ptr Fence) -> ("waitAll" ::: Bool32) -> ("timeout" ::: Word64) -> IO Result) vkWaitForFences)
     (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr (SomeStruct SemaphoreCreateInfo)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pSemaphore" ::: Ptr Semaphore) -> IO Result) vkCreateSemaphore)
     (castFunPtr @_ @(Ptr Device_T -> Semaphore -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroySemaphore)
-    (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr EventCreateInfo) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pEvent" ::: Ptr Event) -> IO Result) vkCreateEvent)
+    (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr (SomeStruct EventCreateInfo)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pEvent" ::: Ptr Event) -> IO Result) vkCreateEvent)
     (castFunPtr @_ @(Ptr Device_T -> Event -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyEvent)
     (castFunPtr @_ @(Ptr Device_T -> Event -> IO Result) vkGetEventStatus)
     (castFunPtr @_ @(Ptr Device_T -> Event -> IO Result) vkSetEvent)
@@ -1523,7 +1526,7 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr Device_T -> QueryPool -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> IO ()) vkResetQueryPool)
     (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr (SomeStruct BufferCreateInfo)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pBuffer" ::: Ptr Buffer) -> IO Result) vkCreateBuffer)
     (castFunPtr @_ @(Ptr Device_T -> Buffer -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyBuffer)
-    (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr BufferViewCreateInfo) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pView" ::: Ptr BufferView) -> IO Result) vkCreateBufferView)
+    (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr (SomeStruct BufferViewCreateInfo)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pView" ::: Ptr BufferView) -> IO Result) vkCreateBufferView)
     (castFunPtr @_ @(Ptr Device_T -> BufferView -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyBufferView)
     (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr (SomeStruct ImageCreateInfo)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pImage" ::: Ptr Image) -> IO Result) vkCreateImage)
     (castFunPtr @_ @(Ptr Device_T -> Image -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyImage)
@@ -1849,4 +1852,5 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr Device_T -> DescriptorSet -> ("ppData" ::: Ptr (Ptr ())) -> IO ()) vkGetDescriptorSetHostMappingVALVE)
     (castFunPtr @_ @(Ptr Device_T -> Image -> ("pSubresource" ::: Ptr ImageSubresource2EXT) -> ("pLayout" ::: Ptr (SomeStruct SubresourceLayout2EXT)) -> IO ()) vkGetImageSubresourceLayout2EXT)
     (castFunPtr @_ @(Ptr Device_T -> ("pPipelineInfo" ::: Ptr PipelineInfoEXT) -> ("pPipelineProperties" ::: Ptr BaseOutStructure) -> IO Result) vkGetPipelinePropertiesEXT)
+    (castFunPtr @_ @(Ptr Device_T -> ("pMetalObjectsInfo" ::: Ptr (SomeStruct ExportMetalObjectsInfoEXT)) -> IO ()) vkExportMetalObjectsEXT)
 

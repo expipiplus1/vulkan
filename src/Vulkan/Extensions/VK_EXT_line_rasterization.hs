@@ -320,10 +320,7 @@ data PhysicalDeviceLineRasterizationFeaturesEXT = PhysicalDeviceLineRasterizatio
   , -- | #features-stippledRectangularLines# @stippledRectangularLines@ indicates
     -- whether the implementation supports
     -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-lines-stipple stippled line rasterization>
-    -- with 'LINE_RASTERIZATION_MODE_RECTANGULAR_EXT' lines, or with
-    -- 'LINE_RASTERIZATION_MODE_DEFAULT_EXT' lines if
-    -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@strictLines@
-    -- is 'Vulkan.Core10.FundamentalTypes.TRUE'.
+    -- with 'LINE_RASTERIZATION_MODE_RECTANGULAR_EXT' lines.
     stippledRectangularLines :: Bool
   , -- | #features-stippledBresenhamLines# @stippledBresenhamLines@ indicates
     -- whether the implementation supports

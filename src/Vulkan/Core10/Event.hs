@@ -16,11 +16,13 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -32,11 +34,10 @@ import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
+import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
-import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
-import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
@@ -44,8 +45,10 @@ import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
+import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Core10.Handles (Device(Device))
@@ -58,8 +61,18 @@ import Vulkan.Core10.Handles (Device_T)
 import Vulkan.Core10.Handles (Event)
 import Vulkan.Core10.Handles (Event(..))
 import Vulkan.Core10.Enums.EventCreateFlagBits (EventCreateFlags)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ExportMetalObjectCreateInfoEXT)
+import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
+import Vulkan.CStruct.Extends (Extensible(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ImportMetalSharedEventInfoEXT)
+import Vulkan.CStruct.Extends (PeekChain)
+import Vulkan.CStruct.Extends (PeekChain(..))
+import Vulkan.CStruct.Extends (PokeChain)
+import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_EVENT_CREATE_INFO))
@@ -72,7 +85,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateEvent
-  :: FunPtr (Ptr Device_T -> Ptr EventCreateInfo -> Ptr AllocationCallbacks -> Ptr Event -> IO Result) -> Ptr Device_T -> Ptr EventCreateInfo -> Ptr AllocationCallbacks -> Ptr Event -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct EventCreateInfo) -> Ptr AllocationCallbacks -> Ptr Event -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct EventCreateInfo) -> Ptr AllocationCallbacks -> Ptr Event -> IO Result
 
 -- | vkCreateEvent - Create a new event object
 --
@@ -123,13 +136,13 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Event',
 -- 'EventCreateInfo'
-createEvent :: forall io
-             . (MonadIO io)
+createEvent :: forall a io
+             . (Extendss EventCreateInfo a, PokeChain a, MonadIO io)
             => -- | @device@ is the logical device that creates the event.
                Device
             -> -- | @pCreateInfo@ is a pointer to a 'EventCreateInfo' structure containing
                -- information about how the event is to be created.
-               EventCreateInfo
+               (EventCreateInfo a)
             -> -- | @pAllocator@ controls host memory allocation as described in the
                -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                -- chapter.
@@ -145,7 +158,7 @@ createEvent device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPEvent <- ContT $ bracket (callocBytes @Event 8) free
-  r <- lift $ traceAroundEvent "vkCreateEvent" (vkCreateEvent' (deviceHandle (device)) pCreateInfo pAllocator (pPEvent))
+  r <- lift $ traceAroundEvent "vkCreateEvent" (vkCreateEvent' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPEvent))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pEvent <- lift $ peek @Event pPEvent
   pure $ (pEvent)
@@ -158,7 +171,7 @@ createEvent device createInfo allocator = liftIO . evalContT $ do
 -- favourite resource management library) as the last argument.
 -- To just extract the pair pass '(,)' as the last argument.
 --
-withEvent :: forall io r . MonadIO io => Device -> EventCreateInfo -> Maybe AllocationCallbacks -> (io Event -> (Event -> io ()) -> r) -> r
+withEvent :: forall a io r . (Extendss EventCreateInfo a, PokeChain a, MonadIO io) => Device -> EventCreateInfo a -> Maybe AllocationCallbacks -> (io Event -> (Event -> io ()) -> r) -> r
 withEvent device pCreateInfo pAllocator b =
   b (createEvent device pCreateInfo pAllocator)
     (\(o0) -> destroyEvent device o0 pAllocator)
@@ -475,55 +488,89 @@ resetEvent device event = liftIO $ do
 -- | VkEventCreateInfo - Structure specifying parameters of a newly created
 -- event
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkEventCreateInfo-pNext-06790# If the @pNext@ chain includes a
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
+--     structure, its @exportObjectType@ member /must/ be
+--     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_SHARED_EVENT_BIT_EXT'.
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkEventCreateInfo-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EVENT_CREATE_INFO'
+--
+-- -   #VUID-VkEventCreateInfo-pNext-pNext# Each @pNext@ member of any
+--     structure (including this one) in the @pNext@ chain /must/ be either
+--     @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
+--     or
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalSharedEventInfoEXT'
+--
+-- -   #VUID-VkEventCreateInfo-sType-unique# The @sType@ value of each
+--     struct in the @pNext@ chain /must/ be unique, with the exception of
+--     structures of type
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
+--
+-- -   #VUID-VkEventCreateInfo-flags-parameter# @flags@ /must/ be a valid
+--     combination of
+--     'Vulkan.Core10.Enums.EventCreateFlagBits.EventCreateFlagBits' values
 --
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.EventCreateFlagBits.EventCreateFlags',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createEvent'
-data EventCreateInfo = EventCreateInfo
-  { -- | @flags@ is a bitmask of
+data EventCreateInfo (es :: [Type]) = EventCreateInfo
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @flags@ is a bitmask of
     -- 'Vulkan.Core10.Enums.EventCreateFlagBits.EventCreateFlagBits' defining
     -- additional creation parameters.
-    --
-    -- #VUID-VkEventCreateInfo-flags-parameter# @flags@ /must/ be a valid
-    -- combination of
-    -- 'Vulkan.Core10.Enums.EventCreateFlagBits.EventCreateFlagBits' values
-    flags :: EventCreateFlags }
-  deriving (Typeable, Eq)
+    flags :: EventCreateFlags
+  }
+  deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (EventCreateInfo)
+deriving instance Generic (EventCreateInfo (es :: [Type]))
 #endif
-deriving instance Show EventCreateInfo
+deriving instance Show (Chain es) => Show (EventCreateInfo es)
 
-instance ToCStruct EventCreateInfo where
+instance Extensible EventCreateInfo where
+  extensibleTypeName = "EventCreateInfo"
+  setNext EventCreateInfo{..} next' = EventCreateInfo{next = next', ..}
+  getNext EventCreateInfo{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends EventCreateInfo e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @ImportMetalSharedEventInfoEXT = Just f
+    | Just Refl <- eqT @e @ExportMetalObjectCreateInfoEXT = Just f
+    | otherwise = Nothing
+
+instance (Extendss EventCreateInfo es, PokeChain es) => ToCStruct (EventCreateInfo es) where
   withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p EventCreateInfo{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EVENT_CREATE_INFO)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr EventCreateFlags)) (flags)
-    f
+  pokeCStruct p EventCreateInfo{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EVENT_CREATE_INFO)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr EventCreateFlags)) (flags)
+    lift $ f
   cStructSize = 24
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EVENT_CREATE_INFO)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EVENT_CREATE_INFO)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ f
 
-instance FromCStruct EventCreateInfo where
+instance (Extendss EventCreateInfo es, PeekChain es) => FromCStruct (EventCreateInfo es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     flags <- peek @EventCreateFlags ((p `plusPtr` 16 :: Ptr EventCreateFlags))
     pure $ EventCreateInfo
-             flags
+             next flags
 
-instance Storable EventCreateInfo where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero EventCreateInfo where
+instance es ~ '[] => Zero (EventCreateInfo es) where
   zero = EventCreateInfo
+           ()
            zero
 

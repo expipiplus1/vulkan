@@ -58,6 +58,7 @@ module Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYPE_APPLICA
                                                         , STRUCTURE_TYPE_SUBPASS_FRAGMENT_DENSITY_MAP_OFFSET_END_INFO_QCOM
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_PROPERTIES_QCOM
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_QCOM
+                                                        , STRUCTURE_TYPE_PHYSICAL_DEVICE_NON_SEAMLESS_CUBE_MAP_FEATURES_EXT
                                                         , STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_HOST_MAPPING_INFO_VALVE
                                                         , STRUCTURE_TYPE_DESCRIPTOR_SET_BINDING_REFERENCE_VALVE
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_SET_HOST_MAPPING_FEATURES_VALVE
@@ -136,6 +137,18 @@ module Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYPE_APPLICA
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_FEATURES_EXT
                                                         , STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV
                                                         , STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV
+                                                        , STRUCTURE_TYPE_IMPORT_METAL_SHARED_EVENT_INFO_EXT
+                                                        , STRUCTURE_TYPE_EXPORT_METAL_SHARED_EVENT_INFO_EXT
+                                                        , STRUCTURE_TYPE_IMPORT_METAL_IO_SURFACE_INFO_EXT
+                                                        , STRUCTURE_TYPE_EXPORT_METAL_IO_SURFACE_INFO_EXT
+                                                        , STRUCTURE_TYPE_IMPORT_METAL_TEXTURE_INFO_EXT
+                                                        , STRUCTURE_TYPE_EXPORT_METAL_TEXTURE_INFO_EXT
+                                                        , STRUCTURE_TYPE_IMPORT_METAL_BUFFER_INFO_EXT
+                                                        , STRUCTURE_TYPE_EXPORT_METAL_BUFFER_INFO_EXT
+                                                        , STRUCTURE_TYPE_EXPORT_METAL_COMMAND_QUEUE_INFO_EXT
+                                                        , STRUCTURE_TYPE_EXPORT_METAL_DEVICE_INFO_EXT
+                                                        , STRUCTURE_TYPE_EXPORT_METAL_OBJECTS_INFO_EXT
+                                                        , STRUCTURE_TYPE_EXPORT_METAL_OBJECT_CREATE_INFO_EXT
                                                         , STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_ID_FEATURES_KHR
@@ -757,6 +770,14 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_NV_external_memory.ExportMemoryAllocateInfoNV',
 -- 'Vulkan.Extensions.VK_KHR_external_memory_win32.ExportMemoryWin32HandleInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_external_memory_win32.ExportMemoryWin32HandleInfoNV',
+-- 'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalBufferInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalCommandQueueInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalDeviceInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalIOSurfaceInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectsInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalSharedEventInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalTextureInfoEXT',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore.ExportSemaphoreCreateInfo',
 -- 'Vulkan.Extensions.VK_KHR_external_semaphore_win32.ExportSemaphoreWin32HandleInfoKHR',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties',
@@ -827,6 +848,10 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_KHR_external_memory_win32.ImportMemoryWin32HandleInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_external_memory_win32.ImportMemoryWin32HandleInfoNV',
 -- 'Vulkan.Extensions.VK_FUCHSIA_external_memory.ImportMemoryZirconHandleInfoFUCHSIA',
+-- 'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalBufferInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalIOSurfaceInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalSharedEventInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalTextureInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_external_semaphore_fd.ImportSemaphoreFdInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_external_semaphore_win32.ImportSemaphoreWin32HandleInfoKHR',
 -- 'Vulkan.Extensions.VK_FUCHSIA_external_semaphore.ImportSemaphoreZirconHandleInfoFUCHSIA',
@@ -964,6 +989,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_NVX_multiview_per_view_attributes.PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties',
 -- 'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.PhysicalDeviceMutableDescriptorTypeFeaturesVALVE',
+-- 'Vulkan.Extensions.VK_EXT_non_seamless_cube_map.PhysicalDeviceNonSeamlessCubeMapFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_pci_bus_info.PhysicalDevicePCIBusInfoPropertiesEXT',
 -- 'Vulkan.Extensions.VK_EXT_pageable_device_local_memory.PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT',
 -- 'Vulkan.Extensions.VK_KHR_performance_query.PhysicalDevicePerformanceQueryFeaturesKHR',
@@ -1378,6 +1404,8 @@ pattern STRUCTURE_TYPE_SUBPASS_FRAGMENT_DENSITY_MAP_OFFSET_END_INFO_QCOM = Struc
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_PROPERTIES_QCOM = StructureType 1000425001
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_QCOM"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_QCOM = StructureType 1000425000
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_NON_SEAMLESS_CUBE_MAP_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_NON_SEAMLESS_CUBE_MAP_FEATURES_EXT = StructureType 1000422000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_HOST_MAPPING_INFO_VALVE"
 pattern STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_HOST_MAPPING_INFO_VALVE = StructureType 1000420002
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_SET_BINDING_REFERENCE_VALVE"
@@ -1534,6 +1562,30 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_FEATURES_EXT = 
 pattern STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV                      = StructureType 1000314009
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV"
 pattern STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV   = StructureType 1000314008
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMPORT_METAL_SHARED_EVENT_INFO_EXT"
+pattern STRUCTURE_TYPE_IMPORT_METAL_SHARED_EVENT_INFO_EXT        = StructureType 1000311011
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXPORT_METAL_SHARED_EVENT_INFO_EXT"
+pattern STRUCTURE_TYPE_EXPORT_METAL_SHARED_EVENT_INFO_EXT        = StructureType 1000311010
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMPORT_METAL_IO_SURFACE_INFO_EXT"
+pattern STRUCTURE_TYPE_IMPORT_METAL_IO_SURFACE_INFO_EXT          = StructureType 1000311009
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXPORT_METAL_IO_SURFACE_INFO_EXT"
+pattern STRUCTURE_TYPE_EXPORT_METAL_IO_SURFACE_INFO_EXT          = StructureType 1000311008
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMPORT_METAL_TEXTURE_INFO_EXT"
+pattern STRUCTURE_TYPE_IMPORT_METAL_TEXTURE_INFO_EXT             = StructureType 1000311007
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXPORT_METAL_TEXTURE_INFO_EXT"
+pattern STRUCTURE_TYPE_EXPORT_METAL_TEXTURE_INFO_EXT             = StructureType 1000311006
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMPORT_METAL_BUFFER_INFO_EXT"
+pattern STRUCTURE_TYPE_IMPORT_METAL_BUFFER_INFO_EXT              = StructureType 1000311005
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXPORT_METAL_BUFFER_INFO_EXT"
+pattern STRUCTURE_TYPE_EXPORT_METAL_BUFFER_INFO_EXT              = StructureType 1000311004
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXPORT_METAL_COMMAND_QUEUE_INFO_EXT"
+pattern STRUCTURE_TYPE_EXPORT_METAL_COMMAND_QUEUE_INFO_EXT       = StructureType 1000311003
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXPORT_METAL_DEVICE_INFO_EXT"
+pattern STRUCTURE_TYPE_EXPORT_METAL_DEVICE_INFO_EXT              = StructureType 1000311002
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXPORT_METAL_OBJECTS_INFO_EXT"
+pattern STRUCTURE_TYPE_EXPORT_METAL_OBJECTS_INFO_EXT             = StructureType 1000311001
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXPORT_METAL_OBJECT_CREATE_INFO_EXT"
+pattern STRUCTURE_TYPE_EXPORT_METAL_OBJECT_CREATE_INFO_EXT       = StructureType 1000311000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV"
 pattern STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV  = StructureType 1000300001
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV"
@@ -2504,6 +2556,7 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES       = StructureType
              STRUCTURE_TYPE_SUBPASS_FRAGMENT_DENSITY_MAP_OFFSET_END_INFO_QCOM,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_PROPERTIES_QCOM,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_QCOM,
+             STRUCTURE_TYPE_PHYSICAL_DEVICE_NON_SEAMLESS_CUBE_MAP_FEATURES_EXT,
              STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_HOST_MAPPING_INFO_VALVE,
              STRUCTURE_TYPE_DESCRIPTOR_SET_BINDING_REFERENCE_VALVE,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_SET_HOST_MAPPING_FEATURES_VALVE,
@@ -2582,6 +2635,18 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES       = StructureType
              STRUCTURE_TYPE_PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_FEATURES_EXT,
              STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV,
              STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV,
+             STRUCTURE_TYPE_IMPORT_METAL_SHARED_EVENT_INFO_EXT,
+             STRUCTURE_TYPE_EXPORT_METAL_SHARED_EVENT_INFO_EXT,
+             STRUCTURE_TYPE_IMPORT_METAL_IO_SURFACE_INFO_EXT,
+             STRUCTURE_TYPE_EXPORT_METAL_IO_SURFACE_INFO_EXT,
+             STRUCTURE_TYPE_IMPORT_METAL_TEXTURE_INFO_EXT,
+             STRUCTURE_TYPE_EXPORT_METAL_TEXTURE_INFO_EXT,
+             STRUCTURE_TYPE_IMPORT_METAL_BUFFER_INFO_EXT,
+             STRUCTURE_TYPE_EXPORT_METAL_BUFFER_INFO_EXT,
+             STRUCTURE_TYPE_EXPORT_METAL_COMMAND_QUEUE_INFO_EXT,
+             STRUCTURE_TYPE_EXPORT_METAL_DEVICE_INFO_EXT,
+             STRUCTURE_TYPE_EXPORT_METAL_OBJECTS_INFO_EXT,
+             STRUCTURE_TYPE_EXPORT_METAL_OBJECT_CREATE_INFO_EXT,
              STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV,
              STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_ID_FEATURES_KHR,
@@ -3117,6 +3182,9 @@ showTableStructureType =
   , ( STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_QCOM
     , "PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_OFFSET_FEATURES_QCOM"
     )
+  , ( STRUCTURE_TYPE_PHYSICAL_DEVICE_NON_SEAMLESS_CUBE_MAP_FEATURES_EXT
+    , "PHYSICAL_DEVICE_NON_SEAMLESS_CUBE_MAP_FEATURES_EXT"
+    )
   , (STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_HOST_MAPPING_INFO_VALVE, "DESCRIPTOR_SET_LAYOUT_HOST_MAPPING_INFO_VALVE")
   , (STRUCTURE_TYPE_DESCRIPTOR_SET_BINDING_REFERENCE_VALVE       , "DESCRIPTOR_SET_BINDING_REFERENCE_VALVE")
   , ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_SET_HOST_MAPPING_FEATURES_VALVE
@@ -3259,6 +3327,18 @@ showTableStructureType =
     )
   , (STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV                    , "CHECKPOINT_DATA_2_NV")
   , (STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV , "QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV")
+  , (STRUCTURE_TYPE_IMPORT_METAL_SHARED_EVENT_INFO_EXT      , "IMPORT_METAL_SHARED_EVENT_INFO_EXT")
+  , (STRUCTURE_TYPE_EXPORT_METAL_SHARED_EVENT_INFO_EXT      , "EXPORT_METAL_SHARED_EVENT_INFO_EXT")
+  , (STRUCTURE_TYPE_IMPORT_METAL_IO_SURFACE_INFO_EXT        , "IMPORT_METAL_IO_SURFACE_INFO_EXT")
+  , (STRUCTURE_TYPE_EXPORT_METAL_IO_SURFACE_INFO_EXT        , "EXPORT_METAL_IO_SURFACE_INFO_EXT")
+  , (STRUCTURE_TYPE_IMPORT_METAL_TEXTURE_INFO_EXT           , "IMPORT_METAL_TEXTURE_INFO_EXT")
+  , (STRUCTURE_TYPE_EXPORT_METAL_TEXTURE_INFO_EXT           , "EXPORT_METAL_TEXTURE_INFO_EXT")
+  , (STRUCTURE_TYPE_IMPORT_METAL_BUFFER_INFO_EXT            , "IMPORT_METAL_BUFFER_INFO_EXT")
+  , (STRUCTURE_TYPE_EXPORT_METAL_BUFFER_INFO_EXT            , "EXPORT_METAL_BUFFER_INFO_EXT")
+  , (STRUCTURE_TYPE_EXPORT_METAL_COMMAND_QUEUE_INFO_EXT     , "EXPORT_METAL_COMMAND_QUEUE_INFO_EXT")
+  , (STRUCTURE_TYPE_EXPORT_METAL_DEVICE_INFO_EXT            , "EXPORT_METAL_DEVICE_INFO_EXT")
+  , (STRUCTURE_TYPE_EXPORT_METAL_OBJECTS_INFO_EXT           , "EXPORT_METAL_OBJECTS_INFO_EXT")
+  , (STRUCTURE_TYPE_EXPORT_METAL_OBJECT_CREATE_INFO_EXT     , "EXPORT_METAL_OBJECT_CREATE_INFO_EXT")
   , (STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV, "DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV")
   , (STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV, "PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV")
   , (STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_ID_FEATURES_KHR , "PHYSICAL_DEVICE_PRESENT_ID_FEATURES_KHR")
