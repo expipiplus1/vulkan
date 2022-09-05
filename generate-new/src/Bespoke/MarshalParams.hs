@@ -102,6 +102,8 @@ isIntegral =
           , TypeName "VkDeviceOrHostAddressConstKHR"
           , TypeName "VkDeviceOrHostAddressKHR"
           , TypeName "VkBool32"
+          , TypeName "VkExtent2D"
+          , TypeName "VkExtent3D"
           , TypeName "LARGE_INTEGER"
           -- TODO: Get these from spec
           -- Base types
