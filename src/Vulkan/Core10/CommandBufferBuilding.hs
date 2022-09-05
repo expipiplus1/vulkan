@@ -1461,10 +1461,9 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_VALVE'
 --     flag set
 --
--- -   #VUID-vkCmdBindDescriptorSets-layout-06564# If @layout@ was not
---     created with
---     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT',
---     each element of @pDescriptorSets@ /must/ be a valid
+-- -   #VUID-vkCmdBindDescriptorSets-graphicsPipelineLibrary-06754# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-graphicsPipelineLibrary graphicsPipelineLibrary>
+--     is not enabled, each element of @pDescriptorSets@ /must/ be a valid
 --     'Vulkan.Core10.Handles.DescriptorSet'
 --
 -- == Valid Usage (Implicit)
@@ -9389,6 +9388,26 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
 --     of @pRegions@, @dstOffset.z@ /must/ be @0@ and @extent.depth@ /must/
 --     be @1@
+--
+-- -   #VUID-vkCmdResolveImage-srcImage-06762# @srcImage@ /must/ have been
+--     created with
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_SRC_BIT'
+--     usage flag
+--
+-- -   #VUID-vkCmdResolveImage-srcImage-06763# The
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @srcImage@ /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_SRC_BIT'
+--
+-- -   #VUID-vkCmdResolveImage-dstImage-06764# @dstImage@ /must/ have been
+--     created with
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
+--     usage flag
+--
+-- -   #VUID-vkCmdResolveImage-dstImage-06765# The
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @dstImage@ /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_TRANSFER_DST_BIT'
 --
 -- == Valid Usage (Implicit)
 --

@@ -674,10 +674,9 @@ instance Zero PushConstantRange where
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE'
 --     bit set
 --
--- -   #VUID-VkPipelineLayoutCreateInfo-flags-06562# If @flags@: does not
---     include
---     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT',
---     elements of @pSetLayouts@ /must/ be valid
+-- -   #VUID-VkPipelineLayoutCreateInfo-graphicsPipelineLibrary-06753# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-graphicsPipelineLibrary graphicsPipelineLibrary>
+--     is not enabled, elements of @pSetLayouts@ /must/ be valid
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' objects
 --
 -- == Valid Usage (Implicit)
@@ -712,7 +711,9 @@ instance Zero PushConstantRange where
 -- 'PushConstantRange', 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createPipelineLayout'
 data PipelineLayoutCreateInfo = PipelineLayoutCreateInfo
-  { -- | @flags@ is reserved for future use.
+  { -- | @flags@ is a bitmask of
+    -- 'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PipelineLayoutCreateFlagBits'
+    -- specifying options for pipeline layout creation.
     flags :: PipelineLayoutCreateFlags
   , -- | @pSetLayouts@ is a pointer to an array of
     -- 'Vulkan.Core10.Handles.DescriptorSetLayout' objects.

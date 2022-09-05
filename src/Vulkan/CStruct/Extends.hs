@@ -515,6 +515,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_shader_core_properties2 (Physical
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_shader_core_properties (PhysicalDeviceShaderCorePropertiesAMD)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_shader_demote_to_helper_invocation (PhysicalDeviceShaderDemoteToHelperInvocationFeatures)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_shader_draw_parameters (PhysicalDeviceShaderDrawParametersFeatures)
+import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_shader_early_and_late_fragment_tests (PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_shader_float16_int8 (PhysicalDeviceShaderFloat16Int8Features)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_image_atomic_int64 (PhysicalDeviceShaderImageAtomicInt64FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shader_image_footprint (PhysicalDeviceShaderImageFootprintFeaturesNV)
@@ -1023,6 +1024,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceSubpassMergeFeedbackFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDevicePipelinePropertiesFeaturesEXT = ()
+  Extends DeviceCreateInfo PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT = ()
   Extends DeviceQueueCreateInfo DeviceQueueGlobalPriorityCreateInfoKHR = ()
   Extends FenceCreateInfo ExportFenceCreateInfo = ()
   Extends FenceCreateInfo ExportFenceWin32HandleInfoKHR = ()
@@ -1207,6 +1209,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceSubpassMergeFeedbackFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDevicePipelinePropertiesFeaturesEXT = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceExternalImageFormatInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 ImageFormatListCreateInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageDrmFormatModifierInfoEXT = ()
@@ -1817,6 +1820,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBPASS_MERGE_FEEDBACK_FEATURES_EXT -> go @PhysicalDeviceSubpassMergeFeedbackFeaturesEXT
   STRUCTURE_TYPE_PIPELINE_PROPERTIES_IDENTIFIER_EXT -> go @PipelinePropertiesIdentifierEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROPERTIES_FEATURES_EXT -> go @PhysicalDevicePipelinePropertiesFeaturesEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EARLY_AND_LATE_FRAGMENT_TESTS_FEATURES_EXT -> go @PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT
   t -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("Unrecognized struct type: " <> show t) Nothing Nothing
  where
   go :: forall e . (Typeable e, FromCStruct e, ToCStruct e, Show e) => IO b
@@ -2221,6 +2225,7 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceSubpassMergeFeedbackFeaturesEXT #-}
 {-# complete (::&) :: PipelinePropertiesIdentifierEXT #-}
 {-# complete (::&) :: PhysicalDevicePipelinePropertiesFeaturesEXT #-}
+{-# complete (::&) :: PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT #-}
 
 -- | View the head and tail of a 'Chain', see '::&'
 --

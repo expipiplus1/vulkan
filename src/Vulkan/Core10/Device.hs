@@ -178,6 +178,7 @@ import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_shader_atomic_int64 (Ph
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_shader_clock (PhysicalDeviceShaderClockFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_shader_demote_to_helper_invocation (PhysicalDeviceShaderDemoteToHelperInvocationFeatures)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_shader_draw_parameters (PhysicalDeviceShaderDrawParametersFeatures)
+import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_shader_early_and_late_fragment_tests (PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_shader_float16_int8 (PhysicalDeviceShaderFloat16Int8Features)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_image_atomic_int64 (PhysicalDeviceShaderImageAtomicInt64FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shader_image_footprint (PhysicalDeviceShaderImageFootprintFeaturesNV)
@@ -498,10 +499,10 @@ destroyDevice device allocator = liftIO . evalContT $ do
 data DeviceQueueCreateInfo (es :: [Type]) = DeviceQueueCreateInfo
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es
-  , -- | @flags@ is a bitmask indicating behavior of the queue.
+  , -- | @flags@ is a bitmask indicating behavior of the queues.
     flags :: DeviceQueueCreateFlags
   , -- | @queueFamilyIndex@ is an unsigned integer indicating the index of the
-    -- queue family in which to create the queue on this device. This index
+    -- queue family in which to create the queues on this device. This index
     -- corresponds to the index of an element of the @pQueueFamilyProperties@
     -- array that was returned by
     -- 'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'.
@@ -580,8 +581,18 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 -- -   #VUID-VkDeviceCreateInfo-queueFamilyIndex-02802# The
 --     @queueFamilyIndex@ member of each element of @pQueueCreateInfos@
 --     /must/ be unique within @pQueueCreateInfos@, except that two members
---     can share the same @queueFamilyIndex@ if one is a protected-capable
---     queue and one is not a protected-capable queue
+--     can share the same @queueFamilyIndex@ if one describes
+--     protected-capable queues and one describes queues that are not
+--     protected-capable
+--
+-- -   #VUID-VkDeviceCreateInfo-pQueueCreateInfos-06755# If multiple
+--     elements of @pQueueCreateInfos@ share the same @queueFamilyIndex@,
+--     the sum of their @queueCount@ members /must/ be less than or equal
+--     to the @queueCount@ member of the
+--     'Vulkan.Core10.DeviceInitialization.QueueFamilyProperties'
+--     structure, as returned by
+--     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
+--     in the @pQueueFamilyProperties@[queueFamilyIndex]
 --
 -- -   #VUID-VkDeviceCreateInfo-pQueueCreateInfos-06654# If multiple
 --     elements of @pQueueCreateInfos@ share the same @queueFamilyIndex@,
@@ -874,6 +885,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_KHR_shader_clock.PhysicalDeviceShaderClockFeaturesKHR',
 --     'Vulkan.Core13.Promoted_From_VK_EXT_shader_demote_to_helper_invocation.PhysicalDeviceShaderDemoteToHelperInvocationFeatures',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_shader_draw_parameters.PhysicalDeviceShaderDrawParametersFeatures',
+--     'Vulkan.Extensions.VK_AMD_shader_early_and_late_fragment_tests.PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_shader_float16_int8.PhysicalDeviceShaderFloat16Int8Features',
 --     'Vulkan.Extensions.VK_EXT_shader_image_atomic_int64.PhysicalDeviceShaderImageAtomicInt64FeaturesEXT',
 --     'Vulkan.Extensions.VK_NV_shader_image_footprint.PhysicalDeviceShaderImageFootprintFeaturesNV',
@@ -985,6 +997,7 @@ instance Extensible DeviceCreateInfo where
   getNext DeviceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DeviceCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDevicePipelinePropertiesFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceSubpassMergeFeedbackFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT = Just f

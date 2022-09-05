@@ -4,6 +4,7 @@ module Vulkan.Core13  ( pattern API_VERSION_1_3
                       , PhysicalDeviceVulkan13Features(..)
                       , PhysicalDeviceVulkan13Properties(..)
                       , StructureType(..)
+                      , Flags64
                       , module Vulkan.Core13.Enums
                       , module Vulkan.Core13.Handles
                       , module Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state
@@ -75,6 +76,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Version (pattern MAKE_API_VERSION)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_PROPERTIES))
+import Vulkan.Core10.FundamentalTypes (Flags64)
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
 pattern API_VERSION_1_3 :: Word32
 pattern API_VERSION_1_3 = MAKE_API_VERSION 1 3 0

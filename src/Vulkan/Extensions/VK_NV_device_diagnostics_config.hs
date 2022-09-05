@@ -15,7 +15,7 @@
 --     301
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -31,7 +31,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2019-12-15
+--     2022-04-06
 --
 -- [__Contributors__]
 --
@@ -44,6 +44,10 @@
 -- Applications using Nvidia Nsight™ Aftermath SDK for Vulkan to integrate
 -- device crash dumps into their error reporting mechanisms, /may/ use this
 -- extension to configure options related to device crash dump creation.
+--
+-- Version 2 of this extension adds
+-- 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_ERROR_REPORTING_BIT_NV' which
+-- when set enables enhanced reporting of shader execution errors.
 --
 -- == New Structures
 --
@@ -83,6 +87,11 @@
 --
 --     -   Internal revisions
 --
+-- -   Revision 2, 2022-04-06 (Kedarnath Thangudu)
+--
+--     -   Added a config bit
+--         'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_ERROR_REPORTING_BIT_NV'
+--
 -- == See Also
 --
 -- 'DeviceDiagnosticsConfigCreateInfoNV',
@@ -102,6 +111,7 @@ module Vulkan.Extensions.VK_NV_device_diagnostics_config  ( PhysicalDeviceDiagno
                                                           , DeviceDiagnosticsConfigFlagBitsNV( DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV
                                                                                              , DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV
                                                                                              , DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV
+                                                                                             , DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_ERROR_REPORTING_BIT_NV
                                                                                              , ..
                                                                                              )
                                                           , NV_DEVICE_DIAGNOSTICS_CONFIG_SPEC_VERSION
@@ -281,18 +291,21 @@ newtype DeviceDiagnosticsConfigFlagBitsNV = DeviceDiagnosticsConfigFlagBitsNV Fl
 
 -- | 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV' enables the
 -- generation of debug information for shaders.
-pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV     = DeviceDiagnosticsConfigFlagBitsNV 0x00000001
+pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV      = DeviceDiagnosticsConfigFlagBitsNV 0x00000001
 -- | 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV' enables
 -- driver side tracking of resources (images, buffers, etc.) used to
 -- augment the device fault information.
-pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV     = DeviceDiagnosticsConfigFlagBitsNV 0x00000002
+pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV      = DeviceDiagnosticsConfigFlagBitsNV 0x00000002
 -- | 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV' enables
 -- automatic insertion of
 -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#device-diagnostic-checkpoints diagnostic checkpoints>
 -- for draw calls, dispatches, trace rays, and copies. The CPU call stack
 -- at the time of the command will be associated as the marker data for the
 -- automatically inserted checkpoints.
-pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV = DeviceDiagnosticsConfigFlagBitsNV 0x00000004
+pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV  = DeviceDiagnosticsConfigFlagBitsNV 0x00000004
+-- | 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_ERROR_REPORTING_BIT_NV' enables
+-- shader error reporting.
+pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_ERROR_REPORTING_BIT_NV = DeviceDiagnosticsConfigFlagBitsNV 0x00000008
 
 conNameDeviceDiagnosticsConfigFlagBitsNV :: String
 conNameDeviceDiagnosticsConfigFlagBitsNV = "DeviceDiagnosticsConfigFlagBitsNV"
@@ -302,9 +315,10 @@ enumPrefixDeviceDiagnosticsConfigFlagBitsNV = "DEVICE_DIAGNOSTICS_CONFIG_ENABLE_
 
 showTableDeviceDiagnosticsConfigFlagBitsNV :: [(DeviceDiagnosticsConfigFlagBitsNV, String)]
 showTableDeviceDiagnosticsConfigFlagBitsNV =
-  [ (DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV    , "SHADER_DEBUG_INFO_BIT_NV")
-  , (DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV    , "RESOURCE_TRACKING_BIT_NV")
-  , (DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV, "AUTOMATIC_CHECKPOINTS_BIT_NV")
+  [ (DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV     , "SHADER_DEBUG_INFO_BIT_NV")
+  , (DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV     , "RESOURCE_TRACKING_BIT_NV")
+  , (DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV , "AUTOMATIC_CHECKPOINTS_BIT_NV")
+  , (DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_ERROR_REPORTING_BIT_NV, "SHADER_ERROR_REPORTING_BIT_NV")
   ]
 
 instance Show DeviceDiagnosticsConfigFlagBitsNV where
@@ -321,11 +335,11 @@ instance Read DeviceDiagnosticsConfigFlagBitsNV where
                           DeviceDiagnosticsConfigFlagBitsNV
 
 
-type NV_DEVICE_DIAGNOSTICS_CONFIG_SPEC_VERSION = 1
+type NV_DEVICE_DIAGNOSTICS_CONFIG_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_NV_DEVICE_DIAGNOSTICS_CONFIG_SPEC_VERSION"
 pattern NV_DEVICE_DIAGNOSTICS_CONFIG_SPEC_VERSION :: forall a . Integral a => a
-pattern NV_DEVICE_DIAGNOSTICS_CONFIG_SPEC_VERSION = 1
+pattern NV_DEVICE_DIAGNOSTICS_CONFIG_SPEC_VERSION = 2
 
 
 type NV_DEVICE_DIAGNOSTICS_CONFIG_EXTENSION_NAME = "VK_NV_device_diagnostics_config"

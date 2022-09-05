@@ -232,6 +232,28 @@ foreign import ccall
 -- Each pipeline is associated with a @pipelineIdentifier@ and the
 -- identifier is implementation specific.
 --
+-- == Valid Usage
+--
+-- -   #VUID-vkGetPipelinePropertiesEXT-pipeline-06738# @pipeline@ member
+--     of @pPipelineInfo@ must have been created with @device@
+--
+-- -   #VUID-vkGetPipelinePropertiesEXT-pPipelineProperties-06739#
+--     @pPipelineProperties@ /must/ be a valid pointer to a
+--     'PipelinePropertiesIdentifierEXT' structure
+--
+-- -   #VUID-vkGetPipelinePropertiesEXT-None-06766# The
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelinePropertiesIdentifier pipelinePropertiesIdentifier>
+--     feature /must/ be enabled
+--
+-- == Valid Usage (Implicit)
+--
+-- -   #VUID-vkGetPipelinePropertiesEXT-device-parameter# @device@ /must/
+--     be a valid 'Vulkan.Core10.Handles.Device' handle
+--
+-- -   #VUID-vkGetPipelinePropertiesEXT-pPipelineInfo-parameter#
+--     @pPipelineInfo@ /must/ be a valid pointer to a valid
+--     'PipelineInfoEXT' structure
+--
 -- == Return Codes
 --
 -- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
@@ -250,28 +272,13 @@ foreign import ccall
 getPipelinePropertiesEXT :: forall io
                           . (MonadIO io)
                          => -- | @device@ is the logical device that created the pipeline.
-                            --
-                            -- #VUID-vkGetPipelinePropertiesEXT-device-parameter# @device@ /must/ be a
-                            -- valid 'Vulkan.Core10.Handles.Device' handle
                             Device
                          -> -- | @pPipelineInfo@ is a pointer to a 'PipelineInfoEXT' structure which
                             -- describes the pipeline being queried.
-                            --
-                            -- #VUID-vkGetPipelinePropertiesEXT-pPipelineInfo-parameter#
-                            -- @pPipelineInfo@ /must/ be a valid pointer to a valid 'PipelineInfoEXT'
-                            -- structure
                             PipelineInfoEXT
                          -> -- | @pPipelineProperties@ is a pointer to a
                             -- 'Vulkan.CStruct.Extends.BaseOutStructure' structure in which the
                             -- pipeline properties will be written.
-                            --
-                            -- #VUID-vkGetPipelinePropertiesEXT-pPipelineProperties-06739#
-                            -- @pPipelineProperties@ /must/ be a valid pointer to a
-                            -- 'PipelinePropertiesIdentifierEXT' structure
-                            --
-                            -- #VUID-vkGetPipelinePropertiesEXT-pPipelineProperties-parameter#
-                            -- @pPipelineProperties@ /must/ be a valid pointer to a
-                            -- 'Vulkan.CStruct.Extends.BaseOutStructure' structure
                             ("pipelineProperties" ::: Ptr BaseOutStructure)
                          -> io ()
 getPipelinePropertiesEXT device pipelineInfo pipelineProperties = liftIO . evalContT $ do

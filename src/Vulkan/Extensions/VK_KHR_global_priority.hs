@@ -248,7 +248,7 @@ pattern QUEUE_GLOBAL_PRIORITY_REALTIME_EXT = QUEUE_GLOBAL_PRIORITY_REALTIME_KHR
 --
 -- = Description
 --
--- A queue created without specifying
+-- Queues created without specifying
 -- 'DeviceQueueGlobalPriorityCreateInfoKHR' will default to
 -- 'QUEUE_GLOBAL_PRIORITY_MEDIUM_KHR'.
 --
@@ -261,8 +261,8 @@ pattern QUEUE_GLOBAL_PRIORITY_REALTIME_EXT = QUEUE_GLOBAL_PRIORITY_REALTIME_KHR
 -- 'QueueGlobalPriorityKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceQueueGlobalPriorityCreateInfoKHR = DeviceQueueGlobalPriorityCreateInfoKHR
-  { -- | @globalPriority@ is the system-wide priority associated to this queue as
-    -- specified by
+  { -- | @globalPriority@ is the system-wide priority associated to these queues
+    -- as specified by
     -- 'Vulkan.Extensions.VK_EXT_global_priority.QueueGlobalPriorityEXT'
     --
     -- #VUID-VkDeviceQueueGlobalPriorityCreateInfoKHR-globalPriority-parameter#

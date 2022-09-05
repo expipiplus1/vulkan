@@ -17,6 +17,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_AMD_shader_ballot
                           , module Vulkan.Extensions.VK_AMD_shader_core_properties
                           , module Vulkan.Extensions.VK_AMD_shader_core_properties2
+                          , module Vulkan.Extensions.VK_AMD_shader_early_and_late_fragment_tests
                           , module Vulkan.Extensions.VK_AMD_shader_explicit_vertex_parameter
                           , module Vulkan.Extensions.VK_AMD_shader_fragment_mask
                           , module Vulkan.Extensions.VK_AMD_shader_image_load_store_lod
@@ -295,6 +296,7 @@ import Vulkan.Extensions.VK_AMD_rasterization_order
 import Vulkan.Extensions.VK_AMD_shader_ballot
 import Vulkan.Extensions.VK_AMD_shader_core_properties
 import Vulkan.Extensions.VK_AMD_shader_core_properties2
+import Vulkan.Extensions.VK_AMD_shader_early_and_late_fragment_tests
 import Vulkan.Extensions.VK_AMD_shader_explicit_vertex_parameter
 import Vulkan.Extensions.VK_AMD_shader_fragment_mask
 import Vulkan.Extensions.VK_AMD_shader_image_load_store_lod

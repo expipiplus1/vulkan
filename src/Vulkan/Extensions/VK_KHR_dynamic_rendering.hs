@@ -21,6 +21,8 @@
 --
 --     -   Requires Vulkan 1.0
 --
+--     -   Requires @VK_KHR_depth_stencil_resolve@
+--
 --     -   Requires @VK_KHR_get_physical_device_properties2@
 --
 -- [__Deprecation state__]

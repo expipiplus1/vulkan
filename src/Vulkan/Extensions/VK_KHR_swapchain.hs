@@ -2630,8 +2630,8 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     structure /must/ be included in the @pNext@ chain
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-pNext-06752# If the
---     @VK_EXT_image_compression_control_swapchain@ extension is not
---     enabled, the @pNext@ chain /must/ not include an
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-imageCompressionControlSwapchain imageCompressionControlSwapchain>
+--     feature is not enabled, the @pNext@ chain /must/ not include an
 --     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionControlEXT'
 --     structure
 --

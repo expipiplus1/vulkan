@@ -643,13 +643,17 @@ destroyPipeline device pipeline allocator = liftIO . evalContT $ do
 --
 -- -   oy = @y@ + @height@ \/ 2
 --
--- -   oz = @minDepth@
+-- -   oz = @minDepth@ (or (@maxDepth@ + @minDepth@) \/ 2 if
+--     'Vulkan.Extensions.VK_EXT_depth_clip_control.PipelineViewportDepthClipControlCreateInfoEXT'::@negativeOneToOne@
+--     is 'Vulkan.Core10.FundamentalTypes.TRUE')
 --
 -- -   px = @width@
 --
 -- -   py = @height@
 --
--- -   pz = @maxDepth@ - @minDepth@.
+-- -   pz = @maxDepth@ - @minDepth@ (or (@maxDepth@ - @minDepth@) \/ 2 if
+--     'Vulkan.Extensions.VK_EXT_depth_clip_control.PipelineViewportDepthClipControlCreateInfoEXT'::@negativeOneToOne@
+--     is 'Vulkan.Core10.FundamentalTypes.TRUE')
 --
 -- If a render pass transform is enabled, the values (px,py) and (ox, oy)
 -- defining the viewport are transformed as described in
@@ -5342,6 +5346,49 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     create the other library’s @layout@ /must/ not be
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
+-- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06756# If
+--     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GraphicsPipelineLibraryCreateInfoEXT'::@flags@
+--     includes only one of
+--     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT'
+--     or
+--     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT',
+--     an element of
+--     'Vulkan.Extensions.VK_KHR_pipeline_library.PipelineLibraryCreateInfoKHR'::@pLibraries@
+--     includes the other subset, and any element of the @pSetLayouts@
+--     array which @layout@ was created with was
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', then the corresponding
+--     element of the @pSetLayouts@ array used to create the library’s
+--     @layout@ /must/ not have shader bindings for shaders in the other
+--     subset
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06757# If
+--     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GraphicsPipelineLibraryCreateInfoEXT'::@flags@
+--     includes only one of
+--     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT'
+--     or
+--     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT',
+--     an element of
+--     'Vulkan.Extensions.VK_KHR_pipeline_library.PipelineLibraryCreateInfoKHR'::@pLibraries@
+--     includes the other subset, and any element of the @pSetLayouts@
+--     array used to create the library’s @layout@ was
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', then the corresponding
+--     element of the @pSetLayouts@ array used to create this pipeline’s
+--     @layout@ /must/ not have shader bindings for shaders in the other
+--     subset
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-pLibraries-06758# If one element
+--     of
+--     'Vulkan.Extensions.VK_KHR_pipeline_library.PipelineLibraryCreateInfoKHR'::@pLibraries@
+--     includes
+--     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT'
+--     and another element includes
+--     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT',
+--     and any element of the @pSetLayouts@ array used to create each
+--     library’s @layout@ was 'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     then the corresponding element of the @pSetLayouts@ array used to
+--     create the other library’s @layout@ /must/ not have shader bindings
+--     for shaders in the other subset
+--
 -- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06682# If
 --     'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GraphicsPipelineLibraryCreateInfoEXT'::@flags@
 --     includes both
@@ -5655,7 +5702,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     specified entirely by libraries, and each library was created with a
 --     'Vulkan.Core10.Handles.PipelineLayout' created with
 --     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT',
---     then @pipelineLayout@ /must/ be a valid
+--     then @layout@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PipelineLayout' that is
 --     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-compatibility compatible>
 --     with the union of the libraries\' pipeline layouts other than the
@@ -5670,10 +5717,50 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     specified entirely by libraries, and each library was created with a
 --     'Vulkan.Core10.Handles.PipelineLayout' created with
 --     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT',
---     then @pipelineLayout@ /must/ be a valid
+--     then @layout@ /must/ be a valid
 --     'Vulkan.Core10.Handles.PipelineLayout' that is
 --     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-compatibility compatible>
 --     with the union of the libraries\' pipeline layouts
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-conservativePointAndLineRasterization-06759#
+--     If
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-conservativePointAndLineRasterization conservativePointAndLineRasterization>
+--     is not supported; the pipeline is being created with
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-vertex-input vertex input state>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>;
+--     the pipeline does not include a geometry shader; and the value of
+--     'PipelineInputAssemblyStateCreateInfo'::@topology@ is
+--     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_POINT_LIST',
+--     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_LINE_LIST',
+--     or
+--     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_LINE_STRIP',
+--     then
+--     'Vulkan.Extensions.VK_EXT_conservative_rasterization.PipelineRasterizationConservativeStateCreateInfoEXT'::@conservativeRasterizationMode@
+--     /must/ be
+--     'Vulkan.Extensions.VK_EXT_conservative_rasterization.CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-conservativePointAndLineRasterization-06760#
+--     If
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-conservativePointAndLineRasterization conservativePointAndLineRasterization>
+--     is not supported, the pipeline is being created with
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     and the pipeline includes a geometry shader with either the
+--     @OutputPoints@ or @OutputLineStrip@ execution modes,
+--     'Vulkan.Extensions.VK_EXT_conservative_rasterization.PipelineRasterizationConservativeStateCreateInfoEXT'::@conservativeRasterizationMode@
+--     /must/ be
+--     'Vulkan.Extensions.VK_EXT_conservative_rasterization.CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-conservativePointAndLineRasterization-06761#
+--     If
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-conservativePointAndLineRasterization conservativePointAndLineRasterization>
+--     is not supported, the pipeline is being created with
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     and the pipeline includes a mesh shader with either the
+--     @OutputPoints@ or @OutputLinesNV@ execution modes,
+--     'Vulkan.Extensions.VK_EXT_conservative_rasterization.PipelineRasterizationConservativeStateCreateInfoEXT'::@conservativeRasterizationMode@
+--     /must/ be
+--     'Vulkan.Extensions.VK_EXT_conservative_rasterization.CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT'
 --
 -- == Valid Usage (Implicit)
 --

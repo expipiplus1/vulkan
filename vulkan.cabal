@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.34.5.
+-- This file has been generated from package.yaml by hpack version 0.34.7.
 --
 -- see: https://github.com/sol/hpack
 
@@ -301,6 +301,7 @@ library
       Vulkan.Extensions.VK_AMD_shader_ballot
       Vulkan.Extensions.VK_AMD_shader_core_properties
       Vulkan.Extensions.VK_AMD_shader_core_properties2
+      Vulkan.Extensions.VK_AMD_shader_early_and_late_fragment_tests
       Vulkan.Extensions.VK_AMD_shader_explicit_vertex_parameter
       Vulkan.Extensions.VK_AMD_shader_fragment_mask
       Vulkan.Extensions.VK_AMD_shader_image_load_store_lod
