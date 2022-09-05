@@ -15,7 +15,7 @@
 --     459
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -32,7 +32,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2022-03-10
+--     2022-05-24
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -54,6 +54,10 @@
 --
 -- == New Structures
 --
+-- -   'RenderPassCreationFeedbackInfoEXT'
+--
+-- -   'RenderPassSubpassFeedbackInfoEXT'
+--
 -- -   Extending
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
 --     'Vulkan.Core10.Device.DeviceCreateInfo':
@@ -61,10 +65,9 @@
 --     -   'PhysicalDeviceSubpassMergeFeedbackFeaturesEXT'
 --
 -- -   Extending
---     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.RenderPassCreateInfo2',
---     'RenderPassCreationControlEXT':
+--     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.RenderPassCreateInfo2':
 --
---     -   'RenderPassCreationFeedbackInfoEXT'
+--     -   'RenderPassCreationFeedbackCreateInfoEXT'
 --
 -- -   Extending
 --     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.RenderPassCreateInfo2',
@@ -73,10 +76,9 @@
 --     -   'RenderPassCreationControlEXT'
 --
 -- -   Extending
---     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDescription2',
---     'RenderPassCreationControlEXT':
+--     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDescription2':
 --
---     -   'RenderPassSubpassFeedbackInfoEXT'
+--     -   'RenderPassSubpassFeedbackCreateInfoEXT'
 --
 -- == New Enums
 --
@@ -94,9 +96,9 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_CREATION_CONTROL_EXT'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_CREATION_FEEDBACK_INFO_EXT'
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_CREATION_FEEDBACK_CREATE_INFO_EXT'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_SUBPASS_FEEDBACK_INFO_EXT'
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_SUBPASS_FEEDBACK_CREATE_INFO_EXT'
 --
 -- == Version History
 --
@@ -104,10 +106,17 @@
 --
 --     -   Initial draft.
 --
+-- -   Revision 2, 2022-05-24
+--
+--     -   Fix structextends and constness issues.
+--
 -- == See Also
 --
 -- 'PhysicalDeviceSubpassMergeFeedbackFeaturesEXT',
--- 'RenderPassCreationControlEXT', 'RenderPassCreationFeedbackInfoEXT',
+-- 'RenderPassCreationControlEXT',
+-- 'RenderPassCreationFeedbackCreateInfoEXT',
+-- 'RenderPassCreationFeedbackInfoEXT',
+-- 'RenderPassSubpassFeedbackCreateInfoEXT',
 -- 'RenderPassSubpassFeedbackInfoEXT', 'SubpassMergeStatusEXT'
 --
 -- == Document Notes
@@ -119,17 +128,16 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_subpass_merge_feedback  ( PhysicalDeviceSubpassMergeFeedbackFeaturesEXT
                                                         , RenderPassCreationControlEXT
+                                                        , RenderPassCreationFeedbackCreateInfoEXT
                                                         , RenderPassCreationFeedbackInfoEXT
+                                                        , RenderPassSubpassFeedbackCreateInfoEXT
                                                         , RenderPassSubpassFeedbackInfoEXT
                                                         ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
-import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
-import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
-import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
-import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
+
 data PhysicalDeviceSubpassMergeFeedbackFeaturesEXT
 
 instance ToCStruct PhysicalDeviceSubpassMergeFeedbackFeaturesEXT
@@ -138,13 +146,20 @@ instance Show PhysicalDeviceSubpassMergeFeedbackFeaturesEXT
 instance FromCStruct PhysicalDeviceSubpassMergeFeedbackFeaturesEXT
 
 
-type role RenderPassCreationControlEXT nominal
-data RenderPassCreationControlEXT (es :: [Type])
+data RenderPassCreationControlEXT
 
-instance (Extendss RenderPassCreationControlEXT es, PokeChain es) => ToCStruct (RenderPassCreationControlEXT es)
-instance Show (Chain es) => Show (RenderPassCreationControlEXT es)
+instance ToCStruct RenderPassCreationControlEXT
+instance Show RenderPassCreationControlEXT
 
-instance (Extendss RenderPassCreationControlEXT es, PeekChain es) => FromCStruct (RenderPassCreationControlEXT es)
+instance FromCStruct RenderPassCreationControlEXT
+
+
+data RenderPassCreationFeedbackCreateInfoEXT
+
+instance ToCStruct RenderPassCreationFeedbackCreateInfoEXT
+instance Show RenderPassCreationFeedbackCreateInfoEXT
+
+instance FromCStruct RenderPassCreationFeedbackCreateInfoEXT
 
 
 data RenderPassCreationFeedbackInfoEXT
@@ -153,6 +168,14 @@ instance ToCStruct RenderPassCreationFeedbackInfoEXT
 instance Show RenderPassCreationFeedbackInfoEXT
 
 instance FromCStruct RenderPassCreationFeedbackInfoEXT
+
+
+data RenderPassSubpassFeedbackCreateInfoEXT
+
+instance ToCStruct RenderPassSubpassFeedbackCreateInfoEXT
+instance Show RenderPassSubpassFeedbackCreateInfoEXT
+
+instance FromCStruct RenderPassSubpassFeedbackCreateInfoEXT
 
 
 data RenderPassSubpassFeedbackInfoEXT

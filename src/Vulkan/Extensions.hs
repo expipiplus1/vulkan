@@ -169,6 +169,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_KHR_external_semaphore_fd
                           , module Vulkan.Extensions.VK_KHR_external_semaphore_win32
                           , module Vulkan.Extensions.VK_KHR_format_feature_flags2
+                          , module Vulkan.Extensions.VK_KHR_fragment_shader_barycentric
                           , module Vulkan.Extensions.VK_KHR_fragment_shading_rate
                           , module Vulkan.Extensions.VK_KHR_get_display_properties2
                           , module Vulkan.Extensions.VK_KHR_get_memory_requirements2
@@ -448,6 +449,7 @@ import Vulkan.Extensions.VK_KHR_external_semaphore_capabilities
 import Vulkan.Extensions.VK_KHR_external_semaphore_fd
 import Vulkan.Extensions.VK_KHR_external_semaphore_win32
 import Vulkan.Extensions.VK_KHR_format_feature_flags2
+import Vulkan.Extensions.VK_KHR_fragment_shader_barycentric
 import Vulkan.Extensions.VK_KHR_fragment_shading_rate
 import Vulkan.Extensions.VK_KHR_get_display_properties2
 import Vulkan.Extensions.VK_KHR_get_memory_requirements2

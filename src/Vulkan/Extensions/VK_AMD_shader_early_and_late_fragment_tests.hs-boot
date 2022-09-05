@@ -50,7 +50,7 @@
 -- This extension adds support for the
 -- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_shader_early_and_late_fragment_tests.html SPV_AMD_shader_early_and_late_fragment_tests>
 -- extension, allowing shaders to explicitly opt in to allowing both early
--- /and/ late fragment tests with the @EarlyAndLateFragmentTestsEXT@
+-- /and/ late fragment tests with the @EarlyAndLateFragmentTestsAMD@
 -- execution mode.
 --
 -- If @VK_EXT_shader_stencil_export@ is supported, additional execution
@@ -63,7 +63,7 @@
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
 --     'Vulkan.Core10.Device.DeviceCreateInfo':
 --
---     -   'PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT'
+--     -   'PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD'
 --
 -- == New Enum Constants
 --
@@ -73,7 +73,7 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EARLY_AND_LATE_FRAGMENT_TESTS_FEATURES_EXT'
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EARLY_AND_LATE_FRAGMENT_TESTS_FEATURES_AMD'
 --
 -- == Version History
 --
@@ -83,7 +83,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT'
+-- 'PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD'
 --
 -- == Document Notes
 --
@@ -92,16 +92,16 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_AMD_shader_early_and_late_fragment_tests  (PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT) where
+module Vulkan.Extensions.VK_AMD_shader_early_and_late_fragment_tests  (PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
 
-data PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT
+data PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD
 
-instance ToCStruct PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT
-instance Show PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT
+instance ToCStruct PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD
+instance Show PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD
 
-instance FromCStruct PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT
+instance FromCStruct PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD
 

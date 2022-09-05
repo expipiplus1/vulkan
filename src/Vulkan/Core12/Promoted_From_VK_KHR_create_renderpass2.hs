@@ -104,9 +104,9 @@ import Vulkan.Core10.Handles (RenderPass(..))
 import Vulkan.Core10.CommandBufferBuilding (RenderPassBeginInfo)
 import Vulkan.Core10.Enums.RenderPassCreateFlagBits (RenderPassCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subpass_merge_feedback (RenderPassCreationControlEXT)
-import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subpass_merge_feedback (RenderPassCreationFeedbackInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subpass_merge_feedback (RenderPassCreationFeedbackCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_density_map (RenderPassFragmentDensityMapCreateInfoEXT)
-import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subpass_merge_feedback (RenderPassSubpassFeedbackInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subpass_merge_feedback (RenderPassSubpassFeedbackCreateInfoEXT)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits)
@@ -1399,7 +1399,7 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateAttachmentInfoKHR',
 --     'Vulkan.Extensions.VK_EXT_subpass_merge_feedback.RenderPassCreationControlEXT',
---     'Vulkan.Extensions.VK_EXT_subpass_merge_feedback.RenderPassSubpassFeedbackInfoEXT',
+--     'Vulkan.Extensions.VK_EXT_subpass_merge_feedback.RenderPassSubpassFeedbackCreateInfoEXT',
 --     or
 --     'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.SubpassDescriptionDepthStencilResolve'
 --
@@ -1497,8 +1497,8 @@ instance Extensible SubpassDescription2 where
   getNext SubpassDescription2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SubpassDescription2 e => b) -> Maybe b
   extends _ f
-    | Just Refl <- eqT @e @RenderPassSubpassFeedbackInfoEXT = Just f
-    | Just Refl <- eqT @e @(RenderPassCreationControlEXT '[]) = Just f
+    | Just Refl <- eqT @e @RenderPassSubpassFeedbackCreateInfoEXT = Just f
+    | Just Refl <- eqT @e @RenderPassCreationControlEXT = Just f
     | Just Refl <- eqT @e @FragmentShadingRateAttachmentInfoKHR = Just f
     | Just Refl <- eqT @e @SubpassDescriptionDepthStencilResolve = Just f
     | otherwise = Nothing
@@ -2106,7 +2106,7 @@ instance es ~ '[] => Zero (SubpassDependency2 es) where
 --     any structure (including this one) in the @pNext@ chain /must/ be
 --     either @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_EXT_subpass_merge_feedback.RenderPassCreationControlEXT',
---     'Vulkan.Extensions.VK_EXT_subpass_merge_feedback.RenderPassCreationFeedbackInfoEXT',
+--     'Vulkan.Extensions.VK_EXT_subpass_merge_feedback.RenderPassCreationFeedbackCreateInfoEXT',
 --     or
 --     'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderPassFragmentDensityMapCreateInfoEXT'
 --
@@ -2181,8 +2181,8 @@ instance Extensible RenderPassCreateInfo2 where
   getNext RenderPassCreateInfo2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RenderPassCreateInfo2 e => b) -> Maybe b
   extends _ f
-    | Just Refl <- eqT @e @RenderPassCreationFeedbackInfoEXT = Just f
-    | Just Refl <- eqT @e @(RenderPassCreationControlEXT '[]) = Just f
+    | Just Refl <- eqT @e @RenderPassCreationFeedbackCreateInfoEXT = Just f
+    | Just Refl <- eqT @e @RenderPassCreationControlEXT = Just f
     | Just Refl <- eqT @e @RenderPassFragmentDensityMapCreateInfoEXT = Just f
     | otherwise = Nothing
 

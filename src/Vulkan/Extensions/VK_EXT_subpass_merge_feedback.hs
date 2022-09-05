@@ -15,7 +15,7 @@
 --     459
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -32,7 +32,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2022-03-10
+--     2022-05-24
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -54,6 +54,10 @@
 --
 -- == New Structures
 --
+-- -   'RenderPassCreationFeedbackInfoEXT'
+--
+-- -   'RenderPassSubpassFeedbackInfoEXT'
+--
 -- -   Extending
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
 --     'Vulkan.Core10.Device.DeviceCreateInfo':
@@ -61,10 +65,9 @@
 --     -   'PhysicalDeviceSubpassMergeFeedbackFeaturesEXT'
 --
 -- -   Extending
---     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.RenderPassCreateInfo2',
---     'RenderPassCreationControlEXT':
+--     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.RenderPassCreateInfo2':
 --
---     -   'RenderPassCreationFeedbackInfoEXT'
+--     -   'RenderPassCreationFeedbackCreateInfoEXT'
 --
 -- -   Extending
 --     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.RenderPassCreateInfo2',
@@ -73,10 +76,9 @@
 --     -   'RenderPassCreationControlEXT'
 --
 -- -   Extending
---     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDescription2',
---     'RenderPassCreationControlEXT':
+--     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDescription2':
 --
---     -   'RenderPassSubpassFeedbackInfoEXT'
+--     -   'RenderPassSubpassFeedbackCreateInfoEXT'
 --
 -- == New Enums
 --
@@ -94,9 +96,9 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_CREATION_CONTROL_EXT'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_CREATION_FEEDBACK_INFO_EXT'
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_CREATION_FEEDBACK_CREATE_INFO_EXT'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_SUBPASS_FEEDBACK_INFO_EXT'
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_SUBPASS_FEEDBACK_CREATE_INFO_EXT'
 --
 -- == Version History
 --
@@ -104,10 +106,17 @@
 --
 --     -   Initial draft.
 --
+-- -   Revision 2, 2022-05-24
+--
+--     -   Fix structextends and constness issues.
+--
 -- == See Also
 --
 -- 'PhysicalDeviceSubpassMergeFeedbackFeaturesEXT',
--- 'RenderPassCreationControlEXT', 'RenderPassCreationFeedbackInfoEXT',
+-- 'RenderPassCreationControlEXT',
+-- 'RenderPassCreationFeedbackCreateInfoEXT',
+-- 'RenderPassCreationFeedbackInfoEXT',
+-- 'RenderPassSubpassFeedbackCreateInfoEXT',
 -- 'RenderPassSubpassFeedbackInfoEXT', 'SubpassMergeStatusEXT'
 --
 -- == Document Notes
@@ -119,7 +128,9 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_subpass_merge_feedback  ( RenderPassCreationControlEXT(..)
                                                         , RenderPassCreationFeedbackInfoEXT(..)
+                                                        , RenderPassCreationFeedbackCreateInfoEXT(..)
                                                         , RenderPassSubpassFeedbackInfoEXT(..)
+                                                        , RenderPassSubpassFeedbackCreateInfoEXT(..)
                                                         , PhysicalDeviceSubpassMergeFeedbackFeaturesEXT(..)
                                                         , SubpassMergeStatusEXT( SUBPASS_MERGE_STATUS_MERGED_EXT
                                                                                , SUBPASS_MERGE_STATUS_DISALLOWED_EXT
@@ -146,15 +157,11 @@ module Vulkan.Extensions.VK_EXT_subpass_merge_feedback  ( RenderPassCreationCont
 import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
-import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytes)
-import GHC.Ptr (castPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import GHC.Show (showsPrec)
 import Data.ByteString (packCString)
-import Control.Monad.Trans.Class (lift)
-import Control.Monad.Trans.Cont (evalContT)
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (FromCStruct(..))
 import Vulkan.CStruct (ToCStruct)
@@ -162,7 +169,6 @@ import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Data.String (IsString)
-import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.Storable (Storable)
@@ -177,26 +183,17 @@ import GHC.Show (Show(showsPrec))
 import Data.Word (Word32)
 import Data.ByteString (ByteString)
 import Data.Kind (Type)
-import Control.Monad.Trans.Cont (ContT(..))
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
 import Vulkan.CStruct.Utils (pokeFixedLengthNullTerminatedByteString)
 import Vulkan.Core10.FundamentalTypes (Bool32)
-import Vulkan.CStruct.Extends (Chain)
-import Vulkan.CStruct.Extends (Extends)
-import Vulkan.CStruct.Extends (Extendss)
-import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.APIConstants (MAX_DESCRIPTION_SIZE)
-import Vulkan.CStruct.Extends (PeekChain)
-import Vulkan.CStruct.Extends (PeekChain(..))
-import Vulkan.CStruct.Extends (PokeChain)
-import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBPASS_MERGE_FEEDBACK_FEATURES_EXT))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDER_PASS_CREATION_CONTROL_EXT))
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDER_PASS_CREATION_FEEDBACK_INFO_EXT))
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDER_PASS_SUBPASS_FEEDBACK_INFO_EXT))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDER_PASS_CREATION_FEEDBACK_CREATE_INFO_EXT))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDER_PASS_SUBPASS_FEEDBACK_CREATE_INFO_EXT))
 -- | VkRenderPassCreationControlEXT - Control about the creation of render
 -- pass or subpass
 --
@@ -226,76 +223,55 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDER_PA
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDescription2',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.createRenderPass2'
-data RenderPassCreationControlEXT (es :: [Type]) = RenderPassCreationControlEXT
-  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-    next :: Chain es
-  , -- | @disallowMerging@ is a boolean value indicating whether subpass merging
+data RenderPassCreationControlEXT = RenderPassCreationControlEXT
+  { -- | @disallowMerging@ is a boolean value indicating whether subpass merging
     -- will be disabled.
-    disallowMerging :: Bool
-  }
-  deriving (Typeable)
+    disallowMerging :: Bool }
+  deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (RenderPassCreationControlEXT (es :: [Type]))
+deriving instance Generic (RenderPassCreationControlEXT)
 #endif
-deriving instance Show (Chain es) => Show (RenderPassCreationControlEXT es)
+deriving instance Show RenderPassCreationControlEXT
 
-instance Extensible RenderPassCreationControlEXT where
-  extensibleTypeName = "RenderPassCreationControlEXT"
-  setNext RenderPassCreationControlEXT{..} next' = RenderPassCreationControlEXT{next = next', ..}
-  getNext RenderPassCreationControlEXT{..} = next
-  extends :: forall e b proxy. Typeable e => proxy e -> (Extends RenderPassCreationControlEXT e => b) -> Maybe b
-  extends _ f
-    | Just Refl <- eqT @e @RenderPassSubpassFeedbackInfoEXT = Just f
-    | Just Refl <- eqT @e @RenderPassCreationFeedbackInfoEXT = Just f
-    | otherwise = Nothing
-
-instance (Extendss RenderPassCreationControlEXT es, PokeChain es) => ToCStruct (RenderPassCreationControlEXT es) where
+instance ToCStruct RenderPassCreationControlEXT where
   withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p RenderPassCreationControlEXT{..} f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_CREATION_CONTROL_EXT)
-    pNext'' <- fmap castPtr . ContT $ withChain (next)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
-    lift $ poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (disallowMerging))
-    lift $ f
+  pokeCStruct p RenderPassCreationControlEXT{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_CREATION_CONTROL_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (disallowMerging))
+    f
   cStructSize = 24
   cStructAlignment = 8
-  pokeZeroCStruct p f = evalContT $ do
-    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_CREATION_CONTROL_EXT)
-    pNext' <- fmap castPtr . ContT $ withZeroChain @es
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
-    lift $ poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
-    lift $ f
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_CREATION_CONTROL_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
+    f
 
-instance (Extendss RenderPassCreationControlEXT es, PeekChain es) => FromCStruct (RenderPassCreationControlEXT es) where
+instance FromCStruct RenderPassCreationControlEXT where
   peekCStruct p = do
-    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
-    next <- peekChain (castPtr pNext)
     disallowMerging <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     pure $ RenderPassCreationControlEXT
-             next (bool32ToBool disallowMerging)
+             (bool32ToBool disallowMerging)
 
-instance es ~ '[] => Zero (RenderPassCreationControlEXT es) where
+instance Storable RenderPassCreationControlEXT where
+  sizeOf ~_ = 24
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero RenderPassCreationControlEXT where
   zero = RenderPassCreationControlEXT
-           ()
            zero
 
 
--- | VkRenderPassCreationFeedbackInfoEXT - Feedback about the creation of
+-- | VkRenderPassCreationFeedbackInfoEXT - Feedback about the creation of a
 -- render pass
---
--- = Description
---
--- The subpass count after merging is written to @postMergeSubpassCount@.
---
--- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_subpass_merge_feedback VK_EXT_subpass_merge_feedback>,
--- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.RenderPassCreateInfo2',
--- 'RenderPassCreationControlEXT',
--- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.createRenderPass2'
+-- 'RenderPassCreationFeedbackCreateInfoEXT'
 data RenderPassCreationFeedbackInfoEXT = RenderPassCreationFeedbackInfoEXT
   { -- | @postMergeSubpassCount@ is the subpass count after merge.
     postMergeSubpassCount :: Word32 }
@@ -306,29 +282,25 @@ deriving instance Generic (RenderPassCreationFeedbackInfoEXT)
 deriving instance Show RenderPassCreationFeedbackInfoEXT
 
 instance ToCStruct RenderPassCreationFeedbackInfoEXT where
-  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 4 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RenderPassCreationFeedbackInfoEXT{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_CREATION_FEEDBACK_INFO_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Word32)) (postMergeSubpassCount)
+    poke ((p `plusPtr` 0 :: Ptr Word32)) (postMergeSubpassCount)
     f
-  cStructSize = 24
-  cStructAlignment = 8
+  cStructSize = 4
+  cStructAlignment = 4
   pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_CREATION_FEEDBACK_INFO_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
     f
 
 instance FromCStruct RenderPassCreationFeedbackInfoEXT where
   peekCStruct p = do
-    postMergeSubpassCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
+    postMergeSubpassCount <- peek @Word32 ((p `plusPtr` 0 :: Ptr Word32))
     pure $ RenderPassCreationFeedbackInfoEXT
              postMergeSubpassCount
 
 instance Storable RenderPassCreationFeedbackInfoEXT where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
+  sizeOf ~_ = 4
+  alignment ~_ = 4
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
 
@@ -337,13 +309,8 @@ instance Zero RenderPassCreationFeedbackInfoEXT where
            zero
 
 
--- | VkRenderPassSubpassFeedbackInfoEXT - Feedback about the creation of
--- subpass
---
--- = Description
---
--- An implementation writes the proper value to @subpassMergeStatus@.
--- Subpasses merged will have the same @postMergeIndex@.
+-- | VkRenderPassCreationFeedbackCreateInfoEXT - Request feedback about the
+-- creation of render pass
 --
 -- == Valid Usage (Implicit)
 --
@@ -351,26 +318,71 @@ instance Zero RenderPassCreationFeedbackInfoEXT where
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_subpass_merge_feedback VK_EXT_subpass_merge_feedback>,
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.RenderPassCreateInfo2',
--- 'RenderPassCreationControlEXT',
+-- 'RenderPassCreationControlEXT', 'RenderPassCreationFeedbackInfoEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDescription2',
--- 'SubpassMergeStatusEXT',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.createRenderPass2'
+data RenderPassCreationFeedbackCreateInfoEXT = RenderPassCreationFeedbackCreateInfoEXT
+  { -- | @pRenderPassFeedback@ is a pointer to a
+    -- 'RenderPassCreationFeedbackInfoEXT' structure in which feedback is
+    -- returned.
+    --
+    -- #VUID-VkRenderPassCreationFeedbackCreateInfoEXT-pRenderPassFeedback-parameter#
+    -- @pRenderPassFeedback@ /must/ be a valid pointer to a
+    -- 'RenderPassCreationFeedbackInfoEXT' structure
+    renderPassFeedback :: Ptr RenderPassCreationFeedbackInfoEXT }
+  deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (RenderPassCreationFeedbackCreateInfoEXT)
+#endif
+deriving instance Show RenderPassCreationFeedbackCreateInfoEXT
+
+instance ToCStruct RenderPassCreationFeedbackCreateInfoEXT where
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p RenderPassCreationFeedbackCreateInfoEXT{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_CREATION_FEEDBACK_CREATE_INFO_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr (Ptr RenderPassCreationFeedbackInfoEXT))) (renderPassFeedback)
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_CREATION_FEEDBACK_CREATE_INFO_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr (Ptr RenderPassCreationFeedbackInfoEXT))) (zero)
+    f
+
+instance FromCStruct RenderPassCreationFeedbackCreateInfoEXT where
+  peekCStruct p = do
+    pRenderPassFeedback <- peek @(Ptr RenderPassCreationFeedbackInfoEXT) ((p `plusPtr` 16 :: Ptr (Ptr RenderPassCreationFeedbackInfoEXT)))
+    pure $ RenderPassCreationFeedbackCreateInfoEXT
+             pRenderPassFeedback
+
+instance Storable RenderPassCreationFeedbackCreateInfoEXT where
+  sizeOf ~_ = 24
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero RenderPassCreationFeedbackCreateInfoEXT where
+  zero = RenderPassCreationFeedbackCreateInfoEXT
+           zero
+
+
+-- | VkRenderPassSubpassFeedbackInfoEXT - Feedback about the creation of
+-- subpass
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_subpass_merge_feedback VK_EXT_subpass_merge_feedback>,
+-- 'RenderPassSubpassFeedbackCreateInfoEXT', 'SubpassMergeStatusEXT'
 data RenderPassSubpassFeedbackInfoEXT = RenderPassSubpassFeedbackInfoEXT
   { -- | @subpassMergeStatus@ is a 'SubpassMergeStatusEXT' value specifying
     -- information about whether the subpass is merged with previous subpass
     -- and the reason why it is not merged.
-    --
-    -- #VUID-VkRenderPassSubpassFeedbackInfoEXT-subpassMergeStatus-parameter#
-    -- @subpassMergeStatus@ /must/ be a valid 'SubpassMergeStatusEXT' value
     subpassMergeStatus :: SubpassMergeStatusEXT
   , -- | @description@ is an array of
     -- 'Vulkan.Core10.APIConstants.MAX_DESCRIPTION_SIZE' @char@ containing a
     -- null-terminated UTF-8 string which provides additional details.
-    --
-    -- #VUID-VkRenderPassSubpassFeedbackInfoEXT-description-parameter#
-    -- @description@ /must/ be a null-terminated UTF-8 string whose length is
-    -- less than or equal to VK_MAX_DESCRIPTION_SIZE
     description :: ByteString
   , -- | @postMergeIndex@ is the subpass index after the subpass merging.
     postMergeIndex :: Word32
@@ -382,35 +394,31 @@ deriving instance Generic (RenderPassSubpassFeedbackInfoEXT)
 deriving instance Show RenderPassSubpassFeedbackInfoEXT
 
 instance ToCStruct RenderPassSubpassFeedbackInfoEXT where
-  withCStruct x f = allocaBytes 280 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 264 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RenderPassSubpassFeedbackInfoEXT{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_SUBPASS_FEEDBACK_INFO_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr SubpassMergeStatusEXT)) (subpassMergeStatus)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (description)
-    poke ((p `plusPtr` 276 :: Ptr Word32)) (postMergeIndex)
+    poke ((p `plusPtr` 0 :: Ptr SubpassMergeStatusEXT)) (subpassMergeStatus)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 4 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (description)
+    poke ((p `plusPtr` 260 :: Ptr Word32)) (postMergeIndex)
     f
-  cStructSize = 280
-  cStructAlignment = 8
+  cStructSize = 264
+  cStructAlignment = 4
   pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_SUBPASS_FEEDBACK_INFO_EXT)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr SubpassMergeStatusEXT)) (zero)
-    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 20 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (mempty)
-    poke ((p `plusPtr` 276 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 0 :: Ptr SubpassMergeStatusEXT)) (zero)
+    pokeFixedLengthNullTerminatedByteString ((p `plusPtr` 4 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))) (mempty)
+    poke ((p `plusPtr` 260 :: Ptr Word32)) (zero)
     f
 
 instance FromCStruct RenderPassSubpassFeedbackInfoEXT where
   peekCStruct p = do
-    subpassMergeStatus <- peek @SubpassMergeStatusEXT ((p `plusPtr` 16 :: Ptr SubpassMergeStatusEXT))
-    description <- packCString (lowerArrayPtr ((p `plusPtr` 20 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))))
-    postMergeIndex <- peek @Word32 ((p `plusPtr` 276 :: Ptr Word32))
+    subpassMergeStatus <- peek @SubpassMergeStatusEXT ((p `plusPtr` 0 :: Ptr SubpassMergeStatusEXT))
+    description <- packCString (lowerArrayPtr ((p `plusPtr` 4 :: Ptr (FixedArray MAX_DESCRIPTION_SIZE CChar))))
+    postMergeIndex <- peek @Word32 ((p `plusPtr` 260 :: Ptr Word32))
     pure $ RenderPassSubpassFeedbackInfoEXT
              subpassMergeStatus description postMergeIndex
 
 instance Storable RenderPassSubpassFeedbackInfoEXT where
-  sizeOf ~_ = 280
-  alignment ~_ = 8
+  sizeOf ~_ = 264
+  alignment ~_ = 4
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
 
@@ -418,6 +426,65 @@ instance Zero RenderPassSubpassFeedbackInfoEXT where
   zero = RenderPassSubpassFeedbackInfoEXT
            zero
            mempty
+           zero
+
+
+-- | VkRenderPassSubpassFeedbackCreateInfoEXT - Request for feedback about
+-- the creation of subpass
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_subpass_merge_feedback VK_EXT_subpass_merge_feedback>,
+-- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.RenderPassCreateInfo2',
+-- 'RenderPassCreationControlEXT', 'RenderPassSubpassFeedbackInfoEXT',
+-- 'Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDescription2',
+-- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.createRenderPass2'
+data RenderPassSubpassFeedbackCreateInfoEXT = RenderPassSubpassFeedbackCreateInfoEXT
+  { -- | @pSubpassFeedback@ is a pointer to a 'RenderPassSubpassFeedbackInfoEXT'
+    -- structure in which feedback is returned.
+    --
+    -- #VUID-VkRenderPassSubpassFeedbackCreateInfoEXT-pSubpassFeedback-parameter#
+    -- @pSubpassFeedback@ /must/ be a valid pointer to a
+    -- 'RenderPassSubpassFeedbackInfoEXT' structure
+    subpassFeedback :: Ptr RenderPassSubpassFeedbackInfoEXT }
+  deriving (Typeable, Eq)
+#if defined(GENERIC_INSTANCES)
+deriving instance Generic (RenderPassSubpassFeedbackCreateInfoEXT)
+#endif
+deriving instance Show RenderPassSubpassFeedbackCreateInfoEXT
+
+instance ToCStruct RenderPassSubpassFeedbackCreateInfoEXT where
+  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p RenderPassSubpassFeedbackCreateInfoEXT{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_SUBPASS_FEEDBACK_CREATE_INFO_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr (Ptr RenderPassSubpassFeedbackInfoEXT))) (subpassFeedback)
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_SUBPASS_FEEDBACK_CREATE_INFO_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr (Ptr RenderPassSubpassFeedbackInfoEXT))) (zero)
+    f
+
+instance FromCStruct RenderPassSubpassFeedbackCreateInfoEXT where
+  peekCStruct p = do
+    pSubpassFeedback <- peek @(Ptr RenderPassSubpassFeedbackInfoEXT) ((p `plusPtr` 16 :: Ptr (Ptr RenderPassSubpassFeedbackInfoEXT)))
+    pure $ RenderPassSubpassFeedbackCreateInfoEXT
+             pSubpassFeedback
+
+instance Storable RenderPassSubpassFeedbackCreateInfoEXT where
+  sizeOf ~_ = 24
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero RenderPassSubpassFeedbackCreateInfoEXT where
+  zero = RenderPassSubpassFeedbackCreateInfoEXT
            zero
 
 
@@ -602,11 +669,11 @@ instance Read SubpassMergeStatusEXT where
                           SubpassMergeStatusEXT
 
 
-type EXT_SUBPASS_MERGE_FEEDBACK_SPEC_VERSION = 1
+type EXT_SUBPASS_MERGE_FEEDBACK_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_EXT_SUBPASS_MERGE_FEEDBACK_SPEC_VERSION"
 pattern EXT_SUBPASS_MERGE_FEEDBACK_SPEC_VERSION :: forall a . Integral a => a
-pattern EXT_SUBPASS_MERGE_FEEDBACK_SPEC_VERSION = 1
+pattern EXT_SUBPASS_MERGE_FEEDBACK_SPEC_VERSION = 2
 
 
 type EXT_SUBPASS_MERGE_FEEDBACK_EXTENSION_NAME = "VK_EXT_subpass_merge_feedback"

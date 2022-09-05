@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.34.5.
+-- This file has been generated from package.yaml by hpack version 0.34.7.
 --
 -- see: https://github.com/sol/hpack
 
@@ -453,6 +453,7 @@ library
       Vulkan.Extensions.VK_KHR_external_semaphore_fd
       Vulkan.Extensions.VK_KHR_external_semaphore_win32
       Vulkan.Extensions.VK_KHR_format_feature_flags2
+      Vulkan.Extensions.VK_KHR_fragment_shader_barycentric
       Vulkan.Extensions.VK_KHR_fragment_shading_rate
       Vulkan.Extensions.VK_KHR_get_display_properties2
       Vulkan.Extensions.VK_KHR_get_memory_requirements2

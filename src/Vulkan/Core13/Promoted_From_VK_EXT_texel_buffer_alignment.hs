@@ -75,7 +75,6 @@ data PhysicalDeviceTexelBufferAlignmentProperties = PhysicalDeviceTexelBufferAli
   , -- | #extension-limits-storageTexelBufferOffsetSingleTexelAlignment#
     -- @storageTexelBufferOffsetSingleTexelAlignment@ indicates whether single
     -- texel alignment is sufficient for a storage texel buffer of any format.
-    -- The value /must/ be a power of two.
     storageTexelBufferOffsetSingleTexelAlignment :: Bool
   , -- | #extension-limits-uniformTexelBufferOffsetAlignmentBytes#
     -- @uniformTexelBufferOffsetAlignmentBytes@ is a byte alignment that is
@@ -85,7 +84,6 @@ data PhysicalDeviceTexelBufferAlignmentProperties = PhysicalDeviceTexelBufferAli
   , -- | #extension-limits-uniformTexelBufferOffsetSingleTexelAlignment#
     -- @uniformTexelBufferOffsetSingleTexelAlignment@ indicates whether single
     -- texel alignment is sufficient for a uniform texel buffer of any format.
-    -- The value /must/ be a power of two.
     uniformTexelBufferOffsetSingleTexelAlignment :: Bool
   }
   deriving (Typeable, Eq)

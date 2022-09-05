@@ -646,7 +646,6 @@ data PhysicalDeviceVulkan13Properties = PhysicalDeviceVulkan13Properties
   , -- | #limits-storageTexelBufferOffsetSingleTexelAlignment#
     -- @storageTexelBufferOffsetSingleTexelAlignment@ indicates whether single
     -- texel alignment is sufficient for a storage texel buffer of any format.
-    -- The value /must/ be a power of two.
     storageTexelBufferOffsetSingleTexelAlignment :: Bool
   , -- | #limits-uniformTexelBufferOffsetAlignmentBytes#
     -- @uniformTexelBufferOffsetAlignmentBytes@ is a byte alignment that is
@@ -656,7 +655,6 @@ data PhysicalDeviceVulkan13Properties = PhysicalDeviceVulkan13Properties
   , -- | #limits-uniformTexelBufferOffsetSingleTexelAlignment#
     -- @uniformTexelBufferOffsetSingleTexelAlignment@ indicates whether single
     -- texel alignment is sufficient for a uniform texel buffer of any format.
-    -- The value /must/ be a power of two.
     uniformTexelBufferOffsetSingleTexelAlignment :: Bool
   , -- | #limits-maxBufferSize# @maxBufferSize@ is the maximum size
     -- 'Vulkan.Core10.Handles.Buffer' that /can/ be created.

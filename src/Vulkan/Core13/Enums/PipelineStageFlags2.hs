@@ -264,9 +264,10 @@ pattern PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT            = PipelineStageFlagB
 -- | 'PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT' specifies the stage of
 -- the pipeline after blending where the final color values are output from
 -- the pipeline. This stage also includes
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-store-ops subpass load and store operations>
--- and multisample resolve operations for framebuffer attachments with a
--- color or depth\/stencil format.
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-load-store-ops subpass load and store operations>,
+-- multisample resolve operations for framebuffer attachments with a color
+-- or depth\/stencil format, and
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdClearAttachments'.
 pattern PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT        = PipelineStageFlagBits2 0x0000000000000400
 -- | 'PIPELINE_STAGE_2_COMPUTE_SHADER_BIT' specifies the compute shader
 -- stage.

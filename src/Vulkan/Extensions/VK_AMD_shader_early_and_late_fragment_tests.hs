@@ -50,7 +50,7 @@
 -- This extension adds support for the
 -- <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_shader_early_and_late_fragment_tests.html SPV_AMD_shader_early_and_late_fragment_tests>
 -- extension, allowing shaders to explicitly opt in to allowing both early
--- /and/ late fragment tests with the @EarlyAndLateFragmentTestsEXT@
+-- /and/ late fragment tests with the @EarlyAndLateFragmentTestsAMD@
 -- execution mode.
 --
 -- If @VK_EXT_shader_stencil_export@ is supported, additional execution
@@ -63,7 +63,7 @@
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
 --     'Vulkan.Core10.Device.DeviceCreateInfo':
 --
---     -   'PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT'
+--     -   'PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD'
 --
 -- == New Enum Constants
 --
@@ -73,7 +73,7 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EARLY_AND_LATE_FRAGMENT_TESTS_FEATURES_EXT'
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EARLY_AND_LATE_FRAGMENT_TESTS_FEATURES_AMD'
 --
 -- == Version History
 --
@@ -83,7 +83,7 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT'
+-- 'PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD'
 --
 -- == Document Notes
 --
@@ -92,7 +92,7 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_AMD_shader_early_and_late_fragment_tests  ( PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT(..)
+module Vulkan.Extensions.VK_AMD_shader_early_and_late_fragment_tests  ( PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD(..)
                                                                       , AMD_SHADER_EARLY_AND_LATE_FRAGMENT_TESTS_SPEC_VERSION
                                                                       , pattern AMD_SHADER_EARLY_AND_LATE_FRAGMENT_TESTS_SPEC_VERSION
                                                                       , AMD_SHADER_EARLY_AND_LATE_FRAGMENT_TESTS_EXTENSION_NAME
@@ -120,8 +120,8 @@ import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EARLY_AND_LATE_FRAGMENT_TESTS_FEATURES_EXT))
--- | VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT - Structure
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EARLY_AND_LATE_FRAGMENT_TESTS_FEATURES_AMD))
+-- | VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD - Structure
 -- describing whether early and late fragment tests can be supported by an
 -- implementation
 --
@@ -131,13 +131,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Description
 --
--- If the 'PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT'
+-- If the 'PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD'
 -- structure is included in the @pNext@ chain of the
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
 -- structure passed to
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
 -- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT'
+-- supported. 'PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD'
 -- /can/ also be used in the @pNext@ chain of
 -- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
 -- features.
@@ -149,46 +149,46 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_AMD_shader_early_and_late_fragment_tests VK_AMD_shader_early_and_late_fragment_tests>,
 -- 'Vulkan.Core10.FundamentalTypes.Bool32',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT = PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT
+data PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD = PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD
   { -- | #features-shaderEarlyAndLateFragmentTests#
     -- @shaderEarlyAndLateFragmentTests@ indicates whether the implementation
-    -- supports the @EarlyAndLateFragmentTestsEXT@ @Execution@ @Mode@.
+    -- supports the @EarlyAndLateFragmentTestsAMD@ @Execution@ @Mode@.
     shaderEarlyAndLateFragmentTests :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT)
+deriving instance Generic (PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD)
 #endif
-deriving instance Show PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT
+deriving instance Show PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD
 
-instance ToCStruct PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT where
+instance ToCStruct PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD where
   withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EARLY_AND_LATE_FRAGMENT_TESTS_FEATURES_EXT)
+  pokeCStruct p PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EARLY_AND_LATE_FRAGMENT_TESTS_FEATURES_AMD)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (shaderEarlyAndLateFragmentTests))
     f
   cStructSize = 24
   cStructAlignment = 8
   pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EARLY_AND_LATE_FRAGMENT_TESTS_FEATURES_EXT)
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EARLY_AND_LATE_FRAGMENT_TESTS_FEATURES_AMD)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
     f
 
-instance FromCStruct PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT where
+instance FromCStruct PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD where
   peekCStruct p = do
     shaderEarlyAndLateFragmentTests <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
-    pure $ PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT
+    pure $ PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD
              (bool32ToBool shaderEarlyAndLateFragmentTests)
 
-instance Storable PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT where
+instance Storable PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD where
   sizeOf ~_ = 24
   alignment ~_ = 8
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
 
-instance Zero PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT where
-  zero = PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT
+instance Zero PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD where
+  zero = PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD
            zero
 
 

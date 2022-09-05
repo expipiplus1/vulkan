@@ -672,10 +672,12 @@ instance Zero PhysicalDevicePipelineExecutablePropertiesFeaturesKHR where
 --
 -- = See Also
 --
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_properties VK_EXT_pipeline_properties>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_pipeline_executable_properties VK_KHR_pipeline_executable_properties>,
 -- 'Vulkan.Core10.Handles.Pipeline',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
--- 'getPipelineExecutablePropertiesKHR'
+-- 'getPipelineExecutablePropertiesKHR',
+-- 'Vulkan.Extensions.VK_EXT_pipeline_properties.getPipelinePropertiesEXT'
 data PipelineInfoKHR = PipelineInfoKHR
   { -- | @pipeline@ is a 'Vulkan.Core10.Handles.Pipeline' handle.
     --

@@ -423,7 +423,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_density_map (PhysicalDev
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_fragment_density_map_offset (PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_fragment_density_map_offset (PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_density_map (PhysicalDeviceFragmentDensityMapPropertiesEXT)
-import {-# SOURCE #-} Vulkan.Extensions.VK_NV_fragment_shader_barycentric (PhysicalDeviceFragmentShaderBarycentricFeaturesNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shader_barycentric (PhysicalDeviceFragmentShaderBarycentricFeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shader_barycentric (PhysicalDeviceFragmentShaderBarycentricPropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_shader_interlock (PhysicalDeviceFragmentShaderInterlockFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_fragment_shading_rate_enums (PhysicalDeviceFragmentShadingRateEnumsFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_fragment_shading_rate_enums (PhysicalDeviceFragmentShadingRateEnumsPropertiesNV)
@@ -515,7 +516,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_shader_core_properties2 (Physical
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_shader_core_properties (PhysicalDeviceShaderCorePropertiesAMD)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_shader_demote_to_helper_invocation (PhysicalDeviceShaderDemoteToHelperInvocationFeatures)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_shader_draw_parameters (PhysicalDeviceShaderDrawParametersFeatures)
-import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_shader_early_and_late_fragment_tests (PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_shader_early_and_late_fragment_tests (PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_shader_float16_int8 (PhysicalDeviceShaderFloat16Int8Features)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_image_atomic_int64 (PhysicalDeviceShaderImageAtomicInt64FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shader_image_footprint (PhysicalDeviceShaderImageFootprintFeaturesNV)
@@ -644,11 +645,13 @@ import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (RenderPassBeginInfo)
 import {-# SOURCE #-} Vulkan.Core10.Pass (RenderPassCreateInfo)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2 (RenderPassCreateInfo2)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subpass_merge_feedback (RenderPassCreationControlEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subpass_merge_feedback (RenderPassCreationFeedbackCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subpass_merge_feedback (RenderPassCreationFeedbackInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_density_map (RenderPassFragmentDensityMapCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (RenderPassInputAttachmentAspectCreateInfo)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_multiview (RenderPassMultiviewCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (RenderPassSampleLocationsBeginInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subpass_merge_feedback (RenderPassSubpassFeedbackCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subpass_merge_feedback (RenderPassSubpassFeedbackInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_render_pass_transform (RenderPassTransformBeginInfoQCOM)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering (RenderingAttachmentInfo)
@@ -938,7 +941,6 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceExclusiveScissorFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceCornerSampledImageFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceComputeShaderDerivativesFeaturesNV = ()
-  Extends DeviceCreateInfo PhysicalDeviceFragmentShaderBarycentricFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderImageFootprintFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceShadingRateImageFeaturesNV = ()
@@ -1012,6 +1014,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceProvokingVertexFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderIntegerDotProductFeatures = ()
+  Extends DeviceCreateInfo PhysicalDeviceFragmentShaderBarycentricFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDeviceRayTracingMotionBlurFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceRGBA10X6FormatsFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceDynamicRenderingFeatures = ()
@@ -1024,7 +1027,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceSubpassMergeFeedbackFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDevicePipelinePropertiesFeaturesEXT = ()
-  Extends DeviceCreateInfo PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT = ()
+  Extends DeviceCreateInfo PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD = ()
   Extends DeviceQueueCreateInfo DeviceQueueGlobalPriorityCreateInfoKHR = ()
   Extends FenceCreateInfo ExportFenceCreateInfo = ()
   Extends FenceCreateInfo ExportFenceWin32HandleInfoKHR = ()
@@ -1125,7 +1128,6 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceExclusiveScissorFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceCornerSampledImageFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceComputeShaderDerivativesFeaturesNV = ()
-  Extends PhysicalDeviceFeatures2 PhysicalDeviceFragmentShaderBarycentricFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderImageFootprintFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShadingRateImageFeaturesNV = ()
@@ -1197,6 +1199,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceProvokingVertexFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderIntegerDotProductFeatures = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceFragmentShaderBarycentricFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRayTracingMotionBlurFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRGBA10X6FormatsFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceDynamicRenderingFeatures = ()
@@ -1209,7 +1212,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceSubpassMergeFeedbackFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDevicePipelinePropertiesFeaturesEXT = ()
-  Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceExternalImageFormatInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 ImageFormatListCreateInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageDrmFormatModifierInfoEXT = ()
@@ -1271,6 +1274,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceProperties2 PhysicalDeviceProvokingVertexPropertiesEXT = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceShaderIntegerDotProductProperties = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceDrmPropertiesEXT = ()
+  Extends PhysicalDeviceProperties2 PhysicalDeviceFragmentShaderBarycentricPropertiesKHR = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT = ()
   Extends PhysicalDeviceSurfaceInfo2KHR SurfaceFullScreenExclusiveInfoEXT = ()
   Extends PhysicalDeviceSurfaceInfo2KHR SurfaceFullScreenExclusiveWin32InfoEXT = ()
@@ -1318,10 +1322,8 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends RenderPassCreateInfo RenderPassInputAttachmentAspectCreateInfo = ()
   Extends RenderPassCreateInfo RenderPassFragmentDensityMapCreateInfoEXT = ()
   Extends RenderPassCreateInfo2 RenderPassFragmentDensityMapCreateInfoEXT = ()
-  Extends RenderPassCreateInfo2 (RenderPassCreationControlEXT '[]) = ()
-  Extends RenderPassCreateInfo2 RenderPassCreationFeedbackInfoEXT = ()
-  Extends RenderPassCreationControlEXT RenderPassCreationFeedbackInfoEXT = ()
-  Extends RenderPassCreationControlEXT RenderPassSubpassFeedbackInfoEXT = ()
+  Extends RenderPassCreateInfo2 RenderPassCreationControlEXT = ()
+  Extends RenderPassCreateInfo2 RenderPassCreationFeedbackCreateInfoEXT = ()
   Extends RenderingInfo DeviceGroupRenderPassBeginInfo = ()
   Extends RenderingInfo RenderingFragmentShadingRateAttachmentInfoKHR = ()
   Extends RenderingInfo RenderingFragmentDensityMapAttachmentInfoEXT = ()
@@ -1348,8 +1350,8 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends SubpassDependency2 MemoryBarrier2 = ()
   Extends SubpassDescription2 SubpassDescriptionDepthStencilResolve = ()
   Extends SubpassDescription2 FragmentShadingRateAttachmentInfoKHR = ()
-  Extends SubpassDescription2 (RenderPassCreationControlEXT '[]) = ()
-  Extends SubpassDescription2 RenderPassSubpassFeedbackInfoEXT = ()
+  Extends SubpassDescription2 RenderPassCreationControlEXT = ()
+  Extends SubpassDescription2 RenderPassSubpassFeedbackCreateInfoEXT = ()
   Extends SubpassEndInfo SubpassFragmentDensityMapOffsetEndInfoQCOM = ()
   Extends SubresourceLayout2EXT ImageCompressionPropertiesEXT = ()
   Extends SurfaceCapabilities2KHR DisplayNativeHdrSurfaceCapabilitiesAMD = ()
@@ -1632,7 +1634,6 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV -> go @PipelineViewportExclusiveScissorStateCreateInfoNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV -> go @PhysicalDeviceCornerSampledImageFeaturesNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV -> go @PhysicalDeviceComputeShaderDerivativesFeaturesNV
-  STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV -> go @PhysicalDeviceFragmentShaderBarycentricFeaturesNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_FOOTPRINT_FEATURES_NV -> go @PhysicalDeviceShaderImageFootprintFeaturesNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_DEDICATED_ALLOCATION_IMAGE_ALIASING_FEATURES_NV -> go @PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV
   STRUCTURE_TYPE_PIPELINE_VIEWPORT_SHADING_RATE_IMAGE_STATE_CREATE_INFO_NV -> go @PipelineViewportShadingRateImageStateCreateInfoNV
@@ -1785,6 +1786,8 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES -> go @PhysicalDeviceShaderIntegerDotProductFeatures
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES -> go @PhysicalDeviceShaderIntegerDotProductProperties
   STRUCTURE_TYPE_PHYSICAL_DEVICE_DRM_PROPERTIES_EXT -> go @PhysicalDeviceDrmPropertiesEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_KHR -> go @PhysicalDeviceFragmentShaderBarycentricFeaturesKHR
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_PROPERTIES_KHR -> go @PhysicalDeviceFragmentShaderBarycentricPropertiesKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_MOTION_BLUR_FEATURES_NV -> go @PhysicalDeviceRayTracingMotionBlurFeaturesNV
   STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_MOTION_TRIANGLES_DATA_NV -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("struct type STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_MOTION_TRIANGLES_DATA_NV contains an undiscriminated union (DeviceOrHostAddressConstKHR) and can't be safely peeked") Nothing Nothing
   STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MOTION_INFO_NV -> go @AccelerationStructureMotionInfoNV
@@ -1814,13 +1817,13 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_COMPRESSION_CONTROL_FEATURES_EXT -> go @PhysicalDeviceImageCompressionControlFeaturesEXT
   STRUCTURE_TYPE_IMAGE_COMPRESSION_PROPERTIES_EXT -> go @ImageCompressionPropertiesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_COMPRESSION_CONTROL_SWAPCHAIN_FEATURES_EXT -> go @PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT
-  STRUCTURE_TYPE_RENDER_PASS_CREATION_CONTROL_EXT -> go @(RenderPassCreationControlEXT '[])
-  STRUCTURE_TYPE_RENDER_PASS_CREATION_FEEDBACK_INFO_EXT -> go @RenderPassCreationFeedbackInfoEXT
-  STRUCTURE_TYPE_RENDER_PASS_SUBPASS_FEEDBACK_INFO_EXT -> go @RenderPassSubpassFeedbackInfoEXT
+  STRUCTURE_TYPE_RENDER_PASS_CREATION_CONTROL_EXT -> go @RenderPassCreationControlEXT
+  STRUCTURE_TYPE_RENDER_PASS_CREATION_FEEDBACK_CREATE_INFO_EXT -> go @RenderPassCreationFeedbackCreateInfoEXT
+  STRUCTURE_TYPE_RENDER_PASS_SUBPASS_FEEDBACK_CREATE_INFO_EXT -> go @RenderPassSubpassFeedbackCreateInfoEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBPASS_MERGE_FEEDBACK_FEATURES_EXT -> go @PhysicalDeviceSubpassMergeFeedbackFeaturesEXT
   STRUCTURE_TYPE_PIPELINE_PROPERTIES_IDENTIFIER_EXT -> go @PipelinePropertiesIdentifierEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROPERTIES_FEATURES_EXT -> go @PhysicalDevicePipelinePropertiesFeaturesEXT
-  STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EARLY_AND_LATE_FRAGMENT_TESTS_FEATURES_EXT -> go @PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EARLY_AND_LATE_FRAGMENT_TESTS_FEATURES_AMD -> go @PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD
   t -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("Unrecognized struct type: " <> show t) Nothing Nothing
  where
   go :: forall e . (Typeable e, FromCStruct e, ToCStruct e, Show e) => IO b
@@ -2037,7 +2040,6 @@ infix 6 ::&
 {-# complete (::&) :: PipelineViewportExclusiveScissorStateCreateInfoNV #-}
 {-# complete (::&) :: PhysicalDeviceCornerSampledImageFeaturesNV #-}
 {-# complete (::&) :: PhysicalDeviceComputeShaderDerivativesFeaturesNV #-}
-{-# complete (::&) :: PhysicalDeviceFragmentShaderBarycentricFeaturesNV #-}
 {-# complete (::&) :: PhysicalDeviceShaderImageFootprintFeaturesNV #-}
 {-# complete (::&) :: PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV #-}
 {-# complete (::&) :: PipelineViewportShadingRateImageStateCreateInfoNV #-}
@@ -2190,6 +2192,8 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceShaderIntegerDotProductFeatures #-}
 {-# complete (::&) :: PhysicalDeviceShaderIntegerDotProductProperties #-}
 {-# complete (::&) :: PhysicalDeviceDrmPropertiesEXT #-}
+{-# complete (::&) :: PhysicalDeviceFragmentShaderBarycentricFeaturesKHR #-}
+{-# complete (::&) :: PhysicalDeviceFragmentShaderBarycentricPropertiesKHR #-}
 {-# complete (::&) :: PhysicalDeviceRayTracingMotionBlurFeaturesNV #-}
 {-# complete (::&) :: AccelerationStructureGeometryMotionTrianglesDataNV #-}
 {-# complete (::&) :: AccelerationStructureMotionInfoNV #-}
@@ -2220,12 +2224,12 @@ infix 6 ::&
 {-# complete (::&) :: ImageCompressionPropertiesEXT #-}
 {-# complete (::&) :: PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT #-}
 {-# complete (::&) :: RenderPassCreationControlEXT #-}
-{-# complete (::&) :: RenderPassCreationFeedbackInfoEXT #-}
-{-# complete (::&) :: RenderPassSubpassFeedbackInfoEXT #-}
+{-# complete (::&) :: RenderPassCreationFeedbackCreateInfoEXT #-}
+{-# complete (::&) :: RenderPassSubpassFeedbackCreateInfoEXT #-}
 {-# complete (::&) :: PhysicalDeviceSubpassMergeFeedbackFeaturesEXT #-}
 {-# complete (::&) :: PipelinePropertiesIdentifierEXT #-}
 {-# complete (::&) :: PhysicalDevicePipelinePropertiesFeaturesEXT #-}
-{-# complete (::&) :: PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesEXT #-}
+{-# complete (::&) :: PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD #-}
 
 -- | View the head and tail of a 'Chain', see '::&'
 --

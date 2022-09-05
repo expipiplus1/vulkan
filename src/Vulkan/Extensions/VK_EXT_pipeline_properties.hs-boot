@@ -173,11 +173,6 @@ instance Show PipelinePropertiesIdentifierEXT
 instance FromCStruct PipelinePropertiesIdentifierEXT
 
 
--- | VkPipelineInfoEXT - Structure describing a pipeline
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_pipeline_properties VK_EXT_pipeline_properties>,
--- 'getPipelinePropertiesEXT'
+-- No documentation found for TopLevel "VkPipelineInfoEXT"
 type PipelineInfoEXT = PipelineInfoKHR
 

@@ -2659,12 +2659,9 @@ instance Zero DescriptorPoolSize where
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DescriptorPoolCreateFlagBits'
 --     values
 --
--- -   #VUID-VkDescriptorPoolCreateInfo-pPoolSizes-parameter# @pPoolSizes@
---     /must/ be a valid pointer to an array of @poolSizeCount@ valid
---     'DescriptorPoolSize' structures
---
--- -   #VUID-VkDescriptorPoolCreateInfo-poolSizeCount-arraylength#
---     @poolSizeCount@ /must/ be greater than @0@
+-- -   #VUID-VkDescriptorPoolCreateInfo-pPoolSizes-parameter# If
+--     @poolSizeCount@ is not @0@, @pPoolSizes@ /must/ be a valid pointer
+--     to an array of @poolSizeCount@ valid 'DescriptorPoolSize' structures
 --
 -- = See Also
 --

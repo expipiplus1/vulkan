@@ -9036,13 +9036,13 @@ foreign import ccall
 --
 -- Unlike other
 -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#clears clear commands>,
--- 'cmdClearAttachments' executes as a drawing command, rather than a
--- transfer command, with writes performed by it executing in
+-- 'cmdClearAttachments' is not a transfer command. It performs its
+-- operations in
 -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-order rasterization order>.
--- Clears to color attachments are executed as color attachment writes, by
--- the
+-- For color attachments, the operations are executed as color attachment
+-- writes, by the
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT'
--- stage. Clears to depth\/stencil attachments are executed as
+-- stage. For depth\/stencil attachments, the operations are executed as
 -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-depth depth writes>
 -- and
 -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-stencil writes>
@@ -12492,6 +12492,38 @@ foreign import ccall
 --     'Vulkan.Core10.CommandBuffer.CommandBufferBeginInfo'::@pInheritanceInfo@
 --     used to begin recording each element of @pCommandBuffers@ /must/ be
 --     equal to the format used to create that image view
+--
+-- -   #VUID-vkCmdExecuteCommands-pDepthAttachment-06774# If
+--     'cmdExecuteCommands' is being called within a render pass instance
+--     begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
+--     and the
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
+--     parameter to
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
+--     was 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
+--     @depthAttachmentFormat@ member of the
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfo'
+--     structure included in the @pNext@ chain of
+--     'Vulkan.Core10.CommandBuffer.CommandBufferBeginInfo'::@pInheritanceInfo@
+--     used to begin recording each element of @pCommandBuffers@ /must/ be
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--
+-- -   #VUID-vkCmdExecuteCommands-pStencilAttachment-06775# If
+--     'cmdExecuteCommands' is being called within a render pass instance
+--     begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
+--     and the
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
+--     parameter to
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
+--     was 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of the
+--     @stencilAttachmentFormat@ member of the
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfo'
+--     structure included in the @pNext@ chain of
+--     'Vulkan.Core10.CommandBuffer.CommandBufferBeginInfo'::@pInheritanceInfo@
+--     used to begin recording each element of @pCommandBuffers@ /must/ be
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
 -- -   #VUID-vkCmdExecuteCommands-viewMask-06031# If 'cmdExecuteCommands'
 --     is being called within a render pass instance begun with

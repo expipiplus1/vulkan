@@ -297,6 +297,11 @@ instance Zero DeviceBufferMemoryRequirements where
 --     'Vulkan.Extensions.VK_KHR_swapchain.ImageSwapchainCreateInfoKHR'
 --     structure
 --
+-- -   #VUID-VkDeviceImageMemoryRequirements-pCreateInfo-06776# The
+--     @pCreateInfo@::@pNext@ chain /must/ not contain a
+--     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierExplicitCreateInfoEXT'
+--     structure.
+--
 -- -   #VUID-VkDeviceImageMemoryRequirementsKHR-pCreateInfo-06417# If
 --     @pCreateInfo@::@format@ specifies a /multi-planar/ format and
 --     @pCreateInfo@::@flags@ has
