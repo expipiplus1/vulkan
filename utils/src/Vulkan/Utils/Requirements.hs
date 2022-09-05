@@ -48,8 +48,21 @@ import           Vulkan.CStruct                 ( FromCStruct
                                                 )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
+import qualified Vulkan.Core10                as Device
+                                                ( DeviceCreateInfo(..) )
+import qualified Vulkan.Core10                as Extension
+                                                ( ExtensionProperties(..) )
+import qualified Vulkan.Core10                as Instance
+                                                ( InstanceCreateInfo(..) )
+import qualified Vulkan.Core10                as PhysicalDevice
+                                                ( PhysicalDeviceProperties(..)
+                                                , PhysicalDevice(instanceCmds) )
 import           Vulkan.Core11.DeviceInitialization
 import           Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2
+import qualified Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2
+                                              as PhysicalDevice
+                                                ( PhysicalDeviceProperties2(..)
+                                                , features )
 import           Vulkan.Dynamic                 ( InstanceCmds
                                                   ( pVkGetPhysicalDeviceFeatures2
                                                   , pVkGetPhysicalDeviceProperties2
@@ -123,11 +136,11 @@ makeInstanceCreateInfo reqs baseCreateInfo =
       [ instanceExtensionName | RequireInstanceExtension {..} <- reqs ]
   in
     baseCreateInfo
-      { enabledLayerNames     =
-        enabledLayerNames (baseCreateInfo :: InstanceCreateInfo es)
+      { Instance.enabledLayerNames     =
+        Instance.enabledLayerNames baseCreateInfo
           <> V.fromList layers
-      , enabledExtensionNames =
-        enabledExtensionNames (baseCreateInfo :: InstanceCreateInfo es)
+      , Instance.enabledExtensionNames =
+        Instance.enabledExtensionNames baseCreateInfo
           <> V.fromList extensions
       }
 
@@ -160,7 +173,7 @@ checkInstanceRequest foundVersion layerProps lookupExtension = \case
     | Just eProps <- lookupExtension instanceExtensionLayerName
                                      instanceExtensionName
     -> let foundInstanceExtensionVersion =
-             specVersion (eProps :: ExtensionProperties)
+             Extension.specVersion eProps
        in  if foundInstanceExtensionVersion >= instanceExtensionMinVersion
              then Satisfied
              else UnsatisfiedInstanceExtensionVersion
@@ -279,7 +292,7 @@ makeDeviceCreateInfo allReqs baseCreateInfo =
     newFeatures = appEndo
       (fold (addBasicFeatures : makeZeroFeatureExts))
       (SomeStruct (baseCreateInfo :: DeviceCreateInfo '[])
-        { enabledExtensionNames = V.fromList extensionNames
+        { Device.enabledExtensionNames = V.fromList extensionNames
         }
       )
   in
@@ -302,9 +315,7 @@ checkDeviceRequest
 checkDeviceRequest mbFeats mbProps lookupExtension = \case
   RequireDeviceVersion minVersion
     | Just props <- mbProps
-    , foundVersion <- apiVersion
-      (properties (props :: PhysicalDeviceProperties2 ps) :: PhysicalDeviceProperties
-      )
+    , foundVersion <- PhysicalDevice.apiVersion (PhysicalDevice.properties props)
     -> if foundVersion >= minVersion
       then Satisfied
       else UnsatisfiedDeviceVersion (Unsatisfied minVersion foundVersion)
@@ -330,7 +341,7 @@ checkDeviceRequest mbFeats mbProps lookupExtension = \case
   RequireDeviceExtension { deviceExtensionLayerName, deviceExtensionName, deviceExtensionMinVersion }
     | Just eProps <- lookupExtension deviceExtensionLayerName
                                      deviceExtensionName
-    -> let foundVersion = specVersion (eProps :: ExtensionProperties)
+    -> let foundVersion = Extension.specVersion eProps
        in  if foundVersion >= deviceExtensionMinVersion
              then Satisfied
              else UnsatisfiedDeviceExtensionVersion
@@ -466,7 +477,7 @@ getPropertyStruct
   => PhysicalDeviceProperties2 es
   -> Maybe s
 getPropertyStruct c = case eqT @PhysicalDeviceProperties @s of
-  Just Refl -> Just (properties (c :: PhysicalDeviceProperties2 es))
+  Just Refl -> Just $ PhysicalDevice.properties c
   Nothing   -> getStruct c
 
 getFeatureStruct
@@ -475,7 +486,7 @@ getFeatureStruct
   => PhysicalDeviceFeatures2 es
   -> Maybe s
 getFeatureStruct c = case eqT @PhysicalDeviceFeatures @s of
-  Just Refl -> Just (features (c :: PhysicalDeviceFeatures2 es))
+  Just Refl -> Just $ PhysicalDevice.features c
   Nothing   -> getStruct c
 
 getStruct
@@ -612,7 +623,7 @@ getMaybe
   -> PhysicalDevice
   -> m (Maybe (s2 fs))
 getMaybe funPtr wrapper2 get1 get2 phys =
-  let hasFunPtr = funPtr (instanceCmds (phys :: PhysicalDevice)) /= nullFunPtr
+  let hasFunPtr = funPtr (PhysicalDevice.instanceCmds phys) /= nullFunPtr
   in  case knownChainNull @fs of
         Just Refl -> Just . wrapper2 <$> get1 phys
         Nothing   -> if hasFunPtr then Just <$> get2 phys else pure Nothing

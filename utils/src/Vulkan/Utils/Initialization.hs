@@ -21,6 +21,7 @@ import           Data.Text                      ( Text )
 import           Data.Text.Encoding             ( decodeUtf8 )
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10
+import qualified Vulkan.Core10 as Instance      ( InstanceCreateInfo(..) )
 import           Vulkan.Extensions.VK_EXT_debug_utils
 import           Vulkan.Extensions.VK_EXT_validation_features
 import           Vulkan.Requirement
@@ -63,8 +64,9 @@ createDebugInstanceFromRequirements required optional baseCreateInfo = do
         :: InstanceCreateInfo
              (DebugUtilsMessengerCreateInfoEXT : ValidationFeaturesEXT : es)
       instanceCreateInfo = baseCreateInfo
-        { next = debugMessengerCreateInfo :& validationFeatures :& next
-                   (baseCreateInfo :: InstanceCreateInfo es)
+        { Instance.next = debugMessengerCreateInfo
+                       :& validationFeatures
+                       :& Instance.next baseCreateInfo
         }
       additionalRequirements =
         [ RequireInstanceExtension
