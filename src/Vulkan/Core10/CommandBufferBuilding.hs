@@ -10691,6 +10691,12 @@ foreign import ccall
 --     or
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR'
 --
+-- -   #VUID-vkCmdBeginQuery-queryType-06741# The @queryType@ used to
+--     create @queryPool@ /must/ not be
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SIZE_KHR'
+--     or
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_BOTTOM_LEVEL_POINTERS_KHR'
+--
 -- -   #VUID-vkCmdBeginQuery-queryType-04729# The @queryType@ used to
 --     create @queryPool@ /must/ not be
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV'

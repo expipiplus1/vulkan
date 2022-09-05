@@ -19,6 +19,7 @@ module Vulkan.Core10.Enums.Result  (Result( SUCCESS
                                           , ERROR_FORMAT_NOT_SUPPORTED
                                           , ERROR_FRAGMENTED_POOL
                                           , ERROR_UNKNOWN
+                                          , ERROR_COMPRESSION_EXHAUSTED_EXT
                                           , OPERATION_NOT_DEFERRED_KHR
                                           , OPERATION_DEFERRED_KHR
                                           , THREAD_DONE_KHR
@@ -150,6 +151,10 @@ pattern ERROR_FRAGMENTED_POOL                = Result (-12)
 -- | 'ERROR_UNKNOWN' An unknown error has occurred; either the application
 -- has provided invalid input, or an implementation failure has occurred.
 pattern ERROR_UNKNOWN                        = Result (-13)
+-- | 'ERROR_COMPRESSION_EXHAUSTED_EXT' An image creation failed because
+-- internal resources required for compression are exhausted. This /must/
+-- only be returned when fixed-rate compression is requested.
+pattern ERROR_COMPRESSION_EXHAUSTED_EXT      = Result (-1000338000)
 -- | 'OPERATION_NOT_DEFERRED_KHR' A deferred operation was requested and no
 -- operations were deferred.
 pattern OPERATION_NOT_DEFERRED_KHR           = Result 1000268003
@@ -238,6 +243,7 @@ pattern ERROR_OUT_OF_POOL_MEMORY             = Result (-1000069000)
              ERROR_FORMAT_NOT_SUPPORTED,
              ERROR_FRAGMENTED_POOL,
              ERROR_UNKNOWN,
+             ERROR_COMPRESSION_EXHAUSTED_EXT,
              OPERATION_NOT_DEFERRED_KHR,
              OPERATION_DEFERRED_KHR,
              THREAD_DONE_KHR,
@@ -285,6 +291,7 @@ showTableResult =
   , (ERROR_FORMAT_NOT_SUPPORTED          , "ERROR_FORMAT_NOT_SUPPORTED")
   , (ERROR_FRAGMENTED_POOL               , "ERROR_FRAGMENTED_POOL")
   , (ERROR_UNKNOWN                       , "ERROR_UNKNOWN")
+  , (ERROR_COMPRESSION_EXHAUSTED_EXT     , "ERROR_COMPRESSION_EXHAUSTED_EXT")
   , (OPERATION_NOT_DEFERRED_KHR          , "OPERATION_NOT_DEFERRED_KHR")
   , (OPERATION_DEFERRED_KHR              , "OPERATION_DEFERRED_KHR")
   , (THREAD_DONE_KHR                     , "THREAD_DONE_KHR")

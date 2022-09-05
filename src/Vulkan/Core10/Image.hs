@@ -75,6 +75,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory (ExternalMemoryIma
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.Core10.Handles (Image)
 import Vulkan.Core10.Handles (Image(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_compression_control (ImageCompressionControlEXT)
 import Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_drm_format_modifier (ImageDrmFormatModifierExplicitCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_drm_format_modifier (ImageDrmFormatModifierListCreateInfoEXT)
@@ -153,6 +154,8 @@ foreign import ccall
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_COMPRESSION_EXHAUSTED_EXT'
 --
 -- = See Also
 --
@@ -359,7 +362,7 @@ foreign import ccall
 -- -   #VUID-vkGetImageSubresourceLayout-format-01581# If the @tiling@ of
 --     the @image@ is 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR'
 --     and its @format@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
 --     with two planes, the @aspectMask@ member of @pSubresource@ /must/ be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
 --     or
@@ -368,7 +371,7 @@ foreign import ccall
 -- -   #VUID-vkGetImageSubresourceLayout-format-01582# If the @tiling@ of
 --     the @image@ is 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR'
 --     and its @format@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
 --     with three planes, the @aspectMask@ member of @pSubresource@ /must/
 --     be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
@@ -670,28 +673,39 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --
 --         -   If @tiling@ is
 --             'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
---             then
---             'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'::@pNext@
---             /must/ contain a
---             'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.PhysicalDeviceImageDrmFormatModifierInfoEXT'
---             structure where @sharingMode@ is equal to
---             'ImageCreateInfo'::@sharingMode@; and, if @sharingMode@ is
---             'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
---             then @queueFamilyIndexCount@ and @pQueueFamilyIndices@
---             /must/ be equal to those in 'ImageCreateInfo'; and, if
---             @flags@ contains
---             'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT',
---             then the
---             'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
---             structure included in the @pNext@ chain of
---             'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'
---             /must/ be equivalent to the one included in the @pNext@
---             chain of 'ImageCreateInfo'; and
---             'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
---             /must/ be called for each modifier in
---             @imageCreateDrmFormatModifiers@, successively setting
---             'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.PhysicalDeviceImageDrmFormatModifierInfoEXT'::@drmFormatModifier@
---             on each call.
+--             then:
+--
+--             -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'::@pNext@
+--                 /must/ contain a
+--                 'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.PhysicalDeviceImageDrmFormatModifierInfoEXT'
+--                 structure where @sharingMode@ is equal to
+--                 'ImageCreateInfo'::@sharingMode@;
+--
+--             -   if @sharingMode@ is
+--                 'Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
+--                 then @queueFamilyIndexCount@ and @pQueueFamilyIndices@
+--                 /must/ be equal to those in 'ImageCreateInfo';
+--
+--             -   if @flags@ contains
+--                 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT',
+--                 then the
+--                 'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
+--                 structure included in the @pNext@ chain of
+--                 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'
+--                 /must/ be equivalent to the one included in the @pNext@
+--                 chain of 'ImageCreateInfo';
+--
+--             -   if 'ImageCreateInfo'::@pNext@ contains a
+--                 'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionControlEXT'
+--                 structure, then the
+--                 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'::@pNext@
+--                 chain /must/ contain an equivalent structure;
+--
+--             -   'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
+--                 /must/ be called for each modifier in
+--                 @imageCreateDrmFormatModifiers@, successively setting
+--                 'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.PhysicalDeviceImageDrmFormatModifierInfoEXT'::@drmFormatModifier@
+--                 on each call.
 --
 --         -   If @tiling@ is not
 --             'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
@@ -1363,6 +1377,36 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionImageCreateInfoFUCHSIA'
 --     structure /must/ be chained to @pNext@.
 --
+-- -   #VUID-VkImageCreateInfo-pNext-06743# If the @pNext@ chain includes a
+--     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionControlEXT'
+--     structure, @format@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
+--     format, and
+--     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionControlEXT'::@flags@
+--     includes
+--     'Vulkan.Extensions.VK_EXT_image_compression_control.IMAGE_COMPRESSION_FIXED_RATE_EXPLICIT_EXT',
+--     then
+--     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionControlEXT'::@compressionControlPlaneCount@
+--     /must/ be equal to the number of planes in @format@
+--
+-- -   #VUID-VkImageCreateInfo-pNext-06744# If the @pNext@ chain includes a
+--     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionControlEXT'
+--     structure, @format@ is a not
+--     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
+--     format, and
+--     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionControlEXT'::@flags@
+--     includes
+--     'Vulkan.Extensions.VK_EXT_image_compression_control.IMAGE_COMPRESSION_FIXED_RATE_EXPLICIT_EXT',
+--     then
+--     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionControlEXT'::@compressionControlPlaneCount@
+--     /must/ be 1
+--
+-- -   #VUID-VkImageCreateInfo-pNext-06746# If the @pNext@ chain includes a
+--     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionControlEXT'
+--     structure, it /must/ not contain a
+--     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierExplicitCreateInfoEXT'
+--     structure
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkImageCreateInfo-sType-sType# @sType@ /must/ be
@@ -1376,6 +1420,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo',
 --     'Vulkan.Extensions.VK_NV_external_memory.ExternalMemoryImageCreateInfoNV',
+--     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionControlEXT',
 --     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierExplicitCreateInfoEXT',
 --     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierListCreateInfoEXT',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo',
@@ -1498,6 +1543,7 @@ instance Extensible ImageCreateInfo where
   getNext ImageCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @ImageCompressionControlEXT = Just f
     | Just Refl <- eqT @e @BufferCollectionImageCreateInfoFUCHSIA = Just f
     | Just Refl <- eqT @e @ImageStencilUsageCreateInfo = Just f
     | Just Refl <- eqT @e @ImageDrmFormatModifierExplicitCreateInfoEXT = Just f
@@ -1676,6 +1722,7 @@ instance es ~ '[] => Zero (ImageCreateInfo es) where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierExplicitCreateInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_image_compression_control.SubresourceLayout2EXT',
 -- 'getImageSubresourceLayout'
 data SubresourceLayout = SubresourceLayout
   { -- | @offset@ is the byte offset from the start of the image or the plane

@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.34.5.
+-- This file has been generated from package.yaml by hpack version 0.34.7.
 --
 -- see: https://github.com/sol/hpack
 
@@ -350,6 +350,8 @@ library
       Vulkan.Extensions.VK_EXT_headless_surface
       Vulkan.Extensions.VK_EXT_host_query_reset
       Vulkan.Extensions.VK_EXT_image_2d_view_of_3d
+      Vulkan.Extensions.VK_EXT_image_compression_control
+      Vulkan.Extensions.VK_EXT_image_compression_control_swapchain
       Vulkan.Extensions.VK_EXT_image_drm_format_modifier
       Vulkan.Extensions.VK_EXT_image_robustness
       Vulkan.Extensions.VK_EXT_image_view_min_lod
@@ -366,6 +368,7 @@ library
       Vulkan.Extensions.VK_EXT_physical_device_drm
       Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
       Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
+      Vulkan.Extensions.VK_EXT_pipeline_properties
       Vulkan.Extensions.VK_EXT_post_depth_coverage
       Vulkan.Extensions.VK_EXT_primitive_topology_list_restart
       Vulkan.Extensions.VK_EXT_primitives_generated_query
@@ -387,6 +390,7 @@ library
       Vulkan.Extensions.VK_EXT_shader_subgroup_vote
       Vulkan.Extensions.VK_EXT_shader_viewport_index_layer
       Vulkan.Extensions.VK_EXT_subgroup_size_control
+      Vulkan.Extensions.VK_EXT_subpass_merge_feedback
       Vulkan.Extensions.VK_EXT_swapchain_colorspace
       Vulkan.Extensions.VK_EXT_texel_buffer_alignment
       Vulkan.Extensions.VK_EXT_texture_compression_astc_hdr
@@ -471,6 +475,7 @@ library
       Vulkan.Extensions.VK_KHR_present_wait
       Vulkan.Extensions.VK_KHR_push_descriptor
       Vulkan.Extensions.VK_KHR_ray_query
+      Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1
       Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
       Vulkan.Extensions.VK_KHR_relaxed_block_layout
       Vulkan.Extensions.VK_KHR_sampler_mirror_clamp_to_edge

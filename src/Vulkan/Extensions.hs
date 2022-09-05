@@ -66,6 +66,8 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_headless_surface
                           , module Vulkan.Extensions.VK_EXT_host_query_reset
                           , module Vulkan.Extensions.VK_EXT_image_2d_view_of_3d
+                          , module Vulkan.Extensions.VK_EXT_image_compression_control
+                          , module Vulkan.Extensions.VK_EXT_image_compression_control_swapchain
                           , module Vulkan.Extensions.VK_EXT_image_drm_format_modifier
                           , module Vulkan.Extensions.VK_EXT_image_robustness
                           , module Vulkan.Extensions.VK_EXT_image_view_min_lod
@@ -82,6 +84,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_physical_device_drm
                           , module Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
                           , module Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
+                          , module Vulkan.Extensions.VK_EXT_pipeline_properties
                           , module Vulkan.Extensions.VK_EXT_post_depth_coverage
                           , module Vulkan.Extensions.VK_EXT_primitive_topology_list_restart
                           , module Vulkan.Extensions.VK_EXT_primitives_generated_query
@@ -103,6 +106,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_shader_subgroup_vote
                           , module Vulkan.Extensions.VK_EXT_shader_viewport_index_layer
                           , module Vulkan.Extensions.VK_EXT_subgroup_size_control
+                          , module Vulkan.Extensions.VK_EXT_subpass_merge_feedback
                           , module Vulkan.Extensions.VK_EXT_swapchain_colorspace
                           , module Vulkan.Extensions.VK_EXT_texel_buffer_alignment
                           , module Vulkan.Extensions.VK_EXT_texture_compression_astc_hdr
@@ -187,6 +191,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_KHR_present_wait
                           , module Vulkan.Extensions.VK_KHR_push_descriptor
                           , module Vulkan.Extensions.VK_KHR_ray_query
+                          , module Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1
                           , module Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
                           , module Vulkan.Extensions.VK_KHR_relaxed_block_layout
                           , module Vulkan.Extensions.VK_KHR_sampler_mirror_clamp_to_edge
@@ -339,6 +344,8 @@ import Vulkan.Extensions.VK_EXT_hdr_metadata
 import Vulkan.Extensions.VK_EXT_headless_surface
 import Vulkan.Extensions.VK_EXT_host_query_reset
 import Vulkan.Extensions.VK_EXT_image_2d_view_of_3d
+import Vulkan.Extensions.VK_EXT_image_compression_control
+import Vulkan.Extensions.VK_EXT_image_compression_control_swapchain
 import Vulkan.Extensions.VK_EXT_image_drm_format_modifier
 import Vulkan.Extensions.VK_EXT_image_robustness
 import Vulkan.Extensions.VK_EXT_image_view_min_lod
@@ -355,6 +362,7 @@ import Vulkan.Extensions.VK_EXT_pci_bus_info
 import Vulkan.Extensions.VK_EXT_physical_device_drm
 import Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
 import Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
+import Vulkan.Extensions.VK_EXT_pipeline_properties
 import Vulkan.Extensions.VK_EXT_post_depth_coverage
 import Vulkan.Extensions.VK_EXT_primitive_topology_list_restart
 import Vulkan.Extensions.VK_EXT_primitives_generated_query
@@ -376,6 +384,7 @@ import Vulkan.Extensions.VK_EXT_shader_subgroup_ballot
 import Vulkan.Extensions.VK_EXT_shader_subgroup_vote
 import Vulkan.Extensions.VK_EXT_shader_viewport_index_layer
 import Vulkan.Extensions.VK_EXT_subgroup_size_control
+import Vulkan.Extensions.VK_EXT_subpass_merge_feedback
 import Vulkan.Extensions.VK_EXT_swapchain_colorspace
 import Vulkan.Extensions.VK_EXT_texel_buffer_alignment
 import Vulkan.Extensions.VK_EXT_texture_compression_astc_hdr
@@ -460,6 +469,7 @@ import Vulkan.Extensions.VK_KHR_present_id
 import Vulkan.Extensions.VK_KHR_present_wait
 import Vulkan.Extensions.VK_KHR_push_descriptor
 import Vulkan.Extensions.VK_KHR_ray_query
+import Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1
 import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
 import Vulkan.Extensions.VK_KHR_relaxed_block_layout
 import Vulkan.Extensions.VK_KHR_sampler_mirror_clamp_to_edge

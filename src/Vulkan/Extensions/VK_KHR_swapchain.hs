@@ -705,8 +705,8 @@
 --
 -- -   Revision 17, 2015-06-15 (Ian Elliott)
 --
---     -   Changed special value from \"-1\" to \"0\" so that the data
---         types can be unsigned.
+--     -   Changed special value from “-1” to “0” so that the data types
+--         can be unsigned.
 --
 -- -   Revision 18, 2015-06-15 (Ian Elliott)
 --
@@ -720,8 +720,8 @@
 --     -   Fixed clarification of VkSurfacePropertiesKHR::minImageCount
 --         made in version 18.
 --
---     -   Added a brief \"Image Ownership\" definition to the list of
---         terms used in the spec.
+--     -   Added a brief “Image Ownership” definition to the list of terms
+--         used in the spec.
 --
 -- -   Revision 20, 2015-06-17 (James Jones)
 --
@@ -1206,6 +1206,7 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.Core10.Handles (Image)
 import Vulkan.Core10.Handles (Image(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_compression_control (ImageCompressionControlEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_image_format_list (ImageFormatListCreateInfo)
 import Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDevicePresentRectanglesKHR))
@@ -1433,6 +1434,8 @@ foreign import ccall
 --     -   'Vulkan.Core10.Enums.Result.ERROR_NATIVE_WINDOW_IN_USE_KHR'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--
+--     -   'Vulkan.Core10.Enums.Result.ERROR_COMPRESSION_EXHAUSTED_EXT'
 --
 -- = See Also
 --
@@ -2626,6 +2629,12 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveWin32InfoEXT'
 --     structure /must/ be included in the @pNext@ chain
 --
+-- -   #VUID-VkSwapchainCreateInfoKHR-pNext-06752# If the
+--     @VK_EXT_image_compression_control_swapchain@ extension is not
+--     enabled, the @pNext@ chain /must/ not include an
+--     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionControlEXT'
+--     structure
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-sType-sType# @sType@ /must/ be
@@ -2635,6 +2644,7 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     any structure (including this one) in the @pNext@ chain /must/ be
 --     either @NULL@ or a pointer to a valid instance of
 --     'DeviceGroupSwapchainCreateInfoKHR',
+--     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionControlEXT',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo',
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveInfoEXT',
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveWin32InfoEXT',
@@ -2822,6 +2832,7 @@ instance Extensible SwapchainCreateInfoKHR where
   getNext SwapchainCreateInfoKHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SwapchainCreateInfoKHR e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @ImageCompressionControlEXT = Just f
     | Just Refl <- eqT @e @SurfaceFullScreenExclusiveWin32InfoEXT = Just f
     | Just Refl <- eqT @e @SurfaceFullScreenExclusiveInfoEXT = Just f
     | Just Refl <- eqT @e @ImageFormatListCreateInfo = Just f

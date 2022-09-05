@@ -1749,11 +1749,14 @@ foreign import ccall
 --     'AccelerationStructureCreateInfoKHR'::@size@
 --
 -- -   A 64-bit integer of the count of the number of acceleration
---     structure handles following. This will be zero for a bottom-level
---     acceleration structure. For top-level acceleration structures this
---     number is implementation-dependent; the number of and ordering of
---     the handles may not match the instance descriptions which were used
---     to build the acceleration structure.
+--     structure handles following. This value matches the value queried
+--     using
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_BOTTOM_LEVEL_POINTERS_KHR'.
+--     This will be zero for a bottom-level acceleration structure. For
+--     top-level acceleration structures this number is
+--     implementation-dependent; the number of and ordering of the handles
+--     may not match the instance descriptions which were used to build the
+--     acceleration structure.
 --
 -- The corresponding handles matching the values returned by
 -- 'getAccelerationStructureDeviceAddressKHR' or
@@ -2255,8 +2258,10 @@ foreign import ccall
 --     @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR'
 --
--- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-queryType-03432#
+-- -   #VUID-vkCmdWriteAccelerationStructuresPropertiesKHR-queryType-06742#
 --     @queryType@ /must/ be
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SIZE_KHR',
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_BOTTOM_LEVEL_POINTERS_KHR',
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR'
 --     or
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR'
@@ -2381,8 +2386,10 @@ foreign import ccall
 --     @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR'
 --
--- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-queryType-03432#
+-- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-queryType-06742#
 --     @queryType@ /must/ be
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SIZE_KHR',
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_BOTTOM_LEVEL_POINTERS_KHR',
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR'
 --     or
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR'
@@ -2396,7 +2403,7 @@ foreign import ccall
 -- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-queryType-03449# If
 --     @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_KHR',
---     then @data@ /must/ point to a
+--     then @pData@ /must/ point to a
 --     'Vulkan.Core10.FundamentalTypes.DeviceSize'
 --
 -- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-queryType-03450# If
@@ -2408,7 +2415,31 @@ foreign import ccall
 -- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-queryType-03451# If
 --     @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR',
---     then @data@ /must/ point to a
+--     then @pData@ /must/ point to a
+--     'Vulkan.Core10.FundamentalTypes.DeviceSize'
+--
+-- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-queryType-06731# If
+--     @queryType@ is
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SIZE_KHR',
+--     then @stride@ /must/ be a multiple of the size of
+--     'Vulkan.Core10.FundamentalTypes.DeviceSize'
+--
+-- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-queryType-06732# If
+--     @queryType@ is
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SIZE_KHR',
+--     then @pData@ /must/ point to a
+--     'Vulkan.Core10.FundamentalTypes.DeviceSize'
+--
+-- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-queryType-06733# If
+--     @queryType@ is
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_BOTTOM_LEVEL_POINTERS_KHR',
+--     then @stride@ /must/ be a multiple of the size of
+--     'Vulkan.Core10.FundamentalTypes.DeviceSize'
+--
+-- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-queryType-06734# If
+--     @queryType@ is
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_BOTTOM_LEVEL_POINTERS_KHR',
+--     then @pData@ /must/ point to a
 --     'Vulkan.Core10.FundamentalTypes.DeviceSize'
 --
 -- -   #VUID-vkWriteAccelerationStructuresPropertiesKHR-dataSize-03452#

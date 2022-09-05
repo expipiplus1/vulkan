@@ -1755,6 +1755,11 @@ instance Zero DisplayPlaneCapabilitiesKHR where
 --     'DisplayPlaneCapabilitiesKHR' for the display plane corresponding to
 --     @displayMode@
 --
+-- -   #VUID-VkDisplaySurfaceCreateInfoKHR-transform-06740# @transform@
+--     /must/ be one of the bits present in the @supportedTransforms@
+--     member of 'DisplayPropertiesKHR' for the display corresponding to
+--     @displayMode@
+--
 -- -   #VUID-VkDisplaySurfaceCreateInfoKHR-width-01256# The @width@ and
 --     @height@ members of @imageExtent@ /must/ be less than or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxImageDimension2D@

@@ -379,6 +379,7 @@ data Device_T
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageSparseMemoryRequirements2',
 -- 'Vulkan.Extensions.VK_KHR_get_memory_requirements2.getImageSparseMemoryRequirements2KHR',
 -- 'Vulkan.Core10.Image.getImageSubresourceLayout',
+-- 'Vulkan.Extensions.VK_EXT_image_compression_control.getImageSubresourceLayout2EXT',
 -- 'Vulkan.Extensions.VK_NVX_image_view_handle.getImageViewAddressNVX',
 -- 'Vulkan.Extensions.VK_NVX_image_view_handle.getImageViewHandleNVX',
 -- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.getMemoryAndroidHardwareBufferANDROID',
@@ -397,6 +398,7 @@ data Device_T
 -- 'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.getPipelineExecutableInternalRepresentationsKHR',
 -- 'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.getPipelineExecutablePropertiesKHR',
 -- 'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.getPipelineExecutableStatisticsKHR',
+-- 'Vulkan.Extensions.VK_EXT_pipeline_properties.getPipelinePropertiesEXT',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_private_data.getPrivateData',
 -- 'Vulkan.Extensions.VK_EXT_private_data.getPrivateDataEXT',
 -- 'Vulkan.Core10.Query.getQueryPoolResults',
@@ -685,6 +687,7 @@ data CommandBuffer_T
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount',
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetViewportWithCountEXT',
 -- 'Vulkan.Extensions.VK_HUAWEI_subpass_shading.cmdSubpassShadingHUAWEI',
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1.cmdTraceRaysIndirect2KHR',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.cmdTraceRaysIndirectKHR',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.cmdTraceRaysKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdTraceRaysNV',
@@ -891,6 +894,7 @@ instance Show BufferView where
 -- 'Vulkan.Core10.MemoryManagement.getImageMemoryRequirements',
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.getImageSparseMemoryRequirements',
 -- 'Vulkan.Core10.Image.getImageSubresourceLayout',
+-- 'Vulkan.Extensions.VK_EXT_image_compression_control.getImageSubresourceLayout2EXT',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.getSwapchainImagesKHR'
 newtype Image = Image Word64
   deriving newtype (Eq, Ord, Storable, Zero)

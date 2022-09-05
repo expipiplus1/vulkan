@@ -44,6 +44,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (AcquireProfili
 import {-# SOURCE #-} Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import {-# SOURCE #-} Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer (AndroidHardwareBufferPropertiesANDROID)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_android_surface (AndroidSurfaceCreateInfoKHR)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (BaseOutStructure)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing (BindAccelerationStructureMemoryInfoNV)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2 (BindBufferMemoryInfo)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2 (BindImageMemoryInfo)
@@ -206,6 +207,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface (ImagePipeS
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ImageResolve)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2 (ImageSparseMemoryRequirementsInfo2)
 import {-# SOURCE #-} Vulkan.Core10.SparseResourceMemoryManagement (ImageSubresource)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_compression_control (ImageSubresource2EXT)
 import {-# SOURCE #-} Vulkan.Core10.ImageView (ImageSubresourceRange)
 import {-# SOURCE #-} Vulkan.Core10.Enums.ImageTiling (ImageTiling)
 import {-# SOURCE #-} Vulkan.Core10.Enums.ImageType (ImageType)
@@ -284,6 +286,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_executable_properties (P
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_executable_properties (PipelineExecutableInternalRepresentationKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_executable_properties (PipelineExecutablePropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_executable_properties (PipelineExecutableStatisticKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pipeline_properties (PipelineInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_executable_properties (PipelineInfoKHR)
 import {-# SOURCE #-} Vulkan.Core10.Handles (PipelineLayout)
 import {-# SOURCE #-} Vulkan.Core10.PipelineLayout (PipelineLayoutCreateInfo)
@@ -354,6 +357,7 @@ import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2 (Sub
 import {-# SOURCE #-} Vulkan.Core10.Enums.SubpassContents (SubpassContents)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2 (SubpassEndInfo)
 import {-# SOURCE #-} Vulkan.Core10.Image (SubresourceLayout)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_compression_control (SubresourceLayout2EXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_display_surface_counter (SurfaceCapabilities2EXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_get_surface_capabilities2 (SurfaceCapabilities2KHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_surface (SurfaceCapabilitiesKHR)
@@ -451,7 +455,7 @@ data InstanceCmds = InstanceCmds
   , pVkCreateMetalSurfaceEXT :: FunPtr (Ptr Instance_T -> ("pCreateInfo" ::: Ptr MetalSurfaceCreateInfoEXT) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pSurface" ::: Ptr SurfaceKHR) -> IO Result)
   , pVkGetPhysicalDeviceMultisamplePropertiesEXT :: FunPtr (Ptr PhysicalDevice_T -> ("samples" ::: SampleCountFlagBits) -> ("pMultisampleProperties" ::: Ptr MultisamplePropertiesEXT) -> IO ())
   , pVkGetPhysicalDeviceSurfaceCapabilities2KHR :: FunPtr (Ptr PhysicalDevice_T -> ("pSurfaceInfo" ::: Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR)) -> ("pSurfaceCapabilities" ::: Ptr (SomeStruct SurfaceCapabilities2KHR)) -> IO Result)
-  , pVkGetPhysicalDeviceSurfaceFormats2KHR :: FunPtr (Ptr PhysicalDevice_T -> ("pSurfaceInfo" ::: Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR)) -> ("pSurfaceFormatCount" ::: Ptr Word32) -> ("pSurfaceFormats" ::: Ptr SurfaceFormat2KHR) -> IO Result)
+  , pVkGetPhysicalDeviceSurfaceFormats2KHR :: FunPtr (Ptr PhysicalDevice_T -> ("pSurfaceInfo" ::: Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR)) -> ("pSurfaceFormatCount" ::: Ptr Word32) -> ("pSurfaceFormats" ::: Ptr (SomeStruct SurfaceFormat2KHR)) -> IO Result)
   , pVkGetPhysicalDeviceDisplayProperties2KHR :: FunPtr (Ptr PhysicalDevice_T -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr DisplayProperties2KHR) -> IO Result)
   , pVkGetPhysicalDeviceDisplayPlaneProperties2KHR :: FunPtr (Ptr PhysicalDevice_T -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr DisplayPlaneProperties2KHR) -> IO Result)
   , pVkGetDisplayModeProperties2KHR :: FunPtr (Ptr PhysicalDevice_T -> DisplayKHR -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr DisplayModeProperties2KHR) -> IO Result)
@@ -661,7 +665,7 @@ initInstanceCmds handle = do
     (castFunPtr @_ @(Ptr Instance_T -> ("pCreateInfo" ::: Ptr MetalSurfaceCreateInfoEXT) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pSurface" ::: Ptr SurfaceKHR) -> IO Result) vkCreateMetalSurfaceEXT)
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("samples" ::: SampleCountFlagBits) -> ("pMultisampleProperties" ::: Ptr MultisamplePropertiesEXT) -> IO ()) vkGetPhysicalDeviceMultisamplePropertiesEXT)
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("pSurfaceInfo" ::: Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR)) -> ("pSurfaceCapabilities" ::: Ptr (SomeStruct SurfaceCapabilities2KHR)) -> IO Result) vkGetPhysicalDeviceSurfaceCapabilities2KHR)
-    (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("pSurfaceInfo" ::: Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR)) -> ("pSurfaceFormatCount" ::: Ptr Word32) -> ("pSurfaceFormats" ::: Ptr SurfaceFormat2KHR) -> IO Result) vkGetPhysicalDeviceSurfaceFormats2KHR)
+    (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("pSurfaceInfo" ::: Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR)) -> ("pSurfaceFormatCount" ::: Ptr Word32) -> ("pSurfaceFormats" ::: Ptr (SomeStruct SurfaceFormat2KHR)) -> IO Result) vkGetPhysicalDeviceSurfaceFormats2KHR)
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr DisplayProperties2KHR) -> IO Result) vkGetPhysicalDeviceDisplayProperties2KHR)
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr DisplayPlaneProperties2KHR) -> IO Result) vkGetPhysicalDeviceDisplayPlaneProperties2KHR)
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> DisplayKHR -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr DisplayModeProperties2KHR) -> IO Result) vkGetDisplayModeProperties2KHR)
@@ -950,6 +954,7 @@ data DeviceCmds = DeviceCmds
   , pVkCreateRayTracingPipelinesNV :: FunPtr (Ptr Device_T -> PipelineCache -> ("createInfoCount" ::: Word32) -> ("pCreateInfos" ::: Ptr (SomeStruct RayTracingPipelineCreateInfoNV)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pPipelines" ::: Ptr Pipeline) -> IO Result)
   , pVkCreateRayTracingPipelinesKHR :: FunPtr (Ptr Device_T -> DeferredOperationKHR -> PipelineCache -> ("createInfoCount" ::: Word32) -> ("pCreateInfos" ::: Ptr (SomeStruct RayTracingPipelineCreateInfoKHR)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pPipelines" ::: Ptr Pipeline) -> IO Result)
   , pVkCmdTraceRaysIndirectKHR :: FunPtr (Ptr CommandBuffer_T -> ("pRaygenShaderBindingTable" ::: Ptr StridedDeviceAddressRegionKHR) -> ("pMissShaderBindingTable" ::: Ptr StridedDeviceAddressRegionKHR) -> ("pHitShaderBindingTable" ::: Ptr StridedDeviceAddressRegionKHR) -> ("pCallableShaderBindingTable" ::: Ptr StridedDeviceAddressRegionKHR) -> ("indirectDeviceAddress" ::: DeviceAddress) -> IO ())
+  , pVkCmdTraceRaysIndirect2KHR :: FunPtr (Ptr CommandBuffer_T -> ("indirectDeviceAddress" ::: DeviceAddress) -> IO ())
   , pVkGetDeviceAccelerationStructureCompatibilityKHR :: FunPtr (Ptr Device_T -> ("pVersionInfo" ::: Ptr AccelerationStructureVersionInfoKHR) -> ("pCompatibility" ::: Ptr AccelerationStructureCompatibilityKHR) -> IO ())
   , pVkGetRayTracingShaderGroupStackSizeKHR :: FunPtr (Ptr Device_T -> Pipeline -> ("group" ::: Word32) -> ShaderGroupShaderKHR -> IO DeviceSize)
   , pVkCmdSetRayTracingPipelineStackSizeKHR :: FunPtr (Ptr CommandBuffer_T -> ("pipelineStackSize" ::: Word32) -> IO ())
@@ -1043,6 +1048,8 @@ data DeviceCmds = DeviceCmds
   , pVkCmdEndRendering :: FunPtr (Ptr CommandBuffer_T -> IO ())
   , pVkGetDescriptorSetLayoutHostMappingInfoVALVE :: FunPtr (Ptr Device_T -> ("pBindingReference" ::: Ptr DescriptorSetBindingReferenceVALVE) -> ("pHostMapping" ::: Ptr DescriptorSetLayoutHostMappingInfoVALVE) -> IO ())
   , pVkGetDescriptorSetHostMappingVALVE :: FunPtr (Ptr Device_T -> DescriptorSet -> ("ppData" ::: Ptr (Ptr ())) -> IO ())
+  , pVkGetImageSubresourceLayout2EXT :: FunPtr (Ptr Device_T -> Image -> ("pSubresource" ::: Ptr ImageSubresource2EXT) -> ("pLayout" ::: Ptr (SomeStruct SubresourceLayout2EXT)) -> IO ())
+  , pVkGetPipelinePropertiesEXT :: FunPtr (Ptr Device_T -> ("pPipelineInfo" ::: Ptr PipelineInfoEXT) -> ("pPipelineProperties" ::: Ptr BaseOutStructure) -> IO Result)
   }
 
 deriving instance Eq DeviceCmds
@@ -1094,7 +1101,7 @@ instance Zero DeviceCmds where
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr
+    nullFunPtr nullFunPtr nullFunPtr nullFunPtr
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1382,6 +1389,7 @@ initDeviceCmds instanceCmds handle = do
   vkCreateRayTracingPipelinesNV <- getDeviceProcAddr' handle (Ptr "vkCreateRayTracingPipelinesNV"#)
   vkCreateRayTracingPipelinesKHR <- getDeviceProcAddr' handle (Ptr "vkCreateRayTracingPipelinesKHR"#)
   vkCmdTraceRaysIndirectKHR <- getDeviceProcAddr' handle (Ptr "vkCmdTraceRaysIndirectKHR"#)
+  vkCmdTraceRaysIndirect2KHR <- getDeviceProcAddr' handle (Ptr "vkCmdTraceRaysIndirect2KHR"#)
   vkGetDeviceAccelerationStructureCompatibilityKHR <- getDeviceProcAddr' handle (Ptr "vkGetDeviceAccelerationStructureCompatibilityKHR"#)
   vkGetRayTracingShaderGroupStackSizeKHR <- getDeviceProcAddr' handle (Ptr "vkGetRayTracingShaderGroupStackSizeKHR"#)
   vkCmdSetRayTracingPipelineStackSizeKHR <- getDeviceProcAddr' handle (Ptr "vkCmdSetRayTracingPipelineStackSizeKHR"#)
@@ -1475,6 +1483,8 @@ initDeviceCmds instanceCmds handle = do
   vkCmdEndRendering <- getFirstDeviceProcAddr [(Ptr "vkCmdEndRenderingKHR"#), (Ptr "vkCmdEndRendering"#)]
   vkGetDescriptorSetLayoutHostMappingInfoVALVE <- getDeviceProcAddr' handle (Ptr "vkGetDescriptorSetLayoutHostMappingInfoVALVE"#)
   vkGetDescriptorSetHostMappingVALVE <- getDeviceProcAddr' handle (Ptr "vkGetDescriptorSetHostMappingVALVE"#)
+  vkGetImageSubresourceLayout2EXT <- getDeviceProcAddr' handle (Ptr "vkGetImageSubresourceLayout2EXT"#)
+  vkGetPipelinePropertiesEXT <- getDeviceProcAddr' handle (Ptr "vkGetPipelinePropertiesEXT"#)
   pure $ DeviceCmds handle
     (castFunPtr @_ @(Ptr Device_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction) vkGetDeviceProcAddr)
     (castFunPtr @_ @(Ptr Device_T -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyDevice)
@@ -1743,6 +1753,7 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr Device_T -> PipelineCache -> ("createInfoCount" ::: Word32) -> ("pCreateInfos" ::: Ptr (SomeStruct RayTracingPipelineCreateInfoNV)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pPipelines" ::: Ptr Pipeline) -> IO Result) vkCreateRayTracingPipelinesNV)
     (castFunPtr @_ @(Ptr Device_T -> DeferredOperationKHR -> PipelineCache -> ("createInfoCount" ::: Word32) -> ("pCreateInfos" ::: Ptr (SomeStruct RayTracingPipelineCreateInfoKHR)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pPipelines" ::: Ptr Pipeline) -> IO Result) vkCreateRayTracingPipelinesKHR)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pRaygenShaderBindingTable" ::: Ptr StridedDeviceAddressRegionKHR) -> ("pMissShaderBindingTable" ::: Ptr StridedDeviceAddressRegionKHR) -> ("pHitShaderBindingTable" ::: Ptr StridedDeviceAddressRegionKHR) -> ("pCallableShaderBindingTable" ::: Ptr StridedDeviceAddressRegionKHR) -> ("indirectDeviceAddress" ::: DeviceAddress) -> IO ()) vkCmdTraceRaysIndirectKHR)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("indirectDeviceAddress" ::: DeviceAddress) -> IO ()) vkCmdTraceRaysIndirect2KHR)
     (castFunPtr @_ @(Ptr Device_T -> ("pVersionInfo" ::: Ptr AccelerationStructureVersionInfoKHR) -> ("pCompatibility" ::: Ptr AccelerationStructureCompatibilityKHR) -> IO ()) vkGetDeviceAccelerationStructureCompatibilityKHR)
     (castFunPtr @_ @(Ptr Device_T -> Pipeline -> ("group" ::: Word32) -> ShaderGroupShaderKHR -> IO DeviceSize) vkGetRayTracingShaderGroupStackSizeKHR)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pipelineStackSize" ::: Word32) -> IO ()) vkCmdSetRayTracingPipelineStackSizeKHR)
@@ -1836,4 +1847,6 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr CommandBuffer_T -> IO ()) vkCmdEndRendering)
     (castFunPtr @_ @(Ptr Device_T -> ("pBindingReference" ::: Ptr DescriptorSetBindingReferenceVALVE) -> ("pHostMapping" ::: Ptr DescriptorSetLayoutHostMappingInfoVALVE) -> IO ()) vkGetDescriptorSetLayoutHostMappingInfoVALVE)
     (castFunPtr @_ @(Ptr Device_T -> DescriptorSet -> ("ppData" ::: Ptr (Ptr ())) -> IO ()) vkGetDescriptorSetHostMappingVALVE)
+    (castFunPtr @_ @(Ptr Device_T -> Image -> ("pSubresource" ::: Ptr ImageSubresource2EXT) -> ("pLayout" ::: Ptr (SomeStruct SubresourceLayout2EXT)) -> IO ()) vkGetImageSubresourceLayout2EXT)
+    (castFunPtr @_ @(Ptr Device_T -> ("pPipelineInfo" ::: Ptr PipelineInfoEXT) -> ("pPipelineProperties" ::: Ptr BaseOutStructure) -> IO Result) vkGetPipelinePropertiesEXT)
 

@@ -43,6 +43,7 @@ module Vulkan.Core13.Enums.AccessFlags2  ( pattern ACCESS_2_NONE_KHR
                                                           , ACCESS_2_SHADER_SAMPLED_READ_BIT
                                                           , ACCESS_2_SHADER_STORAGE_READ_BIT
                                                           , ACCESS_2_SHADER_STORAGE_WRITE_BIT
+                                                          , ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR
                                                           , ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI
                                                           , ACCESS_2_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT
                                                           , ACCESS_2_FRAGMENT_DENSITY_MAP_READ_BIT_EXT
@@ -216,16 +217,15 @@ pattern ACCESS_2_UNIFORM_READ_BIT                   = AccessFlagBits2 0x00000000
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT'
 -- pipeline stage.
 pattern ACCESS_2_INPUT_ATTACHMENT_READ_BIT          = AccessFlagBits2 0x0000000000000010
--- | 'ACCESS_2_SHADER_READ_BIT' specifies read access to a
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shader-binding-table shader binding table>
--- in any shader pipeline. In addition, it is equivalent to the logical OR
--- of:
+-- | 'ACCESS_2_SHADER_READ_BIT' is equivalent to the logical OR of:
 --
 -- -   'ACCESS_2_UNIFORM_READ_BIT'
 --
 -- -   'ACCESS_2_SHADER_SAMPLED_READ_BIT'
 --
 -- -   'ACCESS_2_SHADER_STORAGE_READ_BIT'
+--
+-- -   'ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR'
 pattern ACCESS_2_SHADER_READ_BIT                    = AccessFlagBits2 0x0000000000000020
 -- | 'ACCESS_2_SHADER_WRITE_BIT' is equivalent to
 -- 'ACCESS_2_SHADER_STORAGE_WRITE_BIT'.
@@ -341,6 +341,10 @@ pattern ACCESS_2_SHADER_STORAGE_READ_BIT            = AccessFlagBits2 0x00000002
 -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storageimage storage image>
 -- in any shader pipeline stage.
 pattern ACCESS_2_SHADER_STORAGE_WRITE_BIT           = AccessFlagBits2 0x0000000400000000
+-- | 'ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR' specifies read access to a
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shader-binding-table shader binding table>
+-- in any shader pipeline stage.
+pattern ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR  = AccessFlagBits2 0x0000010000000000
 -- | 'ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI' specifies read access to a
 -- invocation mask image in the
 -- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
@@ -453,6 +457,7 @@ showTableAccessFlagBits2 =
   , (ACCESS_2_SHADER_SAMPLED_READ_BIT           , "SHADER_SAMPLED_READ_BIT")
   , (ACCESS_2_SHADER_STORAGE_READ_BIT           , "SHADER_STORAGE_READ_BIT")
   , (ACCESS_2_SHADER_STORAGE_WRITE_BIT          , "SHADER_STORAGE_WRITE_BIT")
+  , (ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR , "SHADER_BINDING_TABLE_READ_BIT_KHR")
   , (ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI   , "INVOCATION_MASK_READ_BIT_HUAWEI")
   , (ACCESS_2_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT, "COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT")
   , (ACCESS_2_FRAGMENT_DENSITY_MAP_READ_BIT_EXT , "FRAGMENT_DENSITY_MAP_READ_BIT_EXT")

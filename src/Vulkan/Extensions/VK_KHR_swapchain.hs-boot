@@ -705,8 +705,8 @@
 --
 -- -   Revision 17, 2015-06-15 (Ian Elliott)
 --
---     -   Changed special value from \"-1\" to \"0\" so that the data
---         types can be unsigned.
+--     -   Changed special value from “-1” to “0” so that the data types
+--         can be unsigned.
 --
 -- -   Revision 18, 2015-06-15 (Ian Elliott)
 --
@@ -720,8 +720,8 @@
 --     -   Fixed clarification of VkSurfacePropertiesKHR::minImageCount
 --         made in version 18.
 --
---     -   Added a brief \"Image Ownership\" definition to the list of
---         terms used in the spec.
+--     -   Added a brief “Image Ownership” definition to the list of terms
+--         used in the spec.
 --
 -- -   Revision 20, 2015-06-17 (James Jones)
 --

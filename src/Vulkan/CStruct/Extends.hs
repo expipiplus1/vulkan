@@ -275,6 +275,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_headless_surface (HeadlessSurface
 import {-# SOURCE #-} Vulkan.Extensions.VK_MVK_ios_surface (IOSSurfaceCreateInfoMVK)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ImageBlit)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2 (ImageBlit2)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_compression_control (ImageCompressionControlEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_compression_control (ImageCompressionPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_buffer_collection (ImageConstraintsInfoFUCHSIA)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ImageCopy)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2 (ImageCopy2)
@@ -296,6 +298,7 @@ import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2 (ImageRe
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2 (ImageSparseMemoryRequirementsInfo2)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage (ImageStencilUsageCreateInfo)
 import {-# SOURCE #-} Vulkan.Core10.SparseResourceMemoryManagement (ImageSubresource)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_compression_control (ImageSubresource2EXT)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ImageSubresourceLayers)
 import {-# SOURCE #-} Vulkan.Core10.ImageView (ImageSubresourceRange)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain (ImageSwapchainCreateInfoKHR)
@@ -434,6 +437,8 @@ import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation (
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset (PhysicalDeviceHostQueryResetFeatures)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities (PhysicalDeviceIDProperties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_2d_view_of_3d (PhysicalDeviceImage2DViewOf3DFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_compression_control (PhysicalDeviceImageCompressionControlFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_compression_control_swapchain (PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_drm_format_modifier (PhysicalDeviceImageDrmFormatModifierInfoEXT)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2 (PhysicalDeviceImageFormatInfo2)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_image_robustness (PhysicalDeviceImageRobustnessFeatures)
@@ -470,6 +475,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (PhysicalDevice
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (PhysicalDevicePerformanceQueryPropertiesKHR)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_cache_control (PhysicalDevicePipelineCreationCacheControlFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_executable_properties (PhysicalDevicePipelineExecutablePropertiesFeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pipeline_properties (PhysicalDevicePipelinePropertiesFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (PhysicalDevicePointClippingProperties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_portability_subset (PhysicalDevicePortabilitySubsetFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_portability_subset (PhysicalDevicePortabilitySubsetPropertiesKHR)
@@ -488,6 +494,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_push_descriptor (PhysicalDevicePu
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_rgba10x6_formats (PhysicalDeviceRGBA10X6FormatsFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_rasterization_order_attachment_access (PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_query (PhysicalDeviceRayQueryFeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1 (PhysicalDeviceRayTracingMaintenance1FeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (PhysicalDeviceRayTracingMotionBlurFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelineFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelinePropertiesKHR)
@@ -526,6 +533,7 @@ import {-# SOURCE #-} Vulkan.Core10.DeviceInitialization (PhysicalDeviceSparsePr
 import {-# SOURCE #-} Vulkan.Core11.Originally_Based_On_VK_KHR_subgroup (PhysicalDeviceSubgroupProperties)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_subgroup_size_control (PhysicalDeviceSubgroupSizeControlFeatures)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_subgroup_size_control (PhysicalDeviceSubgroupSizeControlProperties)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subpass_merge_feedback (PhysicalDeviceSubpassMergeFeedbackFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_subpass_shading (PhysicalDeviceSubpassShadingFeaturesHUAWEI)
 import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_subpass_shading (PhysicalDeviceSubpassShadingPropertiesHUAWEI)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_get_surface_capabilities2 (PhysicalDeviceSurfaceInfo2KHR)
@@ -580,6 +588,7 @@ import {-# SOURCE #-} Vulkan.Core10.Pipeline (PipelineInputAssemblyStateCreateIn
 import {-# SOURCE #-} Vulkan.Core10.PipelineLayout (PipelineLayoutCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_library (PipelineLibraryCreateInfoKHR)
 import {-# SOURCE #-} Vulkan.Core10.Pipeline (PipelineMultisampleStateCreateInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pipeline_properties (PipelinePropertiesIdentifierEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_conservative_rasterization (PipelineRasterizationConservativeStateCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clip_enable (PipelineRasterizationDepthClipStateCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_line_rasterization (PipelineRasterizationLineStateCreateInfoEXT)
@@ -633,10 +642,13 @@ import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer (
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (RenderPassBeginInfo)
 import {-# SOURCE #-} Vulkan.Core10.Pass (RenderPassCreateInfo)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2 (RenderPassCreateInfo2)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subpass_merge_feedback (RenderPassCreationControlEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subpass_merge_feedback (RenderPassCreationFeedbackInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_density_map (RenderPassFragmentDensityMapCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (RenderPassInputAttachmentAspectCreateInfo)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_multiview (RenderPassMultiviewCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (RenderPassSampleLocationsBeginInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subpass_merge_feedback (RenderPassSubpassFeedbackInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_render_pass_transform (RenderPassTransformBeginInfoQCOM)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering (RenderingAttachmentInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_dynamic_rendering (RenderingFragmentDensityMapAttachmentInfoEXT)
@@ -698,6 +710,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_fragment_density_map_offset (Sub
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (SubpassSampleLocationsEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_subpass_shading (SubpassShadingPipelineCreateInfoHUAWEI)
 import {-# SOURCE #-} Vulkan.Core10.Image (SubresourceLayout)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_compression_control (SubresourceLayout2EXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_display_surface_counter (SurfaceCapabilities2EXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_get_surface_capabilities2 (SurfaceCapabilities2KHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_full_screen_exclusive (SurfaceCapabilitiesFullScreenExclusiveEXT)
@@ -713,6 +726,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_display_native_hdr (SwapchainDisp
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_buffer_collection (SysmemColorSpaceFUCHSIA)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_texture_gather_bias_lod (TextureLODGatherFormatPropertiesAMD)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore (TimelineSemaphoreSubmitInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1 (TraceRaysIndirectCommand2KHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (TraceRaysIndirectCommandKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_acceleration_structure (TransformMatrixKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_validation_cache (ValidationCacheCreateInfoEXT)
@@ -748,7 +762,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_xlib_surface (XlibSurfaceCreateIn
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
--- 'BaseOutStructure', 'Vulkan.Core10.Enums.StructureType.StructureType'
+-- 'BaseOutStructure', 'Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'Vulkan.Extensions.VK_EXT_pipeline_properties.getPipelinePropertiesEXT'
 data BaseOutStructure = BaseOutStructure
   { -- | @sType@ is the structure type of the structure being iterated through.
     sType :: StructureType
@@ -855,6 +870,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends AndroidHardwareBufferPropertiesANDROID AndroidHardwareBufferFormatProperties2ANDROID = ()
   Extends AttachmentDescription2 AttachmentDescriptionStencilLayout = ()
   Extends AttachmentReference2 AttachmentReferenceStencilLayout = ()
+  Extends BaseOutStructure PipelinePropertiesIdentifierEXT = ()
   Extends BindBufferMemoryInfo BindBufferMemoryDeviceGroupInfo = ()
   Extends BindImageMemoryInfo BindImageMemoryDeviceGroupInfo = ()
   Extends BindImageMemoryInfo BindImageMemorySwapchainInfoKHR = ()
@@ -930,6 +946,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceAccelerationStructureFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDeviceRayTracingPipelineFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDeviceRayQueryFeaturesKHR = ()
+  Extends DeviceCreateInfo PhysicalDeviceRayTracingMaintenance1FeaturesKHR = ()
   Extends DeviceCreateInfo DeviceMemoryOverallocationCreateInfoAMD = ()
   Extends DeviceCreateInfo PhysicalDeviceFragmentDensityMapFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceFragmentDensityMap2FeaturesEXT = ()
@@ -1002,6 +1019,10 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceLinearColorAttachmentFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE = ()
+  Extends DeviceCreateInfo PhysicalDeviceImageCompressionControlFeaturesEXT = ()
+  Extends DeviceCreateInfo PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT = ()
+  Extends DeviceCreateInfo PhysicalDeviceSubpassMergeFeedbackFeaturesEXT = ()
+  Extends DeviceCreateInfo PhysicalDevicePipelinePropertiesFeaturesEXT = ()
   Extends DeviceQueueCreateInfo DeviceQueueGlobalPriorityCreateInfoKHR = ()
   Extends FenceCreateInfo ExportFenceCreateInfo = ()
   Extends FenceCreateInfo ExportFenceWin32HandleInfoKHR = ()
@@ -1032,11 +1053,13 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends ImageCreateInfo ImageDrmFormatModifierExplicitCreateInfoEXT = ()
   Extends ImageCreateInfo ImageStencilUsageCreateInfo = ()
   Extends ImageCreateInfo BufferCollectionImageCreateInfoFUCHSIA = ()
+  Extends ImageCreateInfo ImageCompressionControlEXT = ()
   Extends ImageFormatProperties2 ExternalImageFormatProperties = ()
   Extends ImageFormatProperties2 SamplerYcbcrConversionImageFormatProperties = ()
   Extends ImageFormatProperties2 TextureLODGatherFormatPropertiesAMD = ()
   Extends ImageFormatProperties2 AndroidHardwareBufferUsageANDROID = ()
   Extends ImageFormatProperties2 FilterCubicImageViewImageFormatPropertiesEXT = ()
+  Extends ImageFormatProperties2 ImageCompressionPropertiesEXT = ()
   Extends ImageMemoryBarrier SampleLocationsInfoEXT = ()
   Extends ImageMemoryBarrier2 SampleLocationsInfoEXT = ()
   Extends ImageMemoryRequirementsInfo2 ImagePlaneMemoryRequirementsInfo = ()
@@ -1109,6 +1132,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceAccelerationStructureFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRayTracingPipelineFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRayQueryFeaturesKHR = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceRayTracingMaintenance1FeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceFragmentDensityMapFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceFragmentDensityMap2FeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM = ()
@@ -1179,11 +1203,16 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceLinearColorAttachmentFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceImageCompressionControlFeaturesEXT = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceSubpassMergeFeedbackFeaturesEXT = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDevicePipelinePropertiesFeaturesEXT = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceExternalImageFormatInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 ImageFormatListCreateInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageDrmFormatModifierInfoEXT = ()
   Extends PhysicalDeviceImageFormatInfo2 ImageStencilUsageCreateInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageViewImageFormatInfoEXT = ()
+  Extends PhysicalDeviceImageFormatInfo2 ImageCompressionControlEXT = ()
   Extends PhysicalDeviceMemoryProperties2 PhysicalDeviceMemoryBudgetPropertiesEXT = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceDeviceGeneratedCommandsPropertiesNV = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceMultiDrawPropertiesEXT = ()
@@ -1286,6 +1315,10 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends RenderPassCreateInfo RenderPassInputAttachmentAspectCreateInfo = ()
   Extends RenderPassCreateInfo RenderPassFragmentDensityMapCreateInfoEXT = ()
   Extends RenderPassCreateInfo2 RenderPassFragmentDensityMapCreateInfoEXT = ()
+  Extends RenderPassCreateInfo2 (RenderPassCreationControlEXT '[]) = ()
+  Extends RenderPassCreateInfo2 RenderPassCreationFeedbackInfoEXT = ()
+  Extends RenderPassCreationControlEXT RenderPassCreationFeedbackInfoEXT = ()
+  Extends RenderPassCreationControlEXT RenderPassSubpassFeedbackInfoEXT = ()
   Extends RenderingInfo DeviceGroupRenderPassBeginInfo = ()
   Extends RenderingInfo RenderingFragmentShadingRateAttachmentInfoKHR = ()
   Extends RenderingInfo RenderingFragmentDensityMapAttachmentInfoEXT = ()
@@ -1312,17 +1345,22 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends SubpassDependency2 MemoryBarrier2 = ()
   Extends SubpassDescription2 SubpassDescriptionDepthStencilResolve = ()
   Extends SubpassDescription2 FragmentShadingRateAttachmentInfoKHR = ()
+  Extends SubpassDescription2 (RenderPassCreationControlEXT '[]) = ()
+  Extends SubpassDescription2 RenderPassSubpassFeedbackInfoEXT = ()
   Extends SubpassEndInfo SubpassFragmentDensityMapOffsetEndInfoQCOM = ()
+  Extends SubresourceLayout2EXT ImageCompressionPropertiesEXT = ()
   Extends SurfaceCapabilities2KHR DisplayNativeHdrSurfaceCapabilitiesAMD = ()
   Extends SurfaceCapabilities2KHR SharedPresentSurfaceCapabilitiesKHR = ()
   Extends SurfaceCapabilities2KHR SurfaceProtectedCapabilitiesKHR = ()
   Extends SurfaceCapabilities2KHR SurfaceCapabilitiesFullScreenExclusiveEXT = ()
+  Extends SurfaceFormat2KHR ImageCompressionPropertiesEXT = ()
   Extends SwapchainCreateInfoKHR SwapchainCounterCreateInfoEXT = ()
   Extends SwapchainCreateInfoKHR DeviceGroupSwapchainCreateInfoKHR = ()
   Extends SwapchainCreateInfoKHR SwapchainDisplayNativeHdrCreateInfoAMD = ()
   Extends SwapchainCreateInfoKHR ImageFormatListCreateInfo = ()
   Extends SwapchainCreateInfoKHR SurfaceFullScreenExclusiveInfoEXT = ()
   Extends SwapchainCreateInfoKHR SurfaceFullScreenExclusiveWin32InfoEXT = ()
+  Extends SwapchainCreateInfoKHR ImageCompressionControlEXT = ()
   Extends WriteDescriptorSet WriteDescriptorSetInlineUniformBlock = ()
   Extends WriteDescriptorSet WriteDescriptorSetAccelerationStructureKHR = ()
   Extends WriteDescriptorSet WriteDescriptorSetAccelerationStructureNV = ()
@@ -1609,6 +1647,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_PROPERTIES_KHR -> go @PhysicalDeviceAccelerationStructurePropertiesKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_PROPERTIES_KHR -> go @PhysicalDeviceRayTracingPipelinePropertiesKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_NV -> go @PhysicalDeviceRayTracingPropertiesNV
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_MAINTENANCE_1_FEATURES_KHR -> go @PhysicalDeviceRayTracingMaintenance1FeaturesKHR
   STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_EXT -> go @DrmFormatModifierPropertiesListEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT -> go @PhysicalDeviceImageDrmFormatModifierInfoEXT
   STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT -> go @ImageDrmFormatModifierListCreateInfoEXT
@@ -1768,6 +1807,16 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_PROPERTIES_EXT -> go @PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT
   STRUCTURE_TYPE_GRAPHICS_PIPELINE_LIBRARY_CREATE_INFO_EXT -> go @GraphicsPipelineLibraryCreateInfoEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_SET_HOST_MAPPING_FEATURES_VALVE -> go @PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE
+  STRUCTURE_TYPE_IMAGE_COMPRESSION_CONTROL_EXT -> go @ImageCompressionControlEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_COMPRESSION_CONTROL_FEATURES_EXT -> go @PhysicalDeviceImageCompressionControlFeaturesEXT
+  STRUCTURE_TYPE_IMAGE_COMPRESSION_PROPERTIES_EXT -> go @ImageCompressionPropertiesEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_COMPRESSION_CONTROL_SWAPCHAIN_FEATURES_EXT -> go @PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT
+  STRUCTURE_TYPE_RENDER_PASS_CREATION_CONTROL_EXT -> go @(RenderPassCreationControlEXT '[])
+  STRUCTURE_TYPE_RENDER_PASS_CREATION_FEEDBACK_INFO_EXT -> go @RenderPassCreationFeedbackInfoEXT
+  STRUCTURE_TYPE_RENDER_PASS_SUBPASS_FEEDBACK_INFO_EXT -> go @RenderPassSubpassFeedbackInfoEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBPASS_MERGE_FEEDBACK_FEATURES_EXT -> go @PhysicalDeviceSubpassMergeFeedbackFeaturesEXT
+  STRUCTURE_TYPE_PIPELINE_PROPERTIES_IDENTIFIER_EXT -> go @PipelinePropertiesIdentifierEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROPERTIES_FEATURES_EXT -> go @PhysicalDevicePipelinePropertiesFeaturesEXT
   t -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("Unrecognized struct type: " <> show t) Nothing Nothing
  where
   go :: forall e . (Typeable e, FromCStruct e, ToCStruct e, Show e) => IO b
@@ -2002,6 +2051,7 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceAccelerationStructurePropertiesKHR #-}
 {-# complete (::&) :: PhysicalDeviceRayTracingPipelinePropertiesKHR #-}
 {-# complete (::&) :: PhysicalDeviceRayTracingPropertiesNV #-}
+{-# complete (::&) :: PhysicalDeviceRayTracingMaintenance1FeaturesKHR #-}
 {-# complete (::&) :: DrmFormatModifierPropertiesListEXT #-}
 {-# complete (::&) :: PhysicalDeviceImageDrmFormatModifierInfoEXT #-}
 {-# complete (::&) :: ImageDrmFormatModifierListCreateInfoEXT #-}
@@ -2161,6 +2211,16 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT #-}
 {-# complete (::&) :: GraphicsPipelineLibraryCreateInfoEXT #-}
 {-# complete (::&) :: PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE #-}
+{-# complete (::&) :: ImageCompressionControlEXT #-}
+{-# complete (::&) :: PhysicalDeviceImageCompressionControlFeaturesEXT #-}
+{-# complete (::&) :: ImageCompressionPropertiesEXT #-}
+{-# complete (::&) :: PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT #-}
+{-# complete (::&) :: RenderPassCreationControlEXT #-}
+{-# complete (::&) :: RenderPassCreationFeedbackInfoEXT #-}
+{-# complete (::&) :: RenderPassSubpassFeedbackInfoEXT #-}
+{-# complete (::&) :: PhysicalDeviceSubpassMergeFeedbackFeaturesEXT #-}
+{-# complete (::&) :: PipelinePropertiesIdentifierEXT #-}
+{-# complete (::&) :: PhysicalDevicePipelinePropertiesFeaturesEXT #-}
 
 -- | View the head and tail of a 'Chain', see '::&'
 --

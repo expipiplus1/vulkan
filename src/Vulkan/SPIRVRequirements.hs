@@ -25,6 +25,7 @@ import Vulkan.Extensions.VK_EXT_fragment_shader_interlock (PhysicalDeviceFragmen
 import Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDeviceFragmentShadingRateFeaturesKHR(..))
 import Vulkan.Core11.Promoted_From_VK_KHR_multiview (PhysicalDeviceMultiviewFeatures(..))
 import Vulkan.Extensions.VK_KHR_ray_query (PhysicalDeviceRayQueryFeaturesKHR(..))
+import Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1 (PhysicalDeviceRayTracingMaintenance1FeaturesKHR(..))
 import Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (PhysicalDeviceRayTracingMotionBlurFeaturesNV(..))
 import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelineFeaturesKHR(..))
 import Vulkan.Extensions.VK_EXT_shader_atomic_float2 (PhysicalDeviceShaderAtomicFloat2FeaturesEXT(..))
@@ -92,6 +93,7 @@ import Vulkan.Extensions.VK_KHR_maintenance2 (pattern KHR_MAINTENANCE_2_EXTENSIO
 import Vulkan.Extensions.VK_KHR_maintenance3 (pattern KHR_MAINTENANCE_3_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_multiview (pattern KHR_MULTIVIEW_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_ray_query (pattern KHR_RAY_QUERY_EXTENSION_NAME)
+import Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1 (pattern KHR_RAY_TRACING_MAINTENANCE_1_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (pattern KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_atomic_int64 (pattern KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_clock (pattern KHR_SHADER_CLOCK_EXTENSION_NAME)
@@ -442,6 +444,37 @@ spirvExtensionRequirements = \case
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_MAINTENANCE_3_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "SPV_KHR_ray_cull_mask" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_RAY_TRACING_MAINTENANCE_1_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
@@ -2068,6 +2101,44 @@ spirvCapabilityRequirements = \case
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_MAINTENANCE_3_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "RayCullMaskKHR" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceFeature
+      { featureName   = "rayTracingMaintenance1"
+      , checkFeature  = \PhysicalDeviceRayTracingMaintenance1FeaturesKHR { rayTracingMaintenance1 } ->
+                          rayTracingMaintenance1
+      , enableFeature = \PhysicalDeviceRayTracingMaintenance1FeaturesKHR {..} ->
+                          PhysicalDeviceRayTracingMaintenance1FeaturesKHR { rayTracingMaintenance1 = True, .. }
+      }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_RAY_TRACING_MAINTENANCE_1_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing

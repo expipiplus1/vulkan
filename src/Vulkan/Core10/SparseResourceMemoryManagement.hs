@@ -649,6 +649,7 @@ instance Zero SparseImageMemoryRequirements where
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
+-- 'Vulkan.Extensions.VK_EXT_image_compression_control.ImageSubresource2EXT',
 -- 'SparseImageMemoryBind', 'Vulkan.Core10.Image.getImageSubresourceLayout'
 data ImageSubresource = ImageSubresource
   { -- | @aspectMask@ is a

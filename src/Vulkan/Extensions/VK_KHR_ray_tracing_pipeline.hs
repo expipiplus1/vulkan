@@ -1153,6 +1153,12 @@ foreign import ccall
 --     greater than the value of @maxPipelineRayRecursionDepth@ used to
 --     create the bound ray tracing pipeline
 --
+-- -   #VUID-vkCmdTraceRaysKHR-commandBuffer-03635# @commandBuffer@ /must/
+--     not be a protected command buffer
+--
+-- -   #VUID-vkCmdTraceRaysKHR-size-04023# The @size@ member of
+--     @pRayGenShaderBindingTable@ /must/ be equal to its @stride@ member
+--
 -- -   #VUID-vkCmdTraceRaysKHR-pRayGenShaderBindingTable-03680# If the
 --     buffer from which @pRayGenShaderBindingTable->deviceAddress@ was
 --     queried is non-sparse then it /must/ be bound completely and
@@ -1167,9 +1173,6 @@ foreign import ccall
 -- -   #VUID-vkCmdTraceRaysKHR-pRayGenShaderBindingTable-03682#
 --     @pRayGenShaderBindingTable->deviceAddress@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@shaderGroupBaseAlignment@
---
--- -   #VUID-vkCmdTraceRaysKHR-size-04023# The @size@ member of
---     @pRayGenShaderBindingTable@ /must/ be equal to its @stride@ member
 --
 -- -   #VUID-vkCmdTraceRaysKHR-pMissShaderBindingTable-03683# If the buffer
 --     from which @pMissShaderBindingTable->deviceAddress@ was queried is
@@ -1186,12 +1189,12 @@ foreign import ccall
 --     @pMissShaderBindingTable->deviceAddress@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@shaderGroupBaseAlignment@
 --
--- -   #VUID-vkCmdTraceRaysKHR-stride-03686# The @stride@ member of
---     @pMissShaderBindingTable@ /must/ be a multiple of
+-- -   #VUID-vkCmdTraceRaysKHR-stride-03686#
+--     @pMissShaderBindingTable->stride@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@shaderGroupHandleAlignment@
 --
--- -   #VUID-vkCmdTraceRaysKHR-stride-04029# The @stride@ member of
---     @pMissShaderBindingTable@ /must/ be less than or equal to
+-- -   #VUID-vkCmdTraceRaysKHR-stride-04029#
+--     @pMissShaderBindingTable->stride@ /must/ be less than or equal to
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@maxShaderGroupStride@
 --
 -- -   #VUID-vkCmdTraceRaysKHR-pHitShaderBindingTable-03687# If the buffer
@@ -1209,12 +1212,12 @@ foreign import ccall
 --     @pHitShaderBindingTable->deviceAddress@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@shaderGroupBaseAlignment@
 --
--- -   #VUID-vkCmdTraceRaysKHR-stride-03690# The @stride@ member of
---     @pHitShaderBindingTable@ /must/ be a multiple of
+-- -   #VUID-vkCmdTraceRaysKHR-stride-03690#
+--     @pHitShaderBindingTable->stride@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@shaderGroupHandleAlignment@
 --
--- -   #VUID-vkCmdTraceRaysKHR-stride-04035# The @stride@ member of
---     @pHitShaderBindingTable@ /must/ be less than or equal to
+-- -   #VUID-vkCmdTraceRaysKHR-stride-04035#
+--     @pHitShaderBindingTable->stride@ /must/ be less than or equal to
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@maxShaderGroupStride@
 --
 -- -   #VUID-vkCmdTraceRaysKHR-pCallableShaderBindingTable-03691# If the
@@ -1232,89 +1235,90 @@ foreign import ccall
 --     @pCallableShaderBindingTable->deviceAddress@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@shaderGroupBaseAlignment@
 --
--- -   #VUID-vkCmdTraceRaysKHR-stride-03694# The @stride@ member of
---     @pCallableShaderBindingTable@ /must/ be a multiple of
+-- -   #VUID-vkCmdTraceRaysKHR-stride-03694#
+--     @pCallableShaderBindingTable->stride@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@shaderGroupHandleAlignment@
 --
--- -   #VUID-vkCmdTraceRaysKHR-stride-04041# The @stride@ member of
---     @pCallableShaderBindingTable@ /must/ be less than or equal to
+-- -   #VUID-vkCmdTraceRaysKHR-stride-04041#
+--     @pCallableShaderBindingTable->stride@ /must/ be less than or equal
+--     to
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@maxShaderGroupStride@
 --
 -- -   #VUID-vkCmdTraceRaysKHR-flags-03696# If the currently bound ray
 --     tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR',
---     the @deviceAddress@ member of @pHitShaderBindingTable@ /must/ not be
---     zero
+--     @pHitShaderBindingTable->deviceAddress@ /must/ not be zero
 --
 -- -   #VUID-vkCmdTraceRaysKHR-flags-03697# If the currently bound ray
 --     tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR',
---     the @deviceAddress@ member of @pHitShaderBindingTable@ /must/ not be
---     zero
+--     @pHitShaderBindingTable->deviceAddress@ /must/ not be zero
 --
 -- -   #VUID-vkCmdTraceRaysKHR-flags-03511# If the currently bound ray
 --     tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR',
---     the shader group handle identified by @pMissShaderBindingTable@
---     /must/ not be set to zero
+--     the shader group handle identified by
+--     @pMissShaderBindingTable->deviceAddress@ /must/ not be set to zero
 --
 -- -   #VUID-vkCmdTraceRaysKHR-flags-03512# If the currently bound ray
 --     tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR',
---     entries in @pHitShaderBindingTable@ accessed as a result of this
+--     entries in the table identified by
+--     @pHitShaderBindingTable->deviceAddress@ accessed as a result of this
 --     command in order to execute an any-hit shader /must/ not be set to
 --     zero
 --
 -- -   #VUID-vkCmdTraceRaysKHR-flags-03513# If the currently bound ray
 --     tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR',
---     entries in @pHitShaderBindingTable@ accessed as a result of this
+--     entries in the table identified by
+--     @pHitShaderBindingTable->deviceAddress@ accessed as a result of this
 --     command in order to execute a closest hit shader /must/ not be set
 --     to zero
 --
 -- -   #VUID-vkCmdTraceRaysKHR-flags-03514# If the currently bound ray
 --     tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR',
---     entries in @pHitShaderBindingTable@ accessed as a result of this
+--     entries in the table identified by
+--     @pHitShaderBindingTable->deviceAddress@ accessed as a result of this
 --     command in order to execute an intersection shader /must/ not be set
 --     to zero
 --
 -- -   #VUID-vkCmdTraceRaysKHR-pHitShaderBindingTable-04735# Any non-zero
---     hit shader group entries in @pHitShaderBindingTable@ accessed by
---     this call from a geometry with a @geometryType@ of
+--     hit shader group entries in the table identified by
+--     @pHitShaderBindingTable->deviceAddress@ accessed by this call from a
+--     geometry with a @geometryType@ of
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_TYPE_TRIANGLES_KHR'
 --     /must/ have been created with
 --     'RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR'
 --
 -- -   #VUID-vkCmdTraceRaysKHR-pHitShaderBindingTable-04736# Any non-zero
---     hit shader group entries in @pHitShaderBindingTable@ accessed by
---     this call from a geometry with a @geometryType@ of
+--     hit shader group entries in the table identified by
+--     @pHitShaderBindingTable->deviceAddress@ accessed by this call from a
+--     geometry with a @geometryType@ of
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_TYPE_AABBS_KHR'
 --     /must/ have been created with
 --     'RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR'
 --
--- -   #VUID-vkCmdTraceRaysKHR-commandBuffer-04625# @commandBuffer@ /must/
---     not be a protected command buffer
---
--- -   #VUID-vkCmdTraceRaysKHR-width-03626# @width@ /must/ be less than or
+-- -   #VUID-vkCmdTraceRaysKHR-width-03638# @width@ /must/ be less than or
 --     equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
 --     ×
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupSize@[0]
 --
--- -   #VUID-vkCmdTraceRaysKHR-height-03627# @height@ /must/ be less than
+-- -   #VUID-vkCmdTraceRaysKHR-height-03639# @height@ /must/ be less than
 --     or equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
 --     ×
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupSize@[1]
 --
--- -   #VUID-vkCmdTraceRaysKHR-depth-03628# @depth@ /must/ be less than or
+-- -   #VUID-vkCmdTraceRaysKHR-depth-03640# @depth@ /must/ be less than or
 --     equal to
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
 --     ×
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupSize@[2]
 --
--- -   #VUID-vkCmdTraceRaysKHR-width-03629# @width@ × @height@ × @depth@
+-- -   #VUID-vkCmdTraceRaysKHR-width-03641# @width@ × @height@ × @depth@
 --     /must/ be less than or equal to
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@maxRayDispatchInvocationCount@
 --
@@ -2082,6 +2086,12 @@ foreign import ccall
 --     greater than the value of @maxPipelineRayRecursionDepth@ used to
 --     create the bound ray tracing pipeline
 --
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-commandBuffer-03635# @commandBuffer@
+--     /must/ not be a protected command buffer
+--
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-size-04023# The @size@ member of
+--     @pRayGenShaderBindingTable@ /must/ be equal to its @stride@ member
+--
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-pRayGenShaderBindingTable-03680# If
 --     the buffer from which @pRayGenShaderBindingTable->deviceAddress@ was
 --     queried is non-sparse then it /must/ be bound completely and
@@ -2096,9 +2106,6 @@ foreign import ccall
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-pRayGenShaderBindingTable-03682#
 --     @pRayGenShaderBindingTable->deviceAddress@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@shaderGroupBaseAlignment@
---
--- -   #VUID-vkCmdTraceRaysIndirectKHR-size-04023# The @size@ member of
---     @pRayGenShaderBindingTable@ /must/ be equal to its @stride@ member
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-pMissShaderBindingTable-03683# If
 --     the buffer from which @pMissShaderBindingTable->deviceAddress@ was
@@ -2115,12 +2122,12 @@ foreign import ccall
 --     @pMissShaderBindingTable->deviceAddress@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@shaderGroupBaseAlignment@
 --
--- -   #VUID-vkCmdTraceRaysIndirectKHR-stride-03686# The @stride@ member of
---     @pMissShaderBindingTable@ /must/ be a multiple of
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-stride-03686#
+--     @pMissShaderBindingTable->stride@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@shaderGroupHandleAlignment@
 --
--- -   #VUID-vkCmdTraceRaysIndirectKHR-stride-04029# The @stride@ member of
---     @pMissShaderBindingTable@ /must/ be less than or equal to
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-stride-04029#
+--     @pMissShaderBindingTable->stride@ /must/ be less than or equal to
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@maxShaderGroupStride@
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-pHitShaderBindingTable-03687# If the
@@ -2138,12 +2145,12 @@ foreign import ccall
 --     @pHitShaderBindingTable->deviceAddress@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@shaderGroupBaseAlignment@
 --
--- -   #VUID-vkCmdTraceRaysIndirectKHR-stride-03690# The @stride@ member of
---     @pHitShaderBindingTable@ /must/ be a multiple of
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-stride-03690#
+--     @pHitShaderBindingTable->stride@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@shaderGroupHandleAlignment@
 --
--- -   #VUID-vkCmdTraceRaysIndirectKHR-stride-04035# The @stride@ member of
---     @pHitShaderBindingTable@ /must/ be less than or equal to
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-stride-04035#
+--     @pHitShaderBindingTable->stride@ /must/ be less than or equal to
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@maxShaderGroupStride@
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-pCallableShaderBindingTable-03691#
@@ -2163,63 +2170,67 @@ foreign import ccall
 --     @pCallableShaderBindingTable->deviceAddress@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@shaderGroupBaseAlignment@
 --
--- -   #VUID-vkCmdTraceRaysIndirectKHR-stride-03694# The @stride@ member of
---     @pCallableShaderBindingTable@ /must/ be a multiple of
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-stride-03694#
+--     @pCallableShaderBindingTable->stride@ /must/ be a multiple of
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@shaderGroupHandleAlignment@
 --
--- -   #VUID-vkCmdTraceRaysIndirectKHR-stride-04041# The @stride@ member of
---     @pCallableShaderBindingTable@ /must/ be less than or equal to
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-stride-04041#
+--     @pCallableShaderBindingTable->stride@ /must/ be less than or equal
+--     to
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@maxShaderGroupStride@
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-flags-03696# If the currently bound
 --     ray tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR',
---     the @deviceAddress@ member of @pHitShaderBindingTable@ /must/ not be
---     zero
+--     @pHitShaderBindingTable->deviceAddress@ /must/ not be zero
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-flags-03697# If the currently bound
 --     ray tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR',
---     the @deviceAddress@ member of @pHitShaderBindingTable@ /must/ not be
---     zero
+--     @pHitShaderBindingTable->deviceAddress@ /must/ not be zero
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-flags-03511# If the currently bound
 --     ray tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR',
---     the shader group handle identified by @pMissShaderBindingTable@
---     /must/ not be set to zero
+--     the shader group handle identified by
+--     @pMissShaderBindingTable->deviceAddress@ /must/ not be set to zero
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-flags-03512# If the currently bound
 --     ray tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR',
---     entries in @pHitShaderBindingTable@ accessed as a result of this
+--     entries in the table identified by
+--     @pHitShaderBindingTable->deviceAddress@ accessed as a result of this
 --     command in order to execute an any-hit shader /must/ not be set to
 --     zero
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-flags-03513# If the currently bound
 --     ray tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR',
---     entries in @pHitShaderBindingTable@ accessed as a result of this
+--     entries in the table identified by
+--     @pHitShaderBindingTable->deviceAddress@ accessed as a result of this
 --     command in order to execute a closest hit shader /must/ not be set
 --     to zero
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-flags-03514# If the currently bound
 --     ray tracing pipeline was created with @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR',
---     entries in @pHitShaderBindingTable@ accessed as a result of this
+--     entries in the table identified by
+--     @pHitShaderBindingTable->deviceAddress@ accessed as a result of this
 --     command in order to execute an intersection shader /must/ not be set
 --     to zero
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-pHitShaderBindingTable-04735# Any
---     non-zero hit shader group entries in @pHitShaderBindingTable@
---     accessed by this call from a geometry with a @geometryType@ of
+--     non-zero hit shader group entries in the table identified by
+--     @pHitShaderBindingTable->deviceAddress@ accessed by this call from a
+--     geometry with a @geometryType@ of
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_TYPE_TRIANGLES_KHR'
 --     /must/ have been created with
 --     'RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR'
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-pHitShaderBindingTable-04736# Any
---     non-zero hit shader group entries in @pHitShaderBindingTable@
---     accessed by this call from a geometry with a @geometryType@ of
+--     non-zero hit shader group entries in the table identified by
+--     @pHitShaderBindingTable->deviceAddress@ accessed by this call from a
+--     geometry with a @geometryType@ of
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.GEOMETRY_TYPE_AABBS_KHR'
 --     /must/ have been created with
 --     'RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR'
@@ -2238,9 +2249,6 @@ foreign import ccall
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-indirectDeviceAddress-03634#
 --     @indirectDeviceAddress@ /must/ be a multiple of @4@
 --
--- -   #VUID-vkCmdTraceRaysIndirectKHR-commandBuffer-03635# @commandBuffer@
---     /must/ not be a protected command buffer
---
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-indirectDeviceAddress-03636# All
 --     device addresses between @indirectDeviceAddress@ and
 --     @indirectDeviceAddress@ + @sizeof@('TraceRaysIndirectCommandKHR') -
@@ -2248,7 +2256,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-rayTracingPipelineTraceRaysIndirect-03637#
 --     The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-rayTracingPipelineTraceRaysIndirect ::rayTracingPipelineTraceRaysIndirect>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-rayTracingPipelineTraceRaysIndirect rayTracingPipelineTraceRaysIndirect>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-rayTracingMotionBlurPipelineTraceRaysIndirect-04951#

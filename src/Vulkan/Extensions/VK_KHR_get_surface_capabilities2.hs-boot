@@ -171,10 +171,11 @@ instance Show (Chain es) => Show (SurfaceCapabilities2KHR es)
 instance (Extendss SurfaceCapabilities2KHR es, PeekChain es) => FromCStruct (SurfaceCapabilities2KHR es)
 
 
-data SurfaceFormat2KHR
+type role SurfaceFormat2KHR nominal
+data SurfaceFormat2KHR (es :: [Type])
 
-instance ToCStruct SurfaceFormat2KHR
-instance Show SurfaceFormat2KHR
+instance (Extendss SurfaceFormat2KHR es, PokeChain es) => ToCStruct (SurfaceFormat2KHR es)
+instance Show (Chain es) => Show (SurfaceFormat2KHR es)
 
-instance FromCStruct SurfaceFormat2KHR
+instance (Extendss SurfaceFormat2KHR es, PeekChain es) => FromCStruct (SurfaceFormat2KHR es)
 

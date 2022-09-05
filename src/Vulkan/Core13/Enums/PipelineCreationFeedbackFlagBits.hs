@@ -72,8 +72,8 @@ pattern PIPELINE_CREATION_FEEDBACK_VALID_BIT                          = Pipeline
 --
 -- Implementations are encouraged to provide a meaningful signal to
 -- applications using this bit. The intention is to communicate to the
--- application that the pipeline or pipeline stage was created \"as fast as
--- it gets\" using the pipeline cache provided by the application. If an
+-- application that the pipeline or pipeline stage was created “as fast as
+-- it gets” using the pipeline cache provided by the application. If an
 -- implementation uses an internal cache, it is discouraged from setting
 -- this bit as the feedback would be unactionable.
 pattern PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT = PipelineCreationFeedbackFlagBits 0x00000002
@@ -89,7 +89,7 @@ pattern PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT = Pipeline
 --
 -- Note
 --
--- While \"significant amount of work\" is subjective, implementations are
+-- While “significant amount of work” is subjective, implementations are
 -- encouraged to provide a meaningful signal to applications using this
 -- bit. For example, a 1% reduction in duration may not warrant setting
 -- this bit, while a 50% reduction would.

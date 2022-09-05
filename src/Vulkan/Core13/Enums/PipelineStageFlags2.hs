@@ -53,6 +53,7 @@ module Vulkan.Core13.Enums.PipelineStageFlags2  ( pattern PIPELINE_STAGE_2_NONE_
                                                                         , PIPELINE_STAGE_2_INDEX_INPUT_BIT
                                                                         , PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT
                                                                         , PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT
+                                                                        , PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR
                                                                         , PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI
                                                                         , PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI
                                                                         , PIPELINE_STAGE_2_MESH_SHADER_BIT_NV
@@ -279,6 +280,8 @@ pattern PIPELINE_STAGE_2_COMPUTE_SHADER_BIT                 = PipelineStageFlagB
 -- -   'PIPELINE_STAGE_2_RESOLVE_BIT'
 --
 -- -   'PIPELINE_STAGE_2_CLEAR_BIT'
+--
+-- -   'PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR'
 pattern PIPELINE_STAGE_2_ALL_TRANSFER_BIT                   = PipelineStageFlagBits2 0x0000000000001000
 -- | 'PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT' is equivalent to
 -- 'PIPELINE_STAGE_2_ALL_COMMANDS_BIT' with
@@ -367,6 +370,10 @@ pattern PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT         = PipelineStageFlagB
 --
 -- -   'PIPELINE_STAGE_2_MESH_SHADER_BIT_NV'
 pattern PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT      = PipelineStageFlagBits2 0x0000004000000000
+-- | 'PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR' specifies the
+-- execution of
+-- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure-copying acceleration structure copy commands>.
+pattern PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR = PipelineStageFlagBits2 0x0000000010000000
 -- | 'PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI' specifies the stage of the
 -- pipeline where the invocation mask image is read by the implementation
 -- to optimize the ray dispatch.
@@ -443,6 +450,7 @@ showTablePipelineStageFlagBits2 =
   , (PIPELINE_STAGE_2_INDEX_INPUT_BIT                   , "INDEX_INPUT_BIT")
   , (PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT        , "VERTEX_ATTRIBUTE_INPUT_BIT")
   , (PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT     , "PRE_RASTERIZATION_SHADERS_BIT")
+  , (PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR, "ACCELERATION_STRUCTURE_COPY_BIT_KHR")
   , (PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI        , "INVOCATION_MASK_BIT_HUAWEI")
   , (PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI        , "SUBPASS_SHADING_BIT_HUAWEI")
   , (PIPELINE_STAGE_2_MESH_SHADER_BIT_NV                , "MESH_SHADER_BIT_NV")
