@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+- Add support for GHC 9.4.
 
 ## [0.5.8] - 2022-09-06
 - Relax bounds on `vulkan`
