@@ -125,6 +125,7 @@ isDefaultableForeignType t =
            , TypeName "LPCWSTR"
            , Ptr CType.Const (TypeName "SECURITY_ATTRIBUTES")
            , TypeName "zx_handle_t"
+           , TypeName "IOSurfaceRef"
            ]
     )
     || case t of
