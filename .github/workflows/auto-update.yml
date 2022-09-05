@@ -45,7 +45,7 @@ jobs:
     - name: Build dependencies
       run: |
         nix-build -A generate-new
-        nix-build '<nixpkgs>' -A python3 -A asciidoctor -A gnumake -A nodejs -A nodePackages.he -A nodePackages.escape-string-regexp
+        nix-build '<nixpkgs>' -A python3 -A python3Packages.pyparsing -A asciidoctor -A gnumake -A nodejs -A nodePackages.he -A nodePackages.escape-string-regexp
         nix-build '<nixpkgs>' -A haskellPackages.hpack
         nix-build '<nixpkgs>' -A doxygen
 
