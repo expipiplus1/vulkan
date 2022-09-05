@@ -150,16 +150,22 @@ renderExtensibleInstance MarshaledStruct {..} = do
       pure $ "| Just Refl <- eqT @e @" <> childTDoc <+> "= Just f"
     let noMatch = "| otherwise = Nothing"
         cases   = toList matches ++ [noMatch]
+        onlyHasNext =
+          ["sType", "pNext"]
+            == toList (smName . msmStructMember <$> msMembers)
     tellDoc $ "instance Extensible" <+> pretty n <+> "where" <> line <> indent
       2
       (vsep
         [ "extensibleTypeName =" <+> dquotes (pretty n)
-        , "setNext"
-        <+> pretty con
-        <>  "{..}"
-        <+> "next' ="
-        <+> pretty con
-        <>  "{next = next', ..}"
+        , if onlyHasNext
+          then "setNext _" <+> "next' =" <+> pretty con <> "{next = next'}"
+          else
+            "setNext"
+            <+> pretty con
+            <>  "{..}"
+            <+> "next' ="
+            <+> pretty con
+            <>  "{next = next', ..}"
         , "getNext" <+> pretty con <> "{..} = next"
         , "extends :: forall e b proxy. Typeable e => proxy e -> (Extends"
         <+> pretty n

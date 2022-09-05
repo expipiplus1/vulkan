@@ -1419,7 +1419,7 @@ tryTwice xs f =
             Just r  -> Right r
           Right r -> pure $ Right r
         )
-  in  go =<< go xs'
+  in go =<< go xs'
 
 for :: (Traversable t, Applicative f) => t a -> (a -> f b) -> f (t b)
 for = flip traverse
