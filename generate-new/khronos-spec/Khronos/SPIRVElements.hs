@@ -38,11 +38,12 @@ import           Render.SpecInfo                ( HasSpecInfo
                                                 )
 import           Render.Type                    ( cToHsType )
 import           Render.Type.Preserve           ( Preserve(DoNotPreserve) )
+import           Render.Names
 import           Spec.Types
 import           Text.InterpolatedString.Perl6.Unindented
 
 renderSPIRVElements
-  :: (HasErr r, HasRenderParams r, HasSpecInfo r)
+  :: (HasErr r, HasRenderParams r, HasSpecInfo r, HasRenderedNames r)
   => Vector SPIRVExtension
   -> Vector SPIRVCapability
   -> HashMap CName (MarshaledStruct AStruct)
@@ -64,6 +65,7 @@ renderExts
      , HasErr r
      , HasSpecInfo r
      , HasMarshalledStructs r
+     , HasRenderedNames r
      )
   => Vector SPIRVExtension
   -> Sem r ()
@@ -77,6 +79,7 @@ renderCaps
      , HasErr r
      , HasSpecInfo r
      , HasMarshalledStructs r
+     , HasRenderedNames r
      )
   => Vector SPIRVCapability
   -> Sem r ()
@@ -90,6 +93,7 @@ renderSPIRVThing
      , HasErr r
      , HasSpecInfo r
      , HasMarshalledStructs r
+     , HasRenderedNames r
      )
   => Text
   -> (a -> Text)
@@ -124,6 +128,7 @@ renderReq
      , HasErr r
      , HasSpecInfo r
      , HasMarshalledStructs r
+     , HasRenderedNames r
      )
   => SPIRVRequirement
   -> Sem r ([Doc ()], [Doc ()])
@@ -152,8 +157,9 @@ renderReq = \case
             | m <- toList $ msMembers @AStruct str
             , not $ isElided (msmScheme m)
             ]
-    let featureMemberName = mkMemberName s f
-    let con               = mkConName s s
+    resolveAlias <- getResolveAlias
+    let featureMemberName = resolveAlias $ mkMemberName s f
+    let con               = resolveAlias $ mkConName s s
     let xs =
           [ ("featureName", viaShow f)
           , ( "checkFeature"
