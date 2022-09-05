@@ -2965,7 +2965,7 @@ pattern ALLOCATOR_CREATE_EXTERNALLY_SYNCHRONIZED_BIT    = AllocatorCreateFlagBit
 -- When this flag is set, you can experience following warnings reported by
 -- Vulkan validation layer. You can ignore them.
 --
--- vkBindBufferMemory(): Binding memory to buffer 0x2d but
+-- ‍vkBindBufferMemory(): Binding memory to buffer 0x2d but
 -- vkGetBufferMemoryRequirements() has not been called on that buffer.
 pattern ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT   = AllocatorCreateFlagBits 0x00000002
 -- | Enables usage of VK_KHR_bind_memory2 extension.

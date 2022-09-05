@@ -2327,7 +2327,7 @@ deriving instance Show (Chain es) => Show (SubpassEndInfo es)
 
 instance Extensible SubpassEndInfo where
   extensibleTypeName = "SubpassEndInfo"
-  setNext SubpassEndInfo{..} next' = SubpassEndInfo{next = next', ..}
+  setNext _ next' = SubpassEndInfo{next = next'}
   getNext SubpassEndInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SubpassEndInfo e => b) -> Maybe b
   extends _ f
