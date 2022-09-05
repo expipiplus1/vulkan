@@ -478,7 +478,10 @@ withChildren ss =
         , e  <- toList (sInherits s1)
         ]
   in  \s -> s
-        { sExtendedBy  = fromMaybe mempty (Map.lookup (sName s) extendedByMap)
+        { sExtendedBy  =
+            if sName s `elem` neverExtendedStructs
+              then mempty
+              else fromMaybe mempty (Map.lookup (sName s) extendedByMap)
         , sInheritedBy = fromMaybe mempty (Map.lookup (sName s) inheritedByMap)
         }
 

@@ -3,6 +3,7 @@
 {-# language TemplateHaskell #-}
 module Bespoke
   ( forbiddenConstants
+  , neverExtendedStructs
   , forceDisabledExtensions
   , assignBespokeModules
   , bespokeStructsAndUnions
@@ -68,6 +69,11 @@ import           Spec.Types
 -- | These constants are defined elsewhere
 forbiddenConstants :: [CName]
 forbiddenConstants = ["VK_TRUE", "VK_FALSE", "XR_TRUE", "XR_FALSE"]
+
+-- | Structs which are never extended because they're special, and only used
+-- for low-level operations
+neverExtendedStructs :: [CName]
+neverExtendedStructs = ["VkBaseOutStructure", "VkBaseInStructure"]
 
 forceDisabledExtensions :: [ByteString]
 forceDisabledExtensions =

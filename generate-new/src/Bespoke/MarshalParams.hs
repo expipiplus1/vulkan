@@ -153,6 +153,11 @@ isPassAsPointerType' = \case
              , "jobject"
              , "_screen_window"
              , "_screen_context"
+             -- This is used in a slightly weird way in
+             -- VkGetPipelinePropertiesEXT, Just fall back to having the user
+             -- allocate it and assume they know what they're doing
+             , "VkBaseOutStructure"
+             , "VkBaseInStructure"
              -- TODO: remove these
              , "VkInstanceCreateInfo"
              , "VkAllocationCallbacks"
