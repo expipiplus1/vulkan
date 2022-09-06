@@ -57,10 +57,12 @@ module VulkanMemoryAllocator  ( createAllocator
                               , withBuffer
                               , createBufferWithAlignment
                               , createAliasingBuffer
+                              , createAliasingBuffer2
                               , destroyBuffer
                               , createImage
                               , withImage
                               , createAliasingImage
+                              , createAliasingImage2
                               , destroyImage
                               , createVirtualBlock
                               , withVirtualBlock
@@ -1211,7 +1213,7 @@ foreign import ccall
 
 -- | Returns current information about specified allocation.
 --
--- Current paramteres of given allocation are returned in
+-- Current parameters of given allocation are returned in
 -- @pAllocationInfo@.
 --
 -- Although this function doesn\'t lock any mutex, so it should be quite
@@ -1826,7 +1828,7 @@ foreign import ccall
 -- |           | context   | Context object that has been created by       |
 -- |           |           | 'beginDefragmentation'.                       |
 -- +-----------+-----------+-----------------------------------------------+
--- | out       | pPassInfo | Computed informations for current pass.       |
+-- | out       | pPassInfo | Computed information for current pass.        |
 -- +-----------+-----------+-----------------------------------------------+
 --
 -- __Returns__
@@ -1882,7 +1884,7 @@ foreign import ccall
 -- | context     | Context object that has been created by                |
 -- |             | 'beginDefragmentation'.                                |
 -- +-------------+--------------------------------------------------------+
--- | pPassInfo   | Computed informations for current pass filled by       |
+-- | pPassInfo   | Computed information for current pass filled by        |
 -- |             | 'beginDefragmentationPass' and possibly modified by    |
 -- |             | you.                                                   |
 -- +-------------+--------------------------------------------------------+
@@ -2257,6 +2259,11 @@ foreign import ccall
 -- longer need it using @vkDestroyBuffer()@. If you want to also destroy
 -- the corresponding allocation you can use convenience function
 -- 'destroyBuffer'.
+--
+-- Note
+--
+-- There is a new version of this function augmented with parameter
+-- @allocationLocalOffset@ - see 'createAliasingBuffer2'.
 createAliasingBuffer :: forall a io
                       . (Extendss BufferCreateInfo a, PokeChain a, MonadIO io)
                      => -- No documentation found for Nested "vmaCreateAliasingBuffer" "allocator"
@@ -2279,6 +2286,70 @@ foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
+  "vmaCreateAliasingBuffer2" ffiVmaCreateAliasingBuffer2
+  :: Allocator -> Allocation -> DeviceSize -> Ptr (SomeStruct BufferCreateInfo) -> Ptr Buffer -> IO Result
+
+-- | Creates a new @VkBuffer@, binds already created memory for it.
+--
+-- __Parameters__
+--
+-- +-----------+-----------------------+-----------------------------------------------+
+-- |           | allocator             |                                               |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- |           | allocation            | Allocation that provides memory to be used    |
+-- |           |                       | for binding new buffer to it.                 |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- |           | allocationLocalOffset | Additional offset to be added while binding,  |
+-- |           |                       | relative to the beginning of the allocation.  |
+-- |           |                       | Normally it should be 0.                      |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- |           | pBufferCreateInfo     |                                               |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- | out       | pBuffer               | Buffer that was created.                      |
+-- +-----------+-----------------------+-----------------------------------------------+
+--
+-- This function automatically:
+--
+-- 1.  Creates buffer.
+--
+-- 2.  Binds the buffer with the supplied memory.
+--
+-- If any of these operations fail, buffer is not created, returned value
+-- is negative error code and @*pBuffer@ is null.
+--
+-- If the function succeeded, you must destroy the buffer when you no
+-- longer need it using @vkDestroyBuffer()@. If you want to also destroy
+-- the corresponding allocation you can use convenience function
+-- 'destroyBuffer'.
+--
+-- Note
+--
+-- This is a new version of the function augmented with parameter
+-- @allocationLocalOffset@.
+createAliasingBuffer2 :: forall a io
+                       . (Extendss BufferCreateInfo a, PokeChain a, MonadIO io)
+                      => -- No documentation found for Nested "vmaCreateAliasingBuffer2" "allocator"
+                         Allocator
+                      -> -- No documentation found for Nested "vmaCreateAliasingBuffer2" "allocation"
+                         Allocation
+                      -> -- No documentation found for Nested "vmaCreateAliasingBuffer2" "allocationLocalOffset"
+                         ("allocationLocalOffset" ::: DeviceSize)
+                      -> -- No documentation found for Nested "vmaCreateAliasingBuffer2" "pBufferCreateInfo"
+                         (BufferCreateInfo a)
+                      -> io (Buffer)
+createAliasingBuffer2 allocator allocation allocationLocalOffset bufferCreateInfo = liftIO . evalContT $ do
+  pBufferCreateInfo <- ContT $ withCStruct (bufferCreateInfo)
+  pPBuffer <- ContT $ bracket (callocBytes @Buffer 8) free
+  r <- lift $ traceAroundEvent "vmaCreateAliasingBuffer2" ((ffiVmaCreateAliasingBuffer2) (allocator) (allocation) (allocationLocalOffset) (forgetExtensions pBufferCreateInfo) (pPBuffer))
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pBuffer <- lift $ peek @Buffer pPBuffer
+  pure $ (pBuffer)
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
   "vmaDestroyBuffer" ffiVmaDestroyBuffer
   :: Allocator -> Buffer -> Allocation -> IO ()
 
@@ -2289,7 +2360,7 @@ foreign import ccall
 -- > vkDestroyBuffer(device, buffer, allocationCallbacks);
 -- > vmaFreeMemory(allocator, allocation);
 --
--- It it safe to pass null as buffer and\/or allocation.
+-- It is safe to pass null as buffer and\/or allocation.
 destroyBuffer :: forall io
                . (MonadIO io)
               => -- No documentation found for Nested "vmaDestroyBuffer" "allocator"
@@ -2355,7 +2426,7 @@ foreign import ccall
   "vmaCreateAliasingImage" ffiVmaCreateAliasingImage
   :: Allocator -> Allocation -> Ptr (SomeStruct ImageCreateInfo) -> Ptr Image -> IO Result
 
--- | Function similar to 'createAliasingBuffer'.
+-- | Function similar to 'createAliasingBuffer' but for images.
 createAliasingImage :: forall a io
                      . (Extendss ImageCreateInfo a, PokeChain a, MonadIO io)
                     => -- No documentation found for Nested "vmaCreateAliasingImage" "allocator"
@@ -2378,6 +2449,34 @@ foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
+  "vmaCreateAliasingImage2" ffiVmaCreateAliasingImage2
+  :: Allocator -> Allocation -> DeviceSize -> Ptr (SomeStruct ImageCreateInfo) -> Ptr Image -> IO Result
+
+-- | Function similar to 'createAliasingBuffer2' but for images.
+createAliasingImage2 :: forall a io
+                      . (Extendss ImageCreateInfo a, PokeChain a, MonadIO io)
+                     => -- No documentation found for Nested "vmaCreateAliasingImage2" "allocator"
+                        Allocator
+                     -> -- No documentation found for Nested "vmaCreateAliasingImage2" "allocation"
+                        Allocation
+                     -> -- No documentation found for Nested "vmaCreateAliasingImage2" "allocationLocalOffset"
+                        ("allocationLocalOffset" ::: DeviceSize)
+                     -> -- No documentation found for Nested "vmaCreateAliasingImage2" "pImageCreateInfo"
+                        (ImageCreateInfo a)
+                     -> io (Image)
+createAliasingImage2 allocator allocation allocationLocalOffset imageCreateInfo = liftIO . evalContT $ do
+  pImageCreateInfo <- ContT $ withCStruct (imageCreateInfo)
+  pPImage <- ContT $ bracket (callocBytes @Image 8) free
+  r <- lift $ traceAroundEvent "vmaCreateAliasingImage2" ((ffiVmaCreateAliasingImage2) (allocator) (allocation) (allocationLocalOffset) (forgetExtensions pImageCreateInfo) (pPImage))
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pImage <- lift $ peek @Image pPImage
+  pure $ (pImage)
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
   "vmaDestroyImage" ffiVmaDestroyImage
   :: Allocator -> Image -> Allocation -> IO ()
 
@@ -2388,7 +2487,7 @@ foreign import ccall
 -- > vkDestroyImage(device, image, allocationCallbacks);
 -- > vmaFreeMemory(allocator, allocation);
 --
--- It it safe to pass null as image and\/or allocation.
+-- It is safe to pass null as image and\/or allocation.
 destroyImage :: forall io
               . (MonadIO io)
              => -- No documentation found for Nested "vmaDestroyImage" "allocator"
@@ -3360,7 +3459,7 @@ pattern ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT                = AllocationCre
 pattern ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT                  = AllocationCreateFlagBits 0x00020000
 -- | Allocation strategy that chooses always the lowest offset in available
 -- space. This is not the most efficient strategy but achieves highly
--- packed data. Used internally by defragmentation, not recomended in
+-- packed data. Used internally by defragmentation, not recommended in
 -- typical usage.
 pattern ALLOCATION_CREATE_STRATEGY_MIN_OFFSET_BIT                = AllocationCreateFlagBits 0x00040000
 -- | Alias to 'ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT'.
@@ -3896,7 +3995,7 @@ data VulkanFunctions = VulkanFunctions
     -- \"vkGetBufferMemoryRequirements2KHR\" when using
     -- VK_KHR_dedicated_allocation extension.
     vkGetBufferMemoryRequirements2KHR :: PFN_vkGetBufferMemoryRequirements2KHR
-  , -- | Fetch \"vkGetImageMemoryRequirements 2\" on Vulkan >= 1.1, fetch
+  , -- | Fetch \"vkGetImageMemoryRequirements2\" on Vulkan >= 1.1, fetch
     -- \"vkGetImageMemoryRequirements2KHR\" when using
     -- VK_KHR_dedicated_allocation extension.
     vkGetImageMemoryRequirements2KHR :: PFN_vkGetImageMemoryRequirements2KHR
