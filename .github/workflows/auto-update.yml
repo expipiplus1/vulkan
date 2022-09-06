@@ -108,7 +108,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.TUVOK_TOKEN }}
 
     - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v4.0.2
+      uses: peter-evans/create-pull-request@v4.1.1
       if: steps.check_pr.outputs.create_pr == 'true'
       with:
         token: ${{ secrets.TUVOK_TOKEN }}
