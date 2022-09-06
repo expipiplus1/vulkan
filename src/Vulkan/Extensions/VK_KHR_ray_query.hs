@@ -19,11 +19,13 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.1
+--     -   Requires support for Vulkan 1.1
 --
---     -   Requires @VK_KHR_spirv_1_4@
+--     -   Requires @VK_KHR_spirv_1_4@ to be enabled for any device-level
+--         functionality
 --
---     -   Requires @VK_KHR_acceleration_structure@
+--     -   Requires @VK_KHR_acceleration_structure@ to be enabled for any
+--         device-level functionality
 --
 -- [__Contact__]
 --
@@ -167,27 +169,26 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-RayQueryKHR RayQueryKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-RayQueryKHR RayQueryKHR>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-RayTraversalPrimitiveCullingKHR RayTraversalPrimitiveCullingKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-RayTraversalPrimitiveCullingKHR RayTraversalPrimitiveCullingKHR>
 --
 -- == Sample Code
 --
--- Example of ray query in a GLSL shader
+-- Example of ray query in a GLSL shader, illustrating how to use ray
+-- queries to determine whether a given position (at ray origin) is in
+-- shadow or not, by tracing a ray towards the light, and checking for any
+-- intersections with geometry occluding the light.
 --
 -- > rayQueryEXT rq;
 -- >
--- > rayQueryInitializeEXT(rq, accStruct, gl_RayFlagsNoneEXT, 0, origin, tMin, direction, tMax);
+-- > rayQueryInitializeEXT(rq, accStruct, gl_RayFlagsTerminateOnFirstHitEXT, cullMask, origin, tMin, direction, tMax);
 -- >
--- > while(rayQueryProceedEXT(rq)) {
--- >     if (rayQueryGetIntersectionTypeEXT(rq, false) == gl_RayQueryCandidateIntersectionTriangleEXT) {
--- >         //...
--- >         rayQueryConfirmIntersectionEXT(rq);
--- >     }
--- > }
+-- > // Traverse the acceleration structure and store information about the first intersection (if any)
+-- > rayQueryProceedEXT(rq);
 -- >
 -- > if (rayQueryGetIntersectionTypeEXT(rq, true) == gl_RayQueryCommittedIntersectionNoneEXT) {
--- >     //...
+-- >     // Not in shadow
 -- > }
 --
 -- == Issues
@@ -240,7 +241,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_ray_query Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_ray_query Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

@@ -19,13 +19,16 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.1
+--     -   Requires support for Vulkan 1.1
 --
---     -   Requires @VK_EXT_descriptor_indexing@
+--     -   Requires @VK_EXT_descriptor_indexing@ to be enabled for any
+--         device-level functionality
 --
---     -   Requires @VK_KHR_buffer_device_address@
+--     -   Requires @VK_KHR_buffer_device_address@ to be enabled for any
+--         device-level functionality
 --
---     -   Requires @VK_KHR_deferred_host_operations@
+--     -   Requires @VK_KHR_deferred_host_operations@ to be enabled for any
+--         device-level functionality
 --
 -- [__Contact__]
 --
@@ -376,7 +379,7 @@
 --     'cmdCopyMemoryToAccelerationStructureKHR')
 --
 -- -   document
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure-inactive-prims inactive primitives and instances>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure-inactive-prims inactive primitives and instances>
 --
 -- -   added 'PhysicalDeviceAccelerationStructureFeaturesKHR' structure
 --
@@ -384,7 +387,7 @@
 --     ('cmdBuildAccelerationStructuresIndirectKHR')
 --
 -- -   added
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#host-acceleration-structure host acceleration structure>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#host-acceleration-structure host acceleration structure>
 --     commands
 --
 -- -   reworked geometry structures so they could be better shared between
@@ -655,7 +658,7 @@
 --         structure and require one of them be @NULL@
 --
 -- -   added
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
 --     support for acceleration structures
 --
 -- -   changed the @update@ member of
@@ -844,13 +847,14 @@
 --
 --     -   Resolve Vulkan-hpp issues (!3543)
 --
---     -   add missing require for VkGeometryInstanceFlagsKHR
+--         -   add missing require for VkGeometryInstanceFlagsKHR
 --
---     -   de-alias VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_NV
---         since the KHR structure is no longer equivalent
+--         -   de-alias
+--             VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_NV
+--             since the KHR structure is no longer equivalent
 --
---     -   add len to pDataSize attribute for
---         vkWriteAccelerationStructuresPropertiesKHR
+--         -   add len to pDataSize attribute for
+--             vkWriteAccelerationStructuresPropertiesKHR
 --
 -- -   Revision 4, 2020-01-23 (Daniel Koch, Eric Werness)
 --
@@ -1147,7 +1151,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_acceleration_structure Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_acceleration_structure Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

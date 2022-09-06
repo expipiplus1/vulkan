@@ -144,7 +144,7 @@ instance Zero PhysicalDeviceInlineUniformBlockFeatures where
 data PhysicalDeviceInlineUniformBlockProperties = PhysicalDeviceInlineUniformBlockProperties
   { -- | #extension-limits-maxInlineUniformBlockSize# @maxInlineUniformBlockSize@
     -- is the maximum size in bytes of an
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-inlineuniformblock inline uniform block>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-inlineuniformblock inline uniform block>
     -- binding.
     maxInlineUniformBlockSize :: Word32
   , -- No documentation found for Nested "VkPhysicalDeviceInlineUniformBlockProperties" "maxPerStageDescriptorInlineUniformBlocks"

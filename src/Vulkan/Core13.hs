@@ -4,6 +4,7 @@ module Vulkan.Core13  ( pattern API_VERSION_1_3
                       , PhysicalDeviceVulkan13Features(..)
                       , PhysicalDeviceVulkan13Properties(..)
                       , StructureType(..)
+                      , Flags64
                       , module Vulkan.Core13.Enums
                       , module Vulkan.Core13.Handles
                       , module Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state
@@ -75,6 +76,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Version (pattern MAKE_API_VERSION)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_PROPERTIES))
+import Vulkan.Core10.FundamentalTypes (Flags64)
 import Vulkan.Core10.Enums.StructureType (StructureType(..))
 pattern API_VERSION_1_3 :: Word32
 pattern API_VERSION_1_3 = MAKE_API_VERSION 1 3 0
@@ -165,8 +167,8 @@ data PhysicalDeviceVulkan13Features = PhysicalDeviceVulkan13Features
     -- structure.
     subgroupSizeControl :: Bool
   , -- | #features-computeFullSubgroups# @computeFullSubgroups@ indicates whether
-    -- the implementation supports requiring full subgroups in compute shaders
-    -- via the
+    -- the implementation supports requiring full subgroups in compute , mesh,
+    -- or task shaders via the
     -- 'Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT'
     -- flag.
     computeFullSubgroups :: Bool
@@ -644,7 +646,6 @@ data PhysicalDeviceVulkan13Properties = PhysicalDeviceVulkan13Properties
   , -- | #limits-storageTexelBufferOffsetSingleTexelAlignment#
     -- @storageTexelBufferOffsetSingleTexelAlignment@ indicates whether single
     -- texel alignment is sufficient for a storage texel buffer of any format.
-    -- The value /must/ be a power of two.
     storageTexelBufferOffsetSingleTexelAlignment :: Bool
   , -- | #limits-uniformTexelBufferOffsetAlignmentBytes#
     -- @uniformTexelBufferOffsetAlignmentBytes@ is a byte alignment that is
@@ -654,7 +655,6 @@ data PhysicalDeviceVulkan13Properties = PhysicalDeviceVulkan13Properties
   , -- | #limits-uniformTexelBufferOffsetSingleTexelAlignment#
     -- @uniformTexelBufferOffsetSingleTexelAlignment@ indicates whether single
     -- texel alignment is sufficient for a uniform texel buffer of any format.
-    -- The value /must/ be a power of two.
     uniformTexelBufferOffsetSingleTexelAlignment :: Bool
   , -- | #limits-maxBufferSize# @maxBufferSize@ is the maximum size
     -- 'Vulkan.Core10.Handles.Buffer' that /can/ be created.

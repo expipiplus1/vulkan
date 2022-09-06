@@ -209,7 +209,8 @@ instance Zero ProtectedSubmitInfo where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceProtectedMemoryFeatures = PhysicalDeviceProtectedMemoryFeatures
   { -- | #extension-features-protectedMemory# @protectedMemory@ specifies whether
-    -- protected memory is supported.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-protected-memory protected memory>
+    -- is supported.
     protectedMemory :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -279,7 +280,7 @@ data PhysicalDeviceProtectedMemoryProperties = PhysicalDeviceProtectedMemoryProp
     -- have undefined values written, reads and queries will return undefined
     -- values. If this limit is 'Vulkan.Core10.FundamentalTypes.FALSE',
     -- applications /must/ not perform these operations. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-protected-access-rules>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-protected-access-rules>
     -- for more information.
     protectedNoFault :: Bool }
   deriving (Typeable, Eq)
@@ -327,9 +328,39 @@ instance Zero PhysicalDeviceProtectedMemoryProperties where
 --
 -- The queue returned by 'getDeviceQueue2' /must/ have the same @flags@
 -- value from this structure as that used at device creation time in a
--- 'Vulkan.Core10.Device.DeviceQueueCreateInfo' structure. If no matching
--- @flags@ were specified at device creation time, then the handle returned
--- in @pQueue@ /must/ be @NULL@.
+-- 'Vulkan.Core10.Device.DeviceQueueCreateInfo' structure.
+--
+-- Note
+--
+-- Normally, if you create both protected-capable and non-protected-capable
+-- queues with the same family, they are treated as separate lists of
+-- queues and @queueIndex@ is relative to the start of the list of queues
+-- specified by both @queueFamilyIndex@ and @flags@. However, for
+-- historical reasons, some implementations may exhibit different behavior.
+-- These divergent implementations instead concatenate the lists of queues
+-- and treat @queueIndex@ as relative to the start of the first list of
+-- queues with the given @queueFamilyIndex@. This only matters in cases
+-- where an application has created both protected-capable and
+-- non-protected-capable queues from the same queue family.
+--
+-- For such divergent implementations, the maximum value of @queueIndex@ is
+-- equal to the sum of
+-- 'Vulkan.Core10.Device.DeviceQueueCreateInfo'::@queueCount@ minus one,
+-- for all 'Vulkan.Core10.Device.DeviceQueueCreateInfo' structures that
+-- share a common @queueFamilyIndex@.
+--
+-- Such implementations will return @NULL@ for either the protected or
+-- unprotected queues when calling 'getDeviceQueue2' with @queueIndex@ in
+-- the range zero to
+-- 'Vulkan.Core10.Device.DeviceQueueCreateInfo'::@queueCount@ minus one. In
+-- cases where these implementations returned @NULL@, the corresponding
+-- queues are instead located in the extended range described in the
+-- preceding two paragraphs.
+--
+-- This behaviour will not be observed on any driver that has passed Vulkan
+-- conformance test suite version 1.3.3.0, or any subsequent version. This
+-- information can be found by querying
+-- 'Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.PhysicalDeviceDriverProperties'::@conformanceVersion@.
 --
 -- == Valid Usage (Implicit)
 --
@@ -360,8 +391,8 @@ data DeviceQueueInfo2 = DeviceQueueInfo2
     -- /must/ be one of the queue family indices specified when @device@ was
     -- created, via the 'Vulkan.Core10.Device.DeviceQueueCreateInfo' structure
     queueFamilyIndex :: Word32
-  , -- | @queueIndex@ is the index within this queue family of the queue to
-    -- retrieve.
+  , -- | @queueIndex@ is the index of the queue to retrieve from within the set
+    -- of queues that share both the queue family and flags specified.
     --
     -- #VUID-VkDeviceQueueInfo2-queueIndex-01843# @queueIndex@ /must/ be less
     -- than 'Vulkan.Core10.Device.DeviceQueueCreateInfo'::@queueCount@ for the

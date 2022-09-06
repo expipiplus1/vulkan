@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_external_memory_fd@
+--     -   Requires @VK_KHR_external_memory_fd@ to be enabled for any
+--         device-level functionality
 --
 -- [__Contact__]
 --
@@ -73,15 +74,15 @@
 -- image, specify the memory layout (such as row pitch and DRM format
 -- modifier) of the 'Vulkan.Core10.Handles.Image'? In other words, how does
 -- the application achieve behavior comparable to that provided by
--- <https://www.khronos.org/registry/EGL/extensions/EXT/EGL_EXT_image_dma_buf_import.txt EGL_EXT_image_dma_buf_import>
+-- <https://registry.khronos.org/EGL/extensions/EXT/EGL_EXT_image_dma_buf_import.txt EGL_EXT_image_dma_buf_import>
 -- and
--- <https://www.khronos.org/registry/EGL/extensions/EXT/EGL_EXT_image_dma_buf_import_modifiers.txt EGL_EXT_image_dma_buf_import_modifiers>
+-- <https://registry.khronos.org/EGL/extensions/EXT/EGL_EXT_image_dma_buf_import_modifiers.txt EGL_EXT_image_dma_buf_import_modifiers>
 -- ?
 --
 -- __RESOLVED__: Features comparable to those in
--- <https://www.khronos.org/registry/EGL/extensions/EXT/EGL_EXT_image_dma_buf_import.txt EGL_EXT_image_dma_buf_import>
+-- <https://registry.khronos.org/EGL/extensions/EXT/EGL_EXT_image_dma_buf_import.txt EGL_EXT_image_dma_buf_import>
 -- and
--- <https://www.khronos.org/registry/EGL/extensions/EXT/EGL_EXT_image_dma_buf_import_modifiers.txt EGL_EXT_image_dma_buf_import_modifiers>
+-- <https://registry.khronos.org/EGL/extensions/EXT/EGL_EXT_image_dma_buf_import_modifiers.txt EGL_EXT_image_dma_buf_import_modifiers>
 -- will be provided by an extension layered atop this one.
 --
 -- 2) Without the ability to specify the memory layout of external
@@ -106,7 +107,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_external_memory_dma_buf Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_external_memory_dma_buf Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

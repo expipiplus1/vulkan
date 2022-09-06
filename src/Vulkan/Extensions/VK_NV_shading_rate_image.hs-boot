@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Contact__]
 --
@@ -190,10 +191,10 @@
 -- a coarse fragment. This sort of test can be implemented using an output
 -- sample mask, but such a shader would need to know which bit in the mask
 -- corresponds to each sample in the coarse fragment. We are including a
--- mechanism to allow aplications to specify the orders of coverage samples
--- for each shading rate and sample count, either as static pipeline state
--- or dynamically via a command buffer. This portion of the extension has
--- its own feature bit.
+-- mechanism to allow applications to specify the orders of coverage
+-- samples for each shading rate and sample count, either as static
+-- pipeline state or dynamically via a command buffer. This portion of the
+-- extension has its own feature bit.
 --
 -- We will not be providing a query to determine the
 -- implementation-dependent default ordering. The thinking here is that if
@@ -209,7 +210,7 @@
 --
 -- __RESOLVED__ We are specifying the pipeline stage to be between the
 -- final
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>
 -- ('Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT')
 -- and before the first stage used for fragment processing
 -- ('Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT'),
@@ -270,7 +271,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_shading_rate_image Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_shading_rate_image Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Contact__]
 --
@@ -48,7 +49,7 @@
 --         feature is used.
 --
 --     -   This extension provides API support for
---         <https://www.khronos.org/registry/OpenGL/extensions/NV/NV_conservative_raster_underestimation.txt GL_NV_conservative_raster_underestimation>
+--         <https://registry.khronos.org/OpenGL/extensions/NV/NV_conservative_raster_underestimation.txt GL_NV_conservative_raster_underestimation>
 --         if the
 --         'PhysicalDeviceConservativeRasterizationPropertiesEXT'::@fullyCoveredFragmentShaderInputVariable@
 --         feature is used.
@@ -147,7 +148,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_conservative_rasterization Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_conservative_rasterization Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -373,6 +374,26 @@ instance Zero PhysicalDeviceConservativeRasterizationPropertiesEXT where
 -- | VkPipelineRasterizationConservativeStateCreateInfoEXT - Structure
 -- specifying conservative raster state
 --
+-- = Description
+--
+-- If this structure is not included in the @pNext@ chain,
+-- @conservativeRasterizationMode@ is considered to be
+-- 'CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT', and and conservative
+-- rasterization is disabled.
+--
+-- Polygon rasterization /can/ be made conservative by setting
+-- @conservativeRasterizationMode@ to
+-- 'CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT' or
+-- 'CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT' in
+-- 'PipelineRasterizationConservativeStateCreateInfoEXT'.
+--
+-- Note
+--
+-- If
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-conservativePointAndLineRasterization conservativePointAndLineRasterization>
+-- is supported, conservative rasterization can be applied to line and
+-- point primitives, otherwise it must be disabled.
+--
 -- == Valid Usage (Implicit)
 --
 -- = See Also
@@ -399,6 +420,9 @@ data PipelineRasterizationConservativeStateCreateInfoEXT = PipelineRasterization
     -- each of its edges in @X@ and @Y@ equally in screen space beyond the base
     -- overestimation specified in
     -- 'PhysicalDeviceConservativeRasterizationPropertiesEXT'::@primitiveOverestimationSize@.
+    -- If @conservativeRasterizationMode@ is not
+    -- 'CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT', this value is
+    -- ignored.
     --
     -- #VUID-VkPipelineRasterizationConservativeStateCreateInfoEXT-extraPrimitiveOverestimationSize-01769#
     -- @extraPrimitiveOverestimationSize@ /must/ be in the range of @0.0@ to

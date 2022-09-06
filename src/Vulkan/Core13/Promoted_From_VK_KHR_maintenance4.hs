@@ -297,6 +297,17 @@ instance Zero DeviceBufferMemoryRequirements where
 --     'Vulkan.Extensions.VK_KHR_swapchain.ImageSwapchainCreateInfoKHR'
 --     structure
 --
+-- -   #VUID-VkDeviceImageMemoryRequirements-pCreateInfo-06776# The
+--     @pCreateInfo@::@pNext@ chain /must/ not contain a
+--     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierExplicitCreateInfoEXT'
+--     structure
+--
+-- -   #VUID-VkDeviceImageMemoryRequirements-pNext-06996# Applications also
+--     /must/ not call 'getDeviceImageMemoryRequirements' with a
+--     'Vulkan.Core10.Image.ImageCreateInfo' whose @pNext@ chain includes a
+--     'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
+--     structure with non-zero @externalFormat@.
+--
 -- -   #VUID-VkDeviceImageMemoryRequirementsKHR-pCreateInfo-06417# If
 --     @pCreateInfo@::@format@ specifies a /multi-planar/ format and
 --     @pCreateInfo@::@flags@ has
@@ -414,7 +425,7 @@ instance Zero DeviceImageMemoryRequirements where
 --
 -- = Members
 --
--- This structure describes the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --

@@ -31,7 +31,7 @@ type PeerMemoryFeatureFlags = PeerMemoryFeatureFlagBits
 --
 -- The peer memory features of a memory heap also apply to any accesses
 -- that /may/ be performed during
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transitions>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transitions>.
 --
 -- 'PEER_MEMORY_FEATURE_COPY_DST_BIT' /must/ be supported for all host
 -- local heaps and for at least one device-local memory heap.

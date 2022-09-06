@@ -71,7 +71,9 @@ data Bool32
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.DeviceOrHostAddressKHR',
 -- 'Vulkan.Extensions.VK_NVX_image_view_handle.ImageViewAddressPropertiesNVX',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.StridedDeviceAddressRegionKHR',
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1.TraceRaysIndirectCommand2KHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.cmdBuildAccelerationStructuresIndirectKHR',
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1.cmdTraceRaysIndirect2KHR',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.cmdTraceRaysIndirectKHR'
 type DeviceAddress = Word64
 
@@ -90,6 +92,7 @@ type DeviceAddress = Word64
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindBufferMemoryInfo',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindImageMemoryInfo',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkBindVideoSessionMemoryInfoKHR VkBindVideoSessionMemoryInfoKHR>,
 -- 'Vulkan.Core10.CommandBufferBuilding.BufferCopy',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.BufferCopy2',
 -- 'Vulkan.Core10.Buffer.BufferCreateInfo',
@@ -126,7 +129,7 @@ type DeviceAddress = Word64
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.SparseMemoryBind',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.StridedDeviceAddressRegionKHR',
 -- 'Vulkan.Core10.Image.SubresourceLayout',
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoBindMemoryKHR VkVideoBindMemoryKHR>,
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1.TraceRaysIndirectCommand2KHR',
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoCapabilitiesKHR VkVideoCapabilitiesKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeInfoKHR VkVideoDecodeInfoKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeInfoKHR VkVideoEncodeInfoKHR>,
@@ -150,7 +153,9 @@ type DeviceAddress = Word64
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_draw_indirect_count.cmdDrawIndirectCount',
 -- 'Vulkan.Extensions.VK_AMD_draw_indirect_count.cmdDrawIndirectCountAMD',
 -- 'Vulkan.Extensions.VK_KHR_draw_indirect_count.cmdDrawIndirectCountKHR',
+-- 'Vulkan.Extensions.VK_EXT_mesh_shader.cmdDrawMeshTasksIndirectCountEXT',
 -- 'Vulkan.Extensions.VK_NV_mesh_shader.cmdDrawMeshTasksIndirectCountNV',
+-- 'Vulkan.Extensions.VK_EXT_mesh_shader.cmdDrawMeshTasksIndirectEXT',
 -- 'Vulkan.Extensions.VK_NV_mesh_shader.cmdDrawMeshTasksIndirectNV',
 -- 'Vulkan.Extensions.VK_EXT_transform_feedback.cmdEndTransformFeedbackEXT',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdFillBuffer',

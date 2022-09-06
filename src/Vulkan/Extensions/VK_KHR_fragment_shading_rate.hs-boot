@@ -19,11 +19,13 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_create_renderpass2@
+--     -   Requires @VK_KHR_create_renderpass2@ to be enabled for any
+--         device-level functionality
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Contact__]
 --
@@ -31,7 +33,7 @@
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_fragment_shading_rate] @tobski%0A<<Here describe the issue or question you have about the VK_KHR_fragment_shading_rate extension>> >
 --
 -- [__Extension Proposal__]
---     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_KHR_fragment_shading_rate.asciidoc VK_KHR_fragment_shading_rate>
+--     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_KHR_fragment_shading_rate.adoc VK_KHR_fragment_shading_rate>
 --
 -- == Other Extension Metadata
 --
@@ -80,14 +82,14 @@
 -- Up to three methods are available to the application to change the
 -- fragment shading rate:
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-pipeline>,
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-pipeline>,
 --     which allows the specification of a rate per-draw.
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-primitive>,
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-primitive>,
 --     which allows the specification of a rate per primitive, specified
 --     during shading.
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment>,
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment>,
 --     which allows the specification of a rate per-region of the
 --     framebuffer, specified in a specialized image attachment.
 --
@@ -101,7 +103,7 @@
 --
 -- This extension also adds support for the @SPV_KHR_fragment_shading_rate@
 -- extension which enables setting the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-primitive primitive fragment shading rate>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-primitive primitive fragment shading rate>,
 -- and allows querying the final shading rate from a fragment shader.
 --
 -- == New Commands
@@ -216,7 +218,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_fragment_shading_rate Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_fragment_shading_rate Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

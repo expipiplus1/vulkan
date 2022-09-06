@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Contact__]
 --
@@ -65,7 +66,7 @@
 -- generate these collections to be processed by fixed-function primitive
 -- assembly and rasterization logic. When task and mesh shaders are
 -- dispatched, they replace the core
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization stages>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization stages>,
 -- including vertex array attribute fetching, vertex shader processing,
 -- tessellation, and geometry shader processing.
 --
@@ -106,16 +107,16 @@
 -- -   Extending
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits':
 --
---     -   'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV'
+--     -   'PIPELINE_STAGE_MESH_SHADER_BIT_NV'
 --
---     -   'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
+--     -   'PIPELINE_STAGE_TASK_SHADER_BIT_NV'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits':
 --
---     -   'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_NV'
+--     -   'SHADER_STAGE_MESH_BIT_NV'
 --
---     -   'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_NV'
+--     -   'SHADER_STAGE_TASK_BIT_NV'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
@@ -125,21 +126,21 @@
 --
 -- == New or Modified Built-In Variables
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-taskcount TaskCountNV>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-taskcount TaskCountNV>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-primitivecount PrimitiveCountNV>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-primitivecount PrimitiveCountNV>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-primitiveindices PrimitiveIndicesNV>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-primitiveindices PrimitiveIndicesNV>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-clipdistancepv ClipDistancePerViewNV>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-clipdistancepv ClipDistancePerViewNV>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-culldistancepv CullDistancePerViewNV>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-culldistancepv CullDistancePerViewNV>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-layerpv LayerPerViewNV>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-layerpv LayerPerViewNV>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-meshviewcount MeshViewCountNV>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-meshviewcount MeshViewCountNV>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-meshviewindices MeshViewIndicesNV>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-meshviewindices MeshViewIndicesNV>
 --
 -- -   (modified)@Position@
 --
@@ -175,7 +176,7 @@
 --
 -- == New SPIR-V Capability
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-MeshShadingNV MeshShadingNV>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-MeshShadingNV MeshShadingNV>
 --
 -- == Issues
 --
@@ -252,7 +253,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_mesh_shader Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_mesh_shader Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

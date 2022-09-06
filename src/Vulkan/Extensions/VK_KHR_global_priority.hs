@@ -19,7 +19,7 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
 -- [__Contact__]
 --
@@ -35,11 +35,9 @@
 --
 --     -   Tobias Hector, AMD
 --
---     -   Contributors to
---         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_global_priority VK_EXT_global_priority>
+--     -   Contributors to @VK_EXT_global_priority@
 --
---     -   Contributors to
---         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_global_priority_query VK_EXT_global_priority_query>
+--     -   Contributors to @VK_EXT_global_priority_query@
 --
 -- == Description
 --
@@ -155,7 +153,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_global_priority Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_global_priority Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -248,7 +246,7 @@ pattern QUEUE_GLOBAL_PRIORITY_REALTIME_EXT = QUEUE_GLOBAL_PRIORITY_REALTIME_KHR
 --
 -- = Description
 --
--- A queue created without specifying
+-- Queues created without specifying
 -- 'DeviceQueueGlobalPriorityCreateInfoKHR' will default to
 -- 'QUEUE_GLOBAL_PRIORITY_MEDIUM_KHR'.
 --
@@ -261,8 +259,8 @@ pattern QUEUE_GLOBAL_PRIORITY_REALTIME_EXT = QUEUE_GLOBAL_PRIORITY_REALTIME_KHR
 -- 'QueueGlobalPriorityKHR',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DeviceQueueGlobalPriorityCreateInfoKHR = DeviceQueueGlobalPriorityCreateInfoKHR
-  { -- | @globalPriority@ is the system-wide priority associated to this queue as
-    -- specified by
+  { -- | @globalPriority@ is the system-wide priority associated to these queues
+    -- as specified by
     -- 'Vulkan.Extensions.VK_EXT_global_priority.QueueGlobalPriorityEXT'
     --
     -- #VUID-VkDeviceQueueGlobalPriorityCreateInfoKHR-globalPriority-parameter#
@@ -311,9 +309,7 @@ instance Zero DeviceQueueGlobalPriorityCreateInfoKHR where
 --
 -- = Members
 --
--- The members of the
--- 'Vulkan.Extensions.VK_EXT_global_priority_query.PhysicalDeviceGlobalPriorityQueryFeaturesEXT'
--- structure describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --

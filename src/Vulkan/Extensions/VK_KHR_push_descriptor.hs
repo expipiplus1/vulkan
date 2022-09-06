@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Contact__]
 --
@@ -122,7 +123,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_push_descriptor Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_push_descriptor Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -208,15 +209,15 @@ foreign import ccall
 -- When a command buffer begins recording, all push descriptors are
 -- undefined. Push descriptors /can/ be updated incrementally and cause
 -- shaders to use the updated descriptors for subsequent
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-bindpoint-commands bound pipeline commands>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-bindpoint-commands bound pipeline commands>
 -- with the pipeline type set by @pipelineBindPoint@ until the descriptor
 -- is overwritten, or else until the set is disturbed as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>.
 -- When the set is disturbed or push descriptors with a different
 -- descriptor set layout are set, all push descriptors are undefined.
 --
 -- Push descriptors that are
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-staticuse statically used>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-staticuse statically used>
 -- by a pipeline /must/ not be undefined at the time that a drawing or
 -- dispatching command is recorded to execute using that pipeline. This
 -- includes immutable sampler descriptors, which /must/ be pushed before
@@ -297,6 +298,9 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics, or compute operations
 --
+-- -   #VUID-vkCmdPushDescriptorSetKHR-videocoding# This command /must/
+--     only be called outside of a video coding scope
+--
 -- -   #VUID-vkCmdPushDescriptorSetKHR-descriptorWriteCount-arraylength#
 --     @descriptorWriteCount@ /must/ be greater than @0@
 --
@@ -315,12 +319,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -409,6 +413,9 @@ foreign import ccall
 --     The 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics, or compute operations
 --
+-- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-videocoding# This
+--     command /must/ only be called outside of a video coding scope
+--
 -- -   #VUID-vkCmdPushDescriptorSetWithTemplateKHR-commonparent# Each of
 --     @commandBuffer@, @descriptorUpdateTemplate@, and @layout@ /must/
 --     have been created, allocated, or retrieved from the same
@@ -425,12 +432,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- __API example__
 --

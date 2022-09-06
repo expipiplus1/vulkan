@@ -9,6 +9,7 @@ let haskellPackages = import ./haskell-packages.nix { inherit pkgs compiler; };
 in runCommand "vulkan-gen" {
   nativeBuildInputs = [
     python3
+    python3Packages.pyparsing
     asciidoctor
     gnumake
     nodejs
@@ -28,6 +29,8 @@ in runCommand "vulkan-gen" {
     echo "Generating Vulkan-Docs documentation"
     (cd Vulkan-Docs && ./makeAllExts refpages generated)
   ''}
-  LANG=C.UTF-8 ${haskellPackages.generate-new}/bin/vk ${optionalString (!withDocs) "nodocs"}
+  LANG=C.UTF-8 ${haskellPackages.generate-new}/bin/vk ${
+    optionalString (!withDocs) "nodocs"
+  }
   mv out "$out"
 ''

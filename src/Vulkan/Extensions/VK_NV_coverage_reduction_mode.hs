@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_NV_framebuffer_mixed_samples@
+--     -   Requires @VK_NV_framebuffer_mixed_samples@ to be enabled for any
+--         device-level functionality
 --
 -- [__Contact__]
 --
@@ -126,7 +127,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -326,7 +327,7 @@ getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV physicalDevice =
 data PhysicalDeviceCoverageReductionModeFeaturesNV = PhysicalDeviceCoverageReductionModeFeaturesNV
   { -- | #features-coverageReductionMode# @coverageReductionMode@ indicates
     -- whether the implementation supports coverage reduction modes. See
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-coverage-reduction Coverage Reduction>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-coverage-reduction Coverage Reduction>.
     coverageReductionMode :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -591,7 +592,7 @@ pattern COVERAGE_REDUCTION_MODE_MERGE_NV    = CoverageReductionModeNV 0
 -- | 'COVERAGE_REDUCTION_MODE_TRUNCATE_NV' specifies that for color samples
 -- present in the color attachments, a color sample is covered if the pixel
 -- coverage sample with the same
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>
 -- i is covered; other pixel coverage samples are discarded.
 pattern COVERAGE_REDUCTION_MODE_TRUNCATE_NV = CoverageReductionModeNV 1
 {-# complete COVERAGE_REDUCTION_MODE_MERGE_NV,

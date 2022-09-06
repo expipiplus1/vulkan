@@ -19,9 +19,13 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_depth_stencil_resolve@ to be enabled for any
+--         device-level functionality
+--
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Deprecation state__]
 --
@@ -34,7 +38,7 @@
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_dynamic_rendering] @tobski%0A<<Here describe the issue or question you have about the VK_KHR_dynamic_rendering extension>> >
 --
 -- [__Extension Proposal__]
---     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_KHR_dynamic_rendering.asciidoc VK_KHR_dynamic_rendering>
+--     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_KHR_dynamic_rendering.adoc VK_KHR_dynamic_rendering>
 --
 -- == Other Extension Metadata
 --
@@ -268,7 +272,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_dynamic_rendering Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_dynamic_rendering Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -410,7 +414,7 @@ cmdEndRenderingKHR = cmdEndRendering
 -- This structure can be included in the @pNext@ chain of
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo' to
 -- define a
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>.
 -- If @imageView@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', or if this
 -- structure is not specified, the implementation behaves as if a valid
 -- shading rate attachment was specified with all texels specifying a
@@ -438,13 +442,13 @@ cmdEndRenderingKHR = cmdEndRendering
 --     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @shadingRateAttachmentTexelSize.width@ /must/ be less than or equal
 --     to
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateAttachmentTexelSize maxFragmentShadingRateAttachmentTexelSize.width>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateAttachmentTexelSize maxFragmentShadingRateAttachmentTexelSize.width>
 --
 -- -   #VUID-VkRenderingFragmentShadingRateAttachmentInfoKHR-imageView-06151#
 --     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @shadingRateAttachmentTexelSize.width@ /must/ be greater than or
 --     equal to
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-minFragmentShadingRateAttachmentTexelSize minFragmentShadingRateAttachmentTexelSize.width>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-minFragmentShadingRateAttachmentTexelSize minFragmentShadingRateAttachmentTexelSize.width>
 --
 -- -   #VUID-VkRenderingFragmentShadingRateAttachmentInfoKHR-imageView-06152#
 --     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
@@ -455,27 +459,27 @@ cmdEndRenderingKHR = cmdEndRendering
 --     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @shadingRateAttachmentTexelSize.height@ /must/ be less than or equal
 --     to
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateAttachmentTexelSize maxFragmentShadingRateAttachmentTexelSize.height>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateAttachmentTexelSize maxFragmentShadingRateAttachmentTexelSize.height>
 --
 -- -   #VUID-VkRenderingFragmentShadingRateAttachmentInfoKHR-imageView-06154#
 --     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @shadingRateAttachmentTexelSize.height@ /must/ be greater than or
 --     equal to
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-minFragmentShadingRateAttachmentTexelSize minFragmentShadingRateAttachmentTexelSize.height>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-minFragmentShadingRateAttachmentTexelSize minFragmentShadingRateAttachmentTexelSize.height>
 --
 -- -   #VUID-VkRenderingFragmentShadingRateAttachmentInfoKHR-imageView-06155#
 --     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the
 --     quotient of @shadingRateAttachmentTexelSize.width@ and
 --     @shadingRateAttachmentTexelSize.height@ /must/ be less than or equal
 --     to
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateAttachmentTexelSizeAspectRatio maxFragmentShadingRateAttachmentTexelSizeAspectRatio>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateAttachmentTexelSizeAspectRatio maxFragmentShadingRateAttachmentTexelSizeAspectRatio>
 --
 -- -   #VUID-VkRenderingFragmentShadingRateAttachmentInfoKHR-imageView-06156#
 --     If @imageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the
 --     quotient of @shadingRateAttachmentTexelSize.height@ and
 --     @shadingRateAttachmentTexelSize.width@ /must/ be less than or equal
 --     to
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateAttachmentTexelSizeAspectRatio maxFragmentShadingRateAttachmentTexelSizeAspectRatio>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFragmentShadingRateAttachmentTexelSizeAspectRatio maxFragmentShadingRateAttachmentTexelSizeAspectRatio>
 --
 -- == Valid Usage (Implicit)
 --
@@ -607,8 +611,8 @@ instance Zero RenderingFragmentShadingRateAttachmentInfoKHR where
 -- 'Vulkan.Core10.Handles.ImageView',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data RenderingFragmentDensityMapAttachmentInfoEXT = RenderingFragmentDensityMapAttachmentInfoEXT
-  { -- | @imageView@ is the image view that will be used as a fragment shading
-    -- rate attachment.
+  { -- | @imageView@ is the image view that will be used as a fragment density
+    -- map attachment.
     imageView :: ImageView
   , -- | @imageLayout@ is the layout that @imageView@ will be in during
     -- rendering.
@@ -761,7 +765,7 @@ instance Zero AttachmentSampleCountInfoAMD where
 -- 'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX'
 -- or
 -- 'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX'
--- in the subpass description flags, the per-attibute properties of the
+-- in the subpass description flags, the per-attribute properties of the
 -- render pass instance /must/ be specified by the
 -- 'MultiviewPerViewAttributesInfoNVX' structure Include the
 -- 'MultiviewPerViewAttributesInfoNVX' structure in the @pNext@ chain of

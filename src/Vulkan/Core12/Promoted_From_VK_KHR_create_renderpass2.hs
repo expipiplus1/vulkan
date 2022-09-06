@@ -93,6 +93,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_fragment_shading_rate (FragmentSh
 import Vulkan.Core10.Enums.ImageAspectFlagBits (ImageAspectFlags)
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 (MemoryBarrier2)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled (MultisampledRenderToSingleSampledInfoEXT)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.Core10.Enums.PipelineBindPoint (PipelineBindPoint)
@@ -103,7 +104,10 @@ import Vulkan.Core10.Handles (RenderPass)
 import Vulkan.Core10.Handles (RenderPass(..))
 import Vulkan.Core10.CommandBufferBuilding (RenderPassBeginInfo)
 import Vulkan.Core10.Enums.RenderPassCreateFlagBits (RenderPassCreateFlags)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subpass_merge_feedback (RenderPassCreationControlEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subpass_merge_feedback (RenderPassCreationFeedbackCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_fragment_density_map (RenderPassFragmentDensityMapCreateInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subpass_merge_feedback (RenderPassSubpassFeedbackCreateInfoEXT)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
 import Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits)
@@ -183,7 +187,7 @@ createRenderPass2 :: forall a io
                      -- describing the parameters of the render pass.
                      (RenderPassCreateInfo2 a)
                   -> -- | @pAllocator@ controls host memory allocation as described in the
-                     -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                      -- chapter.
                      ("allocator" ::: Maybe AllocationCallbacks)
                   -> io (RenderPass)
@@ -355,6 +359,37 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT'
 --     set
 --
+-- -   #VUID-vkCmdBeginRenderPass2-initialLayout-07002# If any of the
+--     @initialLayout@ or @finalLayout@ member of the
+--     'Vulkan.Core10.Pass.AttachmentDescription' structures or the
+--     @layout@ member of the 'Vulkan.Core10.Pass.AttachmentReference'
+--     structures specified when creating the render pass specified in the
+--     @renderPass@ member of @pRenderPassBegin@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT'
+--     then the corresponding attachment image view of the framebuffer
+--     specified in the @framebuffer@ member of @pRenderPassBegin@ /must/
+--     have been created with a @usage@ value including either the
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
+--     or
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--     and either the
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
+--     or 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT'
+--     usage bits.
+--
+-- -   #VUID-vkCmdBeginRenderPass2-initialLayout-07003# If any of the
+--     @initialLayout@ or @finalLayout@ member of the
+--     'Vulkan.Core10.Pass.AttachmentDescription' structures or the
+--     @layout@ member of the 'Vulkan.Core10.Pass.AttachmentReference'
+--     structures specified when creating the render pass specified in the
+--     @renderPass@ member of @pRenderPassBegin@ is
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT'
+--     then the corresponding attachment image view of the framebuffer
+--     specified in the @framebuffer@ member of @pRenderPassBegin@ /must/
+--     have been created with a @usage@ value the
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT'
+--     usage bit.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdBeginRenderPass2-commandBuffer-parameter# @commandBuffer@
@@ -379,6 +414,9 @@ foreign import ccall
 -- -   #VUID-vkCmdBeginRenderPass2-renderpass# This command /must/ only be
 --     called outside of a render pass instance
 --
+-- -   #VUID-vkCmdBeginRenderPass2-videocoding# This command /must/ only be
+--     called outside of a video coding scope
+--
 -- -   #VUID-vkCmdBeginRenderPass2-bufferlevel# @commandBuffer@ /must/ be a
 --     primary 'Vulkan.Core10.Handles.CommandBuffer'
 --
@@ -393,11 +431,11 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Graphics                                                                                                              |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Graphics                                                                                                              |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -487,6 +525,9 @@ foreign import ccall
 -- -   #VUID-vkCmdNextSubpass2-renderpass# This command /must/ only be
 --     called inside of a render pass instance
 --
+-- -   #VUID-vkCmdNextSubpass2-videocoding# This command /must/ only be
+--     called outside of a video coding scope
+--
 -- -   #VUID-vkCmdNextSubpass2-bufferlevel# @commandBuffer@ /must/ be a
 --     primary 'Vulkan.Core10.Handles.CommandBuffer'
 --
@@ -501,11 +542,11 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Inside                                                                                                                 | Outside                                                                                                                     | Graphics                                                                                                              |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -564,6 +605,12 @@ foreign import ccall
 --     instance /must/ not have been begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --
+-- -   #VUID-vkCmdEndRenderPass2-None-07005# If
+--     'Vulkan.Core10.CommandBufferBuilding.cmdBeginQuery'* was called
+--     within a subpass of the render pass, the corresponding
+--     'Vulkan.Core10.CommandBufferBuilding.cmdEndQuery'* /must/ have been
+--     called subsequently within the same subpass.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdEndRenderPass2-commandBuffer-parameter# @commandBuffer@
@@ -584,6 +631,9 @@ foreign import ccall
 -- -   #VUID-vkCmdEndRenderPass2-renderpass# This command /must/ only be
 --     called inside of a render pass instance
 --
+-- -   #VUID-vkCmdEndRenderPass2-videocoding# This command /must/ only be
+--     called outside of a video coding scope
+--
 -- -   #VUID-vkCmdEndRenderPass2-bufferlevel# @commandBuffer@ /must/ be a
 --     primary 'Vulkan.Core10.Handles.CommandBuffer'
 --
@@ -598,11 +648,11 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Inside                                                                                                                 | Outside                                                                                                                     | Graphics                                                                                                              |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -638,7 +688,7 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
 -- those parameters.
 --
 -- If the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
 -- feature is enabled, and @format@ is a depth\/stencil format,
 -- @initialLayout@ and @finalLayout@ /can/ be set to a layout that only
 -- specifies the layout of the depth aspect.
@@ -665,19 +715,129 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
--- -   #VUID-VkAttachmentDescription2-format-06701# @format@ /must/ not be
+-- -   #VUID-VkAttachmentDescription2-format-06698# @format@ /must/ not be
 --     VK_FORMAT_UNDEFINED
 --
--- -   #VUID-VkAttachmentDescription2-finalLayout-03061# @finalLayout@
---     /must/ not be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED' or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PREINITIALIZED'
---
--- -   #VUID-VkAttachmentDescription2-format-06702# If @format@ includes a
+-- -   #VUID-VkAttachmentDescription2-format-06699# If @format@ includes a
 --     color or depth aspect and @loadOp@ is
 --     'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_LOAD', then
 --     @initialLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED'
+--
+-- -   #VUID-VkAttachmentDescription2-finalLayout-00843# @finalLayout@
+--     /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED' or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PREINITIALIZED'
+--
+-- -   #VUID-VkAttachmentDescription2-format-03280# If @format@ is a color
+--     format, @initialLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkAttachmentDescription2-format-03281# If @format@ is a
+--     depth\/stencil format, @initialLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL'
+--
+-- -   #VUID-VkAttachmentDescription2-format-03282# If @format@ is a color
+--     format, @finalLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkAttachmentDescription2-format-03283# If @format@ is a
+--     depth\/stencil format, @finalLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL'
+--
+-- -   #VUID-VkAttachmentDescription2-format-06487# If @format@ is a color
+--     format, @initialLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
+--
+-- -   #VUID-VkAttachmentDescription2-format-06488# If @format@ is a color
+--     format, @finalLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
+--
+-- -   #VUID-VkAttachmentDescription2-separateDepthStencilLayouts-03284# If
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
+--     feature is not enabled, @initialLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL',
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL',
+--
+-- -   #VUID-VkAttachmentDescription2-separateDepthStencilLayouts-03285# If
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
+--     feature is not enabled, @finalLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL',
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL',
+--
+-- -   #VUID-VkAttachmentDescription2-format-03286# If @format@ is a color
+--     format, @initialLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL',
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkAttachmentDescription2-format-03287# If @format@ is a color
+--     format, @finalLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL',
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkAttachmentDescription2-format-06906# If @format@ is a
+--     depth\/stencil format which includes both depth and stencil aspects,
+--     @initialLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkAttachmentDescription2-format-06907# If @format@ is a
+--     depth\/stencil format which includes both depth and stencil aspects,
+--     @finalLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkAttachmentDescription2-format-03290# If @format@ is a
+--     depth\/stencil format which includes only the depth aspect,
+--     @initialLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkAttachmentDescription2-format-03291# If @format@ is a
+--     depth\/stencil format which includes only the depth aspect,
+--     @finalLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkAttachmentDescription2-synchronization2-06908# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @initialLayout@ /must/ not be
+--     'Vulkan.Extensions.VK_KHR_synchronization2.IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR'
+--     or
+--     'Vulkan.Extensions.VK_KHR_synchronization2.IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR'
+--
+-- -   #VUID-VkAttachmentDescription2-synchronization2-06909# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @finalLayout@ /must/ not be
+--     'Vulkan.Extensions.VK_KHR_synchronization2.IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR'
+--     or
+--     'Vulkan.Extensions.VK_KHR_synchronization2.IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR'
 --
 -- -   #VUID-VkAttachmentDescription2-pNext-06704# If the @pNext@ chain
 --     does not include a
@@ -697,67 +857,7 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
 --     /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED'
 --
--- -   #VUID-VkAttachmentDescription2-format-03294# If @format@ is a color
---     format, @initialLayout@ /must/ not be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL',
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL',
---     or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
---
--- -   #VUID-VkAttachmentDescription2-format-03295# If @format@ is a
---     depth\/stencil format, @initialLayout@ /must/ not be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL'
---
--- -   #VUID-VkAttachmentDescription2-format-03296# If @format@ is a color
---     format, @finalLayout@ /must/ not be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL',
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL',
---     or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
---
--- -   #VUID-VkAttachmentDescription2-format-03297# If @format@ is a
---     depth\/stencil format, @finalLayout@ /must/ not be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL'
---
--- -   #VUID-VkAttachmentDescription2-separateDepthStencilLayouts-03298# If
---     the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
---     feature is not enabled, @initialLayout@ /must/ not be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
---     or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
---
--- -   #VUID-VkAttachmentDescription2-separateDepthStencilLayouts-03299# If
---     the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
---     feature is not enabled, @finalLayout@ /must/ not be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
---     or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
---
--- -   #VUID-VkAttachmentDescription2-format-03300# If @format@ is a color
---     format, @initialLayout@ /must/ not be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
---     or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
---
--- -   #VUID-VkAttachmentDescription2-format-03301# If @format@ is a color
---     format, @finalLayout@ /must/ not be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
---     or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
---
--- -   #VUID-VkAttachmentDescription2-format-03302# If @format@ is a
+-- -   #VUID-VkAttachmentDescription2-format-06249# If @format@ is a
 --     depth\/stencil format which includes both depth and stencil aspects,
 --     and @initialLayout@ is
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
@@ -767,7 +867,7 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
 --     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
 --     structure
 --
--- -   #VUID-VkAttachmentDescription2-format-03303# If @format@ is a
+-- -   #VUID-VkAttachmentDescription2-format-06250# If @format@ is a
 --     depth\/stencil format which includes both depth and stencil aspects,
 --     and @finalLayout@ is
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
@@ -777,55 +877,23 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = liftIO . evalContT $ do
 --     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
 --     structure
 --
--- -   #VUID-VkAttachmentDescription2-format-03304# If @format@ is a
---     depth\/stencil format which includes only the depth aspect,
---     @initialLayout@ /must/ not be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
---     or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
---
--- -   #VUID-VkAttachmentDescription2-format-03305# If @format@ is a
---     depth\/stencil format which includes only the depth aspect,
---     @finalLayout@ /must/ not be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
---     or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
---
--- -   #VUID-VkAttachmentDescription2-format-03306# If @format@ is a
---     depth\/stencil format which includes only the stencil aspect,
+-- -   #VUID-VkAttachmentDescription2-format-06247# If the @pNext@ chain
+--     does not include a
+--     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
+--     structure and @format@ only includes a stencil aspect,
 --     @initialLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
 --     or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL'
 --
--- -   #VUID-VkAttachmentDescription2-format-03307# If @format@ is a
---     depth\/stencil format which includes only the stencil aspect,
---     @finalLayout@ /must/ not be
+-- -   #VUID-VkAttachmentDescription2-format-06248# If the @pNext@ chain
+--     does not include a
+--     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
+--     structure and @format@ only includes a stencil aspect, @finalLayout@
+--     /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
 --     or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL'
---
--- -   #VUID-VkAttachmentDescription2-separateDepthStencilLayouts-06556# If
---     the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
---     feature is enabled and @format@ is a depth\/stencil format that
---     includes a depth aspect and the @pNext@ chain includes a
---     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
---     structure, @initialLayout@ /must/ not be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
---     or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
---
--- -   #VUID-VkAttachmentDescription2-separateDepthStencilLayouts-06557# If
---     the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
---     feature is enabled and @format@ is a depth\/stencil format that
---     includes a depth aspect and the @pNext@ chain includes a
---     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
---     structure, @finalLayout@ /must/ not be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
---     or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
 --
 -- == Valid Usage (Implicit)
 --
@@ -1015,7 +1083,7 @@ instance es ~ '[] => Zero (AttachmentDescription2 es) where
 -- other than an input attachment reference.
 --
 -- If the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
 -- feature is enabled, and @attachment@ has a depth\/stencil format,
 -- @layout@ /can/ be set to a layout that only specifies the layout of the
 -- depth aspect.
@@ -1037,7 +1105,7 @@ instance es ~ '[] => Zero (AttachmentDescription2 es) where
 --
 -- -   #VUID-VkAttachmentReference2-separateDepthStencilLayouts-03313# If
 --     the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
 --     feature is not enabled, and @attachment@ is not
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', @layout@ /must/ not
 --     be
@@ -1047,42 +1115,12 @@ instance es ~ '[] => Zero (AttachmentDescription2 es) where
 --     or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL',
 --
--- -   #VUID-VkAttachmentReference2-attachment-04754# If @attachment@ is
---     not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', and the format
---     of the referenced attachment is a color format, @layout@ /must/ not
---     be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
+-- -   #VUID-VkAttachmentReference2-synchronization2-06910# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @layout@ /must/ not be
+--     'Vulkan.Extensions.VK_KHR_synchronization2.IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR'
 --     or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
---
--- -   #VUID-VkAttachmentReference2-attachment-04755# If @attachment@ is
---     not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', and the format
---     of the referenced attachment is a depth\/stencil format which
---     includes both depth and stencil aspects, and @layout@ is
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
---     or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
---     the @pNext@ chain /must/ include a
---     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentReferenceStencilLayout'
---     structure
---
--- -   #VUID-VkAttachmentReference2-attachment-04756# If @attachment@ is
---     not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', and the format
---     of the referenced attachment is a depth\/stencil format which
---     includes only the depth aspect, @layout@ /must/ not be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
---     or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
---
--- -   #VUID-VkAttachmentReference2-attachment-04757# If @attachment@ is
---     not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', and the format
---     of the referenced attachment is a depth\/stencil format which
---     includes only the stencil aspect, @layout@ /must/ not be
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
---     or
---     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL'
+--     'Vulkan.Extensions.VK_KHR_synchronization2.IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR'
 --
 -- == Valid Usage (Implicit)
 --
@@ -1200,6 +1238,111 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --
 -- == Valid Usage
 --
+-- -   #VUID-VkSubpassDescription2-attachment-06912# If the @attachment@
+--     member of an element of @pInputAttachments@ is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', its @layout@ member
+--     /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL'
+--
+-- -   #VUID-VkSubpassDescription2-attachment-06913# If the @attachment@
+--     member of an element of @pColorAttachments@ is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', its @layout@ member
+--     /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkSubpassDescription2-attachment-06914# If the @attachment@
+--     member of an element of @pResolveAttachments@ is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', its @layout@ member
+--     /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkSubpassDescription2-attachment-06915# If the @attachment@
+--     member of @pDepthStencilAttachment@ is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', ts @layout@ member
+--     /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkSubpassDescription2-attachment-06916# If the @attachment@
+--     member of an element of @pColorAttachments@ is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', its @layout@ member
+--     /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
+--
+-- -   #VUID-VkSubpassDescription2-attachment-06917# If the @attachment@
+--     member of an element of @pResolveAttachments@ is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', its @layout@ member
+--     /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
+--
+-- -   #VUID-VkSubpassDescription2-attachment-06918# If the @attachment@
+--     member of an element of @pInputAttachments@ is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', its @layout@ member
+--     /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
+--
+-- -   #VUID-VkSubpassDescription2-attachment-06919# If the @attachment@
+--     member of an element of @pColorAttachments@ is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', its @layout@ member
+--     /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL',
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkSubpassDescription2-attachment-06920# If the @attachment@
+--     member of an element of @pResolveAttachments@ is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', its @layout@ member
+--     /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL',
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkSubpassDescription2-attachment-06921# If the @attachment@
+--     member of an element of @pInputAttachments@ is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', its @layout@ member
+--     /must/ not be
+--     'Vulkan.Extensions.VK_KHR_synchronization2.IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR'
+--
+-- -   #VUID-VkSubpassDescription2-attachment-06922# If the @attachment@
+--     member of an element of @pColorAttachments@ is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', its @layout@ member
+--     /must/ not be
+--     'Vulkan.Extensions.VK_KHR_synchronization2.IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR'
+--
+-- -   #VUID-VkSubpassDescription2-attachment-06923# If the @attachment@
+--     member of an element of @pResolveAttachments@ is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', its @layout@ member
+--     /must/ not be
+--     'Vulkan.Extensions.VK_KHR_synchronization2.IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR'
+--
+-- -   #VUID-VkSubpassDescription2-attachment-06251# If the @attachment@
+--     member of @pDepthStencilAttachment@ is not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' and its @pNext@ chain
+--     includes a
+--     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
+--     structure, the @layout@ member of @pDepthStencilAttachment@ /must/
+--     not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
+--
 -- -   #VUID-VkSubpassDescription2-pipelineBindPoint-04953#
 --     @pipelineBindPoint@ /must/ be
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
@@ -1240,16 +1383,19 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     'Vulkan.Core10.Enums.Format.Format' as its corresponding color
 --     attachment
 --
--- -   #VUID-VkSubpassDescription2-pColorAttachments-03069# All attachments
---     in @pColorAttachments@ that are not
---     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have the same
---     sample count
+-- -   #VUID-VkSubpassDescription2-multisampledRenderToSingleSampled-06869#
+--     If none of the @VK_AMD_mixed_attachment_samples@ extension, the
+--     @VK_NV_framebuffer_mixed_samples@ extension, or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature are enabled, all attachments in @pColorAttachments@ that are
+--     not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have the
+--     same sample count
 --
 -- -   #VUID-VkSubpassDescription2-pInputAttachments-02897# All attachments
 --     in @pInputAttachments@ that are not
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have image
 --     formats whose
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
 --     contain at least
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --     or
@@ -1259,7 +1405,7 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     in @pColorAttachments@ that are not
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have image
 --     formats whose
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
 --     contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --
@@ -1267,7 +1413,7 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     attachments in @pResolveAttachments@ that are not
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have image
 --     formats whose
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
 --     contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --
@@ -1275,40 +1421,40 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     @pDepthStencilAttachment@ is not @NULL@ and the attachment is not
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' then it /must/ have
 --     an image format whose
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
 --     contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   #VUID-VkSubpassDescription2-linearColorAttachment-06499# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
 --     feature is enabled and the image is created with
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR', all
 --     attachments in @pInputAttachments@ that are not
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have image
 --     formats whose
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
 --     /must/ contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
 --
 -- -   #VUID-VkSubpassDescription2-linearColorAttachment-06500# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
 --     feature is enabled and the image is created with
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR', all
 --     attachments in @pColorAttachments@ that are not
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have image
 --     formats whose
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
 --     /must/ contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
 --
 -- -   #VUID-VkSubpassDescription2-linearColorAttachment-06501# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
 --     feature is enabled and the image is created with
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR', all
 --     attachments in @pResolveAttachments@ that are not
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have image
 --     formats whose
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
 --     /must/ contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
 --
@@ -1320,14 +1466,41 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     @pDepthStencilAttachment@ if it is not
 --     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
 --
--- -   #VUID-VkSubpassDescription2-pDepthStencilAttachment-03071# If
---     neither the @VK_AMD_mixed_attachment_samples@ nor the
---     @VK_NV_framebuffer_mixed_samples@ extensions are enabled, and if
---     @pDepthStencilAttachment@ is not
---     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' and any attachments
---     in @pColorAttachments@ are not
---     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', they /must/ have the
---     same sample count
+-- -   #VUID-VkSubpassDescription2-pNext-06870# If the @pNext@ chain
+--     includes a
+--     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'
+--     structure with @multisampledRenderToSingleSampledEnable@ equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then all attachments in
+--     @pColorAttachments@ and @pDepthStencilAttachment@ that are not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have a sample
+--     count that is either
+--     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT' or
+--     equal to
+--     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'::@rasterizationSamples@
+--
+-- -   #VUID-VkSubpassDescription2-pNext-06871# If the @pNext@ chain
+--     includes a
+--     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'
+--     structure with @multisampledRenderToSingleSampledEnable@ equal to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', and @pDepthStencilAttachment@
+--     is not @NULL@, does not have the value
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', and has a sample
+--     count of
+--     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT', the
+--     @pNext@ chain /must/ also include a
+--     'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.SubpassDescriptionDepthStencilResolve'
+--     structure with @pDepthStencilResolveAttachment@ that is either
+--     @NULL@ or has the value
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
+--
+-- -   #VUID-VkSubpassDescription2-multisampledRenderToSingleSampled-06872#
+--     If none of the @VK_AMD_mixed_attachment_samples@ extension, the
+--     @VK_NV_framebuffer_mixed_samples@ extension, or the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature are enabled, all attachments in @pDepthStencilAttachment@ or
+--     @pColorAttachments@ that are not
+--     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' /must/ have the same
+--     sample count
 --
 -- -   #VUID-VkSubpassDescription2-attachment-03073# Each element of
 --     @pPreserveAttachments@ /must/ not be
@@ -1340,11 +1513,6 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 -- -   #VUID-VkSubpassDescription2-layout-02528# If any attachment is used
 --     by more than one 'AttachmentReference2' member, then each use /must/
 --     use the same @layout@
---
--- -   #VUID-VkSubpassDescription2-None-04439# Attachments /must/ follow
---     the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#attachment-type-imagelayout image layout requirements>
---     based on the type of attachment it is being used as
 --
 -- -   #VUID-VkSubpassDescription2-flags-03076# If @flags@ includes
 --     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX',
@@ -1379,12 +1547,12 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     @pColorAttachments@
 --
 -- -   #VUID-VkSubpassDescription2-multiview-06558# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview multiview>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview multiview>
 --     feature is not enabled, @viewMask@ /must/ be @0@
 --
 -- -   #VUID-VkSubpassDescription2-viewMask-06706# The index of the most
 --     significant bit in @viewMask@ /must/ be less than
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxMultiviewViewCount maxMultiviewViewCount>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxMultiviewViewCount maxMultiviewViewCount>
 --
 -- == Valid Usage (Implicit)
 --
@@ -1394,7 +1562,10 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 -- -   #VUID-VkSubpassDescription2-pNext-pNext# Each @pNext@ member of any
 --     structure (including this one) in the @pNext@ chain /must/ be either
 --     @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateAttachmentInfoKHR'
+--     'Vulkan.Extensions.VK_KHR_fragment_shading_rate.FragmentShadingRateAttachmentInfoKHR',
+--     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT',
+--     'Vulkan.Extensions.VK_EXT_subpass_merge_feedback.RenderPassCreationControlEXT',
+--     'Vulkan.Extensions.VK_EXT_subpass_merge_feedback.RenderPassSubpassFeedbackCreateInfoEXT',
 --     or
 --     'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.SubpassDescriptionDepthStencilResolve'
 --
@@ -1492,6 +1663,9 @@ instance Extensible SubpassDescription2 where
   getNext SubpassDescription2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SubpassDescription2 e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @RenderPassSubpassFeedbackCreateInfoEXT = Just f
+    | Just Refl <- eqT @e @RenderPassCreationControlEXT = Just f
+    | Just Refl <- eqT @e @MultisampledRenderToSingleSampledInfoEXT = Just f
     | Just Refl <- eqT @e @FragmentShadingRateAttachmentInfoKHR = Just f
     | Just Refl <- eqT @e @SubpassDescriptionDepthStencilResolve = Just f
     | otherwise = Nothing
@@ -1602,44 +1776,44 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 -- == Valid Usage
 --
 -- -   #VUID-VkSubpassDependency2-srcStageMask-04090# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometryShader>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
 --
 -- -   #VUID-VkSubpassDependency2-srcStageMask-04091# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
 --     or
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
 --
 -- -   #VUID-VkSubpassDependency2-srcStageMask-04092# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-conditionalRendering conditional rendering>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-conditionalRendering conditionalRendering>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT'
 --
 -- -   #VUID-VkSubpassDependency2-srcStageMask-04093# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMap fragment density map>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMap fragmentDensityMap>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
 --
 -- -   #VUID-VkSubpassDependency2-srcStageMask-04094# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-transformFeedback transform feedback>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-transformFeedback transformFeedback>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT'
 --
 -- -   #VUID-VkSubpassDependency2-srcStageMask-04095# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader meshShader>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV'
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_EXT'
 --
 -- -   #VUID-VkSubpassDependency2-srcStageMask-04096# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader task shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader taskShader>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_EXT'
 --
 -- -   #VUID-VkSubpassDependency2-srcStageMask-04097# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
@@ -1648,44 +1822,44 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 --     feature is not enabled, @srcStageMask@ /must/ not be @0@
 --
 -- -   #VUID-VkSubpassDependency2-dstStageMask-04090# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometryShader>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
 --
 -- -   #VUID-VkSubpassDependency2-dstStageMask-04091# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
 --     or
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
 --
 -- -   #VUID-VkSubpassDependency2-dstStageMask-04092# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-conditionalRendering conditional rendering>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-conditionalRendering conditionalRendering>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT'
 --
 -- -   #VUID-VkSubpassDependency2-dstStageMask-04093# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMap fragment density map>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMap fragmentDensityMap>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
 --
 -- -   #VUID-VkSubpassDependency2-dstStageMask-04094# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-transformFeedback transform feedback>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-transformFeedback transformFeedback>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT'
 --
 -- -   #VUID-VkSubpassDependency2-dstStageMask-04095# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader meshShader>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_NV'
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_EXT'
 --
 -- -   #VUID-VkSubpassDependency2-dstStageMask-04096# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader task shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader taskShader>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_NV'
+--     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_EXT'
 --
 -- -   #VUID-VkSubpassDependency2-dstStageMask-04097# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
@@ -1702,27 +1876,21 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 --     @dstSubpass@ /must/ not both be equal to
 --     'Vulkan.Core10.APIConstants.SUBPASS_EXTERNAL'
 --
--- -   #VUID-VkSubpassDependency2-srcSubpass-03087# If @srcSubpass@ is
---     equal to @dstSubpass@ and not all of the stages in @srcStageMask@
---     and @dstStageMask@ are
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-space stages>,
---     the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages-order logically latest>
---     pipeline stage in @srcStageMask@ /must/ be
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages-order logically earlier>
---     than or equal to the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages-order logically earliest>
---     pipeline stage in @dstStageMask@
+-- -   #VUID-VkSubpassDependency2-srcSubpass-06810# If @srcSubpass@ is
+--     equal to @dstSubpass@ and @srcStageMask@ includes a
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-space stage>,
+--     @dstStageMask@ /must/ only contain
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-space stages>
 --
 -- -   #VUID-VkSubpassDependency2-srcAccessMask-03088# Any access flag
 --     included in @srcAccessMask@ /must/ be supported by one of the
 --     pipeline stages in @srcStageMask@, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
 --
 -- -   #VUID-VkSubpassDependency2-dstAccessMask-03089# Any access flag
 --     included in @dstAccessMask@ /must/ be supported by one of the
 --     pipeline stages in @dstStageMask@, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
 --
 -- -   #VUID-VkSubpassDependency2-dependencyFlags-03090# If
 --     @dependencyFlags@ includes
@@ -1738,7 +1906,7 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 --
 -- -   #VUID-VkSubpassDependency2-srcSubpass-02245# If @srcSubpass@ equals
 --     @dstSubpass@, and @srcStageMask@ and @dstStageMask@ both include a
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-space stage>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-space stage>,
 --     then @dependencyFlags@ /must/ include
 --     'Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_BY_REGION_BIT'
 --
@@ -1805,20 +1973,20 @@ data SubpassDependency2 (es :: [Type]) = SubpassDependency2
   , -- | @srcStageMask@ is a bitmask of
     -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
     -- specifying the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>.
     srcStageMask :: PipelineStageFlags
   , -- | @dstStageMask@ is a bitmask of
     -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
     -- specifying the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages-masks destination stage mask>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages-masks destination stage mask>
     dstStageMask :: PipelineStageFlags
   , -- | @srcAccessMask@ is a bitmask of
     -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits' specifying a
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks source access mask>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks source access mask>.
     srcAccessMask :: AccessFlags
   , -- | @dstAccessMask@ is a bitmask of
     -- 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits' specifying a
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks destination access mask>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks destination access mask>.
     dstAccessMask :: AccessFlags
   , -- | @dependencyFlags@ is a bitmask of
     -- 'Vulkan.Core10.Enums.DependencyFlagBits.DependencyFlagBits'.
@@ -1983,7 +2151,7 @@ instance es ~ '[] => Zero (SubpassDependency2 es) where
 --     'Vulkan.Core10.APIConstants.SUBPASS_EXTERNAL', all stage flags
 --     included in the @srcStageMask@ member of that dependency /must/ be a
 --     pipeline stage supported by the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages-types pipeline>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages-types pipeline>
 --     identified by the @pipelineBindPoint@ member of the source subpass
 --
 -- -   #VUID-VkRenderPassCreateInfo2-pDependencies-03055# For any element
@@ -1991,7 +2159,7 @@ instance es ~ '[] => Zero (SubpassDependency2 es) where
 --     'Vulkan.Core10.APIConstants.SUBPASS_EXTERNAL', all stage flags
 --     included in the @dstStageMask@ member of that dependency /must/ be a
 --     pipeline stage supported by the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages-types pipeline>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages-types pipeline>
 --     identified by the @pipelineBindPoint@ member of the destination
 --     subpass
 --
@@ -2054,23 +2222,23 @@ instance es ~ '[] => Zero (SubpassDependency2 es) where
 -- -   #VUID-VkRenderPassCreateInfo2-pAttachments-04586# If any element of
 --     @pAttachments@ is used as a fragment shading rate attachment in any
 --     subpass, it /must/ have an image format whose
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
 --     contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- -   #VUID-VkRenderPassCreateInfo2-rasterizationSamples-04905# If the
 --     pipeline is being created with fragment shader state, and the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_render_pass_shader_resolve VK_QCOM_render_pass_shader_resolve>
---     extension is enabled, and if subpass has any input attachments, and
---     if the subpass description contains
+--     @VK_QCOM_render_pass_shader_resolve extension@ is enabled, and if
+--     subpass has any input attachments, and if the subpass description
+--     contains
 --     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM',
 --     then the sample count of the input attachments /must/ equal
 --     @rasterizationSamples@
 --
 -- -   #VUID-VkRenderPassCreateInfo2-sampleShadingEnable-04906# If the
 --     pipeline is being created with fragment shader state, and the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_QCOM_render_pass_shader_resolve VK_QCOM_render_pass_shader_resolve>
---     extension is enabled, and if the subpass description contains
+--     @VK_QCOM_render_pass_shader_resolve@ extension is enabled, and if
+--     the subpass description contains
 --     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM',
 --     then @sampleShadingEnable@ /must/ be false
 --
@@ -2090,13 +2258,52 @@ instance es ~ '[] => Zero (SubpassDependency2 es) where
 --     then the subpass /must/ be the last subpass in a subpass dependency
 --     chain
 --
+-- -   #VUID-VkRenderPassCreateInfo2-attachment-06244# If the @attachment@
+--     member of the @pDepthStencilAttachment@ member of an element of
+--     @pSubpasses@ is not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED',
+--     the @layout@ member of that same structure is either
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
+--     and the @pNext@ chain of that structure does not include a
+--     'Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentReferenceStencilLayout'
+--     structure, then the element of @pAttachments@ with an index equal to
+--     @attachment@ /must/ not have a @format@ that includes both depth and
+--     stencil aspects
+--
+-- -   #VUID-VkRenderPassCreateInfo2-attachment-06245# If the @attachment@
+--     member of the @pDepthStencilAttachment@ member of an element of
+--     @pSubpasses@ is not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
+--     and the @layout@ member of that same structure is either
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL',
+--     then the element of @pAttachments@ with an index equal to
+--     @attachment@ /must/ have a @format@ that includes only a stencil
+--     aspect
+--
+-- -   #VUID-VkRenderPassCreateInfo2-attachment-06246# If the @attachment@
+--     member of the @pDepthStencilAttachment@ member of an element of
+--     @pSubpasses@ is not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED'
+--     and the @layout@ member of that same structure is either
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
+--     then the element of @pAttachments@ with an index equal to
+--     @attachment@ /must/ not have a @format@ that includes only a stencil
+--     aspect
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkRenderPassCreateInfo2-sType-sType# @sType@ /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2'
 --
--- -   #VUID-VkRenderPassCreateInfo2-pNext-pNext# @pNext@ /must/ be @NULL@
---     or a pointer to a valid instance of
+-- -   #VUID-VkRenderPassCreateInfo2-pNext-pNext# Each @pNext@ member of
+--     any structure (including this one) in the @pNext@ chain /must/ be
+--     either @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_EXT_subpass_merge_feedback.RenderPassCreationControlEXT',
+--     'Vulkan.Extensions.VK_EXT_subpass_merge_feedback.RenderPassCreationFeedbackCreateInfoEXT',
+--     or
 --     'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderPassFragmentDensityMapCreateInfoEXT'
 --
 -- -   #VUID-VkRenderPassCreateInfo2-sType-unique# The @sType@ value of
@@ -2170,6 +2377,8 @@ instance Extensible RenderPassCreateInfo2 where
   getNext RenderPassCreateInfo2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends RenderPassCreateInfo2 e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @RenderPassCreationFeedbackCreateInfoEXT = Just f
+    | Just Refl <- eqT @e @RenderPassCreationControlEXT = Just f
     | Just Refl <- eqT @e @RenderPassFragmentDensityMapCreateInfoEXT = Just f
     | otherwise = Nothing
 
@@ -2327,7 +2536,7 @@ deriving instance Show (Chain es) => Show (SubpassEndInfo es)
 
 instance Extensible SubpassEndInfo where
   extensibleTypeName = "SubpassEndInfo"
-  setNext SubpassEndInfo{..} next' = SubpassEndInfo{next = next', ..}
+  setNext _ next' = SubpassEndInfo{next = next'}
   getNext SubpassEndInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SubpassEndInfo e => b) -> Maybe b
   extends _ f

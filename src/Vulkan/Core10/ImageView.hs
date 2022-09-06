@@ -60,6 +60,7 @@ import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateImageView))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroyImageView))
 import Vulkan.Core10.Handles (Device_T)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ExportMetalObjectCreateInfoEXT)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
@@ -71,6 +72,7 @@ import Vulkan.Core10.Handles (ImageView(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_astc_decode_mode (ImageViewASTCDecodeModeEXT)
 import Vulkan.Core10.Enums.ImageViewCreateFlagBits (ImageViewCreateFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_view_min_lod (ImageViewMinLodCreateInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_image_processing (ImageViewSampleWeightCreateInfoQCOM)
 import Vulkan.Core10.Enums.ImageViewType (ImageViewType)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (ImageViewUsageCreateInfo)
 import Vulkan.CStruct.Extends (PeekChain)
@@ -140,7 +142,7 @@ createImageView :: forall a io
                    -- containing parameters to be used to create the image view.
                    (ImageViewCreateInfo a)
                 -> -- | @pAllocator@ controls host memory allocation as described in the
-                   -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                   -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                    -- chapter.
                    ("allocator" ::: Maybe AllocationCallbacks)
                 -> io (ImageView)
@@ -229,7 +231,7 @@ destroyImageView :: forall io
                  -> -- | @imageView@ is the image view to destroy.
                     ImageView
                  -> -- | @pAllocator@ controls host memory allocation as described in the
-                    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                     -- chapter.
                     ("allocator" ::: Maybe AllocationCallbacks)
                  -> io ()
@@ -258,7 +260,8 @@ destroyImageView device imageView allocator = liftIO . evalContT $ do
 -- 'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle',
 -- 'ImageViewCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_border_color_swizzle.SamplerBorderColorComponentMappingCreateInfoEXT',
--- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo',
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoFormatPropertiesKHR VkVideoFormatPropertiesKHR>
 data ComponentMapping = ComponentMapping
   { -- | @r@ is a 'Vulkan.Core10.Enums.ComponentSwizzle.ComponentSwizzle'
     -- specifying the component value placed in the R component of the output
@@ -364,7 +367,7 @@ instance Zero ComponentMapping where
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT' if
 -- @format@ is a color, depth-only or stencil-only format, respectively,
 -- except if @format@ is a
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>.
 -- If using a depth\/stencil format with both depth and stencil components,
 -- @aspectMask@ /must/ include at least one of
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' and
@@ -394,14 +397,14 @@ instance Zero ComponentMapping where
 -- both depth and stencil image subresources are used.
 --
 -- When creating a 'Vulkan.Core10.Handles.ImageView', if
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 -- is enabled in the sampler, the @aspectMask@ of a @subresourceRange@ used
 -- by the 'Vulkan.Core10.Handles.ImageView' /must/ be
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'.
 --
 -- When creating a 'Vulkan.Core10.Handles.ImageView', if sampler Y′CBCR
 -- conversion is not enabled in the sampler and the image @format@ is
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>,
 -- the image /must/ have been created with
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT',
 -- and the @aspectMask@ of the 'Vulkan.Core10.Handles.ImageView'’s
@@ -527,7 +530,7 @@ instance Zero ImageSubresourceRange where
 -- specifying the allowed usages of the image view that, by default, takes
 -- the value of the corresponding @usage@ parameter specified in
 -- 'Vulkan.Core10.Image.ImageCreateInfo' at image creation time. The
--- implicit @usage@ /can/ be overriden by adding a
+-- implicit @usage@ /can/ be overridden by adding a
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.ImageViewUsageCreateInfo'
 -- structure to the @pNext@ chain, but the view usage /must/ be a subset of
 -- the image usage. If @image@ has a depth-stencil format and was created
@@ -555,13 +558,13 @@ instance Zero ImageSubresourceRange where
 -- If @image@ was created with the
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
 -- flag, and if the @format@ of the image is not
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>,
 -- @format@ /can/ be different from the image’s format, but if @image@ was
 -- created without the
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT'
 -- flag and they are not equal they /must/ be /compatible/. Image format
 -- compatibility is defined in the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility-classes Format Compatibility Classes>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility-classes Format Compatibility Classes>
 -- section. Views of compatible formats will have the same mapping between
 -- texel coordinates and memory locations irrespective of the @format@,
 -- with only the interpretation of the bit pattern changing.
@@ -575,14 +578,14 @@ instance Zero ImageSubresourceRange where
 -- read through a view with a floating point format. Similarly, a value
 -- written through a signed normalized format that has a bit pattern
 -- exactly equal to -2b /may/ be changed to -2b + 1 as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-fixedfpconv Conversion from Normalized Fixed-Point to Floating-Point>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fundamentals-fixedfpconv Conversion from Normalized Fixed-Point to Floating-Point>.
 --
 -- If @image@ was created with the
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT'
 -- flag, @format@ /must/ be /compatible/ with the image’s format as
 -- described above, or /must/ be an uncompressed format in which case it
 -- /must/ be /size-compatible/ with the image’s format, as defined for
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#copies-images-format-size-compatibility copying data between images>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#copies-images-format-size-compatibility copying data between images>.
 -- In this case, the resulting image view’s texel dimensions equal the
 -- dimensions of the selected mip level divided by the compressed texel
 -- block size and rounded up.
@@ -593,10 +596,10 @@ instance Zero ImageSubresourceRange where
 -- storage image descriptors, input attachment descriptors, framebuffer
 -- attachments, and any 'Vulkan.Core10.Handles.ImageView' used with a
 -- combined image sampler that enables
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>.
 --
 -- If the image view is to be used with a sampler which supports
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
 -- an /identically defined object/ of type
 -- 'Vulkan.Core11.Handles.SamplerYcbcrConversion' to that used to create
 -- the sampler /must/ be passed to 'createImageView' in a
@@ -608,37 +611,66 @@ instance Zero ImageSubresourceRange where
 -- when sampling the image.
 --
 -- If the image has a
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
 -- @format@ and @subresourceRange.aspectMask@ is
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT', then
--- the @format@ /must/ be identical to the image @format@, and the sampler
--- to be used with the image view /must/ enable
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>.
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT', and it
+-- was created with @usage@ value containing flags other than
+-- @VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR@,
+-- @VK_IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR@ ,
+-- @VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR@,
+-- @VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR@, then the @format@ /must/ be
+-- identical to the image @format@, and the sampler to be used with the
+-- image view /must/ enable
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>.
+--
+-- If the image has a
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
+-- @format@ and the @image@ has been created with a @usage@ value
+-- containing any of the @VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR@,
+-- @VK_IMAGE_USAGE_VIDEO_DECODE_SRC_BIT_KHR@, and
+-- @VK_IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR@ flags, then all of the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-decode-operations video decode operations>
+-- would ignore the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
+-- structure and\/or
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+-- object, associated with the image view. If the image has a
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
+-- @format@ and the @image@ has been created with a @usage@ value
+-- containing any of the @VK_IMAGE_USAGE_VIDEO_ENCODE_DST_BIT_KHR@,
+-- @VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR@, and
+-- @VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR@ flags, then all of the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-encode-operations video encode operations>
+-- would ignore the
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
+-- structure and\/or
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+-- object, associated with the image view.
 --
 -- If @image@ was created with the
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
 -- and the image has a
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
 -- @format@, and if @subresourceRange.aspectMask@ is
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT', or
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT',
 -- @format@ /must/ be
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatible-planes compatible>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatible-planes compatible>
 -- with the corresponding plane of the image, and the sampler to be used
 -- with the image view /must/ not enable
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>.
 -- The @width@ and @height@ of the single-plane image view /must/ be
 -- derived from the multi-planar image’s dimensions in the manner listed
 -- for
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatible-planes plane compatibility>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatible-planes plane compatibility>
 -- for the plane.
 --
 -- Any view of an image plane will have the same mapping between texel
 -- coordinates and memory locations as used by the components of the color
 -- aspect, subject to the formulae relating texel coordinates to
 -- lower-resolution planes as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-chroma-reconstruction Chroma Reconstruction>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-chroma-reconstruction Chroma Reconstruction>.
 -- That is, if an R or B plane has a reduced resolution relative to the G
 -- plane of the multi-planar image, the image view operates using the
 -- (/uplane/, /vplane/) unnormalized coordinates of the reduced-resolution
@@ -681,7 +713,7 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY'
 --
 -- -   #VUID-VkImageViewCreateInfo-viewType-01004# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-imageCubeArray image cube map arrays>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-imageCubeArray imageCubeArray>
 --     feature is not enabled, @viewType@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_CUBE_ARRAY'
 --
@@ -726,67 +758,67 @@ instance Zero ImageSubresourceRange where
 -- -   #VUID-VkImageViewCreateInfo-image-04441# @image@ /must/ have been
 --     created with a @usage@ value containing at least one of the usages
 --     defined in the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#valid-imageview-imageusage valid image usage>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#valid-imageview-imageusage valid image usage>
 --     list for image views
 --
 -- -   #VUID-VkImageViewCreateInfo-None-02273# The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     of the resultant image view /must/ contain at least one bit
 --
 -- -   #VUID-VkImageViewCreateInfo-usage-02274# If @usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT',
 --     then the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     of the resultant image view /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_BIT'
 --
 -- -   #VUID-VkImageViewCreateInfo-usage-02275# If @usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT',
 --     then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_IMAGE_BIT'
 --
 -- -   #VUID-VkImageViewCreateInfo-usage-02276# If @usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT',
 --     then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --
 -- -   #VUID-VkImageViewCreateInfo-usage-02277# If @usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT',
 --     then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   #VUID-VkImageViewCreateInfo-usage-06516# If @usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT',
 --     then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV',
 --     if the image is created with
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' and the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
 --     feature is enabled
 --
 -- -   #VUID-VkImageViewCreateInfo-usage-06517# If @usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT',
 --     then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     must contain
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV',
 --     if the image is created with
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' and the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
 --     feature is enabled
 --
 -- -   #VUID-VkImageViewCreateInfo-usage-02652# If @usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT',
 --     then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain at least one of
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
 --     or
@@ -846,7 +878,7 @@ instance Zero ImageSubresourceRange where
 --     computed from @baseMipLevel@ and @extent.depth@ specified in
 --     'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was created,
 --     according to the formula defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>
 --
 -- -   #VUID-VkImageViewCreateInfo-subresourceRange-02725# If
 --     @subresourceRange.layerCount@ is not
@@ -862,7 +894,7 @@ instance Zero ImageSubresourceRange where
 --     @baseMipLevel@ and @extent.depth@ specified in
 --     'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was created,
 --     according to the formula defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-miplevel-sizing Image Miplevel Sizing>
 --
 -- -   #VUID-VkImageViewCreateInfo-image-01761# If @image@ was created with
 --     the
@@ -870,10 +902,10 @@ instance Zero ImageSubresourceRange where
 --     flag, but without the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT'
 --     flag, and if the @format@ of the @image@ is not a
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
 --     format, @format@ /must/ be compatible with the @format@ used to
 --     create @image@, as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility-classes Format Compatibility Classes>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility-classes Format Compatibility Classes>
 --
 -- -   #VUID-VkImageViewCreateInfo-image-01583# If @image@ was created with
 --     the
@@ -882,17 +914,11 @@ instance Zero ImageSubresourceRange where
 --     uncompressed format that is size-compatible with, the @format@ used
 --     to create @image@
 --
--- -   #VUID-VkImageViewCreateInfo-image-01584# If @image@ was created with
+-- -   #VUID-VkImageViewCreateInfo-image-07072# If @image@ was created with
 --     the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT'
---     flag, the @levelCount@ and @layerCount@ members of
---     @subresourceRange@ /must/ both be @1@
---
--- -   #VUID-VkImageViewCreateInfo-image-04739# If @image@ was created with
---     the
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT'
---     flag and @format@ is a non-compressed format, @viewType@ /must/ not
---     be 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_3D'
+--     flag and @format@ is a non-compressed format, the @levelCount@ and
+--     @layerCount@ members of @subresourceRange@ /must/ both be @1@
 --
 -- -   #VUID-VkImageViewCreateInfo-pNext-01585# If a
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
@@ -907,7 +933,7 @@ instance Zero ImageSubresourceRange where
 --     the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
 --     flag, if the @format@ of the @image@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
 --     format, and if @subresourceRange.aspectMask@ is one of
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
@@ -916,20 +942,22 @@ instance Zero ImageSubresourceRange where
 --     then @format@ /must/ be compatible with the
 --     'Vulkan.Core10.Enums.Format.Format' for the plane of the @image@
 --     @format@ indicated by @subresourceRange.aspectMask@, as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatible-planes>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatible-planes>
 --
 -- -   #VUID-VkImageViewCreateInfo-image-01762# If @image@ was not created
 --     with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
 --     flag, or if the @format@ of the @image@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
 --     format and if @subresourceRange.aspectMask@ is
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT',
 --     @format@ /must/ be identical to the @format@ used to create @image@
 --
 -- -   #VUID-VkImageViewCreateInfo-format-06415# If the image view
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#image-views-requiring-sampler-ycbcr-conversion requires a sampler Y′CBCR conversion>,
---     the @pNext@ chain must include a
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#image-views-requiring-sampler-ycbcr-conversion requires a sampler Y′CBCR conversion>
+--     and @usage@ contains
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT',
+--     then the @pNext@ chain /must/ include a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     structure with a conversion value other than
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
@@ -948,7 +976,7 @@ instance Zero ImageSubresourceRange where
 --     structure with a @conversion@ value other than
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', all members of
 --     @components@ /must/ have the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --
 -- -   #VUID-VkImageViewCreateInfo-pNext-06658# If the @pNext@ chain
 --     includes a
@@ -964,23 +992,23 @@ instance Zero ImageSubresourceRange where
 --
 -- -   #VUID-VkImageViewCreateInfo-subResourceRange-01021# @viewType@
 --     /must/ be compatible with the type of @image@ as shown in the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-compatibility view type compatibility table>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-compatibility view type compatibility table>
 --
 -- -   #VUID-VkImageViewCreateInfo-image-02399# If @image@ has an
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>,
 --     @format@ /must/ be 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
 -- -   #VUID-VkImageViewCreateInfo-image-02400# If @image@ has an
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>,
 --     the @pNext@ chain /must/ include a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     structure with a @conversion@ object created with the same external
 --     format as @image@
 --
 -- -   #VUID-VkImageViewCreateInfo-image-02401# If @image@ has an
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>,
 --     all members of @components@ /must/ be the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --
 -- -   #VUID-VkImageViewCreateInfo-image-02086# If @image@ was created with
 --     @usage@ containing
@@ -990,36 +1018,37 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'
 --
 -- -   #VUID-VkImageViewCreateInfo-image-02087# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage feature>
---     is enabled, and If @image@ was created with @usage@ containing
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
+--     feature is enabled, and If @image@ was created with @usage@
+--     containing
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV',
 --     @format@ /must/ be 'Vulkan.Core10.Enums.Format.FORMAT_R8_UINT'
 --
 -- -   #VUID-VkImageViewCreateInfo-usage-04550# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate feature>
---     is enabled, and the @usage@ for the image view includes
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
+--     feature is enabled, and the @usage@ for the image view includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR',
 --     then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --
 -- -   #VUID-VkImageViewCreateInfo-usage-04551# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate feature>
---     is enabled, the @usage@ for the image view includes
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
+--     feature is enabled, the @usage@ for the image view includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR',
 --     and
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-layeredShadingRateAttachments layeredShadingRateAttachments>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-layeredShadingRateAttachments layeredShadingRateAttachments>
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE',
 --     @subresourceRange.layerCount@ /must/ be @1@
 --
--- -   #VUID-VkImageViewCreateInfo-flags-02572# If
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-fragmentDensityMapDynamic dynamic fragment density map>
+-- -   #VUID-VkImageViewCreateInfo-flags-02572# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-fragmentDensityMapDynamic fragmentDensityMapDynamic>
 --     feature is not enabled, @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT'
 --
--- -   #VUID-VkImageViewCreateInfo-flags-03567# If
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-fragmentDensityMapDeferred deferred fragment density map>
+-- -   #VUID-VkImageViewCreateInfo-flags-03567# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-fragmentDensityMapDeferred fragmentDensityMapDeferred>
 --     feature is not enabled, @flags@ /must/ not contain
 --     'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT'
 --
@@ -1034,11 +1063,12 @@ instance Zero ImageSubresourceRange where
 --     and @usage@ containing
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT',
 --     @subresourceRange.layerCount@ /must/ be less than or equal to
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxSubsampledArrayLayers ::maxSubsampledArrayLayers>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxSubsampledArrayLayers ::maxSubsampledArrayLayers>
 --
 -- -   #VUID-VkImageViewCreateInfo-invocationMask-04993# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-invocationMask invocationMask feature>
---     is enabled, and if @image@ was created with @usage@ containing
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-invocationMask invocationMask>
+--     feature is enabled, and if @image@ was created with @usage@
+--     containing
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INVOCATION_MASK_BIT_HUAWEI',
 --     @format@ /must/ be 'Vulkan.Core10.Enums.Format.FORMAT_R8_UINT'
 --
@@ -1140,7 +1170,7 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Extensions.VK_KHR_portability_subset.PhysicalDevicePortabilitySubsetFeaturesKHR'::@imageViewFormatSwizzle@
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', all elements of
 --     @components@ /must/ have the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --
 -- -   #VUID-VkImageViewCreateInfo-imageViewFormatReinterpretation-04466#
 --     If the @VK_KHR_portability_subset@ extension is enabled, and
@@ -1151,6 +1181,135 @@ instance Zero ImageSubresourceRange where
 --     each component, than the format of the 'Vulkan.Core10.Handles.Image'
 --     in @image@
 --
+-- -   #VUID-VkImageViewCreateInfo-image-04817# If @image@ was created with
+--     @usage@ containing @VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR@,
+--     @VK_IMAGE_USAGE_VIDEO_DECODE_SRC_BIT_KHR@,
+--     @VK_IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR@, then the @viewType@
+--     /must/ be 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY' and all
+--     members of @components@ /must/ have the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
+--
+-- -   #VUID-VkImageViewCreateInfo-image-04818# If @image@ was created with
+--     @usage@ containing @VK_IMAGE_USAGE_VIDEO_ENCODE_DST_BIT_KHR@,
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR@,
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR@, then the @viewType@
+--     /must/ be 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY' and all
+--     members of @components@ /must/ have the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
+--
+-- -   #VUID-VkImageViewCreateInfo-pNext-06787# If the @pNext@ chain
+--     includes a
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
+--     structure, its @exportObjectType@ member /must/ be
+--     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT'.
+--
+-- -   #VUID-VkImageViewCreateInfo-pNext-06944# If the @pNext@ chain
+--     includes
+--     'Vulkan.Extensions.VK_QCOM_image_processing.ImageViewSampleWeightCreateInfoQCOM'
+--     structure, then
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-textureSampleWeighted textureSampleWeighted>
+--     feature /must/ be enabled
+--
+-- -   #VUID-VkImageViewCreateInfo-pNext-06945# If the @pNext@ chain
+--     includes
+--     'Vulkan.Extensions.VK_QCOM_image_processing.ImageViewSampleWeightCreateInfoQCOM'
+--     structure, then @image@ /must/ have been created with @usage@
+--     containing
+--     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLE_WEIGHT_BIT_QCOM'
+--
+-- -   #VUID-VkImageViewCreateInfo-pNext-06946# If the @pNext@ chain
+--     includes
+--     'Vulkan.Extensions.VK_QCOM_image_processing.ImageViewSampleWeightCreateInfoQCOM'
+--     structure, then @components@ /must/ be
+--     'Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_IDENTITY'
+--     for all components
+--
+-- -   #VUID-VkImageViewCreateInfo-pNext-06947# If the @pNext@ chain
+--     includes
+--     'Vulkan.Extensions.VK_QCOM_image_processing.ImageViewSampleWeightCreateInfoQCOM'
+--     structure, then @subresourceRange.aspectMask@ /must/ be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
+--
+-- -   #VUID-VkImageViewCreateInfo-pNext-06948# If the @pNext@ chain
+--     includes
+--     'Vulkan.Extensions.VK_QCOM_image_processing.ImageViewSampleWeightCreateInfoQCOM'
+--     structure, then @subresourceRange.levelCount@ /must/ be @1@
+--
+-- -   #VUID-VkImageViewCreateInfo-pNext-06949# If the @pNext@ chain
+--     includes
+--     'Vulkan.Extensions.VK_QCOM_image_processing.ImageViewSampleWeightCreateInfoQCOM'
+--     structure, then @viewType@ /must/ be
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D_ARRAY' or
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'
+--
+-- -   #VUID-VkImageViewCreateInfo-pNext-06950# If the @pNext@ chain
+--     includes
+--     'Vulkan.Extensions.VK_QCOM_image_processing.ImageViewSampleWeightCreateInfoQCOM'
+--     structure and if @viewType@ is
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D_ARRAY', then
+--     @image@ /must/ have been created with @imageType@
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D'
+--
+-- -   #VUID-VkImageViewCreateInfo-pNext-06951# If the @pNext@ chain
+--     includes
+--     'Vulkan.Extensions.VK_QCOM_image_processing.ImageViewSampleWeightCreateInfoQCOM'
+--     structure and @viewType@ is
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D_ARRAY', then
+--     @subresourceRange.layerCount@ /must/ be equal to @2@.
+--
+-- -   #VUID-VkImageViewCreateInfo-pNext-06952# If the @pNext@ chain
+--     includes
+--     'Vulkan.Extensions.VK_QCOM_image_processing.ImageViewSampleWeightCreateInfoQCOM'
+--     structure and @viewType@ is
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D_ARRAY', then
+--     @image@ /must/ have been created with @width@ equal to or greater
+--     than \((numPhases
+--     \times \mathbin{max}\left(
+--     \mathbin{align}\left(filterSize.width,4\right),
+--     filterSize.height\right))\)
+--
+-- -   #VUID-VkImageViewCreateInfo-pNext-06953# If the @pNext@ chain
+--     includes
+--     'Vulkan.Extensions.VK_QCOM_image_processing.ImageViewSampleWeightCreateInfoQCOM'
+--     structure and if @viewType@ is
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY', then
+--     @image@ /must/ have been created with @imageType@
+--     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
+--
+-- -   #VUID-VkImageViewCreateInfo-pNext-06954# If the @pNext@ chain
+--     includes
+--     'Vulkan.Extensions.VK_QCOM_image_processing.ImageViewSampleWeightCreateInfoQCOM'
+--     structure and @viewType@ is
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY', then
+--     @subresourceRange.layerCount@ /must/ be equal or greater than
+--     numPhases
+--
+-- -   #VUID-VkImageViewCreateInfo-pNext-06955# If the @pNext@ chain
+--     includes
+--     'Vulkan.Extensions.VK_QCOM_image_processing.ImageViewSampleWeightCreateInfoQCOM'
+--     structure and @viewType@ is
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY', then
+--     @image@ /must/ have been created with @width@ equal to or greater
+--     than @filterSize.width@
+--
+-- -   #VUID-VkImageViewCreateInfo-pNext-06956# If the @pNext@ chain
+--     includes
+--     'Vulkan.Extensions.VK_QCOM_image_processing.ImageViewSampleWeightCreateInfoQCOM'
+--     structure and @viewType@ is
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY', then
+--     @image@ /must/ have been created with @height@ equal to or greater
+--     than @filterSize.height@
+--
+-- -   #VUID-VkImageViewCreateInfo-pNext-06957# If the @pNext@ chain
+--     includes
+--     'Vulkan.Extensions.VK_QCOM_image_processing.ImageViewSampleWeightCreateInfoQCOM'
+--     structure then
+--     'Vulkan.Extensions.VK_QCOM_image_processing.ImageViewSampleWeightCreateInfoQCOM'::@filterSize.height@
+--     /must/ be less than or equal to
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-weightfilter-maxdimension ::maxWeightFilterDimension.height>
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkImageViewCreateInfo-sType-sType# @sType@ /must/ be
@@ -1159,20 +1318,18 @@ instance Zero ImageSubresourceRange where
 -- -   #VUID-VkImageViewCreateInfo-pNext-pNext# Each @pNext@ member of any
 --     structure (including this one) in the @pNext@ chain /must/ be either
 --     @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT',
 --     'Vulkan.Extensions.VK_EXT_astc_decode_mode.ImageViewASTCDecodeModeEXT',
 --     'Vulkan.Extensions.VK_EXT_image_view_min_lod.ImageViewMinLodCreateInfoEXT',
+--     'Vulkan.Extensions.VK_QCOM_image_processing.ImageViewSampleWeightCreateInfoQCOM',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.ImageViewUsageCreateInfo',
---     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo',
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264ProfileEXT VkVideoDecodeH264ProfileEXT>,
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH265ProfileEXT VkVideoDecodeH265ProfileEXT>,
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264ProfileEXT VkVideoEncodeH264ProfileEXT>,
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265ProfileEXT VkVideoEncodeH265ProfileEXT>,
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileKHR VkVideoProfileKHR>,
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfilesKHR VkVideoProfilesKHR>
+--     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --
 -- -   #VUID-VkImageViewCreateInfo-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique
+--     struct in the @pNext@ chain /must/ be unique, with the exception of
+--     structures of type
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
 --
 -- -   #VUID-VkImageViewCreateInfo-flags-parameter# @flags@ /must/ be a
 --     valid combination of
@@ -1239,6 +1396,8 @@ instance Extensible ImageViewCreateInfo where
   getNext ImageViewCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageViewCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @ImageViewSampleWeightCreateInfoQCOM = Just f
+    | Just Refl <- eqT @e @ExportMetalObjectCreateInfoEXT = Just f
     | Just Refl <- eqT @e @ImageViewMinLodCreateInfoEXT = Just f
     | Just Refl <- eqT @e @ImageViewASTCDecodeModeEXT = Just f
     | Just Refl <- eqT @e @SamplerYcbcrConversionInfo = Just f

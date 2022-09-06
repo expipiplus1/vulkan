@@ -19,7 +19,7 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
 -- [__Contact__]
 --
@@ -33,8 +33,7 @@
 --
 -- [__Interactions and External Dependencies__]
 --
---     -   This extension requires
---         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
+--     -   This extension requires @VK_KHR_format_feature_flags2@
 --
 -- [__Contributors__]
 --
@@ -108,7 +107,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_linear_color_attachment Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_linear_color_attachment Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -148,7 +147,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Members
 --
--- This structure describes the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
@@ -172,7 +171,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 data PhysicalDeviceLinearColorAttachmentFeaturesNV = PhysicalDeviceLinearColorAttachmentFeaturesNV
   { -- | #features-linearColorAttachment# @linearColorAttachment@ indicates
     -- whether the implementation supports renderable
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#glossary Linear Color Attachment>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary Linear Color Attachment>
     linearColorAttachment :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

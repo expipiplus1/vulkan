@@ -51,11 +51,13 @@ import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkCreateSemaphore))
 import Vulkan.Dynamic (DeviceCmds(pVkDestroySemaphore))
 import Vulkan.Core10.Handles (Device_T)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ExportMetalObjectCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore (ExportSemaphoreCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_semaphore_win32 (ExportSemaphoreWin32HandleInfoKHR)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ImportMetalSharedEventInfoEXT)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.CStruct.Extends (PokeChain)
@@ -123,7 +125,7 @@ createSemaphore :: forall a io
                    -- containing information about how the semaphore is to be created.
                    (SemaphoreCreateInfo a)
                 -> -- | @pAllocator@ controls host memory allocation as described in the
-                   -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                   -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                    -- chapter.
                    ("allocator" ::: Maybe AllocationCallbacks)
                 -> io (Semaphore)
@@ -212,7 +214,7 @@ destroySemaphore :: forall io
                  -> -- | @semaphore@ is the handle of the semaphore to destroy.
                     Semaphore
                  -> -- | @pAllocator@ controls host memory allocation as described in the
-                    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                     -- chapter.
                     ("allocator" ::: Maybe AllocationCallbacks)
                  -> io ()
@@ -231,6 +233,14 @@ destroySemaphore device semaphore allocator = liftIO . evalContT $ do
 -- | VkSemaphoreCreateInfo - Structure specifying parameters of a newly
 -- created semaphore
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkSemaphoreCreateInfo-pNext-06789# If the @pNext@ chain
+--     includes a
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
+--     structure, its @exportObjectType@ member /must/ be
+--     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_SHARED_EVENT_BIT_EXT'.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkSemaphoreCreateInfo-sType-sType# @sType@ /must/ be
@@ -239,13 +249,17 @@ destroySemaphore device semaphore allocator = liftIO . evalContT $ do
 -- -   #VUID-VkSemaphoreCreateInfo-pNext-pNext# Each @pNext@ member of any
 --     structure (including this one) in the @pNext@ chain /must/ be either
 --     @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore.ExportSemaphoreCreateInfo',
 --     'Vulkan.Extensions.VK_KHR_external_semaphore_win32.ExportSemaphoreWin32HandleInfoKHR',
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalSharedEventInfoEXT',
 --     or
 --     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'
 --
 -- -   #VUID-VkSemaphoreCreateInfo-sType-unique# The @sType@ value of each
---     struct in the @pNext@ chain /must/ be unique
+--     struct in the @pNext@ chain /must/ be unique, with the exception of
+--     structures of type
+--     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
 --
 -- -   #VUID-VkSemaphoreCreateInfo-flags-zerobitmask# @flags@ /must/ be @0@
 --
@@ -272,6 +286,8 @@ instance Extensible SemaphoreCreateInfo where
   getNext SemaphoreCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SemaphoreCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @ImportMetalSharedEventInfoEXT = Just f
+    | Just Refl <- eqT @e @ExportMetalObjectCreateInfoEXT = Just f
     | Just Refl <- eqT @e @SemaphoreTypeCreateInfo = Just f
     | Just Refl <- eqT @e @ExportSemaphoreWin32HandleInfoKHR = Just f
     | Just Refl <- eqT @e @ExportSemaphoreCreateInfo = Just f

@@ -172,6 +172,13 @@ foreign import ccall
 -- properties when the layer was enumerated by
 -- 'enumerateInstanceLayerProperties'.
 --
+-- Note
+--
+-- Due to platform details on Android, 'enumerateDeviceLayerProperties' may
+-- be called with @physicalDevice@ equal to @NULL@ during layer discovery.
+-- This behaviour will only be observed by layer implementations, and not
+-- the underlying Vulkan driver.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkEnumerateDeviceLayerProperties-physicalDevice-parameter#
@@ -206,7 +213,7 @@ foreign import ccall
 -- 'LayerProperties', 'Vulkan.Core10.Handles.PhysicalDevice'
 enumerateDeviceLayerProperties :: forall io
                                 . (MonadIO io)
-                               => -- No documentation found for Nested "vkEnumerateDeviceLayerProperties" "physicalDevice"
+                               => -- | @physicalDevice@ is the physical device that will be queried.
                                   PhysicalDevice
                                -> io (Result, ("properties" ::: Vector LayerProperties))
 enumerateDeviceLayerProperties physicalDevice = liftIO . evalContT $ do
@@ -244,7 +251,7 @@ data LayerProperties = LayerProperties
     layerName :: ByteString
   , -- | @specVersion@ is the Vulkan version the layer was written to, encoded as
     -- described in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-coreversions-versionnumbers>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-coreversions-versionnumbers>.
     specVersion :: Word32
   , -- | @implementationVersion@ is the version of this layer. It is an integer,
     -- increasing with backward compatible changes.

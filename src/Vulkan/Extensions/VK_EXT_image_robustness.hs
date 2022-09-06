@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Deprecation state__]
 --
@@ -66,7 +67,7 @@
 -- out of bounds reads return R, G, and B values of zero and alpha values
 -- of either zero or one. Components not present in the image format may be
 -- set to zero or to values based on the format as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-conversion-to-rgba Conversion to RGBA>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-conversion-to-rgba Conversion to RGBA>.
 --
 -- == New Structures
 --
@@ -111,7 +112,7 @@
 --
 -- -   Revision 1, 2020-04-27 (Graeme Leese)
 --
---     -   Initial draft
+-- -   Initial draft
 --
 -- == See Also
 --
@@ -120,7 +121,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_robustness Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_robustness Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

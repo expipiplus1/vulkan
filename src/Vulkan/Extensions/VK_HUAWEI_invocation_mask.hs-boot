@@ -19,19 +19,21 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_ray_tracing_pipeline@
+--     -   Requires @VK_KHR_ray_tracing_pipeline@ to be enabled for any
+--         device-level functionality
 --
---     -   Requires @VK_KHR_synchronization2@
+--     -   Requires @VK_KHR_synchronization2@ to be enabled for any
+--         device-level functionality
 --
 -- [__Contact__]
 --
---     -   Yunpeng Zhu
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_HUAWEI_invocation_mask] @yunxingzhu%0A<<Here describe the issue or question you have about the VK_HUAWEI_invocation_mask extension>> >
+--     -   Pan Gao
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_HUAWEI_invocation_mask] @PanGao-h%0A<<Here describe the issue or question you have about the VK_HUAWEI_invocation_mask extension>> >
 --
 -- [__Extension Proposal__]
---     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_HUAWEI_invocation_mask.asciidoc VK_HUAWEI_invocation_mask>
+--     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_HUAWEI_invocation_mask.adoc VK_HUAWEI_invocation_mask>
 --
 -- == Other Extension Metadata
 --
@@ -49,7 +51,15 @@
 --
 -- [__Contributors__]
 --
---     -   Yunpeng Zhu, HuaWei
+--     -   Yunpeng Zhu
+--
+--     -   Juntao Li, Huawei
+--
+--     -   Liang Chen, Huawei
+--
+--     -   Shaozhuang Shi, Huawei
+--
+--     -   Hailong Chu, Huawei
 --
 -- == Description
 --
@@ -140,7 +150,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_HUAWEI_invocation_mask Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_HUAWEI_invocation_mask Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

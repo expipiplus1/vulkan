@@ -97,9 +97,16 @@ foreign import ccall
 --
 -- Once a shader module has been created, any entry points it contains
 -- /can/ be used in pipeline shader stages as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-compute Compute Pipelines>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-compute Compute Pipelines>
 -- and
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics Graphics Pipelines>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics Graphics Pipelines>.
+--
+-- == Valid Usage
+--
+-- -   #VUID-vkCreateShaderModule-pCreateInfo-06904# If @pCreateInfo@ is
+--     not @NULL@, @pCreateInfo->pNext@ /must/ be @NULL@ or a pointer to a
+--     'Vulkan.Extensions.VK_EXT_validation_cache.ShaderModuleValidationCacheCreateInfoEXT'
+--     structure
 --
 -- == Valid Usage (Implicit)
 --
@@ -145,7 +152,7 @@ createShaderModule :: forall a io
                    -> -- | @pCreateInfo@ is a pointer to a 'ShaderModuleCreateInfo' structure.
                       (ShaderModuleCreateInfo a)
                    -> -- | @pAllocator@ controls host memory allocation as described in the
-                      -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                      -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                       -- chapter.
                       ("allocator" ::: Maybe AllocationCallbacks)
                    -> io (ShaderModule)
@@ -238,7 +245,7 @@ destroyShaderModule :: forall io
                     -> -- | @shaderModule@ is the handle of the shader module to destroy.
                        ShaderModule
                     -> -- | @pAllocator@ controls host memory allocation as described in the
-                       -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                       -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                        -- chapter.
                        ("allocator" ::: Maybe AllocationCallbacks)
                     -> io ()
@@ -267,16 +274,16 @@ destroyShaderModule device shaderModule allocator = liftIO . evalContT $ do
 --
 -- -   #VUID-VkShaderModuleCreateInfo-pCode-01377# @pCode@ /must/ point to
 --     either valid SPIR-V code, formatted and packed as described by the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirv-spec Khronos SPIR-V Specification>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirv-spec Khronos SPIR-V Specification>
 --     or valid GLSL code which /must/ be written to the
 --     @GL_KHR_vulkan_glsl@ extension specification
 --
 -- -   #VUID-VkShaderModuleCreateInfo-pCode-01378# If @pCode@ is a pointer
 --     to SPIR-V code, that code /must/ adhere to the validation rules
 --     described by the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-module-validation Validation Rules within a Module>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-module-validation Validation Rules within a Module>
 --     section of the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities SPIR-V Environment>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities SPIR-V Environment>
 --     appendix
 --
 -- -   #VUID-VkShaderModuleCreateInfo-pCode-01379# If @pCode@ is a pointer
@@ -289,27 +296,27 @@ destroyShaderModule device shaderModule allocator = liftIO . evalContT $ do
 -- -   #VUID-VkShaderModuleCreateInfo-pCode-01090# @pCode@ /must/ not
 --     declare any capability that is not supported by the API, as
 --     described by the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-module-validation Capabilities>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-module-validation Capabilities>
 --     section of the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities SPIR-V Environment>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities SPIR-V Environment>
 --     appendix
 --
 -- -   #VUID-VkShaderModuleCreateInfo-pCode-01091# If @pCode@ declares any
 --     of the capabilities listed in the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table SPIR-V Environment>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table SPIR-V Environment>
 --     appendix, one of the corresponding requirements /must/ be satisfied
 --
 -- -   #VUID-VkShaderModuleCreateInfo-pCode-04146# @pCode@ /must/ not
 --     declare any SPIR-V extension that is not supported by the API, as
 --     described by the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-extensions Extension>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-extensions Extension>
 --     section of the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities SPIR-V Environment>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities SPIR-V Environment>
 --     appendix
 --
 -- -   #VUID-VkShaderModuleCreateInfo-pCode-04147# If @pCode@ declares any
 --     of the SPIR-V extensions listed in the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-extensions-table SPIR-V Environment>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-extensions-table SPIR-V Environment>
 --     appendix, one of the corresponding requirements /must/ be satisfied
 --
 -- == Valid Usage (Implicit)
@@ -328,7 +335,8 @@ destroyShaderModule device shaderModule allocator = liftIO . evalContT $ do
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.ShaderModuleCreateFlags.ShaderModuleCreateFlags',
--- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createShaderModule'
+-- 'Vulkan.Core10.Enums.StructureType.StructureType', 'createShaderModule',
+-- 'Vulkan.Extensions.VK_EXT_shader_module_identifier.getShaderModuleCreateInfoIdentifierEXT'
 data ShaderModuleCreateInfo (es :: [Type]) = ShaderModuleCreateInfo
   { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
     next :: Chain es

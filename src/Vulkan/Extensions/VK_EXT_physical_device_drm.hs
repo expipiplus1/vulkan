@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Contact__]
 --
@@ -47,7 +48,7 @@
 -- DRM nodes on Linux.
 --
 -- Its functionality closely overlaps with
--- @EGL_EXT_device_drm@<https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_physical_device_drm-fn1 1>^.
+-- @EGL_EXT_device_drm@<https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_physical_device_drm-fn1 1>^.
 -- Unlike the EGL extension, this extension does not expose a string
 -- containing the name of the device file and instead exposes device minor
 -- numbers.
@@ -83,7 +84,7 @@
 -- == References
 --
 -- 1.  #VK_EXT_physical_device_drm-fn1#
---     <https://www.khronos.org/registry/EGL/extensions/EXT/EGL_EXT_device_drm.txt EGL_EXT_device_drm>
+--     <https://registry.khronos.org/EGL/extensions/EXT/EGL_EXT_device_drm.txt EGL_EXT_device_drm>
 --
 -- == Version History
 --
@@ -98,7 +99,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_physical_device_drm Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_physical_device_drm Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

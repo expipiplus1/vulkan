@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Contact__]
 --
@@ -84,9 +85,9 @@
 --
 -- == New SPIR-V Capability
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ComputeDerivativeGroupQuadsNV ComputeDerivativeGroupQuadsNV>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ComputeDerivativeGroupQuadsNV ComputeDerivativeGroupQuadsNV>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ComputeDerivativeGroupLinearNV ComputeDerivativeGroupLinearNV>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ComputeDerivativeGroupLinearNV ComputeDerivativeGroupLinearNV>
 --
 -- == Issues
 --
@@ -113,7 +114,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_compute_shader_derivatives Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_compute_shader_derivatives Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -157,7 +158,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- = Description
 --
 -- See
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-scope-quad Quad shader scope>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-scope-quad Quad shader scope>
 -- for more information.
 --
 -- If the @VkPhysicalDeviceComputeShaderDerivativesFeaturesNVfeatures@.

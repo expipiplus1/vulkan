@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_EXT_fragment_density_map@
+--     -   Requires @VK_EXT_fragment_density_map@ to be enabled for any
+--         device-level functionality
 --
 -- [__Contact__]
 --
@@ -60,80 +61,29 @@
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
 --     'Vulkan.Core10.Device.DeviceCreateInfo':
 --
---     -   'Vulkan.Extensions.VK_EXT_fragment_density_map.PhysicalDeviceFragmentDensityMapFeaturesEXT'
+--     -   'PhysicalDeviceFragmentDensityMap2FeaturesEXT'
 --
 -- -   Extending
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2':
 --
---     -   'Vulkan.Extensions.VK_EXT_fragment_density_map.PhysicalDeviceFragmentDensityMapPropertiesEXT'
---
--- -   Extending 'Vulkan.Core10.Pass.RenderPassCreateInfo',
---     'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.RenderPassCreateInfo2':
---
---     -   'Vulkan.Extensions.VK_EXT_fragment_density_map.RenderPassFragmentDensityMapCreateInfoEXT'
+--     -   'PhysicalDeviceFragmentDensityMap2PropertiesEXT'
 --
 -- == New Enum Constants
 --
--- -   'Vulkan.Extensions.VK_EXT_fragment_density_map.EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME'
+-- -   'EXT_FRAGMENT_DENSITY_MAP_2_EXTENSION_NAME'
 --
--- -   'Vulkan.Extensions.VK_EXT_fragment_density_map.EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION'
---
--- -   Extending 'Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits':
---
---     -   'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT'
---
--- -   Extending
---     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits':
---
---     -   'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT'
---
--- -   Extending
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits':
---
---     -   'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
---
--- -   Extending 'Vulkan.Core10.Enums.ImageLayout.ImageLayout':
---
---     -   'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT'
---
--- -   Extending
---     'Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits':
---
---     -   'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT'
+-- -   'EXT_FRAGMENT_DENSITY_MAP_2_SPEC_VERSION'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.ImageViewCreateFlagBits.ImageViewCreateFlagBits':
 --
---     -   'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT'
---
--- -   Extending
---     'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits':
---
---     -   'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
---
--- -   Extending
---     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SamplerCreateFlagBits':
---
---     -   'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT'
---
---     -   'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT'
+--     -   'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT'
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_FEATURES_EXT'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT'
---
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT'
---
--- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>
--- is supported:
---
--- -   Extending
---     'Vulkan.Core13.Enums.FormatFeatureFlags2.FormatFeatureFlagBits2':
---
---     -   'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT'
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_PROPERTIES_EXT'
 --
 -- == Version History
 --
@@ -149,7 +99,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_fragment_density_map2 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_fragment_density_map2 Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

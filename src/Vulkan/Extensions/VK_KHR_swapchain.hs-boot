@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_surface@
+--     -   Requires @VK_KHR_surface@ to be enabled for any device-level
+--         functionality
 --
 -- [__Contact__]
 --
@@ -705,8 +706,8 @@
 --
 -- -   Revision 17, 2015-06-15 (Ian Elliott)
 --
---     -   Changed special value from \"-1\" to \"0\" so that the data
---         types can be unsigned.
+--     -   Changed special value from “-1” to “0” so that the data types
+--         can be unsigned.
 --
 -- -   Revision 18, 2015-06-15 (Ian Elliott)
 --
@@ -720,8 +721,8 @@
 --     -   Fixed clarification of VkSurfacePropertiesKHR::minImageCount
 --         made in version 18.
 --
---     -   Added a brief \"Image Ownership\" definition to the list of
---         terms used in the spec.
+--     -   Added a brief “Image Ownership” definition to the list of terms
+--         used in the spec.
 --
 -- -   Revision 20, 2015-06-17 (James Jones)
 --
@@ -1069,7 +1070,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_swapchain Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_swapchain Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

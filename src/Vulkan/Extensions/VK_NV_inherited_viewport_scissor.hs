@@ -19,7 +19,7 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
 -- [__Contact__]
 --
@@ -146,7 +146,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_inherited_viewport_scissor Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_inherited_viewport_scissor Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -349,13 +349,13 @@ instance Zero PhysicalDeviceInheritedViewportScissorFeaturesNV where
 --
 -- -   #VUID-VkCommandBufferInheritanceViewportScissorInfoNV-viewportScissor2D-04782#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-inheritedViewportScissor2D inherited viewport scissor>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-inheritedViewportScissor2D inheritedViewportScissor2D>
 --     feature is not enabled, @viewportScissor2D@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   #VUID-VkCommandBufferInheritanceViewportScissorInfoNV-viewportScissor2D-04783#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiple viewports>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiViewport>
 --     feature is not enabled and @viewportScissor2D@ is
 --     'Vulkan.Core10.FundamentalTypes.TRUE', then @viewportDepthCount@
 --     /must/ be @1@

@@ -19,7 +19,7 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
 -- [__Deprecation state__]
 --
@@ -45,7 +45,7 @@
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_shader_draw_parameters.html SPV_KHR_shader_draw_parameters>
 --
 --     -   This extension provides API support for
---         <https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_shader_draw_parameters.txt GL_ARB_shader_draw_parameters>
+--         <https://registry.khronos.org/OpenGL/extensions/ARB/ARB_shader_draw_parameters.txt GL_ARB_shader_draw_parameters>
 --
 --     -   Promoted to Vulkan 1.1 Core
 --
@@ -94,10 +94,11 @@
 --
 -- == Promotion to Vulkan 1.1
 --
--- All functionality in this extension is included in core Vulkan 1.1,
--- however a
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderDrawParameters feature bit was added>
--- to distinguish whether it is actually available or not.
+-- All functionality in this extension is included in core Vulkan 1.1.
+-- However, the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderDrawParameters shaderDrawParameters>
+-- feature bit was added to distinguish whether it is actually available or
+-- not.
 --
 -- == New Enum Constants
 --
@@ -107,15 +108,15 @@
 --
 -- == New Built-In Variables
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-baseinstance BaseInstance>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-baseinstance BaseInstance>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-basevertex BaseVertex>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-basevertex BaseVertex>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-drawindex DrawIndex>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-drawindex DrawIndex>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-DrawParameters DrawParameters>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-DrawParameters DrawParameters>
 --
 -- == Issues
 --
@@ -149,7 +150,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_shader_draw_parameters Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_shader_draw_parameters Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

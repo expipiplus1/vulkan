@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Deprecation state__]
 --
@@ -287,6 +288,17 @@
 --     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
 --
 -- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_mesh_shader VK_EXT_mesh_shader>
+-- is supported:
+--
+-- -   Extending
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2':
+--
+--     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MESH_SHADER_BIT_EXT'
+--
+--     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT'
+--
+-- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_transform_feedback VK_EXT_transform_feedback>
 -- is supported:
 --
@@ -372,9 +384,9 @@
 -- -   Extending
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PipelineStageFlagBits2':
 --
---     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MESH_SHADER_BIT_NV'
+--     -   'PIPELINE_STAGE_2_MESH_SHADER_BIT_NV'
 --
---     -   'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TASK_SHADER_BIT_NV'
+--     -   'PIPELINE_STAGE_2_TASK_SHADER_BIT_NV'
 --
 -- If
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>
@@ -438,7 +450,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_synchronization2 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_synchronization2 Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -463,6 +475,8 @@ module Vulkan.Extensions.VK_KHR_synchronization2  ( cmdWriteBufferMarker2AMD
                                                   , pattern PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_NV
                                                   , pattern ACCESS_2_ACCELERATION_STRUCTURE_READ_BIT_NV
                                                   , pattern ACCESS_2_ACCELERATION_STRUCTURE_WRITE_BIT_NV
+                                                  , pattern PIPELINE_STAGE_2_TASK_SHADER_BIT_NV
+                                                  , pattern PIPELINE_STAGE_2_MESH_SHADER_BIT_NV
                                                   , cmdSetEvent2KHR
                                                   , cmdResetEvent2KHR
                                                   , cmdWaitEvents2KHR
@@ -580,7 +594,11 @@ import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_
 import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
 import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR))
 import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_MESH_SHADER_BIT_EXT))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
 import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_RAY_TRACING_SHADER_BIT_KHR))
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlagBits2(PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT))
 import Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlags)
 import Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlagBits(PIPELINE_STAGE_NONE))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2))
@@ -638,59 +656,59 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-03929# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometry shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometryShader>
 --     feature is not enabled, @stage@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT'
 --
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-03930# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
 --     feature is not enabled, @stage@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT'
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT'
 --
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-03931# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-conditionalRendering conditional rendering>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-conditionalRendering conditionalRendering>
 --     feature is not enabled, @stage@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_CONDITIONAL_RENDERING_BIT_EXT'
 --
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-03932# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMap fragment density map>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-fragmentDensityMap fragmentDensityMap>
 --     feature is not enabled, @stage@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
 --
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-03933# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-transformFeedback transform feedback>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-transformFeedback transformFeedback>
 --     feature is not enabled, @stage@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TRANSFORM_FEEDBACK_BIT_EXT'
 --
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-03934# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader mesh shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-meshShader meshShader>
 --     feature is not enabled, @stage@ /must/ not contain
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MESH_SHADER_BIT_NV'
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MESH_SHADER_BIT_EXT'
 --
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-03935# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader task shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader taskShader>
 --     feature is not enabled, @stage@ /must/ not contain
---     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TASK_SHADER_BIT_NV'
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT'
 --
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-04956# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
 --     feature is not enabled, @stage@ /must/ not contain
 --     'PIPELINE_STAGE_2_SHADING_RATE_IMAGE_BIT_NV'
 --
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-04957# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subpassShading subpass shading>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-subpassShading subpassShading>
 --     feature is not enabled, @stage@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI'
 --
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-04995# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocation mask image>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-invocationMask invocationMask>
 --     feature is not enabled, @stage@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
 --
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-synchronization2-03893# The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-03894# @stage@ /must/ include
@@ -738,6 +756,9 @@ foreign import ccall
 --     allocated from /must/ support transfer, graphics, or compute
 --     operations
 --
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-videocoding# This command /must/
+--     only be called outside of a video coding scope
+--
 -- -   #VUID-vkCmdWriteBufferMarker2AMD-commonparent# Both of
 --     @commandBuffer@, and @dstBuffer@ /must/ have been created,
 --     allocated, or retrieved from the same 'Vulkan.Core10.Handles.Device'
@@ -753,13 +774,13 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Transfer                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |
--- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Transfer                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             | Graphics                                                                                                              |
+-- |                                                                                                                            |                                                                                                                        |                                                                                                                             | Compute                                                                                                               |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -936,6 +957,14 @@ pattern ACCESS_2_ACCELERATION_STRUCTURE_READ_BIT_NV = ACCESS_2_ACCELERATION_STRU
 
 -- No documentation found for TopLevel "VK_ACCESS_2_ACCELERATION_STRUCTURE_WRITE_BIT_NV"
 pattern ACCESS_2_ACCELERATION_STRUCTURE_WRITE_BIT_NV = ACCESS_2_ACCELERATION_STRUCTURE_WRITE_BIT_KHR
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_TASK_SHADER_BIT_NV"
+pattern PIPELINE_STAGE_2_TASK_SHADER_BIT_NV = PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_STAGE_2_MESH_SHADER_BIT_NV"
+pattern PIPELINE_STAGE_2_MESH_SHADER_BIT_NV = PIPELINE_STAGE_2_MESH_SHADER_BIT_EXT
 
 
 -- No documentation found for TopLevel "vkCmdSetEvent2KHR"

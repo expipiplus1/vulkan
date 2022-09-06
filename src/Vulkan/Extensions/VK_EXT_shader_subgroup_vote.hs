@@ -19,7 +19,7 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
 -- [__Deprecation state__]
 --
@@ -45,7 +45,7 @@
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/KHR/SPV_KHR_subgroup_vote.html SPV_KHR_subgroup_vote>
 --
 --     -   This extension provides API support for
---         <https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_shader_group_vote.txt GL_ARB_shader_group_vote>
+--         <https://registry.khronos.org/OpenGL/extensions/ARB/ARB_shader_group_vote.txt GL_ARB_shader_group_vote>
 --
 -- [__Contributors__]
 --
@@ -144,7 +144,7 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-SubgroupVoteKHR SubgroupVoteKHR>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-SubgroupVoteKHR SubgroupVoteKHR>
 --
 -- == Version History
 --
@@ -159,7 +159,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_shader_subgroup_vote Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_shader_subgroup_vote Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

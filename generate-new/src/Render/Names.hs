@@ -71,6 +71,10 @@ specRenderedNames Spec {..} = do
          | Alias {..} <- toList specAliases
          , TypeAlias == aType
          ]
+      <> [ (mkConName aName aName, mkConName aTarget aTarget)
+         | Alias {..} <- toList specAliases
+         , TypeAlias == aType
+         ]
       <> [ (mkTyName flags, mkTyName eName)
          | Enum {..}        <- toList specEnums
          , ABitmask flags _ <- pure eType

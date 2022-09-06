@@ -19,13 +19,16 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
---     -   Requires @VK_KHR_get_surface_capabilities2@
+--     -   Requires @VK_KHR_get_surface_capabilities2@ to be enabled for
+--         any device-level functionality
 --
---     -   Requires @VK_KHR_swapchain@
+--     -   Requires @VK_KHR_swapchain@ to be enabled for any device-level
+--         functionality
 --
 -- [__Contact__]
 --
@@ -120,7 +123,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_AMD_display_native_hdr Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_AMD_display_native_hdr Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -244,7 +247,7 @@ data DisplayNativeHdrSurfaceCapabilitiesAMD = DisplayNativeHdrSurfaceCapabilitie
     -- dimming. If this is 'Vulkan.Core10.FundamentalTypes.TRUE',
     -- 'SwapchainDisplayNativeHdrCreateInfoAMD' /can/ be used to explicitly
     -- enable or disable local dimming for the surface. Local dimming may also
-    -- be overriden by 'setLocalDimmingAMD' during the lifetime of the
+    -- be overridden by 'setLocalDimmingAMD' during the lifetime of the
     -- swapchain.
     localDimmingSupport :: Bool }
   deriving (Typeable, Eq)

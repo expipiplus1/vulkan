@@ -19,11 +19,13 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_FUCHSIA_external_memory@
+--     -   Requires @VK_FUCHSIA_external_memory@ to be enabled for any
+--         device-level functionality
 --
---     -   Requires @VK_KHR_sampler_ycbcr_conversion@
+--     -   Requires @VK_KHR_sampler_ycbcr_conversion@ to be enabled for any
+--         device-level functionality
 --
 -- [__Contact__]
 --
@@ -204,7 +206,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_FUCHSIA_buffer_collection Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_FUCHSIA_buffer_collection Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -402,7 +404,7 @@ createBufferCollectionFUCHSIA :: forall io
                               -> -- | @pAllocator@ is a pointer to a
                                  -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
                                  -- controlling host memory allocation as described in the
-                                 -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                  -- chapter
                                  ("allocator" ::: Maybe AllocationCallbacks)
                               -> io (BufferCollectionFUCHSIA)
@@ -524,7 +526,7 @@ foreign import ccall
 -- @pImageConstraintsInfo@::@formatConstraintsCount@ is larger than the
 -- implementation-defined limit. If that occurs,
 -- 'setBufferCollectionImageConstraintsFUCHSIA' will return
--- VK_ERROR_INITIALIZATION_FAILED.
+-- 'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'.
 --
 -- 'setBufferCollectionImageConstraintsFUCHSIA' /may/ fail if the
 -- implementation does not support any of the formats described by the
@@ -642,7 +644,7 @@ destroyBufferCollectionFUCHSIA :: forall io
                                -> -- | @pAllocator@ is a pointer to a
                                   -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
                                   -- controlling host memory allocation as described in the
-                                  -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                                  -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                   -- chapter
                                   ("allocator" ::: Maybe AllocationCallbacks)
                                -> io ()
@@ -1051,7 +1053,7 @@ data BufferCollectionPropertiesFUCHSIA = BufferCollectionPropertiesFUCHSIA
   , -- | @bufferCount@ is the number of buffers in the collection
     bufferCount :: Word32
   , -- | @createInfoIndex@ as described in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#sysmem-chosen-create-infos Sysmem chosen create infos>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#sysmem-chosen-create-infos Sysmem chosen create infos>
     createInfoIndex :: Word32
   , -- | @sysmemPixelFormat@ is the Sysmem @PixelFormatType@ as defined in
     -- @fuchsia.sysmem\/image_formats.fidl@
@@ -1204,7 +1206,7 @@ instance Zero BufferCollectionPropertiesFUCHSIA where
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits'
 --     /must/ be chosen from among the buffer compatible format features
 --     listed in
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#buffer-compatible-format-features buffer compatible format features>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#buffer-compatible-format-features buffer compatible format features>
 --
 -- == Valid Usage (Implicit)
 --
@@ -1483,9 +1485,9 @@ instance Zero ImageFormatConstraintsInfoFUCHSIA where
 --
 -- -   #VUID-VkImageConstraintsInfoFUCHSIA-attachmentFragmentShadingRate-06401#
 --     If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate feature>
---     is enabled, and @pFormatConstraints@::@imageCreateInfo@::@usage@
---     contains
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
+--     feature is enabled, and
+--     @pFormatConstraints@::@imageCreateInfo@::@usage@ contains
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR',
 --     then @pFormatConstraints@::@requiredFormatFeatures@ /must/ contain
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'

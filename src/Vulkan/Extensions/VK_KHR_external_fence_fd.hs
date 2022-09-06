@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_external_fence@
+--     -   Requires @VK_KHR_external_fence@ to be enabled for any
+--         device-level functionality
 --
 -- [__Contact__]
 --
@@ -99,7 +100,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_external_fence_fd Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_external_fence_fd Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -203,7 +204,7 @@ foreign import ccall
 -- Exporting a file descriptor from a fence /may/ have side effects
 -- depending on the transference of the specified handle type, as described
 -- in
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence State>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence State>.
 --
 -- == Return Codes
 --
@@ -330,12 +331,12 @@ importFenceFdKHR device importFenceFdInfo = liftIO . evalContT $ do
 --
 -- -   #VUID-VkImportFenceFdInfoKHR-handleType-01464# @handleType@ /must/
 --     be a value included in the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-fence-handletypes-fd Handle Types Supported by >
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-fence-handletypes-fd Handle Types Supported by >
 --     table
 --
 -- -   #VUID-VkImportFenceFdInfoKHR-fd-01541# @fd@ /must/ obey any
 --     requirements listed for @handleType@ in
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#external-fence-handle-types-compatibility external fence handle types compatibility>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#external-fence-handle-types-compatibility external fence handle types compatibility>
 --
 -- If @handleType@ is
 -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT',
@@ -470,13 +471,13 @@ instance Zero ImportFenceFdInfoKHR where
 -- -   #VUID-VkFenceGetFdInfoKHR-handleType-01454# If @handleType@ refers
 --     to a handle type with copy payload transference semantics, @fence@
 --     /must/ be signaled, or have an associated
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-fences-signaling fence signal operation>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-fences-signaling fence signal operation>
 --     pending execution
 --
 -- -   #VUID-VkFenceGetFdInfoKHR-fence-01455# @fence@ /must/ not currently
 --     have its payload replaced by an imported payload as described below
 --     in
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence Payloads>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence Payloads>
 --     unless that imported payload’s handle type was included in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_fence_capabilities.ExternalFenceProperties'::@exportFromImportedHandleTypes@
 --     for @handleType@

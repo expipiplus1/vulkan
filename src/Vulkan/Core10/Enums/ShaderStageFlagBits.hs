@@ -10,8 +10,8 @@ module Vulkan.Core10.Enums.ShaderStageFlagBits  ( ShaderStageFlags
                                                                      , SHADER_STAGE_ALL_GRAPHICS
                                                                      , SHADER_STAGE_ALL
                                                                      , SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI
-                                                                     , SHADER_STAGE_MESH_BIT_NV
-                                                                     , SHADER_STAGE_TASK_BIT_NV
+                                                                     , SHADER_STAGE_MESH_BIT_EXT
+                                                                     , SHADER_STAGE_TASK_BIT_EXT
                                                                      , SHADER_STAGE_CALLABLE_BIT_KHR
                                                                      , SHADER_STAGE_INTERSECTION_BIT_KHR
                                                                      , SHADER_STAGE_MISS_BIT_KHR
@@ -78,10 +78,10 @@ pattern SHADER_STAGE_ALL_GRAPHICS                = ShaderStageFlagBits 0x0000001
 pattern SHADER_STAGE_ALL                         = ShaderStageFlagBits 0x7fffffff
 -- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI"
 pattern SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI  = ShaderStageFlagBits 0x00004000
--- | 'SHADER_STAGE_MESH_BIT_NV' specifies the mesh stage.
-pattern SHADER_STAGE_MESH_BIT_NV                 = ShaderStageFlagBits 0x00000080
--- | 'SHADER_STAGE_TASK_BIT_NV' specifies the task stage.
-pattern SHADER_STAGE_TASK_BIT_NV                 = ShaderStageFlagBits 0x00000040
+-- | 'SHADER_STAGE_MESH_BIT_EXT' specifies the mesh stage.
+pattern SHADER_STAGE_MESH_BIT_EXT                = ShaderStageFlagBits 0x00000080
+-- | 'SHADER_STAGE_TASK_BIT_EXT' specifies the task stage.
+pattern SHADER_STAGE_TASK_BIT_EXT                = ShaderStageFlagBits 0x00000040
 -- | 'SHADER_STAGE_CALLABLE_BIT_KHR' specifies the callable stage.
 pattern SHADER_STAGE_CALLABLE_BIT_KHR            = ShaderStageFlagBits 0x00002000
 -- | 'SHADER_STAGE_INTERSECTION_BIT_KHR' specifies the intersection stage.
@@ -112,8 +112,8 @@ showTableShaderStageFlagBits =
   , (SHADER_STAGE_ALL_GRAPHICS               , "ALL_GRAPHICS")
   , (SHADER_STAGE_ALL                        , "ALL")
   , (SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI , "SUBPASS_SHADING_BIT_HUAWEI")
-  , (SHADER_STAGE_MESH_BIT_NV                , "MESH_BIT_NV")
-  , (SHADER_STAGE_TASK_BIT_NV                , "TASK_BIT_NV")
+  , (SHADER_STAGE_MESH_BIT_EXT               , "MESH_BIT_EXT")
+  , (SHADER_STAGE_TASK_BIT_EXT               , "TASK_BIT_EXT")
   , (SHADER_STAGE_CALLABLE_BIT_KHR           , "CALLABLE_BIT_KHR")
   , (SHADER_STAGE_INTERSECTION_BIT_KHR       , "INTERSECTION_BIT_KHR")
   , (SHADER_STAGE_MISS_BIT_KHR               , "MISS_BIT_KHR")

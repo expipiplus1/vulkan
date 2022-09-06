@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_EXT_transform_feedback@
+--     -   Requires @VK_EXT_transform_feedback@ to be enabled for any
+--         device-level functionality
 --
 -- [__Special Use__]
 --
@@ -33,7 +34,7 @@
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_primitives_generated_query] @syoussefi%0A<<Here describe the issue or question you have about the VK_EXT_primitives_generated_query extension>> >
 --
 -- [__Extension Proposal__]
---     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_primitives_generated_query.asciidoc VK_EXT_primitives_generated_query>
+--     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_primitives_generated_query.adoc VK_EXT_primitives_generated_query>
 --
 -- == Other Extension Metadata
 --
@@ -76,12 +77,6 @@
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVES_GENERATED_QUERY_FEATURES_EXT'
---
--- == Version History
---
--- -   Revision 1, 2021-06-23 (Shahbaz Youssefi)
---
---     -   Internal revisions
 --
 -- == Issues
 --
@@ -128,6 +123,12 @@
 -- __RESOLVED__: Disallowed for non-zero streams. In OpenGL, the
 -- rasterization stream is always stream zero.
 --
+-- == Version History
+--
+-- -   Revision 1, 2021-06-23 (Shahbaz Youssefi)
+--
+--     -   Internal revisions
+--
 -- == See Also
 --
 -- 'PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT'
@@ -135,7 +136,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_primitives_generated_query Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_primitives_generated_query Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -173,7 +174,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 --
 -- = Members
 --
--- This structure describes the following feature:
+-- This structure describes the following features:
 --
 -- = Description
 --
@@ -204,7 +205,7 @@ data PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT = PhysicalDevicePrimitive
   , -- | #features-primitivesGeneratedQueryWithRasterizerDiscard#
     -- @primitivesGeneratedQueryWithRasterizerDiscard@ indicates whether the
     -- implementation supports this query when
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-discard rasterization discard>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-discard rasterization discard>
     -- is enabled.
     primitivesGeneratedQueryWithRasterizerDiscard :: Bool
   , -- | #features-primitivesGeneratedQueryWithNonZeroStreams#

@@ -144,7 +144,7 @@ createQueryPool :: forall a io
                    -- containing the number and type of queries to be managed by the pool.
                    (QueryPoolCreateInfo a)
                 -> -- | @pAllocator@ controls host memory allocation as described in the
-                   -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                   -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                    -- chapter.
                    ("allocator" ::: Maybe AllocationCallbacks)
                 -> io (QueryPool)
@@ -241,7 +241,7 @@ destroyQueryPool :: forall io
                  -> -- | @queryPool@ is the query pool to destroy.
                     QueryPool
                  -> -- | @pAllocator@ controls host memory allocation as described in the
-                    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+                    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                     -- chapter.
                     ("allocator" ::: Maybe AllocationCallbacks)
                  -> io ()
@@ -269,42 +269,70 @@ foreign import ccall
 --
 -- = Description
 --
--- The range of queries read is defined by [@firstQuery@, @firstQuery@ +
--- @queryCount@ - 1]. For pipeline statistics queries, each query index in
--- the pool contains one integer value for each bit that is enabled in
--- 'QueryPoolCreateInfo'::@pipelineStatistics@ when the pool is created.
+-- Any results written for a query are written according to
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#queries-operation-memorylayout a layout dependent on the query type>.
 --
 -- If no bits are set in @flags@, and all requested queries are in the
 -- available state, results are written as an array of 32-bit unsigned
 -- integer values. The behavior when not all queries are available, is
 -- described
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#queries-wait-bit-not-set below>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#queries-wait-bit-not-set below>.
 --
--- If 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT' is not
--- set and the result overflows a 32-bit value, the value /may/ either wrap
--- or saturate. Similarly, if
--- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT' is set and
--- the result overflows a 64-bit value, the value /may/ either wrap or
--- saturate.
+-- If
+-- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT'
+-- is set, results for all queries in @queryPool@ identified by
+-- @firstQuery@ and @queryCount@ are copied to @pData@, along with an extra
+-- availability value written directly after the results of each query and
+-- interpreted as an unsigned integer. A value of zero indicates that the
+-- results are not yet available, otherwise the query is complete and
+-- results are available.
+--
+-- If @VK_QUERY_RESULT_WITH_STATUS_BIT_KHR@ is set, results for all queries
+-- in @queryPool@ identified by @firstQuery@ and @queryCount@ are copied to
+-- @pData@, along with an extra status value written directly after the
+-- results of each query and interpreted as a signed integer. A value of
+-- zero indicates that the results are not yet available. Positive values
+-- indicate that the operations within the query completed successfully,
+-- and the query results are valid. Negative values indicate that the
+-- operations within the query completed unsuccessfully.
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueryResultStatusKHR VkQueryResultStatusKHR>
+-- defines specific meaning for values returned here, though
+-- implementations are free to return other values.
+--
+-- Results for any available query written by this command are final and
+-- represent the final result of the query. If
+-- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_PARTIAL_BIT' is
+-- set, then for any query that is unavailable, an intermediate result
+-- between zero and the final result value is written for that query.
+-- Otherwise, any result written by this command is undefined.
+--
+-- If 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT' is set,
+-- results and availability or status values for all queries are written as
+-- an array of 64-bit values. If the @queryPool@ was created with
+-- 'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
+-- results for each query are written as an array of the type indicated by
+-- 'Vulkan.Extensions.VK_KHR_performance_query.PerformanceCounterKHR'::@storage@
+-- for the counter being queried. Otherwise, results and availability or
+-- status values are written as an array of 32-bit values. If an unsigned
+-- integer query’s value overflows the result type, the value /may/ either
+-- wrap or saturate. If a signed integer query’s value overflows the result
+-- type, the value is undefined. If a floating point query’s value is not
+-- representable as the result type, the value is undefined.
 --
 -- If 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WAIT_BIT' is
--- set, Vulkan will wait for each query to be in the available state before
--- retrieving the numerical results for that query. In this case,
--- 'getQueryPoolResults' is guaranteed to succeed and return
--- 'Vulkan.Core10.Enums.Result.SUCCESS' if the queries become available in
--- a finite time (i.e. if they have been issued and not reset). If queries
--- will never finish (e.g. due to being reset but not issued), then
--- 'getQueryPoolResults' /may/ not return in finite time.
---
--- If 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WAIT_BIT' and
--- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_PARTIAL_BIT' are
--- both not set then no result values are written to @pData@ for queries
--- that are in the unavailable state at the time of the call, and
--- 'getQueryPoolResults' returns 'Vulkan.Core10.Enums.Result.NOT_READY'.
--- However, availability state is still written to @pData@ for those
--- queries if
--- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT'
--- is set.
+-- set, this command defines an execution dependency with any earlier
+-- commands that writes one of the identified queries. The first
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- includes all instances of
+-- 'Vulkan.Core10.CommandBufferBuilding.cmdEndQuery',
+-- 'Vulkan.Extensions.VK_EXT_transform_feedback.cmdEndQueryIndexedEXT',
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.cmdWriteTimestamp2',
+-- and 'Vulkan.Core10.CommandBufferBuilding.cmdWriteTimestamp' that
+-- reference any query in @queryPool@ indicated by @firstQuery@ and
+-- @queryCount@. The second
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- includes the host operations of this command.
 --
 -- If 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WAIT_BIT' is
 -- not set, 'getQueryPoolResults' /may/ return
@@ -340,32 +368,13 @@ foreign import ccall
 -- called or the 'Vulkan.Core10.CommandBufferBuilding.cmdResetQueryPool'
 -- command has been executed since the last use of the query.
 --
+-- A similar situation can arise with the
+-- @VK_QUERY_RESULT_WITH_STATUS_BIT_KHR@ flag.
+--
 -- Note
 --
 -- Applications /can/ double-buffer query pool usage, with a pool per
 -- frame, and reset queries at the end of the frame in which they are read.
---
--- If 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_PARTIAL_BIT' is
--- set, 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WAIT_BIT' is
--- not set, and the query’s status is unavailable, an intermediate result
--- value between zero and the final result value is written to @pData@ for
--- that query.
---
--- If
--- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT'
--- is set, the final integer value written for each query is non-zero if
--- the query’s status was available or zero if the status was unavailable.
--- When
--- 'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT'
--- is used, implementations /must/ guarantee that if they return a non-zero
--- availability value then the numerical results /must/ be valid, assuming
--- the results are not reset by a subsequent command.
---
--- Note
---
--- Satisfying this guarantee /may/ require careful ordering by the
--- application, e.g. to read the availability status before reading the
--- results.
 --
 -- == Valid Usage
 --
@@ -403,7 +412,7 @@ foreign import ccall
 --
 -- -   #VUID-vkGetQueryPoolResults-dataSize-00817# @dataSize@ /must/ be
 --     large enough to contain the result of each query, as described
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#queries-operation-memorylayout here>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#queries-operation-memorylayout here>
 --
 -- -   #VUID-vkGetQueryPoolResults-queryType-00818# If the @queryType@ used
 --     to create @queryPool@ was
@@ -425,6 +434,19 @@ foreign import ccall
 --     the @queryPool@ /must/ have been recorded once for each pass as
 --     retrieved via a call to
 --     'Vulkan.Extensions.VK_KHR_performance_query.getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR'
+--
+-- -   #VUID-vkGetQueryPoolResults-queryType-04810# If the @queryType@ used
+--     to create @queryPool@ was @VK_QUERY_TYPE_RESULT_STATUS_ONLY_KHR@,
+--     @flags@ /must/ include @VK_QUERY_RESULT_WITH_STATUS_BIT_KHR@
+--
+-- -   #VUID-vkGetQueryPoolResults-flags-04811# If @flags@ includes
+--     @VK_QUERY_RESULT_WITH_STATUS_BIT_KHR@, it /must/ not include
+--     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT'
+--
+-- -   #VUID-vkGetQueryPoolResults-queryType-06900# If the @queryType@ used
+--     to create @queryPool@ was
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
+--     @flags@ /must/ not contain @VK_QUERY_RESULT_WITH_STATUS_BIT_KHR@
 --
 -- == Valid Usage (Implicit)
 --
@@ -515,9 +537,23 @@ getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride
 -- == Valid Usage
 --
 -- -   #VUID-VkQueryPoolCreateInfo-queryType-00791# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineStatisticsQuery pipeline statistics queries>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineStatisticsQuery pipelineStatisticsQuery>
 --     feature is not enabled, @queryType@ /must/ not be
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PIPELINE_STATISTICS'
+--
+-- -   #VUID-VkQueryPoolCreateInfo-meshShaderQueries-07068# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-meshShaderQueries meshShaderQueries>
+--     feature is not enabled, @queryType@ /must/ not be
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_MESH_PRIMITIVES_GENERATED_EXT'
+--
+-- -   #VUID-VkQueryPoolCreateInfo-meshShaderQueries-07069# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-meshShaderQueries meshShaderQueries>
+--     feature is not enabled, and @queryType@ is
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PIPELINE_STATISTICS',
+--     @pipelineStatistics@ /must/ not contain
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_TASK_SHADER_INVOCATIONS_BIT_EXT'
+--     or
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_MESH_SHADER_INVOCATIONS_BIT_EXT'
 --
 -- -   #VUID-VkQueryPoolCreateInfo-queryType-00792# If @queryType@ is
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PIPELINE_STATISTICS',
@@ -544,12 +580,12 @@ getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride
 --     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR',
 --     'Vulkan.Extensions.VK_INTEL_performance_query.QueryPoolPerformanceQueryCreateInfoINTEL',
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264ProfileEXT VkVideoDecodeH264ProfileEXT>,
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH265ProfileEXT VkVideoDecodeH265ProfileEXT>,
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264ProfileEXT VkVideoEncodeH264ProfileEXT>,
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265ProfileEXT VkVideoEncodeH265ProfileEXT>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264ProfileInfoEXT VkVideoDecodeH264ProfileInfoEXT>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH265ProfileInfoEXT VkVideoDecodeH265ProfileInfoEXT>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264ProfileInfoEXT VkVideoEncodeH264ProfileInfoEXT>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265ProfileInfoEXT VkVideoEncodeH265ProfileInfoEXT>,
 --     or
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileKHR VkVideoProfileKHR>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>
 --
 -- -   #VUID-VkQueryPoolCreateInfo-sType-unique# The @sType@ value of each
 --     struct in the @pNext@ chain /must/ be unique
@@ -580,7 +616,7 @@ data QueryPoolCreateInfo (es :: [Type]) = QueryPoolCreateInfo
     -- 'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QueryPipelineStatisticFlagBits'
     -- specifying which counters will be returned in queries on the new pool,
     -- as described below in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#queries-pipestats>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#queries-pipestats>.
     pipelineStatistics :: QueryPipelineStatisticFlags
   }
   deriving (Typeable)

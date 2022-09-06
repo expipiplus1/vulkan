@@ -2,7 +2,7 @@
 -- No documentation found for Chapter "Filter"
 module Vulkan.Core10.Enums.Filter  (Filter( FILTER_NEAREST
                                           , FILTER_LINEAR
-                                          , FILTER_CUBIC_IMG
+                                          , FILTER_CUBIC_EXT
                                           , ..
                                           )) where
 
@@ -20,7 +20,7 @@ import GHC.Show (Show(showsPrec))
 -- = Description
 --
 -- These filters are described in detail in
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#textures-texel-filtering Texel Filtering>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-texel-filtering Texel Filtering>.
 --
 -- = See Also
 --
@@ -36,11 +36,11 @@ newtype Filter = Filter Int32
 pattern FILTER_NEAREST   = Filter 0
 -- | 'FILTER_LINEAR' specifies linear filtering.
 pattern FILTER_LINEAR    = Filter 1
--- No documentation found for Nested "VkFilter" "VK_FILTER_CUBIC_IMG"
-pattern FILTER_CUBIC_IMG = Filter 1000015000
+-- | 'FILTER_CUBIC_EXT' specifies cubic filtering.
+pattern FILTER_CUBIC_EXT = Filter 1000015000
 {-# complete FILTER_NEAREST,
              FILTER_LINEAR,
-             FILTER_CUBIC_IMG :: Filter #-}
+             FILTER_CUBIC_EXT :: Filter #-}
 
 conNameFilter :: String
 conNameFilter = "Filter"
@@ -49,7 +49,7 @@ enumPrefixFilter :: String
 enumPrefixFilter = "FILTER_"
 
 showTableFilter :: [(Filter, String)]
-showTableFilter = [(FILTER_NEAREST, "NEAREST"), (FILTER_LINEAR, "LINEAR"), (FILTER_CUBIC_IMG, "CUBIC_IMG")]
+showTableFilter = [(FILTER_NEAREST, "NEAREST"), (FILTER_LINEAR, "LINEAR"), (FILTER_CUBIC_EXT, "CUBIC_EXT")]
 
 instance Show Filter where
   showsPrec = enumShowsPrec enumPrefixFilter showTableFilter conNameFilter (\(Filter x) -> x) (showsPrec 11)

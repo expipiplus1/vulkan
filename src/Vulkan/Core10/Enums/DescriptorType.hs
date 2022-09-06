@@ -11,6 +11,8 @@ module Vulkan.Core10.Enums.DescriptorType  (DescriptorType( DESCRIPTOR_TYPE_SAMP
                                                           , DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC
                                                           , DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC
                                                           , DESCRIPTOR_TYPE_INPUT_ATTACHMENT
+                                                          , DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM
+                                                          , DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM
                                                           , DESCRIPTOR_TYPE_MUTABLE_VALVE
                                                           , DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV
                                                           , DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR
@@ -33,43 +35,49 @@ import GHC.Show (Show(showsPrec))
 -- = Description
 --
 -- -   'DESCRIPTOR_TYPE_SAMPLER' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sampler sampler descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sampler sampler descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-combinedimagesampler combined image sampler descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-combinedimagesampler combined image sampler descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_SAMPLED_IMAGE' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sampledimage sampled image descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-sampledimage sampled image descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_STORAGE_IMAGE' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storageimage storage image descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storageimage storage image descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformtexelbuffer uniform texel buffer descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformtexelbuffer uniform texel buffer descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer storage texel buffer descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer storage texel buffer descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_UNIFORM_BUFFER' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformbuffer uniform buffer descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformbuffer uniform buffer descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_STORAGE_BUFFER' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagebuffer storage buffer descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagebuffer storage buffer descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic dynamic uniform buffer descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic dynamic uniform buffer descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic dynamic storage buffer descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic dynamic storage buffer descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_INPUT_ATTACHMENT' specifies an
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-inputattachment input attachment descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-inputattachment input attachment descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK' specifies an
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-inlineuniformblock inline uniform block>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-inlineuniformblock inline uniform block>.
 --
 -- -   'DESCRIPTOR_TYPE_MUTABLE_VALVE' specifies a
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-mutable descriptor of mutable type>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-mutable descriptor of mutable type>.
+--
+-- -   'DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM' specifies a
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-weightimage sampled weight image descriptor>.
+--
+-- -   'DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM' specifies a
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-blockmatching block matching image descriptor>.
 --
 -- When a descriptor set is updated via elements of
 -- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet', members of
@@ -164,6 +172,10 @@ pattern DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC     = DescriptorType 8
 pattern DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC     = DescriptorType 9
 -- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT"
 pattern DESCRIPTOR_TYPE_INPUT_ATTACHMENT           = DescriptorType 10
+-- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM"
+pattern DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM     = DescriptorType 1000440001
+-- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM"
+pattern DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM   = DescriptorType 1000440000
 -- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_MUTABLE_VALVE"
 pattern DESCRIPTOR_TYPE_MUTABLE_VALVE              = DescriptorType 1000351000
 -- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV"
@@ -183,6 +195,8 @@ pattern DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK       = DescriptorType 1000138000
              DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
              DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC,
              DESCRIPTOR_TYPE_INPUT_ATTACHMENT,
+             DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM,
+             DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM,
              DESCRIPTOR_TYPE_MUTABLE_VALVE,
              DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV,
              DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR,
@@ -207,6 +221,8 @@ showTableDescriptorType =
   , (DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC    , "UNIFORM_BUFFER_DYNAMIC")
   , (DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC    , "STORAGE_BUFFER_DYNAMIC")
   , (DESCRIPTOR_TYPE_INPUT_ATTACHMENT          , "INPUT_ATTACHMENT")
+  , (DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM    , "BLOCK_MATCH_IMAGE_QCOM")
+  , (DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM  , "SAMPLE_WEIGHT_IMAGE_QCOM")
   , (DESCRIPTOR_TYPE_MUTABLE_VALVE             , "MUTABLE_VALVE")
   , (DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV , "ACCELERATION_STRUCTURE_NV")
   , (DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR, "ACCELERATION_STRUCTURE_KHR")

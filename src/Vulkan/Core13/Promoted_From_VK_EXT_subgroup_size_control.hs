@@ -65,7 +65,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- the features structure but applications may assume that both
 -- @subgroupSizeControl@ and @computeFullSubgroups@ are supported if the
 -- extension is supported. (See also the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-requirements Feature Requirements>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-requirements Feature Requirements>
 -- section.) Applications are advised to add a
 -- 'Vulkan.Extensions.VK_EXT_subgroup_size_control.PhysicalDeviceSubgroupSizeControlFeaturesEXT'
 -- structure to the @pNext@ chain of
@@ -96,7 +96,7 @@ data PhysicalDeviceSubgroupSizeControlFeatures = PhysicalDeviceSubgroupSizeContr
     subgroupSizeControl :: Bool
   , -- | #extension-features-computeFullSubgroups# @computeFullSubgroups@
     -- indicates whether the implementation supports requiring full subgroups
-    -- in compute shaders via the
+    -- in compute , mesh, or task shaders via the
     -- 'Vulkan.Core10.Enums.PipelineShaderStageCreateFlagBits.PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT'
     -- flag.
     computeFullSubgroups :: Bool
@@ -159,7 +159,7 @@ instance Zero PhysicalDeviceSubgroupSizeControlFeatures where
 -- If
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_subgroup.PhysicalDeviceSubgroupProperties'::@supportedOperations@
 -- includes
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-subgroup-quad >,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-subgroup-quad >,
 -- @minSubgroupSize@ /must/ be greater than or equal to 4.
 --
 -- == Valid Usage (Implicit)
@@ -178,7 +178,7 @@ data PhysicalDeviceSubgroupSizeControlProperties = PhysicalDeviceSubgroupSizeCon
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'. @minSubgroupSize@
     -- is a power-of-two. @minSubgroupSize@ is less than or equal to
     -- @maxSubgroupSize@. @minSubgroupSize@ is less than or equal to
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-subgroup-size subgroupSize>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-subgroup-size subgroupSize>.
     minSubgroupSize :: Word32
   , -- | #extension-limits-maxSubgroupSize# @maxSubgroupSize@ is the maximum
     -- subgroup size supported by this device. @maxSubgroupSize@ is at least
@@ -187,7 +187,7 @@ data PhysicalDeviceSubgroupSizeControlProperties = PhysicalDeviceSubgroupSizeCon
     -- 'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT'. @maxSubgroupSize@
     -- is a power-of-two. @maxSubgroupSize@ is greater than or equal to
     -- @minSubgroupSize@. @maxSubgroupSize@ is greater than or equal to
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-subgroup-size subgroupSize>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-subgroup-size subgroupSize>.
     maxSubgroupSize :: Word32
   , -- | #extension-limits-maxComputeWorkgroupSubgroups#
     -- @maxComputeWorkgroupSubgroups@ is the maximum number of subgroups
@@ -277,11 +277,11 @@ data PipelineShaderStageRequiredSubgroupSizeCreateInfo = PipelineShaderStageRequ
     --
     -- #VUID-VkPipelineShaderStageRequiredSubgroupSizeCreateInfo-requiredSubgroupSize-02761#
     -- @requiredSubgroupSize@ /must/ be greater or equal to
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-minSubgroupSize minSubgroupSize>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-minSubgroupSize minSubgroupSize>
     --
     -- #VUID-VkPipelineShaderStageRequiredSubgroupSizeCreateInfo-requiredSubgroupSize-02762#
     -- @requiredSubgroupSize@ /must/ be less than or equal to
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxSubgroupSize maxSubgroupSize>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxSubgroupSize maxSubgroupSize>
     requiredSubgroupSize :: Word32 }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

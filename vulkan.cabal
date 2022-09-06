@@ -5,7 +5,7 @@ cabal-version: 2.2
 -- see: https://github.com/sol/hpack
 
 name:           vulkan
-version:        3.17.2
+version:        3.21
 synopsis:       Bindings to the Vulkan graphics API.
 description:    Please see [the readme](https://github.com/expipiplus1/vulkan/#readme)
 category:       Graphics
@@ -301,6 +301,7 @@ library
       Vulkan.Extensions.VK_AMD_shader_ballot
       Vulkan.Extensions.VK_AMD_shader_core_properties
       Vulkan.Extensions.VK_AMD_shader_core_properties2
+      Vulkan.Extensions.VK_AMD_shader_early_and_late_fragment_tests
       Vulkan.Extensions.VK_AMD_shader_explicit_vertex_parameter
       Vulkan.Extensions.VK_AMD_shader_fragment_mask
       Vulkan.Extensions.VK_AMD_shader_image_load_store_lod
@@ -313,6 +314,7 @@ library
       Vulkan.Extensions.VK_EXT_acquire_drm_display
       Vulkan.Extensions.VK_EXT_acquire_xlib_display
       Vulkan.Extensions.VK_EXT_astc_decode_mode
+      Vulkan.Extensions.VK_EXT_attachment_feedback_loop_layout
       Vulkan.Extensions.VK_EXT_blend_operation_advanced
       Vulkan.Extensions.VK_EXT_border_color_swizzle
       Vulkan.Extensions.VK_EXT_buffer_device_address
@@ -324,6 +326,7 @@ library
       Vulkan.Extensions.VK_EXT_debug_marker
       Vulkan.Extensions.VK_EXT_debug_report
       Vulkan.Extensions.VK_EXT_debug_utils
+      Vulkan.Extensions.VK_EXT_depth_clamp_zero_one
       Vulkan.Extensions.VK_EXT_depth_clip_control
       Vulkan.Extensions.VK_EXT_depth_clip_enable
       Vulkan.Extensions.VK_EXT_depth_range_unrestricted
@@ -350,6 +353,8 @@ library
       Vulkan.Extensions.VK_EXT_headless_surface
       Vulkan.Extensions.VK_EXT_host_query_reset
       Vulkan.Extensions.VK_EXT_image_2d_view_of_3d
+      Vulkan.Extensions.VK_EXT_image_compression_control
+      Vulkan.Extensions.VK_EXT_image_compression_control_swapchain
       Vulkan.Extensions.VK_EXT_image_drm_format_modifier
       Vulkan.Extensions.VK_EXT_image_robustness
       Vulkan.Extensions.VK_EXT_image_view_min_lod
@@ -359,19 +364,26 @@ library
       Vulkan.Extensions.VK_EXT_load_store_op_none
       Vulkan.Extensions.VK_EXT_memory_budget
       Vulkan.Extensions.VK_EXT_memory_priority
+      Vulkan.Extensions.VK_EXT_mesh_shader
+      Vulkan.Extensions.VK_EXT_metal_objects
       Vulkan.Extensions.VK_EXT_metal_surface
       Vulkan.Extensions.VK_EXT_multi_draw
+      Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled
+      Vulkan.Extensions.VK_EXT_non_seamless_cube_map
       Vulkan.Extensions.VK_EXT_pageable_device_local_memory
       Vulkan.Extensions.VK_EXT_pci_bus_info
       Vulkan.Extensions.VK_EXT_physical_device_drm
       Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
       Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
+      Vulkan.Extensions.VK_EXT_pipeline_properties
+      Vulkan.Extensions.VK_EXT_pipeline_robustness
       Vulkan.Extensions.VK_EXT_post_depth_coverage
       Vulkan.Extensions.VK_EXT_primitive_topology_list_restart
       Vulkan.Extensions.VK_EXT_primitives_generated_query
       Vulkan.Extensions.VK_EXT_private_data
       Vulkan.Extensions.VK_EXT_provoking_vertex
       Vulkan.Extensions.VK_EXT_queue_family_foreign
+      Vulkan.Extensions.VK_EXT_rasterization_order_attachment_access
       Vulkan.Extensions.VK_EXT_rgba10x6_formats
       Vulkan.Extensions.VK_EXT_robustness2
       Vulkan.Extensions.VK_EXT_sample_locations
@@ -382,11 +394,13 @@ library
       Vulkan.Extensions.VK_EXT_shader_atomic_float2
       Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation
       Vulkan.Extensions.VK_EXT_shader_image_atomic_int64
+      Vulkan.Extensions.VK_EXT_shader_module_identifier
       Vulkan.Extensions.VK_EXT_shader_stencil_export
       Vulkan.Extensions.VK_EXT_shader_subgroup_ballot
       Vulkan.Extensions.VK_EXT_shader_subgroup_vote
       Vulkan.Extensions.VK_EXT_shader_viewport_index_layer
       Vulkan.Extensions.VK_EXT_subgroup_size_control
+      Vulkan.Extensions.VK_EXT_subpass_merge_feedback
       Vulkan.Extensions.VK_EXT_swapchain_colorspace
       Vulkan.Extensions.VK_EXT_texel_buffer_alignment
       Vulkan.Extensions.VK_EXT_texture_compression_astc_hdr
@@ -448,6 +462,7 @@ library
       Vulkan.Extensions.VK_KHR_external_semaphore_fd
       Vulkan.Extensions.VK_KHR_external_semaphore_win32
       Vulkan.Extensions.VK_KHR_format_feature_flags2
+      Vulkan.Extensions.VK_KHR_fragment_shader_barycentric
       Vulkan.Extensions.VK_KHR_fragment_shading_rate
       Vulkan.Extensions.VK_KHR_get_display_properties2
       Vulkan.Extensions.VK_KHR_get_memory_requirements2
@@ -471,6 +486,7 @@ library
       Vulkan.Extensions.VK_KHR_present_wait
       Vulkan.Extensions.VK_KHR_push_descriptor
       Vulkan.Extensions.VK_KHR_ray_query
+      Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1
       Vulkan.Extensions.VK_KHR_ray_tracing_pipeline
       Vulkan.Extensions.VK_KHR_relaxed_block_layout
       Vulkan.Extensions.VK_KHR_sampler_mirror_clamp_to_edge
@@ -549,11 +565,14 @@ library
       Vulkan.Extensions.VK_NVX_image_view_handle
       Vulkan.Extensions.VK_NVX_multiview_per_view_attributes
       Vulkan.Extensions.VK_QCOM_fragment_density_map_offset
+      Vulkan.Extensions.VK_QCOM_image_processing
       Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
       Vulkan.Extensions.VK_QCOM_render_pass_store_ops
       Vulkan.Extensions.VK_QCOM_render_pass_transform
       Vulkan.Extensions.VK_QCOM_rotated_copy_commands
+      Vulkan.Extensions.VK_QCOM_tile_properties
       Vulkan.Extensions.VK_QNX_screen_surface
+      Vulkan.Extensions.VK_SEC_amigo_profiling
       Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping
       Vulkan.Extensions.VK_VALVE_mutable_descriptor_type
       Vulkan.NamedType

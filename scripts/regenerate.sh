@@ -13,7 +13,7 @@ git -C generate-new/Vulkan-Docs clean -dxf
 echo "Generating Vulkan-Docs documentation"
 (cd generate-new/Vulkan-Docs &&
   nix-shell -p \
-    python3 asciidoctor gnumake nodejs nodePackages.he nodePackages.escape-string-regexp \
+    python3 python3Packages.pyparsing asciidoctor gnumake nodejs nodePackages.he nodePackages.escape-string-regexp \
     --run "./makeAllExts refpages generated")
 
 echo "Building generator"
@@ -58,7 +58,7 @@ git -C generate-new/OpenXR-Docs clean -dxf
 echo "Generating OpenXR-Docs documentation"
 (cd generate-new/OpenXR-Docs/specification &&
   nix-shell -p \
-    python3 asciidoctor gnumake nodejs nodePackages.he nodePackages.escape-string-regexp \
+    python3 python3Packages.pyparsing asciidoctor gnumake nodejs nodePackages.he nodePackages.escape-string-regexp \
     --run "./makeAllExts man/apispec.txt generated")
 
 echo "Cleaning src"

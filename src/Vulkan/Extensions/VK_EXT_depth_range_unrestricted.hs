@@ -19,7 +19,7 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
 -- [__Contact__]
 --
@@ -57,10 +57,10 @@
 --
 -- 1) How do 'Vulkan.Core10.Pipeline.Viewport' @minDepth@ and @maxDepth@
 -- values outside of the @0.0@ to @1.0@ range interact with
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-clipping Primitive Clipping>?
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-clipping Primitive Clipping>?
 --
 -- __RESOLVED__: The behavior described in
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-clipping Primitive Clipping>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#vertexpostproc-clipping Primitive Clipping>
 -- still applies. If depth clamping is disabled the depth values are still
 -- clipped to 0 ≤ zc ≤ wc before the viewport transform. If depth clamping
 -- is enabled the above equation is ignored and the depth values are
@@ -72,8 +72,11 @@
 -- @1.0@ range and the depth buffer is fixed-point rather than
 -- floating-point?
 --
--- __RESOLVED__: The supported range of a fixed-point depth buffer is @0.0@
--- to @1.0@ and depth fragments are clamped to this range.
+-- __RESOLVED__: This situation can also arise without this extension (when
+-- fragment shaders replace depth values, for example), and this extension
+-- does not change the behaviour, which is defined in the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-depth Depth Test>
+-- section of the Fragment Operations chapter.
 --
 -- == Version History
 --
@@ -88,7 +91,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_depth_range_unrestricted Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_depth_range_unrestricted Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

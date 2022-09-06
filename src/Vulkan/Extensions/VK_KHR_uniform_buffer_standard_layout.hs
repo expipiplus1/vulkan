@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Deprecation state__]
 --
@@ -62,7 +63,7 @@
 -- It modifies the alignment rules for uniform buffers, allowing for
 -- tighter packing of arrays and structures. This allows, for example, the
 -- std430 layout, as defined in
--- <https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf GLSL>
+-- <https://registry.khronos.org/OpenGL/specs/gl/GLSLangSpec.4.60.pdf GLSL>
 -- to be supported in uniform buffers.
 --
 -- == Promotion to Vulkan 1.2
@@ -102,7 +103,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_uniform_buffer_standard_layout Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_uniform_buffer_standard_layout Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

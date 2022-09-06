@@ -19,11 +19,13 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
---     -   Requires @VK_KHR_pipeline_library@
+--     -   Requires @VK_KHR_pipeline_library@ to be enabled for any
+--         device-level functionality
 --
 -- [__Contact__]
 --
@@ -31,7 +33,7 @@
 --         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_graphics_pipeline_library] @tobski%0A<<Here describe the issue or question you have about the VK_EXT_graphics_pipeline_library extension>> >
 --
 -- [__Extension Proposal__]
---     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_graphics_pipeline_library.asciidoc VK_EXT_graphics_pipeline_library>
+--     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_graphics_pipeline_library.adoc VK_EXT_graphics_pipeline_library>
 --
 -- == Other Extension Metadata
 --
@@ -145,7 +147,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_graphics_pipeline_library Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_graphics_pipeline_library Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

@@ -52,7 +52,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- single component of the format is used instead.
 --
 -- These limits /must/ not advertise a larger alignment than the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-required required>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-required required>
 -- maximum minimum value of
 -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@minTexelBufferOffsetAlignment@,
 -- for any format that supports use as a texel buffer.
@@ -75,7 +75,6 @@ data PhysicalDeviceTexelBufferAlignmentProperties = PhysicalDeviceTexelBufferAli
   , -- | #extension-limits-storageTexelBufferOffsetSingleTexelAlignment#
     -- @storageTexelBufferOffsetSingleTexelAlignment@ indicates whether single
     -- texel alignment is sufficient for a storage texel buffer of any format.
-    -- The value /must/ be a power of two.
     storageTexelBufferOffsetSingleTexelAlignment :: Bool
   , -- | #extension-limits-uniformTexelBufferOffsetAlignmentBytes#
     -- @uniformTexelBufferOffsetAlignmentBytes@ is a byte alignment that is
@@ -85,7 +84,6 @@ data PhysicalDeviceTexelBufferAlignmentProperties = PhysicalDeviceTexelBufferAli
   , -- | #extension-limits-uniformTexelBufferOffsetSingleTexelAlignment#
     -- @uniformTexelBufferOffsetSingleTexelAlignment@ indicates whether single
     -- texel alignment is sufficient for a uniform texel buffer of any format.
-    -- The value /must/ be a power of two.
     uniformTexelBufferOffsetSingleTexelAlignment :: Bool
   }
   deriving (Typeable, Eq)

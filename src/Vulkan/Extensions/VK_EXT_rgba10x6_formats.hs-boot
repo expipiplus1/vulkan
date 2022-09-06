@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_sampler_ycbcr_conversion@
+--     -   Requires @VK_KHR_sampler_ycbcr_conversion@ to be enabled for any
+--         device-level functionality
 --
 -- [__Contact__]
 --
@@ -49,7 +50,7 @@
 -- This extension enables the
 -- 'Vulkan.Core10.Enums.Format.FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16'
 -- format to be used without a
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 -- enabled.
 --
 -- == New Structures
@@ -103,7 +104,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_rgba10x6_formats Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_rgba10x6_formats Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

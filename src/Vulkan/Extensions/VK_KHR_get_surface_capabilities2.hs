@@ -19,9 +19,9 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_surface@
+--     -   Requires @VK_KHR_surface@ to be enabled
 --
 -- [__Contact__]
 --
@@ -137,7 +137,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_get_surface_capabilities2 Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_get_surface_capabilities2 Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -186,10 +186,8 @@ import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
-import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
-import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))
@@ -207,6 +205,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_display_native_hdr (DisplayNative
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_compression_control (ImageCompressionPropertiesEXT)
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceSurfaceCapabilities2KHR))
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceSurfaceFormats2KHR))
 import Vulkan.CStruct.Extends (PeekChain)
@@ -341,7 +340,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkGetPhysicalDeviceSurfaceFormats2KHR
-  :: FunPtr (Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR) -> Ptr Word32 -> Ptr SurfaceFormat2KHR -> IO Result) -> Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR) -> Ptr Word32 -> Ptr SurfaceFormat2KHR -> IO Result
+  :: FunPtr (Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR) -> Ptr Word32 -> Ptr (SomeStruct SurfaceFormat2KHR) -> IO Result) -> Ptr PhysicalDevice_T -> Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR) -> Ptr Word32 -> Ptr (SomeStruct SurfaceFormat2KHR) -> IO Result
 
 -- | vkGetPhysicalDeviceSurfaceFormats2KHR - Query color formats supported by
 -- surface
@@ -419,8 +418,8 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_get_surface_capabilities2 VK_KHR_get_surface_capabilities2>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceSurfaceInfo2KHR',
 -- 'SurfaceFormat2KHR'
-getPhysicalDeviceSurfaceFormats2KHR :: forall a io
-                                     . (Extendss PhysicalDeviceSurfaceInfo2KHR a, PokeChain a, MonadIO io)
+getPhysicalDeviceSurfaceFormats2KHR :: forall a b io
+                                     . (Extendss PhysicalDeviceSurfaceInfo2KHR a, PokeChain a, Extendss SurfaceFormat2KHR b, PokeChain b, PeekChain b, MonadIO io)
                                     => -- | @physicalDevice@ is the physical device that will be associated with the
                                        -- swapchain to be created, as described for
                                        -- 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
@@ -429,7 +428,7 @@ getPhysicalDeviceSurfaceFormats2KHR :: forall a io
                                        -- structure describing the surface and other fixed parameters that would
                                        -- be consumed by 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
                                        (PhysicalDeviceSurfaceInfo2KHR a)
-                                    -> io (Result, ("surfaceFormats" ::: Vector SurfaceFormat2KHR))
+                                    -> io (Result, ("surfaceFormats" ::: Vector (SurfaceFormat2KHR b)))
 getPhysicalDeviceSurfaceFormats2KHR physicalDevice surfaceInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfaceFormats2KHRPtr = pVkGetPhysicalDeviceSurfaceFormats2KHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceSurfaceFormats2KHRPtr /= nullFunPtr) $
@@ -439,15 +438,15 @@ getPhysicalDeviceSurfaceFormats2KHR physicalDevice surfaceInfo = liftIO . evalCo
   pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
   let x9 = forgetExtensions pSurfaceInfo
   pPSurfaceFormatCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceSurfaceFormats2KHR" (vkGetPhysicalDeviceSurfaceFormats2KHR' physicalDevice' x9 (pPSurfaceFormatCount) (nullPtr))
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceSurfaceFormats2KHR" (vkGetPhysicalDeviceSurfaceFormats2KHR' physicalDevice' x9 (pPSurfaceFormatCount) (forgetExtensions (nullPtr)))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurfaceFormatCount <- lift $ peek @Word32 pPSurfaceFormatCount
-  pPSurfaceFormats <- ContT $ bracket (callocBytes @SurfaceFormat2KHR ((fromIntegral (pSurfaceFormatCount)) * 24)) free
-  _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPSurfaceFormats `advancePtrBytes` (i * 24) :: Ptr SurfaceFormat2KHR) . ($ ())) [0..(fromIntegral (pSurfaceFormatCount)) - 1]
-  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceSurfaceFormats2KHR" (vkGetPhysicalDeviceSurfaceFormats2KHR' physicalDevice' x9 (pPSurfaceFormatCount) ((pPSurfaceFormats)))
+  pPSurfaceFormats <- ContT $ bracket (callocBytes @(SurfaceFormat2KHR _) ((fromIntegral (pSurfaceFormatCount)) * 24)) free
+  _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPSurfaceFormats `advancePtrBytes` (i * 24) :: Ptr (SurfaceFormat2KHR _)) . ($ ())) [0..(fromIntegral (pSurfaceFormatCount)) - 1]
+  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceSurfaceFormats2KHR" (vkGetPhysicalDeviceSurfaceFormats2KHR' physicalDevice' x9 (pPSurfaceFormatCount) (forgetExtensions ((pPSurfaceFormats))))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pSurfaceFormatCount' <- lift $ peek @Word32 pPSurfaceFormatCount
-  pSurfaceFormats' <- lift $ generateM (fromIntegral (pSurfaceFormatCount')) (\i -> peekCStruct @SurfaceFormat2KHR (((pPSurfaceFormats) `advancePtrBytes` (24 * (i)) :: Ptr SurfaceFormat2KHR)))
+  pSurfaceFormats' <- lift $ generateM (fromIntegral (pSurfaceFormatCount')) (\i -> peekCStruct @(SurfaceFormat2KHR _) (((pPSurfaceFormats) `advancePtrBytes` (24 * (i)) :: Ptr (SurfaceFormat2KHR _))))
   pure $ ((r'), pSurfaceFormats')
 
 
@@ -679,7 +678,25 @@ instance es ~ '[] => Zero (SurfaceCapabilities2KHR es) where
 -- | VkSurfaceFormat2KHR - Structure describing a supported swapchain format
 -- tuple
 --
+-- == Valid Usage
+--
+-- -   #VUID-VkSurfaceFormat2KHR-pNext-06750# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-imageCompressionControlSwapchain imageCompressionControlSwapchain>
+--     feature is not enabled, the @pNext@ chain /must/ not include an
+--     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionPropertiesEXT'
+--     structure
+--
 -- == Valid Usage (Implicit)
+--
+-- -   #VUID-VkSurfaceFormat2KHR-sType-sType# @sType@ /must/ be
+--     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR'
+--
+-- -   #VUID-VkSurfaceFormat2KHR-pNext-pNext# @pNext@ /must/ be @NULL@ or a
+--     pointer to a valid instance of
+--     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionPropertiesEXT'
+--
+-- -   #VUID-VkSurfaceFormat2KHR-sType-unique# The @sType@ value of each
+--     struct in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --
@@ -687,46 +704,57 @@ instance es ~ '[] => Zero (SurfaceCapabilities2KHR es) where
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Vulkan.Extensions.VK_KHR_surface.SurfaceFormatKHR',
 -- 'getPhysicalDeviceSurfaceFormats2KHR'
-data SurfaceFormat2KHR = SurfaceFormat2KHR
-  { -- | @surfaceFormat@ is a 'Vulkan.Extensions.VK_KHR_surface.SurfaceFormatKHR'
+data SurfaceFormat2KHR (es :: [Type]) = SurfaceFormat2KHR
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @surfaceFormat@ is a 'Vulkan.Extensions.VK_KHR_surface.SurfaceFormatKHR'
     -- structure describing a format-color space pair that is compatible with
     -- the specified surface.
-    surfaceFormat :: SurfaceFormatKHR }
+    surfaceFormat :: SurfaceFormatKHR
+  }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (SurfaceFormat2KHR)
+deriving instance Generic (SurfaceFormat2KHR (es :: [Type]))
 #endif
-deriving instance Show SurfaceFormat2KHR
+deriving instance Show (Chain es) => Show (SurfaceFormat2KHR es)
 
-instance ToCStruct SurfaceFormat2KHR where
+instance Extensible SurfaceFormat2KHR where
+  extensibleTypeName = "SurfaceFormat2KHR"
+  setNext SurfaceFormat2KHR{..} next' = SurfaceFormat2KHR{next = next', ..}
+  getNext SurfaceFormat2KHR{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends SurfaceFormat2KHR e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @ImageCompressionPropertiesEXT = Just f
+    | otherwise = Nothing
+
+instance (Extendss SurfaceFormat2KHR es, PokeChain es) => ToCStruct (SurfaceFormat2KHR es) where
   withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p SurfaceFormat2KHR{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr SurfaceFormatKHR)) (surfaceFormat)
-    f
+  pokeCStruct p SurfaceFormat2KHR{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr SurfaceFormatKHR)) (surfaceFormat)
+    lift $ f
   cStructSize = 24
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr SurfaceFormatKHR)) (zero)
-    f
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ poke ((p `plusPtr` 16 :: Ptr SurfaceFormatKHR)) (zero)
+    lift $ f
 
-instance FromCStruct SurfaceFormat2KHR where
+instance (Extendss SurfaceFormat2KHR es, PeekChain es) => FromCStruct (SurfaceFormat2KHR es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     surfaceFormat <- peekCStruct @SurfaceFormatKHR ((p `plusPtr` 16 :: Ptr SurfaceFormatKHR))
     pure $ SurfaceFormat2KHR
-             surfaceFormat
+             next surfaceFormat
 
-instance Storable SurfaceFormat2KHR where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero SurfaceFormat2KHR where
+instance es ~ '[] => Zero (SurfaceFormat2KHR es) where
   zero = SurfaceFormat2KHR
+           ()
            zero
 
 

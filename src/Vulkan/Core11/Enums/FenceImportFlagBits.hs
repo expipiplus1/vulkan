@@ -31,7 +31,7 @@ newtype FenceImportFlagBits = FenceImportFlagBits Flags
 
 -- | 'FENCE_IMPORT_TEMPORARY_BIT' specifies that the fence payload will be
 -- imported only temporarily, as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence Payloads>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence Payloads>,
 -- regardless of the permanence of @handleType@.
 pattern FENCE_IMPORT_TEMPORARY_BIT = FenceImportFlagBits 0x00000001
 

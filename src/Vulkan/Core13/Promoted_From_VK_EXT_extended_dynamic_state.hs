@@ -111,6 +111,9 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
+-- -   #VUID-vkCmdSetCullMode-videocoding# This command /must/ only be
+--     called outside of a video coding scope
+--
 -- == Host Synchronization
 --
 -- -   Host access to @commandBuffer@ /must/ be externally synchronized
@@ -122,12 +125,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -188,6 +191,9 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
+-- -   #VUID-vkCmdSetFrontFace-videocoding# This command /must/ only be
+--     called outside of a video coding scope
+--
 -- == Host Synchronization
 --
 -- -   Host access to @commandBuffer@ /must/ be externally synchronized
@@ -199,12 +205,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -269,6 +275,9 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
+-- -   #VUID-vkCmdSetPrimitiveTopology-videocoding# This command /must/
+--     only be called outside of a video coding scope
+--
 -- == Host Synchronization
 --
 -- -   Host access to @commandBuffer@ /must/ be externally synchronized
@@ -280,12 +289,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -339,7 +348,7 @@ foreign import ccall
 --     inclusive
 --
 -- -   #VUID-vkCmdSetViewportWithCount-viewportCount-03395# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiple viewports>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiViewport>
 --     feature is not enabled, @viewportCount@ /must/ be @1@
 --
 -- -   #VUID-vkCmdSetViewportWithCount-commandBuffer-04819# @commandBuffer@
@@ -365,6 +374,9 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
+-- -   #VUID-vkCmdSetViewportWithCount-videocoding# This command /must/
+--     only be called outside of a video coding scope
+--
 -- -   #VUID-vkCmdSetViewportWithCount-viewportCount-arraylength#
 --     @viewportCount@ /must/ be greater than @0@
 --
@@ -379,12 +391,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -439,7 +451,7 @@ foreign import ccall
 --     inclusive
 --
 -- -   #VUID-vkCmdSetScissorWithCount-scissorCount-03398# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiple viewports>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiViewport multiViewport>
 --     feature is not enabled, @scissorCount@ /must/ be @1@
 --
 -- -   #VUID-vkCmdSetScissorWithCount-x-03399# The @x@ and @y@ members of
@@ -477,6 +489,9 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
+-- -   #VUID-vkCmdSetScissorWithCount-videocoding# This command /must/ only
+--     be called outside of a video coding scope
+--
 -- -   #VUID-vkCmdSetScissorWithCount-scissorCount-arraylength#
 --     @scissorCount@ /must/ be greater than @0@
 --
@@ -491,12 +506,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -544,7 +559,7 @@ foreign import ccall
 -- of @pBuffers@[i] plus @pOffsets@[i]. All vertex input attributes that
 -- use each of these bindings will use these updated addresses in their
 -- address calculations for subsequent drawing commands. If the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
 -- feature is enabled, elements of @pBuffers@ /can/ be
 -- 'Vulkan.Core10.APIConstants.NULL_HANDLE', and /can/ be used by the
 -- vertex shader. If a vertex input attribute is bound to a vertex input
@@ -554,7 +569,7 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fxvertex-input-extraction filled with (0,0,1)>.
 --
 -- This command also
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-dynamic-state dynamically sets>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-dynamic-state dynamically sets>
 -- the byte strides between consecutive elements within buffer
 -- @pBuffers@[i] to the corresponding @pStrides@[i] value when the graphics
 -- pipeline is created with
@@ -599,7 +614,7 @@ foreign import ccall
 --     contiguously to a single 'Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- -   #VUID-vkCmdBindVertexBuffers2-pBuffers-04111# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
 --     feature is not enabled, all elements of @pBuffers@ /must/ not be
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
@@ -652,6 +667,9 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
+-- -   #VUID-vkCmdBindVertexBuffers2-videocoding# This command /must/ only
+--     be called outside of a video coding scope
+--
 -- -   #VUID-vkCmdBindVertexBuffers2-bindingCount-arraylength# If any of
 --     @pSizes@, or @pStrides@ are not @NULL@, @bindingCount@ /must/ be
 --     greater than @0@
@@ -672,12 +690,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -772,6 +790,9 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
+-- -   #VUID-vkCmdSetDepthTestEnable-videocoding# This command /must/ only
+--     be called outside of a video coding scope
+--
 -- == Host Synchronization
 --
 -- -   Host access to @commandBuffer@ /must/ be externally synchronized
@@ -783,12 +804,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -848,6 +869,9 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
+-- -   #VUID-vkCmdSetDepthWriteEnable-videocoding# This command /must/ only
+--     be called outside of a video coding scope
+--
 -- == Host Synchronization
 --
 -- -   Host access to @commandBuffer@ /must/ be externally synchronized
@@ -859,12 +883,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -927,6 +951,9 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
+-- -   #VUID-vkCmdSetDepthCompareOp-videocoding# This command /must/ only
+--     be called outside of a video coding scope
+--
 -- == Host Synchronization
 --
 -- -   Host access to @commandBuffer@ /must/ be externally synchronized
@@ -938,12 +965,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -958,9 +985,9 @@ cmdSetDepthCompareOp :: forall io
                         CommandBuffer
                      -> -- | @depthCompareOp@ is a 'Vulkan.Core10.Enums.CompareOp.CompareOp' value
                         -- specifying the comparison operator used for the
-                        -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-depth-comparison Depth Comparison>
+                        -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-depth-comparison Depth Comparison>
                         -- step of the
-                        -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-depth depth test>.
+                        -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-depth depth test>.
                         ("depthCompareOp" ::: CompareOp)
                      -> io ()
 cmdSetDepthCompareOp commandBuffer depthCompareOp = liftIO $ do
@@ -1007,6 +1034,9 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
+-- -   #VUID-vkCmdSetDepthBoundsTestEnable-videocoding# This command /must/
+--     only be called outside of a video coding scope
+--
 -- == Host Synchronization
 --
 -- -   Host access to @commandBuffer@ /must/ be externally synchronized
@@ -1018,12 +1048,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -1083,6 +1113,9 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
+-- -   #VUID-vkCmdSetStencilTestEnable-videocoding# This command /must/
+--     only be called outside of a video coding scope
+--
 -- == Host Synchronization
 --
 -- -   Host access to @commandBuffer@ /must/ be externally synchronized
@@ -1094,12 +1127,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -1177,6 +1210,9 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
+-- -   #VUID-vkCmdSetStencilOp-videocoding# This command /must/ only be
+--     called outside of a video coding scope
+--
 -- == Host Synchronization
 --
 -- -   Host access to @commandBuffer@ /must/ be externally synchronized
@@ -1188,12 +1224,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --

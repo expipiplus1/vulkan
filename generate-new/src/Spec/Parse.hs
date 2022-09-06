@@ -478,7 +478,10 @@ withChildren ss =
         , e  <- toList (sInherits s1)
         ]
   in  \s -> s
-        { sExtendedBy  = fromMaybe mempty (Map.lookup (sName s) extendedByMap)
+        { sExtendedBy  =
+            if sName s `elem` neverExtendedStructs
+              then mempty
+              else fromMaybe mempty (Map.lookup (sName s) extendedByMap)
         , sInheritedBy = fromMaybe mempty (Map.lookup (sName s) inheritedByMap)
         }
 
@@ -1416,7 +1419,7 @@ tryTwice xs f =
             Just r  -> Right r
           Right r -> pure $ Right r
         )
-  in  go =<< go xs'
+  in go =<< go xs'
 
 for :: (Traversable t, Applicative f) => t a -> (a -> f b) -> f (t b)
 for = flip traverse

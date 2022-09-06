@@ -33,8 +33,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --
 -- = Members
 --
--- The members of the 'PhysicalDeviceShaderIntegerDotProductFeatures'
--- structure describe the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
@@ -139,188 +138,188 @@ data PhysicalDeviceShaderIntegerDotProductProperties = PhysicalDeviceShaderInteg
     -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the support for 8-bit unsigned
     -- dot product operations using the @OpUDotKHR@ SPIR-V instruction is
     -- accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProduct8BitUnsignedAccelerated :: Bool
   , -- | @integerDotProduct8BitSignedAccelerated@ is a boolean that will be
     -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the support for 8-bit signed
     -- dot product operations using the @OpSDotKHR@ SPIR-V instruction is
     -- accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProduct8BitSignedAccelerated :: Bool
   , -- | @integerDotProduct8BitMixedSignednessAccelerated@ is a boolean that will
     -- be 'Vulkan.Core10.FundamentalTypes.TRUE' if the support for 8-bit mixed
     -- signedness dot product operations using the @OpSUDotKHR@ SPIR-V
     -- instruction is accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProduct8BitMixedSignednessAccelerated :: Bool
   , -- | @integerDotProduct4x8BitPackedUnsignedAccelerated@ is a boolean that
     -- will be 'Vulkan.Core10.FundamentalTypes.TRUE' if the support for 8-bit
     -- unsigned dot product operations from operands packed into 32-bit
     -- integers using the @OpUDotKHR@ SPIR-V instruction is accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProduct4x8BitPackedUnsignedAccelerated :: Bool
   , -- | @integerDotProduct4x8BitPackedSignedAccelerated@ is a boolean that will
     -- be 'Vulkan.Core10.FundamentalTypes.TRUE' if the support for 8-bit signed
     -- dot product operations from operands packed into 32-bit integers using
     -- the @OpSDotKHR@ SPIR-V instruction is accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProduct4x8BitPackedSignedAccelerated :: Bool
   , -- | @integerDotProduct4x8BitPackedMixedSignednessAccelerated@ is a boolean
     -- that will be 'Vulkan.Core10.FundamentalTypes.TRUE' if the support for
     -- 8-bit mixed signedness dot product operations from operands packed into
     -- 32-bit integers using the @OpSUDotKHR@ SPIR-V instruction is accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProduct4x8BitPackedMixedSignednessAccelerated :: Bool
   , -- | @integerDotProduct16BitUnsignedAccelerated@ is a boolean that will be
     -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the support for 16-bit unsigned
     -- dot product operations using the @OpUDotKHR@ SPIR-V instruction is
     -- accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProduct16BitUnsignedAccelerated :: Bool
   , -- | @integerDotProduct16BitSignedAccelerated@ is a boolean that will be
     -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the support for 16-bit signed
     -- dot product operations using the @OpSDotKHR@ SPIR-V instruction is
     -- accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProduct16BitSignedAccelerated :: Bool
   , -- | @integerDotProduct16BitMixedSignednessAccelerated@ is a boolean that
     -- will be 'Vulkan.Core10.FundamentalTypes.TRUE' if the support for 16-bit
     -- mixed signedness dot product operations using the @OpSUDotKHR@ SPIR-V
     -- instruction is accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProduct16BitMixedSignednessAccelerated :: Bool
   , -- | @integerDotProduct32BitUnsignedAccelerated@ is a boolean that will be
     -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the support for 32-bit unsigned
     -- dot product operations using the @OpUDotKHR@ SPIR-V instruction is
     -- accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProduct32BitUnsignedAccelerated :: Bool
   , -- | @integerDotProduct32BitSignedAccelerated@ is a boolean that will be
     -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the support for 32-bit signed
     -- dot product operations using the @OpSDotKHR@ SPIR-V instruction is
     -- accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProduct32BitSignedAccelerated :: Bool
   , -- | @integerDotProduct32BitMixedSignednessAccelerated@ is a boolean that
     -- will be 'Vulkan.Core10.FundamentalTypes.TRUE' if the support for 32-bit
     -- mixed signedness dot product operations using the @OpSUDotKHR@ SPIR-V
     -- instruction is accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProduct32BitMixedSignednessAccelerated :: Bool
   , -- | @integerDotProduct64BitUnsignedAccelerated@ is a boolean that will be
     -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the support for 64-bit unsigned
     -- dot product operations using the @OpUDotKHR@ SPIR-V instruction is
     -- accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProduct64BitUnsignedAccelerated :: Bool
   , -- | @integerDotProduct64BitSignedAccelerated@ is a boolean that will be
     -- 'Vulkan.Core10.FundamentalTypes.TRUE' if the support for 64-bit signed
     -- dot product operations using the @OpSDotKHR@ SPIR-V instruction is
     -- accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProduct64BitSignedAccelerated :: Bool
   , -- | @integerDotProduct64BitMixedSignednessAccelerated@ is a boolean that
     -- will be 'Vulkan.Core10.FundamentalTypes.TRUE' if the support for 64-bit
     -- mixed signedness dot product operations using the @OpSUDotKHR@ SPIR-V
     -- instruction is accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProduct64BitMixedSignednessAccelerated :: Bool
   , -- | @integerDotProductAccumulatingSaturating8BitUnsignedAccelerated@ is a
     -- boolean that will be 'Vulkan.Core10.FundamentalTypes.TRUE' if the
     -- support for 8-bit unsigned accumulating saturating dot product
     -- operations using the @OpUDotAccSatKHR@ SPIR-V instruction is accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProductAccumulatingSaturating8BitUnsignedAccelerated :: Bool
   , -- | @integerDotProductAccumulatingSaturating8BitSignedAccelerated@ is a
     -- boolean that will be 'Vulkan.Core10.FundamentalTypes.TRUE' if the
     -- support for 8-bit signed accumulating saturating dot product operations
     -- using the @OpSDotAccSatKHR@ SPIR-V instruction is accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProductAccumulatingSaturating8BitSignedAccelerated :: Bool
   , -- | @integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated@
     -- is a boolean that will be 'Vulkan.Core10.FundamentalTypes.TRUE' if the
     -- support for 8-bit mixed signedness accumulating saturating dot product
     -- operations using the @OpSUDotAccSatKHR@ SPIR-V instruction is
     -- accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated :: Bool
   , -- | @integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated@
     -- is a boolean that will be 'Vulkan.Core10.FundamentalTypes.TRUE' if the
     -- support for 8-bit unsigned accumulating saturating dot product
     -- operations from operands packed into 32-bit integers using the
     -- @OpUDotAccSatKHR@ SPIR-V instruction is accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated :: Bool
   , -- | @integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated@
     -- is a boolean that will be 'Vulkan.Core10.FundamentalTypes.TRUE' if the
     -- support for 8-bit signed accumulating saturating dot product operations
     -- from operands packed into 32-bit integers using the @OpSDotAccSatKHR@
     -- SPIR-V instruction is accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated :: Bool
   , -- | @integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated@
     -- is a boolean that will be 'Vulkan.Core10.FundamentalTypes.TRUE' if the
     -- support for 8-bit mixed signedness accumulating saturating dot product
     -- operations from operands packed into 32-bit integers using the
     -- @OpSUDotAccSatKHR@ SPIR-V instruction is accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated :: Bool
   , -- | @integerDotProductAccumulatingSaturating16BitUnsignedAccelerated@ is a
     -- boolean that will be 'Vulkan.Core10.FundamentalTypes.TRUE' if the
     -- support for 16-bit unsigned accumulating saturating dot product
     -- operations using the @OpUDotAccSatKHR@ SPIR-V instruction is accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProductAccumulatingSaturating16BitUnsignedAccelerated :: Bool
   , -- | @integerDotProductAccumulatingSaturating16BitSignedAccelerated@ is a
     -- boolean that will be 'Vulkan.Core10.FundamentalTypes.TRUE' if the
     -- support for 16-bit signed accumulating saturating dot product operations
     -- using the @OpSDotAccSatKHR@ SPIR-V instruction is accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProductAccumulatingSaturating16BitSignedAccelerated :: Bool
   , -- | @integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated@
     -- is a boolean that will be 'Vulkan.Core10.FundamentalTypes.TRUE' if the
     -- support for 16-bit mixed signedness accumulating saturating dot product
     -- operations using the @OpSUDotAccSatKHR@ SPIR-V instruction is
     -- accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated :: Bool
   , -- | @integerDotProductAccumulatingSaturating32BitUnsignedAccelerated@ is a
     -- boolean that will be 'Vulkan.Core10.FundamentalTypes.TRUE' if the
     -- support for 32-bit unsigned accumulating saturating dot product
     -- operations using the @OpUDotAccSatKHR@ SPIR-V instruction is accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProductAccumulatingSaturating32BitUnsignedAccelerated :: Bool
   , -- | @integerDotProductAccumulatingSaturating32BitSignedAccelerated@ is a
     -- boolean that will be 'Vulkan.Core10.FundamentalTypes.TRUE' if the
     -- support for 32-bit signed accumulating saturating dot product operations
     -- using the @OpSDotAccSatKHR@ SPIR-V instruction is accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProductAccumulatingSaturating32BitSignedAccelerated :: Bool
   , -- | @integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated@
     -- is a boolean that will be 'Vulkan.Core10.FundamentalTypes.TRUE' if the
     -- support for 32-bit mixed signedness accumulating saturating dot product
     -- operations using the @OpSUDotAccSatKHR@ SPIR-V instruction is
     -- accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated :: Bool
   , -- | @integerDotProductAccumulatingSaturating64BitUnsignedAccelerated@ is a
     -- boolean that will be 'Vulkan.Core10.FundamentalTypes.TRUE' if the
     -- support for 64-bit unsigned accumulating saturating dot product
     -- operations using the @OpUDotAccSatKHR@ SPIR-V instruction is accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProductAccumulatingSaturating64BitUnsignedAccelerated :: Bool
   , -- | @integerDotProductAccumulatingSaturating64BitSignedAccelerated@ is a
     -- boolean that will be 'Vulkan.Core10.FundamentalTypes.TRUE' if the
     -- support for 64-bit signed accumulating saturating dot product operations
     -- using the @OpSDotAccSatKHR@ SPIR-V instruction is accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProductAccumulatingSaturating64BitSignedAccelerated :: Bool
   , -- | @integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated@
     -- is a boolean that will be 'Vulkan.Core10.FundamentalTypes.TRUE' if the
     -- support for 64-bit mixed signedness accumulating saturating dot product
     -- operations using the @OpSUDotAccSatKHR@ SPIR-V instruction is
     -- accelerated
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-integer-dot-product-accelerated as defined below>.
     integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated :: Bool
   }
   deriving (Typeable, Eq)

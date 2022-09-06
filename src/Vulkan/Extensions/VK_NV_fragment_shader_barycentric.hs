@@ -19,9 +19,14 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
+--
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to @VK_KHR_fragment_shader_barycentric@ extension
 --
 -- [__Contact__]
 --
@@ -84,6 +89,11 @@
 -- GLSL variables declared using the @__pervertexNV@ GLSL qualifier are
 -- expected to be decorated with @PerVertexNV@ in SPIR-V.
 --
+-- == Promotion to @VK_KHR_fragment_shader_barycentric@
+--
+-- All functionality in this extension is included in
+-- @VK_KHR_fragment_shader_barycentric@, with the suffix changed to KHR.
+--
 -- == New Structures
 --
 -- -   Extending
@@ -100,21 +110,21 @@
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV'
 --
 -- == New Built-In Variables
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-barycoordnv BaryCoordNV>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-barycoordkhr BaryCoordNV>
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-barycoordnoperspnv BaryCoordNoPerspNV>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-barycoordnoperspkhr BaryCoordNoPerspNV>
 --
 -- == New SPIR-V Decorations
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-interpolation-decorations-pervertexnv PerVertexNV>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shaders-interpolation-decorations-pervertexkhr PerVertexNV>
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-FragmentBarycentricNV FragmentBarycentricNV>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-FragmentBarycentricKHR FragmentBarycentricNV>
 --
 -- == Issues
 --
@@ -176,113 +186,29 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_fragment_shader_barycentric Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_fragment_shader_barycentric Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_NV_fragment_shader_barycentric  ( PhysicalDeviceFragmentShaderBarycentricFeaturesNV(..)
+module Vulkan.Extensions.VK_NV_fragment_shader_barycentric  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV
+                                                            , PhysicalDeviceFragmentShaderBarycentricFeaturesNV
                                                             , NV_FRAGMENT_SHADER_BARYCENTRIC_SPEC_VERSION
                                                             , pattern NV_FRAGMENT_SHADER_BARYCENTRIC_SPEC_VERSION
                                                             , NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME
                                                             , pattern NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME
+                                                            , PhysicalDeviceFragmentShaderBarycentricFeaturesKHR(..)
                                                             ) where
 
-import Foreign.Marshal.Alloc (allocaBytes)
-import Foreign.Ptr (nullPtr)
-import Foreign.Ptr (plusPtr)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero(..))
 import Data.String (IsString)
-import Data.Typeable (Typeable)
-import Foreign.Storable (Storable)
-import Foreign.Storable (Storable(peek))
-import Foreign.Storable (Storable(poke))
-import qualified Foreign.Storable (Storable(..))
-import GHC.Generics (Generic)
-import Foreign.Ptr (Ptr)
-import Data.Kind (Type)
-import Vulkan.Core10.FundamentalTypes (bool32ToBool)
-import Vulkan.Core10.FundamentalTypes (boolToBool32)
-import Vulkan.Core10.FundamentalTypes (Bool32)
-import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV))
--- | VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV - Structure
--- describing barycentric support in fragment shaders that can be supported
--- by an implementation
---
--- = Members
---
--- This structure describes the following feature:
---
--- = Description
---
--- See
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-barycentric Barycentric Interpolation>
--- for more information.
---
--- If the 'PhysicalDeviceFragmentShaderBarycentricFeaturesNV' structure is
--- included in the @pNext@ chain of the
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2'
--- structure passed to
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFeatures2',
--- it is filled in to indicate whether each corresponding feature is
--- supported. 'PhysicalDeviceFragmentShaderBarycentricFeaturesNV' /can/
--- also be used in the @pNext@ chain of
--- 'Vulkan.Core10.Device.DeviceCreateInfo' to selectively enable these
--- features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_fragment_shader_barycentric VK_NV_fragment_shader_barycentric>,
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data PhysicalDeviceFragmentShaderBarycentricFeaturesNV = PhysicalDeviceFragmentShaderBarycentricFeaturesNV
-  { -- | #features-fragmentShaderBarycentric# @fragmentShaderBarycentric@
-    -- indicates that the implementation supports the @BaryCoordNV@ and
-    -- @BaryCoordNoPerspNV@ SPIR-V fragment shader built-ins and supports the
-    -- @PerVertexNV@ SPIR-V decoration on fragment shader input variables.
-    fragmentShaderBarycentric :: Bool }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (PhysicalDeviceFragmentShaderBarycentricFeaturesNV)
-#endif
-deriving instance Show PhysicalDeviceFragmentShaderBarycentricFeaturesNV
+import Vulkan.Extensions.VK_KHR_fragment_shader_barycentric (PhysicalDeviceFragmentShaderBarycentricFeaturesKHR)
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_KHR))
+import Vulkan.Extensions.VK_KHR_fragment_shader_barycentric (PhysicalDeviceFragmentShaderBarycentricFeaturesKHR(..))
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV = STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_KHR
 
-instance ToCStruct PhysicalDeviceFragmentShaderBarycentricFeaturesNV where
-  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceFragmentShaderBarycentricFeaturesNV{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (fragmentShaderBarycentric))
-    f
-  cStructSize = 24
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
-    f
 
-instance FromCStruct PhysicalDeviceFragmentShaderBarycentricFeaturesNV where
-  peekCStruct p = do
-    fragmentShaderBarycentric <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
-    pure $ PhysicalDeviceFragmentShaderBarycentricFeaturesNV
-             (bool32ToBool fragmentShaderBarycentric)
-
-instance Storable PhysicalDeviceFragmentShaderBarycentricFeaturesNV where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
-
-instance Zero PhysicalDeviceFragmentShaderBarycentricFeaturesNV where
-  zero = PhysicalDeviceFragmentShaderBarycentricFeaturesNV
-           zero
+-- No documentation found for TopLevel "VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV"
+type PhysicalDeviceFragmentShaderBarycentricFeaturesNV = PhysicalDeviceFragmentShaderBarycentricFeaturesKHR
 
 
 type NV_FRAGMENT_SHADER_BARYCENTRIC_SPEC_VERSION = 1

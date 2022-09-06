@@ -20,11 +20,15 @@ import Vulkan.Extensions.VK_NV_compute_shader_derivatives (PhysicalDeviceCompute
 import Vulkan.Extensions.VK_NV_cooperative_matrix (PhysicalDeviceCooperativeMatrixFeaturesNV(..))
 import Vulkan.Core10.DeviceInitialization (PhysicalDeviceFeatures(..))
 import Vulkan.Extensions.VK_EXT_fragment_density_map (PhysicalDeviceFragmentDensityMapFeaturesEXT(..))
-import Vulkan.Extensions.VK_NV_fragment_shader_barycentric (PhysicalDeviceFragmentShaderBarycentricFeaturesNV(..))
+import Vulkan.Extensions.VK_KHR_fragment_shader_barycentric (PhysicalDeviceFragmentShaderBarycentricFeaturesKHR(..))
+import Vulkan.Extensions.VK_NV_fragment_shader_barycentric (PhysicalDeviceFragmentShaderBarycentricFeaturesNV)
+import Vulkan.Extensions.VK_KHR_fragment_shader_barycentric (PhysicalDeviceFragmentShaderBarycentricFeaturesKHR(..))
 import Vulkan.Extensions.VK_EXT_fragment_shader_interlock (PhysicalDeviceFragmentShaderInterlockFeaturesEXT(..))
 import Vulkan.Extensions.VK_KHR_fragment_shading_rate (PhysicalDeviceFragmentShadingRateFeaturesKHR(..))
+import Vulkan.Extensions.VK_QCOM_image_processing (PhysicalDeviceImageProcessingFeaturesQCOM(..))
 import Vulkan.Core11.Promoted_From_VK_KHR_multiview (PhysicalDeviceMultiviewFeatures(..))
 import Vulkan.Extensions.VK_KHR_ray_query (PhysicalDeviceRayQueryFeaturesKHR(..))
+import Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1 (PhysicalDeviceRayTracingMaintenance1FeaturesKHR(..))
 import Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (PhysicalDeviceRayTracingMotionBlurFeaturesNV(..))
 import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelineFeaturesKHR(..))
 import Vulkan.Extensions.VK_EXT_shader_atomic_float2 (PhysicalDeviceShaderAtomicFloat2FeaturesEXT(..))
@@ -62,6 +66,7 @@ import Vulkan.Extensions.VK_EXT_buffer_device_address (pattern EXT_BUFFER_DEVICE
 import Vulkan.Extensions.VK_EXT_descriptor_indexing (pattern EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_fragment_density_map (pattern EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_fragment_shader_interlock (pattern EXT_FRAGMENT_SHADER_INTERLOCK_EXTENSION_NAME)
+import Vulkan.Extensions.VK_EXT_mesh_shader (pattern EXT_MESH_SHADER_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_post_depth_coverage (pattern EXT_POST_DEPTH_COVERAGE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_shader_atomic_float2 (pattern EXT_SHADER_ATOMIC_FLOAT_2_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_shader_atomic_float (pattern EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME)
@@ -85,6 +90,7 @@ import Vulkan.Extensions.VK_KHR_deferred_host_operations (pattern KHR_DEFERRED_H
 import Vulkan.Extensions.VK_KHR_device_group_creation (pattern KHR_DEVICE_GROUP_CREATION_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_device_group (pattern KHR_DEVICE_GROUP_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_format_feature_flags2 (pattern KHR_FORMAT_FEATURE_FLAGS_2_EXTENSION_NAME)
+import Vulkan.Extensions.VK_KHR_fragment_shader_barycentric (pattern KHR_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_fragment_shading_rate (pattern KHR_FRAGMENT_SHADING_RATE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_get_memory_requirements2 (pattern KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_get_physical_device_properties2 (pattern KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME)
@@ -92,6 +98,7 @@ import Vulkan.Extensions.VK_KHR_maintenance2 (pattern KHR_MAINTENANCE_2_EXTENSIO
 import Vulkan.Extensions.VK_KHR_maintenance3 (pattern KHR_MAINTENANCE_3_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_multiview (pattern KHR_MULTIVIEW_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_ray_query (pattern KHR_RAY_QUERY_EXTENSION_NAME)
+import Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1 (pattern KHR_RAY_TRACING_MAINTENANCE_1_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (pattern KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_atomic_int64 (pattern KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_shader_clock (pattern KHR_SHADER_CLOCK_EXTENSION_NAME)
@@ -122,6 +129,7 @@ import Vulkan.Extensions.VK_NV_shader_sm_builtins (pattern NV_SHADER_SM_BUILTINS
 import Vulkan.Extensions.VK_NV_shader_subgroup_partitioned (pattern NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_shading_rate_image (pattern NV_SHADING_RATE_IMAGE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_viewport_array2 (pattern NV_VIEWPORT_ARRAY_2_EXTENSION_NAME)
+import Vulkan.Extensions.VK_QCOM_image_processing (pattern QCOM_IMAGE_PROCESSING_EXTENSION_NAME)
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlagBits(SUBGROUP_FEATURE_ARITHMETIC_BIT))
 import Vulkan.Core11.Enums.SubgroupFeatureFlagBits (SubgroupFeatureFlags)
@@ -461,6 +469,37 @@ spirvExtensionRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     ]
+  "SPV_KHR_ray_cull_mask" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_RAY_TRACING_MAINTENANCE_1_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_MAINTENANCE_3_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
   "SPV_GOOGLE_hlsl_functionality1" -> (,)
     []
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
@@ -599,6 +638,17 @@ spirvExtensionRequirements = \case
                              , deviceExtensionMinVersion = 0
                              }
     ]
+  "SPV_KHR_fragment_shader_barycentric" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
   "SPV_KHR_subgroup_uniform_control_flow" ->
     (,) [RequireInstanceVersion $ MAKE_API_VERSION 1 3 0] [RequireDeviceVersion $ MAKE_API_VERSION 1 3 0]
   "SPV_EXT_shader_atomic_float_min_max" -> (,)
@@ -646,6 +696,32 @@ spirvExtensionRequirements = \case
     ]
   "SPV_KHR_device_group" ->
     (,) [RequireInstanceVersion $ MAKE_API_VERSION 1 1 0] [RequireDeviceVersion $ MAKE_API_VERSION 1 1 0]
+  "SPV_QCOM_image_processing" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = QCOM_IMAGE_PROCESSING_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_FORMAT_FEATURE_FLAGS_2_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "SPV_EXT_mesh_shader" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = EXT_MESH_SHADER_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
   _ -> ([], [])
 
 spirvCapabilityRequirements :: ByteString -> ([InstanceRequirement], [DeviceRequirement])
@@ -1900,9 +1976,9 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceFeature
       { featureName   = "fragmentShaderBarycentric"
-      , checkFeature  = \PhysicalDeviceFragmentShaderBarycentricFeaturesNV { fragmentShaderBarycentric } ->
+      , checkFeature  = \PhysicalDeviceFragmentShaderBarycentricFeaturesKHR { fragmentShaderBarycentric } ->
                           fragmentShaderBarycentric
-      , enableFeature = \_ -> PhysicalDeviceFragmentShaderBarycentricFeaturesNV { fragmentShaderBarycentric = True }
+      , enableFeature = \_ -> PhysicalDeviceFragmentShaderBarycentricFeaturesKHR { fragmentShaderBarycentric = True }
       }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME
@@ -2068,6 +2144,44 @@ spirvCapabilityRequirements = \case
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_MAINTENANCE_3_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "RayCullMaskKHR" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceFeature
+      { featureName   = "rayTracingMaintenance1"
+      , checkFeature  = \PhysicalDeviceRayTracingMaintenance1FeaturesKHR { rayTracingMaintenance1 } ->
+                          rayTracingMaintenance1
+      , enableFeature = \PhysicalDeviceRayTracingMaintenance1FeaturesKHR {..} ->
+                          PhysicalDeviceRayTracingMaintenance1FeaturesKHR { rayTracingMaintenance1 = True, .. }
+      }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_RAY_TRACING_MAINTENANCE_1_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
@@ -2510,6 +2624,97 @@ spirvCapabilityRequirements = \case
     , RequireDeviceVersion $ MAKE_API_VERSION 1 3 0
     , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "FragmentBarycentricKHR" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceFeature
+      { featureName   = "fragmentShaderBarycentric"
+      , checkFeature  = \PhysicalDeviceFragmentShaderBarycentricFeaturesKHR { fragmentShaderBarycentric } ->
+                          fragmentShaderBarycentric
+      , enableFeature = \_ -> PhysicalDeviceFragmentShaderBarycentricFeaturesKHR { fragmentShaderBarycentric = True }
+      }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "TextureSampleWeightedQCOM" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceFeature
+      { featureName   = "textureSampleWeighted"
+      , checkFeature  = \PhysicalDeviceImageProcessingFeaturesQCOM { textureSampleWeighted } -> textureSampleWeighted
+      , enableFeature = \PhysicalDeviceImageProcessingFeaturesQCOM {..} ->
+                          PhysicalDeviceImageProcessingFeaturesQCOM { textureSampleWeighted = True, .. }
+      }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = QCOM_IMAGE_PROCESSING_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_FORMAT_FEATURE_FLAGS_2_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "TextureBoxFilterQCOM" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceFeature
+      { featureName   = "textureBoxFilter"
+      , checkFeature  = \PhysicalDeviceImageProcessingFeaturesQCOM { textureBoxFilter } -> textureBoxFilter
+      , enableFeature = \PhysicalDeviceImageProcessingFeaturesQCOM {..} ->
+                          PhysicalDeviceImageProcessingFeaturesQCOM { textureBoxFilter = True, .. }
+      }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = QCOM_IMAGE_PROCESSING_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_FORMAT_FEATURE_FLAGS_2_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "TextureBlockMatchQCOM" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceFeature
+      { featureName   = "textureBlockMatch"
+      , checkFeature  = \PhysicalDeviceImageProcessingFeaturesQCOM { textureBlockMatch } -> textureBlockMatch
+      , enableFeature = \PhysicalDeviceImageProcessingFeaturesQCOM {..} ->
+                          PhysicalDeviceImageProcessingFeaturesQCOM { textureBlockMatch = True, .. }
+      }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = QCOM_IMAGE_PROCESSING_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_FORMAT_FEATURE_FLAGS_2_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    ]
+  "MeshShadingEXT" -> (,)
+    [ RequireInstanceExtension { instanceExtensionLayerName  = Nothing
+                               , instanceExtensionName       = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+                               , instanceExtensionMinVersion = 0
+                               }
+    ]
+    [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = EXT_MESH_SHADER_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]

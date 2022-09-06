@@ -19,15 +19,19 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_sampler_ycbcr_conversion@
+--     -   Requires @VK_KHR_sampler_ycbcr_conversion@ to be enabled for any
+--         device-level functionality
 --
---     -   Requires @VK_KHR_external_memory@
+--     -   Requires @VK_KHR_external_memory@ to be enabled for any
+--         device-level functionality
 --
---     -   Requires @VK_EXT_queue_family_foreign@
+--     -   Requires @VK_EXT_queue_family_foreign@ to be enabled for any
+--         device-level functionality
 --
---     -   Requires @VK_KHR_dedicated_allocation@
+--     -   Requires @VK_KHR_dedicated_allocation@ to be enabled for any
+--         device-level functionality
 --
 -- [__Contact__]
 --
@@ -275,7 +279,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_ANDROID_external_memory_android_hardware_buffer Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_ANDROID_external_memory_android_hardware_buffer Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -519,7 +523,7 @@ getMemoryAndroidHardwareBufferANDROID device info = liftIO . evalContT $ do
 --     @buffer@ is not @NULL@, it /must/ be a valid Android hardware buffer
 --     object with @AHardwareBuffer_Desc@::@usage@ compatible with Vulkan
 --     as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer Android Hardware Buffers>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer Android Hardware Buffers>
 --
 -- == Valid Usage (Implicit)
 --
@@ -582,7 +586,7 @@ instance Zero ImportAndroidHardwareBufferInfoANDROID where
 --
 -- The @androidHardwareBufferUsage@ field /must/ include Android hardware
 -- buffer usage flags listed in the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-usage AHardwareBuffer Usage Equivalence>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-usage AHardwareBuffer Usage Equivalence>
 -- table when the corresponding Vulkan image usage or image creation flags
 -- are included in the @usage@ or @flags@ fields of
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'.
@@ -819,7 +823,7 @@ instance Zero MemoryGetAndroidHardwareBufferInfoANDROID where
 -- = Description
 --
 -- If the Android hardware buffer has one of the formats listed in the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-formats Format Equivalence table>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-formats Format Equivalence table>,
 -- then @format@ /must/ have the equivalent Vulkan format listed in the
 -- table. Otherwise, @format@ /may/ be
 -- 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', indicating the Android
@@ -840,7 +844,7 @@ instance Zero MemoryGetAndroidHardwareBufferInfoANDROID where
 --
 -- The @formatFeatures@ member only indicates the features available when
 -- using an
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external-format image>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external-format image>
 -- created from the Android hardware buffer. Images from Android hardware
 -- buffers with a format other than
 -- 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED' are subject to the format
@@ -877,7 +881,7 @@ instance Zero MemoryGetAndroidHardwareBufferInfoANDROID where
 -- with that format. If @format@ is
 -- 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', all members of
 -- @samplerYcbcrConversionComponents@ /must/ be the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>.
 --
 -- Implementations /may/ not always be able to determine the color model,
 -- numerical range, or chroma offsets of the image contents, so the values
@@ -886,7 +890,7 @@ instance Zero MemoryGetAndroidHardwareBufferInfoANDROID where
 -- the absence of more reliable information obtained through some other
 -- means. If the underlying physical device is also usable via OpenGL ES
 -- with the
--- <https://www.khronos.org/registry/OpenGL/extensions/OES/OES_EGL_image_external.txt GL_OES_EGL_image_external>
+-- <https://registry.khronos.org/OpenGL/extensions/OES/OES_EGL_image_external.txt GL_OES_EGL_image_external>
 -- extension, the implementation /should/ suggest values that will produce
 -- similar sampled values as would be obtained by sampling the same
 -- external image via @samplerExternalOES@ in OpenGL ES using equivalent
@@ -895,7 +899,7 @@ instance Zero MemoryGetAndroidHardwareBufferInfoANDROID where
 -- Note
 --
 -- Since
--- <https://www.khronos.org/registry/OpenGL/extensions/OES/OES_EGL_image_external.txt GL_OES_EGL_image_external>
+-- <https://registry.khronos.org/OpenGL/extensions/OES/OES_EGL_image_external.txt GL_OES_EGL_image_external>
 -- does not require the same sampling and conversion calculations as Vulkan
 -- does, achieving identical results between APIs /may/ not be possible on
 -- some implementations.

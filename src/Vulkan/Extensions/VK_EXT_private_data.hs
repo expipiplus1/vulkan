@@ -19,7 +19,7 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
 -- [__Deprecation state__]
 --
@@ -123,6 +123,29 @@
 --
 -- -   In progress
 --
+-- == Issues
+--
+-- (1) If I have to create a 'Vulkan.Core13.Handles.PrivateDataSlot' to
+-- store and retrieve data on an object, how does this extension help me?
+-- Will I not need to store the 'Vulkan.Core13.Handles.PrivateDataSlot'
+-- mapping with each object, and if I am doing that, I might as well just
+-- store the original data!
+--
+-- __RESOLVED:__ The 'Vulkan.Core13.Handles.PrivateDataSlot' can be thought
+-- of as an opaque index into storage that is reserved in each object. That
+-- is, you can use the same 'Vulkan.Core13.Handles.PrivateDataSlot' with
+-- each object for a specific piece of information. For example, if a layer
+-- wishes to track per-object information, the layer only needs to allocate
+-- one 'Vulkan.Core13.Handles.PrivateDataSlot' per device and it can use
+-- that private data slot for all of the device’s child objects. This
+-- allows multiple layers to store private data without conflicting with
+-- each other’s and\/or the application’s private data.
+--
+-- (2) What if I need to store more than 64-bits of information per object?
+--
+-- __RESOLVED:__ The data that you store per object could be a pointer to
+-- another object or structure of your own allocation.
+--
 -- == Version History
 --
 -- -   Revision 1, 2020-01-15 (Matthew Rusch)
@@ -140,7 +163,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_private_data Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_private_data Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

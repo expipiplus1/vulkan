@@ -3,6 +3,7 @@
 {-# language TemplateHaskell #-}
 module Bespoke
   ( forbiddenConstants
+  , neverExtendedStructs
   , forceDisabledExtensions
   , assignBespokeModules
   , bespokeStructsAndUnions
@@ -68,6 +69,11 @@ import           Spec.Types
 -- | These constants are defined elsewhere
 forbiddenConstants :: [CName]
 forbiddenConstants = ["VK_TRUE", "VK_FALSE", "XR_TRUE", "XR_FALSE"]
+
+-- | Structs which are never extended because they're special, and only used
+-- for low-level operations
+neverExtendedStructs :: [CName]
+neverExtendedStructs = ["VkBaseOutStructure", "VkBaseInStructure"]
 
 forceDisabledExtensions :: [ByteString]
 forceDisabledExtensions =
@@ -780,17 +786,17 @@ bespokeSizes t =
         , ("PFN_vkGetInstanceProcAddr", (8, 8))
         ]
         <> (fst <$> concat
-             [win32Xr @'[Input RenderParams], x11Shared, xcb2Xr, egl, gl, d3d]
+             [win32Xr @'[Input RenderParams], x11Shared, xcb2Xr, egl, gl, d3d, metalSized]
            )
     vkSizes =
-      [ ("VkSampleMask"   , (4, 4))
-        , ("VkFlags"        , (4, 4))
-        , ("VkDeviceSize"   , (8, 8))
-        , ("VkDeviceAddress", (8, 8))
+      [ ("VkSampleMask"     , (4, 4))
+        , ("VkFlags"          , (4, 4))
+        , ("VkDeviceSize"     , (8, 8))
+        , ("VkDeviceAddress"  , (8, 8))
         , ("VkRemoteAddressNV", (8, 8))
         ]
         <> (fst <$> concat
-             [win32 @'[Input RenderParams], x11Shared, x11, xcb2, zircon, ggp]
+             [win32 @'[Input RenderParams], x11Shared, x11, xcb2, zircon, ggp, metalSized]
            )
     sharedSizes = []
   in
@@ -930,8 +936,8 @@ wsiTypes
   :: (HasErr r, HasRenderParams r) => SpecFlavor -> [Sem r RenderElement]
 wsiTypes = \case
   SpecVk ->
-    (snd <$> concat [win32, x11Shared, x11, xcb2, zircon, ggp]) <> concat
-      [win32', xcb1, waylandShared, wayland, metal, android, directfb, screen]
+    (snd <$> concat [win32, x11Shared, x11, xcb2, zircon, ggp, metalSized]) <> concat
+      [win32', xcb1, waylandShared, wayland, metalUnsized, android, directfb, screen]
   SpecXr -> (snd <$> concat [win32Xr, x11Shared, xcb2Xr, egl, gl, d3d])
     <> concat [win32Xr', xcb1, waylandShared, d3d', jni, timespec]
 
@@ -1079,8 +1085,18 @@ xcb2Xr =
 ggp :: HasRenderParams r => [BespokeAlias r]
 ggp = [alias AWord32 "GgpStreamDescriptor", alias AWord32 "GgpFrameToken"]
 
-metal :: HasRenderParams r => [Sem r RenderElement]
-metal = [voidData "CAMetalLayer"]
+metalUnsized :: HasRenderParams r => [Sem r RenderElement]
+metalUnsized = [voidData "CAMetalLayer"]
+
+metalSized :: HasRenderParams r => [BespokeAlias r]
+metalSized =
+  [ alias (APtr ''()) "MTLDevice_id"
+  , alias (APtr ''()) "MTLCommandQueue_id"
+  , alias (APtr ''()) "MTLBuffer_id"
+  , alias (APtr ''()) "MTLTexture_id"
+  , alias (APtr ''()) "IOSurfaceRef"
+  , alias (APtr ''()) "MTLSharedEvent_id"
+  ]
 
 waylandShared :: HasRenderParams r => [Sem r RenderElement]
 waylandShared = [voidData "wl_display"]

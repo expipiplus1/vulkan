@@ -19,6 +19,7 @@ module Vulkan.Core10.Enums.Result  (Result( SUCCESS
                                           , ERROR_FORMAT_NOT_SUPPORTED
                                           , ERROR_FRAGMENTED_POOL
                                           , ERROR_UNKNOWN
+                                          , ERROR_COMPRESSION_EXHAUSTED_EXT
                                           , OPERATION_NOT_DEFERRED_KHR
                                           , OPERATION_DEFERRED_KHR
                                           , THREAD_DONE_KHR
@@ -119,7 +120,7 @@ pattern ERROR_OUT_OF_DEVICE_MEMORY           = Result (-2)
 -- completed for implementation-specific reasons.
 pattern ERROR_INITIALIZATION_FAILED          = Result (-3)
 -- | 'ERROR_DEVICE_LOST' The logical or physical device has been lost. See
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>
 pattern ERROR_DEVICE_LOST                    = Result (-4)
 -- | 'ERROR_MEMORY_MAP_FAILED' Mapping of a memory object has failed.
 pattern ERROR_MEMORY_MAP_FAILED              = Result (-5)
@@ -150,6 +151,10 @@ pattern ERROR_FRAGMENTED_POOL                = Result (-12)
 -- | 'ERROR_UNKNOWN' An unknown error has occurred; either the application
 -- has provided invalid input, or an implementation failure has occurred.
 pattern ERROR_UNKNOWN                        = Result (-13)
+-- | 'ERROR_COMPRESSION_EXHAUSTED_EXT' An image creation failed because
+-- internal resources required for compression are exhausted. This /must/
+-- only be returned when fixed-rate compression is requested.
+pattern ERROR_COMPRESSION_EXHAUSTED_EXT      = Result (-1000338000)
 -- | 'OPERATION_NOT_DEFERRED_KHR' A deferred operation was requested and no
 -- operations were deferred.
 pattern OPERATION_NOT_DEFERRED_KHR           = Result 1000268003
@@ -165,7 +170,7 @@ pattern THREAD_IDLE_KHR                      = Result 1000268000
 -- | 'ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT' An operation on a swapchain
 -- created with
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT'
--- failed as it did not have exlusive full-screen access. This /may/ occur
+-- failed as it did not have exclusive full-screen access. This /may/ occur
 -- due to implementation-dependent reasons, outside of the application’s
 -- control.
 pattern ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT = Result (-1000255000)
@@ -238,6 +243,7 @@ pattern ERROR_OUT_OF_POOL_MEMORY             = Result (-1000069000)
              ERROR_FORMAT_NOT_SUPPORTED,
              ERROR_FRAGMENTED_POOL,
              ERROR_UNKNOWN,
+             ERROR_COMPRESSION_EXHAUSTED_EXT,
              OPERATION_NOT_DEFERRED_KHR,
              OPERATION_DEFERRED_KHR,
              THREAD_DONE_KHR,
@@ -285,6 +291,7 @@ showTableResult =
   , (ERROR_FORMAT_NOT_SUPPORTED          , "ERROR_FORMAT_NOT_SUPPORTED")
   , (ERROR_FRAGMENTED_POOL               , "ERROR_FRAGMENTED_POOL")
   , (ERROR_UNKNOWN                       , "ERROR_UNKNOWN")
+  , (ERROR_COMPRESSION_EXHAUSTED_EXT     , "ERROR_COMPRESSION_EXHAUSTED_EXT")
   , (OPERATION_NOT_DEFERRED_KHR          , "OPERATION_NOT_DEFERRED_KHR")
   , (OPERATION_DEFERRED_KHR              , "OPERATION_DEFERRED_KHR")
   , (THREAD_DONE_KHR                     , "THREAD_DONE_KHR")

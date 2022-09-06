@@ -36,7 +36,7 @@ newtype DescriptorSetLayoutCreateFlagBits = DescriptorSetLayoutCreateFlagBits Fl
 -- pool created with the
 -- 'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_VALVE'
 -- bit set. Descriptor set layouts created with this bit have no
--- expressable limit for maximum number of descriptors per-stage. Host
+-- expressible limit for maximum number of descriptors per-stage. Host
 -- descriptor sets are limited only by available host memory, but /may/ be
 -- limited for implementation specific reasons. Implementations /may/ limit
 -- the number of supported descriptors to UpdateAfterBind limits or

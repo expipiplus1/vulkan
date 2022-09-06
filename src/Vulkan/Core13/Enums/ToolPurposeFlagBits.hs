@@ -79,12 +79,12 @@ pattern TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT = ToolPurposeFlagBits 0x00000008
 -- the API features\/limits\/extensions presented to the application.
 pattern TOOL_PURPOSE_MODIFYING_FEATURES_BIT  = ToolPurposeFlagBits 0x00000010
 -- | 'TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT' specifies that the tool consumes
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#debugging-debug-markers debug markers>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#debugging-debug-markers debug markers>
 -- or
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#debugging-object-debug-annotation object debug annotation>,
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#debugging-queue-labels queue labels>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#debugging-object-debug-annotation object debug annotation>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#debugging-queue-labels queue labels>,
 -- or
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#debugging-command-buffer-labels command buffer labels>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#debugging-command-buffer-labels command buffer labels>
 pattern TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT   = ToolPurposeFlagBits 0x00000040
 -- | 'TOOL_PURPOSE_DEBUG_REPORTING_BIT_EXT' specifies that the tool reports
 -- additional information to the application via callbacks specified by

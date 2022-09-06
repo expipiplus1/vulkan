@@ -15,13 +15,14 @@
 --     301
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Contact__]
 --
@@ -31,7 +32,7 @@
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2019-12-15
+--     2022-04-06
 --
 -- [__Contributors__]
 --
@@ -44,6 +45,10 @@
 -- Applications using Nvidia Nsight™ Aftermath SDK for Vulkan to integrate
 -- device crash dumps into their error reporting mechanisms, /may/ use this
 -- extension to configure options related to device crash dump creation.
+--
+-- Version 2 of this extension adds
+-- 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_ERROR_REPORTING_BIT_NV' which
+-- when set enables enhanced reporting of shader execution errors.
 --
 -- == New Structures
 --
@@ -83,6 +88,11 @@
 --
 --     -   Internal revisions
 --
+-- -   Revision 2, 2022-04-06 (Kedarnath Thangudu)
+--
+--     -   Added a config bit
+--         'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_ERROR_REPORTING_BIT_NV'
+--
 -- == See Also
 --
 -- 'DeviceDiagnosticsConfigCreateInfoNV',
@@ -92,7 +102,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_device_diagnostics_config Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_device_diagnostics_config Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

@@ -102,6 +102,8 @@ isIntegral =
           , TypeName "VkDeviceOrHostAddressConstKHR"
           , TypeName "VkDeviceOrHostAddressKHR"
           , TypeName "VkBool32"
+          , TypeName "VkExtent2D"
+          , TypeName "VkExtent3D"
           , TypeName "LARGE_INTEGER"
           -- TODO: Get these from spec
           -- Base types
@@ -123,6 +125,7 @@ isDefaultableForeignType t =
            , TypeName "LPCWSTR"
            , Ptr CType.Const (TypeName "SECURITY_ATTRIBUTES")
            , TypeName "zx_handle_t"
+           , TypeName "IOSurfaceRef"
            ]
     )
     || case t of
@@ -153,6 +156,11 @@ isPassAsPointerType' = \case
              , "jobject"
              , "_screen_window"
              , "_screen_context"
+             -- This is used in a slightly weird way in
+             -- VkGetPipelinePropertiesEXT, Just fall back to having the user
+             -- allocate it and assume they know what they're doing
+             , "VkBaseOutStructure"
+             , "VkBaseInStructure"
              -- TODO: remove these
              , "VkInstanceCreateInfo"
              , "VkAllocationCallbacks"

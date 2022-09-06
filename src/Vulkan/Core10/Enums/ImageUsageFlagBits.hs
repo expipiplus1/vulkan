@@ -9,7 +9,10 @@ module Vulkan.Core10.Enums.ImageUsageFlagBits  ( ImageUsageFlags
                                                                    , IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
                                                                    , IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT
                                                                    , IMAGE_USAGE_INPUT_ATTACHMENT_BIT
+                                                                   , IMAGE_USAGE_SAMPLE_BLOCK_MATCH_BIT_QCOM
+                                                                   , IMAGE_USAGE_SAMPLE_WEIGHT_BIT_QCOM
                                                                    , IMAGE_USAGE_INVOCATION_MASK_BIT_HUAWEI
+                                                                   , IMAGE_USAGE_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT
                                                                    , IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
                                                                    , IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT
                                                                    , ..
@@ -67,7 +70,7 @@ pattern IMAGE_USAGE_COLOR_ATTACHMENT_BIT                     = ImageUsageFlagBit
 pattern IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT             = ImageUsageFlagBits 0x00000020
 -- | 'IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT' specifies that implementations
 -- /may/ support using
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory memory allocations>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory memory allocations>
 -- with the
 -- 'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT'
 -- to back an image with this usage. This bit /can/ be set for any image
@@ -82,19 +85,31 @@ pattern IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT                 = ImageUsageFlagBit
 -- be read from a shader as an input attachment; and be used as an input
 -- attachment in a framebuffer.
 pattern IMAGE_USAGE_INPUT_ATTACHMENT_BIT                     = ImageUsageFlagBits 0x00000080
+-- No documentation found for Nested "VkImageUsageFlagBits" "VK_IMAGE_USAGE_SAMPLE_BLOCK_MATCH_BIT_QCOM"
+pattern IMAGE_USAGE_SAMPLE_BLOCK_MATCH_BIT_QCOM              = ImageUsageFlagBits 0x00200000
+-- No documentation found for Nested "VkImageUsageFlagBits" "VK_IMAGE_USAGE_SAMPLE_WEIGHT_BIT_QCOM"
+pattern IMAGE_USAGE_SAMPLE_WEIGHT_BIT_QCOM                   = ImageUsageFlagBits 0x00100000
 -- No documentation found for Nested "VkImageUsageFlagBits" "VK_IMAGE_USAGE_INVOCATION_MASK_BIT_HUAWEI"
 pattern IMAGE_USAGE_INVOCATION_MASK_BIT_HUAWEI               = ImageUsageFlagBits 0x00040000
+-- | 'IMAGE_USAGE_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT' specifies that the image
+-- /can/ be transitioned to the
+-- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT'
+-- layout to be used as a color or depth\/stencil attachment in a
+-- 'Vulkan.Core10.Handles.Framebuffer' and\/or as a read-only input
+-- resource in a shader (sampled image, combined image sampler or input
+-- attachment) in the same render pass.
+pattern IMAGE_USAGE_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT         = ImageUsageFlagBits 0x00080000
 -- | 'IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR' specifies that
 -- the image /can/ be used to create a 'Vulkan.Core10.Handles.ImageView'
 -- suitable for use as a
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-fragment-shading-rate-attachment fragment shading rate attachment>
 -- or
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-shading-rate-image shading rate image>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-shading-rate-image shading rate image>
 pattern IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = ImageUsageFlagBits 0x00000100
 -- | 'IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT' specifies that the image
 -- /can/ be used to create a 'Vulkan.Core10.Handles.ImageView' suitable for
 -- use as a
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragmentdensitymapops fragment density map image>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragmentdensitymapops fragment density map image>.
 pattern IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT             = ImageUsageFlagBits 0x00000200
 
 conNameImageUsageFlagBits :: String
@@ -113,7 +128,10 @@ showTableImageUsageFlagBits =
   , (IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT            , "DEPTH_STENCIL_ATTACHMENT_BIT")
   , (IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT                , "TRANSIENT_ATTACHMENT_BIT")
   , (IMAGE_USAGE_INPUT_ATTACHMENT_BIT                    , "INPUT_ATTACHMENT_BIT")
+  , (IMAGE_USAGE_SAMPLE_BLOCK_MATCH_BIT_QCOM             , "SAMPLE_BLOCK_MATCH_BIT_QCOM")
+  , (IMAGE_USAGE_SAMPLE_WEIGHT_BIT_QCOM                  , "SAMPLE_WEIGHT_BIT_QCOM")
   , (IMAGE_USAGE_INVOCATION_MASK_BIT_HUAWEI              , "INVOCATION_MASK_BIT_HUAWEI")
+  , (IMAGE_USAGE_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT        , "ATTACHMENT_FEEDBACK_LOOP_BIT_EXT")
   , (IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR, "FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR")
   , (IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT            , "FRAGMENT_DENSITY_MAP_BIT_EXT")
   ]

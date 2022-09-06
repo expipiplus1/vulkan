@@ -19,9 +19,15 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
+--
+-- [__Deprecation state__]
+--
+--     -   /Promoted/ to @VK_EXT_rasterization_order_attachment_access@
+--         extension
 --
 -- [__Contact__]
 --
@@ -45,7 +51,7 @@
 -- == Description
 --
 -- Renderpasses, and specifically
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-barriers-subpass-self-dependencies subpass self-dependencies>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-barriers-subpass-self-dependencies subpass self-dependencies>
 -- enable much of the same functionality as the framebuffer fetch and pixel
 -- local storage extensions did for OpenGL ES. But certain techniques such
 -- as programmable blending are awkward or impractical to implement with
@@ -58,7 +64,7 @@
 -- rasterization order, without explicit synchronization.
 --
 -- See
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-feedbackloop renderpass feedback loops>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-feedbackloop renderpass feedback loops>
 -- for more information.
 --
 -- == New Structures
@@ -69,12 +75,6 @@
 --
 --     -   'PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM'
 --
--- == New Enums
---
--- -   'Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits.PipelineColorBlendStateCreateFlagBits'
---
--- -   'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PipelineDepthStencilStateCreateFlagBits'
---
 -- == New Enum Constants
 --
 -- -   'ARM_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_EXTENSION_NAME'
@@ -84,27 +84,27 @@
 -- -   Extending
 --     'Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits.PipelineColorBlendStateCreateFlagBits':
 --
---     -   'Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits.PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_ARM'
+--     -   'PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_ARM'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PipelineDepthStencilStateCreateFlagBits':
 --
---     -   'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM'
+--     -   'PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM'
 --
---     -   'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM'
+--     -   'PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_ARM'
+--     -   'STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_ARM'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SubpassDescriptionFlagBits':
 --
---     -   'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_ARM'
+--     -   'SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_ARM'
 --
---     -   'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM'
+--     -   'SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM'
 --
---     -   'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM'
+--     -   'SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM'
 --
 -- == Issues
 --
@@ -129,134 +129,76 @@
 --
 -- == See Also
 --
--- 'PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM',
--- 'Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits.PipelineColorBlendStateCreateFlagBits',
--- 'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PipelineDepthStencilStateCreateFlagBits'
+-- 'PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM'
 --
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_ARM_rasterization_order_attachment_access Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_ARM_rasterization_order_attachment_access Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_ARM_rasterization_order_attachment_access  ( PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM(..)
+module Vulkan.Extensions.VK_ARM_rasterization_order_attachment_access  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_ARM
+                                                                       , pattern PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_ARM
+                                                                       , pattern PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM
+                                                                       , pattern PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM
+                                                                       , pattern SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_ARM
+                                                                       , pattern SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM
+                                                                       , pattern SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM
+                                                                       , PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM
                                                                        , ARM_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_SPEC_VERSION
                                                                        , pattern ARM_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_SPEC_VERSION
                                                                        , ARM_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_EXTENSION_NAME
                                                                        , pattern ARM_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_EXTENSION_NAME
+                                                                       , PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT(..)
                                                                        ) where
 
-import Foreign.Marshal.Alloc (allocaBytes)
-import Foreign.Ptr (nullPtr)
-import Foreign.Ptr (plusPtr)
-import Vulkan.CStruct (FromCStruct)
-import Vulkan.CStruct (FromCStruct(..))
-import Vulkan.CStruct (ToCStruct)
-import Vulkan.CStruct (ToCStruct(..))
-import Vulkan.Zero (Zero(..))
 import Data.String (IsString)
-import Data.Typeable (Typeable)
-import Foreign.Storable (Storable)
-import Foreign.Storable (Storable(peek))
-import Foreign.Storable (Storable(poke))
-import qualified Foreign.Storable (Storable(..))
-import GHC.Generics (Generic)
-import Foreign.Ptr (Ptr)
-import Data.Kind (Type)
-import Vulkan.Core10.FundamentalTypes (bool32ToBool)
-import Vulkan.Core10.FundamentalTypes (boolToBool32)
-import Vulkan.Core10.FundamentalTypes (Bool32)
-import Vulkan.Core10.Enums.StructureType (StructureType)
-import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_ARM))
--- | VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM -
--- Structure describing whether rasterization order attachment access can
--- be supported by an implementation
---
--- = Members
---
--- The members of the
--- 'PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM' structure
--- describe the following features:
---
--- = Description
---
--- If the 'PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM'
--- structure is included in the @pNext@ chain of
--- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM' /can/ also
--- be used in the @pNext@ chain of 'Vulkan.Core10.Device.DeviceCreateInfo'
--- to enable features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_rasterization_order_attachment_access VK_ARM_rasterization_order_attachment_access>,
--- 'Vulkan.Core10.FundamentalTypes.Bool32',
--- 'Vulkan.Core10.Enums.StructureType.StructureType'
-data PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM = PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM
-  { -- | #features-rasterizationOrderColorAttachmentAccess#
-    -- @rasterizationOrderColorAttachmentAccess@ indicates that rasterization
-    -- order access to color and input attachments is supported by the
-    -- implementation.
-    rasterizationOrderColorAttachmentAccess :: Bool
-  , -- | #features-rasterizationOrderDepthAttachmentAccess#
-    -- @rasterizationOrderDepthAttachmentAccess@ indicates that rasterization
-    -- order access to the depth aspect of depth\/stencil and input attachments
-    -- is supported by the implementation.
-    rasterizationOrderDepthAttachmentAccess :: Bool
-  , -- | #features-rasterizationOrderStencilAttachmentAccess#
-    -- @rasterizationOrderStencilAttachmentAccess@ indicates that rasterization
-    -- order access to the stencil aspect of depth\/stencil and input
-    -- attachments is supported by the implementation.
-    rasterizationOrderStencilAttachmentAccess :: Bool
-  }
-  deriving (Typeable, Eq)
-#if defined(GENERIC_INSTANCES)
-deriving instance Generic (PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM)
-#endif
-deriving instance Show PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM
+import Vulkan.Extensions.VK_EXT_rasterization_order_attachment_access (PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT)
+import Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits (PipelineColorBlendStateCreateFlags)
+import Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits (PipelineColorBlendStateCreateFlagBits(PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_EXT))
+import Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits (PipelineDepthStencilStateCreateFlags)
+import Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits (PipelineDepthStencilStateCreateFlagBits(PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT))
+import Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits (PipelineDepthStencilStateCreateFlags)
+import Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits (PipelineDepthStencilStateCreateFlagBits(PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT))
+import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_EXT))
+import Vulkan.Core10.Enums.SubpassDescriptionFlagBits (SubpassDescriptionFlags)
+import Vulkan.Core10.Enums.SubpassDescriptionFlagBits (SubpassDescriptionFlagBits(SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_EXT))
+import Vulkan.Core10.Enums.SubpassDescriptionFlagBits (SubpassDescriptionFlags)
+import Vulkan.Core10.Enums.SubpassDescriptionFlagBits (SubpassDescriptionFlagBits(SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT))
+import Vulkan.Core10.Enums.SubpassDescriptionFlagBits (SubpassDescriptionFlags)
+import Vulkan.Core10.Enums.SubpassDescriptionFlagBits (SubpassDescriptionFlagBits(SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT))
+import Vulkan.Extensions.VK_EXT_rasterization_order_attachment_access (PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT(..))
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_ARM"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_ARM = STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_EXT
 
-instance ToCStruct PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM where
-  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
-  pokeCStruct p PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM{..} f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_ARM)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (rasterizationOrderColorAttachmentAccess))
-    poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (rasterizationOrderDepthAttachmentAccess))
-    poke ((p `plusPtr` 24 :: Ptr Bool32)) (boolToBool32 (rasterizationOrderStencilAttachmentAccess))
-    f
-  cStructSize = 32
-  cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_ARM)
-    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
-    poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (zero))
-    poke ((p `plusPtr` 24 :: Ptr Bool32)) (boolToBool32 (zero))
-    f
 
-instance FromCStruct PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM where
-  peekCStruct p = do
-    rasterizationOrderColorAttachmentAccess <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
-    rasterizationOrderDepthAttachmentAccess <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
-    rasterizationOrderStencilAttachmentAccess <- peek @Bool32 ((p `plusPtr` 24 :: Ptr Bool32))
-    pure $ PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM
-             (bool32ToBool rasterizationOrderColorAttachmentAccess) (bool32ToBool rasterizationOrderDepthAttachmentAccess) (bool32ToBool rasterizationOrderStencilAttachmentAccess)
+-- No documentation found for TopLevel "VK_PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_ARM"
+pattern PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_ARM = PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_EXT
 
-instance Storable PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM where
-  sizeOf ~_ = 32
-  alignment ~_ = 8
-  peek = peekCStruct
-  poke ptr poked = pokeCStruct ptr poked (pure ())
 
-instance Zero PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM where
-  zero = PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM
-           zero
-           zero
-           zero
+-- No documentation found for TopLevel "VK_PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM"
+pattern PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM = PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT
+
+
+-- No documentation found for TopLevel "VK_PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM"
+pattern PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM = PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT
+
+
+-- No documentation found for TopLevel "VK_SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_ARM"
+pattern SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_ARM = SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_EXT
+
+
+-- No documentation found for TopLevel "VK_SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM"
+pattern SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_ARM = SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT
+
+
+-- No documentation found for TopLevel "VK_SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM"
+pattern SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_ARM = SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT
+
+
+-- No documentation found for TopLevel "VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM"
+type PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM = PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT
 
 
 type ARM_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_SPEC_VERSION = 1

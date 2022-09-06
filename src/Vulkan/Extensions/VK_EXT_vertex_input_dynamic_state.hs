@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Contact__]
 --
@@ -112,7 +113,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_vertex_input_dynamic_state Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_vertex_input_dynamic_state Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -205,7 +206,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdSetVertexInputEXT-None-04790# The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-vertexInputDynamicState vertexInputDynamicState>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-vertexInputDynamicState vertexInputDynamicState>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdSetVertexInputEXT-vertexBindingDescriptionCount-04791#
@@ -255,6 +256,9 @@ foreign import ccall
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support graphics operations
 --
+-- -   #VUID-vkCmdSetVertexInputEXT-videocoding# This command /must/ only
+--     be called outside of a video coding scope
+--
 -- == Host Synchronization
 --
 -- -   Host access to @commandBuffer@ /must/ be externally synchronized
@@ -266,12 +270,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Outside                                                                                                                     | Graphics                                                                                                              |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -388,11 +392,11 @@ instance Zero PhysicalDeviceVertexInputDynamicStateFeaturesEXT where
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxVertexInputBindingStride@
 --
 -- -   #VUID-VkVertexInputBindingDescription2EXT-divisor-04798# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-vertexAttributeInstanceRateZeroDivisor vertexAttributeInstanceRateZeroDivisor>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-vertexAttributeInstanceRateZeroDivisor vertexAttributeInstanceRateZeroDivisor>
 --     feature is not enabled, @divisor@ /must/ not be @0@
 --
 -- -   #VUID-VkVertexInputBindingDescription2EXT-divisor-04799# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-vertexAttributeInstanceRateDivisor vertexAttributeInstanceRateDivisor>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-vertexAttributeInstanceRateDivisor vertexAttributeInstanceRateDivisor>
 --     feature is not enabled, @divisor@ /must/ be @1@
 --
 -- -   #VUID-VkVertexInputBindingDescription2EXT-divisor-06226# @divisor@
@@ -433,14 +437,14 @@ data VertexInputBindingDescription2EXT = VertexInputBindingDescription2EXT
   , -- | @divisor@ is the number of successive instances that will use the same
     -- value of the vertex attribute when instanced rendering is enabled. This
     -- member /can/ be set to a value other than @1@ if the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-vertexAttributeInstanceRateDivisor vertexAttributeInstanceRateDivisor>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-vertexAttributeInstanceRateDivisor vertexAttributeInstanceRateDivisor>
     -- feature is enabled. For example, if the divisor is N, the same vertex
     -- attribute will be applied to N successive instances before moving on to
     -- the next vertex attribute. The maximum value of @divisor@ is
     -- implementation-dependent and can be queried using
     -- 'Vulkan.Extensions.VK_EXT_vertex_attribute_divisor.PhysicalDeviceVertexAttributeDivisorPropertiesEXT'::@maxVertexAttribDivisor@.
     -- A value of @0@ /can/ be used for the divisor if the
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-vertexAttributeInstanceRateZeroDivisor vertexAttributeInstanceRateZeroDivisor>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-vertexAttributeInstanceRateZeroDivisor vertexAttributeInstanceRateZeroDivisor>
     -- feature is enabled. In this case, the same vertex attribute will be
     -- applied to all instances.
     divisor :: Word32

@@ -356,7 +356,7 @@ foreign import ccall
 -- = Description
 --
 -- 'queueBindSparse' is a
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-submission queue submission command>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#devsandqueues-submission queue submission command>,
 -- with each batch defined by an element of @pBindInfo@ as a
 -- 'BindSparseInfo' structure. Batches begin execution in the order they
 -- appear in @pBindInfo@, but /may/ complete out of order.
@@ -374,7 +374,7 @@ foreign import ccall
 --
 -- Additional information about fence and semaphore operation is described
 -- in
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization the synchronization chapter>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization the synchronization chapter>.
 --
 -- == Valid Usage
 --
@@ -402,7 +402,7 @@ foreign import ccall
 --     @pWaitSemaphores@ member of all elements of the @pBindInfo@
 --     parameter referring to a binary semaphore /must/ be semaphores that
 --     are signaled, or have
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
 --     previously submitted for execution
 --
 -- -   #VUID-vkQueueBindSparse-pWaitSemaphores-03245# All elements of the
@@ -444,11 +444,11 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | -                                                                                                                          | -                                                                                                                      | SPARSE_BINDING                                                                                                        |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | -                                                                                                                          | -                                                                                                                      | -                                                                                                                           | SPARSE_BINDING                                                                                                        |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- == Return Codes
 --
@@ -479,7 +479,7 @@ queueBindSparse :: forall io
                    ("bindInfo" ::: Vector (SomeStruct BindSparseInfo))
                 -> -- | @fence@ is an /optional/ handle to a fence to be signaled. If @fence@ is
                    -- not 'Vulkan.Core10.APIConstants.NULL_HANDLE', it defines a
-                   -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-fences-signaling fence signal operation>.
+                   -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-fences-signaling fence signal operation>.
                    Fence
                 -> io ()
 queueBindSparse queue bindInfo fence = liftIO . evalContT $ do
@@ -649,6 +649,7 @@ instance Zero SparseImageMemoryRequirements where
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags',
+-- 'Vulkan.Extensions.VK_EXT_image_compression_control.ImageSubresource2EXT',
 -- 'SparseImageMemoryBind', 'Vulkan.Core10.Image.getImageSubresourceLayout'
 data ImageSubresource = ImageSubresource
   { -- | @aspectMask@ is a
@@ -743,7 +744,7 @@ instance Zero ImageSubresource where
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @memory@ and
 --     @memoryOffset@ /must/ match the memory requirements of the resource,
 --     as described in section
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-association>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-association>
 --
 -- -   #VUID-VkSparseMemoryBind-memory-01097# If @memory@ is not
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE', @memory@ /must/ not have
@@ -873,7 +874,7 @@ instance Zero SparseMemoryBind where
 -- == Valid Usage
 --
 -- -   #VUID-VkSparseImageMemoryBind-memory-01104# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-sparseResidencyAliased sparse aliased residency>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-sparseResidencyAliased sparseResidencyAliased>
 --     feature is not enabled, and if any other resources are bound to
 --     ranges of @memory@, the range of @memory@ being bound /must/ not
 --     overlap with those bound ranges
@@ -881,11 +882,11 @@ instance Zero SparseMemoryBind where
 -- -   #VUID-VkSparseImageMemoryBind-memory-01105# @memory@ and
 --     @memoryOffset@ /must/ match the memory requirements of the calling
 --     command’s @image@, as described in section
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-association>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-association>
 --
 -- -   #VUID-VkSparseImageMemoryBind-subresource-01106# @subresource@
 --     /must/ be a valid image subresource for @image@ (see
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views>)
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views>)
 --
 -- -   #VUID-VkSparseImageMemoryBind-offset-01107# @offset.x@ /must/ be a
 --     multiple of the sparse image block width
@@ -1272,7 +1273,7 @@ instance Zero SparseImageMemoryBindInfo where
 --     'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.TimelineSemaphoreSubmitInfo'::@pSignalSemaphoreValues@
 --     /must/ have a value greater than the current value of the semaphore
 --     when the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
 --     is executed
 --
 -- -   #VUID-VkBindSparseInfo-pWaitSemaphores-03250# For each element of
@@ -1284,7 +1285,7 @@ instance Zero SparseImageMemoryBindInfo where
 --     /must/ have a value which does not differ from the current value of
 --     the semaphore or from the value of any outstanding semaphore wait or
 --     signal operation on that semaphore by more than
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
 --
 -- -   #VUID-VkBindSparseInfo-pSignalSemaphores-03251# For each element of
 --     @pSignalSemaphores@ created with a
@@ -1295,7 +1296,7 @@ instance Zero SparseImageMemoryBindInfo where
 --     /must/ have a value which does not differ from the current value of
 --     the semaphore or from the value of any outstanding semaphore wait or
 --     signal operation on that semaphore by more than
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>
 --
 -- == Valid Usage (Implicit)
 --
@@ -1352,7 +1353,7 @@ data BindSparseInfo (es :: [Type]) = BindSparseInfo
   , -- | @pWaitSemaphores@ is a pointer to an array of semaphores upon which to
     -- wait on before the sparse binding operations for this batch begin
     -- execution. If semaphores to wait on are provided, they define a
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-waiting semaphore wait operation>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-waiting semaphore wait operation>.
     waitSemaphores :: Vector Semaphore
   , -- | @pBufferBinds@ is a pointer to an array of 'SparseBufferMemoryBindInfo'
     -- structures.
@@ -1368,7 +1369,7 @@ data BindSparseInfo (es :: [Type]) = BindSparseInfo
     -- signaled when the sparse binding operations for this batch have
     -- completed execution. If semaphores to be signaled are provided, they
     -- define a
-    -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>.
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>.
     signalSemaphores :: Vector Semaphore
   }
   deriving (Typeable)

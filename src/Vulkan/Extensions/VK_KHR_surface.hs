@@ -19,7 +19,7 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
 -- [__Contact__]
 --
@@ -367,7 +367,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_surface Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_surface Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -572,7 +572,7 @@ destroySurfaceKHR :: forall io
                      SurfaceKHR
                   -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                      -- surface object when there is no more specific allocator available (see
-                     -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
                      ("allocator" ::: Maybe AllocationCallbacks)
                   -> io ()
 destroySurfaceKHR instance' surface allocator = liftIO . evalContT $ do
@@ -1363,6 +1363,11 @@ instance Read PresentModeKHR where
 -- XYZ. The old name is deprecated but is maintained for backwards
 -- compatibility.
 --
+-- Note
+--
+-- For a traditional \"Linear\" or non-gamma transfer function color space
+-- use 'COLOR_SPACE_PASS_THROUGH_EXT'.
+--
 -- The color components of non-linear color space swap chain images /must/
 -- have had the appropriate transfer function applied. The color space
 -- selected for the swap chain image will not affect the processing of data
@@ -1416,7 +1421,7 @@ instance Read PresentModeKHR where
 --
 -- The transfer functions are described in the “Transfer Functions” chapter
 -- of the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#data-format Khronos Data Format Specification>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#data-format Khronos Data Format Specification>.
 --
 -- Except Display-P3 OETF, which is:
 --

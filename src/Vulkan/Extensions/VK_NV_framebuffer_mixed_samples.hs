@@ -19,7 +19,7 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
 -- [__Contact__]
 --
@@ -116,7 +116,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_framebuffer_mixed_samples Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_NV_framebuffer_mixed_samples Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -228,7 +228,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 -- @coverageModulationMode@ is 'COVERAGE_MODULATION_MODE_NONE_NV'.
 --
 -- If the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-coverage-reduction coverage reduction mode>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-coverage-reduction coverage reduction mode>
 -- is
 -- 'Vulkan.Extensions.VK_NV_coverage_reduction_mode.COVERAGE_REDUCTION_MODE_TRUNCATE_NV',
 -- each color sample is associated with only a single coverage sample. In

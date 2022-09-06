@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_surface@
+--     -   Requires @VK_KHR_surface@ to be enabled for any device-level
+--         functionality
 --
 -- [__Contact__]
 --
@@ -705,8 +706,8 @@
 --
 -- -   Revision 17, 2015-06-15 (Ian Elliott)
 --
---     -   Changed special value from \"-1\" to \"0\" so that the data
---         types can be unsigned.
+--     -   Changed special value from “-1” to “0” so that the data types
+--         can be unsigned.
 --
 -- -   Revision 18, 2015-06-15 (Ian Elliott)
 --
@@ -720,8 +721,8 @@
 --     -   Fixed clarification of VkSurfacePropertiesKHR::minImageCount
 --         made in version 18.
 --
---     -   Added a brief \"Image Ownership\" definition to the list of
---         terms used in the spec.
+--     -   Added a brief “Image Ownership” definition to the list of terms
+--         used in the spec.
 --
 -- -   Revision 20, 2015-06-17 (James Jones)
 --
@@ -1069,7 +1070,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_swapchain Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_KHR_swapchain Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -1206,6 +1207,7 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.Core10.Handles (Image)
 import Vulkan.Core10.Handles (Image(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_compression_control (ImageCompressionControlEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_image_format_list (ImageFormatListCreateInfo)
 import Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
 import Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDevicePresentRectanglesKHR))
@@ -1434,6 +1436,8 @@ foreign import ccall
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
 --
+--     -   'Vulkan.Core10.Enums.Result.ERROR_COMPRESSION_EXHAUSTED_EXT'
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_swapchain VK_KHR_swapchain>,
@@ -1449,7 +1453,7 @@ createSwapchainKHR :: forall a io
                       (SwapchainCreateInfoKHR a)
                    -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                       -- swapchain object when there is no more specific allocator available (see
-                      -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                      -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
                       ("allocator" ::: Maybe AllocationCallbacks)
                    -> io (SwapchainKHR)
 createSwapchainKHR device createInfo allocator = liftIO . evalContT $ do
@@ -1566,7 +1570,7 @@ destroySwapchainKHR :: forall io
                        SwapchainKHR
                     -> -- | @pAllocator@ is the allocator used for host memory allocated for the
                        -- swapchain object when there is no more specific allocator available (see
-                       -- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+                       -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
                        ("allocator" ::: Maybe AllocationCallbacks)
                     -> io ()
 destroySwapchainKHR device swapchain allocator = liftIO . evalContT $ do
@@ -1898,7 +1902,7 @@ foreign import ccall
 -- -   #VUID-vkQueuePresentKHR-pWaitSemaphores-01295# All elements of the
 --     @pWaitSemaphores@ member of @pPresentInfo@ /must/ be semaphores that
 --     are signaled, or have
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
 --     previously submitted for execution
 --
 -- -   #VUID-vkQueuePresentKHR-pWaitSemaphores-03267# All elements of the
@@ -1989,11 +1993,11 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | -                                                                                                                          | -                                                                                                                      | Any                                                                                                                   |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | -                                                                                                                          | -                                                                                                                      | -                                                                                                                           | Any                                                                                                                   |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- == Return Codes
 --
@@ -2579,7 +2583,7 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     referred to by @surface@
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-imageFormat-01778# The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#swapchain-wsi-image-create-info implied image creation parameters>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#swapchain-wsi-image-create-info implied image creation parameters>
 --     of the swapchain /must/ be supported as reported by
 --     'Vulkan.Core10.DeviceInitialization.getPhysicalDeviceImageFormatProperties'
 --
@@ -2597,7 +2601,7 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     is not zero then all of the formats in
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'::@pViewFormats@
 --     /must/ be compatible with the @format@ as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility compatibility table>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility compatibility table>
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-flags-04100# If @flags@ does not
 --     contain 'SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR' and the @pNext@
@@ -2626,6 +2630,12 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveWin32InfoEXT'
 --     structure /must/ be included in the @pNext@ chain
 --
+-- -   #VUID-VkSwapchainCreateInfoKHR-pNext-06752# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-imageCompressionControlSwapchain imageCompressionControlSwapchain>
+--     feature is not enabled, the @pNext@ chain /must/ not include an
+--     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionControlEXT'
+--     structure
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-sType-sType# @sType@ /must/ be
@@ -2635,6 +2645,7 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalCont
 --     any structure (including this one) in the @pNext@ chain /must/ be
 --     either @NULL@ or a pointer to a valid instance of
 --     'DeviceGroupSwapchainCreateInfoKHR',
+--     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionControlEXT',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo',
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveInfoEXT',
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveWin32InfoEXT',
@@ -2822,6 +2833,7 @@ instance Extensible SwapchainCreateInfoKHR where
   getNext SwapchainCreateInfoKHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SwapchainCreateInfoKHR e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @ImageCompressionControlEXT = Just f
     | Just Refl <- eqT @e @SurfaceFullScreenExclusiveWin32InfoEXT = Just f
     | Just Refl <- eqT @e @SurfaceFullScreenExclusiveInfoEXT = Just f
     | Just Refl <- eqT @e @ImageFormatListCreateInfo = Just f
@@ -2958,7 +2970,7 @@ instance es ~ '[] => Zero (SwapchainCreateInfoKHR es) where
 -- -   #VUID-VkPresentInfoKHR-pNext-06235# If a
 --     'Vulkan.Extensions.VK_KHR_present_id.PresentIdKHR' structure is
 --     included in the @pNext@ chain, and the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-presentId presentId>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-presentId presentId>
 --     feature is not enabled, each @presentIds@ entry in that structure
 --     /must/ be NULL
 --
@@ -3200,7 +3212,7 @@ instance Zero DeviceGroupPresentCapabilitiesKHR where
 -- -   #VUID-VkImageSwapchainCreateInfoKHR-swapchain-00995# If @swapchain@
 --     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the fields of
 --     'Vulkan.Core10.Image.ImageCreateInfo' /must/ match the
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#swapchain-wsi-image-create-info implied image creation parameters>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#swapchain-wsi-image-create-info implied image creation parameters>
 --     of the swapchain
 --
 -- == Valid Usage (Implicit)

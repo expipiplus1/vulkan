@@ -19,9 +19,10 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_get_physical_device_properties2@
+--     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
+--         for any device-level functionality
 --
 -- [__Contact__]
 --
@@ -42,7 +43,7 @@
 --         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/AMD/SPV_AMD_texture_gather_bias_lod.html SPV_AMD_texture_gather_bias_lod>
 --
 --     -   This extension provides API support for
---         <https://www.khronos.org/registry/OpenGL/extensions/AMD/AMD_texture_gather_bias_lod.txt GL_AMD_texture_gather_bias_lod>
+--         <https://registry.khronos.org/OpenGL/extensions/AMD/AMD_texture_gather_bias_lod.txt GL_AMD_texture_gather_bias_lod>
 --
 -- [__Contributors__]
 --
@@ -91,7 +92,7 @@
 --
 -- == New SPIR-V Capabilities
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ImageGatherBiasLodAMD ImageGatherBiasLodAMD>
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-ImageGatherBiasLodAMD ImageGatherBiasLodAMD>
 --
 -- == Examples
 --
@@ -148,7 +149,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_AMD_texture_gather_bias_lod Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_AMD_texture_gather_bias_lod Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.

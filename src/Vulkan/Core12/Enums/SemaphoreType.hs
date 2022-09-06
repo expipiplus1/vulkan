@@ -14,7 +14,7 @@ import Data.Int (Int32)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 
--- | VkSemaphoreType - Sepcifies the type of a semaphore object
+-- | VkSemaphoreType - Specifies the type of a semaphore object
 --
 -- = See Also
 --

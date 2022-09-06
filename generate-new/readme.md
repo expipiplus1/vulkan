@@ -14,7 +14,7 @@ https://github.com/NixOS/nixpkgs/pull/86773 merged):
 
 ```bash
 cd Vulkan-Docs
-nix-shell -p python3 asciidoctor gnumake nodejs nodePackages.he nodePackages.escape-string-regexp --run "./makeAllExts refpages generated"
+nix-shell -p python3 python3Packages.pyparsing asciidoctor gnumake nodejs nodePackages.he nodePackages.escape-string-regexp --run "./makeAllExts refpages generated"
 ```
 
 ## The `vma` generator

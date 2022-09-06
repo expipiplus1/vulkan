@@ -19,19 +19,21 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires Vulkan 1.0
+--     -   Requires support for Vulkan 1.0
 --
---     -   Requires @VK_KHR_ray_tracing_pipeline@
+--     -   Requires @VK_KHR_ray_tracing_pipeline@ to be enabled for any
+--         device-level functionality
 --
---     -   Requires @VK_KHR_synchronization2@
+--     -   Requires @VK_KHR_synchronization2@ to be enabled for any
+--         device-level functionality
 --
 -- [__Contact__]
 --
---     -   Yunpeng Zhu
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_HUAWEI_invocation_mask] @yunxingzhu%0A<<Here describe the issue or question you have about the VK_HUAWEI_invocation_mask extension>> >
+--     -   Pan Gao
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_HUAWEI_invocation_mask] @PanGao-h%0A<<Here describe the issue or question you have about the VK_HUAWEI_invocation_mask extension>> >
 --
 -- [__Extension Proposal__]
---     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_HUAWEI_invocation_mask.asciidoc VK_HUAWEI_invocation_mask>
+--     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_HUAWEI_invocation_mask.adoc VK_HUAWEI_invocation_mask>
 --
 -- == Other Extension Metadata
 --
@@ -49,7 +51,15 @@
 --
 -- [__Contributors__]
 --
---     -   Yunpeng Zhu, HuaWei
+--     -   Yunpeng Zhu
+--
+--     -   Juntao Li, Huawei
+--
+--     -   Liang Chen, Huawei
+--
+--     -   Shaozhuang Shi, Huawei
+--
+--     -   Hailong Chu, Huawei
 --
 -- == Description
 --
@@ -140,7 +150,7 @@
 -- == Document Notes
 --
 -- For more information, see the
--- <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#VK_HUAWEI_invocation_mask Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_HUAWEI_invocation_mask Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
@@ -205,7 +215,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdBindInvocationMaskHUAWEI-None-04976# The
---     <https://www.khronos.org/registry/vulkan/specs/1.3-extensions/html/vkspec.html#features-invocationMask invocation mask image>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-invocationMask invocationMask>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdBindInvocationMaskHUAWEI-imageView-04977# If @imageView@
@@ -265,6 +275,9 @@ foreign import ccall
 -- -   #VUID-vkCmdBindInvocationMaskHUAWEI-renderpass# This command /must/
 --     only be called outside of a render pass instance
 --
+-- -   #VUID-vkCmdBindInvocationMaskHUAWEI-videocoding# This command /must/
+--     only be called outside of a video coding scope
+--
 -- -   #VUID-vkCmdBindInvocationMaskHUAWEI-commonparent# Both of
 --     @commandBuffer@, and @imageView@ that are valid handles of
 --     non-ignored parameters /must/ have been created, allocated, or
@@ -281,12 +294,12 @@ foreign import ccall
 --
 -- \'
 --
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
--- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
--- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+
--- | Primary                                                                                                                    | Outside                                                                                                                | Compute                                                                                                               |
--- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                       |
--- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginVideoCodingKHR Video Coding Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> |
+-- +============================================================================================================================+========================================================================================================================+=============================================================================================================================+=======================================================================================================================+
+-- | Primary                                                                                                                    | Outside                                                                                                                | Outside                                                                                                                     | Compute                                                                                                               |
+-- | Secondary                                                                                                                  |                                                                                                                        |                                                                                                                             |                                                                                                                       |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
@@ -322,7 +335,7 @@ cmdBindInvocationMaskHUAWEI commandBuffer imageView imageLayout = liftIO $ do
 --
 -- = Members
 --
--- This structure describes the following features:
+-- This structure describes the following feature:
 --
 -- = Description
 --
