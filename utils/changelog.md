@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+
+## [0.5.8] - 2022-09-06
 - Relax bounds on `vulkan`
 
 ## [0.5.7] - 2022-03-31
