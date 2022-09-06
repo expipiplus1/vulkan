@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+
+## [0.5.7.1] - 2022-09-06
 - Add support for GHC 9.4.
 
 ## [0.5.7] - 2022-03-31
