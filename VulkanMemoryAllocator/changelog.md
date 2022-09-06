@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+- Bump VMA to current (latest 3.0.1)
+- Raise upper bound on `vulkan`
 
 ## [0.10] - 2022-03-31
 - Bump VMA to 3.0.0
