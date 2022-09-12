@@ -282,6 +282,8 @@ vulkanFuncPointers =
         , "vkVoidFunction"
         , "vkMapMemory"
         , "vkUnmapMemory"
+        , "vkGetDeviceBufferMemoryRequirements"
+        , "vkGetDeviceImageMemoryRequirements"
         ]
     $ \case
         "vkVoidFunction" ->
