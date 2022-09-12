@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Aaron Hagan
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_shader_fragment_mask] @AaronHaganAMD%0A<<Here describe the issue or question you have about the VK_AMD_shader_fragment_mask extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_shader_fragment_mask] @AaronHaganAMD%0A*Here describe the issue or question you have about the VK_AMD_shader_fragment_mask extension* >
 --
 -- == Other Extension Metadata
 --

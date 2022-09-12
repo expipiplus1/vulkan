@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Pan Gao
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_HUAWEI_subpass_shading] @PanGao-h%0A<<Here describe the issue or question you have about the VK_HUAWEI_subpass_shading extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_HUAWEI_subpass_shading] @PanGao-h%0A*Here describe the issue or question you have about the VK_HUAWEI_subpass_shading extension* >
 --
 -- == Other Extension Metadata
 --
@@ -843,6 +843,10 @@ foreign import ccall
 --     a result of this command, then the sampler /must/ not have been
 --     created with
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
+--
+-- -   #VUID-vkCmdSubpassShadingHUAWEI-None-07288# Any shader invocation
+--     executed by this command /must/
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-termination terminate>
 --
 -- -   #VUID-vkCmdSubpassShadingHUAWEI-None-04931# This command must be
 --     called in a subpass with bind point

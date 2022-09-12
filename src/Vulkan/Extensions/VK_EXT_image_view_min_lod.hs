@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Joshua Ashton
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_image_view_min_lod] @Joshua-Ashton%0A<<Here describe the issue or question you have about the VK_EXT_image_view_min_lod extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_image_view_min_lod] @Joshua-Ashton%0A*Here describe the issue or question you have about the VK_EXT_image_view_min_lod extension* >
 --
 -- == Other Extension Metadata
 --
@@ -54,7 +54,8 @@
 -- == Description
 --
 -- This extension allows applications to clamp the minimum LOD value during
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-image-level-selection Image Level(s) Selection>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-image-level-selection Image Level(s) Selection>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-gather Texel Gathering>
 -- and
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-integer-coordinate-operations Integer Texel Coordinate Operations>
 -- with a given 'Vulkan.Core10.Handles.ImageView' by
@@ -172,7 +173,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 data PhysicalDeviceImageViewMinLodFeaturesEXT = PhysicalDeviceImageViewMinLodFeaturesEXT
   { -- | #features-minLod# @minLod@ indicates whether the implementation supports
     -- clamping the minimum LOD value during
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-image-level-selection Image Level(s) Selection>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-image-level-selection Image Level(s) Selection>,
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-gather Texel Gathering>
     -- and
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-integer-coordinate-operations Integer Texel Coordinate Operations>
     -- with a given 'Vulkan.Core10.Handles.ImageView' by
@@ -218,6 +220,30 @@ instance Zero PhysicalDeviceImageViewMinLodFeaturesEXT where
 
 -- | VkImageViewMinLodCreateInfoEXT - Structure describing the minimum lod of
 -- an image view
+--
+-- = Description
+--
+-- If the @pNext@ chain includes a 'ImageViewMinLodCreateInfoEXT'
+-- structure, then that structure includes a parameter specifying a value
+-- to clamp the minimum LOD value during
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-image-level-selection Image Level(s) Selection>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-gather Texel Gathering>
+-- and
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-integer-coordinate-operations Integer Texel Coordinate Operations>.
+--
+-- If the image view contains 'ImageViewMinLodCreateInfoEXT' and it is used
+-- as part of a sampling operation:
+--
+-- minLodFloatimageView = @minLod@
+--
+-- otherwise:
+--
+-- minLodFloatimageView = 0.0
+--
+-- An integer variant of this parameter is also defined for sampling
+-- operations which access integer mipmap levels:
+--
+-- minLodIntegerimageView = ⌊minLodFloatimageView⌋
 --
 -- == Valid Usage
 --

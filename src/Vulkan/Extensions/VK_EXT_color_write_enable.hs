@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Sharif Elcott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_color_write_enable] @selcott%0A<<Here describe the issue or question you have about the VK_EXT_color_write_enable extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_color_write_enable] @selcott%0A*Here describe the issue or question you have about the VK_EXT_color_write_enable extension* >
 --
 -- == Other Extension Metadata
 --

@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Pan Gao
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_HUAWEI_invocation_mask] @PanGao-h%0A<<Here describe the issue or question you have about the VK_HUAWEI_invocation_mask extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_HUAWEI_invocation_mask] @PanGao-h%0A*Here describe the issue or question you have about the VK_HUAWEI_invocation_mask extension* >
 --
 -- [__Extension Proposal__]
 --     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_HUAWEI_invocation_mask.adoc VK_HUAWEI_invocation_mask>

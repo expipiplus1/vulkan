@@ -1310,12 +1310,6 @@ instance Zero PhysicalDeviceProperties where
 -- to 1.1, then the application /must/ not use Vulkan 1.2 functionality on
 -- the physical device that supports Vulkan 1.2.
 --
--- Implicit layers /must/ be disabled if they do not support a version at
--- least as high as @apiVersion@ and their version is less than the highest
--- version of the drivers on the system. See the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#LoaderInterfaceArchitecture “Architecture of the Vulkan Loader Interfaces”>
--- document for additional information.
---
 -- Note
 --
 -- Providing a @NULL@ 'InstanceCreateInfo'::@pApplicationInfo@ or providing
@@ -2628,7 +2622,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     --     perform out of bounds accesses except under the conditions enabled
     --     by the
     --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineRobustness pipelineRobustness>
-    --     feature. .
+    --     feature .
     robustBufferAccess :: Bool
   , -- | #features-fullDrawIndexUint32# @fullDrawIndexUint32@ specifies the full
     -- 32-bit range of indices is supported for indexed draw calls when using a

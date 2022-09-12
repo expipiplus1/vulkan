@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_ray_tracing_maintenance1] @dgkoch%0A<<Here describe the issue or question you have about the VK_KHR_ray_tracing_maintenance1 extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_ray_tracing_maintenance1] @dgkoch%0A*Here describe the issue or question you have about the VK_KHR_ray_tracing_maintenance1 extension* >
 --
 -- == Other Extension Metadata
 --

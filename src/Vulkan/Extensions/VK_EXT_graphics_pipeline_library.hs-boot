@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Tobias Hector
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_graphics_pipeline_library] @tobski%0A<<Here describe the issue or question you have about the VK_EXT_graphics_pipeline_library extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_graphics_pipeline_library] @tobski%0A*Here describe the issue or question you have about the VK_EXT_graphics_pipeline_library extension* >
 --
 -- [__Extension Proposal__]
 --     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_graphics_pipeline_library.adoc VK_EXT_graphics_pipeline_library>

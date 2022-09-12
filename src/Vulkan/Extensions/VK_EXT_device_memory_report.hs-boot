@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   Yiwei Zhang
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_device_memory_report] @zhangyiwei%0A<<Here describe the issue or question you have about the VK_EXT_device_memory_report extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_device_memory_report] @zhangyiwei%0A*Here describe the issue or question you have about the VK_EXT_device_memory_report extension* >
 --
 -- == Other Extension Metadata
 --

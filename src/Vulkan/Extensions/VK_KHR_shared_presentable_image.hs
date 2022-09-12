@@ -33,7 +33,7 @@
 -- [__Contact__]
 --
 --     -   Alon Or-bach
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shared_presentable_image] @alonorbach%0A<<Here describe the issue or question you have about the VK_KHR_shared_presentable_image extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shared_presentable_image] @alonorbach%0A*Here describe the issue or question you have about the VK_KHR_shared_presentable_image extension* >
 --
 -- == Other Extension Metadata
 --

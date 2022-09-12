@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Chad Versace
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_queue_family_foreign] @chadversary%0A<<Here describe the issue or question you have about the VK_EXT_queue_family_foreign extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_queue_family_foreign] @chadversary%0A*Here describe the issue or question you have about the VK_EXT_queue_family_foreign extension* >
 --
 -- == Other Extension Metadata
 --

@@ -29,7 +29,7 @@
 -- [__Contact__]
 --
 --     -   Baldur Karlsson
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shader_non_semantic_info] @baldurk%0A<<Here describe the issue or question you have about the VK_KHR_shader_non_semantic_info extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shader_non_semantic_info] @baldurk%0A*Here describe the issue or question you have about the VK_KHR_shader_non_semantic_info extension* >
 --
 -- == Other Extension Metadata
 --

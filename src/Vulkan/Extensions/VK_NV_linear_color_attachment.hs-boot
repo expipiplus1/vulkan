@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   sourav parmar
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_linear_color_attachment] @souravpNV%0A<<Here describe the issue or question you have about the VK_NV_linear_color_attachment extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_linear_color_attachment] @souravpNV%0A*Here describe the issue or question you have about the VK_NV_linear_color_attachment extension* >
 --
 -- == Other Extension Metadata
 --

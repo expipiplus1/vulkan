@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Christoph Kubisch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_mesh_shader] @pixeljetstream%0A<<Here describe the issue or question you have about the VK_NV_mesh_shader extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_mesh_shader] @pixeljetstream%0A*Here describe the issue or question you have about the VK_NV_mesh_shader extension* >
 --
 -- == Other Extension Metadata
 --

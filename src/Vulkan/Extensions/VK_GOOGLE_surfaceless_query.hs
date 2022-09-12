@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Shahbaz Youssefi
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_GOOGLE_surfaceless_query] @syoussefi%0A<<Here describe the issue or question you have about the VK_GOOGLE_surfaceless_query extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_GOOGLE_surfaceless_query] @syoussefi%0A*Here describe the issue or question you have about the VK_GOOGLE_surfaceless_query extension* >
 --
 -- [__Extension Proposal__]
 --     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_GOOGLE_surfaceless_query.adoc VK_GOOGLE_surfaceless_query>

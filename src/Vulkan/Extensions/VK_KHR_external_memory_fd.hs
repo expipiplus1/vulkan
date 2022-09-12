@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_external_memory_fd] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_external_memory_fd extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_external_memory_fd] @cubanismo%0A*Here describe the issue or question you have about the VK_KHR_external_memory_fd extension* >
 --
 -- == Other Extension Metadata
 --

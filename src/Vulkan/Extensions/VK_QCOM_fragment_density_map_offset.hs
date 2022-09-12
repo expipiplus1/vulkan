@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Matthew Netsch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QCOM_fragment_density_map_offset] @mnetsch%0A<<Here describe the issue or question you have about the VK_QCOM_fragment_density_map_offset extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QCOM_fragment_density_map_offset] @mnetsch%0A*Here describe the issue or question you have about the VK_QCOM_fragment_density_map_offset extension* >
 --
 -- == Other Extension Metadata
 --

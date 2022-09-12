@@ -35,7 +35,7 @@
 -- [__Contact__]
 --
 --     -   Baldur Karlsson
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_debug_marker] @baldurk%0A<<Here describe the issue or question you have about the VK_EXT_debug_marker extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_debug_marker] @baldurk%0A*Here describe the issue or question you have about the VK_EXT_debug_marker extension* >
 --
 -- == Other Extension Metadata
 --

@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   David Zhao Akeley
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_inherited_viewport_scissor] @akeley98%0A<<Here describe the issue or question you have about the VK_NV_inherited_viewport_scissor extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_inherited_viewport_scissor] @akeley98%0A*Here describe the issue or question you have about the VK_NV_inherited_viewport_scissor extension* >
 --
 -- == Other Extension Metadata
 --

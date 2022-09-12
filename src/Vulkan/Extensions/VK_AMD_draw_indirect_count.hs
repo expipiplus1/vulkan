@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_draw_indirect_count] @drakos-amd%0A<<Here describe the issue or question you have about the VK_AMD_draw_indirect_count extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_draw_indirect_count] @drakos-amd%0A*Here describe the issue or question you have about the VK_AMD_draw_indirect_count extension* >
 --
 -- == Other Extension Metadata
 --

@@ -721,6 +721,14 @@ spirvExtensionRequirements = \case
                              , deviceExtensionName       = EXT_MESH_SHADER_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_SPIRV_1_4_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
     ]
   _ -> ([], [])
 
@@ -2715,6 +2723,14 @@ spirvCapabilityRequirements = \case
     ]
     [ RequireDeviceExtension { deviceExtensionLayerName  = Nothing
                              , deviceExtensionName       = EXT_MESH_SHADER_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_SPIRV_1_4_EXTENSION_NAME
+                             , deviceExtensionMinVersion = 0
+                             }
+    , RequireDeviceExtension { deviceExtensionLayerName  = Nothing
+                             , deviceExtensionName       = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
                              , deviceExtensionMinVersion = 0
                              }
     ]

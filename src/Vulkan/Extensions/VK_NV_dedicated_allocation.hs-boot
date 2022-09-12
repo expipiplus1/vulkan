@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_dedicated_allocation] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_NV_dedicated_allocation extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_dedicated_allocation] @jeffbolznv%0A*Here describe the issue or question you have about the VK_NV_dedicated_allocation extension* >
 --
 -- == Other Extension Metadata
 --

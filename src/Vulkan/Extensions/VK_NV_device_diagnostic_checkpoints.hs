@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Nuno Subtil
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_device_diagnostic_checkpoints] @nsubtil%0A<<Here describe the issue or question you have about the VK_NV_device_diagnostic_checkpoints extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_device_diagnostic_checkpoints] @nsubtil%0A*Here describe the issue or question you have about the VK_NV_device_diagnostic_checkpoints extension* >
 --
 -- == Other Extension Metadata
 --

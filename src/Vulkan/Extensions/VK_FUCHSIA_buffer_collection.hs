@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   John Rosasco
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_FUCHSIA_buffer_collection] @rosasco%0A<<Here describe the issue or question you have about the VK_FUCHSIA_buffer_collection extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_FUCHSIA_buffer_collection] @rosasco%0A*Here describe the issue or question you have about the VK_FUCHSIA_buffer_collection extension* >
 --
 -- == Other Extension Metadata
 --

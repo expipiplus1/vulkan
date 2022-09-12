@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Hans-Kristian Arntzen
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_VALVE_descriptor_set_host_mapping] @HansKristian-Work%0A<<Here describe the issue or question you have about the VK_VALVE_descriptor_set_host_mapping extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_VALVE_descriptor_set_host_mapping] @HansKristian-Work%0A*Here describe the issue or question you have about the VK_VALVE_descriptor_set_host_mapping extension* >
 --
 -- == Other Extension Metadata
 --

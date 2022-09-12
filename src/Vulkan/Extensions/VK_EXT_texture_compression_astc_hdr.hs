@@ -32,7 +32,7 @@
 -- [__Contact__]
 --
 --     -   Jan-Harald Fredriksen
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_texture_compression_astc_hdr] @janharaldfredriksen-arm%0A<<Here describe the issue or question you have about the VK_EXT_texture_compression_astc_hdr extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_texture_compression_astc_hdr] @janharaldfredriksen-arm%0A*Here describe the issue or question you have about the VK_EXT_texture_compression_astc_hdr extension* >
 --
 -- == Other Extension Metadata
 --

@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_calibrated_timestamps] @drakos-amd%0A<<Here describe the issue or question you have about the VK_EXT_calibrated_timestamps extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_calibrated_timestamps] @drakos-amd%0A*Here describe the issue or question you have about the VK_EXT_calibrated_timestamps extension* >
 --
 -- == Other Extension Metadata
 --

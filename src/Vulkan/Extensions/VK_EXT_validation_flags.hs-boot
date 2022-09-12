@@ -32,7 +32,7 @@
 -- [__Contact__]
 --
 --     -   Tobin Ehlis
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_validation_flags] @tobine%0A<<Here describe the issue or question you have about the VK_EXT_validation_flags extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_validation_flags] @tobine%0A*Here describe the issue or question you have about the VK_EXT_validation_flags extension* >
 --
 -- == Other Extension Metadata
 --

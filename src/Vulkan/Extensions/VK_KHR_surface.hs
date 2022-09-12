@@ -24,10 +24,10 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_surface] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_surface extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_surface] @cubanismo%0A*Here describe the issue or question you have about the VK_KHR_surface extension* >
 --
 --     -   Ian Elliott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_surface] @ianelliottus%0A<<Here describe the issue or question you have about the VK_KHR_surface extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_surface] @ianelliottus%0A*Here describe the issue or question you have about the VK_KHR_surface extension* >
 --
 -- == Other Extension Metadata
 --

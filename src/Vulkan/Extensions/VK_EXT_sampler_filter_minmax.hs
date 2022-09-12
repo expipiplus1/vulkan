@@ -32,7 +32,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_sampler_filter_minmax] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_EXT_sampler_filter_minmax extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_sampler_filter_minmax] @jeffbolznv%0A*Here describe the issue or question you have about the VK_EXT_sampler_filter_minmax extension* >
 --
 -- == Other Extension Metadata
 --

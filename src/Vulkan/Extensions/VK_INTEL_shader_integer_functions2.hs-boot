@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Ian Romanick
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_INTEL_shader_integer_functions2] @ianromanick%0A<<Here describe the issue or question you have about the VK_INTEL_shader_integer_functions2 extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_INTEL_shader_integer_functions2] @ianromanick%0A*Here describe the issue or question you have about the VK_INTEL_shader_integer_functions2 extension* >
 --
 -- == Other Extension Metadata
 --

@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_ray_tracing_maintenance1] @dgkoch%0A<<Here describe the issue or question you have about the VK_KHR_ray_tracing_maintenance1 extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_ray_tracing_maintenance1] @dgkoch%0A*Here describe the issue or question you have about the VK_KHR_ray_tracing_maintenance1 extension* >
 --
 -- == Other Extension Metadata
 --
@@ -621,6 +621,10 @@ foreign import ccall
 --     a result of this command, then the sampler /must/ not have been
 --     created with
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
+--
+-- -   #VUID-vkCmdTraceRaysIndirect2KHR-None-07288# Any shader invocation
+--     executed by this command /must/
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-termination terminate>
 --
 -- -   #VUID-vkCmdTraceRaysIndirect2KHR-None-03429# Any shader group handle
 --     referenced by this call /must/ have been queried from the currently

@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_ycbcr_image_arrays] @pdaniell-nv%0A<<Here describe the issue or question you have about the VK_EXT_ycbcr_image_arrays extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_ycbcr_image_arrays] @pdaniell-nv%0A*Here describe the issue or question you have about the VK_EXT_ycbcr_image_arrays extension* >
 --
 -- == Other Extension Metadata
 --

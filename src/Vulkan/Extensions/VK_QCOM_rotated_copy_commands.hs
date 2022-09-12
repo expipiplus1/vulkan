@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Leger
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QCOM_rotated_copy_commands] @jackohound%0A<<Here describe the issue or question you have about the VK_QCOM_rotated_copy_commands extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QCOM_rotated_copy_commands] @jackohound%0A*Here describe the issue or question you have about the VK_QCOM_rotated_copy_commands extension* >
 --
 -- == Other Extension Metadata
 --

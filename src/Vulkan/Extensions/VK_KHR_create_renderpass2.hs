@@ -35,7 +35,7 @@
 -- [__Contact__]
 --
 --     -   Tobias Hector
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_create_renderpass2] @tobias%0A<<Here describe the issue or question you have about the VK_KHR_create_renderpass2 extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_create_renderpass2] @tobias%0A*Here describe the issue or question you have about the VK_KHR_create_renderpass2 extension* >
 --
 -- == Other Extension Metadata
 --

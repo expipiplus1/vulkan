@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Kedarnath Thangudu
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_coverage_reduction_mode] @kthangudu%0A<<Here describe the issue or question you have about the VK_NV_coverage_reduction_mode extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_coverage_reduction_mode] @kthangudu%0A*Here describe the issue or question you have about the VK_NV_coverage_reduction_mode extension* >
 --
 -- == Other Extension Metadata
 --

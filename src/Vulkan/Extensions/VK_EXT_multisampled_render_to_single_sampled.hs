@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Shahbaz Youssefi
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_multisampled_render_to_single_sampled] @syoussefi%0A<<Here describe the issue or question you have about the VK_EXT_multisampled_render_to_single_sampled extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_multisampled_render_to_single_sampled] @syoussefi%0A*Here describe the issue or question you have about the VK_EXT_multisampled_render_to_single_sampled extension* >
 --
 -- [__Extension Proposal__]
 --     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_multisampled_render_to_single_sampled.adoc VK_EXT_multisampled_render_to_single_sampled>

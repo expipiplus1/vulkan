@@ -36,7 +36,7 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_ANDROID_external_memory_android_hardware_buffer] @critsec%0A<<Here describe the issue or question you have about the VK_ANDROID_external_memory_android_hardware_buffer extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_ANDROID_external_memory_android_hardware_buffer] @critsec%0A*Here describe the issue or question you have about the VK_ANDROID_external_memory_android_hardware_buffer extension* >
 --
 -- == Other Extension Metadata
 --

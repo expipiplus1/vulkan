@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Bill Licea-Kane
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QCOM_render_pass_shader_resolve] @wwlk%0A<<Here describe the issue or question you have about the VK_QCOM_render_pass_shader_resolve extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QCOM_render_pass_shader_resolve] @wwlk%0A*Here describe the issue or question you have about the VK_QCOM_render_pass_shader_resolve extension* >
 --
 -- == Other Extension Metadata
 --

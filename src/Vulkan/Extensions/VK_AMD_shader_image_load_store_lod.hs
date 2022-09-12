@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Dominik Witczak
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_shader_image_load_store_lod] @dominikwitczakamd%0A<<Here describe the issue or question you have about the VK_AMD_shader_image_load_store_lod extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_shader_image_load_store_lod] @dominikwitczakamd%0A*Here describe the issue or question you have about the VK_AMD_shader_image_load_store_lod extension* >
 --
 -- == Other Extension Metadata
 --

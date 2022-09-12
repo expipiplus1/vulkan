@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Martin Dinkov
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_memory_overallocation_behavior] @mdinkov%0A<<Here describe the issue or question you have about the VK_AMD_memory_overallocation_behavior extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_memory_overallocation_behavior] @mdinkov%0A*Here describe the issue or question you have about the VK_AMD_memory_overallocation_behavior extension* >
 --
 -- == Other Extension Metadata
 --

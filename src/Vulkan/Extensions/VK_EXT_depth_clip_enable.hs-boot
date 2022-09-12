@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_depth_clip_enable] @pdaniell-nv%0A<<Here describe the issue or question you have about the VK_EXT_depth_clip_enable extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_depth_clip_enable] @pdaniell-nv%0A*Here describe the issue or question you have about the VK_EXT_depth_clip_enable extension* >
 --
 -- == Other Extension Metadata
 --

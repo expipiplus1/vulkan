@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Alan Baker
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shader_subgroup_uniform_control_flow] @alan-baker%0A<<Here describe the issue or question you have about the VK_KHR_shader_subgroup_uniform_control_flow extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shader_subgroup_uniform_control_flow] @alan-baker%0A*Here describe the issue or question you have about the VK_KHR_shader_subgroup_uniform_control_flow extension* >
 --
 -- == Other Extension Metadata
 --

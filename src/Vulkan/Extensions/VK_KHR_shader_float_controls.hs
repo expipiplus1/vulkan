@@ -32,7 +32,7 @@
 -- [__Contact__]
 --
 --     -   Alexander Galazin
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shader_float_controls] @alegal-arm%0A<<Here describe the issue or question you have about the VK_KHR_shader_float_controls extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shader_float_controls] @alegal-arm%0A*Here describe the issue or question you have about the VK_KHR_shader_float_controls extension* >
 --
 -- == Other Extension Metadata
 --

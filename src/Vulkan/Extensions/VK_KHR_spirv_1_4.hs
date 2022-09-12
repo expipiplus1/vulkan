@@ -32,7 +32,7 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_spirv_1_4] @critsec%0A<<Here describe the issue or question you have about the VK_KHR_spirv_1_4 extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_spirv_1_4] @critsec%0A*Here describe the issue or question you have about the VK_KHR_spirv_1_4 extension* >
 --
 -- == Other Extension Metadata
 --

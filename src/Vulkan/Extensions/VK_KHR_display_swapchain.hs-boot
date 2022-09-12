@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_display_swapchain] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_display_swapchain extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_display_swapchain] @cubanismo%0A*Here describe the issue or question you have about the VK_KHR_display_swapchain extension* >
 --
 -- == Other Extension Metadata
 --

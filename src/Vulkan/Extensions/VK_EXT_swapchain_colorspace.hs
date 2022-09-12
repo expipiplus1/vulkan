@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   Courtney Goeltzenleuchter
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_swapchain_colorspace] @courtney-g%0A<<Here describe the issue or question you have about the VK_EXT_swapchain_colorspace extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_swapchain_colorspace] @courtney-g%0A*Here describe the issue or question you have about the VK_EXT_swapchain_colorspace extension* >
 --
 -- == Other Extension Metadata
 --

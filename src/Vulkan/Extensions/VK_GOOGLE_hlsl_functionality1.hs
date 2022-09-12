@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Hai Nguyen
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_GOOGLE_hlsl_functionality1] @chaoticbob%0A<<Here describe the issue or question you have about the VK_GOOGLE_hlsl_functionality1 extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_GOOGLE_hlsl_functionality1] @chaoticbob%0A*Here describe the issue or question you have about the VK_GOOGLE_hlsl_functionality1 extension* >
 --
 -- == Other Extension Metadata
 --

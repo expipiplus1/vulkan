@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Rex Xu
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_texture_gather_bias_lod] @amdrexu%0A<<Here describe the issue or question you have about the VK_AMD_texture_gather_bias_lod extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_texture_gather_bias_lod] @amdrexu%0A*Here describe the issue or question you have about the VK_AMD_texture_gather_bias_lod extension* >
 --
 -- == Other Extension Metadata
 --

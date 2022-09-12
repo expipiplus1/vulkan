@@ -76,6 +76,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_image_view_min_lod
                           , module Vulkan.Extensions.VK_EXT_index_type_uint8
                           , module Vulkan.Extensions.VK_EXT_inline_uniform_block
+                          , module Vulkan.Extensions.VK_EXT_legacy_dithering
                           , module Vulkan.Extensions.VK_EXT_line_rasterization
                           , module Vulkan.Extensions.VK_EXT_load_store_op_none
                           , module Vulkan.Extensions.VK_EXT_memory_budget
@@ -368,6 +369,7 @@ import Vulkan.Extensions.VK_EXT_image_robustness
 import Vulkan.Extensions.VK_EXT_image_view_min_lod
 import Vulkan.Extensions.VK_EXT_index_type_uint8
 import Vulkan.Extensions.VK_EXT_inline_uniform_block
+import Vulkan.Extensions.VK_EXT_legacy_dithering
 import Vulkan.Extensions.VK_EXT_line_rasterization
 import Vulkan.Extensions.VK_EXT_load_store_op_none
 import Vulkan.Extensions.VK_EXT_memory_budget

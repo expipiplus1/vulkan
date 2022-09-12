@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Leger
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QCOM_tile_properties] @jackohound%0A<<Here describe the issue or question you have about the VK_QCOM_tile_properties extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_QCOM_tile_properties] @jackohound%0A*Here describe the issue or question you have about the VK_QCOM_tile_properties extension* >
 --
 -- [__Extension Proposal__]
 --     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_QCOM_tile_properties.adoc VK_QCOM_tile_properties>

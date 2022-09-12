@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Jan-Harald Fredriksen
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_astc_decode_mode] @janharaldfredriksen-arm%0A<<Here describe the issue or question you have about the VK_EXT_astc_decode_mode extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_astc_decode_mode] @janharaldfredriksen-arm%0A*Here describe the issue or question you have about the VK_EXT_astc_decode_mode extension* >
 --
 -- == Other Extension Metadata
 --

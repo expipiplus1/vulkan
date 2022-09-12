@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Joshua Ashton
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_image_view_min_lod] @Joshua-Ashton%0A<<Here describe the issue or question you have about the VK_EXT_image_view_min_lod extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_image_view_min_lod] @Joshua-Ashton%0A*Here describe the issue or question you have about the VK_EXT_image_view_min_lod extension* >
 --
 -- == Other Extension Metadata
 --
@@ -54,7 +54,8 @@
 -- == Description
 --
 -- This extension allows applications to clamp the minimum LOD value during
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-image-level-selection Image Level(s) Selection>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-image-level-selection Image Level(s) Selection>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-gather Texel Gathering>
 -- and
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-integer-coordinate-operations Integer Texel Coordinate Operations>
 -- with a given 'Vulkan.Core10.Handles.ImageView' by

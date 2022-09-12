@@ -26,10 +26,10 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_display] @cubanismo%0A<<Here describe the issue or question you have about the VK_KHR_display extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_display] @cubanismo%0A*Here describe the issue or question you have about the VK_KHR_display extension* >
 --
 --     -   Norbert Nopper
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_display] @FslNopper%0A<<Here describe the issue or question you have about the VK_KHR_display extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_display] @FslNopper%0A*Here describe the issue or question you have about the VK_KHR_display extension* >
 --
 -- == Other Extension Metadata
 --

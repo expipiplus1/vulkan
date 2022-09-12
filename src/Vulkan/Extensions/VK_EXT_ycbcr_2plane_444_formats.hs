@@ -32,7 +32,7 @@
 -- [__Contact__]
 --
 --     -   Tony Zlatinski
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_ycbcr_2plane_444_formats] @tzlatinski%0A<<Here describe the issue or question you have about the VK_EXT_ycbcr_2plane_444_formats extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_ycbcr_2plane_444_formats] @tzlatinski%0A*Here describe the issue or question you have about the VK_EXT_ycbcr_2plane_444_formats extension* >
 --
 -- == Other Extension Metadata
 --

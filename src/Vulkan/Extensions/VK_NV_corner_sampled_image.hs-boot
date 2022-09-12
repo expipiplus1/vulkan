@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_corner_sampled_image] @dgkoch%0A<<Here describe the issue or question you have about the VK_NV_corner_sampled_image extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_corner_sampled_image] @dgkoch%0A*Here describe the issue or question you have about the VK_NV_corner_sampled_image extension* >
 --
 -- == Other Extension Metadata
 --

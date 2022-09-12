@@ -1473,8 +1473,8 @@ instance Zero CopyBufferInfo2 where
 --     @dstImage@ is not a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     the 'Vulkan.Core10.Enums.Format.Format' of each of @srcImage@ and
---     @dstImage@ /must/ be compatible, as defined
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies-images-format-compatibility above>
+--     @dstImage@ /must/ be
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-size-compatibility size-compatible>
 --
 -- -   #VUID-VkCopyImageInfo2-None-01549# In a copy to or from a plane of a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image>,
@@ -1674,59 +1674,77 @@ instance Zero CopyBufferInfo2 where
 --     /must/ both be greater than or equal to @0@ and less than or equal
 --     to the depth of the specified @dstSubresource@ of @dstImage@
 --
--- -   #VUID-VkCopyImageInfo2-srcImage-01727# If @srcImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     then for each element of @pRegions@, all members of @srcOffset@
---     /must/ be a multiple of the corresponding dimensions of the
---     compressed texel block
+-- -   #VUID-VkCopyImageInfo2-pRegions-07278# For each element of
+--     @pRegions@, @srcOffset.x@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-VkCopyImageInfo2-srcImage-01728# If @srcImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     then for each element of @pRegions@, @extent.width@ /must/ be a
---     multiple of the compressed texel block width or (@extent.width@ +
---     @srcOffset.x@) /must/ equal the width of the specified
---     @srcSubresource@ of @srcImage@
+-- -   #VUID-VkCopyImageInfo2-pRegions-07279# For each element of
+--     @pRegions@, @srcOffset.y@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-VkCopyImageInfo2-srcImage-01729# If @srcImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     then for each element of @pRegions@, @extent.height@ /must/ be a
---     multiple of the compressed texel block height or (@extent.height@ +
---     @srcOffset.y@) /must/ equal the height of the specified
---     @srcSubresource@ of @srcImage@
+-- -   #VUID-VkCopyImageInfo2-pRegions-07280# For each element of
+--     @pRegions@, @srcOffset.z@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-VkCopyImageInfo2-srcImage-01730# If @srcImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     then for each element of @pRegions@, @extent.depth@ /must/ be a
---     multiple of the compressed texel block depth or (@extent.depth@ +
---     @srcOffset.z@) /must/ equal the depth of the specified
---     @srcSubresource@ of @srcImage@
+-- -   #VUID-VkCopyImageInfo2-pRegions-07281# For each element of
+--     @pRegions@, @dstOffset.x@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-VkCopyImageInfo2-dstImage-01731# If @dstImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     then for each element of @pRegions@, all members of @dstOffset@
---     /must/ be a multiple of the corresponding dimensions of the
---     compressed texel block
+-- -   #VUID-VkCopyImageInfo2-pRegions-07282# For each element of
+--     @pRegions@, @dstOffset.y@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-VkCopyImageInfo2-dstImage-01732# If @dstImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     then for each element of @pRegions@, @extent.width@ /must/ be a
---     multiple of the compressed texel block width or (@extent.width@ +
---     @dstOffset.x@) /must/ equal the width of the specified
---     @dstSubresource@ of @dstImage@
+-- -   #VUID-VkCopyImageInfo2-pRegions-07283# For each element of
+--     @pRegions@, @dstOffset.z@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-VkCopyImageInfo2-dstImage-01733# If @dstImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     then for each element of @pRegions@, @extent.height@ /must/ be a
---     multiple of the compressed texel block height or (@extent.height@ +
---     @dstOffset.y@) /must/ equal the height of the specified
---     @dstSubresource@ of @dstImage@
+-- -   #VUID-VkCopyImageInfo2-srcImage-01728# For each element of
+--     @pRegions@, if the sum of @srcOffset.x@ and @extent.width@ does not
+--     equal the width of the the subresource specified by
+--     @srcSubresource@, @extent.width@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-VkCopyImageInfo2-dstImage-01734# If @dstImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     then for each element of @pRegions@, @extent.depth@ /must/ be a
---     multiple of the compressed texel block depth or (@extent.depth@ +
---     @dstOffset.z@) /must/ equal the depth of the specified
---     @dstSubresource@ of @dstImage@
+-- -   #VUID-VkCopyImageInfo2-srcImage-01729# For each element of
+--     @pRegions@, if the sum of @srcOffset.y@ and @extent.height@ does not
+--     equal the height of the the subresource specified by
+--     @srcSubresource@, @extent.height@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
+--
+-- -   #VUID-VkCopyImageInfo2-srcImage-01730# For each element of
+--     @pRegions@, if the sum of @srcOffset.z@ and @extent.depth@ does not
+--     equal the depth of the the subresource specified by
+--     @srcSubresource@, @extent.depth@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
+--
+-- -   #VUID-VkCopyImageInfo2-dstImage-01732# For each element of
+--     @pRegions@, if the sum of @dstOffset.x@ and @extent.width@ does not
+--     equal the width of the the subresource specified by
+--     @dstSubresource@, @extent.width@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
+--
+-- -   #VUID-VkCopyImageInfo2-dstImage-01733# For each element of
+--     @pRegions@, if the sum of @dstOffset.y@ and @extent.height@ does not
+--     equal the height of the the subresource specified by
+--     @dstSubresource@, @extent.height@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
+--
+-- -   #VUID-VkCopyImageInfo2-dstImage-01734# For each element of
+--     @pRegions@, if the sum of @dstOffset.z@ and @extent.depth@ does not
+--     equal the depth of the the subresource specified by
+--     @dstSubresource@, @extent.depth@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
 -- -   #VUID-VkCopyImageInfo2-aspect-06662# If the @aspect@ member of any
 --     element of @pRegions@ includes any flag other than
@@ -2238,8 +2256,8 @@ instance Zero BlitImageInfo2 where
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-04555# If any element of
 --     @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, then @dstImage@ /must/ not be a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#blocked-image blocked image>
+--     in its @pNext@ chain, then @dstImage@ /must/ have a 1x1x1
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility-classes texel block extent>
 --
 -- -   #VUID-VkCopyBufferToImageInfo2KHR-pRegions-06203# If any element of
 --     @pRegions@ contains
@@ -2378,50 +2396,57 @@ instance Zero BlitImageInfo2 where
 --     of @pRegions@, @imageOffset.z@ /must/ be @0@ and @imageExtent.depth@
 --     /must/ be @1@
 --
--- -   #VUID-VkCopyBufferToImageInfo2-bufferRowLength-00203# If @dstImage@
---     is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @bufferRowLength@ /must/ be a
---     multiple of the compressed texel block width
+-- -   #VUID-VkCopyBufferToImageInfo2-bufferRowLength-00203# For each
+--     element of @pRegions@, @bufferRowLength@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-VkCopyBufferToImageInfo2-bufferImageHeight-00204# If
---     @dstImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @bufferImageHeight@ /must/ be a
---     multiple of the compressed texel block height
+-- -   #VUID-VkCopyBufferToImageInfo2-bufferImageHeight-00204# For each
+--     element of @pRegions@, @bufferImageHeight@ /must/ be a multiple of
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-VkCopyBufferToImageInfo2-imageOffset-00205# If @dstImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, all members of @imageOffset@ /must/
---     be a multiple of the corresponding dimensions of the compressed
---     texel block
+-- -   #VUID-VkCopyBufferToImageInfo2-pRegions-07273# For each element of
+--     @pRegions@, @bufferOffset@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block size>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-VkCopyBufferToImageInfo2-bufferOffset-00206# If @dstImage@ is
---     a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @bufferOffset@ /must/ be a multiple
---     of the compressed texel block size in bytes
+-- -   #VUID-VkCopyBufferToImageInfo2-pRegions-07274# For each element of
+--     @pRegions@, @imageOffset.x@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-VkCopyBufferToImageInfo2-imageExtent-00207# If @dstImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @imageExtent.width@ /must/ be a
---     multiple of the compressed texel block width or (@imageExtent.width@
---     + @imageOffset.x@) /must/ equal the width of the specified
---     @imageSubresource@ of @dstImage@
+-- -   #VUID-VkCopyBufferToImageInfo2-pRegions-07275# For each element of
+--     @pRegions@, @imageOffset.y@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-VkCopyBufferToImageInfo2-imageExtent-00208# If @dstImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @imageExtent.height@ /must/ be a
---     multiple of the compressed texel block height or
---     (@imageExtent.height@ + @imageOffset.y@) /must/ equal the height of
---     the specified @imageSubresource@ of @dstImage@
+-- -   #VUID-VkCopyBufferToImageInfo2-pRegions-07276# For each element of
+--     @pRegions@, @imageOffset.z@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-VkCopyBufferToImageInfo2-imageExtent-00209# If @dstImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @imageExtent.depth@ /must/ be a
---     multiple of the compressed texel block depth or (@imageExtent.depth@
---     + @imageOffset.z@) /must/ equal the depth of the specified
---     @imageSubresource@ of @dstImage@
+-- -   #VUID-VkCopyBufferToImageInfo2-imageExtent-00207# For each element
+--     of @pRegions@, if the sum of @imageOffset.x@ and @extent.width@ does
+--     not equal the width of the the subresource specified by
+--     @srcSubresource@, @extent.width@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
+--
+-- -   #VUID-VkCopyBufferToImageInfo2-imageExtent-00208# For each element
+--     of @pRegions@, if the sum of @imageOffset.y@ and @extent.height@
+--     does not equal the height of the the subresource specified by
+--     @srcSubresource@, @extent.height@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
+--
+-- -   #VUID-VkCopyBufferToImageInfo2-imageExtent-00209# For each element
+--     of @pRegions@, if the sum of @imageOffset.z@ and @extent.depth@ does
+--     not equal the depth of the the subresource specified by
+--     @srcSubresource@, @extent.depth@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-aspectMask-00211# For each element of
 --     @pRegions@, @imageSubresource.aspectMask@ /must/ specify aspects
@@ -2444,17 +2469,11 @@ instance Zero BlitImageInfo2 where
 --     element of @pRegions@, @imageSubresource.baseArrayLayer@ /must/ be
 --     @0@ and @imageSubresource.layerCount@ /must/ be @1@
 --
--- -   #VUID-VkCopyBufferToImageInfo2-pRegions-04725# If @dstImage@ is not
---     a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @bufferRowLength@ multiplied by the
---     texel block size of @dstImage@ /must/ be less than or equal to 231-1
---
--- -   #VUID-VkCopyBufferToImageInfo2-pRegions-04726# If @dstImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @bufferRowLength@ divided by the
---     compressed texel block width and then multiplied by the texel block
---     size of @dstImage@ /must/ be less than or equal to 231-1
+-- -   #VUID-VkCopyBufferToImageInfo2-pRegions-07277# For each element of
+--     @pRegions@, @bufferRowLength@ divided by the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     and then multiplied by the texel block size of @dstImage@ /must/ be
+--     less than or equal to 231-1
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-commandBuffer-04052# If the queue
 --     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
@@ -2587,8 +2606,8 @@ instance Zero CopyBufferToImageInfo2 where
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-pRegions-04558# If any element of
 --     @pRegions@ contains
 --     'Vulkan.Extensions.VK_QCOM_rotated_copy_commands.CopyCommandTransformInfoQCOM'
---     in its @pNext@ chain, then @srcImage@ /must/ not be a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#blocked-image blocked image>
+--     in its @pNext@ chain, then @srcImage@ /must/ have a 1x1x1
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility-classes texel block extent>
 --
 -- -   #VUID-VkCopyImageToBufferInfo2KHR-pRegions-06205# If any element of
 --     @pRegions@ contains
@@ -2718,50 +2737,57 @@ instance Zero CopyBufferToImageInfo2 where
 --     of @pRegions@, @imageOffset.z@ /must/ be @0@ and @imageExtent.depth@
 --     /must/ be @1@
 --
--- -   #VUID-VkCopyImageToBufferInfo2-bufferRowLength-00203# If @srcImage@
---     is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @bufferRowLength@ /must/ be a
---     multiple of the compressed texel block width
+-- -   #VUID-VkCopyImageToBufferInfo2-bufferRowLength-00203# For each
+--     element of @pRegions@, @bufferRowLength@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-VkCopyImageToBufferInfo2-bufferImageHeight-00204# If
---     @srcImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @bufferImageHeight@ /must/ be a
---     multiple of the compressed texel block height
+-- -   #VUID-VkCopyImageToBufferInfo2-bufferImageHeight-00204# For each
+--     element of @pRegions@, @bufferImageHeight@ /must/ be a multiple of
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-VkCopyImageToBufferInfo2-imageOffset-00205# If @srcImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, all members of @imageOffset@ /must/
---     be a multiple of the corresponding dimensions of the compressed
---     texel block
+-- -   #VUID-VkCopyImageToBufferInfo2-pRegions-07273# For each element of
+--     @pRegions@, @bufferOffset@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block size>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-VkCopyImageToBufferInfo2-bufferOffset-00206# If @srcImage@ is
---     a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @bufferOffset@ /must/ be a multiple
---     of the compressed texel block size in bytes
+-- -   #VUID-VkCopyImageToBufferInfo2-pRegions-07274# For each element of
+--     @pRegions@, @imageOffset.x@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-VkCopyImageToBufferInfo2-imageExtent-00207# If @srcImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @imageExtent.width@ /must/ be a
---     multiple of the compressed texel block width or (@imageExtent.width@
---     + @imageOffset.x@) /must/ equal the width of the specified
---     @imageSubresource@ of @srcImage@
+-- -   #VUID-VkCopyImageToBufferInfo2-pRegions-07275# For each element of
+--     @pRegions@, @imageOffset.y@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-VkCopyImageToBufferInfo2-imageExtent-00208# If @srcImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @imageExtent.height@ /must/ be a
---     multiple of the compressed texel block height or
---     (@imageExtent.height@ + @imageOffset.y@) /must/ equal the height of
---     the specified @imageSubresource@ of @srcImage@
+-- -   #VUID-VkCopyImageToBufferInfo2-pRegions-07276# For each element of
+--     @pRegions@, @imageOffset.z@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-VkCopyImageToBufferInfo2-imageExtent-00209# If @srcImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @imageExtent.depth@ /must/ be a
---     multiple of the compressed texel block depth or (@imageExtent.depth@
---     + @imageOffset.z@) /must/ equal the depth of the specified
---     @imageSubresource@ of @srcImage@
+-- -   #VUID-VkCopyImageToBufferInfo2-imageExtent-00207# For each element
+--     of @pRegions@, if the sum of @imageOffset.x@ and @extent.width@ does
+--     not equal the width of the the subresource specified by
+--     @srcSubresource@, @extent.width@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
+--
+-- -   #VUID-VkCopyImageToBufferInfo2-imageExtent-00208# For each element
+--     of @pRegions@, if the sum of @imageOffset.y@ and @extent.height@
+--     does not equal the height of the the subresource specified by
+--     @srcSubresource@, @extent.height@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
+--
+-- -   #VUID-VkCopyImageToBufferInfo2-imageExtent-00209# For each element
+--     of @pRegions@, if the sum of @imageOffset.z@ and @extent.depth@ does
+--     not equal the depth of the the subresource specified by
+--     @srcSubresource@, @extent.depth@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-aspectMask-00211# For each element of
 --     @pRegions@, @imageSubresource.aspectMask@ /must/ specify aspects
@@ -2784,17 +2810,11 @@ instance Zero CopyBufferToImageInfo2 where
 --     element of @pRegions@, @imageSubresource.baseArrayLayer@ /must/ be
 --     @0@ and @imageSubresource.layerCount@ /must/ be @1@
 --
--- -   #VUID-VkCopyImageToBufferInfo2-pRegions-04725# If @srcImage@ is not
---     a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @bufferRowLength@ multiplied by the
---     texel block size of @srcImage@ /must/ be less than or equal to 231-1
---
--- -   #VUID-VkCopyImageToBufferInfo2-pRegions-04726# If @srcImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @bufferRowLength@ divided by the
---     compressed texel block width and then multiplied by the texel block
---     size of @srcImage@ /must/ be less than or equal to 231-1
+-- -   #VUID-VkCopyImageToBufferInfo2-pRegions-07277# For each element of
+--     @pRegions@, @bufferRowLength@ divided by the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     and then multiplied by the texel block size of @srcImage@ /must/ be
+--     less than or equal to 231-1
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-commandBuffer-04052# If the queue
 --     family used to create the 'Vulkan.Core10.Handles.CommandPool' which

@@ -35,7 +35,7 @@
 -- [__Contact__]
 --
 --     -   Jesse Hall
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_variable_pointers] @critsec%0A<<Here describe the issue or question you have about the VK_KHR_variable_pointers extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_variable_pointers] @critsec%0A*Here describe the issue or question you have about the VK_KHR_variable_pointers extension* >
 --
 -- == Other Extension Metadata
 --

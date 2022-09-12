@@ -26,7 +26,7 @@
 -- [__Contact__]
 --
 --     -   James Jones
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_display_surface_counter] @cubanismo%0A<<Here describe the issue or question you have about the VK_EXT_display_surface_counter extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_display_surface_counter] @cubanismo%0A*Here describe the issue or question you have about the VK_EXT_display_surface_counter extension* >
 --
 -- == Other Extension Metadata
 --

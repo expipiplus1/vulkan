@@ -35,7 +35,7 @@
 -- [__Contact__]
 --
 --     -   Alexander Galazin
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_8bit_storage] @alegal-arm%0A<<Here describe the issue or question you have about the VK_KHR_8bit_storage extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_8bit_storage] @alegal-arm%0A*Here describe the issue or question you have about the VK_KHR_8bit_storage extension* >
 --
 -- == Other Extension Metadata
 --

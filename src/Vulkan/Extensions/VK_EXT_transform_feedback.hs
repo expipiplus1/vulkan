@@ -35,7 +35,7 @@
 -- [__Contact__]
 --
 --     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_transform_feedback] @pdaniell-nv%0A<<Here describe the issue or question you have about the VK_EXT_transform_feedback extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_transform_feedback] @pdaniell-nv%0A*Here describe the issue or question you have about the VK_EXT_transform_feedback extension* >
 --
 -- == Other Extension Metadata
 --
@@ -999,6 +999,15 @@ foreign import ccall
 --     used to create @queryPool@ /must/ not be
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_MESH_PRIMITIVES_GENERATED_EXT'
 --
+-- -   #VUID-vkCmdBeginQueryIndexedEXT-queryPool-07289# If @queryPool@ was
+--     created with a @queryType@ of
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
+--     then the
+--     'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR'::@queueFamilyIndex@
+--     @queryPool@ was created with /must/ equal the queue family index of
+--     the 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+--     allocated from
+--
 -- -   #VUID-vkCmdBeginQueryIndexedEXT-queryPool-03223# If @queryPool@ was
 --     created with a @queryType@ of
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
@@ -1671,6 +1680,10 @@ foreign import ccall
 --     created with
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
 --
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-None-07288# Any shader
+--     invocation executed by this command /must/
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-termination terminate>
+--
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-renderPass-02684# The current
 --     render pass /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
@@ -1908,10 +1921,12 @@ foreign import ccall
 --     @pAttachments@ member of @pColorBlendState@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
--- -   #VUID-vkCmdDrawIndirectByteCountEXT-rasterizationSamples-04740# If
---     rasterization is not disabled in the bound graphics pipeline, and
---     neither the @VK_AMD_mixed_attachment_samples@ nor the
---     @VK_NV_framebuffer_mixed_samples@ extensions are enabled, then
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-multisampledRenderToSingleSampled-07284#
+--     If rasterization is not disabled in the bound graphics pipeline, and
+--     none of the @VK_AMD_mixed_attachment_samples@ extension, the
+--     @VK_NV_framebuffer_mixed_samples@ extension, or the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature are enabled, then
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     /must/ be the same as the current subpass color and\/or
 --     depth\/stencil attachments
@@ -2121,12 +2136,15 @@ foreign import ccall
 --     to the sample count used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --
--- -   #VUID-vkCmdDrawIndirectByteCountEXT-colorAttachmentCount-06188# If
---     the currently bound pipeline was created without a
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-multisampledRenderToSingleSampled-07285#
+--     If the currently bound pipeline was created without a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
---     structure, and the current render pass instance was begun with
+--     structure, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is not enabled, and the current render pass instance was
+--     begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     with a
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
@@ -2138,14 +2156,16 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     used to create the currently bound graphics pipeline
 --
--- -   #VUID-vkCmdDrawIndirectByteCountEXT-pDepthAttachment-06189# If the
---     current render pass instance was begun with
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-multisampledRenderToSingleSampled-07286#
+--     If the current render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound pipeline was created without a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
---     structure, and
+--     structure, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is not enabled, and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
@@ -2153,14 +2173,16 @@ foreign import ccall
 --     to the sample count used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --
--- -   #VUID-vkCmdDrawIndirectByteCountEXT-pStencilAttachment-06190# If the
---     current render pass instance was begun with
+-- -   #VUID-vkCmdDrawIndirectByteCountEXT-multisampledRenderToSingleSampled-07287#
+--     If the current render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound pipeline was created without a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
---     structure, and
+--     structure, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is not enabled, and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@

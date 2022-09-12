@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_shader_sm_builtins] @dgkoch%0A<<Here describe the issue or question you have about the VK_NV_shader_sm_builtins extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_shader_sm_builtins] @dgkoch%0A*Here describe the issue or question you have about the VK_NV_shader_sm_builtins extension* >
 --
 -- == Other Extension Metadata
 --

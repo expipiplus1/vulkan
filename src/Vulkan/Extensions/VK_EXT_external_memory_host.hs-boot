@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_external_memory_host] @drakos-amd%0A<<Here describe the issue or question you have about the VK_EXT_external_memory_host extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_external_memory_host] @drakos-amd%0A*Here describe the issue or question you have about the VK_EXT_external_memory_host extension* >
 --
 -- == Other Extension Metadata
 --

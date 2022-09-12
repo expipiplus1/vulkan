@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_sample_locations] @drakos-amd%0A<<Here describe the issue or question you have about the VK_EXT_sample_locations extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_sample_locations] @drakos-amd%0A*Here describe the issue or question you have about the VK_EXT_sample_locations extension* >
 --
 -- == Other Extension Metadata
 --

@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Jan-Harald Fredriksen
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_image_compression_control_swapchain] @janharaldfredriksen-arm%0A<<Here describe the issue or question you have about the VK_EXT_image_compression_control_swapchain extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_image_compression_control_swapchain] @janharaldfredriksen-arm%0A*Here describe the issue or question you have about the VK_EXT_image_compression_control_swapchain extension* >
 --
 -- == Other Extension Metadata
 --
