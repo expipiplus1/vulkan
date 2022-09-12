@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+
+## [3.21.1] - 2022-09-12
 - Bump API version to v1.3.227
 
 ## [3.21] - 2022-09-05
