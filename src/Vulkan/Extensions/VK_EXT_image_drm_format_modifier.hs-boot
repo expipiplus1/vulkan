@@ -36,7 +36,7 @@
 -- [__Contact__]
 --
 --     -   Chad Versace
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_image_drm_format_modifier] @chadversary%0A<<Here describe the issue or question you have about the VK_EXT_image_drm_format_modifier extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_image_drm_format_modifier] @chadversary%0A*Here describe the issue or question you have about the VK_EXT_image_drm_format_modifier extension* >
 --
 -- == Other Extension Metadata
 --

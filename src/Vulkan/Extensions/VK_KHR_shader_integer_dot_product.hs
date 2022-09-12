@@ -32,7 +32,7 @@
 -- [__Contact__]
 --
 --     -   Kevin Petit
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shader_integer_dot_product] @kevinpetit%0A<<Here describe the issue or question you have about the VK_KHR_shader_integer_dot_product extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_shader_integer_dot_product] @kevinpetit%0A*Here describe the issue or question you have about the VK_KHR_shader_integer_dot_product extension* >
 --
 -- [__Extension Proposal__]
 --     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_KHR_shader_integer_dot_product.adoc VK_KHR_shader_integer_dot_product>

@@ -7,6 +7,7 @@ module Vulkan.Core13.Enums.RenderingFlagBits  ( pattern RENDERING_CONTENTS_SECON
                                               , RenderingFlagBits( RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT
                                                                  , RENDERING_SUSPENDING_BIT
                                                                  , RENDERING_RESUMING_BIT
+                                                                 , RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT
                                                                  , ..
                                                                  )
                                               ) where
@@ -67,6 +68,10 @@ pattern RENDERING_SUSPENDING_BIT                         = RenderingFlagBits 0x0
 -- | 'RENDERING_RESUMING_BIT' specifies that the render pass instance is
 -- resuming an earlier suspended render pass instance.
 pattern RENDERING_RESUMING_BIT                           = RenderingFlagBits 0x00000004
+-- | 'RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT' specifies that
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-legacy-dithering Legacy Dithering>
+-- is enabled for the render pass instance.
+pattern RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT        = RenderingFlagBits 0x00000008
 
 conNameRenderingFlagBits :: String
 conNameRenderingFlagBits = "RenderingFlagBits"
@@ -79,6 +84,7 @@ showTableRenderingFlagBits =
   [ (RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT, "CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT")
   , (RENDERING_SUSPENDING_BIT                        , "SUSPENDING_BIT")
   , (RENDERING_RESUMING_BIT                          , "RESUMING_BIT")
+  , (RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT       , "ENABLE_LEGACY_DITHERING_BIT_EXT")
   ]
 
 instance Show RenderingFlagBits where

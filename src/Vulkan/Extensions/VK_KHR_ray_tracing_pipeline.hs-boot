@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_ray_tracing_pipeline] @dgkoch%0A<<Here describe the issue or question you have about the VK_KHR_ray_tracing_pipeline extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_ray_tracing_pipeline] @dgkoch%0A*Here describe the issue or question you have about the VK_KHR_ray_tracing_pipeline extension* >
 --
 -- == Other Extension Metadata
 --

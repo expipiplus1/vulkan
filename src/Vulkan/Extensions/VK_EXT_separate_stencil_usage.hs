@@ -29,7 +29,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_separate_stencil_usage] @drakos-amd%0A<<Here describe the issue or question you have about the VK_EXT_separate_stencil_usage extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_separate_stencil_usage] @drakos-amd%0A*Here describe the issue or question you have about the VK_EXT_separate_stencil_usage extension* >
 --
 -- == Other Extension Metadata
 --

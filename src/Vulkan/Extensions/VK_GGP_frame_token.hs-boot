@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Jean-Francois Roy
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_GGP_frame_token] @jfroy%0A<<Here describe the issue or question you have about the VK_GGP_frame_token extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_GGP_frame_token] @jfroy%0A*Here describe the issue or question you have about the VK_GGP_frame_token extension* >
 --
 -- == Other Extension Metadata
 --

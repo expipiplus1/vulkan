@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Pan Gao
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_HUAWEI_subpass_shading] @PanGao-h%0A<<Here describe the issue or question you have about the VK_HUAWEI_subpass_shading extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_HUAWEI_subpass_shading] @PanGao-h%0A*Here describe the issue or question you have about the VK_HUAWEI_subpass_shading extension* >
 --
 -- == Other Extension Metadata
 --

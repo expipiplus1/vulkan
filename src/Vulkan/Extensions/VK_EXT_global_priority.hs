@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Andres Rodriguez
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_global_priority] @lostgoat%0A<<Here describe the issue or question you have about the VK_EXT_global_priority extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_global_priority] @lostgoat%0A*Here describe the issue or question you have about the VK_EXT_global_priority extension* >
 --
 -- == Other Extension Metadata
 --

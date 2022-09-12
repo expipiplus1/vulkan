@@ -472,6 +472,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_inherited_viewport_scissor (Physic
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block (PhysicalDeviceInlineUniformBlockFeatures)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block (PhysicalDeviceInlineUniformBlockProperties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_invocation_mask (PhysicalDeviceInvocationMaskFeaturesHUAWEI)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_legacy_dithering (PhysicalDeviceLegacyDitheringFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core10.DeviceInitialization (PhysicalDeviceLimits)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_line_rasterization (PhysicalDeviceLineRasterizationFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_line_rasterization (PhysicalDeviceLineRasterizationPropertiesEXT)
@@ -1047,6 +1048,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceColorWriteEnableFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceSynchronization2Features = ()
   Extends DeviceCreateInfo PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT = ()
+  Extends DeviceCreateInfo PhysicalDeviceLegacyDitheringFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceInheritedViewportScissorFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT = ()
@@ -1260,6 +1262,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceColorWriteEnableFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceSynchronization2Features = ()
   Extends PhysicalDeviceFeatures2 PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceLegacyDitheringFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceInheritedViewportScissorFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT = ()
@@ -1866,6 +1869,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV -> go @QueueFamilyCheckpointProperties2NV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES -> go @PhysicalDeviceSynchronization2Features
   STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVES_GENERATED_QUERY_FEATURES_EXT -> go @PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_LEGACY_DITHERING_FEATURES_EXT -> go @PhysicalDeviceLegacyDitheringFeaturesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_FEATURES_EXT -> go @PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT
   STRUCTURE_TYPE_SUBPASS_RESOLVE_PERFORMANCE_QUERY_EXT -> go @SubpassResolvePerformanceQueryEXT
   STRUCTURE_TYPE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_INFO_EXT -> go @MultisampledRenderToSingleSampledInfoEXT
@@ -2302,6 +2306,7 @@ infix 6 ::&
 {-# complete (::&) :: QueueFamilyCheckpointProperties2NV #-}
 {-# complete (::&) :: PhysicalDeviceSynchronization2Features #-}
 {-# complete (::&) :: PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT #-}
+{-# complete (::&) :: PhysicalDeviceLegacyDitheringFeaturesEXT #-}
 {-# complete (::&) :: PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT #-}
 {-# complete (::&) :: SubpassResolvePerformanceQueryEXT #-}
 {-# complete (::&) :: MultisampledRenderToSingleSampledInfoEXT #-}

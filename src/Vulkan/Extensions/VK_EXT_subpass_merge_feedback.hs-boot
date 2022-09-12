@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Ting Wei
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_subpass_merge_feedback] @catweiting%0A<<Here describe the issue or question you have about the VK_EXT_subpass_merge_feedback extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_subpass_merge_feedback] @catweiting%0A*Here describe the issue or question you have about the VK_EXT_subpass_merge_feedback extension* >
 --
 -- [__Extension Proposal__]
 --     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_subpass_merge_feedback.adoc VK_EXT_subpass_merge_feedback>

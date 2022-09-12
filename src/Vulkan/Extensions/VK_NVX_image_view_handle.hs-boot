@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Eric Werness
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NVX_image_view_handle] @ewerness-nv%0A<<Here describe the issue or question you have about the VK_NVX_image_view_handle extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NVX_image_view_handle] @ewerness-nv%0A*Here describe the issue or question you have about the VK_NVX_image_view_handle extension* >
 --
 -- == Other Extension Metadata
 --

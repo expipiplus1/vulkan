@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Ian Elliott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_GOOGLE_display_timing] @ianelliottus%0A<<Here describe the issue or question you have about the VK_GOOGLE_display_timing extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_GOOGLE_display_timing] @ianelliottus%0A*Here describe the issue or question you have about the VK_GOOGLE_display_timing extension* >
 --
 -- == Other Extension Metadata
 --

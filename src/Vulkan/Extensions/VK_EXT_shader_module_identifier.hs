@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Hans-Kristian Arntzen
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_shader_module_identifier] @HansKristian-Work%0A<<Here describe the issue or question you have about the VK_EXT_shader_module_identifier extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_shader_module_identifier] @HansKristian-Work%0A*Here describe the issue or question you have about the VK_EXT_shader_module_identifier extension* >
 --
 -- [__Extension Proposal__]
 --     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_shader_module_identifier.adoc VK_EXT_shader_module_identifier>

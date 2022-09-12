@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Tobias Hector
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_device_coherent_memory] @tobski%0A<<Here describe the issue or question you have about the VK_AMD_device_coherent_memory extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_device_coherent_memory] @tobski%0A*Here describe the issue or question you have about the VK_AMD_device_coherent_memory extension* >
 --
 -- == Other Extension Metadata
 --

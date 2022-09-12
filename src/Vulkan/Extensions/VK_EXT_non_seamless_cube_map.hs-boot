@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Georg Lehmann
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_non_seamless_cube_map] @DadSchoorse%0A<<Here describe the issue or question you have about the VK_EXT_non_seamless_cube_map extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_non_seamless_cube_map] @DadSchoorse%0A*Here describe the issue or question you have about the VK_EXT_non_seamless_cube_map extension* >
 --
 -- [__Extension Proposal__]
 --     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_non_seamless_cube_map.adoc VK_EXT_non_seamless_cube_map>

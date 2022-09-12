@@ -265,25 +265,23 @@ instance Zero PhysicalDevicePipelineRobustnessFeaturesEXT where
 -- | VkPipelineRobustnessCreateInfoEXT - Structure controlling the robustness
 -- of a newly created pipeline shader stage
 --
--- = Members
+-- = Description
 --
 -- Resources bound as
 -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE' will
 -- have the robustness behavior that covers its active descriptor type.
 --
--- = Description
---
 -- The scope of the effect of 'PipelineRobustnessCreateInfoEXT' depends on
 -- which structure’s @pNext@ chain it is included in.
 --
 -- -   'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo',
---     'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo',
---     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR'
+--     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
+--     'Vulkan.Core10.Pipeline.ComputePipelineCreateInfo':
 --     The robustness behavior described by
 --     'PipelineRobustnessCreateInfoEXT' applies to all accesses through
 --     this pipeline
 --
--- -   'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo'
+-- -   'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo':
 --     The robustness behavior described by
 --     'PipelineRobustnessCreateInfoEXT' applies to all accesses emanating
 --     from the shader code of this shader stage
@@ -376,13 +374,35 @@ instance Zero PhysicalDevicePipelineRobustnessFeaturesEXT where
 -- 'PipelineRobustnessImageBehaviorEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineRobustnessCreateInfoEXT = PipelineRobustnessCreateInfoEXT
-  { -- No documentation found for Nested "VkPipelineRobustnessCreateInfoEXT" "storageBuffers"
+  { -- | @storageBuffers@ sets the behaviour of out of bounds accesses made to
+    -- resources bound as:
+    --
+    -- -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
+    --
+    -- -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+    --
+    -- -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
     storageBuffers :: PipelineRobustnessBufferBehaviorEXT
-  , -- No documentation found for Nested "VkPipelineRobustnessCreateInfoEXT" "uniformBuffers"
+  , -- | @uniformBuffers@ describes the behaviour of out of bounds accesses made
+    -- to resources bound as:
+    --
+    -- -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
+    --
+    -- -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
+    --
+    -- -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
+    --
+    -- -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
     uniformBuffers :: PipelineRobustnessBufferBehaviorEXT
-  , -- No documentation found for Nested "VkPipelineRobustnessCreateInfoEXT" "vertexInputs"
+  , -- | @vertexInputs@ describes the behaviour of out of bounds accesses made to
+    -- vertex input attributes
     vertexInputs :: PipelineRobustnessBufferBehaviorEXT
-  , -- No documentation found for Nested "VkPipelineRobustnessCreateInfoEXT" "images"
+  , -- | @images@ describes the behaviour of out of bounds accesses made to
+    -- resources bound as:
+    --
+    -- -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'
+    --
+    -- -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE'
     images :: PipelineRobustnessImageBehaviorEXT
   }
   deriving (Typeable, Eq)

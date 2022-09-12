@@ -29,7 +29,7 @@
 -- [__Contact__]
 --
 --     -   Matthew Rusch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_private_data] @mattruschnv%0A<<Here describe the issue or question you have about the VK_EXT_private_data extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_private_data] @mattruschnv%0A*Here describe the issue or question you have about the VK_EXT_private_data extension* >
 --
 -- == Other Extension Metadata
 --

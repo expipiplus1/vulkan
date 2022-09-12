@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Juliano
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_acquire_winrt_display] @jjuliano%0A<<Here describe the issue or question you have about the VK_NV_acquire_winrt_display extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_acquire_winrt_display] @jjuliano%0A*Here describe the issue or question you have about the VK_NV_acquire_winrt_display extension* >
 --
 -- == Other Extension Metadata
 --

@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Vikram Kushwaha
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_vertex_attribute_divisor] @vkushwaha%0A<<Here describe the issue or question you have about the VK_EXT_vertex_attribute_divisor extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_vertex_attribute_divisor] @vkushwaha%0A*Here describe the issue or question you have about the VK_EXT_vertex_attribute_divisor extension* >
 --
 -- == Other Extension Metadata
 --

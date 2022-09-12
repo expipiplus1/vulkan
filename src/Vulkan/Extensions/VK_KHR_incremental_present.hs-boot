@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Ian Elliott
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_incremental_present] @ianelliottus%0A<<Here describe the issue or question you have about the VK_KHR_incremental_present extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_incremental_present] @ianelliottus%0A*Here describe the issue or question you have about the VK_KHR_incremental_present extension* >
 --
 -- == Other Extension Metadata
 --

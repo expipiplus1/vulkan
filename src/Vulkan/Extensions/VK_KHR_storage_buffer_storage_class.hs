@@ -29,7 +29,7 @@
 -- [__Contact__]
 --
 --     -   Alexander Galazin
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_storage_buffer_storage_class] @alegal-arm%0A<<Here describe the issue or question you have about the VK_KHR_storage_buffer_storage_class extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_storage_buffer_storage_class] @alegal-arm%0A*Here describe the issue or question you have about the VK_KHR_storage_buffer_storage_class extension* >
 --
 -- == Other Extension Metadata
 --

@@ -5985,14 +5985,9 @@ data GraphicsPipelineCreateInfo (es :: [Type]) = GraphicsPipelineCreateInfo
     vertexInputState :: Maybe (SomeStruct PipelineVertexInputStateCreateInfo)
   , -- | @pInputAssemblyState@ is a pointer to a
     -- 'PipelineInputAssemblyStateCreateInfo' structure which determines input
-    -- assembly behavior, as described in
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#drawing Drawing Commands>.
-    -- It is ignored if the pipeline includes a mesh shader stage.
-    --
-    -- @pInputAssemblyState@ is a pointer to a
-    -- 'PipelineInputAssemblyStateCreateInfo' structure which determines input
     -- assembly behavior for vertex shading, as described in
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#drawing Drawing Commands>.
+    -- It is ignored if the pipeline includes a mesh shader stage.
     inputAssemblyState :: Maybe PipelineInputAssemblyStateCreateInfo
   , -- | @pTessellationState@ is a pointer to a
     -- 'PipelineTessellationStateCreateInfo' structure defining tessellation

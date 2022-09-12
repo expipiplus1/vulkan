@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Eric Werness
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_ray_tracing] @ewerness-nv%0A<<Here describe the issue or question you have about the VK_NV_ray_tracing extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_ray_tracing] @ewerness-nv%0A*Here describe the issue or question you have about the VK_NV_ray_tracing extension* >
 --
 -- == Other Extension Metadata
 --
@@ -1990,6 +1990,10 @@ foreign import ccall
 --     a result of this command, then the sampler /must/ not have been
 --     created with
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
+--
+-- -   #VUID-vkCmdTraceRaysNV-None-07288# Any shader invocation executed by
+--     this command /must/
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-termination terminate>
 --
 -- -   #VUID-vkCmdTraceRaysNV-None-03429# Any shader group handle
 --     referenced by this call /must/ have been queried from the currently

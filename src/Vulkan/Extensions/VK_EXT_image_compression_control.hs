@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Jan-Harald Fredriksen
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_image_compression_control] @janharaldfredriksen-arm%0A<<Here describe the issue or question you have about the VK_EXT_image_compression_control extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_image_compression_control] @janharaldfredriksen-arm%0A*Here describe the issue or question you have about the VK_EXT_image_compression_control extension* >
 --
 -- [__Extension Proposal__]
 --     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_image_compression_control.adoc VK_EXT_image_compression_control>

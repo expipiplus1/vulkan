@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Pat Brown
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_compute_shader_derivatives] @nvpbrown%0A<<Here describe the issue or question you have about the VK_NV_compute_shader_derivatives extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_compute_shader_derivatives] @nvpbrown%0A*Here describe the issue or question you have about the VK_NV_compute_shader_derivatives extension* >
 --
 -- == Other Extension Metadata
 --

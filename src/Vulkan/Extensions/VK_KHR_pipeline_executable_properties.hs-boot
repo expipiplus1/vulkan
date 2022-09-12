@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   Jason Ekstrand
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_pipeline_executable_properties] @jekstrand%0A<<Here describe the issue or question you have about the VK_KHR_pipeline_executable_properties extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_pipeline_executable_properties] @jekstrand%0A*Here describe the issue or question you have about the VK_KHR_pipeline_executable_properties extension* >
 --
 -- == Other Extension Metadata
 --

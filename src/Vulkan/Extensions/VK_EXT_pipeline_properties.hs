@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Mukund Keshava
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_pipeline_properties] @mkeshavanv%0A<<Here describe the issue or question you have about the VK_EXT_pipeline_properties extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_pipeline_properties] @mkeshavanv%0A*Here describe the issue or question you have about the VK_EXT_pipeline_properties extension* >
 --
 -- == Other Extension Metadata
 --

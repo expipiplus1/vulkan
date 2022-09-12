@@ -33,7 +33,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_acceleration_structure] @dgkoch%0A<<Here describe the issue or question you have about the VK_KHR_acceleration_structure extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_acceleration_structure] @dgkoch%0A*Here describe the issue or question you have about the VK_KHR_acceleration_structure extension* >
 --
 -- == Other Extension Metadata
 --
@@ -868,7 +868,7 @@
 --     -   Add language to help deal with looped self-intersecting fans
 --         (#1901)
 --
---     -   Change vkCmdTraceRays{Indirect}KHR args to pointers (!3559)
+--     -   Change vkCmdTraceRays{,Indirect}KHR args to pointers (!3559)
 --
 --     -   Add scratch address validation language (#1941, !3551)
 --

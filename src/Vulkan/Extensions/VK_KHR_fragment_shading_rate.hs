@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Tobias Hector
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_fragment_shading_rate] @tobski%0A<<Here describe the issue or question you have about the VK_KHR_fragment_shading_rate extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_fragment_shading_rate] @tobski%0A*Here describe the issue or question you have about the VK_KHR_fragment_shading_rate extension* >
 --
 -- [__Extension Proposal__]
 --     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_KHR_fragment_shading_rate.adoc VK_KHR_fragment_shading_rate>

@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Kedarnath Thangudu
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_device_diagnostics_config] @kthangudu%0A<<Here describe the issue or question you have about the VK_NV_device_diagnostics_config extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NV_device_diagnostics_config] @kthangudu%0A*Here describe the issue or question you have about the VK_NV_device_diagnostics_config extension* >
 --
 -- == Other Extension Metadata
 --

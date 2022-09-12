@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Matthaeus G. Chajdas
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_pci_bus_info] @anteru%0A<<Here describe the issue or question you have about the VK_EXT_pci_bus_info extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_pci_bus_info] @anteru%0A*Here describe the issue or question you have about the VK_EXT_pci_bus_info extension* >
 --
 -- == Other Extension Metadata
 --

@@ -1,7 +1,8 @@
 {-# language CPP #-}
 -- No documentation found for Chapter "SubpassDescriptionFlagBits"
 module Vulkan.Core10.Enums.SubpassDescriptionFlagBits  ( SubpassDescriptionFlags
-                                                       , SubpassDescriptionFlagBits( SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT
+                                                       , SubpassDescriptionFlagBits( SUBPASS_DESCRIPTION_ENABLE_LEGACY_DITHERING_BIT_EXT
+                                                                                   , SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT
                                                                                    , SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT
                                                                                    , SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_EXT
                                                                                    , SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM
@@ -45,6 +46,10 @@ type SubpassDescriptionFlags = SubpassDescriptionFlagBits
 newtype SubpassDescriptionFlagBits = SubpassDescriptionFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
+-- | 'SUBPASS_DESCRIPTION_ENABLE_LEGACY_DITHERING_BIT_EXT' specifies that
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-legacy-dithering Legacy Dithering>
+-- is enabled for this subpass.
+pattern SUBPASS_DESCRIPTION_ENABLE_LEGACY_DITHERING_BIT_EXT = SubpassDescriptionFlagBits 0x00000080
 -- | 'SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT'
 -- specifies that this subpass supports pipelines created with
 -- 'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT'.
@@ -89,7 +94,8 @@ enumPrefixSubpassDescriptionFlagBits = "SUBPASS_DESCRIPTION_"
 
 showTableSubpassDescriptionFlagBits :: [(SubpassDescriptionFlagBits, String)]
 showTableSubpassDescriptionFlagBits =
-  [ ( SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT
+  [ (SUBPASS_DESCRIPTION_ENABLE_LEGACY_DITHERING_BIT_EXT, "ENABLE_LEGACY_DITHERING_BIT_EXT")
+  , ( SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT
     , "RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT"
     )
   , ( SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT

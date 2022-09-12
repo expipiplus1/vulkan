@@ -32,7 +32,7 @@
 -- [__Contact__]
 --
 --     -   Jan-Harald Fredriksen
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_ARM_rasterization_order_attachment_access] @janharaldfredriksen-arm%0A<<Here describe the issue or question you have about the VK_ARM_rasterization_order_attachment_access extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_ARM_rasterization_order_attachment_access] @janharaldfredriksen-arm%0A*Here describe the issue or question you have about the VK_ARM_rasterization_order_attachment_access extension* >
 --
 -- == Other Extension Metadata
 --

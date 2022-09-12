@@ -611,6 +611,10 @@ foreign import ccall
 --     created with
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
 --
+-- -   #VUID-vkCmdDispatchBase-None-07288# Any shader invocation executed
+--     by this command /must/
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-termination terminate>
+--
 -- -   #VUID-vkCmdDispatchBase-commandBuffer-02712# If @commandBuffer@ is a
 --     protected command buffer and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>

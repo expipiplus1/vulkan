@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_conservative_rasterization] @pdaniell-nv%0A<<Here describe the issue or question you have about the VK_EXT_conservative_rasterization extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_conservative_rasterization] @pdaniell-nv%0A*Here describe the issue or question you have about the VK_EXT_conservative_rasterization extension* >
 --
 -- == Other Extension Metadata
 --

@@ -32,7 +32,7 @@
 -- [__Contact__]
 --
 --     -   Bas Nieuwenhuizen
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_host_query_reset] @BNieuwenhuizen%0A<<Here describe the issue or question you have about the VK_EXT_host_query_reset extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_host_query_reset] @BNieuwenhuizen%0A*Here describe the issue or question you have about the VK_EXT_host_query_reset extension* >
 --
 -- == Other Extension Metadata
 --

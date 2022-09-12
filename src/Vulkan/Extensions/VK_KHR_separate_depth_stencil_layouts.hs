@@ -35,7 +35,7 @@
 -- [__Contact__]
 --
 --     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_separate_depth_stencil_layouts] @pdaniell-nv%0A<<Here describe the issue or question you have about the VK_KHR_separate_depth_stencil_layouts extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_separate_depth_stencil_layouts] @pdaniell-nv%0A*Here describe the issue or question you have about the VK_KHR_separate_depth_stencil_layouts extension* >
 --
 -- == Other Extension Metadata
 --

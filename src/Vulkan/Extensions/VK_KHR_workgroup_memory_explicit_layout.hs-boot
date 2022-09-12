@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Caio Marcelo de Oliveira Filho
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_workgroup_memory_explicit_layout] @cmarcelo%0A<<Here describe the issue or question you have about the VK_KHR_workgroup_memory_explicit_layout extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_workgroup_memory_explicit_layout] @cmarcelo%0A*Here describe the issue or question you have about the VK_KHR_workgroup_memory_explicit_layout extension* >
 --
 -- == Other Extension Metadata
 --

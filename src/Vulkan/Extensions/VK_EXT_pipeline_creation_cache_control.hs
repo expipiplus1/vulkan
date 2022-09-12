@@ -29,7 +29,7 @@
 -- [__Contact__]
 --
 --     -   Gregory Grebe
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_pipeline_creation_cache_control] @grgrebe_amd%0A<<Here describe the issue or question you have about the VK_EXT_pipeline_creation_cache_control extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_pipeline_creation_cache_control] @grgrebe_amd%0A*Here describe the issue or question you have about the VK_EXT_pipeline_creation_cache_control extension* >
 --
 -- == Other Extension Metadata
 --

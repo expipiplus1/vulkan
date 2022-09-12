@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Simon Ser
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_physical_device_drm] @emersion%0A<<Here describe the issue or question you have about the VK_EXT_physical_device_drm extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_physical_device_drm] @emersion%0A*Here describe the issue or question you have about the VK_EXT_physical_device_drm extension* >
 --
 -- == Other Extension Metadata
 --

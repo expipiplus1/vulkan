@@ -2232,6 +2232,10 @@ foreign import ccall
 --     the sampler /must/ not have been created with
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
 --
+-- -   #VUID-vkCmdDraw-None-07288# Any shader invocation executed by this
+--     command /must/
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-termination terminate>
+--
 -- -   #VUID-vkCmdDraw-renderPass-02684# The current render pass /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
 --     with the @renderPass@ member of the
@@ -2465,10 +2469,12 @@ foreign import ccall
 --     @pAttachments@ member of @pColorBlendState@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
--- -   #VUID-vkCmdDraw-rasterizationSamples-04740# If rasterization is not
---     disabled in the bound graphics pipeline, and neither the
---     @VK_AMD_mixed_attachment_samples@ nor the
---     @VK_NV_framebuffer_mixed_samples@ extensions are enabled, then
+-- -   #VUID-vkCmdDraw-multisampledRenderToSingleSampled-07284# If
+--     rasterization is not disabled in the bound graphics pipeline, and
+--     none of the @VK_AMD_mixed_attachment_samples@ extension, the
+--     @VK_NV_framebuffer_mixed_samples@ extension, or the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature are enabled, then
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     /must/ be the same as the current subpass color and\/or
 --     depth\/stencil attachments
@@ -2678,12 +2684,15 @@ foreign import ccall
 --     to the sample count used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --
--- -   #VUID-vkCmdDraw-colorAttachmentCount-06188# If the currently bound
---     pipeline was created without a
+-- -   #VUID-vkCmdDraw-multisampledRenderToSingleSampled-07285# If the
+--     currently bound pipeline was created without a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
---     structure, and the current render pass instance was begun with
+--     structure, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is not enabled, and the current render pass instance was
+--     begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     with a
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
@@ -2695,14 +2704,16 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     used to create the currently bound graphics pipeline
 --
--- -   #VUID-vkCmdDraw-pDepthAttachment-06189# If the current render pass
---     instance was begun with
+-- -   #VUID-vkCmdDraw-multisampledRenderToSingleSampled-07286# If the
+--     current render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound pipeline was created without a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
---     structure, and
+--     structure, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is not enabled, and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
@@ -2710,14 +2721,16 @@ foreign import ccall
 --     to the sample count used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --
--- -   #VUID-vkCmdDraw-pStencilAttachment-06190# If the current render pass
---     instance was begun with
+-- -   #VUID-vkCmdDraw-multisampledRenderToSingleSampled-07287# If the
+--     current render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound pipeline was created without a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
---     structure, and
+--     structure, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is not enabled, and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
@@ -3323,6 +3336,10 @@ foreign import ccall
 --     created with
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
 --
+-- -   #VUID-vkCmdDrawIndexed-None-07288# Any shader invocation executed by
+--     this command /must/
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-termination terminate>
+--
 -- -   #VUID-vkCmdDrawIndexed-renderPass-02684# The current render pass
 --     /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
@@ -3558,10 +3575,12 @@ foreign import ccall
 --     @pAttachments@ member of @pColorBlendState@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
--- -   #VUID-vkCmdDrawIndexed-rasterizationSamples-04740# If rasterization
---     is not disabled in the bound graphics pipeline, and neither the
---     @VK_AMD_mixed_attachment_samples@ nor the
---     @VK_NV_framebuffer_mixed_samples@ extensions are enabled, then
+-- -   #VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07284# If
+--     rasterization is not disabled in the bound graphics pipeline, and
+--     none of the @VK_AMD_mixed_attachment_samples@ extension, the
+--     @VK_NV_framebuffer_mixed_samples@ extension, or the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature are enabled, then
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     /must/ be the same as the current subpass color and\/or
 --     depth\/stencil attachments
@@ -3771,12 +3790,15 @@ foreign import ccall
 --     to the sample count used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --
--- -   #VUID-vkCmdDrawIndexed-colorAttachmentCount-06188# If the currently
---     bound pipeline was created without a
+-- -   #VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07285# If
+--     the currently bound pipeline was created without a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
---     structure, and the current render pass instance was begun with
+--     structure, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is not enabled, and the current render pass instance was
+--     begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     with a
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
@@ -3788,14 +3810,16 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     used to create the currently bound graphics pipeline
 --
--- -   #VUID-vkCmdDrawIndexed-pDepthAttachment-06189# If the current render
---     pass instance was begun with
+-- -   #VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07286# If
+--     the current render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound pipeline was created without a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
---     structure, and
+--     structure, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is not enabled, and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
@@ -3803,14 +3827,16 @@ foreign import ccall
 --     to the sample count used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --
--- -   #VUID-vkCmdDrawIndexed-pStencilAttachment-06190# If the current
---     render pass instance was begun with
+-- -   #VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07287# If
+--     the current render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound pipeline was created without a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
---     structure, and
+--     structure, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is not enabled, and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
@@ -4410,6 +4436,10 @@ foreign import ccall
 --     created with
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
 --
+-- -   #VUID-vkCmdDrawIndirect-None-07288# Any shader invocation executed
+--     by this command /must/
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-termination terminate>
+--
 -- -   #VUID-vkCmdDrawIndirect-renderPass-02684# The current render pass
 --     /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
@@ -4646,10 +4676,12 @@ foreign import ccall
 --     @pAttachments@ member of @pColorBlendState@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
--- -   #VUID-vkCmdDrawIndirect-rasterizationSamples-04740# If rasterization
---     is not disabled in the bound graphics pipeline, and neither the
---     @VK_AMD_mixed_attachment_samples@ nor the
---     @VK_NV_framebuffer_mixed_samples@ extensions are enabled, then
+-- -   #VUID-vkCmdDrawIndirect-multisampledRenderToSingleSampled-07284# If
+--     rasterization is not disabled in the bound graphics pipeline, and
+--     none of the @VK_AMD_mixed_attachment_samples@ extension, the
+--     @VK_NV_framebuffer_mixed_samples@ extension, or the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature are enabled, then
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     /must/ be the same as the current subpass color and\/or
 --     depth\/stencil attachments
@@ -4859,12 +4891,15 @@ foreign import ccall
 --     to the sample count used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --
--- -   #VUID-vkCmdDrawIndirect-colorAttachmentCount-06188# If the currently
---     bound pipeline was created without a
+-- -   #VUID-vkCmdDrawIndirect-multisampledRenderToSingleSampled-07285# If
+--     the currently bound pipeline was created without a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
---     structure, and the current render pass instance was begun with
+--     structure, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is not enabled, and the current render pass instance was
+--     begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     with a
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
@@ -4876,14 +4911,16 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     used to create the currently bound graphics pipeline
 --
--- -   #VUID-vkCmdDrawIndirect-pDepthAttachment-06189# If the current
---     render pass instance was begun with
+-- -   #VUID-vkCmdDrawIndirect-multisampledRenderToSingleSampled-07286# If
+--     the current render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound pipeline was created without a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
---     structure, and
+--     structure, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is not enabled, and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
@@ -4891,14 +4928,16 @@ foreign import ccall
 --     to the sample count used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --
--- -   #VUID-vkCmdDrawIndirect-pStencilAttachment-06190# If the current
---     render pass instance was begun with
+-- -   #VUID-vkCmdDrawIndirect-multisampledRenderToSingleSampled-07287# If
+--     the current render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound pipeline was created without a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
---     structure, and
+--     structure, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is not enabled, and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
@@ -5515,6 +5554,10 @@ foreign import ccall
 --     created with
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07288# Any shader invocation
+--     executed by this command /must/
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-termination terminate>
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-renderPass-02684# The current render
 --     pass /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
@@ -5751,10 +5794,12 @@ foreign import ccall
 --     @pAttachments@ member of @pColorBlendState@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
--- -   #VUID-vkCmdDrawIndexedIndirect-rasterizationSamples-04740# If
---     rasterization is not disabled in the bound graphics pipeline, and
---     neither the @VK_AMD_mixed_attachment_samples@ nor the
---     @VK_NV_framebuffer_mixed_samples@ extensions are enabled, then
+-- -   #VUID-vkCmdDrawIndexedIndirect-multisampledRenderToSingleSampled-07284#
+--     If rasterization is not disabled in the bound graphics pipeline, and
+--     none of the @VK_AMD_mixed_attachment_samples@ extension, the
+--     @VK_NV_framebuffer_mixed_samples@ extension, or the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature are enabled, then
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     /must/ be the same as the current subpass color and\/or
 --     depth\/stencil attachments
@@ -5964,12 +6009,15 @@ foreign import ccall
 --     to the sample count used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --
--- -   #VUID-vkCmdDrawIndexedIndirect-colorAttachmentCount-06188# If the
---     currently bound pipeline was created without a
+-- -   #VUID-vkCmdDrawIndexedIndirect-multisampledRenderToSingleSampled-07285#
+--     If the currently bound pipeline was created without a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
---     structure, and the current render pass instance was begun with
+--     structure, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is not enabled, and the current render pass instance was
+--     begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
 --     with a
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
@@ -5981,14 +6029,16 @@ foreign import ccall
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
 --     used to create the currently bound graphics pipeline
 --
--- -   #VUID-vkCmdDrawIndexedIndirect-pDepthAttachment-06189# If the
---     current render pass instance was begun with
+-- -   #VUID-vkCmdDrawIndexedIndirect-multisampledRenderToSingleSampled-07286#
+--     If the current render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound pipeline was created without a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
---     structure, and
+--     structure, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is not enabled, and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
@@ -5996,14 +6046,16 @@ foreign import ccall
 --     to the sample count used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --
--- -   #VUID-vkCmdDrawIndexedIndirect-pStencilAttachment-06190# If the
---     current render pass instance was begun with
+-- -   #VUID-vkCmdDrawIndexedIndirect-multisampledRenderToSingleSampled-07287#
+--     If the current render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
 --     the currently bound pipeline was created without a
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoNV'
---     structure, and
+--     structure, and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is not enabled, and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
 --     was not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
 --     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
@@ -6613,6 +6665,10 @@ foreign import ccall
 --     the sampler /must/ not have been created with
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
 --
+-- -   #VUID-vkCmdDispatch-None-07288# Any shader invocation executed by
+--     this command /must/
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-termination terminate>
+--
 -- -   #VUID-vkCmdDispatch-commandBuffer-02712# If @commandBuffer@ is a
 --     protected command buffer and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
@@ -7082,6 +7138,10 @@ foreign import ccall
 --     created with
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
 --
+-- -   #VUID-vkCmdDispatchIndirect-None-07288# Any shader invocation
+--     executed by this command /must/
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-termination terminate>
+--
 -- -   #VUID-vkCmdDispatchIndirect-buffer-02708# If @buffer@ is non-sparse
 --     then it /must/ be bound completely and contiguously to a single
 --     'Vulkan.Core10.Handles.DeviceMemory' object
@@ -7340,11 +7400,6 @@ foreign import ccall
 -- region of the destination image. @srcImage@ and @dstImage@ /can/ be the
 -- same image or alias the same memory.
 --
--- The formats of @srcImage@ and @dstImage@ /must/ be compatible. Formats
--- are compatible if they share the same class, as shown in the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility Compatible Formats>
--- table. Depth\/stencil formats /must/ match exactly.
---
 -- If either @srcImage@ or @dstImage@ has a
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 -- regions of each plane to be copied /must/ be specified separately using
@@ -7375,75 +7430,12 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.Format.FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16',
 -- as each texel is 2 bytes in size.
 --
--- 'cmdCopyImage' allows copying between /size-compatible/ compressed and
--- uncompressed internal formats. Formats are size-compatible if the texel
--- block size of the uncompressed format is equal to the texel block size
--- of the compressed format. Such a copy does not perform on-the-fly
--- compression or decompression. When copying from an uncompressed format
--- to a compressed format, each texel of uncompressed data of the source
--- image is copied as a raw value to the corresponding compressed texel
--- block of the destination image. When copying from a compressed format to
--- an uncompressed format, each compressed texel block of the source image
--- is copied as a raw value to the corresponding texel of uncompressed data
--- in the destination image. Thus, for example, it is legal to copy between
--- a 128-bit uncompressed format and a compressed format which has a
--- 128-bit sized compressed texel block representing 4×4 texels (using 8
--- bits per texel), or between a 64-bit uncompressed format and a
--- compressed format which has a 64-bit sized compressed texel block
--- representing 4×4 texels (using 4 bits per texel).
---
--- When copying between compressed and uncompressed formats the @extent@
--- members represent the texel dimensions of the source image and not the
--- destination. When copying from a compressed image to an uncompressed
--- image the image texel dimensions written to the uncompressed image will
--- be source extent divided by the compressed texel block dimensions. When
--- copying from an uncompressed image to a compressed image the image texel
--- dimensions written to the compressed image will be the source extent
--- multiplied by the compressed texel block dimensions. In both cases the
--- number of bytes read and the number of bytes written will be identical.
---
--- Copying to or from block-compressed images is typically done in
--- multiples of the compressed texel block size. For this reason the
--- @extent@ /must/ be a multiple of the compressed texel block dimension.
--- There is one exception to this rule which is /required/ to handle
--- compressed images created with dimensions that are not a multiple of the
--- compressed texel block dimensions: if the @srcImage@ is compressed,
--- then:
---
--- -   If @extent.width@ is not a multiple of the compressed texel block
---     width, then (@extent.width@ + @srcOffset.x@) /must/ equal the image
---     subresource width.
---
--- -   If @extent.height@ is not a multiple of the compressed texel block
---     height, then (@extent.height@ + @srcOffset.y@) /must/ equal the
---     image subresource height.
---
--- -   If @extent.depth@ is not a multiple of the compressed texel block
---     depth, then (@extent.depth@ + @srcOffset.z@) /must/ equal the image
---     subresource depth.
---
--- Similarly, if the @dstImage@ is compressed, then:
---
--- -   If @extent.width@ is not a multiple of the compressed texel block
---     width, then (@extent.width@ + @dstOffset.x@) /must/ equal the image
---     subresource width.
---
--- -   If @extent.height@ is not a multiple of the compressed texel block
---     height, then (@extent.height@ + @dstOffset.y@) /must/ equal the
---     image subresource height.
---
--- -   If @extent.depth@ is not a multiple of the compressed texel block
---     depth, then (@extent.depth@ + @dstOffset.z@) /must/ equal the image
---     subresource depth.
---
--- This allows the last compressed texel block of the image in each
--- non-multiple dimension to be included as a source or destination of the
--- copy.
---
--- “@_422@” image formats that are not
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
--- are treated as having a 2×1 compressed texel block for the purposes of
--- these rules.
+-- If the format of the destination image has a different
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility-classes block extent>
+-- than the source image (e.g. one is a compressed format), the offset and
+-- extent for each of the regions specified is
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-size-compatibility scaled according to the block extents of each format>
+-- to match in size.
 --
 -- 'cmdCopyImage' /can/ be used to copy image data between multisample
 -- images, but both images /must/ have the same number of samples.
@@ -7516,8 +7508,8 @@ foreign import ccall
 --     @dstImage@ is not a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     the 'Vulkan.Core10.Enums.Format.Format' of each of @srcImage@ and
---     @dstImage@ /must/ be compatible, as defined
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#copies-images-format-compatibility above>
+--     @dstImage@ /must/ be
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-size-compatibility size-compatible>
 --
 -- -   #VUID-vkCmdCopyImage-None-01549# In a copy to or from a plane of a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image>,
@@ -7717,59 +7709,77 @@ foreign import ccall
 --     /must/ both be greater than or equal to @0@ and less than or equal
 --     to the depth of the specified @dstSubresource@ of @dstImage@
 --
--- -   #VUID-vkCmdCopyImage-srcImage-01727# If @srcImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     then for each element of @pRegions@, all members of @srcOffset@
---     /must/ be a multiple of the corresponding dimensions of the
---     compressed texel block
+-- -   #VUID-vkCmdCopyImage-pRegions-07278# For each element of @pRegions@,
+--     @srcOffset.x@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-vkCmdCopyImage-srcImage-01728# If @srcImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     then for each element of @pRegions@, @extent.width@ /must/ be a
---     multiple of the compressed texel block width or (@extent.width@ +
---     @srcOffset.x@) /must/ equal the width of the specified
---     @srcSubresource@ of @srcImage@
+-- -   #VUID-vkCmdCopyImage-pRegions-07279# For each element of @pRegions@,
+--     @srcOffset.y@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-vkCmdCopyImage-srcImage-01729# If @srcImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     then for each element of @pRegions@, @extent.height@ /must/ be a
---     multiple of the compressed texel block height or (@extent.height@ +
---     @srcOffset.y@) /must/ equal the height of the specified
---     @srcSubresource@ of @srcImage@
+-- -   #VUID-vkCmdCopyImage-pRegions-07280# For each element of @pRegions@,
+--     @srcOffset.z@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-vkCmdCopyImage-srcImage-01730# If @srcImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     then for each element of @pRegions@, @extent.depth@ /must/ be a
---     multiple of the compressed texel block depth or (@extent.depth@ +
---     @srcOffset.z@) /must/ equal the depth of the specified
---     @srcSubresource@ of @srcImage@
+-- -   #VUID-vkCmdCopyImage-pRegions-07281# For each element of @pRegions@,
+--     @dstOffset.x@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-vkCmdCopyImage-dstImage-01731# If @dstImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     then for each element of @pRegions@, all members of @dstOffset@
---     /must/ be a multiple of the corresponding dimensions of the
---     compressed texel block
+-- -   #VUID-vkCmdCopyImage-pRegions-07282# For each element of @pRegions@,
+--     @dstOffset.y@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-vkCmdCopyImage-dstImage-01732# If @dstImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     then for each element of @pRegions@, @extent.width@ /must/ be a
---     multiple of the compressed texel block width or (@extent.width@ +
---     @dstOffset.x@) /must/ equal the width of the specified
---     @dstSubresource@ of @dstImage@
+-- -   #VUID-vkCmdCopyImage-pRegions-07283# For each element of @pRegions@,
+--     @dstOffset.z@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-vkCmdCopyImage-dstImage-01733# If @dstImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     then for each element of @pRegions@, @extent.height@ /must/ be a
---     multiple of the compressed texel block height or (@extent.height@ +
---     @dstOffset.y@) /must/ equal the height of the specified
---     @dstSubresource@ of @dstImage@
+-- -   #VUID-vkCmdCopyImage-srcImage-01728# For each element of @pRegions@,
+--     if the sum of @srcOffset.x@ and @extent.width@ does not equal the
+--     width of the the subresource specified by @srcSubresource@,
+--     @extent.width@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-vkCmdCopyImage-dstImage-01734# If @dstImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     then for each element of @pRegions@, @extent.depth@ /must/ be a
---     multiple of the compressed texel block depth or (@extent.depth@ +
---     @dstOffset.z@) /must/ equal the depth of the specified
---     @dstSubresource@ of @dstImage@
+-- -   #VUID-vkCmdCopyImage-srcImage-01729# For each element of @pRegions@,
+--     if the sum of @srcOffset.y@ and @extent.height@ does not equal the
+--     height of the the subresource specified by @srcSubresource@,
+--     @extent.height@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
+--
+-- -   #VUID-vkCmdCopyImage-srcImage-01730# For each element of @pRegions@,
+--     if the sum of @srcOffset.z@ and @extent.depth@ does not equal the
+--     depth of the the subresource specified by @srcSubresource@,
+--     @extent.depth@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
+--
+-- -   #VUID-vkCmdCopyImage-dstImage-01732# For each element of @pRegions@,
+--     if the sum of @dstOffset.x@ and @extent.width@ does not equal the
+--     width of the the subresource specified by @dstSubresource@,
+--     @extent.width@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
+--
+-- -   #VUID-vkCmdCopyImage-dstImage-01733# For each element of @pRegions@,
+--     if the sum of @dstOffset.y@ and @extent.height@ does not equal the
+--     height of the the subresource specified by @dstSubresource@,
+--     @extent.height@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
+--
+-- -   #VUID-vkCmdCopyImage-dstImage-01734# For each element of @pRegions@,
+--     if the sum of @dstOffset.z@ and @extent.depth@ does not equal the
+--     depth of the the subresource specified by @dstSubresource@,
+--     @extent.depth@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
 -- -   #VUID-vkCmdCopyImage-aspect-06662# If the @aspect@ member of any
 --     element of @pRegions@ includes any flag other than
@@ -8532,49 +8542,57 @@ foreign import ccall
 --     of @pRegions@, @imageOffset.z@ /must/ be @0@ and @imageExtent.depth@
 --     /must/ be @1@
 --
--- -   #VUID-vkCmdCopyBufferToImage-bufferRowLength-00203# If @dstImage@ is
---     a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @bufferRowLength@ /must/ be a
---     multiple of the compressed texel block width
+-- -   #VUID-vkCmdCopyBufferToImage-bufferRowLength-00203# For each element
+--     of @pRegions@, @bufferRowLength@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-vkCmdCopyBufferToImage-bufferImageHeight-00204# If @dstImage@
---     is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @bufferImageHeight@ /must/ be a
---     multiple of the compressed texel block height
+-- -   #VUID-vkCmdCopyBufferToImage-bufferImageHeight-00204# For each
+--     element of @pRegions@, @bufferImageHeight@ /must/ be a multiple of
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-vkCmdCopyBufferToImage-imageOffset-00205# If @dstImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, all members of @imageOffset@ /must/
---     be a multiple of the corresponding dimensions of the compressed
---     texel block
+-- -   #VUID-vkCmdCopyBufferToImage-pRegions-07273# For each element of
+--     @pRegions@, @bufferOffset@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block size>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-vkCmdCopyBufferToImage-bufferOffset-00206# If @dstImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @bufferOffset@ /must/ be a multiple
---     of the compressed texel block size in bytes
+-- -   #VUID-vkCmdCopyBufferToImage-pRegions-07274# For each element of
+--     @pRegions@, @imageOffset.x@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-vkCmdCopyBufferToImage-imageExtent-00207# If @dstImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @imageExtent.width@ /must/ be a
---     multiple of the compressed texel block width or (@imageExtent.width@
---     + @imageOffset.x@) /must/ equal the width of the specified
---     @imageSubresource@ of @dstImage@
+-- -   #VUID-vkCmdCopyBufferToImage-pRegions-07275# For each element of
+--     @pRegions@, @imageOffset.y@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-vkCmdCopyBufferToImage-imageExtent-00208# If @dstImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @imageExtent.height@ /must/ be a
---     multiple of the compressed texel block height or
---     (@imageExtent.height@ + @imageOffset.y@) /must/ equal the height of
---     the specified @imageSubresource@ of @dstImage@
+-- -   #VUID-vkCmdCopyBufferToImage-pRegions-07276# For each element of
+--     @pRegions@, @imageOffset.z@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
--- -   #VUID-vkCmdCopyBufferToImage-imageExtent-00209# If @dstImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @imageExtent.depth@ /must/ be a
---     multiple of the compressed texel block depth or (@imageExtent.depth@
---     + @imageOffset.z@) /must/ equal the depth of the specified
---     @imageSubresource@ of @dstImage@
+-- -   #VUID-vkCmdCopyBufferToImage-imageExtent-00207# For each element of
+--     @pRegions@, if the sum of @imageOffset.x@ and @extent.width@ does
+--     not equal the width of the the subresource specified by
+--     @srcSubresource@, @extent.width@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
+--
+-- -   #VUID-vkCmdCopyBufferToImage-imageExtent-00208# For each element of
+--     @pRegions@, if the sum of @imageOffset.y@ and @extent.height@ does
+--     not equal the height of the the subresource specified by
+--     @srcSubresource@, @extent.height@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
+--
+-- -   #VUID-vkCmdCopyBufferToImage-imageExtent-00209# For each element of
+--     @pRegions@, if the sum of @imageOffset.z@ and @extent.depth@ does
+--     not equal the depth of the the subresource specified by
+--     @srcSubresource@, @extent.depth@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
 -- -   #VUID-vkCmdCopyBufferToImage-aspectMask-00211# For each element of
 --     @pRegions@, @imageSubresource.aspectMask@ /must/ specify aspects
@@ -8597,16 +8615,11 @@ foreign import ccall
 --     element of @pRegions@, @imageSubresource.baseArrayLayer@ /must/ be
 --     @0@ and @imageSubresource.layerCount@ /must/ be @1@
 --
--- -   #VUID-vkCmdCopyBufferToImage-pRegions-04725# If @dstImage@ is not a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @bufferRowLength@ multiplied by the
---     texel block size of @dstImage@ /must/ be less than or equal to 231-1
---
--- -   #VUID-vkCmdCopyBufferToImage-pRegions-04726# If @dstImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @bufferRowLength@ divided by the
---     compressed texel block width and then multiplied by the texel block
---     size of @dstImage@ /must/ be less than or equal to 231-1
+-- -   #VUID-vkCmdCopyBufferToImage-pRegions-07277# For each element of
+--     @pRegions@, @bufferRowLength@ divided by the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     and then multiplied by the texel block size of @dstImage@ /must/ be
+--     less than or equal to 231-1
 --
 -- -   #VUID-vkCmdCopyBufferToImage-commandBuffer-04052# If the queue
 --     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
@@ -8877,49 +8890,57 @@ foreign import ccall
 --     of @pRegions@, @imageOffset.z@ /must/ be @0@ and @imageExtent.depth@
 --     /must/ be @1@
 --
--- -   #VUID-vkCmdCopyImageToBuffer-bufferRowLength-00203# If @srcImage@ is
---     a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @bufferRowLength@ /must/ be a
---     multiple of the compressed texel block width
+-- -   #VUID-vkCmdCopyImageToBuffer-bufferRowLength-00203# For each element
+--     of @pRegions@, @bufferRowLength@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-vkCmdCopyImageToBuffer-bufferImageHeight-00204# If @srcImage@
---     is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @bufferImageHeight@ /must/ be a
---     multiple of the compressed texel block height
+-- -   #VUID-vkCmdCopyImageToBuffer-bufferImageHeight-00204# For each
+--     element of @pRegions@, @bufferImageHeight@ /must/ be a multiple of
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-vkCmdCopyImageToBuffer-imageOffset-00205# If @srcImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, all members of @imageOffset@ /must/
---     be a multiple of the corresponding dimensions of the compressed
---     texel block
+-- -   #VUID-vkCmdCopyImageToBuffer-pRegions-07273# For each element of
+--     @pRegions@, @bufferOffset@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block size>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-vkCmdCopyImageToBuffer-bufferOffset-00206# If @srcImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @bufferOffset@ /must/ be a multiple
---     of the compressed texel block size in bytes
+-- -   #VUID-vkCmdCopyImageToBuffer-pRegions-07274# For each element of
+--     @pRegions@, @imageOffset.x@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-vkCmdCopyImageToBuffer-imageExtent-00207# If @srcImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @imageExtent.width@ /must/ be a
---     multiple of the compressed texel block width or (@imageExtent.width@
---     + @imageOffset.x@) /must/ equal the width of the specified
---     @imageSubresource@ of @srcImage@
+-- -   #VUID-vkCmdCopyImageToBuffer-pRegions-07275# For each element of
+--     @pRegions@, @imageOffset.y@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-vkCmdCopyImageToBuffer-imageExtent-00208# If @srcImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @imageExtent.height@ /must/ be a
---     multiple of the compressed texel block height or
---     (@imageExtent.height@ + @imageOffset.y@) /must/ equal the height of
---     the specified @imageSubresource@ of @srcImage@
+-- -   #VUID-vkCmdCopyImageToBuffer-pRegions-07276# For each element of
+--     @pRegions@, @imageOffset.z@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
--- -   #VUID-vkCmdCopyImageToBuffer-imageExtent-00209# If @srcImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @imageExtent.depth@ /must/ be a
---     multiple of the compressed texel block depth or (@imageExtent.depth@
---     + @imageOffset.z@) /must/ equal the depth of the specified
---     @imageSubresource@ of @srcImage@
+-- -   #VUID-vkCmdCopyImageToBuffer-imageExtent-00207# For each element of
+--     @pRegions@, if the sum of @imageOffset.x@ and @extent.width@ does
+--     not equal the width of the the subresource specified by
+--     @srcSubresource@, @extent.width@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
+--
+-- -   #VUID-vkCmdCopyImageToBuffer-imageExtent-00208# For each element of
+--     @pRegions@, if the sum of @imageOffset.y@ and @extent.height@ does
+--     not equal the height of the the subresource specified by
+--     @srcSubresource@, @extent.height@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
+--
+-- -   #VUID-vkCmdCopyImageToBuffer-imageExtent-00209# For each element of
+--     @pRegions@, if the sum of @imageOffset.z@ and @extent.depth@ does
+--     not equal the depth of the the subresource specified by
+--     @srcSubresource@, @extent.depth@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent depth>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
 -- -   #VUID-vkCmdCopyImageToBuffer-aspectMask-00211# For each element of
 --     @pRegions@, @imageSubresource.aspectMask@ /must/ specify aspects
@@ -8942,16 +8963,11 @@ foreign import ccall
 --     element of @pRegions@, @imageSubresource.baseArrayLayer@ /must/ be
 --     @0@ and @imageSubresource.layerCount@ /must/ be @1@
 --
--- -   #VUID-vkCmdCopyImageToBuffer-pRegions-04725# If @srcImage@ is not a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @bufferRowLength@ multiplied by the
---     texel block size of @srcImage@ /must/ be less than or equal to 231-1
---
--- -   #VUID-vkCmdCopyImageToBuffer-pRegions-04726# If @srcImage@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#blocked-image blocked image>,
---     for each element of @pRegions@, @bufferRowLength@ divided by the
---     compressed texel block width and then multiplied by the texel block
---     size of @srcImage@ /must/ be less than or equal to 231-1
+-- -   #VUID-vkCmdCopyImageToBuffer-pRegions-07277# For each element of
+--     @pRegions@, @bufferRowLength@ divided by the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
+--     and then multiplied by the texel block size of @srcImage@ /must/ be
+--     less than or equal to 231-1
 --
 -- -   #VUID-vkCmdCopyImageToBuffer-commandBuffer-04052# If the queue
 --     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
@@ -9826,29 +9842,21 @@ foreign import ccall
 -- operation at the start of rendering, as it is more efficient on some
 -- implementations.
 --
+-- If any attachment’s @aspectMask@ to be cleared is not backed by an image
+-- view, the clear has no effect on that aspect.
+--
 -- == Valid Usage
 --
--- -   #VUID-vkCmdClearAttachments-aspectMask-02501# If the @aspectMask@
+-- -   #VUID-vkCmdClearAttachments-pAttachments-07270# For each element of
+--     @pAttachments@, the corresponding attachment in the current render
+--     pass instance /must/ either not be backed by an image view, or
+--     contain each of the aspects specified in @aspectMask@
+--
+-- -   #VUID-vkCmdClearAttachments-aspectMask-07271# If the @aspectMask@
 --     member of any element of @pAttachments@ contains
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT',
---     then the @colorAttachment@ member of that element /must/ either
---     refer to a color attachment which is
---     'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', or /must/ be a valid
---     color attachment
---
--- -   #VUID-vkCmdClearAttachments-aspectMask-02502# If the @aspectMask@
---     member of any element of @pAttachments@ contains
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT',
---     then the current subpass\' depth\/stencil attachment /must/ either
---     be 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', or /must/ have a
---     depth component
---
--- -   #VUID-vkCmdClearAttachments-aspectMask-02503# If the @aspectMask@
---     member of any element of @pAttachments@ contains
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT',
---     then the current subpass\' depth\/stencil attachment /must/ either
---     be 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED', or /must/ have a
---     stencil component
+--     the @colorAttachment@ /must/ be a valid color attachment index in
+--     the current render pass instance
 --
 -- -   #VUID-vkCmdClearAttachments-rect-02682# The @rect@ member of each
 --     element of @pRects@ /must/ have an @extent.width@ greater than @0@
@@ -9946,9 +9954,7 @@ cmdClearAttachments :: forall io
                        -- recorded.
                        CommandBuffer
                     -> -- | @pAttachments@ is a pointer to an array of 'ClearAttachment' structures
-                       -- defining the attachments to clear and the clear values to use. If any
-                       -- attachment index to be cleared is not backed by an image view, then the
-                       -- clear has no effect.
+                       -- defining the attachments to clear and the clear values to use.
                        ("attachments" ::: Vector ClearAttachment)
                     -> -- | @pRects@ is a pointer to an array of 'ClearRect' structures defining
                        -- regions within each selected attachment to clear.
@@ -11606,6 +11612,15 @@ foreign import ccall
 --     then
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-primitivesGeneratedQuery primitivesGeneratedQuery>
 --     /must/ be enabled
+--
+-- -   #VUID-vkCmdBeginQuery-queryPool-07289# If @queryPool@ was created
+--     with a @queryType@ of
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
+--     then the
+--     'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR'::@queueFamilyIndex@
+--     @queryPool@ was created with /must/ equal the queue family index of
+--     the 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+--     allocated from
 --
 -- -   #VUID-vkCmdBeginQuery-queryPool-03223# If @queryPool@ was created
 --     with a @queryType@ of
@@ -13916,16 +13931,6 @@ instance Zero BufferCopy where
 -- 3D image correspond to @layerCount@ layers in the 2D image, with an
 -- effective @depth@ of @1@ used for the 2D image.
 --
--- Copies involving a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>
--- specify the region to be copied in terms of the /plane/ to be copied,
--- not the coordinates of the multi-planar image. This means that copies
--- accessing the R\/B planes of “@_422@” format images /must/ fit the
--- copied region within half the @width@ of the parent image, and that
--- copies accessing the R\/B planes of “@_420@” format images /must/ fit
--- the copied region within half the @width@ and @height@ of the parent
--- image.
---
 -- == Valid Usage
 --
 -- -   #VUID-VkImageCopy-extent-00140# The number of slices of the @extent@
@@ -14175,14 +14180,6 @@ instance Zero ImageBlit where
 -- Copies are done layer by layer starting with image layer
 -- @baseArrayLayer@ member of @imageSubresource@. @layerCount@ layers are
 -- copied from the source image or to the destination image.
---
--- For purpose of valid usage statements here and in related copy commands,
--- a /blocked image/ is defined as:
---
--- -   an image with a /single-plane/, “@_422@” format, which is treated as
---     a format with a 2 × 1 compressed texel block, or
---
--- -   a compressed image.
 --
 -- == Valid Usage
 --

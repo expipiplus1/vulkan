@@ -24,10 +24,13 @@
 --     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
 --         for any device-level functionality
 --
+--     -   Requires @VK_KHR_spirv_1_4@ to be enabled for any device-level
+--         functionality
+--
 -- [__Contact__]
 --
 --     -   Christoph Kubisch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_mesh_shader] @pixeljetstream%0A<<Here describe the issue or question you have about the VK_EXT_mesh_shader extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_mesh_shader] @pixeljetstream%0A*Here describe the issue or question you have about the VK_EXT_mesh_shader extension* >
 --
 -- [__Extension Proposal__]
 --     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_mesh_shader.adoc VK_EXT_mesh_shader>

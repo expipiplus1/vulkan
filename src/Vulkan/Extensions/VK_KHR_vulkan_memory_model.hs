@@ -29,7 +29,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_vulkan_memory_model] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_KHR_vulkan_memory_model extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_vulkan_memory_model] @jeffbolznv%0A*Here describe the issue or question you have about the VK_KHR_vulkan_memory_model extension* >
 --
 -- == Other Extension Metadata
 --

@@ -29,7 +29,7 @@
 -- [__Contact__]
 --
 --     -   Neil Henning
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_subgroup_size_control] @sheredom%0A<<Here describe the issue or question you have about the VK_EXT_subgroup_size_control extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_subgroup_size_control] @sheredom%0A*Here describe the issue or question you have about the VK_EXT_subgroup_size_control extension* >
 --
 -- == Other Extension Metadata
 --

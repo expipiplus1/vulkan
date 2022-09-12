@@ -24,10 +24,10 @@
 -- [__Contact__]
 --
 --     -   Eric Werness
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NVX_binary_import] @ewerness-nv%0A<<Here describe the issue or question you have about the VK_NVX_binary_import extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NVX_binary_import] @ewerness-nv%0A*Here describe the issue or question you have about the VK_NVX_binary_import extension* >
 --
 --     -   Liam Middlebrook
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NVX_binary_import] @liam-middlebrook%0A<<Here describe the issue or question you have about the VK_NVX_binary_import extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_NVX_binary_import] @liam-middlebrook%0A*Here describe the issue or question you have about the VK_NVX_binary_import extension* >
 --
 -- == Other Extension Metadata
 --

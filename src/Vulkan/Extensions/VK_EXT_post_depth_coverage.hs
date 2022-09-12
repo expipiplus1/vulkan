@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_post_depth_coverage] @dgkoch%0A<<Here describe the issue or question you have about the VK_EXT_post_depth_coverage extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_post_depth_coverage] @dgkoch%0A*Here describe the issue or question you have about the VK_EXT_post_depth_coverage extension* >
 --
 -- == Other Extension Metadata
 --

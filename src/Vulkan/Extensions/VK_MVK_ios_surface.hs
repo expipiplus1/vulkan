@@ -30,7 +30,7 @@
 -- [__Contact__]
 --
 --     -   Bill Hollings
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_MVK_ios_surface] @billhollings%0A<<Here describe the issue or question you have about the VK_MVK_ios_surface extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_MVK_ios_surface] @billhollings%0A*Here describe the issue or question you have about the VK_MVK_ios_surface extension* >
 --
 -- == Other Extension Metadata
 --

@@ -31,7 +31,7 @@
 -- [__Contact__]
 --
 --     -   Shahbaz Youssefi
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_primitives_generated_query] @syoussefi%0A<<Here describe the issue or question you have about the VK_EXT_primitives_generated_query extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_primitives_generated_query] @syoussefi%0A*Here describe the issue or question you have about the VK_EXT_primitives_generated_query extension* >
 --
 -- [__Extension Proposal__]
 --     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_primitives_generated_query.adoc VK_EXT_primitives_generated_query>

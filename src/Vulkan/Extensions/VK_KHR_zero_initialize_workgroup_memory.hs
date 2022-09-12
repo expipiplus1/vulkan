@@ -32,7 +32,7 @@
 -- [__Contact__]
 --
 --     -   Alan Baker
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_zero_initialize_workgroup_memory] @alan-baker%0A<<Here describe the issue or question you have about the VK_KHR_zero_initialize_workgroup_memory extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_KHR_zero_initialize_workgroup_memory] @alan-baker%0A*Here describe the issue or question you have about the VK_KHR_zero_initialize_workgroup_memory extension* >
 --
 -- == Other Extension Metadata
 --

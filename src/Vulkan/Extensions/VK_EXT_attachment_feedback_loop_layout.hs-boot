@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Joshua Ashton
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_attachment_feedback_loop_layout] @Joshua-Ashton%0A<<Here describe the issue or question you have about the VK_EXT_attachment_feedback_loop_layout extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_attachment_feedback_loop_layout] @Joshua-Ashton%0A*Here describe the issue or question you have about the VK_EXT_attachment_feedback_loop_layout extension* >
 --
 -- [__Extension Proposal__]
 --     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_attachment_feedback_loop_layout.adoc VK_EXT_attachment_feedback_loop_layout>

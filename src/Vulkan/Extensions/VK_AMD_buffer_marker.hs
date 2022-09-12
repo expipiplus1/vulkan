@@ -28,7 +28,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Rakos
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_buffer_marker] @drakos-amd%0A<<Here describe the issue or question you have about the VK_AMD_buffer_marker extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_buffer_marker] @drakos-amd%0A*Here describe the issue or question you have about the VK_AMD_buffer_marker extension* >
 --
 -- == Other Extension Metadata
 --

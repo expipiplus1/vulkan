@@ -32,7 +32,7 @@
 -- [__Contact__]
 --
 --     -   Jeff Bolz
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_texel_buffer_alignment] @jeffbolznv%0A<<Here describe the issue or question you have about the VK_EXT_texel_buffer_alignment extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_texel_buffer_alignment] @jeffbolznv%0A*Here describe the issue or question you have about the VK_EXT_texel_buffer_alignment extension* >
 --
 -- == Other Extension Metadata
 --

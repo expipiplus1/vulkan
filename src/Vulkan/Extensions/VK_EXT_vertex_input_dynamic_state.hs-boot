@@ -27,7 +27,7 @@
 -- [__Contact__]
 --
 --     -   Piers Daniell
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_vertex_input_dynamic_state] @pdaniell-nv%0A<<Here describe the issue or question you have about the VK_EXT_vertex_input_dynamic_state extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_vertex_input_dynamic_state] @pdaniell-nv%0A*Here describe the issue or question you have about the VK_EXT_vertex_input_dynamic_state extension* >
 --
 -- == Other Extension Metadata
 --

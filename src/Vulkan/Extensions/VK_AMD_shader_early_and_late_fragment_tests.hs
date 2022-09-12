@@ -24,7 +24,7 @@
 -- [__Contact__]
 --
 --     -   Tobias Hector
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_shader_early_and_late_fragment_tests] @tobski%0A<<Here describe the issue or question you have about the VK_AMD_shader_early_and_late_fragment_tests extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_AMD_shader_early_and_late_fragment_tests] @tobski%0A*Here describe the issue or question you have about the VK_AMD_shader_early_and_late_fragment_tests extension* >
 --
 -- [__Extension Proposal__]
 --     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_AMD_shader_early_and_late_fragment_tests.adoc VK_AMD_shader_early_and_late_fragment_tests>

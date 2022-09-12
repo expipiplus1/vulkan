@@ -29,7 +29,7 @@
 -- [__Contact__]
 --
 --     -   Daniel Koch
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_shader_subgroup_vote] @dgkoch%0A<<Here describe the issue or question you have about the VK_EXT_shader_subgroup_vote extension>> >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_shader_subgroup_vote] @dgkoch%0A*Here describe the issue or question you have about the VK_EXT_shader_subgroup_vote extension* >
 --
 -- == Other Extension Metadata
 --
