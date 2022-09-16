@@ -1697,7 +1697,7 @@ data QueueFamilyProperties = QueueFamilyProperties
     -- the timestamps written via
     -- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.cmdWriteTimestamp2'
     -- or 'Vulkan.Core10.CommandBufferBuilding.cmdWriteTimestamp'. The valid
-    -- range for the count is 36..64 bits, or a value of 0, indicating no
+    -- range for the count is 36 to 64 bits, or a value of 0, indicating no
     -- support for timestamps. Bits outside the valid range are guaranteed to
     -- be zeros.
     timestampValidBits :: Word32
@@ -1759,13 +1759,13 @@ instance Zero QueueFamilyProperties where
 -- /memory heaps/ as well as a number of /memory types/ that /can/ be used
 -- to access memory allocated in those heaps. Each heap describes a memory
 -- resource of a particular size, and each memory type describes a set of
--- memory properties (e.g. host cached vs uncached) that /can/ be used with
--- a given memory heap. Allocations using a particular memory type will
--- consume resources from the heap indicated by that memory type’s heap
--- index. More than one memory type /may/ share each heap, and the heaps
--- and memory types provide a mechanism to advertise an accurate size of
--- the physical memory resources while allowing the memory to be used with
--- a variety of different properties.
+-- memory properties (e.g. host cached vs. uncached) that /can/ be used
+-- with a given memory heap. Allocations using a particular memory type
+-- will consume resources from the heap indicated by that memory type’s
+-- heap index. More than one memory type /may/ share each heap, and the
+-- heaps and memory types provide a mechanism to advertise an accurate size
+-- of the physical memory resources while allowing the memory to be used
+-- with a variety of different properties.
 --
 -- The number of memory heaps is given by @memoryHeapCount@ and is less
 -- than or equal to 'Vulkan.Core10.APIConstants.MAX_MEMORY_HEAPS'. Each
@@ -4178,7 +4178,9 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- assigned offsets in an arbitrary order by successively taking the
     -- smallest valid offset according to the
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-resources-standard-layout Standard Storage Buffer Layout>
-    -- rules. (This is equivalent to using the GLSL std430 layout rules.)
+    -- rules, and with @Boolean@ values considered as 32-bit integer values for
+    -- the purpose of this calculation. (This is equivalent to using the GLSL
+    -- std430 layout rules.)
     maxComputeSharedMemorySize :: Word32
   , -- | #limits-maxComputeWorkGroupCount# @maxComputeWorkGroupCount@[3] is the
     -- maximum number of local workgroups that /can/ be dispatched by a single

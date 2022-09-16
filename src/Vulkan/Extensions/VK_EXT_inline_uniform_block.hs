@@ -123,7 +123,7 @@
 --
 -- == Issues
 --
--- 1) Do we need a new storage class for inline uniform blocks vs uniform
+-- 1) Do we need a new storage class for inline uniform blocks vs. uniform
 -- blocks?
 --
 -- __RESOLVED__: No. The @Uniform@ storage class is used to allow the same

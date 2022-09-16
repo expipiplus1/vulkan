@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.34.5.
+-- This file has been generated from package.yaml by hpack version 0.34.7.
 --
 -- see: https://github.com/sol/hpack
 
@@ -370,6 +370,7 @@ library
       Vulkan.Extensions.VK_EXT_metal_surface
       Vulkan.Extensions.VK_EXT_multi_draw
       Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled
+      Vulkan.Extensions.VK_EXT_mutable_descriptor_type
       Vulkan.Extensions.VK_EXT_non_seamless_cube_map
       Vulkan.Extensions.VK_EXT_pageable_device_local_memory
       Vulkan.Extensions.VK_EXT_pci_bus_info

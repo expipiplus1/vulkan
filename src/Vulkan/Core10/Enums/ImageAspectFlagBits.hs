@@ -51,7 +51,7 @@ pattern IMAGE_ASPECT_COLOR_BIT              = ImageAspectFlagBits 0x00000001
 pattern IMAGE_ASPECT_DEPTH_BIT              = ImageAspectFlagBits 0x00000002
 -- | 'IMAGE_ASPECT_STENCIL_BIT' specifies the stencil aspect.
 pattern IMAGE_ASPECT_STENCIL_BIT            = ImageAspectFlagBits 0x00000004
--- | 'IMAGE_ASPECT_METADATA_BIT' specifies the metadata aspect, used for
+-- | 'IMAGE_ASPECT_METADATA_BIT' specifies the metadata aspect used for
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory sparse resource>
 -- operations.
 pattern IMAGE_ASPECT_METADATA_BIT           = ImageAspectFlagBits 0x00000008

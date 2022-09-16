@@ -268,7 +268,7 @@ instance Zero PhysicalDevicePipelineRobustnessFeaturesEXT where
 -- = Description
 --
 -- Resources bound as
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE' will
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT' will
 -- have the robustness behavior that covers its active descriptor type.
 --
 -- The scope of the effect of 'PipelineRobustnessCreateInfoEXT' depends on

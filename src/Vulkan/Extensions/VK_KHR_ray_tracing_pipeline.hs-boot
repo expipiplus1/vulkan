@@ -372,7 +372,7 @@
 --     device build
 --
 -- -   added
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-library pipeline library>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-library pipeline library>
 --     support for ray tracing
 --
 -- -   added

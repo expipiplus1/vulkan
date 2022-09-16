@@ -112,7 +112,7 @@ import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.Enums.ImageLayout (ImageLayout)
 import Vulkan.Core10.Handles (ImageView)
-import {-# SOURCE #-} Vulkan.Extensions.VK_VALVE_mutable_descriptor_type (MutableDescriptorTypeCreateInfoVALVE)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_mutable_descriptor_type (MutableDescriptorTypeCreateInfoEXT)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.CStruct.Extends (PokeChain)
@@ -1266,9 +1266,9 @@ instance Zero DescriptorImageInfo where
 -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DescriptorBindingFlagBits',
 -- and immutable samplers references. In addition, if the
 -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE', the
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT', the
 -- supported descriptor types in
--- 'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.MutableDescriptorTypeCreateInfoVALVE'
+-- 'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeCreateInfoEXT'
 -- /must/ be equally defined.
 --
 -- Note
@@ -1610,7 +1610,7 @@ instance Zero DescriptorImageInfo where
 --
 -- -   #VUID-VkWriteDescriptorSet-dstSet-04611# If the
 --     'DescriptorSetLayoutBinding' for @dstSet@ at @dstBinding@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT',
 --     the new active descriptor type @descriptorType@ /must/ exist in the
 --     corresponding @pMutableDescriptorTypeLists@ list for @dstBinding@
 --
@@ -1715,7 +1715,7 @@ data WriteDescriptorSet (es :: [Type]) = WriteDescriptorSet
     -- of each descriptor in @pImageInfo@, @pBufferInfo@, or
     -- @pTexelBufferView@, as described below. If 'DescriptorSetLayoutBinding'
     -- for @dstSet@ at @dstBinding@ is not equal to
-    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE',
+    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT',
     -- @descriptorType@ /must/ be the same type as the @descriptorType@
     -- specified in 'DescriptorSetLayoutBinding' for @dstSet@ at @dstBinding@.
     -- The type of the descriptor also controls which array the descriptors are
@@ -1844,12 +1844,12 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
 -- = Description
 --
 -- If the 'DescriptorSetLayoutBinding' for @dstBinding@ is
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE' and
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT' and
 -- @srcBinding@ is not
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE', the
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT', the
 -- new active descriptor type becomes the descriptor type of @srcBinding@.
 -- If both 'DescriptorSetLayoutBinding' for @srcBinding@ and @dstBinding@
--- are 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE',
+-- are 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT',
 -- the active descriptor type in each source descriptor is copied into the
 -- corresponding destination descriptor. The active descriptor type /can/
 -- be different for each source descriptor.
@@ -1922,7 +1922,7 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
 --     created with neither
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --     nor
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE'
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT'
 --     flags set, then @dstSet@’s layout /must/ have been created without
 --     the
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
@@ -1940,7 +1940,7 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
 --     which @srcSet@ was allocated was created with neither
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
 --     nor
---     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_VALVE'
+--     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_EXT'
 --     flags set, then the descriptor pool from which @dstSet@ was
 --     allocated /must/ have been created without the
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
@@ -1954,26 +1954,25 @@ instance es ~ '[] => Zero (WriteDescriptorSet es) where
 --
 -- -   #VUID-VkCopyDescriptorSet-dstSet-04612# If
 --     'DescriptorSetLayoutBinding' for @dstSet@ at @dstBinding@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT',
 --     the new active descriptor type /must/ exist in the corresponding
 --     @pMutableDescriptorTypeLists@ list for @dstBinding@ if the new
 --     active descriptor type is not
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE'
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT'
 --
 -- -   #VUID-VkCopyDescriptorSet-srcSet-04613# If
 --     'DescriptorSetLayoutBinding' for @srcSet@ at @srcBinding@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE'
---     and the 'DescriptorSetLayoutBinding' for @dstSet@ at @dstBinding@ is
---     not
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT' and
+--     the 'DescriptorSetLayoutBinding' for @dstSet@ at @dstBinding@ is not
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT',
 --     the active descriptor type for the source descriptor /must/ match
 --     the descriptor type of @dstBinding@
 --
 -- -   #VUID-VkCopyDescriptorSet-dstSet-04614# If
 --     'DescriptorSetLayoutBinding' for @dstSet@ at @dstBinding@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT',
 --     and the new active descriptor type is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT',
 --     the @pMutableDescriptorTypeLists@ for @srcBinding@ and @dstBinding@
 --     /must/ match exactly
 --
@@ -2186,7 +2185,7 @@ instance Zero CopyDescriptorSet where
 --
 -- -   #VUID-VkDescriptorSetLayoutBinding-descriptorType-04605# If
 --     @descriptorType@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT',
 --     then @pImmutableSamplers@ /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
@@ -2328,13 +2327,13 @@ instance Zero DescriptorSetLayoutBinding where
 --     contains
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
 --     @flags@ /must/ not contain
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE'
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT'
 --
 -- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-04591# If @flags@
 --     contains
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
 --     @pBindings@ /must/ not have a @descriptorType@ of
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE'
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT'
 --
 -- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-03000# If any binding
 --     has the
@@ -2354,31 +2353,31 @@ instance Zero DescriptorSetLayoutBinding where
 --     contains
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT',
 --     @flags@ /must/ not contain
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE'
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT'
 --
--- -   #VUID-VkDescriptorSetLayoutCreateInfo-pBindings-07031# If any
+-- -   #VUID-VkDescriptorSetLayoutCreateInfo-pBindings-07303# If any
 --     element @pBindings@[i] has a @descriptorType@ of
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT',
 --     then a
---     'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.MutableDescriptorTypeCreateInfoVALVE'
+--     'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeCreateInfoEXT'
 --     /must/ be present in the @pNext@ chain, and
---     @mutableDescriptorTypeCount@ /must/ be greater than i.
+--     @mutableDescriptorTypeListCount@ /must/ be greater than i.
 --
 -- -   #VUID-VkDescriptorSetLayoutCreateInfo-descriptorType-04594# If a
 --     binding has a @descriptorType@ value of
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT',
 --     then @pImmutableSamplers@ /must/ be @NULL@
 --
 -- -   #VUID-VkDescriptorSetLayoutCreateInfo-mutableDescriptorType-04595#
 --     If
---     'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.PhysicalDeviceMutableDescriptorTypeFeaturesVALVE'::@mutableDescriptorType@
+--     'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.PhysicalDeviceMutableDescriptorTypeFeaturesEXT'::@mutableDescriptorType@
 --     is not enabled, @pBindings@ /must/ not contain a @descriptorType@ of
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE'
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT'
 --
 -- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-04596# If @flags@
 --     contains
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE',
---     'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.PhysicalDeviceMutableDescriptorTypeFeaturesVALVE'::@mutableDescriptorType@
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT',
+--     'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.PhysicalDeviceMutableDescriptorTypeFeaturesEXT'::@mutableDescriptorType@
 --     /must/ be enabled
 --
 -- == Valid Usage (Implicit)
@@ -2391,7 +2390,7 @@ instance Zero DescriptorSetLayoutBinding where
 --     /must/ be either @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.DescriptorSetLayoutBindingFlagsCreateInfo'
 --     or
---     'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.MutableDescriptorTypeCreateInfoVALVE'
+--     'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeCreateInfoEXT'
 --
 -- -   #VUID-VkDescriptorSetLayoutCreateInfo-sType-unique# The @sType@
 --     value of each struct in the @pNext@ chain /must/ be unique
@@ -2438,7 +2437,7 @@ instance Extensible DescriptorSetLayoutCreateInfo where
   getNext DescriptorSetLayoutCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DescriptorSetLayoutCreateInfo e => b) -> Maybe b
   extends _ f
-    | Just Refl <- eqT @e @MutableDescriptorTypeCreateInfoVALVE = Just f
+    | Just Refl <- eqT @e @MutableDescriptorTypeCreateInfoEXT = Just f
     | Just Refl <- eqT @e @DescriptorSetLayoutBindingFlagsCreateInfo = Just f
     | otherwise = Nothing
 
@@ -2602,37 +2601,37 @@ instance Zero DescriptorPoolSize where
 -- fragmentation of the underlying hardware resources occurs.
 --
 -- If a @pPoolSizes@[i]::@type@ is
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE', a
--- 'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.MutableDescriptorTypeCreateInfoVALVE'
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT', a
+-- 'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeCreateInfoEXT'
 -- struct in the @pNext@ chain /can/ be used to specify which mutable
 -- descriptor types /can/ be allocated from the pool. If present in the
 -- @pNext@ chain,
--- 'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.MutableDescriptorTypeCreateInfoVALVE'::@pMutableDescriptorTypeLists@[i]
+-- 'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeCreateInfoEXT'::@pMutableDescriptorTypeLists@[i]
 -- specifies which kind of
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE'
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT'
 -- descriptors /can/ be allocated from this pool entry. If
--- 'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.MutableDescriptorTypeCreateInfoVALVE'
+-- 'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeCreateInfoEXT'
 -- does not exist in the @pNext@ chain, or
--- 'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.MutableDescriptorTypeCreateInfoVALVE'::@pMutableDescriptorTypeLists@[i]
+-- 'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeCreateInfoEXT'::@pMutableDescriptorTypeLists@[i]
 -- is out of range, the descriptor pool allocates enough memory to be able
 -- to allocate a
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE'
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT'
 -- descriptor with any supported
 -- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType' as a mutable
 -- descriptor. A mutable descriptor /can/ be allocated from a pool entry if
 -- the type list in 'DescriptorSetLayoutCreateInfo' is a subset of the type
 -- list declared in the descriptor pool, or if the pool entry is created
 -- without a descriptor type list. Multiple @pPoolSizes@ entries with
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE' /can/
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT' /can/
 -- be declared. When multiple such pool entries are present in
 -- @pPoolSizes@, they specify sets of supported descriptor types which
 -- either fully overlap, partially overlap, or are disjoint. Two sets fully
 -- overlap if the sets of supported descriptor types are equal. If the sets
 -- are not disjoint they partially overlap. A pool entry without a
--- 'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.MutableDescriptorTypeListVALVE'
+-- 'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeListEXT'
 -- assigned to it is considered to partially overlap any other pool entry
 -- which has a
--- 'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.MutableDescriptorTypeListVALVE'
+-- 'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeListEXT'
 -- assigned to it. The application /must/ ensure that partial overlap does
 -- not exist in @pPoolSizes@.
 --
@@ -2649,28 +2648,27 @@ instance Zero DescriptorPoolSize where
 --     greater than @0@
 --
 -- -   #VUID-VkDescriptorPoolCreateInfo-flags-04607# If @flags@ has the
---     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_VALVE'
+--     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_EXT'
 --     bit set, then the
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
 --     bit /must/ not be set
 --
 -- -   #VUID-VkDescriptorPoolCreateInfo-mutableDescriptorType-04608# If
---     'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.PhysicalDeviceMutableDescriptorTypeFeaturesVALVE'::@mutableDescriptorType@
+--     'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.PhysicalDeviceMutableDescriptorTypeFeaturesEXT'::@mutableDescriptorType@
 --     is not enabled, @pPoolSizes@ /must/ not contain a @descriptorType@
---     of
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE'
+--     of 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT'
 --
 -- -   #VUID-VkDescriptorPoolCreateInfo-flags-04609# If @flags@ has the
---     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_VALVE'
+--     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_EXT'
 --     bit set,
---     'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.PhysicalDeviceMutableDescriptorTypeFeaturesVALVE'::@mutableDescriptorType@
+--     'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.PhysicalDeviceMutableDescriptorTypeFeaturesEXT'::@mutableDescriptorType@
 --     /must/ be enabled
 --
 -- -   #VUID-VkDescriptorPoolCreateInfo-pPoolSizes-04787# If @pPoolSizes@
 --     contains a @descriptorType@ of
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT',
 --     any other
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE'
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT'
 --     element in @pPoolSizes@ /must/ not have sets of supported descriptor
 --     types which partially overlap
 --
@@ -2684,7 +2682,7 @@ instance Zero DescriptorPoolSize where
 --     either @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.DescriptorPoolInlineUniformBlockCreateInfo'
 --     or
---     'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.MutableDescriptorTypeCreateInfoVALVE'
+--     'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeCreateInfoEXT'
 --
 -- -   #VUID-VkDescriptorPoolCreateInfo-sType-unique# The @sType@ value of
 --     each struct in the @pNext@ chain /must/ be unique
@@ -2731,7 +2729,7 @@ instance Extensible DescriptorPoolCreateInfo where
   getNext DescriptorPoolCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends DescriptorPoolCreateInfo e => b) -> Maybe b
   extends _ f
-    | Just Refl <- eqT @e @MutableDescriptorTypeCreateInfoVALVE = Just f
+    | Just Refl <- eqT @e @MutableDescriptorTypeCreateInfoEXT = Just f
     | Just Refl <- eqT @e @DescriptorPoolInlineUniformBlockCreateInfo = Just f
     | otherwise = Nothing
 
@@ -2796,9 +2794,9 @@ instance es ~ '[] => Zero (DescriptorPoolCreateInfo es) where
 --
 -- -   #VUID-VkDescriptorSetAllocateInfo-pSetLayouts-04610# If any element
 --     of @pSetLayouts@ was created with the
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE'
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT'
 --     bit set, @descriptorPool@ /must/ have been created with the
---     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_VALVE'
+--     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_EXT'
 --     flag set
 --
 -- == Valid Usage (Implicit)

@@ -86,6 +86,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_metal_surface
                           , module Vulkan.Extensions.VK_EXT_multi_draw
                           , module Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled
+                          , module Vulkan.Extensions.VK_EXT_mutable_descriptor_type
                           , module Vulkan.Extensions.VK_EXT_non_seamless_cube_map
                           , module Vulkan.Extensions.VK_EXT_pageable_device_local_memory
                           , module Vulkan.Extensions.VK_EXT_pci_bus_info
@@ -379,6 +380,7 @@ import Vulkan.Extensions.VK_EXT_metal_objects
 import Vulkan.Extensions.VK_EXT_metal_surface
 import Vulkan.Extensions.VK_EXT_multi_draw
 import Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled
+import Vulkan.Extensions.VK_EXT_mutable_descriptor_type
 import Vulkan.Extensions.VK_EXT_non_seamless_cube_map
 import Vulkan.Extensions.VK_EXT_pageable_device_local_memory
 import Vulkan.Extensions.VK_EXT_pci_bus_info

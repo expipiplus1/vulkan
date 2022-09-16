@@ -274,8 +274,7 @@ foreign import ccall
 --
 -- If no bits are set in @flags@, and all requested queries are in the
 -- available state, results are written as an array of 32-bit unsigned
--- integer values. The behavior when not all queries are available, is
--- described
+-- integer values. Behavior when not all queries are available is described
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#queries-wait-bit-not-set below>.
 --
 -- If

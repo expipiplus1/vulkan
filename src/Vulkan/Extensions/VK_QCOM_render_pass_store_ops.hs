@@ -63,7 +63,7 @@
 -- cache. The 'Vulkan.Core10.Enums.AttachmentStoreOp.AttachmentStoreOp'
 -- 'ATTACHMENT_STORE_OP_NONE_QCOM' /may/ allow an implementation to assume
 -- that the attachment was not written and allow an implementation to avoid
--- such a flush..
+-- such a flush.
 --
 -- == New Enum Constants
 --

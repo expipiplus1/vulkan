@@ -895,10 +895,12 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.Result.SUCCESS', to indicate that not all the
 -- available modes were returned.
 --
--- If the @VK_GOOGLE_surfaceless_query@ extension is enabled, the values
--- returned in @pPresentModes@ will be identical for every valid surface
--- created on this physical device, and so @surface@ /can/ be
--- 'Vulkan.Core10.APIConstants.NULL_HANDLE'.
+-- If the @VK_GOOGLE_surfaceless_query@ extension is enabled and @surface@
+-- is 'Vulkan.Core10.APIConstants.NULL_HANDLE', the values returned in
+-- @pPresentModes@ will only indicate support for 'PRESENT_MODE_FIFO_KHR',
+-- 'PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR', and
+-- 'PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR'. To query support for any
+-- other present mode, a valid handle /must/ be provided in @surface@.
 --
 -- == Valid Usage
 --

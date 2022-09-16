@@ -58,14 +58,14 @@
 -- This extension adds a new way to write shaders to be used with multiview
 -- subpasses, where the attributes for all views are written out by a
 -- single invocation of the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stages>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader stages>.
 -- Related SPIR-V and GLSL extensions
 -- @SPV_NVX_multiview_per_view_attributes@ and
 -- @GL_NVX_multiview_per_view_attributes@ introduce per-view position and
 -- viewport mask attributes arrays, and this extension defines how those
 -- per-view attribute arrays are interpreted by Vulkan. Pipelines using
 -- per-view attributes /may/ only execute the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stages>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader stages>
 -- once for all views rather than once per-view, which reduces redundant
 -- shading work.
 --

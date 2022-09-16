@@ -207,7 +207,7 @@
 -- A query pool created with this type will capture 2 integers -
 -- numPrimitivesWritten and numPrimitivesNeeded - for the specified vertex
 -- stream output from the last
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader stage>.
 -- The vertex stream output queried is zero by default, but can be
 -- specified with the new 'cmdBeginQueryIndexedEXT' and
 -- 'cmdEndQueryIndexedEXT' commands.
