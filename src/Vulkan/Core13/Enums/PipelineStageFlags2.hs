@@ -357,7 +357,7 @@ pattern PIPELINE_STAGE_2_INDEX_INPUT_BIT                    = PipelineStageFlagB
 pattern PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT         = PipelineStageFlagBits2 0x0000002000000000
 -- | 'PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT' is equivalent to
 -- specifying all supported
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stages>:
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader stages>:
 --
 -- -   'PIPELINE_STAGE_2_VERTEX_SHADER_BIT'
 --

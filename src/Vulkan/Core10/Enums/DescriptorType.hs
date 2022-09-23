@@ -11,9 +11,9 @@ module Vulkan.Core10.Enums.DescriptorType  (DescriptorType( DESCRIPTOR_TYPE_SAMP
                                                           , DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC
                                                           , DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC
                                                           , DESCRIPTOR_TYPE_INPUT_ATTACHMENT
+                                                          , DESCRIPTOR_TYPE_MUTABLE_EXT
                                                           , DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM
                                                           , DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM
-                                                          , DESCRIPTOR_TYPE_MUTABLE_VALVE
                                                           , DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV
                                                           , DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR
                                                           , DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK
@@ -70,14 +70,14 @@ import GHC.Show (Show(showsPrec))
 -- -   'DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK' specifies an
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-inlineuniformblock inline uniform block>.
 --
--- -   'DESCRIPTOR_TYPE_MUTABLE_VALVE' specifies a
+-- -   'DESCRIPTOR_TYPE_MUTABLE_EXT' specifies a
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-mutable descriptor of mutable type>.
 --
 -- -   'DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM' specifies a
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-weightimage sampled weight image descriptor>.
 --
 -- -   'DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM' specifies a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-blockmatching block matching image descriptor>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-blockmatch block matching image descriptor>.
 --
 -- When a descriptor set is updated via elements of
 -- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet', members of
@@ -145,7 +145,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutBinding',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.DescriptorUpdateTemplateEntry',
 -- 'Vulkan.Extensions.VK_NVX_image_view_handle.ImageViewHandleInfoNVX',
--- 'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.MutableDescriptorTypeListVALVE',
+-- 'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeListEXT',
 -- 'Vulkan.Core10.DescriptorSet.WriteDescriptorSet'
 newtype DescriptorType = DescriptorType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -172,12 +172,12 @@ pattern DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC     = DescriptorType 8
 pattern DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC     = DescriptorType 9
 -- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT"
 pattern DESCRIPTOR_TYPE_INPUT_ATTACHMENT           = DescriptorType 10
+-- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_MUTABLE_EXT"
+pattern DESCRIPTOR_TYPE_MUTABLE_EXT                = DescriptorType 1000351000
 -- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM"
 pattern DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM     = DescriptorType 1000440001
 -- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM"
 pattern DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM   = DescriptorType 1000440000
--- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_MUTABLE_VALVE"
-pattern DESCRIPTOR_TYPE_MUTABLE_VALVE              = DescriptorType 1000351000
 -- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV"
 pattern DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV  = DescriptorType 1000165000
 -- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR"
@@ -195,9 +195,9 @@ pattern DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK       = DescriptorType 1000138000
              DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
              DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC,
              DESCRIPTOR_TYPE_INPUT_ATTACHMENT,
+             DESCRIPTOR_TYPE_MUTABLE_EXT,
              DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM,
              DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM,
-             DESCRIPTOR_TYPE_MUTABLE_VALVE,
              DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV,
              DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR,
              DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK :: DescriptorType #-}
@@ -221,9 +221,9 @@ showTableDescriptorType =
   , (DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC    , "UNIFORM_BUFFER_DYNAMIC")
   , (DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC    , "STORAGE_BUFFER_DYNAMIC")
   , (DESCRIPTOR_TYPE_INPUT_ATTACHMENT          , "INPUT_ATTACHMENT")
+  , (DESCRIPTOR_TYPE_MUTABLE_EXT               , "MUTABLE_EXT")
   , (DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM    , "BLOCK_MATCH_IMAGE_QCOM")
   , (DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM  , "SAMPLE_WEIGHT_IMAGE_QCOM")
-  , (DESCRIPTOR_TYPE_MUTABLE_VALVE             , "MUTABLE_VALVE")
   , (DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV , "ACCELERATION_STRUCTURE_NV")
   , (DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR, "ACCELERATION_STRUCTURE_KHR")
   , (DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK      , "INLINE_UNIFORM_BLOCK")

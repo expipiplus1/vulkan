@@ -576,7 +576,7 @@ instance Zero DescriptorUpdateTemplateEntry where
 --     @templateType@ is
 --     'Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET',
 --     @descriptorSetLayout@ /must/ not contain a binding with type
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE'
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT'
 --
 -- == Valid Usage (Implicit)
 --

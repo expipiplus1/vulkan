@@ -673,7 +673,7 @@ instance Zero PushConstantRange where
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-04606# Any element of
 --     @pSetLayouts@ /must/ not have been created with the
---     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE'
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT'
 --     bit set
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-graphicsPipelineLibrary-06753# If

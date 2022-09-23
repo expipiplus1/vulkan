@@ -88,8 +88,13 @@ import Vulkan.Core10.Enums.StructureType (StructureType(..))
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --     in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'::@externalMemoryProperties.externalMemoryFeatures@.
---     Otherwise, @requiresDedicatedAllocation@ will be
---     'Vulkan.Core10.FundamentalTypes.FALSE'.
+--
+-- -   @requiresDedicatedAllocation@ /may/ be
+--     'Vulkan.Core10.FundamentalTypes.TRUE' if the image’s tiling is
+--     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'.
+--
+-- -   @requiresDedicatedAllocation@ will otherwise be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   If
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT'

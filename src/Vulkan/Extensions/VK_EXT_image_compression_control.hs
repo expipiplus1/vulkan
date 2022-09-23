@@ -854,7 +854,7 @@ type ImageCompressionFixedRateFlagsEXT = ImageCompressionFixedRateFlagBitsEXT
 -- component, stored at quarter the original size, 2.5 bits, rounded down).
 --
 -- If @flags@ includes 'IMAGE_COMPRESSION_FIXED_RATE_EXPLICIT_EXT', and
--- multiple bits are set in 'ImageCompressionControlEXT'::pFixedRateFlags
+-- multiple bits are set in 'ImageCompressionControlEXT'::@pFixedRateFlags@
 -- for a plane, implementations /should/ apply the lowest allowed bitrate
 -- that is supported.
 --

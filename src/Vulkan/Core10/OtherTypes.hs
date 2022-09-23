@@ -705,6 +705,12 @@ instance Zero BufferMemoryBarrier where
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT'
 --     usage bit.
 --
+-- -   #VUID-VkImageMemoryBarrier-attachmentFeedbackLoopLayout-07313# If
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFeedbackLoopLayout attachmentFeedbackLoopLayout>
+--     feature is not enabled, @newLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT'
+--
 -- -   #VUID-VkImageMemoryBarrier-synchronization2-03857# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2>
 --     feature is not enabled, and @image@ was created with a sharing mode

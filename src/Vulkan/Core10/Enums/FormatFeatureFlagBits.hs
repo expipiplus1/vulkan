@@ -122,12 +122,20 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 -- -   'FORMAT_FEATURE_TRANSFER_SRC_BIT' specifies that an image /can/ be
 --     used as a source image for
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#copies copy commands>.
+--     If the application @apiVersion@ is Vulkan 1.0 and
+--     @VK_KHR_maintenance1@ is not supported,
+--     'FORMAT_FEATURE_TRANSFER_SRC_BIT' is implied to be set when the
+--     format feature flag is not 0.
 --
 -- -   'FORMAT_FEATURE_TRANSFER_DST_BIT' specifies that an image /can/ be
 --     used as a destination image for
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#copies copy commands>
 --     and
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#clears clear commands>.
+--     If the application @apiVersion@ is Vulkan 1.0 and
+--     @VK_KHR_maintenance1@ is not supported,
+--     'FORMAT_FEATURE_TRANSFER_DST_BIT' is implied to be set when the
+--     format feature flag is not 0.
 --
 -- -   'FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT' specifies
 --     'Vulkan.Core10.Handles.Image' /can/ be used as a sampled image with
@@ -467,10 +475,16 @@ pattern FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT = FormatFeatureFlagBits 0x000
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#copies copy commands>
 -- and
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#clears clear commands>.
+-- If the application @apiVersion@ is Vulkan 1.0 and @VK_KHR_maintenance1@
+-- is not supported, 'FORMAT_FEATURE_TRANSFER_DST_BIT' is implied to be set
+-- when the format feature flag is not 0.
 pattern FORMAT_FEATURE_TRANSFER_DST_BIT            = FormatFeatureFlagBits 0x00008000
 -- | 'FORMAT_FEATURE_TRANSFER_SRC_BIT' specifies that an image /can/ be used
 -- as a source image for
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#copies copy commands>.
+-- If the application @apiVersion@ is Vulkan 1.0 and @VK_KHR_maintenance1@
+-- is not supported, 'FORMAT_FEATURE_TRANSFER_SRC_BIT' is implied to be set
+-- when the format feature flag is not 0.
 pattern FORMAT_FEATURE_TRANSFER_SRC_BIT            = FormatFeatureFlagBits 0x00004000
 
 conNameFormatFeatureFlagBits :: String

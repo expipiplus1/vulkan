@@ -338,6 +338,11 @@ importFenceFdKHR device importFenceFdInfo = liftIO . evalContT $ do
 --     requirements listed for @handleType@ in
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#external-fence-handle-types-compatibility external fence handle types compatibility>
 --
+-- -   #VUID-VkImportFenceFdInfoKHR-handleType-07306# If @handleType@
+--     refers to a handle type with copy payload transference semantics,
+--     @flags@ /must/ contain
+--     'Vulkan.Core11.Enums.FenceImportFlagBits.FENCE_IMPORT_TEMPORARY_BIT'
+--
 -- If @handleType@ is
 -- 'Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT',
 -- the special value @-1@ for @fd@ is treated like a valid sync file

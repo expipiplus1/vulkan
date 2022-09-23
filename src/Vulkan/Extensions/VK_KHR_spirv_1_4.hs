@@ -123,7 +123,7 @@
 --
 -- Mixing SPIR-V versions 1.0-1.3 in the same pipeline has not been
 -- disallowed, so it would be inconsistent to disallow mixing 1.4 with
--- previous versions.. SPIR-V 1.4 does not introduce anything that should
+-- previous versions. SPIR-V 1.4 does not introduce anything that should
 -- cause new difficulties here.
 --
 -- 3. Must Vulkan extensions corresponding to SPIR-V extensions that were

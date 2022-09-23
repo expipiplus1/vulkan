@@ -116,13 +116,13 @@
 -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@timestampPeriod@
 -- makes it possible to calculate future device timestamps as follows:
 --
+-- > futureTimestamp = calibratedTimestamp + deltaNanoseconds / timestampPeriod
+--
 -- 6) In what queue are timestamp values in time domain
 -- 'TIME_DOMAIN_DEVICE_EXT' captured by 'getCalibratedTimestampsEXT'?
 --
 -- __RESOLVED__: An implementation supporting this extension will have all
 -- its VkQueue share the same time domain.
---
--- > futureTimestamp = calibratedTimestamp + deltaNanoseconds / timestampPeriod
 --
 -- 6) Can the host and device timestamp values drift apart over longer
 -- periods of time?

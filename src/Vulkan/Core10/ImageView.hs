@@ -583,12 +583,12 @@ instance Zero ImageSubresourceRange where
 -- If @image@ was created with the
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT'
 -- flag, @format@ /must/ be /compatible/ with the image’s format as
--- described above, or /must/ be an uncompressed format in which case it
--- /must/ be /size-compatible/ with the image’s format, as defined for
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#copies-images-format-size-compatibility copying data between images>.
--- In this case, the resulting image view’s texel dimensions equal the
--- dimensions of the selected mip level divided by the compressed texel
--- block size and rounded up.
+-- described above; or /must/ be an uncompressed format, in which case it
+-- /must/ be
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-size-compatibility size-compatible>
+-- with the image’s format. In this case, the resulting image view’s texel
+-- dimensions equal the dimensions of the selected mip level divided by the
+-- compressed texel block size and rounded up.
 --
 -- The 'ComponentMapping' @components@ member describes a remapping from
 -- components of the image to components of the vector returned by shader
@@ -1365,7 +1365,7 @@ data ImageViewCreateInfo (es :: [Type]) = ImageViewCreateInfo
     next :: Chain es
   , -- | @flags@ is a bitmask of
     -- 'Vulkan.Core10.Enums.ImageViewCreateFlagBits.ImageViewCreateFlagBits'
-    -- describing additional parameters of the image view.
+    -- specifying additional parameters of the image view.
     flags :: ImageViewCreateFlags
   , -- | @image@ is a 'Vulkan.Core10.Handles.Image' on which the view will be
     -- created.
@@ -1373,8 +1373,8 @@ data ImageViewCreateInfo (es :: [Type]) = ImageViewCreateInfo
   , -- | @viewType@ is a 'Vulkan.Core10.Enums.ImageViewType.ImageViewType' value
     -- specifying the type of the image view.
     viewType :: ImageViewType
-  , -- | @format@ is a 'Vulkan.Core10.Enums.Format.Format' describing the format
-    -- and type used to interpret texel blocks in the image.
+  , -- | @format@ is a 'Vulkan.Core10.Enums.Format.Format' specifying the format
+    -- and type used to interpret texel blocks of the image.
     format :: Format
   , -- | @components@ is a 'ComponentMapping' structure specifying a remapping of
     -- color components (or of depth or stencil components after they have been

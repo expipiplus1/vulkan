@@ -77,8 +77,9 @@ pattern QUEUE_SPARSE_BINDING_BIT = QueueFlagBits 0x00000008
 -- 'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DEVICE_QUEUE_CREATE_PROTECTED_BIT'
 -- bit. (see
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-protected-memory Protected Memory>).
--- If the physical device supports the @protectedMemory@ feature, at least
--- one of its queue families /must/ support this bit.
+-- If the physical device supports the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-protectedMemory protectedMemory>
+-- feature, at least one of its queue families /must/ support this bit.
 pattern QUEUE_PROTECTED_BIT      = QueueFlagBits 0x00000010
 
 conNameQueueFlagBits :: String

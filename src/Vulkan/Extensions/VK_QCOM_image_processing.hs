@@ -328,11 +328,11 @@ data PhysicalDeviceImageProcessingFeaturesQCOM = PhysicalDeviceImageProcessingFe
     -- the implementation supports shader modules that declare the
     -- @TextureSampleWeightedQCOM@ capability.
     textureSampleWeighted :: Bool
-  , -- | #features-TextureBoxFilter# @textureBoxFilter@ indicates that the
+  , -- | #features-textureBoxFilter# @textureBoxFilter@ indicates that the
     -- implementation supports shader modules that declare the
     -- @TextureBoxFilterQCOM@ capability.
     textureBoxFilter :: Bool
-  , -- | #features-TextureBlockMatch# @textureBlockMatch@ indicates that the
+  , -- | #features-textureBlockMatch# @textureBlockMatch@ indicates that the
     -- implementation supports shader modules that declare the
     -- @TextureBlockMatchQCOM@ capability.
     textureBlockMatch :: Bool

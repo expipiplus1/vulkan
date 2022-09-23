@@ -670,7 +670,7 @@ destroyPipeline device pipeline allocator = liftIO . evalContT $ do
 -- viewport instead of the upper left corner. Using the negative @height@
 -- allows the application to avoid having to negate the y component of the
 -- @Position@ output from the last
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader stage>.
 --
 -- The width and height of the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxViewportDimensions implementation-dependent maximum viewport dimensions>
@@ -897,7 +897,7 @@ instance Zero SpecializationMapEntry where
 -- 'PipelineShaderStageCreateInfo', 'SpecializationMapEntry'
 data SpecializationInfo = SpecializationInfo
   { -- | @pMapEntries@ is a pointer to an array of 'SpecializationMapEntry'
-    -- structures which map constant IDs to offsets in @pData@.
+    -- structures, which map constant IDs to offsets in @pData@.
     mapEntries :: Vector SpecializationMapEntry
   , -- | @dataSize@ is the byte size of the @pData@ buffer.
     dataSize :: Word64
@@ -1123,38 +1123,6 @@ instance Zero SpecializationInfo where
 --     execution path, all execution paths that are not exclusive to helper
 --     invocations /must/ either discard the fragment, or write or
 --     initialize the value of @FragStencilRefEXT@
---
--- -   #VUID-VkPipelineShaderStageCreateInfo-stage-02093# If @stage@ is
---     'Vulkan.Extensions.VK_NV_mesh_shader.SHADER_STAGE_MESH_BIT_NV' and
---     the @MeshNV@ @Execution@ @Model@ is used, the identified entry point
---     /must/ have an @OpExecutionMode@ instruction specifying a maximum
---     output vertex count, @OutputVertices@, that is greater than @0@ and
---     less than or equal to
---     'Vulkan.Extensions.VK_NV_mesh_shader.PhysicalDeviceMeshShaderPropertiesNV'::@maxMeshOutputVertices@
---
--- -   #VUID-VkPipelineShaderStageCreateInfo-stage-02094# If @stage@ is
---     'Vulkan.Extensions.VK_NV_mesh_shader.SHADER_STAGE_MESH_BIT_NV' and
---     the @MeshNV@ @Execution@ @Model@ is used, the identified entry point
---     /must/ have an @OpExecutionMode@ instruction specifying a maximum
---     output primitive count, @OutputPrimitivesNV@, that is greater than
---     @0@ and less than or equal to
---     'Vulkan.Extensions.VK_NV_mesh_shader.PhysicalDeviceMeshShaderPropertiesNV'::@maxMeshOutputPrimitives@
---
--- -   #VUID-VkPipelineShaderStageCreateInfo-stage-07061# If @stage@ is
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
---     and the @MeshEXT@ @Execution@ @Model@ is used, the identified entry
---     point /must/ have an @OpExecutionMode@ instruction specifying a
---     maximum output vertex count, @OutputVertices@, that is greater than
---     @0@ and less than or equal to
---     'Vulkan.Extensions.VK_EXT_mesh_shader.PhysicalDeviceMeshShaderPropertiesEXT'::@maxMeshOutputVertices@
---
--- -   #VUID-VkPipelineShaderStageCreateInfo-stage-07062# If @stage@ is
---     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
---     and the @MeshEXT@ @Execution@ @Model@ is used, the identified entry
---     point /must/ have an @OpExecutionMode@ instruction specifying a
---     maximum output primitive count, @OutputPrimitivesEXT@, that is
---     greater than @0@ and less than or equal to
---     'Vulkan.Extensions.VK_EXT_mesh_shader.PhysicalDeviceMeshShaderPropertiesEXT'::@maxMeshOutputPrimitives@
 --
 -- -   #VUID-VkPipelineShaderStageCreateInfo-flags-02784# If @flags@ has
 --     the
@@ -2982,7 +2950,7 @@ data PipelineColorBlendAttachmentState = PipelineColorBlendAttachmentState
   , -- | @dstAlphaBlendFactor@ selects which blend factor is used to determine
     -- the destination factor Da.
     dstAlphaBlendFactor :: BlendFactor
-  , -- | @alphaBlendOp@ selects which blend operation is use to calculate the
+  , -- | @alphaBlendOp@ selects which blend operation is used to calculate the
     -- alpha values to write to the color attachment.
     alphaBlendOp :: BlendOp
   , -- | @colorWriteMask@ is a bitmask of
@@ -3596,11 +3564,11 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- 'Vulkan.Core10.Enums.Result.ERROR_INVALID_SHADER_NV' will be generated.
 --
 -- The state required for a graphics pipeline is divided into
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-vertex-input vertex input state>,
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-vertex-input vertex input state>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
 -- and
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output state>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output state>.
 --
 -- Vertex input state is defined by:
 --
@@ -3709,21 +3677,31 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT'
 --     flags
 --
+-- Dynamic state values set via @pDynamicState@ /must/ be ignored if the
+-- state they correspond to is not otherwise statically set by one of the
+-- state subsets used to create the pipeline. Additionally, setting dynamic
+-- state values /must/ not modify whether state in a linked library is
+-- static or dynamic; this is set and unchangeable when the library is
+-- created. For example, if a pipeline only included
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+-- then any dynamic state value corresponding to depth or stencil testing
+-- has no effect.
+--
 -- A complete graphics pipeline always includes
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 -- with other subsets included depending on that state. If the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 -- includes a vertex shader, then
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-vertex-input vertex input state>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-vertex-input vertex input state>
 -- is included in a complete graphics pipeline. If the value of
 -- 'PipelineRasterizationStateCreateInfo'::@rasterizerDiscardEnable@ in the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 -- is 'Vulkan.Core10.FundamentalTypes.FALSE' or the
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE'
 -- dynamic state is enabled
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 -- and
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>
 -- is included in a complete graphics pipeline.
 --
 -- If different subsets are linked together with pipeline layouts created
@@ -3774,7 +3752,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-02095# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     the geometric shader stages provided in @pStages@ /must/ be either
 --     from the mesh shading pipeline (@stage@ is
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT'
@@ -3789,7 +3767,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-stage-02096# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     the @stage@ member of one element of @pStages@ /must/ be either
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT' or
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MESH_BIT_EXT'
@@ -3805,19 +3783,19 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-00729# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and @pStages@ includes a tessellation control shader stage, it
 --     /must/ include a tessellation evaluation shader stage
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-00730# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and @pStages@ includes a tessellation evaluation shader stage, it
 --     /must/ include a tessellation control shader stage
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-00731# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and @pStages@ includes a tessellation control shader stage and a
 --     tessellation evaluation shader stage, @pTessellationState@ /must/ be
 --     a valid pointer to a valid 'PipelineTessellationStateCreateInfo'
@@ -3825,14 +3803,14 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-00732# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and @pStages@ includes tessellation shader stages, the shader code
 --     of at least one stage /must/ contain an @OpExecutionMode@
 --     instruction specifying the type of subdivision in the pipeline
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-00733# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and @pStages@ includes tessellation shader stages, and the shader
 --     code of both stages contain an @OpExecutionMode@ instruction
 --     specifying the type of subdivision in the pipeline, they /must/ both
@@ -3840,14 +3818,14 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-00734# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and @pStages@ includes tessellation shader stages, the shader code
 --     of at least one stage /must/ contain an @OpExecutionMode@
 --     instruction specifying the output patch size in the pipeline
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-00735# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and @pStages@ includes tessellation shader stages, and the shader
 --     code of both contain an @OpExecutionMode@ instruction specifying the
 --     out patch size in the pipeline, they /must/ both specify the same
@@ -3855,21 +3833,21 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-00736# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and @pStages@ includes tessellation shader stages, the @topology@
 --     member of @pInputAssembly@ /must/ be
 --     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_PATCH_LIST'
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-topology-00737# If the pipeline
 --     is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and the @topology@ member of @pInputAssembly@ is
 --     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_PATCH_LIST',
 --     @pStages@ /must/ include tessellation shader stages
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-00738# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and @pStages@ includes a geometry shader stage, and does not include
 --     any tessellation shader stages, its shader code /must/ contain an
 --     @OpExecutionMode@ instruction specifying an input primitive type
@@ -3879,7 +3857,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-00739# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and @pStages@ includes a geometry shader stage, and also includes
 --     tessellation shader stages, its shader code /must/ contain an
 --     @OpExecutionMode@ instruction specifying an input primitive type
@@ -3890,9 +3868,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-00740# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
 --     it includes both a fragment shader and a geometry shader, and the
 --     fragment shader code reads from an input variable that is decorated
 --     with @PrimitiveId@, then the geometry shader code /must/ write to a
@@ -3901,7 +3879,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-PrimitiveId-06264# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     it includes a mesh shader and the fragment shader code reads from an
 --     input variable that is decorated with @PrimitiveId@, then the mesh
 --     shader code /must/ write to a matching output variable, decorated
@@ -3910,14 +3888,14 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06038# If @renderPass@
 --     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' and the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     the fragment shader /must/ not read from any input attachment that
 --     is defined as 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' in
 --     @subpass@
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-00742# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and multiple pre-rasterization shader stages are included in
 --     @pStages@, the shader code for the entry points identified by those
 --     @pStages@ and the rest of the state identified by this structure
@@ -3927,11 +3905,11 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-None-04889# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
 --     the fragment shader and last
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader stage>
 --     and any relevant state /must/ adhere to the pipeline linking rules
 --     described in the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces Shader Interfaces>
@@ -3940,7 +3918,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06041# If @renderPass@
 --     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', and the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     then for each color attachment in the subpass, if the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
 --     of the format of the corresponding attachment description do not
@@ -3953,14 +3931,14 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06042# If @renderPass@
 --     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', and the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     and the subpass uses color attachments, the @attachmentCount@ member
 --     of @pColorBlendState@ /must/ be equal to the @colorAttachmentCount@
 --     used to create @subpass@
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-04130# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and no element of the @pDynamicStates@ member of @pDynamicState@ is
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT' or
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT',
@@ -3970,7 +3948,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-04131# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and no element of the @pDynamicStates@ member of @pDynamicState@ is
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR' or
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT',
@@ -3980,7 +3958,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-00749# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-wideLines wideLines>
 --     feature is not enabled, and no element of the @pDynamicStates@
@@ -3990,14 +3968,14 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-rasterizerDiscardEnable-00750# If
 --     the pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and the @rasterizerDiscardEnable@ member of @pRasterizationState@ is
 --     'Vulkan.Core10.FundamentalTypes.FALSE', @pViewportState@ /must/ be a
 --     valid pointer to a valid 'PipelineViewportStateCreateInfo' structure
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pViewportState-04892# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and the graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE'
 --     dynamic state enabled, @pViewportState@ /must/ be a valid pointer to
@@ -4005,14 +3983,14 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-rasterizerDiscardEnable-00751# If
 --     the pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     @pMultisampleState@ /must/ be a valid pointer to a valid
 --     'PipelineMultisampleStateCreateInfo' structure
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06043# If @renderPass@
 --     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
 --     and @subpass@ uses a depth\/stencil attachment, @pDepthStencilState@
 --     /must/ be a valid pointer to a valid
 --     'PipelineDepthStencilStateCreateInfo' structure
@@ -4020,14 +3998,14 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06044# If @renderPass@
 --     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     and @subpass@ uses color attachments, @pColorBlendState@ /must/ be a
 --     valid pointer to a valid 'PipelineColorBlendStateCreateInfo'
 --     structure
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-00754# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-depthBiasClamp depthBiasClamp>
 --     feature is not enabled, no element of the @pDynamicStates@ member of
@@ -4039,7 +4017,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-02510# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
 --     and the @VK_EXT_depth_range_unrestricted@ extension is not enabled
 --     and no element of the @pDynamicStates@ member of @pDynamicState@ is
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_BOUNDS', and
@@ -4050,9 +4028,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-01521# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     and no element of the @pDynamicStates@ member of @pDynamicState@ is
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT',
 --     and the @sampleLocationsEnable@ member of a
@@ -4068,9 +4046,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-01522# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     and no element of the @pDynamicStates@ member of @pDynamicState@ is
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT',
 --     and the @sampleLocationsEnable@ member of a
@@ -4086,9 +4064,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-01523# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     and no element of the @pDynamicStates@ member of @pDynamicState@ is
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT',
 --     and the @sampleLocationsEnable@ member of a
@@ -4100,7 +4078,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-sampleLocationsEnable-01524# If
 --     the pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
 --     and the @sampleLocationsEnable@ member of a
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'
 --     structure included in the @pNext@ chain of @pMultisampleState@ is
@@ -4114,7 +4092,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-multisampledRenderToSingleSampled-06853#
 --     If the pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     and none of the @VK_AMD_mixed_attachment_samples@ extension, the
 --     @VK_NV_framebuffer_mixed_samples@ extension, or the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
@@ -4125,7 +4103,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-subpass-01505# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     and the @VK_AMD_mixed_attachment_samples@ extension is enabled, and
 --     if @subpass@ uses color and\/or depth\/stencil attachments, then the
 --     @rasterizationSamples@ member of @pMultisampleState@ /must/ equal
@@ -4146,7 +4124,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-subpass-01411# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     and the @VK_NV_framebuffer_mixed_samples@ extension is enabled, and
 --     if @subpass@ has a depth\/stencil attachment and depth test, stencil
 --     test, or depth bounds test are enabled, then the
@@ -4155,7 +4133,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-subpass-01412# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     and the @VK_NV_framebuffer_mixed_samples@ extension is enabled, and
 --     if @subpass@ has any color attachments, then the
 --     @rasterizationSamples@ member of @pMultisampleState@ /must/ be
@@ -4164,7 +4142,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-coverageReductionMode-02722# If
 --     the pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     and the @VK_NV_coverage_reduction_mode@ extension is enabled, the
 --     coverage reduction mode specified by
 --     'Vulkan.Extensions.VK_NV_coverage_reduction_mode.PipelineCoverageReductionStateCreateInfoNV'::@coverageReductionMode@,
@@ -4175,7 +4153,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-subpass-00758# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     and @subpass@ does not use any color and\/or depth\/stencil
 --     attachments, then the @rasterizationSamples@ member of
 --     @pMultisampleState@ /must/ follow the rules for a
@@ -4187,7 +4165,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06047# If @renderPass@
 --     is a valid renderPass, the pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and the @renderPass@ has multiview enabled and @subpass@ has more
 --     than one bit set in the view mask and @multiviewTessellationShader@
 --     is not enabled, then @pStages@ /must/ not include tessellation
@@ -4195,28 +4173,28 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06048# If @renderPass@
 --     is a valid renderPass, the pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and the @renderPass@ has multiview enabled and @subpass@ has more
 --     than one bit set in the view mask and @multiviewGeometryShader@ is
 --     not enabled, then @pStages@ /must/ not include a geometry shader
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06049# If @renderPass@
 --     is a valid renderPass, the pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and the @renderPass@ has multiview enabled and @subpass@ has more
 --     than one bit set in the view mask, shaders in the pipeline /must/
 --     not write to the @Layer@ built-in output
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06050# If @renderPass@
 --     is a valid renderPass and the pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and the @renderPass@ has multiview enabled, then all shaders /must/
 --     not include variables decorated with the @Layer@ built-in decoration
 --     in their interfaces
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-07064# If @renderPass@
 --     is a valid renderPass, the pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and the @renderPass@ has multiview enabled and @subpass@ has more
 --     than one bit set in the view mask and @multiviewMeshShader@ is not
 --     enabled, then @pStages@ /must/ not include a mesh shader
@@ -4228,7 +4206,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-01565# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and an input attachment was referenced by an @aspectMask@ at
 --     @renderPass@ creation time, the fragment shader /must/ only read
 --     from the aspects that were specified for that input attachment
@@ -4240,7 +4218,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-01715# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and no element of the @pDynamicStates@ member of @pDynamicState@ is
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_NV',
 --     and the @viewportWScalingEnable@ member of a
@@ -4257,7 +4235,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-04056# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and no element of the @pDynamicStates@ member of @pDynamicState@ is
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV',
 --     and if @pViewportState->pNext@ chain includes a
@@ -4269,7 +4247,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-04057# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and no element of the @pDynamicStates@ member of @pDynamicState@ is
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV',
 --     and if @pViewportState->pNext@ chain includes a
@@ -4281,7 +4259,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-04058# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and no element of the @pDynamicStates@ member of @pDynamicState@ is
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT',
 --     and if @pNext@ chain includes a
@@ -4293,7 +4271,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pVertexInputState-04910# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-vertex-input vertex input state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-vertex-input vertex input state>,
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT' is
 --     not set, @pVertexInputState@ /must/ be a valid pointer to a valid
@@ -4301,26 +4279,26 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-02098# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-vertex-input vertex input state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-vertex-input vertex input state>,
 --     @pInputAssemblyState@ /must/ be a valid pointer to a valid
 --     'PipelineInputAssemblyStateCreateInfo' structure
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-02317# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     the @Xfb@ execution mode /can/ be specified by no more than one
 --     shader stage in @pStages@
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-02318# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and any shader stage in @pStages@ specifies @Xfb@ execution mode it
 --     /must/ be the last
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader stage>
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-rasterizationStream-02319# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and a
 --     'Vulkan.Extensions.VK_EXT_transform_feedback.PipelineRasterizationStateStreamCreateInfoEXT'::@rasterizationStream@
 --     value other than zero is specified, all variables in the output
@@ -4331,7 +4309,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-rasterizationStream-02320# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and
 --     'Vulkan.Extensions.VK_EXT_transform_feedback.PipelineRasterizationStateStreamCreateInfoEXT'::@rasterizationStream@
 --     is zero, or not specified, all variables in the output interface of
@@ -4342,9 +4320,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-geometryStreams-02321# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and the last
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader stage>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader stage>
 --     is a geometry shader, and that geometry shader uses the
 --     @GeometryStreams@ capability, then
 --     'Vulkan.Extensions.VK_EXT_transform_feedback.PhysicalDeviceTransformFeedbackFeaturesEXT'::@geometryStreams@
@@ -4352,17 +4330,17 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-None-02322# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and there are any mesh shader stages in the pipeline there /must/
 --     not be any shader stage in the pipeline with a @Xfb@ execution mode
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-lineRasterizationMode-02766# If
 --     the pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and at least one of
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
 --     and @pMultisampleState@ is not @NULL@, the @lineRasterizationMode@
 --     member of a
 --     'Vulkan.Extensions.VK_EXT_line_rasterization.PipelineRasterizationLineStateCreateInfoEXT'
@@ -4376,7 +4354,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-stippledLineEnable-02767# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     the @stippledLineEnable@ member of
 --     'Vulkan.Extensions.VK_EXT_line_rasterization.PipelineRasterizationLineStateCreateInfoEXT'
 --     is 'Vulkan.Core10.FundamentalTypes.TRUE', and no element of the
@@ -4420,7 +4398,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-03379# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     is included in the @pDynamicStates@ array then @viewportCount@
@@ -4428,7 +4406,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-03380# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT'
 --     is included in the @pDynamicStates@ array then @scissorCount@ /must/
@@ -4436,7 +4414,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-04132# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
 --     is included in the @pDynamicStates@ array then
@@ -4445,7 +4423,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-04133# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT'
 --     is included in the @pDynamicStates@ array then
@@ -4454,7 +4432,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-07065# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and includes a mesh shader, there /must/ be no element of the
 --     @pDynamicStates@ member of @pDynamicState@ set to
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_TOPOLOGY',
@@ -4475,7 +4453,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-07066# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and includes a mesh shader, there /must/ be no element of the
 --     @pDynamicStates@ member of @pDynamicState@ set to
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE',
@@ -4490,7 +4468,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-flags-02966# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and @flags@ includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV',
 --     then all stages /must/ not specify @Xfb@ execution mode
@@ -4505,9 +4483,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicState-04494# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 --     is not included in @pDynamicState->pDynamicStates@,
@@ -4516,9 +4494,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicState-04495# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 --     is not included in @pDynamicState->pDynamicStates@,
@@ -4527,9 +4505,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicState-04496# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 --     is not included in @pDynamicState->pDynamicStates@,
@@ -4538,9 +4516,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicState-04497# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 --     is not included in @pDynamicState->pDynamicStates@,
@@ -4549,9 +4527,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicState-04498# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 --     is not included in @pDynamicState->pDynamicStates@,
@@ -4560,9 +4538,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicState-04499# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 --     is not included in @pDynamicState->pDynamicStates@,
@@ -4571,9 +4549,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicState-04500# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 --     is not included in @pDynamicState->pDynamicStates@, and the
@@ -4586,9 +4564,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicState-06567# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 --     is not included in @pDynamicState->pDynamicStates@,
@@ -4599,9 +4577,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicState-06568# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 --     is not included in @pDynamicState->pDynamicStates@,
@@ -4612,9 +4590,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicState-04501# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 --     is not included in @pDynamicState->pDynamicStates@, and the
@@ -4626,9 +4604,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicState-04502# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 --     is not included in @pDynamicState->pDynamicStates@, and the
@@ -4640,7 +4618,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-primitiveFragmentShadingRateWithMultipleViewports-04503#
 --     If the pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-primitiveFragmentShadingRateWithMultipleViewports primitiveFragmentShadingRateWithMultipleViewports>
 --     limit is not supported,
@@ -4652,7 +4630,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-primitiveFragmentShadingRateWithMultipleViewports-04504#
 --     If the pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-primitiveFragmentShadingRateWithMultipleViewports primitiveFragmentShadingRateWithMultipleViewports>
 --     limit is not supported, and entry points specified in @pStages@
@@ -4661,7 +4639,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-primitiveFragmentShadingRateWithMultipleViewports-04505#
 --     If the pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-primitiveFragmentShadingRateWithMultipleViewports primitiveFragmentShadingRateWithMultipleViewports>
 --     limit is not supported, and entry points specified in @pStages@
@@ -4670,9 +4648,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-fragmentShadingRateNonTrivialCombinerOps-04506#
 --     If the pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
 --     the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-fragmentShadingRateNonTrivialCombinerOps fragmentShadingRateNonTrivialCombinerOps>
 --     limit is not supported, and
@@ -4686,7 +4664,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-None-06569# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 --     is not included in @pDynamicState->pDynamicStates@,
@@ -4697,7 +4675,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicState-06570# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 --     is not included in @pDynamicState->pDynamicStates@,
@@ -4708,7 +4686,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicState-06571# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 --     is not included in @pDynamicState->pDynamicStates@,
@@ -4719,7 +4697,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicState-06572# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 --     is not included in @pDynamicState->pDynamicStates@,
@@ -4730,7 +4708,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicState-04569# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 --     is not included in @pDynamicState->pDynamicStates@, and the
@@ -4742,7 +4720,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicState-04570# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 --     is not included in @pDynamicState->pDynamicStates@, and the
@@ -4754,7 +4732,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicState-04571# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 --     is not included in @pDynamicState->pDynamicStates@, and the
@@ -4766,7 +4744,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicState-04572# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR'
 --     is not included in @pDynamicState->pDynamicStates@, and the
@@ -4778,7 +4756,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-fragmentShadingRateNonTrivialCombinerOps-04573#
 --     If the pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
 --     and the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-fragmentShadingRateNonTrivialCombinerOps fragmentShadingRateNonTrivialCombinerOps>
 --     limit is not supported and
@@ -4792,7 +4770,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-None-04574# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
 --     and the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-supersampleFragmentShadingRates supersampleFragmentShadingRates>
 --     feature is not enabled,
@@ -4806,7 +4784,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-None-04575# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
 --     and the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-noInvocationFragmentShadingRates noInvocationFragmentShadingRates>
 --     feature is not enabled,
@@ -4821,7 +4799,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-04807# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     and the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-vertexInputDynamicState vertexInputDynamicState>
 --     feature is not enabled, there /must/ be no element of the
@@ -4830,7 +4808,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-07067# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and includes a mesh shader, there /must/ be no element of the
 --     @pDynamicStates@ member of @pDynamicState@ set to
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VERTEX_INPUT_EXT'
@@ -4869,39 +4847,39 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06575# If the pipeline
 --     is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     @renderPass@ /must/ be 'Vulkan.Core10.APIConstants.NULL_HANDLE' or a
 --     valid render pass object
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-dynamicRendering-06576# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-dynamicRendering dynamicRendering>
 --     feature is not enabled and the pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     @renderPass@ /must/ not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-multiview-06577# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview multiview>
 --     feature is not enabled, the pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     and @renderPass@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@viewMask@
 --     /must/ be @0@
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06578# If the pipeline
 --     is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     and @renderPass@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', the
 --     index of the most significant bit in
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@viewMask@
@@ -4910,7 +4888,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06579# If the pipeline
 --     is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     and @renderPass@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@colorAttachmentCount@
 --     is not 0,
@@ -4920,7 +4898,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06580# If the pipeline
 --     is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     and @renderPass@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', each
 --     element of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
@@ -4928,7 +4906,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06582# If the pipeline
 --     is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     @renderPass@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', and any
 --     element of
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
@@ -4942,21 +4920,21 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06583# If the pipeline
 --     is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     and @renderPass@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@depthAttachmentFormat@
 --     /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06584# If the pipeline
 --     is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     and @renderPass@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@stencilAttachmentFormat@
 --     /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06585# If the pipeline
 --     is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     @renderPass@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@depthAttachmentFormat@
 --     is not 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', it /must/ be a
@@ -4967,7 +4945,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06586# If the pipeline
 --     is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     @renderPass@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@stencilAttachmentFormat@
 --     is not 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', it /must/ be a
@@ -4978,7 +4956,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06587# If the pipeline
 --     is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     @renderPass@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@depthAttachmentFormat@
 --     is not 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', it /must/ be a
@@ -4986,7 +4964,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06588# If the pipeline
 --     is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     @renderPass@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', and
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@stencilAttachmentFormat@
 --     is not 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', it /must/ be a
@@ -4994,7 +4972,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06589# If the pipeline
 --     is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     @renderPass@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@depthAttachmentFormat@
 --     is not 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', and
@@ -5005,13 +4983,13 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06053# If @renderPass@
 --     is 'Vulkan.Core10.APIConstants.NULL_HANDLE', the pipeline is being
 --     created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     and either of
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::depthAttachmentFormat
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@depthAttachmentFormat@
 --     or
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::stencilAttachmentFormat
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@stencilAttachmentFormat@
 --     are not 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED',
 --     @pDepthStencilState@ /must/ be a valid pointer to a valid
 --     'PipelineDepthStencilStateCreateInfo' structure
@@ -5019,38 +4997,38 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06590# If @renderPass@
 --     is 'Vulkan.Core10.APIConstants.NULL_HANDLE' and the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     but not
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     @pDepthStencilState@ /must/ be a valid pointer to a valid
 --     'PipelineDepthStencilStateCreateInfo' structure
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06054# If @renderPass@
 --     is 'Vulkan.Core10.APIConstants.NULL_HANDLE', the pipeline is being
 --     created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     and
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::colorAttachmentCount
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@colorAttachmentCount@
 --     is not equal to @0@, @pColorBlendState@ /must/ be a valid pointer to
 --     a valid 'PipelineColorBlendStateCreateInfo' structure
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06055# If @renderPass@
 --     is 'Vulkan.Core10.APIConstants.NULL_HANDLE' and the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     @pColorBlendState->attachmentCount@ /must/ be equal to
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::colorAttachmentCount
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@colorAttachmentCount@
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06056# If @renderPass@
 --     is 'Vulkan.Core10.APIConstants.NULL_HANDLE' and the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     the fragment shader /must/ not read from any input attachment
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06057# If @renderPass@
 --     is 'Vulkan.Core10.APIConstants.NULL_HANDLE', the pipeline is being
 --     created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     the @viewMask@ member of a
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'
 --     structure included in the @pNext@ chain is not @0@, and the
@@ -5061,7 +5039,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06058# If @renderPass@
 --     is 'Vulkan.Core10.APIConstants.NULL_HANDLE', the pipeline is being
 --     created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     the @viewMask@ member of a
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'
 --     structure included in the @pNext@ chain is not @0@, and the
@@ -5072,7 +5050,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06059# If @renderPass@
 --     is 'Vulkan.Core10.APIConstants.NULL_HANDLE', the pipeline is being
 --     created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and the @viewMask@ member of a
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'
 --     structure included in the @pNext@ chain is not @0@, shaders in
@@ -5081,14 +5059,14 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06061# If the pipeline
 --     is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and @renderPass@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     fragment shaders in @pStages@ /must/ not include the
 --     @InputAttachment@ capability
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06062# If the pipeline
 --     is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>
 --     and @renderPass@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', for
 --     each color attachment format defined by the
 --     @pColorAttachmentFormats@ member of
@@ -5103,7 +5081,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06063# If the pipeline
 --     is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>
 --     and @renderPass@ is 'Vulkan.Core10.APIConstants.NULL_HANDLE', if the
 --     @pNext@ chain includes
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
@@ -5123,7 +5101,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06482# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>
 --     and the @flags@ member of 'PipelineColorBlendStateCreateInfo'
 --     includes
 --     'Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits.PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_EXT',
@@ -5131,7 +5109,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06483# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>
 --     and the @flags@ member of 'PipelineDepthStencilStateCreateInfo'
 --     includes
 --     'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT'
@@ -5141,7 +5119,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pColorAttachmentSamples-06592# If
 --     the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>,
 --     elements of the @pColorAttachmentSamples@ member of
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
@@ -5151,7 +5129,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-depthStencilAttachmentSamples-06593#
 --     If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>
 --     and the @depthStencilAttachmentSamples@ member of
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.AttachmentSampleCountInfoAMD'
 --     or
@@ -5161,7 +5139,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06484# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>
 --     and the @flags@ member of 'PipelineColorBlendStateCreateInfo'
 --     includes
 --     'Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits.PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_EXT'
@@ -5170,7 +5148,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06485# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>
 --     and the @flags@ member of 'PipelineDepthStencilStateCreateInfo'
 --     includes
 --     'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT',
@@ -5179,7 +5157,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06486# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-output fragment output interface state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>
 --     and the @flags@ member of 'PipelineDepthStencilStateCreateInfo'
 --     includes
 --     'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT',
@@ -5194,9 +5172,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06595# If @renderPass@
 --     is 'Vulkan.Core10.APIConstants.NULL_HANDLE', the pipeline is being
 --     created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
 --     and
 --     'Vulkan.Extensions.VK_KHR_dynamic_rendering.MultiviewPerViewAttributesInfoNVX'::@perViewAttributesPositionXOnly@
 --     is 'Vulkan.Core10.FundamentalTypes.TRUE' then
@@ -5263,7 +5241,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06608# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-complete all possible state subsets>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-complete all possible state subsets>,
 --     @flags@ /must/ not include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'
 --
@@ -5285,7 +5263,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     libraries included via
 --     'Vulkan.Extensions.VK_KHR_pipeline_library.PipelineLibraryCreateInfoKHR'::@pLibraries@
 --     /must/ not include any
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets state subset>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets state subset>
 --     already defined by this structure or defined by any other pipeline
 --     library in
 --     'Vulkan.Extensions.VK_KHR_pipeline_library.PipelineLibraryCreateInfoKHR'::@pLibraries@
@@ -5619,19 +5597,19 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pMultisampleState-06629# If the
 --     pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     @pMultisampleState@ /must/ be @NULL@ or a valid pointer to a valid
 --     'PipelineMultisampleStateCreateInfo' structure
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderpass-06631# If the pipeline
 --     is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and @renderpass@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     then @pMultisampleState@ /must/ not be @NULL@
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-Input-06632# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     with a fragment shader that either enables
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-sampleshading sample shading>
 --     or decorates any variable in the @Input@ storage class with
@@ -5839,9 +5817,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     If
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-conservativePointAndLineRasterization conservativePointAndLineRasterization>
 --     is not supported; the pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-vertex-input vertex input state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-vertex-input vertex input state>
 --     and
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>;
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>;
 --     the pipeline does not include a geometry shader; and the value of
 --     'PipelineInputAssemblyStateCreateInfo'::@topology@ is
 --     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_POINT_LIST',
@@ -5857,7 +5835,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     If
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-conservativePointAndLineRasterization conservativePointAndLineRasterization>
 --     is not supported, the pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and the pipeline includes a geometry shader with either the
 --     @OutputPoints@ or @OutputLineStrip@ execution modes,
 --     'Vulkan.Extensions.VK_EXT_conservative_rasterization.PipelineRasterizationConservativeStateCreateInfoEXT'::@conservativeRasterizationMode@
@@ -5868,7 +5846,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     If
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-conservativePointAndLineRasterization conservativePointAndLineRasterization>
 --     is not supported, the pipeline is being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     and the pipeline includes a mesh shader with either the
 --     @OutputPoints@ or @OutputLinesNV@ execution modes,
 --     'Vulkan.Extensions.VK_EXT_conservative_rasterization.PipelineRasterizationConservativeStateCreateInfoEXT'::@conservativeRasterizationMode@
@@ -5877,34 +5855,34 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-06894# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --     but not
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>,
 --     elements of @pStages@ /must/ not have @stage@ set to
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-06895# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     but not
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     elements of @pStages@ /must/ not have @stage@ set to a shader stage
 --     which participates in pre-rasterization
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-06896# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     all elements of @pStages@ /must/ have a @stage@ set to a shader
 --     stage which participates in
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-stage-06897# If the pipeline is
 --     being created with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-fragment-shader fragment shader state>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>
 --     and\/or
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipeline-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     any value of @stage@ /must/ not be set in more than one element of
 --     @pStages@
 --

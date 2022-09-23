@@ -595,6 +595,23 @@ instance es ~ '[] => Zero (PhysicalDeviceSurfaceInfo2KHR es) where
 -- | VkSurfaceCapabilities2KHR - Structure describing capabilities of a
 -- surface
 --
+-- = Description
+--
+-- If the @VK_GOOGLE_surfaceless_query@ extension is enabled and
+-- 'PhysicalDeviceSurfaceInfo2KHR'::@surface@ in the
+-- 'getPhysicalDeviceSurfaceCapabilities2KHR' call is
+-- 'Vulkan.Core10.APIConstants.NULL_HANDLE', the values returned in
+-- @minImageCount@, @maxImageCount@, @currentExtent@, and
+-- @currentTransform@ will not reflect that of any surface and will instead
+-- be as such:
+--
+-- -   @minImageCount@ and @maxImageCount@ will be 0xFFFFFFFF
+--
+-- -   @currentExtent@ will be (0xFFFFFFFF, 0xFFFFFFFF)
+--
+-- -   @currentTransform@ will be
+--     'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_INHERIT_BIT_KHR'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkSurfaceCapabilities2KHR-sType-sType# @sType@ /must/ be
