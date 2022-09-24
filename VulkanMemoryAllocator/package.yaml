@@ -20,7 +20,7 @@ library:
     src/lib.cpp
   dependencies:
     - base <5
-    - vulkan >= 3.6 && < 3.22
+    - vulkan >= 3.6 && < 3.23
     - bytestring
     - transformers
     - vector
