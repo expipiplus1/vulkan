@@ -560,9 +560,9 @@ instance Zero ExternalBufferProperties where
 -- as a GPU driver and a software renderer; two drivers for different GPUs;
 -- or the same Vulkan driver running on two logically different devices).
 --
--- Khronos\' conformance testing can not guarantee that @deviceUUID@ values
--- are actually unique, so implementors should make their own best efforts
--- to ensure this. In particular, hard-coded @deviceUUID@ values,
+-- Khronos\' conformance testing is unable to guarantee that @deviceUUID@
+-- values are actually unique, so implementors /should/ make their own best
+-- efforts to ensure this. In particular, hard-coded @deviceUUID@ values,
 -- especially all-@0@ bits, /should/ never be used.
 --
 -- A combination of values unique to the vendor, the driver, and the

@@ -1,18 +1,18 @@
 {-# language CPP #-}
 -- | = Name
 --
--- VK_VALVE_mutable_descriptor_type - device extension
+-- VK_EXT_mutable_descriptor_type - device extension
 --
--- == VK_VALVE_mutable_descriptor_type
+-- == VK_EXT_mutable_descriptor_type
 --
 -- [__Name String__]
---     @VK_VALVE_mutable_descriptor_type@
+--     @VK_EXT_mutable_descriptor_type@
 --
 -- [__Extension Type__]
 --     Device extension
 --
 -- [__Registered Extension Number__]
---     352
+--     495
 --
 -- [__Revision__]
 --     1
@@ -31,15 +31,18 @@
 -- [__Contact__]
 --
 --     -   Joshua Ashton
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_VALVE_mutable_descriptor_type] @Joshua-Ashton%0A*Here describe the issue or question you have about the VK_VALVE_mutable_descriptor_type extension* >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_mutable_descriptor_type] @Joshua-Ashton%0A*Here describe the issue or question you have about the VK_EXT_mutable_descriptor_type extension* >
 --
 --     -   Hans-Kristian Arntzen
---         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_VALVE_mutable_descriptor_type] @HansKristian-Work%0A*Here describe the issue or question you have about the VK_VALVE_mutable_descriptor_type extension* >
+--         <https://github.com/KhronosGroup/Vulkan-Docs/issues/new?body=[VK_EXT_mutable_descriptor_type] @HansKristian-Work%0A*Here describe the issue or question you have about the VK_EXT_mutable_descriptor_type extension* >
+--
+-- [__Extension Proposal__]
+--     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_mutable_descriptor_type.adoc VK_EXT_mutable_descriptor_type>
 --
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
---     2020-12-02
+--     2022-08-22
 --
 -- [__IP Status__]
 --     No known IP claims.
@@ -76,94 +79,94 @@
 --
 -- == New Structures
 --
--- -   'MutableDescriptorTypeListVALVE'
+-- -   'MutableDescriptorTypeListEXT'
 --
 -- -   Extending
 --     'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo',
 --     'Vulkan.Core10.DescriptorSet.DescriptorPoolCreateInfo':
 --
---     -   'MutableDescriptorTypeCreateInfoVALVE'
+--     -   'MutableDescriptorTypeCreateInfoEXT'
 --
 -- -   Extending
 --     'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
 --     'Vulkan.Core10.Device.DeviceCreateInfo':
 --
---     -   'PhysicalDeviceMutableDescriptorTypeFeaturesVALVE'
+--     -   'PhysicalDeviceMutableDescriptorTypeFeaturesEXT'
 --
 -- == New Enum Constants
 --
--- -   'VALVE_MUTABLE_DESCRIPTOR_TYPE_EXTENSION_NAME'
+-- -   'EXT_MUTABLE_DESCRIPTOR_TYPE_EXTENSION_NAME'
 --
--- -   'VALVE_MUTABLE_DESCRIPTOR_TYPE_SPEC_VERSION'
+-- -   'EXT_MUTABLE_DESCRIPTOR_TYPE_SPEC_VERSION'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DescriptorPoolCreateFlagBits':
 --
---     -   'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_VALVE'
+--     -   'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_EXT'
 --
 -- -   Extending
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DescriptorSetLayoutCreateFlagBits':
 --
---     -   'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE'
+--     -   'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.DescriptorType.DescriptorType':
 --
---     -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_VALVE'
+--     -   'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_MUTABLE_EXT'
 --
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_VALVE'
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_EXT'
 --
---     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_VALVE'
+--     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_EXT'
 --
 -- == Version History
 --
--- -   Revision 1, 2020-12-01 (Joshua Ashton, Hans-Kristian Arntzen)
+-- -   Revision 1, 2022-08-22 (Jon Leech)
 --
---     -   Initial specification, squashed from public draft.
+--     -   Initial version, promoted from
+--         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VALVE_mutable_descriptor_type VK_VALVE_mutable_descriptor_type>.
 --
 -- == See Also
 --
--- 'MutableDescriptorTypeCreateInfoVALVE',
--- 'MutableDescriptorTypeListVALVE',
--- 'PhysicalDeviceMutableDescriptorTypeFeaturesVALVE'
+-- 'MutableDescriptorTypeCreateInfoEXT', 'MutableDescriptorTypeListEXT',
+-- 'PhysicalDeviceMutableDescriptorTypeFeaturesEXT'
 --
 -- == Document Notes
 --
 -- For more information, see the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_VALVE_mutable_descriptor_type Vulkan Specification>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_mutable_descriptor_type Vulkan Specification>
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_VALVE_mutable_descriptor_type  ( MutableDescriptorTypeCreateInfoVALVE
-                                                           , MutableDescriptorTypeListVALVE
-                                                           , PhysicalDeviceMutableDescriptorTypeFeaturesVALVE
-                                                           ) where
+module Vulkan.Extensions.VK_EXT_mutable_descriptor_type  ( MutableDescriptorTypeCreateInfoEXT
+                                                         , MutableDescriptorTypeListEXT
+                                                         , PhysicalDeviceMutableDescriptorTypeFeaturesEXT
+                                                         ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
 
-data MutableDescriptorTypeCreateInfoVALVE
+data MutableDescriptorTypeCreateInfoEXT
 
-instance ToCStruct MutableDescriptorTypeCreateInfoVALVE
-instance Show MutableDescriptorTypeCreateInfoVALVE
+instance ToCStruct MutableDescriptorTypeCreateInfoEXT
+instance Show MutableDescriptorTypeCreateInfoEXT
 
-instance FromCStruct MutableDescriptorTypeCreateInfoVALVE
-
-
-data MutableDescriptorTypeListVALVE
-
-instance ToCStruct MutableDescriptorTypeListVALVE
-instance Show MutableDescriptorTypeListVALVE
-
-instance FromCStruct MutableDescriptorTypeListVALVE
+instance FromCStruct MutableDescriptorTypeCreateInfoEXT
 
 
-data PhysicalDeviceMutableDescriptorTypeFeaturesVALVE
+data MutableDescriptorTypeListEXT
 
-instance ToCStruct PhysicalDeviceMutableDescriptorTypeFeaturesVALVE
-instance Show PhysicalDeviceMutableDescriptorTypeFeaturesVALVE
+instance ToCStruct MutableDescriptorTypeListEXT
+instance Show MutableDescriptorTypeListEXT
 
-instance FromCStruct PhysicalDeviceMutableDescriptorTypeFeaturesVALVE
+instance FromCStruct MutableDescriptorTypeListEXT
+
+
+data PhysicalDeviceMutableDescriptorTypeFeaturesEXT
+
+instance ToCStruct PhysicalDeviceMutableDescriptorTypeFeaturesEXT
+instance Show PhysicalDeviceMutableDescriptorTypeFeaturesEXT
+
+instance FromCStruct PhysicalDeviceMutableDescriptorTypeFeaturesEXT
 

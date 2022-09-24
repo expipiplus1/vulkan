@@ -346,6 +346,11 @@ importSemaphoreFdKHR device importSemaphoreFdInfo = liftIO . evalContT $ do
 --     field /must/ match that of the semaphore from which @fd@ was
 --     exported
 --
+-- -   #VUID-VkImportSemaphoreFdInfoKHR-handleType-07307# If @handleType@
+--     refers to a handle type with copy payload transference semantics,
+--     @flags@ /must/ contain
+--     'Vulkan.Core11.Enums.SemaphoreImportFlagBits.SEMAPHORE_IMPORT_TEMPORARY_BIT'
+--
 -- -   #VUID-VkImportSemaphoreFdInfoKHR-handleType-03264# If @handleType@
 --     is
 --     'Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT',

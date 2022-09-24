@@ -195,7 +195,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sam
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_multiview (PhysicalDeviceMultiviewFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NVX_multiview_per_view_attributes (PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_multiview (PhysicalDeviceMultiviewProperties)
-import {-# SOURCE #-} Vulkan.Extensions.VK_VALVE_mutable_descriptor_type (PhysicalDeviceMutableDescriptorTypeFeaturesVALVE)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_mutable_descriptor_type (PhysicalDeviceMutableDescriptorTypeFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_non_seamless_cube_map (PhysicalDeviceNonSeamlessCubeMapFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pci_bus_info (PhysicalDevicePCIBusInfoPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pageable_device_local_memory (PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT)
@@ -811,7 +811,7 @@ instance Extensible PhysicalDeviceFeatures2 where
     | Just Refl <- eqT @e @PhysicalDeviceExternalMemoryRDMAFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceVertexInputDynamicStateFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDepthClipControlFeaturesEXT = Just f
-    | Just Refl <- eqT @e @PhysicalDeviceMutableDescriptorTypeFeaturesVALVE = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceMutableDescriptorTypeFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceImage2DViewOf3DFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFragmentShadingRateEnumsFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderTerminateInvocationFeatures = Just f

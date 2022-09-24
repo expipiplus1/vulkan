@@ -231,7 +231,7 @@
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore_capabilities.getPhysicalDeviceExternalSemaphoreProperties'
 -- by chaining the new 'SemaphoreTypeCreateInfoKHR' structure to its
 -- @pExternalSemaphoreInfo@ structure. This allows having a different set
--- of external semaphore handle types supported for timeline semaphores vs
+-- of external semaphore handle types supported for timeline semaphores vs.
 -- binary semaphores.
 --
 -- 9) Do we need to add a host signal operation for the new synchronization

@@ -229,7 +229,7 @@ pattern DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT                = DynamicState 1000143
 -- 'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT'.
 pattern DYNAMIC_STATE_DISCARD_RECTANGLE_EXT               = DynamicState 1000099000
 -- | 'DYNAMIC_STATE_VIEWPORT_W_SCALING_NV' specifies that the
--- @pViewportScalings@ state in
+-- @pViewportWScalings@ state in
 -- 'Vulkan.Extensions.VK_NV_clip_space_w_scaling.PipelineViewportWScalingStateCreateInfoNV'
 -- will be ignored and /must/ be set dynamically with
 -- 'Vulkan.Extensions.VK_NV_clip_space_w_scaling.cmdSetViewportWScalingNV'

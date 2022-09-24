@@ -976,14 +976,14 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxFramebufferHeight@
 --
 -- -   #VUID-VkImageCreateInfo-fragmentDensityMapOffset-06514# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-fragmentDensityMapOffset fragmentDensityMapOffset>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-fragmentDensityMapOffsets fragmentDensityMapOffset>
 --     feature is not enabled and @usage@ includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT',
 --     @extent.width@ /must/ be less than or equal to
 --     \(\left\lceil{\frac{maxFramebufferWidth}{minFragmentDensityTexelSize_{width}}}\right\rceil\)
 --
 -- -   #VUID-VkImageCreateInfo-fragmentDensityMapOffset-06515# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-fragmentDensityMapOffset fragmentDensityMapOffset>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-fragmentDensityMapOffsets fragmentDensityMapOffset>
 --     feature is not enabled and @usage@ includes
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT',
 --     @extent.height@ /must/ be less than or equal to
@@ -1483,7 +1483,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --
 -- -   #VUID-VkImageCreateInfo-pNext-06744# If the @pNext@ chain includes a
 --     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionControlEXT'
---     structure, @format@ is a not
+--     structure, @format@ is not a
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
 --     format, and
 --     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionControlEXT'::@flags@

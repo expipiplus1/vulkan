@@ -1365,7 +1365,7 @@ data ImageViewCreateInfo (es :: [Type]) = ImageViewCreateInfo
     next :: Chain es
   , -- | @flags@ is a bitmask of
     -- 'Vulkan.Core10.Enums.ImageViewCreateFlagBits.ImageViewCreateFlagBits'
-    -- describing additional parameters of the image view.
+    -- specifying additional parameters of the image view.
     flags :: ImageViewCreateFlags
   , -- | @image@ is a 'Vulkan.Core10.Handles.Image' on which the view will be
     -- created.
@@ -1373,8 +1373,8 @@ data ImageViewCreateInfo (es :: [Type]) = ImageViewCreateInfo
   , -- | @viewType@ is a 'Vulkan.Core10.Enums.ImageViewType.ImageViewType' value
     -- specifying the type of the image view.
     viewType :: ImageViewType
-  , -- | @format@ is a 'Vulkan.Core10.Enums.Format.Format' describing the format
-    -- and type used to interpret texel blocks in the image.
+  , -- | @format@ is a 'Vulkan.Core10.Enums.Format.Format' specifying the format
+    -- and type used to interpret texel blocks of the image.
     format :: Format
   , -- | @components@ is a 'ComponentMapping' structure specifying a remapping of
     -- color components (or of depth or stencil components after they have been

@@ -142,7 +142,7 @@ instance Zero BindBufferMemoryDeviceGroupInfo where
 --
 -- If @deviceIndexCount@ is greater than zero, then on device index i
 -- @image@ is attached to the instance of the memory on the physical device
--- with device index pDeviceIndices[i].
+-- with device index @pDeviceIndices@[i].
 --
 -- Let N be the number of physical devices in the logical device. If
 -- @splitInstanceBindRegionCount@ is greater than zero, then
