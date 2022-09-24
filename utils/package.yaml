@@ -1,5 +1,5 @@
 name: vulkan-utils
-version: "0.5.8.1"
+version: "0.5.9"
 synopsis: Utils for the vulkan package
 category: Graphics
 maintainer: Ellie Hermaszewska <live.long.and.prosper@monoid.al>
