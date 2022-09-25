@@ -70,6 +70,13 @@ jobs:
         vulkan-components: Vulkan-Headers, Vulkan-Loader, Glslang
         vulkan-use-cache: true
 
+    - name: Make libvulkan.1.dylib available on OSX
+      if: matrix.os == 'macOS-latest'
+      shell: bash
+      run: |
+        file $VULKAN_SDK/lib/libvulkan.1.dylib
+        ln -s $VULKAN_SDK/lib/libvulkan.1.dylib /usr/local/lib/libvulkan.1.dylib
+
     - name: Inform Cabal about Vulkan
       shell: bash
       run: |
