@@ -1233,28 +1233,69 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-mesh-shader Mesh Shader Queries>
 --     must not be active
 --
--- -   #VUID-vkCmdDrawMeshTasksEXT-groupCountX-07083# @groupCountX@ /must/
---     be less than or equal to
+-- -   #VUID-vkCmdDrawMeshTasksEXT-TaskEXT-07322# If the current pipeline
+--     bound to
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+--     contains a shader using the @TaskEXT@ @Execution@ @Model@,
+--     @groupCountX@ /must/ be less than or equal to
 --     'PhysicalDeviceMeshShaderPropertiesEXT'::@maxTaskWorkGroupCount@[0]
 --
--- -   #VUID-vkCmdDrawMeshTasksEXT-groupCountY-07084# @groupCountY@ /must/
---     be less than or equal to
+-- -   #VUID-vkCmdDrawMeshTasksEXT-TaskEXT-07323# If the current pipeline
+--     bound to
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+--     contains a shader using the @TaskEXT@ @Execution@ @Model@,
+--     @groupCountY@ /must/ be less than or equal to
 --     'PhysicalDeviceMeshShaderPropertiesEXT'::@maxTaskWorkGroupCount@[1]
 --
--- -   #VUID-vkCmdDrawMeshTasksEXT-groupCountZ-07085# @groupCountZ@ /must/
---     be less than or equal to
+-- -   #VUID-vkCmdDrawMeshTasksEXT-TaskEXT-07324# If the current pipeline
+--     bound to
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+--     contains a shader using the @TaskEXT@ @Execution@ @Model@,
+--     @groupCountZ@ /must/ be less than or equal to
 --     'PhysicalDeviceMeshShaderPropertiesEXT'::@maxTaskWorkGroupCount@[2]
 --
--- -   #VUID-vkCmdDrawMeshTasksEXT-groupCountX-07086# The product of
---     @groupCountX@, @groupCountY@ and @groupCountZ@ /must/ be less than
---     or equal to
+-- -   #VUID-vkCmdDrawMeshTasksEXT-TaskEXT-07325# If the current pipeline
+--     bound to
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+--     contains a shader using the @TaskEXT@ @Execution@ @Model@, The
+--     product of @groupCountX@, @groupCountY@ and @groupCountZ@ /must/ be
+--     less than or equal to
 --     'PhysicalDeviceMeshShaderPropertiesEXT'::@maxTaskWorkGroupTotalCount@
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-TaskEXT-07326# If the current pipeline
+--     bound to
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+--     does not contain a shader using the @TaskEXT@ @Execution@ @Model@,
+--     @groupCountX@ /must/ be less than or equal to
+--     'PhysicalDeviceMeshShaderPropertiesEXT'::@maxMeshWorkGroupCount@[0]
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-TaskEXT-07327# If the current pipeline
+--     bound to
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+--     does not contain a shader using the @TaskEXT@ @Execution@ @Model@,
+--     @groupCountY@ /must/ be less than or equal to
+--     'PhysicalDeviceMeshShaderPropertiesEXT'::@maxMeshWorkGroupCount@[1]
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-TaskEXT-07328# If the current pipeline
+--     bound to
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+--     does not contain a shader using the @TaskEXT@ @Execution@ @Model@,
+--     @groupCountZ@ /must/ be less than or equal to
+--     'PhysicalDeviceMeshShaderPropertiesEXT'::@maxMeshWorkGroupCount@[2]
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-TaskEXT-07329# If the current pipeline
+--     bound to
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+--     does not contain a shader using the @TaskEXT@ @Execution@ @Model@,
+--     The product of @groupCountX@, @groupCountY@ and @groupCountZ@ /must/
+--     be less than or equal to
+--     'PhysicalDeviceMeshShaderPropertiesEXT'::@maxMeshWorkGroupTotalCount@
 --
 -- -   #VUID-vkCmdDrawMeshTasksEXT-MeshEXT-07087# The current pipeline
 --     bound to
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --     /must/ contain a shader stage using the @MeshEXT@ @Execution@
---     @Model@.
+--     @Model@
 --
 -- == Valid Usage (Implicit)
 --
@@ -2288,7 +2329,7 @@ foreign import ccall
 --     pipeline bound to
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --     /must/ contain a shader stage using the @MeshEXT@ @Execution@
---     @Model@.
+--     @Model@
 --
 -- == Valid Usage (Implicit)
 --
@@ -3351,7 +3392,7 @@ foreign import ccall
 --     pipeline bound to
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --     /must/ contain a shader stage using the @MeshEXT@ @Execution@
---     @Model@.
+--     @Model@
 --
 -- == Valid Usage (Implicit)
 --
@@ -3962,22 +4003,55 @@ instance Zero PhysicalDeviceMeshShaderPropertiesEXT where
 --
 -- == Valid Usage
 --
--- -   #VUID-VkDrawMeshTasksIndirectCommandEXT-groupCountX-07092#
+-- -   [[VUID-{refpage}-TaskEXT-07322]] If the current pipeline bound to
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+--     contains a shader using the @TaskEXT@ @Execution@ @Model@,
 --     @groupCountX@ /must/ be less than or equal to
 --     'PhysicalDeviceMeshShaderPropertiesEXT'::@maxTaskWorkGroupCount@[0]
 --
--- -   #VUID-VkDrawMeshTasksIndirectCommandEXT-groupCountY-07093#
+-- -   [[VUID-{refpage}-TaskEXT-07323]] If the current pipeline bound to
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+--     contains a shader using the @TaskEXT@ @Execution@ @Model@,
 --     @groupCountY@ /must/ be less than or equal to
 --     'PhysicalDeviceMeshShaderPropertiesEXT'::@maxTaskWorkGroupCount@[1]
 --
--- -   #VUID-VkDrawMeshTasksIndirectCommandEXT-groupCountZ-07094#
+-- -   [[VUID-{refpage}-TaskEXT-07324]] If the current pipeline bound to
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+--     contains a shader using the @TaskEXT@ @Execution@ @Model@,
 --     @groupCountZ@ /must/ be less than or equal to
 --     'PhysicalDeviceMeshShaderPropertiesEXT'::@maxTaskWorkGroupCount@[2]
 --
--- -   #VUID-VkDrawMeshTasksIndirectCommandEXT-groupCountX-07095# The
+-- -   [[VUID-{refpage}-TaskEXT-07325]] If the current pipeline bound to
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+--     contains a shader using the @TaskEXT@ @Execution@ @Model@, The
 --     product of @groupCountX@, @groupCountY@ and @groupCountZ@ /must/ be
 --     less than or equal to
 --     'PhysicalDeviceMeshShaderPropertiesEXT'::@maxTaskWorkGroupTotalCount@
+--
+-- -   [[VUID-{refpage}-TaskEXT-07326]] If the current pipeline bound to
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+--     does not contain a shader using the @TaskEXT@ @Execution@ @Model@,
+--     @groupCountX@ /must/ be less than or equal to
+--     'PhysicalDeviceMeshShaderPropertiesEXT'::@maxMeshWorkGroupCount@[0]
+--
+-- -   [[VUID-{refpage}-TaskEXT-07327]] If the current pipeline bound to
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+--     does not contain a shader using the @TaskEXT@ @Execution@ @Model@,
+--     @groupCountY@ /must/ be less than or equal to
+--     'PhysicalDeviceMeshShaderPropertiesEXT'::@maxMeshWorkGroupCount@[1]
+--
+-- -   [[VUID-{refpage}-TaskEXT-07328]] If the current pipeline bound to
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+--     does not contain a shader using the @TaskEXT@ @Execution@ @Model@,
+--     @groupCountZ@ /must/ be less than or equal to
+--     'PhysicalDeviceMeshShaderPropertiesEXT'::@maxMeshWorkGroupCount@[2]
+--
+-- -   [[VUID-{refpage}-TaskEXT-07329]] If the current pipeline bound to
+--     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+--     does not contain a shader using the @TaskEXT@ @Execution@ @Model@,
+--     The product of @groupCountX@, @groupCountY@ and @groupCountZ@ /must/
+--     be less than or equal to
+--     'PhysicalDeviceMeshShaderPropertiesEXT'::@maxMeshWorkGroupTotalCount@
 --
 -- = See Also
 --

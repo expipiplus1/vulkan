@@ -40,6 +40,12 @@ echo "Generating VMA documentation" &&
   sed -i -e 's|^GENERATE_DOCBOOK.*|GENERATE_DOCBOOK=YES|' -e 's|^BRIEF_MEMBER_DESC.*|BRIEF_MEMBER_DESC=NO|' Doxyfile &&
   nix-shell -p cmake vulkan-headers vulkan-loader doxygen --run 'cmake . -DBUILD_DOCUMENTATION=ON && cmake --build . --target doc_doxygen' )
 
+echo "Generating Vulkan-Docs headers"
+(cd generate-new/Vulkan-Docs/xml &&
+  nix-shell -p \
+    python3 python3Packages.pyparsing asciidoctor gnumake nodejs nodePackages.he nodePackages.escape-string-regexp \
+    --run "make clean install")
+
 echo "Generating VulkanMemoryAllocator"
 nix-shell -p vulkan-headers --run "sh -c 'cd generate-new && \"$generate/bin/vma\"'"
 nix-shell -p haskellPackages.hpack --run 'hpack VulkanMemoryAllocator'
