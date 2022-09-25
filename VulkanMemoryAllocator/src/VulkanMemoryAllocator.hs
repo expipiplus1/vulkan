@@ -193,6 +193,8 @@ import Vulkan (BufferCopy)
 import Vulkan (BufferCreateInfo)
 import Vulkan (BufferMemoryRequirementsInfo2)
 import Vulkan (CommandBuffer_T)
+import Vulkan (DeviceBufferMemoryRequirements)
+import Vulkan (DeviceImageMemoryRequirements)
 import Vulkan (DeviceMemory)
 import Vulkan (DeviceSize)
 import Vulkan (Device_T)
@@ -3027,6 +3029,16 @@ type FN_vkUnmapMemory = Ptr Device_T -> DeviceMemory -> IO ()
 type PFN_vkUnmapMemory = FunPtr FN_vkUnmapMemory
 
 
+type FN_vkGetDeviceBufferMemoryRequirements = Ptr Device_T -> ("pInfo" ::: Ptr (SomeStruct DeviceBufferMemoryRequirements)) -> ("pMemoryRequirements" ::: Ptr (SomeStruct MemoryRequirements2)) -> IO ()
+-- No documentation found for TopLevel "PFN_vkGetDeviceBufferMemoryRequirements"
+type PFN_vkGetDeviceBufferMemoryRequirements = FunPtr FN_vkGetDeviceBufferMemoryRequirements
+
+
+type FN_vkGetDeviceImageMemoryRequirements = Ptr Device_T -> ("pInfo" ::: Ptr (SomeStruct DeviceImageMemoryRequirements)) -> ("pMemoryRequirements" ::: Ptr (SomeStruct MemoryRequirements2)) -> IO ()
+-- No documentation found for TopLevel "PFN_vkGetDeviceImageMemoryRequirements"
+type PFN_vkGetDeviceImageMemoryRequirements = FunPtr FN_vkGetDeviceImageMemoryRequirements
+
+
 type AllocatorCreateFlags = AllocatorCreateFlagBits
 
 -- | Flags for created 'Allocator'.
@@ -4007,6 +4019,14 @@ data VulkanFunctions = VulkanFunctions
     vkBindImageMemory2KHR :: PFN_vkBindImageMemory2KHR
   , 
     vkGetPhysicalDeviceMemoryProperties2KHR :: PFN_vkGetPhysicalDeviceMemoryProperties2KHR
+  , -- | Fetch from \"vkGetDeviceBufferMemoryRequirements\" on Vulkan >= 1.3, but
+    -- you can also fetch it from \"vkGetDeviceBufferMemoryRequirementsKHR\" if
+    -- you enabled extension VK_KHR_maintenance4.
+    vkGetDeviceBufferMemoryRequirements :: PFN_vkGetDeviceBufferMemoryRequirements
+  , -- | Fetch from \"vkGetDeviceImageMemoryRequirements\" on Vulkan >= 1.3, but
+    -- you can also fetch it from \"vkGetDeviceImageMemoryRequirementsKHR\" if
+    -- you enabled extension VK_KHR_maintenance4.
+    vkGetDeviceImageMemoryRequirements :: PFN_vkGetDeviceImageMemoryRequirements
   }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -4015,7 +4035,7 @@ deriving instance Generic (VulkanFunctions)
 deriving instance Show VulkanFunctions
 
 instance ToCStruct VulkanFunctions where
-  withCStruct x f = allocaBytes 192 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 208 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p VulkanFunctions{..} f = do
     poke ((p `plusPtr` 0 :: Ptr PFN_vkGetInstanceProcAddr)) (vkGetInstanceProcAddr)
     poke ((p `plusPtr` 8 :: Ptr PFN_vkGetDeviceProcAddr)) (vkGetDeviceProcAddr)
@@ -4041,8 +4061,10 @@ instance ToCStruct VulkanFunctions where
     poke ((p `plusPtr` 168 :: Ptr PFN_vkBindBufferMemory2KHR)) (vkBindBufferMemory2KHR)
     poke ((p `plusPtr` 176 :: Ptr PFN_vkBindImageMemory2KHR)) (vkBindImageMemory2KHR)
     poke ((p `plusPtr` 184 :: Ptr PFN_vkGetPhysicalDeviceMemoryProperties2KHR)) (vkGetPhysicalDeviceMemoryProperties2KHR)
+    poke ((p `plusPtr` 192 :: Ptr PFN_vkGetDeviceBufferMemoryRequirements)) (vkGetDeviceBufferMemoryRequirements)
+    poke ((p `plusPtr` 200 :: Ptr PFN_vkGetDeviceImageMemoryRequirements)) (vkGetDeviceImageMemoryRequirements)
     f
-  cStructSize = 192
+  cStructSize = 208
   cStructAlignment = 8
   pokeZeroCStruct _ f = f
 
@@ -4072,17 +4094,21 @@ instance FromCStruct VulkanFunctions where
     vkBindBufferMemory2KHR <- peek @PFN_vkBindBufferMemory2KHR ((p `plusPtr` 168 :: Ptr PFN_vkBindBufferMemory2KHR))
     vkBindImageMemory2KHR <- peek @PFN_vkBindImageMemory2KHR ((p `plusPtr` 176 :: Ptr PFN_vkBindImageMemory2KHR))
     vkGetPhysicalDeviceMemoryProperties2KHR <- peek @PFN_vkGetPhysicalDeviceMemoryProperties2KHR ((p `plusPtr` 184 :: Ptr PFN_vkGetPhysicalDeviceMemoryProperties2KHR))
+    vkGetDeviceBufferMemoryRequirements <- peek @PFN_vkGetDeviceBufferMemoryRequirements ((p `plusPtr` 192 :: Ptr PFN_vkGetDeviceBufferMemoryRequirements))
+    vkGetDeviceImageMemoryRequirements <- peek @PFN_vkGetDeviceImageMemoryRequirements ((p `plusPtr` 200 :: Ptr PFN_vkGetDeviceImageMemoryRequirements))
     pure $ VulkanFunctions
-             vkGetInstanceProcAddr vkGetDeviceProcAddr vkGetPhysicalDeviceProperties vkGetPhysicalDeviceMemoryProperties vkAllocateMemory vkFreeMemory vkMapMemory vkUnmapMemory vkFlushMappedMemoryRanges vkInvalidateMappedMemoryRanges vkBindBufferMemory vkBindImageMemory vkGetBufferMemoryRequirements vkGetImageMemoryRequirements vkCreateBuffer vkDestroyBuffer vkCreateImage vkDestroyImage vkCmdCopyBuffer vkGetBufferMemoryRequirements2KHR vkGetImageMemoryRequirements2KHR vkBindBufferMemory2KHR vkBindImageMemory2KHR vkGetPhysicalDeviceMemoryProperties2KHR
+             vkGetInstanceProcAddr vkGetDeviceProcAddr vkGetPhysicalDeviceProperties vkGetPhysicalDeviceMemoryProperties vkAllocateMemory vkFreeMemory vkMapMemory vkUnmapMemory vkFlushMappedMemoryRanges vkInvalidateMappedMemoryRanges vkBindBufferMemory vkBindImageMemory vkGetBufferMemoryRequirements vkGetImageMemoryRequirements vkCreateBuffer vkDestroyBuffer vkCreateImage vkDestroyImage vkCmdCopyBuffer vkGetBufferMemoryRequirements2KHR vkGetImageMemoryRequirements2KHR vkBindBufferMemory2KHR vkBindImageMemory2KHR vkGetPhysicalDeviceMemoryProperties2KHR vkGetDeviceBufferMemoryRequirements vkGetDeviceImageMemoryRequirements
 
 instance Storable VulkanFunctions where
-  sizeOf ~_ = 192
+  sizeOf ~_ = 208
   alignment ~_ = 8
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero VulkanFunctions where
   zero = VulkanFunctions
+           zero
+           zero
            zero
            zero
            zero
