@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+
+## [0.10.3] - 2022-09-25
 - Add Vulkan 1.3 functions to VulkanFunctions
 
 ## [0.10.2] - 2022-09-24
