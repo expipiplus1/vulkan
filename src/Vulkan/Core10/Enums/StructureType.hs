@@ -1271,7 +1271,6 @@ import GHC.Show (Show(showsPrec))
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeCapabilitiesKHR VkVideoDecodeCapabilitiesKHR>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264CapabilitiesEXT VkVideoDecodeH264CapabilitiesEXT>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264DpbSlotInfoEXT VkVideoDecodeH264DpbSlotInfoEXT>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264MvcInfoEXT VkVideoDecodeH264MvcInfoEXT>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264PictureInfoEXT VkVideoDecodeH264PictureInfoEXT>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264ProfileInfoEXT VkVideoDecodeH264ProfileInfoEXT>,
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264SessionParametersAddInfoEXT VkVideoDecodeH264SessionParametersAddInfoEXT>,
