@@ -53,11 +53,17 @@ import           Write.Segment
 import           VMA.Documentation
 import           VMA.Render
 import           VMA.RenderParams
+import System.Directory (doesFileExist)
+import System.FilePath ((</>))
 
-vmaDir, vmaDocbookDir, vmaHeader :: FilePath
+vmaDir, vmaDocbookDir, vmaHeader, vulkanDocsDir, vulkanDocsXml, vulkanDocsInclude
+  :: FilePath
 vmaDir = "../VulkanMemoryAllocator/VulkanMemoryAllocator"
-vmaHeader = vmaDir <> "/include/vk_mem_alloc.h"
-vmaDocbookDir = vmaDir <> "/docs/docbook"
+vmaHeader = vmaDir </> "include/vk_mem_alloc.h"
+vmaDocbookDir = vmaDir </> "docs/docbook"
+vulkanDocsDir = "./Vulkan-Docs"
+vulkanDocsXml = vulkanDocsDir </> "xml/vk.xml"
+vulkanDocsInclude = vulkanDocsDir </> "gen/include"
 
 main :: IO ()
 main =
@@ -71,17 +77,27 @@ main =
   go :: Sem '[Err , Fixpoint , Embed IO , Final IO] ()
   go = do
     -- We need information on the Vulkan spec
-    specText <- timeItNamed "Reading spec"
-      $ readFileBS "./Vulkan-Docs/xml/vk.xml"
+    specText <- timeItNamed "Reading spec" $ readFileBS vulkanDocsXml
     (spec, specTypeSize) <- timeItNamed "Parsing spec"
       $ parseSpec @SpecVk specText
 
     getDocumentation <- loadAllDocumentation vmaDocbookDir
 
-    (ds, state)      <- fileDecls DoNotIgnoreWarnings vmaHeader
-    enums            <- unitEnums state ds
-    structs          <- unitStructs state ds
-    commands         <- unitCommands ds
+    liftIO
+      $   unlessM (doesFileExist (vulkanDocsInclude </> "vulkan/vulkan.h"))
+      $   sayErrString
+      $   "Couldn't find vulkan/vulkan.h in "
+      <>  vulkanDocsInclude
+      <>  "\nYou might want to run `make clean install` in "
+      <>  vulkanDocsDir
+      </> "xml"
+      <>  " to generate the most up-to-date vulkan headers"
+    (ds, state) <- fileDecls DoNotIgnoreWarnings
+                             ["./Vulkan-Docs/gen/include"]
+                             vmaHeader
+    enums    <- unitEnums state ds
+    structs  <- unitStructs state ds
+    commands <- unitCommands ds
     let handles = unitHandles ds
     funcPointers <- unitFuncPointers ds
 
@@ -470,7 +486,10 @@ typeToCType' = \case
   t -> throw $ "Unhandled type to convert: " <> show t
  where
   qual = bool NonConst CType.Const . constant
-  opt q t = if nullable q then True : t else if nonnull q then False : t else t
+  opt q t
+    | nullable q = True : t
+    | nonnull q = False : t
+    | otherwise = t
   len as t =
     [ l
     | Attr (Ident attrName _ _) [expr] _ <- as
@@ -553,10 +572,12 @@ exprValue = \case
 fileDecls
   :: (HasErr r, Member (Embed IO) r)
   => IgnoreWarnings
+  -> [FilePath]
+  -- ^ Include paths
   -> FilePath
   -> Sem r (GlobalDecls, TravState Identity ())
-fileDecls iw f = do
-  preprocessed <- cpp f
+fileDecls iw incs f = do
+  preprocessed <- cpp incs f
   transUnit <- fromEitherShow $ parseC (toStrict preprocessed) (initPos f)
   (GlobalDecls objs tags typedefs, state) <- runTrav' iw
                                                       (initTravState ())
@@ -581,15 +602,22 @@ data IgnoreWarnings = DoIgnoreWarnings | DoNotIgnoreWarnings
   deriving (Eq)
 
 -- | Read the preprocessed version of a file
-cpp :: MonadIO m => FilePath -> m LByteString
-cpp f = mapException (\e -> e { eceStdout = mempty }) $ readProcessStdout_
+cpp
+  :: MonadIO m
+  => [FilePath]
+  -- ^ Include paths
+  -> FilePath
+  -> m LByteString
+cpp incs f = mapException (\e -> e { eceStdout = mempty }) $ readProcessStdout_
   (proc
     "cpp"
-    [ f
-    , "-DVMA_NOT_NULL=_Nonnull"
-    , "-DVMA_NULLABLE=_Nullable"
-    , "-DVMA_LEN_IF_NOT_NULL(len)=__attribute__((" <> lenAttrName <> "(len)))"
-    ]
+    ([ f
+     , "-DVMA_NOT_NULL=_Nonnull"
+     , "-DVMA_NULLABLE=_Nullable"
+     , "-DVMA_LEN_IF_NOT_NULL(len)=__attribute__((" <> lenAttrName <> "(len)))"
+     ]
+    <> fmap ("-I" <>) incs
+    )
   )
 
 lenAttrName :: String
