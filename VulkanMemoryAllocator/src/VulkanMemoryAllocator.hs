@@ -3029,12 +3029,12 @@ type FN_vkUnmapMemory = Ptr Device_T -> DeviceMemory -> IO ()
 type PFN_vkUnmapMemory = FunPtr FN_vkUnmapMemory
 
 
-type FN_vkGetDeviceBufferMemoryRequirements = Ptr Device_T -> ("pInfo" ::: Ptr (SomeStruct DeviceBufferMemoryRequirements)) -> ("pMemoryRequirements" ::: Ptr (SomeStruct MemoryRequirements2)) -> IO ()
+type FN_vkGetDeviceBufferMemoryRequirements = Ptr Device_T -> ("pInfo" ::: Ptr DeviceBufferMemoryRequirements) -> ("pMemoryRequirements" ::: Ptr (SomeStruct MemoryRequirements2)) -> IO ()
 -- No documentation found for TopLevel "PFN_vkGetDeviceBufferMemoryRequirements"
 type PFN_vkGetDeviceBufferMemoryRequirements = FunPtr FN_vkGetDeviceBufferMemoryRequirements
 
 
-type FN_vkGetDeviceImageMemoryRequirements = Ptr Device_T -> ("pInfo" ::: Ptr (SomeStruct DeviceImageMemoryRequirements)) -> ("pMemoryRequirements" ::: Ptr (SomeStruct MemoryRequirements2)) -> IO ()
+type FN_vkGetDeviceImageMemoryRequirements = Ptr Device_T -> ("pInfo" ::: Ptr DeviceImageMemoryRequirements) -> ("pMemoryRequirements" ::: Ptr (SomeStruct MemoryRequirements2)) -> IO ()
 -- No documentation found for TopLevel "PFN_vkGetDeviceImageMemoryRequirements"
 type PFN_vkGetDeviceImageMemoryRequirements = FunPtr FN_vkGetDeviceImageMemoryRequirements
 
