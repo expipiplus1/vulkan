@@ -214,6 +214,8 @@ vulkanManifest getVar structStyle RenderParams {..} =
                    , "VkPhysicalDeviceMemoryProperties"
                    , "VkPhysicalDeviceProperties"
                    , "VkResult"
+                   , "VkDeviceBufferMemoryRequirements"
+                   , "VkDeviceImageMemoryRequirements"
                    ]
           -> vk n
           | n
@@ -225,8 +227,6 @@ vulkanManifest getVar structStyle RenderParams {..} =
                    , "VkMemoryRequirements2"
                    , "VkImageMemoryRequirementsInfo2"
                    , "VkPhysicalDeviceMemoryProperties2"
-                   , "VkDeviceBufferMemoryRequirements"
-                   , "VkDeviceImageMemoryRequirements"
                    ]
           -> someVk n
         _ -> Nothing
