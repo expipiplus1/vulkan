@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+- Fix tests on ghc 9.2
 
 ## [0.5.9] - 2022-09-24
 - Relax bounds on `vulkan`
