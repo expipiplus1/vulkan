@@ -108,6 +108,9 @@ let
         };
       } super.hs-speedscope));
 
+      autoapply = doJailbreak super.autoapply;
+      sdl2 = doJailbreak super.sdl2;
+
       #
       # Overrides for generate
       #
