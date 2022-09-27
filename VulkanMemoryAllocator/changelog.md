@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+- Enable c++17 to get VMA aligned alloc
 
 ## [0.10.3] - 2022-09-25
 - Add Vulkan 1.3 functions to VulkanFunctions
