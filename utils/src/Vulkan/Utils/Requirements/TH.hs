@@ -2,21 +2,19 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 module Vulkan.Utils.Requirements.TH
-  ( req,
-    reqs,
+  ( req
+  , reqs
   )
 where
 
 import Control.Applicative
 import Control.Category ((>>>))
 import Control.Monad
-import Control.Monad.IO.Class (MonadIO (..))
 import Data.Char
+import Data.Either (lefts)
 import Data.Foldable
-import Data.List
-  ( intercalate,
-    isPrefixOf,
-  )
+import Data.Functor ((<&>))
+import Data.List ( intercalate, isPrefixOf, dropWhileEnd )
 import Data.List.Extra (nubOrd)
 import Data.Maybe
 import Data.String
@@ -26,7 +24,7 @@ import Language.Haskell.TH
 import Language.Haskell.TH.Quote
 import Language.Haskell.TH.Syntax
 import Text.ParserCombinators.ReadP hiding
-  ( optional,
+  ( optional
   )
 import Text.Read (readMaybe)
 import Vulkan.Requirement
@@ -34,9 +32,6 @@ import Vulkan.Utils.Internal
 import Vulkan.Utils.Misc
 import Vulkan.Version (pattern MAKE_API_VERSION)
 import Prelude hiding (GT)
-import Data.Functor ((<&>))
-import Data.Either (isRight, isLeft)
-import Data.Bifunctor (first)
 
 -- $setup
 -- >>> import           Vulkan.Core11.Promoted_From_VK_KHR_multiview
@@ -80,9 +75,9 @@ import Data.Bifunctor (first)
 -- >>> featureName r
 -- "PhysicalDeviceVulkan11Features.multiview"
 --
--- >>> let r = [req|PhysicalDeviceMultiviewFeatures.multiview|]
--- >>> featureName r
--- "PhysicalDeviceMultiviewFeatures.multiview"
+-- >>> let r = [reqs|  PhysicalDeviceTimelineSemaphoreFeatures.timelineSemaphore |]
+-- >>> featureName <$> r
+-- ["PhysicalDeviceTimelineSemaphoreFeatures.timelineSemaphore"]
 --
 -- >>> let r = [req|PhysicalDeviceMultiviewFeatures.doesn'tExist|]
 -- ...
@@ -99,7 +94,7 @@ import Data.Bifunctor (first)
 --     • Data.Either.Either doesn't seem to be the type of a record constructor
 -- ...
 req :: QuasiQuoter
-req = (badQQ "req") {quoteExp = reqExp}
+req = (badQQ "req"){quoteExp = reqExp}
 
 -- | Like 'reqs' except that this parses a list of newline separated
 -- requirements
@@ -109,7 +104,7 @@ req = (badQQ "req") {quoteExp = reqExp}
 -- - Blank lines
 -- - Lines beginning with @--@ or @#@
 reqs :: QuasiQuoter
-reqs = (badQQ "req") {quoteExp = exps reqExp . filterComments}
+reqs = (badQQ "req"){quoteExp = exps reqExp . filterComments}
 
 reqExp :: String -> Q Exp
 reqExp s = do
@@ -122,8 +117,8 @@ reqExp s = do
 renderRequest :: String -> Request Name Name -> ExpQ
 renderRequest input = \case
   Feature s m ->
-    let check = explicitRecordGet s m
-        enable = explicitRecordSet s m [|True|]
+    let check = explicitRecordGet s m (ConT ''Bool)
+        enable = explicitRecordSet s m (ConT ''Bool) [|True|]
      in do
           [|
             let featureName = fromString $(lift input)
@@ -170,15 +165,15 @@ nameRequest = \case
     pure $ Property sName mName c'
   Extension s v -> pure $ Extension s v
   Version v -> pure $ Version v
-  where
-    getQualTyName n = do
-      let q = intercalate "." n
-      maybe (fail $ "Couldn't find type name " <> show q) pure
-        =<< lookupTypeName q
-    getQualValueName n = do
-      let q = intercalate "." n
-      maybe (fail $ "Couldn't find value name " <> show q) pure
-        =<< lookupValueName q
+ where
+  getQualTyName n = do
+    let q = intercalate "." n
+    maybe (fail $ "Couldn't find type name " <> show q) pure
+      =<< lookupTypeName q
+  getQualValueName n = do
+    let q = intercalate "." n
+    maybe (fail $ "Couldn't find value name " <> show q) pure
+      =<< lookupValueName q
 
 data Request qual unqual
   = Version Word32
@@ -286,7 +281,7 @@ parse =
         skipSpaces
         asum
           [ p <* skipSpaces <* eof
-            | p <- [version, feature, property, extension]
+          | p <- [version, feature, property, extension]
           ]
    in readP_to_S request >>> \case
         -- xs        -> pure $ Feature [] (show xs)
@@ -302,14 +297,16 @@ parse =
 filterComments :: String -> [String]
 filterComments =
   let bad = (("--" `isPrefixOf`) <||> ("#" `isPrefixOf`) <||> null)
-   in nubOrd . filter (not . bad) . fmap (dropWhile isSpace) . lines
+   in nubOrd . filter (not . bad) . fmap strip . lines
+
+strip :: String -> String
+strip = dropWhile isSpace . dropWhileEnd isSpace
 
 exps :: (String -> ExpQ) -> [String] -> ExpQ
 exps f = listE . fmap f
 
 (<||>) :: Applicative f => f Bool -> f Bool -> f Bool
 (<||>) = liftA2 (||)
-
 
 ----------------------------------------------------------------
 -- TH Utils
@@ -320,12 +317,14 @@ explicitRecordSet
   -- ^ Type name
   -> Name
   -- ^ member name
+  -> Type
+  -- ^ member type
   -> ExpQ
   -- ^ new value
   -> ExpQ
-explicitRecordSet s m x = do
-  (con, ns) <- overRecord s m
-  ns'       <- traverse (traverse newName) ns
+explicitRecordSet s m t x = do
+  (con, ns) <- overRecord s m t
+  ns' <- traverse (traverse newName) ns
   let pats = either (const wildP) varP <$> ns'
   let apps = either (const x) varE <$> ns'
   [|\ $(conP con pats) -> $(foldl appE (conE con) apps)|]
@@ -335,28 +334,45 @@ explicitRecordGet
   -- ^ Type name
   -> Name
   -- ^ member name
+  -> Type
+  -- ^ member type
   -> ExpQ
-explicitRecordGet s m = do
-  (con, ns) <- overRecord s m
-  x         <- newName "x"
-  let pats = either (const wildP) (const (varP x)) <$> ns
+explicitRecordGet s m t = do
+  (con, ns) <- overRecord s m t
+  x <- newName "x"
+  let pats = either (const (varP x)) (const wildP) <$> ns
   [|\ $(conP con pats) -> $(varE x)|]
 
 overRecord
   :: Name
   -- ^ Type name
   -> Name
+  -- ^ member name
+  -> Type
+  -- ^ member type
   -> Q (Name, [Either Type String])
   -- ^ (Constructor, [Left var name, Right selected member type])
-overRecord s (nameBase -> m) = do
+overRecord s (nameBase -> m) t = do
   reify s >>= \case
     TyConI (DataD _ _ _ _ [c] _) | RecC con vs <- c ->
       let ns = vs <&> \case
-            (nameBase -> n, _bang, t) | n == m    -> Left t
-                                      | otherwise -> Right n
-      in  case filter isLeft ns of
-            []  -> fail $ "Couldn't find member " <> show m <> " in " <> show s
-            [_] -> pure (con, ns)
+            (nameBase -> n, _bang, t') | n == m    -> Left t'
+                                       | otherwise -> Right n
+      in  case lefts ns of
+            [] -> fail $ "Couldn't find member " <> show m <> " in " <> show s
+            [t']
+              | t == t'
+              -> pure (con, ns)
+              | otherwise
+              -> fail
+                $  "Member "
+                <> show m
+                <> " of "
+                <> show s
+                <> " has type "
+                <> show t'
+                <> " but we expected "
+                <> show t
             _ ->
               fail
                 $  "Found multiple members called"
@@ -364,4 +380,5 @@ overRecord s (nameBase -> m) = do
                 <> " in "
                 <> show s
                 <> " ...what?"
-    _ -> fail $ show s <> " doesn't seem to be the type of a record constructor"
+    _ ->
+      fail $ show s <> " doesn't seem to be the type of a record constructor"

@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+- Improve error messages for requirements TH
 
 ## [0.5.9.1] - 2022-09-26
 - Fix tests on ghc 9.2
