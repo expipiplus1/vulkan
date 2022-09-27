@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+
+## [0.5.10] - 2022-09-27
 - Improve error messages for requirements TH
 
 ## [0.5.9.1] - 2022-09-26

@@ -5,7 +5,7 @@ cabal-version: 1.24
 -- see: https://github.com/sol/hpack
 
 name:           vulkan-utils
-version:        0.5.9.1
+version:        0.5.10
 synopsis:       Utils for the vulkan package
 category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme

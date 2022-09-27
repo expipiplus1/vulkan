@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+
+## [0.10.3.1] - 2022-09-27
 - Enable c++17 to get VMA aligned alloc
 
 ## [0.10.3] - 2022-09-25
