@@ -260,7 +260,7 @@ renderBracket paramName b@Bracket {..} =
 
         let bracketBody =
               pretty wrapperName
-                <+> sep argHsVars
+                <+> hang 2 (sep argHsVars)
                 <+> "="
                 <>  line
                 <>  indent 2 bracketRHS
@@ -319,7 +319,7 @@ renderCreate paramName Bracket {..} = do
     -- Would be a bit weird to hit this, but nothing unhandleable
     Member   _ _ -> throw "TODO: Member used during construction"
   tellImport create
-  pure $ pretty create <+> sep createArgVars
+  pure $ pretty create <+> hang 2 (sep createArgVars)
 
 renderDestroy
   :: ( HasErr r
@@ -338,7 +338,7 @@ renderDestroy paramName Bracket {..} = do
       noResource           = null bInnerTypes && noDestructorResource
       usedResourceIndices  = [ n | Resource _ n <- bDestroyArguments ]
       resourcePattern      = case length bInnerTypes of
-        n -> tupled
+        n -> align $ tupled
           [ if i `elem` usedResourceIndices then "o" <> show i else "_"
           | i <- [0 .. n - 1]
           ]
@@ -381,7 +381,7 @@ renderDestroy paramName Bracket {..} = do
           xs
       callDestructor =
         (if noResource then emptyDoc else "\\" <> resourcePattern <+> "-> ")
-          <> withTraversals (pretty destroy <+> sep appVars) toTraverse
+          <> withTraversals (pretty destroy <+> hang 2 (sep appVars)) toTraverse
       traverseDestroy = "traverse" <+> parens callDestructor
   pure $ case bDestroyIndividually of
     DoDestroyIndividually    -> traverseDestroy

@@ -21,6 +21,7 @@ import           Documentation.RunAsciiDoctor
                                          hiding ( main )
 import           Relude                  hiding ( elem
                                                 , rem
+                                                , getArgs
                                                 )
 import           Say
 import           Spec.Flavor

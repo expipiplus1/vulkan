@@ -107,8 +107,8 @@ renderSPIRVThing funName name reqs xs = do
                                      -- other reqs
         (instReqs', devReqs') <- mergeReqs
           <$> traverse renderReq (V.toList (reqs x))
-        pure $ viaShow (name x) <+> "-> (,)" <+> fillSep
-          [align (list instReqs'), align (list devReqs')]
+        pure $ viaShow (name x) <+> "-> (,)" <+> align
+          (fillSep [align (list instReqs'), align (list devReqs')])
   cases <- (<> ["_ -> ([],[])"]) <$> traverse case' (V.toList xs)
   tellImport ''ByteString
   tellImport (TyConName "Instance")

@@ -11,6 +11,7 @@ import           Relude                  hiding ( Handle
                                                 , Type
                                                 , evalState
                                                 , uncons
+                                                , getArgs
                                                 )
 import           Say
 import           System.TimeIt

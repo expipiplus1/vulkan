@@ -468,8 +468,8 @@ difficultLengths =
             tellImport ''CChar
             let castPtr = "castPtr @Word32 @CChar" <+> ptr
             tellImport 'BS.packCStringLen
-            pure . IOAction . ValueDoc $ "packCStringLen" <+> tupled
-              [castPtr, bytes]
+            pure . IOAction . ValueDoc $ "packCStringLen" <+> align (tupled
+              [castPtr, bytes])
         }
       _ -> Nothing
     _ -> const Nothing
@@ -541,8 +541,8 @@ difficultLengths =
                 tellImport ''CChar
                 let castPtr = "castPtr @Word8 @CChar" <+> ptr
                 tellImport 'BS.packCStringLen
-                pure . IOAction . ValueDoc $ "packCStringLen" <+> tupled
-                  [castPtr, bytes]
+                pure . IOAction . ValueDoc $ "packCStringLen" <+> align (tupled
+                  [castPtr, bytes])
             }
         _ -> Nothing
     _ -> const Nothing

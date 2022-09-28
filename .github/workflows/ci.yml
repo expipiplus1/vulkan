@@ -287,7 +287,7 @@ jobs:
         name: vulkan-haskell
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
 
-    - run: nix-build -A generate-new
+    - run: nix-build --argstr "ghc8107" -A generate-new
 
   nix-shell-profiling:
     runs-on: ubuntu-latest

@@ -379,7 +379,7 @@ byteStringPeek name lengths addrRef =
       ValueDoc lenVal <- use lenRef
       let castAddr = "castPtr @() @CChar" <+> addr
       pure . IOAction $ ValueDoc
-        ("packCStringLen " <+> tupled [castAddr, lenVal])
+        ("packCStringLen " <+> align (tupled [castAddr, lenVal]))
 
     -- TODO: These next two patterns have different "levelness" but the same
     -- code, it works because this function is not called consistently. Fix!
@@ -699,7 +699,7 @@ tuplePeek name addrRef fromPtr toElem = case fromPtr of
 
       Pure InlineOnce . ValueDoc <$> do
         subPeekDocs <- traverseV (fmap unValueDoc . use @r) subPeeks
-        pure $ tupled subPeekDocs
+        pure $ align (tupled subPeekDocs)
   t -> throw ("Unhandled conversion to Tuple from " <> show t)
 
 ----------------------------------------------------------------

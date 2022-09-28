@@ -33,6 +33,7 @@ import           Relude                  hiding ( State
                                                 , group
                                                 , unwords
                                                 , words
+                                                , universe
                                                 )
 
 import           Haskell.Name

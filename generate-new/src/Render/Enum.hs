@@ -95,7 +95,7 @@ renderEnum e@Enum {..} = do
            <+> pretty conName
            <+> tDoc
            <>  line
-           <>  indent 2 ("deriving newtype" <+> tupled derivedClasses)
+           <>  indent 2 ("deriving newtype" <+> align (tupled derivedClasses))
            , zeroComment
            , vsep (toList (($ getDoc) <$> patterns))
            ]
@@ -213,7 +213,8 @@ renderShowInstance prefixString showTableName conNameName Enum {..} = do
       pure "(\\x -> showString \"0x\" . showHex x)"
   tellDoc [qqi|
     instance Show {n} where
-      showsPrec = enumShowsPrec {prefixString} {showTableName} {conNameName} (\\({conName} x) -> x) {shows}
+      showsPrec = enumShowsPrec 
+        {prefixString} {showTableName} {conNameName} (\\({conName} x) -> x) {shows}
   |]
 
 renderReadInstance
@@ -232,5 +233,17 @@ renderReadInstance prefixString showTableName conNameName Enum {..} = do
   tellImport (mkName (T.unpack modulePrefix <> ".Internal.Utils.enumReadPrec"))
   tellDoc [qqi|
     instance Read {n} where
-      readPrec = enumReadPrec {prefixString} {showTableName} {conNameName} {conName}
+      readPrec = enumReadPrec 
+        {prefixString} {showTableName} {conNameName} {conName}
   |]
+
+----------------------------------------------------------------
+-- Utils
+----------------------------------------------------------------
+
+listMultiLine :: [Doc a] -> Doc a
+listMultiLine es =
+  hang 2
+    $  pretty @Text "[ "
+    <> cat (punctuate (pretty @Text ", ") es)
+    <> pretty @Text "]"

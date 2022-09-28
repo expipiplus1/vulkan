@@ -98,7 +98,7 @@ renderUnionMember tyName MarshaledStructMember {..} = do
     Tupled n elemScheme -> do
       t    <- note "Union member is elided" =<< schemeTypeNegative elemScheme
       tDoc <- renderTypeHighPrec t
-      pure $ pretty con <+> hsep (replicate (fromIntegral n) tDoc)
+      pure $ pretty con <+> align (hsep (replicate (fromIntegral n) tDoc))
     _ -> do
       t    <- note "Union member is elided" =<< schemeTypeNegative msmScheme
       tDoc <- renderTypeHighPrec t
@@ -166,7 +166,7 @@ toCStructInstance MarshaledStruct {..} = do
 
       tellImportWith ty con
       let matchVars =
-            if numMembers == 1 then pretty mVar else hsep (pretty <$> mVars)
+            if numMembers == 1 then pretty mVar else align (hsep (pretty <$> mVars))
       pure $ pretty con <+> matchVars <+> "->" <+> pokeDoc
 
   cases           <- traverseV mkCase (toList msMembers)
@@ -247,7 +247,7 @@ zeroInstance MarshaledStruct {..} = do
             pure $ tSize * fromIntegral n
           _ -> empty
         guard (size == unionSize)
-        pure (con <+> hsep (replicate (fromIntegral numElems) zero))
+        pure (con <+> align (hsep (replicate (fromIntegral numElems) zero)))
   zeroMember <- case zeroableMembers of
     [] ->
       throw

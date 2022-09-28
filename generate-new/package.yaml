@@ -104,7 +104,6 @@ dependencies:
 - async-pool
 - attoparsec
 - base
-- brittany
 - bytestring
 - casing
 - containers
@@ -115,6 +114,7 @@ dependencies:
 - directory
 - extra
 - filepath
+- fourmolu
 - inline-c
 - interpolatedstring-perl6
 - mtl

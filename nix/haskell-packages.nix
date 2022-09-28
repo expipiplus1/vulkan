@@ -116,6 +116,7 @@ let
       #
       pandoc = appendPatch ../generate-new/patches/pandoc-haddock-tables.patch
         super.pandoc;
+      fourmolu = doJailbreak super.fourmolu;
     } // pkgs.lib.optionalAttrs hoogle {
       ghc = super.ghc // { withPackages = super.ghc.withHoogle; };
       ghcWithPackages = super.ghcWithPackages.override { withHoogle = true; };

@@ -692,10 +692,10 @@ fromCStructInstanceStub tellSourceImport s = do
       tellSourceImport (TyConName "Extendss")
       pure
         $   " "
-        <>  tupled
+        <>  align (tupled
               [ "Extendss" <+> pretty n <+> pretty structChainVar
               , "PeekChain" <+> pretty structChainVar
-              ]
+              ])
         <+> "=>"
     else pure ""
   tellImport (TyConName "FromCStruct")
@@ -718,10 +718,12 @@ toCStructInstanceStub tellSourceImport s = do
       tellSourceImport (TyConName "Extendss")
       pure
         $   " "
-        <>  tupled
-              [ "Extendss" <+> pretty n <+> pretty structChainVar
-              , "PokeChain" <+> pretty structChainVar
-              ]
+        <>  align
+              (tupled
+                [ "Extendss" <+> pretty n <+> pretty structChainVar
+                , "PokeChain" <+> pretty structChainVar
+                ]
+              )
         <+> "=>"
     else pure ""
   tellImport (TyConName "ToCStruct")

@@ -244,7 +244,7 @@ initCmdsStmts getFirstProcAddr getProcAddr commands = do
         let otherNames = siGetAliases cName
             nameString name =
               parens $ "Ptr \"" <> pretty (unCName name) <> "\"#"
-            nameStrings names = list (nameString <$> names)
+            nameStrings names = align (list (nameString <$> names))
         in  case otherNames of
               [] ->
                 pretty (unCName cName)

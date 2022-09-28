@@ -11,19 +11,19 @@ import qualified Data.Set                      as Set
 import           Data.Set                       ( unions )
 import           Data.Text                     as T
 import           Data.Text.IO                  as T
-import           Prettyprinter
-import           Prettyprinter.Render.Text
 import qualified Data.Vector.Extra             as V
 import           Data.Vector.Extra              ( Vector )
 import           Foreign.Ptr
-import           Language.Haskell.Brittany
-import           Language.Haskell.Brittany.Internal.Config.Types
 import           Language.Haskell.TH            ( mkName
                                                 , nameBase
                                                 , nameModule
                                                 )
+import qualified Ormolu
+import qualified Ormolu.Config as Ormolu
 import           Polysemy
 import           Polysemy.Input
+import           Prettyprinter
+import           Prettyprinter.Render.Text
 import           Relude                  hiding ( Handle
                                                 , State
                                                 , modify'
@@ -48,6 +48,7 @@ import           Render.SpecInfo
 import           Render.Utils
 import           Spec.Types
 import           Write.Segment
+import Control.Exception (try)
 
 ----------------------------------------------------------------
 -- Rendering
@@ -282,22 +283,16 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
         d <- maybe mzero pure $ reDoc e getDocumentation
         let t = layoutDoc (d <> line <> line)
         if getAll (reCanFormat e)
-          then liftIO (parsePrintModule brittanyConfig t) >>= \case
-            Left err ->
-              error
-                $  "Fail: Brittany failed to handle module:\n"
-                <> T.intercalate "\n" (fmap (T.pack . showBError) err)
-                <> "\n\n\n"
-                <> t
-             where
-              showBError = \case
-                ErrorInput         x -> "ErrorInput " <> x
-                ErrorUnusedComment x -> "ErrorUnusedComent " <> x
-                ErrorMacroConfig x y -> "ErrorMacroConfig " <> x <> " " <> y
-                LayoutWarning x      -> "LayoutWarning " <> x
-                ErrorUnknownNode x _ -> "ErrorUnknownNode " <> x <> " <<>>"
-                ErrorOutputCheck     -> "ErrorOutputCheck"
-            Right f -> pure f
+          then
+            liftIO (try (Ormolu.ormolu ormoluConfig "<stdin>" (T.unpack t)))
+              >>= \case
+                    Left ex ->
+                      error
+                        $  "Fail: Ormolu failed to handle module:\n"
+                        <> T.pack (displayException @Ormolu.OrmoluException ex)
+                        <> "\n\n\n"
+                        <> t
+                    Right f -> pure f
           else pure t
     contentsTexts <- mapMaybeM layoutContent (V.toList es)
     let moduleText =
@@ -460,13 +455,18 @@ readFileMaybe :: FilePath -> IO (Maybe Text)
 readFileMaybe f =
   (Just <$> T.readFile f) `catch` (\(_ :: IOException) -> pure Nothing)
 
-brittanyConfig :: CConfig Identity
-brittanyConfig = staticDefaultConfig
-  { _conf_preprocessor = PreProcessorConfig (pure (pure CPPModeNowarn))
-                                            (pure (pure True))
-  , _conf_layout       = (_conf_layout staticDefaultConfig)
-                           { _lconfig_cols = pure (pure 120)
-                           }
-  , _conf_forward      = ForwardOptions (pure [])
-    --  ^ TODO: put language exts here
+-- If we don't put PatternSynonyms here the fourmolu eatst he comments on them 
+ormoluConfig :: Ormolu.Config Ormolu.RegionIndices
+ormoluConfig = Ormolu.defaultConfig
+  { Ormolu.cfgDynOptions  = [Ormolu.DynOption "-XPatternSynonyms"] 
+  , Ormolu.cfgPrinterOpts = Ormolu.defaultPrinterOpts
+    { Ormolu.poIndentation              = pure 2
+    , Ormolu.poCommaStyle               = pure Ormolu.Leading
+    , Ormolu.poIndentWheres             = pure True
+    , Ormolu.poRecordBraceSpace         = pure False
+    , Ormolu.poDiffFriendlyImportExport = pure False
+    , Ormolu.poRespectful               = pure False
+    , Ormolu.poHaddockStyle             = pure Ormolu.HaddockSingleLine
+    }
   }
+

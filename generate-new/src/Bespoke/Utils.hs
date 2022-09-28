@@ -39,7 +39,9 @@ hasObjectTypeClass = genRe "HasObjectType class" $ do
 
   tellDoc $ "class HasObjectType a where" <> line <> indent
     2
-    ("objectTypeAndHandle :: a ->" <+> tupled [pretty objectType, "Word64"])
+    (   "objectTypeAndHandle :: a ->"
+    <+> align (tupled [pretty objectType, "Word64"])
+    )
 
 marshalUtils :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 marshalUtils = genRe "marshal utils" $ do
