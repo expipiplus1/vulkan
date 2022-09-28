@@ -46,6 +46,15 @@ import qualified Language.C.Types              as C
 import           Vulkan.CStruct.Extends
 import           Vulkan.Core10                 as Vk
                                          hiding ( withImage )
+import           Vulkan.Dynamic                 ( DeviceCmds
+                                                  ( DeviceCmds
+                                                  , pVkGetDeviceProcAddr
+                                                  )
+                                                , InstanceCmds
+                                                  ( InstanceCmds
+                                                  , pVkGetInstanceProcAddr
+                                                  )
+                                                )
 import           Vulkan.Extensions.VK_EXT_debug_utils
 import           Vulkan.Extensions.VK_EXT_validation_features
 import           Vulkan.Utils.Debug
@@ -170,12 +179,19 @@ main = runResourceT $ do
   inst             <- Main.createInstance
   (phys, pdi, dev) <- Main.createDevice inst
   (_, allocator)   <- withAllocator
-    zero { flags            = zero
-         , physicalDevice   = physicalDeviceHandle phys
-         , device           = deviceHandle dev
-         , instance'        = instanceHandle inst
-         , vulkanApiVersion = myApiVersion
-         }
+    zero
+      { flags            = zero
+      , physicalDevice   = physicalDeviceHandle phys
+      , device           = deviceHandle dev
+      , instance'        = instanceHandle inst
+      , vulkanApiVersion = myApiVersion
+      , vulkanFunctions  = Just $ case inst of
+        Instance _ InstanceCmds {..} -> case dev of
+          Device _ DeviceCmds {..} -> zero
+            { vkGetInstanceProcAddr = castFunPtr pVkGetInstanceProcAddr
+            , vkGetDeviceProcAddr   = castFunPtr pVkGetDeviceProcAddr
+            }
+      }
     allocate
 
 #if defined(RENDERDOC)
