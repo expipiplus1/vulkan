@@ -198,7 +198,10 @@ createSpatialAnchorMSFT session createInfo = liftIO . evalContT $ do
   let xrCreateSpatialAnchorMSFT' = mkXrCreateSpatialAnchorMSFT xrCreateSpatialAnchorMSFTPtr
   createInfo' <- ContT $ withCStruct (createInfo)
   pAnchor <- ContT $ bracket (callocBytes @(Ptr SpatialAnchorMSFT_T) 8) free
-  r <- lift $ traceAroundEvent "xrCreateSpatialAnchorMSFT" (xrCreateSpatialAnchorMSFT' (sessionHandle (session)) createInfo' (pAnchor))
+  r <- lift $ traceAroundEvent "xrCreateSpatialAnchorMSFT" (xrCreateSpatialAnchorMSFT'
+                                                              (sessionHandle (session))
+                                                              createInfo'
+                                                              (pAnchor))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   anchor <- lift $ peek @(Ptr SpatialAnchorMSFT_T) pAnchor
   pure $ (((\h -> SpatialAnchorMSFT h cmds ) anchor))
@@ -303,7 +306,10 @@ createSpatialAnchorSpaceMSFT session createInfo = liftIO . evalContT $ do
   let xrCreateSpatialAnchorSpaceMSFT' = mkXrCreateSpatialAnchorSpaceMSFT xrCreateSpatialAnchorSpaceMSFTPtr
   createInfo' <- ContT $ withCStruct (createInfo)
   pSpace <- ContT $ bracket (callocBytes @(Ptr Space_T) 8) free
-  r <- lift $ traceAroundEvent "xrCreateSpatialAnchorSpaceMSFT" (xrCreateSpatialAnchorSpaceMSFT' (sessionHandle (session)) createInfo' (pSpace))
+  r <- lift $ traceAroundEvent "xrCreateSpatialAnchorSpaceMSFT" (xrCreateSpatialAnchorSpaceMSFT'
+                                                                   (sessionHandle (session))
+                                                                   createInfo'
+                                                                   (pSpace))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   space <- lift $ peek @(Ptr Space_T) pSpace
   pure $ (((\h -> Space h cmds ) space))
@@ -375,7 +381,8 @@ destroySpatialAnchorMSFT anchor = liftIO $ do
   unless (xrDestroySpatialAnchorMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrDestroySpatialAnchorMSFT is null" Nothing Nothing
   let xrDestroySpatialAnchorMSFT' = mkXrDestroySpatialAnchorMSFT xrDestroySpatialAnchorMSFTPtr
-  r <- traceAroundEvent "xrDestroySpatialAnchorMSFT" (xrDestroySpatialAnchorMSFT' (spatialAnchorMSFTHandle (anchor)))
+  r <- traceAroundEvent "xrDestroySpatialAnchorMSFT" (xrDestroySpatialAnchorMSFT'
+                                                        (spatialAnchorMSFTHandle (anchor)))
   when (r < SUCCESS) (throwIO (OpenXrException r))
 
 

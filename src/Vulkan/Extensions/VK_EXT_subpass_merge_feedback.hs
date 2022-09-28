@@ -567,69 +567,86 @@ newtype SubpassMergeStatusEXT = SubpassMergeStatusEXT Int32
 
 -- | 'SUBPASS_MERGE_STATUS_MERGED_EXT' specifies the subpass is merged with a
 -- previous subpass.
-pattern SUBPASS_MERGE_STATUS_MERGED_EXT                              = SubpassMergeStatusEXT 0
+pattern SUBPASS_MERGE_STATUS_MERGED_EXT = SubpassMergeStatusEXT 0
+
 -- | 'SUBPASS_MERGE_STATUS_DISALLOWED_EXT' specifies the subpass is
 -- disallowed to merge with previous subpass. If the render pass does not
 -- allow subpass merging, then all subpass statuses are set to this value.
 -- If a subpass description does not allow subpass merging, then only that
 -- subpass’s status is set to this value.
-pattern SUBPASS_MERGE_STATUS_DISALLOWED_EXT                          = SubpassMergeStatusEXT 1
+pattern SUBPASS_MERGE_STATUS_DISALLOWED_EXT = SubpassMergeStatusEXT 1
+
 -- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_SIDE_EFFECTS_EXT' specifies the subpass
 -- is not merged because it contains side effects.
-pattern SUBPASS_MERGE_STATUS_NOT_MERGED_SIDE_EFFECTS_EXT             = SubpassMergeStatusEXT 2
+pattern SUBPASS_MERGE_STATUS_NOT_MERGED_SIDE_EFFECTS_EXT = SubpassMergeStatusEXT 2
+
 -- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_SAMPLES_MISMATCH_EXT' specifies the
 -- subpass is not merged because sample count is not compatible with
 -- previous subpass.
-pattern SUBPASS_MERGE_STATUS_NOT_MERGED_SAMPLES_MISMATCH_EXT         = SubpassMergeStatusEXT 3
+pattern SUBPASS_MERGE_STATUS_NOT_MERGED_SAMPLES_MISMATCH_EXT = SubpassMergeStatusEXT 3
+
 -- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_VIEWS_MISMATCH_EXT' specifies the
 -- subpass is not merged because view masks do not match with previous
 -- subpass.
-pattern SUBPASS_MERGE_STATUS_NOT_MERGED_VIEWS_MISMATCH_EXT           = SubpassMergeStatusEXT 4
+pattern SUBPASS_MERGE_STATUS_NOT_MERGED_VIEWS_MISMATCH_EXT = SubpassMergeStatusEXT 4
+
 -- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_ALIASING_EXT' specifies the subpass is
 -- not merged because of attachments aliasing between them.
-pattern SUBPASS_MERGE_STATUS_NOT_MERGED_ALIASING_EXT                 = SubpassMergeStatusEXT 5
+pattern SUBPASS_MERGE_STATUS_NOT_MERGED_ALIASING_EXT = SubpassMergeStatusEXT 5
+
 -- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_DEPENDENCIES_EXT' specifies the subpass
 -- is not merged because subpass dependencies do not allow merging.
-pattern SUBPASS_MERGE_STATUS_NOT_MERGED_DEPENDENCIES_EXT             = SubpassMergeStatusEXT 6
+pattern SUBPASS_MERGE_STATUS_NOT_MERGED_DEPENDENCIES_EXT = SubpassMergeStatusEXT 6
+
 -- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_INCOMPATIBLE_INPUT_ATTACHMENT_EXT'
 -- specifies the subpass is not merged because input attachment is not a
 -- color attachment from previous subpass or the formats are incompatible.
 pattern SUBPASS_MERGE_STATUS_NOT_MERGED_INCOMPATIBLE_INPUT_ATTACHMENT_EXT = SubpassMergeStatusEXT 7
+
 -- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_TOO_MANY_ATTACHMENTS_EXT' specifies the
 -- subpass is not merged because of too many attachments.
-pattern SUBPASS_MERGE_STATUS_NOT_MERGED_TOO_MANY_ATTACHMENTS_EXT     = SubpassMergeStatusEXT 8
+pattern SUBPASS_MERGE_STATUS_NOT_MERGED_TOO_MANY_ATTACHMENTS_EXT = SubpassMergeStatusEXT 8
+
 -- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_INSUFFICIENT_STORAGE_EXT' specifies the
 -- subpass is not merged because of insufficient memory.
-pattern SUBPASS_MERGE_STATUS_NOT_MERGED_INSUFFICIENT_STORAGE_EXT     = SubpassMergeStatusEXT 9
+pattern SUBPASS_MERGE_STATUS_NOT_MERGED_INSUFFICIENT_STORAGE_EXT = SubpassMergeStatusEXT 9
+
 -- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_DEPTH_STENCIL_COUNT_EXT' specifies the
 -- subpass is not merged because of too many depth\/stencil attachments.
-pattern SUBPASS_MERGE_STATUS_NOT_MERGED_DEPTH_STENCIL_COUNT_EXT      = SubpassMergeStatusEXT 10
+pattern SUBPASS_MERGE_STATUS_NOT_MERGED_DEPTH_STENCIL_COUNT_EXT = SubpassMergeStatusEXT 10
+
 -- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_RESOLVE_ATTACHMENT_REUSE_EXT' specifies
 -- the subpass is not merged because a resolve attachment is reused as an
 -- input attachment in a subsequent subpass.
 pattern SUBPASS_MERGE_STATUS_NOT_MERGED_RESOLVE_ATTACHMENT_REUSE_EXT = SubpassMergeStatusEXT 11
+
 -- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_SINGLE_SUBPASS_EXT' specifies the
 -- subpass is not merged because the render pass has only one subpass.
-pattern SUBPASS_MERGE_STATUS_NOT_MERGED_SINGLE_SUBPASS_EXT           = SubpassMergeStatusEXT 12
+pattern SUBPASS_MERGE_STATUS_NOT_MERGED_SINGLE_SUBPASS_EXT = SubpassMergeStatusEXT 12
+
 -- | 'SUBPASS_MERGE_STATUS_NOT_MERGED_UNSPECIFIED_EXT' specifies other
 -- reasons why subpass is not merged. It is also the recommended default
 -- value that should be reported when a subpass is not merged and when no
 -- other value is appropriate.
-pattern SUBPASS_MERGE_STATUS_NOT_MERGED_UNSPECIFIED_EXT              = SubpassMergeStatusEXT 13
-{-# complete SUBPASS_MERGE_STATUS_MERGED_EXT,
-             SUBPASS_MERGE_STATUS_DISALLOWED_EXT,
-             SUBPASS_MERGE_STATUS_NOT_MERGED_SIDE_EFFECTS_EXT,
-             SUBPASS_MERGE_STATUS_NOT_MERGED_SAMPLES_MISMATCH_EXT,
-             SUBPASS_MERGE_STATUS_NOT_MERGED_VIEWS_MISMATCH_EXT,
-             SUBPASS_MERGE_STATUS_NOT_MERGED_ALIASING_EXT,
-             SUBPASS_MERGE_STATUS_NOT_MERGED_DEPENDENCIES_EXT,
-             SUBPASS_MERGE_STATUS_NOT_MERGED_INCOMPATIBLE_INPUT_ATTACHMENT_EXT,
-             SUBPASS_MERGE_STATUS_NOT_MERGED_TOO_MANY_ATTACHMENTS_EXT,
-             SUBPASS_MERGE_STATUS_NOT_MERGED_INSUFFICIENT_STORAGE_EXT,
-             SUBPASS_MERGE_STATUS_NOT_MERGED_DEPTH_STENCIL_COUNT_EXT,
-             SUBPASS_MERGE_STATUS_NOT_MERGED_RESOLVE_ATTACHMENT_REUSE_EXT,
-             SUBPASS_MERGE_STATUS_NOT_MERGED_SINGLE_SUBPASS_EXT,
-             SUBPASS_MERGE_STATUS_NOT_MERGED_UNSPECIFIED_EXT :: SubpassMergeStatusEXT #-}
+pattern SUBPASS_MERGE_STATUS_NOT_MERGED_UNSPECIFIED_EXT = SubpassMergeStatusEXT 13
+
+{-# COMPLETE
+  SUBPASS_MERGE_STATUS_MERGED_EXT
+  , SUBPASS_MERGE_STATUS_DISALLOWED_EXT
+  , SUBPASS_MERGE_STATUS_NOT_MERGED_SIDE_EFFECTS_EXT
+  , SUBPASS_MERGE_STATUS_NOT_MERGED_SAMPLES_MISMATCH_EXT
+  , SUBPASS_MERGE_STATUS_NOT_MERGED_VIEWS_MISMATCH_EXT
+  , SUBPASS_MERGE_STATUS_NOT_MERGED_ALIASING_EXT
+  , SUBPASS_MERGE_STATUS_NOT_MERGED_DEPENDENCIES_EXT
+  , SUBPASS_MERGE_STATUS_NOT_MERGED_INCOMPATIBLE_INPUT_ATTACHMENT_EXT
+  , SUBPASS_MERGE_STATUS_NOT_MERGED_TOO_MANY_ATTACHMENTS_EXT
+  , SUBPASS_MERGE_STATUS_NOT_MERGED_INSUFFICIENT_STORAGE_EXT
+  , SUBPASS_MERGE_STATUS_NOT_MERGED_DEPTH_STENCIL_COUNT_EXT
+  , SUBPASS_MERGE_STATUS_NOT_MERGED_RESOLVE_ATTACHMENT_REUSE_EXT
+  , SUBPASS_MERGE_STATUS_NOT_MERGED_SINGLE_SUBPASS_EXT
+  , SUBPASS_MERGE_STATUS_NOT_MERGED_UNSPECIFIED_EXT ::
+    SubpassMergeStatusEXT
+  #-}
 
 conNameSubpassMergeStatusEXT :: String
 conNameSubpassMergeStatusEXT = "SubpassMergeStatusEXT"
@@ -639,35 +656,80 @@ enumPrefixSubpassMergeStatusEXT = "SUBPASS_MERGE_STATUS_"
 
 showTableSubpassMergeStatusEXT :: [(SubpassMergeStatusEXT, String)]
 showTableSubpassMergeStatusEXT =
-  [ (SUBPASS_MERGE_STATUS_MERGED_EXT                             , "MERGED_EXT")
-  , (SUBPASS_MERGE_STATUS_DISALLOWED_EXT                         , "DISALLOWED_EXT")
-  , (SUBPASS_MERGE_STATUS_NOT_MERGED_SIDE_EFFECTS_EXT            , "NOT_MERGED_SIDE_EFFECTS_EXT")
-  , (SUBPASS_MERGE_STATUS_NOT_MERGED_SAMPLES_MISMATCH_EXT        , "NOT_MERGED_SAMPLES_MISMATCH_EXT")
-  , (SUBPASS_MERGE_STATUS_NOT_MERGED_VIEWS_MISMATCH_EXT          , "NOT_MERGED_VIEWS_MISMATCH_EXT")
-  , (SUBPASS_MERGE_STATUS_NOT_MERGED_ALIASING_EXT                , "NOT_MERGED_ALIASING_EXT")
-  , (SUBPASS_MERGE_STATUS_NOT_MERGED_DEPENDENCIES_EXT            , "NOT_MERGED_DEPENDENCIES_EXT")
-  , (SUBPASS_MERGE_STATUS_NOT_MERGED_INCOMPATIBLE_INPUT_ATTACHMENT_EXT, "NOT_MERGED_INCOMPATIBLE_INPUT_ATTACHMENT_EXT")
-  , (SUBPASS_MERGE_STATUS_NOT_MERGED_TOO_MANY_ATTACHMENTS_EXT    , "NOT_MERGED_TOO_MANY_ATTACHMENTS_EXT")
-  , (SUBPASS_MERGE_STATUS_NOT_MERGED_INSUFFICIENT_STORAGE_EXT    , "NOT_MERGED_INSUFFICIENT_STORAGE_EXT")
-  , (SUBPASS_MERGE_STATUS_NOT_MERGED_DEPTH_STENCIL_COUNT_EXT     , "NOT_MERGED_DEPTH_STENCIL_COUNT_EXT")
-  , (SUBPASS_MERGE_STATUS_NOT_MERGED_RESOLVE_ATTACHMENT_REUSE_EXT, "NOT_MERGED_RESOLVE_ATTACHMENT_REUSE_EXT")
-  , (SUBPASS_MERGE_STATUS_NOT_MERGED_SINGLE_SUBPASS_EXT          , "NOT_MERGED_SINGLE_SUBPASS_EXT")
-  , (SUBPASS_MERGE_STATUS_NOT_MERGED_UNSPECIFIED_EXT             , "NOT_MERGED_UNSPECIFIED_EXT")
+  [
+    ( SUBPASS_MERGE_STATUS_MERGED_EXT
+    , "MERGED_EXT"
+    )
+  ,
+    ( SUBPASS_MERGE_STATUS_DISALLOWED_EXT
+    , "DISALLOWED_EXT"
+    )
+  ,
+    ( SUBPASS_MERGE_STATUS_NOT_MERGED_SIDE_EFFECTS_EXT
+    , "NOT_MERGED_SIDE_EFFECTS_EXT"
+    )
+  ,
+    ( SUBPASS_MERGE_STATUS_NOT_MERGED_SAMPLES_MISMATCH_EXT
+    , "NOT_MERGED_SAMPLES_MISMATCH_EXT"
+    )
+  ,
+    ( SUBPASS_MERGE_STATUS_NOT_MERGED_VIEWS_MISMATCH_EXT
+    , "NOT_MERGED_VIEWS_MISMATCH_EXT"
+    )
+  ,
+    ( SUBPASS_MERGE_STATUS_NOT_MERGED_ALIASING_EXT
+    , "NOT_MERGED_ALIASING_EXT"
+    )
+  ,
+    ( SUBPASS_MERGE_STATUS_NOT_MERGED_DEPENDENCIES_EXT
+    , "NOT_MERGED_DEPENDENCIES_EXT"
+    )
+  ,
+    ( SUBPASS_MERGE_STATUS_NOT_MERGED_INCOMPATIBLE_INPUT_ATTACHMENT_EXT
+    , "NOT_MERGED_INCOMPATIBLE_INPUT_ATTACHMENT_EXT"
+    )
+  ,
+    ( SUBPASS_MERGE_STATUS_NOT_MERGED_TOO_MANY_ATTACHMENTS_EXT
+    , "NOT_MERGED_TOO_MANY_ATTACHMENTS_EXT"
+    )
+  ,
+    ( SUBPASS_MERGE_STATUS_NOT_MERGED_INSUFFICIENT_STORAGE_EXT
+    , "NOT_MERGED_INSUFFICIENT_STORAGE_EXT"
+    )
+  ,
+    ( SUBPASS_MERGE_STATUS_NOT_MERGED_DEPTH_STENCIL_COUNT_EXT
+    , "NOT_MERGED_DEPTH_STENCIL_COUNT_EXT"
+    )
+  ,
+    ( SUBPASS_MERGE_STATUS_NOT_MERGED_RESOLVE_ATTACHMENT_REUSE_EXT
+    , "NOT_MERGED_RESOLVE_ATTACHMENT_REUSE_EXT"
+    )
+  ,
+    ( SUBPASS_MERGE_STATUS_NOT_MERGED_SINGLE_SUBPASS_EXT
+    , "NOT_MERGED_SINGLE_SUBPASS_EXT"
+    )
+  ,
+    ( SUBPASS_MERGE_STATUS_NOT_MERGED_UNSPECIFIED_EXT
+    , "NOT_MERGED_UNSPECIFIED_EXT"
+    )
   ]
 
 instance Show SubpassMergeStatusEXT where
-  showsPrec = enumShowsPrec enumPrefixSubpassMergeStatusEXT
-                            showTableSubpassMergeStatusEXT
-                            conNameSubpassMergeStatusEXT
-                            (\(SubpassMergeStatusEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixSubpassMergeStatusEXT
+      showTableSubpassMergeStatusEXT
+      conNameSubpassMergeStatusEXT
+      (\(SubpassMergeStatusEXT x) -> x)
+      (showsPrec 11)
 
 instance Read SubpassMergeStatusEXT where
-  readPrec = enumReadPrec enumPrefixSubpassMergeStatusEXT
-                          showTableSubpassMergeStatusEXT
-                          conNameSubpassMergeStatusEXT
-                          SubpassMergeStatusEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixSubpassMergeStatusEXT
+      showTableSubpassMergeStatusEXT
+      conNameSubpassMergeStatusEXT
+      SubpassMergeStatusEXT
 
 type EXT_SUBPASS_MERGE_FEEDBACK_SPEC_VERSION = 2
 

@@ -34,18 +34,21 @@ newtype DependencyFlagBits = DependencyFlagBits Flags
 
 -- | 'DEPENDENCY_BY_REGION_BIT' specifies that dependencies will be
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-local>.
-pattern DEPENDENCY_BY_REGION_BIT         = DependencyFlagBits 0x00000001
+pattern DEPENDENCY_BY_REGION_BIT = DependencyFlagBits 0x00000001
+
 -- | 'DEPENDENCY_FEEDBACK_LOOP_BIT_EXT' specifies that the render pass will
 -- write to and read from the same image using the
 -- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT'
 -- layout.
 pattern DEPENDENCY_FEEDBACK_LOOP_BIT_EXT = DependencyFlagBits 0x00000008
+
 -- | 'DEPENDENCY_VIEW_LOCAL_BIT' specifies that a
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-barriers-subpass-self-dependencies subpass has more than one view>.
-pattern DEPENDENCY_VIEW_LOCAL_BIT        = DependencyFlagBits 0x00000002
+pattern DEPENDENCY_VIEW_LOCAL_BIT = DependencyFlagBits 0x00000002
+
 -- | 'DEPENDENCY_DEVICE_GROUP_BIT' specifies that dependencies are
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-device-local-dependencies non-device-local>.
-pattern DEPENDENCY_DEVICE_GROUP_BIT      = DependencyFlagBits 0x00000004
+pattern DEPENDENCY_DEVICE_GROUP_BIT = DependencyFlagBits 0x00000004
 
 conNameDependencyFlagBits :: String
 conNameDependencyFlagBits = "DependencyFlagBits"
@@ -55,20 +58,31 @@ enumPrefixDependencyFlagBits = "DEPENDENCY_"
 
 showTableDependencyFlagBits :: [(DependencyFlagBits, String)]
 showTableDependencyFlagBits =
-  [ (DEPENDENCY_BY_REGION_BIT        , "BY_REGION_BIT")
-  , (DEPENDENCY_FEEDBACK_LOOP_BIT_EXT, "FEEDBACK_LOOP_BIT_EXT")
-  , (DEPENDENCY_VIEW_LOCAL_BIT       , "VIEW_LOCAL_BIT")
-  , (DEPENDENCY_DEVICE_GROUP_BIT     , "DEVICE_GROUP_BIT")
+  [ (DEPENDENCY_BY_REGION_BIT, "BY_REGION_BIT")
+  ,
+    ( DEPENDENCY_FEEDBACK_LOOP_BIT_EXT
+    , "FEEDBACK_LOOP_BIT_EXT"
+    )
+  , (DEPENDENCY_VIEW_LOCAL_BIT, "VIEW_LOCAL_BIT")
+  ,
+    ( DEPENDENCY_DEVICE_GROUP_BIT
+    , "DEVICE_GROUP_BIT"
+    )
   ]
 
 instance Show DependencyFlagBits where
-  showsPrec = enumShowsPrec enumPrefixDependencyFlagBits
-                            showTableDependencyFlagBits
-                            conNameDependencyFlagBits
-                            (\(DependencyFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDependencyFlagBits
+      showTableDependencyFlagBits
+      conNameDependencyFlagBits
+      (\(DependencyFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read DependencyFlagBits where
   readPrec =
-    enumReadPrec enumPrefixDependencyFlagBits showTableDependencyFlagBits conNameDependencyFlagBits DependencyFlagBits
-
+    enumReadPrec
+      enumPrefixDependencyFlagBits
+      showTableDependencyFlagBits
+      conNameDependencyFlagBits
+      DependencyFlagBits

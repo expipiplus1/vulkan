@@ -102,7 +102,8 @@ data Instance = Instance
 instance Zero Instance where
   zero = Instance zero zero
 instance HasObjectType Instance where
-  objectTypeAndHandle (Instance (ptrToWordPtr -> WordPtr h) _) = (OBJECT_TYPE_INSTANCE, fromIntegral h)
+  objectTypeAndHandle (Instance (ptrToWordPtr -> WordPtr h) _) = ( OBJECT_TYPE_INSTANCE
+                                                                 , fromIntegral h )
 
 
 -- | An opaque type for representing pointers to XrSession handles
@@ -252,7 +253,8 @@ data Session = Session
 instance Zero Session where
   zero = Session zero zero
 instance HasObjectType Session where
-  objectTypeAndHandle (Session (ptrToWordPtr -> WordPtr h) _) = (OBJECT_TYPE_SESSION, fromIntegral h)
+  objectTypeAndHandle (Session (ptrToWordPtr -> WordPtr h) _) = ( OBJECT_TYPE_SESSION
+                                                                , fromIntegral h )
 
 
 -- | An opaque type for representing pointers to XrActionSet handles
@@ -292,7 +294,8 @@ data ActionSet = ActionSet
 instance Zero ActionSet where
   zero = ActionSet zero zero
 instance HasObjectType ActionSet where
-  objectTypeAndHandle (ActionSet (ptrToWordPtr -> WordPtr h) _) = (OBJECT_TYPE_ACTION_SET, fromIntegral h)
+  objectTypeAndHandle (ActionSet (ptrToWordPtr -> WordPtr h) _) = ( OBJECT_TYPE_ACTION_SET
+                                                                  , fromIntegral h )
 
 
 -- | An opaque type for representing pointers to XrAction handles
@@ -323,7 +326,8 @@ data Action = Action
 instance Zero Action where
   zero = Action zero zero
 instance HasObjectType Action where
-  objectTypeAndHandle (Action (ptrToWordPtr -> WordPtr h) _) = (OBJECT_TYPE_ACTION, fromIntegral h)
+  objectTypeAndHandle (Action (ptrToWordPtr -> WordPtr h) _) = ( OBJECT_TYPE_ACTION
+                                                               , fromIntegral h )
 
 
 -- | An opaque type for representing pointers to XrSwapchain handles
@@ -388,7 +392,8 @@ data Swapchain = Swapchain
 instance Zero Swapchain where
   zero = Swapchain zero zero
 instance HasObjectType Swapchain where
-  objectTypeAndHandle (Swapchain (ptrToWordPtr -> WordPtr h) _) = (OBJECT_TYPE_SWAPCHAIN, fromIntegral h)
+  objectTypeAndHandle (Swapchain (ptrToWordPtr -> WordPtr h) _) = ( OBJECT_TYPE_SWAPCHAIN
+                                                                  , fromIntegral h )
 
 
 -- | An opaque type for representing pointers to XrSpace handles
@@ -476,5 +481,6 @@ data Space = Space
 instance Zero Space where
   zero = Space zero zero
 instance HasObjectType Space where
-  objectTypeAndHandle (Space (ptrToWordPtr -> WordPtr h) _) = (OBJECT_TYPE_SPACE, fromIntegral h)
+  objectTypeAndHandle (Space (ptrToWordPtr -> WordPtr h) _) = ( OBJECT_TYPE_SPACE
+                                                              , fromIntegral h )
 

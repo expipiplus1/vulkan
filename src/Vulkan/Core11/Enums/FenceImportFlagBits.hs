@@ -45,15 +45,18 @@ showTableFenceImportFlagBits :: [(FenceImportFlagBits, String)]
 showTableFenceImportFlagBits = [(FENCE_IMPORT_TEMPORARY_BIT, "")]
 
 instance Show FenceImportFlagBits where
-  showsPrec = enumShowsPrec enumPrefixFenceImportFlagBits
-                            showTableFenceImportFlagBits
-                            conNameFenceImportFlagBits
-                            (\(FenceImportFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixFenceImportFlagBits
+      showTableFenceImportFlagBits
+      conNameFenceImportFlagBits
+      (\(FenceImportFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read FenceImportFlagBits where
-  readPrec = enumReadPrec enumPrefixFenceImportFlagBits
-                          showTableFenceImportFlagBits
-                          conNameFenceImportFlagBits
-                          FenceImportFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixFenceImportFlagBits
+      showTableFenceImportFlagBits
+      conNameFenceImportFlagBits
+      FenceImportFlagBits

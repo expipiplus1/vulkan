@@ -21,8 +21,6 @@ type SessionCreateFlags = SessionCreateFlagBits
 newtype SessionCreateFlagBits = SessionCreateFlagBits Flags64
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameSessionCreateFlagBits :: String
 conNameSessionCreateFlagBits = "SessionCreateFlagBits"
 
@@ -33,15 +31,18 @@ showTableSessionCreateFlagBits :: [(SessionCreateFlagBits, String)]
 showTableSessionCreateFlagBits = []
 
 instance Show SessionCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixSessionCreateFlagBits
-                            showTableSessionCreateFlagBits
-                            conNameSessionCreateFlagBits
-                            (\(SessionCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixSessionCreateFlagBits
+      showTableSessionCreateFlagBits
+      conNameSessionCreateFlagBits
+      (\(SessionCreateFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read SessionCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixSessionCreateFlagBits
-                          showTableSessionCreateFlagBits
-                          conNameSessionCreateFlagBits
-                          SessionCreateFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixSessionCreateFlagBits
+      showTableSessionCreateFlagBits
+      conNameSessionCreateFlagBits
+      SessionCreateFlagBits

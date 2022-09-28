@@ -262,7 +262,11 @@ createViSurfaceNN instance' createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSurface <- ContT $ bracket (callocBytes @SurfaceKHR 8) free
-  r <- lift $ traceAroundEvent "vkCreateViSurfaceNN" (vkCreateViSurfaceNN' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface))
+  r <- lift $ traceAroundEvent "vkCreateViSurfaceNN" (vkCreateViSurfaceNN'
+                                                        (instanceHandle (instance'))
+                                                        pCreateInfo
+                                                        pAllocator
+                                                        (pPSurface))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurface <- lift $ peek @SurfaceKHR pPSurface
   pure $ (pSurface)
@@ -345,8 +349,6 @@ instance Zero ViSurfaceCreateInfoNN where
 newtype ViSurfaceCreateFlagsNN = ViSurfaceCreateFlagsNN Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameViSurfaceCreateFlagsNN :: String
 conNameViSurfaceCreateFlagsNN = "ViSurfaceCreateFlagsNN"
 
@@ -357,18 +359,21 @@ showTableViSurfaceCreateFlagsNN :: [(ViSurfaceCreateFlagsNN, String)]
 showTableViSurfaceCreateFlagsNN = []
 
 instance Show ViSurfaceCreateFlagsNN where
-  showsPrec = enumShowsPrec enumPrefixViSurfaceCreateFlagsNN
-                            showTableViSurfaceCreateFlagsNN
-                            conNameViSurfaceCreateFlagsNN
-                            (\(ViSurfaceCreateFlagsNN x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixViSurfaceCreateFlagsNN
+      showTableViSurfaceCreateFlagsNN
+      conNameViSurfaceCreateFlagsNN
+      (\(ViSurfaceCreateFlagsNN x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read ViSurfaceCreateFlagsNN where
-  readPrec = enumReadPrec enumPrefixViSurfaceCreateFlagsNN
-                          showTableViSurfaceCreateFlagsNN
-                          conNameViSurfaceCreateFlagsNN
-                          ViSurfaceCreateFlagsNN
-
+  readPrec =
+    enumReadPrec
+      enumPrefixViSurfaceCreateFlagsNN
+      showTableViSurfaceCreateFlagsNN
+      conNameViSurfaceCreateFlagsNN
+      ViSurfaceCreateFlagsNN
 
 type NN_VI_SURFACE_SPEC_VERSION = 1
 

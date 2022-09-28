@@ -156,26 +156,32 @@ import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
 type role PhysicalDeviceSurfaceInfo2KHR nominal
 data PhysicalDeviceSurfaceInfo2KHR (es :: [Type])
 
-instance (Extendss PhysicalDeviceSurfaceInfo2KHR es, PokeChain es) => ToCStruct (PhysicalDeviceSurfaceInfo2KHR es)
+instance ( Extendss PhysicalDeviceSurfaceInfo2KHR es
+         , PokeChain es ) => ToCStruct (PhysicalDeviceSurfaceInfo2KHR es)
 instance Show (Chain es) => Show (PhysicalDeviceSurfaceInfo2KHR es)
 
-instance (Extendss PhysicalDeviceSurfaceInfo2KHR es, PeekChain es) => FromCStruct (PhysicalDeviceSurfaceInfo2KHR es)
+instance ( Extendss PhysicalDeviceSurfaceInfo2KHR es
+         , PeekChain es ) => FromCStruct (PhysicalDeviceSurfaceInfo2KHR es)
 
 
 type role SurfaceCapabilities2KHR nominal
 data SurfaceCapabilities2KHR (es :: [Type])
 
-instance (Extendss SurfaceCapabilities2KHR es, PokeChain es) => ToCStruct (SurfaceCapabilities2KHR es)
+instance ( Extendss SurfaceCapabilities2KHR es
+         , PokeChain es ) => ToCStruct (SurfaceCapabilities2KHR es)
 instance Show (Chain es) => Show (SurfaceCapabilities2KHR es)
 
-instance (Extendss SurfaceCapabilities2KHR es, PeekChain es) => FromCStruct (SurfaceCapabilities2KHR es)
+instance ( Extendss SurfaceCapabilities2KHR es
+         , PeekChain es ) => FromCStruct (SurfaceCapabilities2KHR es)
 
 
 type role SurfaceFormat2KHR nominal
 data SurfaceFormat2KHR (es :: [Type])
 
-instance (Extendss SurfaceFormat2KHR es, PokeChain es) => ToCStruct (SurfaceFormat2KHR es)
+instance ( Extendss SurfaceFormat2KHR es
+         , PokeChain es ) => ToCStruct (SurfaceFormat2KHR es)
 instance Show (Chain es) => Show (SurfaceFormat2KHR es)
 
-instance (Extendss SurfaceFormat2KHR es, PeekChain es) => FromCStruct (SurfaceFormat2KHR es)
+instance ( Extendss SurfaceFormat2KHR es
+         , PeekChain es ) => FromCStruct (SurfaceFormat2KHR es)
 

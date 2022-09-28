@@ -186,11 +186,21 @@ enumerateViewConfigurations instance' systemId = liftIO . evalContT $ do
   let xrEnumerateViewConfigurations' = mkXrEnumerateViewConfigurations xrEnumerateViewConfigurationsPtr
   let instance'' = instanceHandle (instance')
   pViewConfigurationTypeCountOutput <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "xrEnumerateViewConfigurations" (xrEnumerateViewConfigurations' instance'' (systemId) (0) (pViewConfigurationTypeCountOutput) (nullPtr))
+  r <- lift $ traceAroundEvent "xrEnumerateViewConfigurations" (xrEnumerateViewConfigurations'
+                                                                  instance''
+                                                                  (systemId)
+                                                                  (0)
+                                                                  (pViewConfigurationTypeCountOutput)
+                                                                  (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   viewConfigurationTypeCountOutput <- lift $ peek @Word32 pViewConfigurationTypeCountOutput
   pViewConfigurationTypes <- ContT $ bracket (callocBytes @ViewConfigurationType ((fromIntegral (viewConfigurationTypeCountOutput)) * 4)) free
-  r' <- lift $ traceAroundEvent "xrEnumerateViewConfigurations" (xrEnumerateViewConfigurations' instance'' (systemId) ((viewConfigurationTypeCountOutput)) (pViewConfigurationTypeCountOutput) (pViewConfigurationTypes))
+  r' <- lift $ traceAroundEvent "xrEnumerateViewConfigurations" (xrEnumerateViewConfigurations'
+                                                                   instance''
+                                                                   (systemId)
+                                                                   ((viewConfigurationTypeCountOutput))
+                                                                   (pViewConfigurationTypeCountOutput)
+                                                                   (pViewConfigurationTypes))
   lift $ when (r' < SUCCESS) (throwIO (OpenXrException r'))
   viewConfigurationTypeCountOutput' <- lift $ peek @Word32 pViewConfigurationTypeCountOutput
   viewConfigurationTypes' <- lift $ generateM (fromIntegral (viewConfigurationTypeCountOutput')) (\i -> peek @ViewConfigurationType ((pViewConfigurationTypes `advancePtrBytes` (4 * (i)) :: Ptr ViewConfigurationType)))
@@ -264,13 +274,19 @@ getViewConfigurationProperties :: forall io
                                   -- 'OpenXR.Core10.Enums.ViewConfigurationType.ViewConfigurationType' value
                                   ViewConfigurationType
                                -> io (ViewConfigurationProperties)
-getViewConfigurationProperties instance' systemId viewConfigurationType = liftIO . evalContT $ do
+getViewConfigurationProperties instance'
+                                 systemId
+                                 viewConfigurationType = liftIO . evalContT $ do
   let xrGetViewConfigurationPropertiesPtr = pXrGetViewConfigurationProperties (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetViewConfigurationPropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetViewConfigurationProperties is null" Nothing Nothing
   let xrGetViewConfigurationProperties' = mkXrGetViewConfigurationProperties xrGetViewConfigurationPropertiesPtr
   pConfigurationProperties <- ContT (withZeroCStruct @ViewConfigurationProperties)
-  r <- lift $ traceAroundEvent "xrGetViewConfigurationProperties" (xrGetViewConfigurationProperties' (instanceHandle (instance')) (systemId) (viewConfigurationType) (pConfigurationProperties))
+  r <- lift $ traceAroundEvent "xrGetViewConfigurationProperties" (xrGetViewConfigurationProperties'
+                                                                     (instanceHandle (instance'))
+                                                                     (systemId)
+                                                                     (viewConfigurationType)
+                                                                     (pConfigurationProperties))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   configurationProperties <- lift $ peekCStruct @ViewConfigurationProperties pConfigurationProperties
   pure $ (configurationProperties)
@@ -349,7 +365,10 @@ foreign import ccall
 -- 'OpenXR.Core10.Enums.ViewConfigurationType.ViewConfigurationType',
 -- 'ViewConfigurationView', 'getViewConfigurationProperties'
 enumerateViewConfigurationViews :: forall a io
-                                 . (Extendss ViewConfigurationView a, PokeChain a, PeekChain a, MonadIO io)
+                                 . ( Extendss ViewConfigurationView a
+                                   , PokeChain a
+                                   , PeekChain a
+                                   , MonadIO io )
                                 => -- | @instance@ is the instance from which @systemId@ was retrieved.
                                    Instance
                                 -> -- | @systemId@ is the
@@ -361,19 +380,33 @@ enumerateViewConfigurationViews :: forall a io
                                    -- configuration to get.
                                    ViewConfigurationType
                                 -> io (("views" ::: Vector (ViewConfigurationView a)))
-enumerateViewConfigurationViews instance' systemId viewConfigurationType = liftIO . evalContT $ do
+enumerateViewConfigurationViews instance'
+                                  systemId
+                                  viewConfigurationType = liftIO . evalContT $ do
   let xrEnumerateViewConfigurationViewsPtr = pXrEnumerateViewConfigurationViews (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrEnumerateViewConfigurationViewsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEnumerateViewConfigurationViews is null" Nothing Nothing
   let xrEnumerateViewConfigurationViews' = mkXrEnumerateViewConfigurationViews xrEnumerateViewConfigurationViewsPtr
   let instance'' = instanceHandle (instance')
   pViewCountOutput <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "xrEnumerateViewConfigurationViews" (xrEnumerateViewConfigurationViews' instance'' (systemId) (viewConfigurationType) (0) (pViewCountOutput) (forgetExtensions (nullPtr)))
+  r <- lift $ traceAroundEvent "xrEnumerateViewConfigurationViews" (xrEnumerateViewConfigurationViews'
+                                                                      instance''
+                                                                      (systemId)
+                                                                      (viewConfigurationType)
+                                                                      (0)
+                                                                      (pViewCountOutput)
+                                                                      (forgetExtensions (nullPtr)))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   viewCountOutput <- lift $ peek @Word32 pViewCountOutput
   pViews <- ContT $ bracket (callocBytes @(ViewConfigurationView _) ((fromIntegral (viewCountOutput)) * 40)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pViews `advancePtrBytes` (i * 40) :: Ptr (ViewConfigurationView _)) . ($ ())) [0..(fromIntegral (viewCountOutput)) - 1]
-  r' <- lift $ traceAroundEvent "xrEnumerateViewConfigurationViews" (xrEnumerateViewConfigurationViews' instance'' (systemId) (viewConfigurationType) ((viewCountOutput)) (pViewCountOutput) (forgetExtensions ((pViews))))
+  r' <- lift $ traceAroundEvent "xrEnumerateViewConfigurationViews" (xrEnumerateViewConfigurationViews'
+                                                                       instance''
+                                                                       (systemId)
+                                                                       (viewConfigurationType)
+                                                                       ((viewCountOutput))
+                                                                       (pViewCountOutput)
+                                                                       (forgetExtensions ((pViews))))
   lift $ when (r' < SUCCESS) (throwIO (OpenXrException r'))
   viewCountOutput' <- lift $ peek @Word32 pViewCountOutput
   views' <- lift $ generateM (fromIntegral (viewCountOutput')) (\i -> peekCStruct @(ViewConfigurationView _) (((pViews) `advancePtrBytes` (40 * (i)) :: Ptr (ViewConfigurationView _))))
@@ -452,7 +485,8 @@ instance Extensible ViewConfigurationView where
     | Just Refl <- eqT @e @ViewConfigurationDepthRangeEXT = Just f
     | otherwise = Nothing
 
-instance (Extendss ViewConfigurationView es, PokeChain es) => ToCStruct (ViewConfigurationView es) where
+instance ( Extendss ViewConfigurationView es
+         , PokeChain es ) => ToCStruct (ViewConfigurationView es) where
   withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ViewConfigurationView{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_VIEW_CONFIGURATION_VIEW)
@@ -479,7 +513,8 @@ instance (Extendss ViewConfigurationView es, PokeChain es) => ToCStruct (ViewCon
     lift $ poke ((p `plusPtr` 36 :: Ptr Word32)) (zero)
     lift $ f
 
-instance (Extendss ViewConfigurationView es, PeekChain es) => FromCStruct (ViewConfigurationView es) where
+instance ( Extendss ViewConfigurationView es
+         , PeekChain es ) => FromCStruct (ViewConfigurationView es) where
   peekCStruct p = do
     next <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next' <- peekChain (castPtr next)
@@ -490,7 +525,13 @@ instance (Extendss ViewConfigurationView es, PeekChain es) => FromCStruct (ViewC
     recommendedSwapchainSampleCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
     maxSwapchainSampleCount <- peek @Word32 ((p `plusPtr` 36 :: Ptr Word32))
     pure $ ViewConfigurationView
-             next' recommendedImageRectWidth maxImageRectWidth recommendedImageRectHeight maxImageRectHeight recommendedSwapchainSampleCount maxSwapchainSampleCount
+             next'
+             recommendedImageRectWidth
+             maxImageRectWidth
+             recommendedImageRectHeight
+             maxImageRectHeight
+             recommendedSwapchainSampleCount
+             maxSwapchainSampleCount
 
 instance es ~ '[] => Zero (ViewConfigurationView es) where
   zero = ViewConfigurationView

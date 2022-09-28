@@ -135,7 +135,6 @@ library
     , async-pool
     , attoparsec
     , base
-    , brittany
     , bytestring
     , casing
     , containers
@@ -146,6 +145,7 @@ library
     , directory
     , extra
     , filepath
+    , fourmolu
     , inline-c
     , interpolatedstring-perl6
     , mtl
@@ -242,7 +242,6 @@ library khronos-spec
     , async-pool
     , attoparsec
     , base
-    , brittany
     , bytestring
     , casing
     , containers
@@ -253,6 +252,7 @@ library khronos-spec
     , directory
     , extra
     , filepath
+    , fourmolu
     , generate-new
     , inline-c
     , interpolatedstring-perl6
@@ -345,7 +345,6 @@ executable vk
     , async-pool
     , attoparsec
     , base
-    , brittany
     , bytestring
     , casing
     , containers
@@ -356,6 +355,7 @@ executable vk
     , directory
     , extra
     , filepath
+    , fourmolu
     , generate-new
     , inline-c
     , interpolatedstring-perl6
@@ -452,7 +452,6 @@ executable vma
     , async-pool
     , attoparsec
     , base
-    , brittany
     , bytestring
     , casing
     , containers
@@ -463,6 +462,7 @@ executable vma
     , directory
     , extra
     , filepath
+    , fourmolu
     , generate-new
     , inline-c
     , interpolatedstring-perl6
@@ -557,7 +557,6 @@ executable xr
     , async-pool
     , attoparsec
     , base
-    , brittany
     , bytestring
     , casing
     , containers
@@ -568,6 +567,7 @@ executable xr
     , directory
     , extra
     , filepath
+    , fourmolu
     , generate-new
     , inline-c
     , interpolatedstring-perl6

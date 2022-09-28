@@ -350,7 +350,15 @@ instance FromCStruct PhysicalDeviceConservativeRasterizationPropertiesEXT where
     fullyCoveredFragmentShaderInputVariable <- peek @Bool32 ((p `plusPtr` 44 :: Ptr Bool32))
     conservativeRasterizationPostDepthCoverage <- peek @Bool32 ((p `plusPtr` 48 :: Ptr Bool32))
     pure $ PhysicalDeviceConservativeRasterizationPropertiesEXT
-             (coerce @CFloat @Float primitiveOverestimationSize) (coerce @CFloat @Float maxExtraPrimitiveOverestimationSize) (coerce @CFloat @Float extraPrimitiveOverestimationSizeGranularity) (bool32ToBool primitiveUnderestimation) (bool32ToBool conservativePointAndLineRasterization) (bool32ToBool degenerateTrianglesRasterized) (bool32ToBool degenerateLinesRasterized) (bool32ToBool fullyCoveredFragmentShaderInputVariable) (bool32ToBool conservativeRasterizationPostDepthCoverage)
+             (coerce @CFloat @Float primitiveOverestimationSize)
+             (coerce @CFloat @Float maxExtraPrimitiveOverestimationSize)
+             (coerce @CFloat @Float extraPrimitiveOverestimationSizeGranularity)
+             (bool32ToBool primitiveUnderestimation)
+             (bool32ToBool conservativePointAndLineRasterization)
+             (bool32ToBool degenerateTrianglesRasterized)
+             (bool32ToBool degenerateLinesRasterized)
+             (bool32ToBool fullyCoveredFragmentShaderInputVariable)
+             (bool32ToBool conservativeRasterizationPostDepthCoverage)
 
 instance Storable PhysicalDeviceConservativeRasterizationPropertiesEXT where
   sizeOf ~_ = 56
@@ -460,7 +468,9 @@ instance FromCStruct PipelineRasterizationConservativeStateCreateInfoEXT where
     conservativeRasterizationMode <- peek @ConservativeRasterizationModeEXT ((p `plusPtr` 20 :: Ptr ConservativeRasterizationModeEXT))
     extraPrimitiveOverestimationSize <- peek @CFloat ((p `plusPtr` 24 :: Ptr CFloat))
     pure $ PipelineRasterizationConservativeStateCreateInfoEXT
-             flags conservativeRasterizationMode (coerce @CFloat @Float extraPrimitiveOverestimationSize)
+             flags
+             conservativeRasterizationMode
+             (coerce @CFloat @Float extraPrimitiveOverestimationSize)
 
 instance Storable PipelineRasterizationConservativeStateCreateInfoEXT where
   sizeOf ~_ = 32
@@ -490,31 +500,31 @@ instance Zero PipelineRasterizationConservativeStateCreateInfoEXT where
 newtype PipelineRasterizationConservativeStateCreateFlagsEXT = PipelineRasterizationConservativeStateCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNamePipelineRasterizationConservativeStateCreateFlagsEXT :: String
 conNamePipelineRasterizationConservativeStateCreateFlagsEXT = "PipelineRasterizationConservativeStateCreateFlagsEXT"
 
 enumPrefixPipelineRasterizationConservativeStateCreateFlagsEXT :: String
 enumPrefixPipelineRasterizationConservativeStateCreateFlagsEXT = ""
 
-showTablePipelineRasterizationConservativeStateCreateFlagsEXT
-  :: [(PipelineRasterizationConservativeStateCreateFlagsEXT, String)]
+showTablePipelineRasterizationConservativeStateCreateFlagsEXT :: [(PipelineRasterizationConservativeStateCreateFlagsEXT, String)]
 showTablePipelineRasterizationConservativeStateCreateFlagsEXT = []
 
 instance Show PipelineRasterizationConservativeStateCreateFlagsEXT where
-  showsPrec = enumShowsPrec enumPrefixPipelineRasterizationConservativeStateCreateFlagsEXT
-                            showTablePipelineRasterizationConservativeStateCreateFlagsEXT
-                            conNamePipelineRasterizationConservativeStateCreateFlagsEXT
-                            (\(PipelineRasterizationConservativeStateCreateFlagsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineRasterizationConservativeStateCreateFlagsEXT
+      showTablePipelineRasterizationConservativeStateCreateFlagsEXT
+      conNamePipelineRasterizationConservativeStateCreateFlagsEXT
+      (\(PipelineRasterizationConservativeStateCreateFlagsEXT x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read PipelineRasterizationConservativeStateCreateFlagsEXT where
-  readPrec = enumReadPrec enumPrefixPipelineRasterizationConservativeStateCreateFlagsEXT
-                          showTablePipelineRasterizationConservativeStateCreateFlagsEXT
-                          conNamePipelineRasterizationConservativeStateCreateFlagsEXT
-                          PipelineRasterizationConservativeStateCreateFlagsEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineRasterizationConservativeStateCreateFlagsEXT
+      showTablePipelineRasterizationConservativeStateCreateFlagsEXT
+      conNamePipelineRasterizationConservativeStateCreateFlagsEXT
+      PipelineRasterizationConservativeStateCreateFlagsEXT
 
 -- | VkConservativeRasterizationModeEXT - Specify the conservative
 -- rasterization mode
@@ -529,16 +539,22 @@ newtype ConservativeRasterizationModeEXT = ConservativeRasterizationModeEXT Int3
 -- | 'CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT' specifies that
 -- conservative rasterization is disabled and rasterization proceeds as
 -- normal.
-pattern CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT      = ConservativeRasterizationModeEXT 0
+pattern CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT = ConservativeRasterizationModeEXT 0
+
 -- | 'CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT' specifies that
 -- conservative rasterization is enabled in overestimation mode.
-pattern CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT  = ConservativeRasterizationModeEXT 1
+pattern CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT = ConservativeRasterizationModeEXT 1
+
 -- | 'CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT' specifies that
 -- conservative rasterization is enabled in underestimation mode.
 pattern CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT = ConservativeRasterizationModeEXT 2
-{-# complete CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT,
-             CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT,
-             CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT :: ConservativeRasterizationModeEXT #-}
+
+{-# COMPLETE
+  CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT
+  , CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT
+  , CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT ::
+    ConservativeRasterizationModeEXT
+  #-}
 
 conNameConservativeRasterizationModeEXT :: String
 conNameConservativeRasterizationModeEXT = "ConservativeRasterizationModeEXT"
@@ -548,24 +564,36 @@ enumPrefixConservativeRasterizationModeEXT = "CONSERVATIVE_RASTERIZATION_MODE_"
 
 showTableConservativeRasterizationModeEXT :: [(ConservativeRasterizationModeEXT, String)]
 showTableConservativeRasterizationModeEXT =
-  [ (CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT     , "DISABLED_EXT")
-  , (CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT , "OVERESTIMATE_EXT")
-  , (CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT, "UNDERESTIMATE_EXT")
+  [
+    ( CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT
+    , "DISABLED_EXT"
+    )
+  ,
+    ( CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT
+    , "OVERESTIMATE_EXT"
+    )
+  ,
+    ( CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT
+    , "UNDERESTIMATE_EXT"
+    )
   ]
 
 instance Show ConservativeRasterizationModeEXT where
-  showsPrec = enumShowsPrec enumPrefixConservativeRasterizationModeEXT
-                            showTableConservativeRasterizationModeEXT
-                            conNameConservativeRasterizationModeEXT
-                            (\(ConservativeRasterizationModeEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixConservativeRasterizationModeEXT
+      showTableConservativeRasterizationModeEXT
+      conNameConservativeRasterizationModeEXT
+      (\(ConservativeRasterizationModeEXT x) -> x)
+      (showsPrec 11)
 
 instance Read ConservativeRasterizationModeEXT where
-  readPrec = enumReadPrec enumPrefixConservativeRasterizationModeEXT
-                          showTableConservativeRasterizationModeEXT
-                          conNameConservativeRasterizationModeEXT
-                          ConservativeRasterizationModeEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixConservativeRasterizationModeEXT
+      showTableConservativeRasterizationModeEXT
+      conNameConservativeRasterizationModeEXT
+      ConservativeRasterizationModeEXT
 
 type EXT_CONSERVATIVE_RASTERIZATION_SPEC_VERSION = 1
 

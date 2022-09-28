@@ -257,8 +257,6 @@ instance Zero PipelineCoverageToColorStateCreateInfoNV where
 newtype PipelineCoverageToColorStateCreateFlagsNV = PipelineCoverageToColorStateCreateFlagsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNamePipelineCoverageToColorStateCreateFlagsNV :: String
 conNamePipelineCoverageToColorStateCreateFlagsNV = "PipelineCoverageToColorStateCreateFlagsNV"
 
@@ -269,18 +267,21 @@ showTablePipelineCoverageToColorStateCreateFlagsNV :: [(PipelineCoverageToColorS
 showTablePipelineCoverageToColorStateCreateFlagsNV = []
 
 instance Show PipelineCoverageToColorStateCreateFlagsNV where
-  showsPrec = enumShowsPrec enumPrefixPipelineCoverageToColorStateCreateFlagsNV
-                            showTablePipelineCoverageToColorStateCreateFlagsNV
-                            conNamePipelineCoverageToColorStateCreateFlagsNV
-                            (\(PipelineCoverageToColorStateCreateFlagsNV x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineCoverageToColorStateCreateFlagsNV
+      showTablePipelineCoverageToColorStateCreateFlagsNV
+      conNamePipelineCoverageToColorStateCreateFlagsNV
+      (\(PipelineCoverageToColorStateCreateFlagsNV x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read PipelineCoverageToColorStateCreateFlagsNV where
-  readPrec = enumReadPrec enumPrefixPipelineCoverageToColorStateCreateFlagsNV
-                          showTablePipelineCoverageToColorStateCreateFlagsNV
-                          conNamePipelineCoverageToColorStateCreateFlagsNV
-                          PipelineCoverageToColorStateCreateFlagsNV
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineCoverageToColorStateCreateFlagsNV
+      showTablePipelineCoverageToColorStateCreateFlagsNV
+      conNamePipelineCoverageToColorStateCreateFlagsNV
+      PipelineCoverageToColorStateCreateFlagsNV
 
 type NV_FRAGMENT_COVERAGE_TO_COLOR_SPEC_VERSION = 1
 

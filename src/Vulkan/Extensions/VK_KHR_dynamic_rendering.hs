@@ -826,7 +826,8 @@ instance FromCStruct MultiviewPerViewAttributesInfoNVX where
     perViewAttributes <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     perViewAttributesPositionXOnly <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ MultiviewPerViewAttributesInfoNVX
-             (bool32ToBool perViewAttributes) (bool32ToBool perViewAttributesPositionXOnly)
+             (bool32ToBool perViewAttributes)
+             (bool32ToBool perViewAttributesPositionXOnly)
 
 instance Storable MultiviewPerViewAttributesInfoNVX where
   sizeOf ~_ = 24

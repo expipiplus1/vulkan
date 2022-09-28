@@ -517,7 +517,10 @@ cmdBindPipeline commandBuffer pipelineBindPoint pipeline = liftIO $ do
   unless (vkCmdBindPipelinePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindPipeline is null" Nothing Nothing
   let vkCmdBindPipeline' = mkVkCmdBindPipeline vkCmdBindPipelinePtr
-  traceAroundEvent "vkCmdBindPipeline" (vkCmdBindPipeline' (commandBufferHandle (commandBuffer)) (pipelineBindPoint) (pipeline))
+  traceAroundEvent "vkCmdBindPipeline" (vkCmdBindPipeline'
+                                          (commandBufferHandle (commandBuffer))
+                                          (pipelineBindPoint)
+                                          (pipeline))
   pure $ ()
 
 
@@ -629,7 +632,11 @@ cmdSetViewport commandBuffer firstViewport viewports = liftIO . evalContT $ do
   let vkCmdSetViewport' = mkVkCmdSetViewport vkCmdSetViewportPtr
   pPViewports <- ContT $ allocaBytes @Viewport ((Data.Vector.length (viewports)) * 24)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPViewports `plusPtr` (24 * (i)) :: Ptr Viewport) (e)) (viewports)
-  lift $ traceAroundEvent "vkCmdSetViewport" (vkCmdSetViewport' (commandBufferHandle (commandBuffer)) (firstViewport) ((fromIntegral (Data.Vector.length $ (viewports)) :: Word32)) (pPViewports))
+  lift $ traceAroundEvent "vkCmdSetViewport" (vkCmdSetViewport'
+                                                (commandBufferHandle (commandBuffer))
+                                                (firstViewport)
+                                                ((fromIntegral (Data.Vector.length $ (viewports)) :: Word32))
+                                                (pPViewports))
   pure $ ()
 
 
@@ -755,7 +762,11 @@ cmdSetScissor commandBuffer firstScissor scissors = liftIO . evalContT $ do
   let vkCmdSetScissor' = mkVkCmdSetScissor vkCmdSetScissorPtr
   pPScissors <- ContT $ allocaBytes @Rect2D ((Data.Vector.length (scissors)) * 16)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPScissors `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (scissors)
-  lift $ traceAroundEvent "vkCmdSetScissor" (vkCmdSetScissor' (commandBufferHandle (commandBuffer)) (firstScissor) ((fromIntegral (Data.Vector.length $ (scissors)) :: Word32)) (pPScissors))
+  lift $ traceAroundEvent "vkCmdSetScissor" (vkCmdSetScissor'
+                                               (commandBufferHandle (commandBuffer))
+                                               (firstScissor)
+                                               ((fromIntegral (Data.Vector.length $ (scissors)) :: Word32))
+                                               (pPScissors))
   pure $ ()
 
 
@@ -835,7 +846,9 @@ cmdSetLineWidth commandBuffer lineWidth = liftIO $ do
   unless (vkCmdSetLineWidthPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetLineWidth is null" Nothing Nothing
   let vkCmdSetLineWidth' = mkVkCmdSetLineWidth vkCmdSetLineWidthPtr
-  traceAroundEvent "vkCmdSetLineWidth" (vkCmdSetLineWidth' (commandBufferHandle (commandBuffer)) (CFloat (lineWidth)))
+  traceAroundEvent "vkCmdSetLineWidth" (vkCmdSetLineWidth'
+                                          (commandBufferHandle (commandBuffer))
+                                          (CFloat (lineWidth)))
   pure $ ()
 
 
@@ -918,12 +931,19 @@ cmdSetDepthBias :: forall io
                    -- in depth bias calculations.
                    ("depthBiasSlopeFactor" ::: Float)
                 -> io ()
-cmdSetDepthBias commandBuffer depthBiasConstantFactor depthBiasClamp depthBiasSlopeFactor = liftIO $ do
+cmdSetDepthBias commandBuffer
+                  depthBiasConstantFactor
+                  depthBiasClamp
+                  depthBiasSlopeFactor = liftIO $ do
   let vkCmdSetDepthBiasPtr = pVkCmdSetDepthBias (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetDepthBiasPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDepthBias is null" Nothing Nothing
   let vkCmdSetDepthBias' = mkVkCmdSetDepthBias vkCmdSetDepthBiasPtr
-  traceAroundEvent "vkCmdSetDepthBias" (vkCmdSetDepthBias' (commandBufferHandle (commandBuffer)) (CFloat (depthBiasConstantFactor)) (CFloat (depthBiasClamp)) (CFloat (depthBiasSlopeFactor)))
+  traceAroundEvent "vkCmdSetDepthBias" (vkCmdSetDepthBias'
+                                          (commandBufferHandle (commandBuffer))
+                                          (CFloat (depthBiasConstantFactor))
+                                          (CFloat (depthBiasClamp))
+                                          (CFloat (depthBiasSlopeFactor)))
   pure $ ()
 
 
@@ -1009,7 +1029,9 @@ cmdSetBlendConstants commandBuffer blendConstants = liftIO . evalContT $ do
       poke (pBlendConstants' `plusPtr` 4 :: Ptr CFloat) (CFloat (e1))
       poke (pBlendConstants' `plusPtr` 8 :: Ptr CFloat) (CFloat (e2))
       poke (pBlendConstants' `plusPtr` 12 :: Ptr CFloat) (CFloat (e3))
-  lift $ traceAroundEvent "vkCmdSetBlendConstants" (vkCmdSetBlendConstants' (commandBufferHandle (commandBuffer)) (pBlendConstants))
+  lift $ traceAroundEvent "vkCmdSetBlendConstants" (vkCmdSetBlendConstants'
+                                                      (commandBufferHandle (commandBuffer))
+                                                      (pBlendConstants))
   pure $ ()
 
 
@@ -1098,7 +1120,10 @@ cmdSetDepthBounds commandBuffer minDepthBounds maxDepthBounds = liftIO $ do
   unless (vkCmdSetDepthBoundsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDepthBounds is null" Nothing Nothing
   let vkCmdSetDepthBounds' = mkVkCmdSetDepthBounds vkCmdSetDepthBoundsPtr
-  traceAroundEvent "vkCmdSetDepthBounds" (vkCmdSetDepthBounds' (commandBufferHandle (commandBuffer)) (CFloat (minDepthBounds)) (CFloat (maxDepthBounds)))
+  traceAroundEvent "vkCmdSetDepthBounds" (vkCmdSetDepthBounds'
+                                            (commandBufferHandle (commandBuffer))
+                                            (CFloat (minDepthBounds))
+                                            (CFloat (maxDepthBounds)))
   pure $ ()
 
 
@@ -1187,7 +1212,10 @@ cmdSetStencilCompareMask commandBuffer faceMask compareMask = liftIO $ do
   unless (vkCmdSetStencilCompareMaskPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetStencilCompareMask is null" Nothing Nothing
   let vkCmdSetStencilCompareMask' = mkVkCmdSetStencilCompareMask vkCmdSetStencilCompareMaskPtr
-  traceAroundEvent "vkCmdSetStencilCompareMask" (vkCmdSetStencilCompareMask' (commandBufferHandle (commandBuffer)) (faceMask) (compareMask))
+  traceAroundEvent "vkCmdSetStencilCompareMask" (vkCmdSetStencilCompareMask'
+                                                   (commandBufferHandle (commandBuffer))
+                                                   (faceMask)
+                                                   (compareMask))
   pure $ ()
 
 
@@ -1278,7 +1306,10 @@ cmdSetStencilWriteMask commandBuffer faceMask writeMask = liftIO $ do
   unless (vkCmdSetStencilWriteMaskPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetStencilWriteMask is null" Nothing Nothing
   let vkCmdSetStencilWriteMask' = mkVkCmdSetStencilWriteMask vkCmdSetStencilWriteMaskPtr
-  traceAroundEvent "vkCmdSetStencilWriteMask" (vkCmdSetStencilWriteMask' (commandBufferHandle (commandBuffer)) (faceMask) (writeMask))
+  traceAroundEvent "vkCmdSetStencilWriteMask" (vkCmdSetStencilWriteMask'
+                                                 (commandBufferHandle (commandBuffer))
+                                                 (faceMask)
+                                                 (writeMask))
   pure $ ()
 
 
@@ -1369,7 +1400,10 @@ cmdSetStencilReference commandBuffer faceMask reference = liftIO $ do
   unless (vkCmdSetStencilReferencePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetStencilReference is null" Nothing Nothing
   let vkCmdSetStencilReference' = mkVkCmdSetStencilReference vkCmdSetStencilReferencePtr
-  traceAroundEvent "vkCmdSetStencilReference" (vkCmdSetStencilReference' (commandBufferHandle (commandBuffer)) (faceMask) (reference))
+  traceAroundEvent "vkCmdSetStencilReference" (vkCmdSetStencilReference'
+                                                 (commandBufferHandle (commandBuffer))
+                                                 (faceMask)
+                                                 (reference))
   pure $ ()
 
 
@@ -1601,7 +1635,12 @@ cmdBindDescriptorSets :: forall io
                          -- specifying dynamic offsets.
                          ("dynamicOffsets" ::: Vector Word32)
                       -> io ()
-cmdBindDescriptorSets commandBuffer pipelineBindPoint layout firstSet descriptorSets dynamicOffsets = liftIO . evalContT $ do
+cmdBindDescriptorSets commandBuffer
+                        pipelineBindPoint
+                        layout
+                        firstSet
+                        descriptorSets
+                        dynamicOffsets = liftIO . evalContT $ do
   let vkCmdBindDescriptorSetsPtr = pVkCmdBindDescriptorSets (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBindDescriptorSetsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindDescriptorSets is null" Nothing Nothing
@@ -1610,7 +1649,15 @@ cmdBindDescriptorSets commandBuffer pipelineBindPoint layout firstSet descriptor
   lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorSets `plusPtr` (8 * (i)) :: Ptr DescriptorSet) (e)) (descriptorSets)
   pPDynamicOffsets <- ContT $ allocaBytes @Word32 ((Data.Vector.length (dynamicOffsets)) * 4)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPDynamicOffsets `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (dynamicOffsets)
-  lift $ traceAroundEvent "vkCmdBindDescriptorSets" (vkCmdBindDescriptorSets' (commandBufferHandle (commandBuffer)) (pipelineBindPoint) (layout) (firstSet) ((fromIntegral (Data.Vector.length $ (descriptorSets)) :: Word32)) (pPDescriptorSets) ((fromIntegral (Data.Vector.length $ (dynamicOffsets)) :: Word32)) (pPDynamicOffsets))
+  lift $ traceAroundEvent "vkCmdBindDescriptorSets" (vkCmdBindDescriptorSets'
+                                                       (commandBufferHandle (commandBuffer))
+                                                       (pipelineBindPoint)
+                                                       (layout)
+                                                       (firstSet)
+                                                       ((fromIntegral (Data.Vector.length $ (descriptorSets)) :: Word32))
+                                                       (pPDescriptorSets)
+                                                       ((fromIntegral (Data.Vector.length $ (dynamicOffsets)) :: Word32))
+                                                       (pPDynamicOffsets))
   pure $ ()
 
 
@@ -1719,7 +1766,11 @@ cmdBindIndexBuffer commandBuffer buffer offset indexType = liftIO $ do
   unless (vkCmdBindIndexBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindIndexBuffer is null" Nothing Nothing
   let vkCmdBindIndexBuffer' = mkVkCmdBindIndexBuffer vkCmdBindIndexBufferPtr
-  traceAroundEvent "vkCmdBindIndexBuffer" (vkCmdBindIndexBuffer' (commandBufferHandle (commandBuffer)) (buffer) (offset) (indexType))
+  traceAroundEvent "vkCmdBindIndexBuffer" (vkCmdBindIndexBuffer'
+                                             (commandBufferHandle (commandBuffer))
+                                             (buffer)
+                                             (offset)
+                                             (indexType))
   pure $ ()
 
 
@@ -1852,7 +1903,10 @@ cmdBindVertexBuffers :: forall io
                      -> -- | @pOffsets@ is a pointer to an array of buffer offsets.
                         ("offsets" ::: Vector DeviceSize)
                      -> io ()
-cmdBindVertexBuffers commandBuffer firstBinding buffers offsets = liftIO . evalContT $ do
+cmdBindVertexBuffers commandBuffer
+                       firstBinding
+                       buffers
+                       offsets = liftIO . evalContT $ do
   let vkCmdBindVertexBuffersPtr = pVkCmdBindVertexBuffers (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBindVertexBuffersPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindVertexBuffers is null" Nothing Nothing
@@ -1864,7 +1918,12 @@ cmdBindVertexBuffers commandBuffer firstBinding buffers offsets = liftIO . evalC
   lift $ Data.Vector.imapM_ (\i e -> poke (pPBuffers `plusPtr` (8 * (i)) :: Ptr Buffer) (e)) (buffers)
   pPOffsets <- ContT $ allocaBytes @DeviceSize ((Data.Vector.length (offsets)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) (offsets)
-  lift $ traceAroundEvent "vkCmdBindVertexBuffers" (vkCmdBindVertexBuffers' (commandBufferHandle (commandBuffer)) (firstBinding) ((fromIntegral pBuffersLength :: Word32)) (pPBuffers) (pPOffsets))
+  lift $ traceAroundEvent "vkCmdBindVertexBuffers" (vkCmdBindVertexBuffers'
+                                                      (commandBufferHandle (commandBuffer))
+                                                      (firstBinding)
+                                                      ((fromIntegral pBuffersLength :: Word32))
+                                                      (pPBuffers)
+                                                      (pPOffsets))
   pure $ ()
 
 
@@ -2941,12 +3000,21 @@ cmdDraw :: forall io
         -> -- | @firstInstance@ is the instance ID of the first instance to draw.
            ("firstInstance" ::: Word32)
         -> io ()
-cmdDraw commandBuffer vertexCount instanceCount firstVertex firstInstance = liftIO $ do
+cmdDraw commandBuffer
+          vertexCount
+          instanceCount
+          firstVertex
+          firstInstance = liftIO $ do
   let vkCmdDrawPtr = pVkCmdDraw (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDrawPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDraw is null" Nothing Nothing
   let vkCmdDraw' = mkVkCmdDraw vkCmdDrawPtr
-  traceAroundEvent "vkCmdDraw" (vkCmdDraw' (commandBufferHandle (commandBuffer)) (vertexCount) (instanceCount) (firstVertex) (firstInstance))
+  traceAroundEvent "vkCmdDraw" (vkCmdDraw'
+                                  (commandBufferHandle (commandBuffer))
+                                  (vertexCount)
+                                  (instanceCount)
+                                  (firstVertex)
+                                  (firstInstance))
   pure $ ()
 
 
@@ -4058,12 +4126,23 @@ cmdDrawIndexed :: forall io
                -> -- | @firstInstance@ is the instance ID of the first instance to draw.
                   ("firstInstance" ::: Word32)
                -> io ()
-cmdDrawIndexed commandBuffer indexCount instanceCount firstIndex vertexOffset firstInstance = liftIO $ do
+cmdDrawIndexed commandBuffer
+                 indexCount
+                 instanceCount
+                 firstIndex
+                 vertexOffset
+                 firstInstance = liftIO $ do
   let vkCmdDrawIndexedPtr = pVkCmdDrawIndexed (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDrawIndexedPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawIndexed is null" Nothing Nothing
   let vkCmdDrawIndexed' = mkVkCmdDrawIndexed vkCmdDrawIndexedPtr
-  traceAroundEvent "vkCmdDrawIndexed" (vkCmdDrawIndexed' (commandBufferHandle (commandBuffer)) (indexCount) (instanceCount) (firstIndex) (vertexOffset) (firstInstance))
+  traceAroundEvent "vkCmdDrawIndexed" (vkCmdDrawIndexed'
+                                         (commandBufferHandle (commandBuffer))
+                                         (indexCount)
+                                         (instanceCount)
+                                         (firstIndex)
+                                         (vertexOffset)
+                                         (firstInstance))
   pure $ ()
 
 
@@ -5179,7 +5258,12 @@ cmdDrawIndirect commandBuffer buffer offset drawCount stride = liftIO $ do
   unless (vkCmdDrawIndirectPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawIndirect is null" Nothing Nothing
   let vkCmdDrawIndirect' = mkVkCmdDrawIndirect vkCmdDrawIndirectPtr
-  traceAroundEvent "vkCmdDrawIndirect" (vkCmdDrawIndirect' (commandBufferHandle (commandBuffer)) (buffer) (offset) (drawCount) (stride))
+  traceAroundEvent "vkCmdDrawIndirect" (vkCmdDrawIndirect'
+                                          (commandBufferHandle (commandBuffer))
+                                          (buffer)
+                                          (offset)
+                                          (drawCount)
+                                          (stride))
   pure $ ()
 
 
@@ -6296,12 +6380,21 @@ cmdDrawIndexedIndirect :: forall io
                        -> -- | @stride@ is the byte stride between successive sets of draw parameters.
                           ("stride" ::: Word32)
                        -> io ()
-cmdDrawIndexedIndirect commandBuffer buffer offset drawCount stride = liftIO $ do
+cmdDrawIndexedIndirect commandBuffer
+                         buffer
+                         offset
+                         drawCount
+                         stride = liftIO $ do
   let vkCmdDrawIndexedIndirectPtr = pVkCmdDrawIndexedIndirect (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDrawIndexedIndirectPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawIndexedIndirect is null" Nothing Nothing
   let vkCmdDrawIndexedIndirect' = mkVkCmdDrawIndexedIndirect vkCmdDrawIndexedIndirectPtr
-  traceAroundEvent "vkCmdDrawIndexedIndirect" (vkCmdDrawIndexedIndirect' (commandBufferHandle (commandBuffer)) (buffer) (offset) (drawCount) (stride))
+  traceAroundEvent "vkCmdDrawIndexedIndirect" (vkCmdDrawIndexedIndirect'
+                                                 (commandBufferHandle (commandBuffer))
+                                                 (buffer)
+                                                 (offset)
+                                                 (drawCount)
+                                                 (stride))
   pure $ ()
 
 
@@ -6769,7 +6862,11 @@ cmdDispatch commandBuffer groupCountX groupCountY groupCountZ = liftIO $ do
   unless (vkCmdDispatchPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDispatch is null" Nothing Nothing
   let vkCmdDispatch' = mkVkCmdDispatch vkCmdDispatchPtr
-  traceAroundEvent "vkCmdDispatch" (vkCmdDispatch' (commandBufferHandle (commandBuffer)) (groupCountX) (groupCountY) (groupCountZ))
+  traceAroundEvent "vkCmdDispatch" (vkCmdDispatch'
+                                      (commandBufferHandle (commandBuffer))
+                                      (groupCountX)
+                                      (groupCountY)
+                                      (groupCountZ))
   pure $ ()
 
 
@@ -7230,7 +7327,10 @@ cmdDispatchIndirect commandBuffer buffer offset = liftIO $ do
   unless (vkCmdDispatchIndirectPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDispatchIndirect is null" Nothing Nothing
   let vkCmdDispatchIndirect' = mkVkCmdDispatchIndirect vkCmdDispatchIndirectPtr
-  traceAroundEvent "vkCmdDispatchIndirect" (vkCmdDispatchIndirect' (commandBufferHandle (commandBuffer)) (buffer) (offset))
+  traceAroundEvent "vkCmdDispatchIndirect" (vkCmdDispatchIndirect'
+                                              (commandBufferHandle (commandBuffer))
+                                              (buffer)
+                                              (offset))
   pure $ ()
 
 
@@ -7379,14 +7479,22 @@ cmdCopyBuffer :: forall io
                  -- specifying the regions to copy.
                  ("regions" ::: Vector BufferCopy)
               -> io ()
-cmdCopyBuffer commandBuffer srcBuffer dstBuffer regions = liftIO . evalContT $ do
+cmdCopyBuffer commandBuffer
+                srcBuffer
+                dstBuffer
+                regions = liftIO . evalContT $ do
   let vkCmdCopyBufferPtr = pVkCmdCopyBuffer (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyBuffer is null" Nothing Nothing
   let vkCmdCopyBuffer' = mkVkCmdCopyBuffer vkCmdCopyBufferPtr
   pPRegions <- ContT $ allocaBytes @BufferCopy ((Data.Vector.length (regions)) * 24)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions `plusPtr` (24 * (i)) :: Ptr BufferCopy) (e)) (regions)
-  lift $ traceAroundEvent "vkCmdCopyBuffer" (vkCmdCopyBuffer' (commandBufferHandle (commandBuffer)) (srcBuffer) (dstBuffer) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions))
+  lift $ traceAroundEvent "vkCmdCopyBuffer" (vkCmdCopyBuffer'
+                                               (commandBufferHandle (commandBuffer))
+                                               (srcBuffer)
+                                               (dstBuffer)
+                                               ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
+                                               (pPRegions))
   pure $ ()
 
 
@@ -7913,14 +8021,26 @@ cmdCopyImage :: forall io
                 -- the regions to copy.
                 ("regions" ::: Vector ImageCopy)
              -> io ()
-cmdCopyImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regions = liftIO . evalContT $ do
+cmdCopyImage commandBuffer
+               srcImage
+               srcImageLayout
+               dstImage
+               dstImageLayout
+               regions = liftIO . evalContT $ do
   let vkCmdCopyImagePtr = pVkCmdCopyImage (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyImage is null" Nothing Nothing
   let vkCmdCopyImage' = mkVkCmdCopyImage vkCmdCopyImagePtr
   pPRegions <- ContT $ allocaBytes @ImageCopy ((Data.Vector.length (regions)) * 68)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions `plusPtr` (68 * (i)) :: Ptr ImageCopy) (e)) (regions)
-  lift $ traceAroundEvent "vkCmdCopyImage" (vkCmdCopyImage' (commandBufferHandle (commandBuffer)) (srcImage) (srcImageLayout) (dstImage) (dstImageLayout) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions))
+  lift $ traceAroundEvent "vkCmdCopyImage" (vkCmdCopyImage'
+                                              (commandBufferHandle (commandBuffer))
+                                              (srcImage)
+                                              (srcImageLayout)
+                                              (dstImage)
+                                              (dstImageLayout)
+                                              ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
+                                              (pPRegions))
   pure $ ()
 
 
@@ -8364,14 +8484,28 @@ cmdBlitImage :: forall io
                 -- to apply if the blits require scaling.
                 Filter
              -> io ()
-cmdBlitImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regions filter' = liftIO . evalContT $ do
+cmdBlitImage commandBuffer
+               srcImage
+               srcImageLayout
+               dstImage
+               dstImageLayout
+               regions
+               filter' = liftIO . evalContT $ do
   let vkCmdBlitImagePtr = pVkCmdBlitImage (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBlitImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBlitImage is null" Nothing Nothing
   let vkCmdBlitImage' = mkVkCmdBlitImage vkCmdBlitImagePtr
   pPRegions <- ContT $ allocaBytes @ImageBlit ((Data.Vector.length (regions)) * 80)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions `plusPtr` (80 * (i)) :: Ptr ImageBlit) (e)) (regions)
-  lift $ traceAroundEvent "vkCmdBlitImage" (vkCmdBlitImage' (commandBufferHandle (commandBuffer)) (srcImage) (srcImageLayout) (dstImage) (dstImageLayout) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions) (filter'))
+  lift $ traceAroundEvent "vkCmdBlitImage" (vkCmdBlitImage'
+                                              (commandBufferHandle (commandBuffer))
+                                              (srcImage)
+                                              (srcImageLayout)
+                                              (dstImage)
+                                              (dstImageLayout)
+                                              ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
+                                              (pPRegions)
+                                              (filter'))
   pure $ ()
 
 
@@ -8721,14 +8855,24 @@ cmdCopyBufferToImage :: forall io
                         -- specifying the regions to copy.
                         ("regions" ::: Vector BufferImageCopy)
                      -> io ()
-cmdCopyBufferToImage commandBuffer srcBuffer dstImage dstImageLayout regions = liftIO . evalContT $ do
+cmdCopyBufferToImage commandBuffer
+                       srcBuffer
+                       dstImage
+                       dstImageLayout
+                       regions = liftIO . evalContT $ do
   let vkCmdCopyBufferToImagePtr = pVkCmdCopyBufferToImage (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyBufferToImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyBufferToImage is null" Nothing Nothing
   let vkCmdCopyBufferToImage' = mkVkCmdCopyBufferToImage vkCmdCopyBufferToImagePtr
   pPRegions <- ContT $ allocaBytes @BufferImageCopy ((Data.Vector.length (regions)) * 56)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions `plusPtr` (56 * (i)) :: Ptr BufferImageCopy) (e)) (regions)
-  lift $ traceAroundEvent "vkCmdCopyBufferToImage" (vkCmdCopyBufferToImage' (commandBufferHandle (commandBuffer)) (srcBuffer) (dstImage) (dstImageLayout) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions))
+  lift $ traceAroundEvent "vkCmdCopyBufferToImage" (vkCmdCopyBufferToImage'
+                                                      (commandBufferHandle (commandBuffer))
+                                                      (srcBuffer)
+                                                      (dstImage)
+                                                      (dstImageLayout)
+                                                      ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
+                                                      (pPRegions))
   pure $ ()
 
 
@@ -9069,14 +9213,24 @@ cmdCopyImageToBuffer :: forall io
                         -- specifying the regions to copy.
                         ("regions" ::: Vector BufferImageCopy)
                      -> io ()
-cmdCopyImageToBuffer commandBuffer srcImage srcImageLayout dstBuffer regions = liftIO . evalContT $ do
+cmdCopyImageToBuffer commandBuffer
+                       srcImage
+                       srcImageLayout
+                       dstBuffer
+                       regions = liftIO . evalContT $ do
   let vkCmdCopyImageToBufferPtr = pVkCmdCopyImageToBuffer (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyImageToBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyImageToBuffer is null" Nothing Nothing
   let vkCmdCopyImageToBuffer' = mkVkCmdCopyImageToBuffer vkCmdCopyImageToBufferPtr
   pPRegions <- ContT $ allocaBytes @BufferImageCopy ((Data.Vector.length (regions)) * 56)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions `plusPtr` (56 * (i)) :: Ptr BufferImageCopy) (e)) (regions)
-  lift $ traceAroundEvent "vkCmdCopyImageToBuffer" (vkCmdCopyImageToBuffer' (commandBufferHandle (commandBuffer)) (srcImage) (srcImageLayout) (dstBuffer) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions))
+  lift $ traceAroundEvent "vkCmdCopyImageToBuffer" (vkCmdCopyImageToBuffer'
+                                                      (commandBufferHandle (commandBuffer))
+                                                      (srcImage)
+                                                      (srcImageLayout)
+                                                      (dstBuffer)
+                                                      ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
+                                                      (pPRegions))
   pure $ ()
 
 
@@ -9238,7 +9392,12 @@ cmdUpdateBuffer commandBuffer dstBuffer dstOffset dataSize data' = liftIO $ do
   unless (vkCmdUpdateBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdUpdateBuffer is null" Nothing Nothing
   let vkCmdUpdateBuffer' = mkVkCmdUpdateBuffer vkCmdUpdateBufferPtr
-  traceAroundEvent "vkCmdUpdateBuffer" (vkCmdUpdateBuffer' (commandBufferHandle (commandBuffer)) (dstBuffer) (dstOffset) (dataSize) (data'))
+  traceAroundEvent "vkCmdUpdateBuffer" (vkCmdUpdateBuffer'
+                                          (commandBufferHandle (commandBuffer))
+                                          (dstBuffer)
+                                          (dstOffset)
+                                          (dataSize)
+                                          (data'))
   pure $ ()
 
 
@@ -9377,7 +9536,12 @@ cmdFillBuffer commandBuffer dstBuffer dstOffset size data' = liftIO $ do
   unless (vkCmdFillBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdFillBuffer is null" Nothing Nothing
   let vkCmdFillBuffer' = mkVkCmdFillBuffer vkCmdFillBufferPtr
-  traceAroundEvent "vkCmdFillBuffer" (vkCmdFillBuffer' (commandBufferHandle (commandBuffer)) (dstBuffer) (dstOffset) (size) (data'))
+  traceAroundEvent "vkCmdFillBuffer" (vkCmdFillBuffer'
+                                        (commandBufferHandle (commandBuffer))
+                                        (dstBuffer)
+                                        (dstOffset)
+                                        (size)
+                                        (data'))
   pure $ ()
 
 
@@ -9563,7 +9727,11 @@ cmdClearColorImage :: forall io
                       -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views Image Views>.
                       ("ranges" ::: Vector ImageSubresourceRange)
                    -> io ()
-cmdClearColorImage commandBuffer image imageLayout color ranges = liftIO . evalContT $ do
+cmdClearColorImage commandBuffer
+                     image
+                     imageLayout
+                     color
+                     ranges = liftIO . evalContT $ do
   let vkCmdClearColorImagePtr = pVkCmdClearColorImage (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdClearColorImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdClearColorImage is null" Nothing Nothing
@@ -9571,7 +9739,13 @@ cmdClearColorImage commandBuffer image imageLayout color ranges = liftIO . evalC
   pColor <- ContT $ withCStruct (color)
   pPRanges <- ContT $ allocaBytes @ImageSubresourceRange ((Data.Vector.length (ranges)) * 20)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRanges `plusPtr` (20 * (i)) :: Ptr ImageSubresourceRange) (e)) (ranges)
-  lift $ traceAroundEvent "vkCmdClearColorImage" (vkCmdClearColorImage' (commandBufferHandle (commandBuffer)) (image) (imageLayout) pColor ((fromIntegral (Data.Vector.length $ (ranges)) :: Word32)) (pPRanges))
+  lift $ traceAroundEvent "vkCmdClearColorImage" (vkCmdClearColorImage'
+                                                    (commandBufferHandle (commandBuffer))
+                                                    (image)
+                                                    (imageLayout)
+                                                    pColor
+                                                    ((fromIntegral (Data.Vector.length $ (ranges)) :: Word32))
+                                                    (pPRanges))
   pure $ ()
 
 
@@ -9787,7 +9961,11 @@ cmdClearDepthStencilImage :: forall io
                              -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views Image Views>.
                              ("ranges" ::: Vector ImageSubresourceRange)
                           -> io ()
-cmdClearDepthStencilImage commandBuffer image imageLayout depthStencil ranges = liftIO . evalContT $ do
+cmdClearDepthStencilImage commandBuffer
+                            image
+                            imageLayout
+                            depthStencil
+                            ranges = liftIO . evalContT $ do
   let vkCmdClearDepthStencilImagePtr = pVkCmdClearDepthStencilImage (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdClearDepthStencilImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdClearDepthStencilImage is null" Nothing Nothing
@@ -9795,7 +9973,13 @@ cmdClearDepthStencilImage commandBuffer image imageLayout depthStencil ranges = 
   pDepthStencil <- ContT $ withCStruct (depthStencil)
   pPRanges <- ContT $ allocaBytes @ImageSubresourceRange ((Data.Vector.length (ranges)) * 20)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRanges `plusPtr` (20 * (i)) :: Ptr ImageSubresourceRange) (e)) (ranges)
-  lift $ traceAroundEvent "vkCmdClearDepthStencilImage" (vkCmdClearDepthStencilImage' (commandBufferHandle (commandBuffer)) (image) (imageLayout) pDepthStencil ((fromIntegral (Data.Vector.length $ (ranges)) :: Word32)) (pPRanges))
+  lift $ traceAroundEvent "vkCmdClearDepthStencilImage" (vkCmdClearDepthStencilImage'
+                                                           (commandBufferHandle (commandBuffer))
+                                                           (image)
+                                                           (imageLayout)
+                                                           pDepthStencil
+                                                           ((fromIntegral (Data.Vector.length $ (ranges)) :: Word32))
+                                                           (pPRanges))
   pure $ ()
 
 
@@ -9974,7 +10158,12 @@ cmdClearAttachments commandBuffer attachments rects = liftIO . evalContT $ do
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPAttachments `plusPtr` (24 * (i)) :: Ptr ClearAttachment) (e) . ($ ())) (attachments)
   pPRects <- ContT $ allocaBytes @ClearRect ((Data.Vector.length (rects)) * 24)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRects `plusPtr` (24 * (i)) :: Ptr ClearRect) (e)) (rects)
-  lift $ traceAroundEvent "vkCmdClearAttachments" (vkCmdClearAttachments' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (attachments)) :: Word32)) (pPAttachments) ((fromIntegral (Data.Vector.length $ (rects)) :: Word32)) (pPRects))
+  lift $ traceAroundEvent "vkCmdClearAttachments" (vkCmdClearAttachments'
+                                                     (commandBufferHandle (commandBuffer))
+                                                     ((fromIntegral (Data.Vector.length $ (attachments)) :: Word32))
+                                                     (pPAttachments)
+                                                     ((fromIntegral (Data.Vector.length $ (rects)) :: Word32))
+                                                     (pPRects))
   pure $ ()
 
 
@@ -10277,14 +10466,26 @@ cmdResolveImage :: forall io
                    -- specifying the regions to resolve.
                    ("regions" ::: Vector ImageResolve)
                 -> io ()
-cmdResolveImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout regions = liftIO . evalContT $ do
+cmdResolveImage commandBuffer
+                  srcImage
+                  srcImageLayout
+                  dstImage
+                  dstImageLayout
+                  regions = liftIO . evalContT $ do
   let vkCmdResolveImagePtr = pVkCmdResolveImage (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdResolveImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdResolveImage is null" Nothing Nothing
   let vkCmdResolveImage' = mkVkCmdResolveImage vkCmdResolveImagePtr
   pPRegions <- ContT $ allocaBytes @ImageResolve ((Data.Vector.length (regions)) * 68)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPRegions `plusPtr` (68 * (i)) :: Ptr ImageResolve) (e)) (regions)
-  lift $ traceAroundEvent "vkCmdResolveImage" (vkCmdResolveImage' (commandBufferHandle (commandBuffer)) (srcImage) (srcImageLayout) (dstImage) (dstImageLayout) ((fromIntegral (Data.Vector.length $ (regions)) :: Word32)) (pPRegions))
+  lift $ traceAroundEvent "vkCmdResolveImage" (vkCmdResolveImage'
+                                                 (commandBufferHandle (commandBuffer))
+                                                 (srcImage)
+                                                 (srcImageLayout)
+                                                 (dstImage)
+                                                 (dstImageLayout)
+                                                 ((fromIntegral (Data.Vector.length $ (regions)) :: Word32))
+                                                 (pPRegions))
   pure $ ()
 
 
@@ -10441,7 +10642,10 @@ cmdSetEvent commandBuffer event stageMask = liftIO $ do
   unless (vkCmdSetEventPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetEvent is null" Nothing Nothing
   let vkCmdSetEvent' = mkVkCmdSetEvent vkCmdSetEventPtr
-  traceAroundEvent "vkCmdSetEvent" (vkCmdSetEvent' (commandBufferHandle (commandBuffer)) (event) (stageMask))
+  traceAroundEvent "vkCmdSetEvent" (vkCmdSetEvent'
+                                      (commandBufferHandle (commandBuffer))
+                                      (event)
+                                      (stageMask))
   pure $ ()
 
 
@@ -10606,7 +10810,10 @@ cmdResetEvent commandBuffer event stageMask = liftIO $ do
   unless (vkCmdResetEventPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdResetEvent is null" Nothing Nothing
   let vkCmdResetEvent' = mkVkCmdResetEvent vkCmdResetEventPtr
-  traceAroundEvent "vkCmdResetEvent" (vkCmdResetEvent' (commandBufferHandle (commandBuffer)) (event) (stageMask))
+  traceAroundEvent "vkCmdResetEvent" (vkCmdResetEvent'
+                                        (commandBufferHandle (commandBuffer))
+                                        (event)
+                                        (stageMask))
   pure $ ()
 
 
@@ -10650,7 +10857,13 @@ cmdWaitEventsSafeOrUnsafe :: forall io
                              -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' structures.
                              ("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier))
                           -> io ()
-cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask dstStageMask memoryBarriers bufferMemoryBarriers imageMemoryBarriers = liftIO . evalContT $ do
+cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer
+                                              events
+                                              srcStageMask
+                                              dstStageMask
+                                              memoryBarriers
+                                              bufferMemoryBarriers
+                                              imageMemoryBarriers = liftIO . evalContT $ do
   let vkCmdWaitEventsPtr = pVkCmdWaitEvents (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdWaitEventsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWaitEvents is null" Nothing Nothing
@@ -10663,7 +10876,18 @@ cmdWaitEventsSafeOrUnsafe mkVkCmdWaitEvents commandBuffer events srcStageMask ds
   lift $ Data.Vector.imapM_ (\i e -> poke (pPBufferMemoryBarriers `plusPtr` (56 * (i)) :: Ptr BufferMemoryBarrier) (e)) (bufferMemoryBarriers)
   pPImageMemoryBarriers <- ContT $ allocaBytes @(ImageMemoryBarrier _) ((Data.Vector.length (imageMemoryBarriers)) * 72)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPImageMemoryBarriers `plusPtr` (72 * (i)) :: Ptr (ImageMemoryBarrier _))) (e) . ($ ())) (imageMemoryBarriers)
-  lift $ traceAroundEvent "vkCmdWaitEvents" (vkCmdWaitEvents' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (events)) :: Word32)) (pPEvents) (srcStageMask) (dstStageMask) ((fromIntegral (Data.Vector.length $ (memoryBarriers)) :: Word32)) (pPMemoryBarriers) ((fromIntegral (Data.Vector.length $ (bufferMemoryBarriers)) :: Word32)) (pPBufferMemoryBarriers) ((fromIntegral (Data.Vector.length $ (imageMemoryBarriers)) :: Word32)) (forgetExtensions (pPImageMemoryBarriers)))
+  lift $ traceAroundEvent "vkCmdWaitEvents" (vkCmdWaitEvents'
+                                               (commandBufferHandle (commandBuffer))
+                                               ((fromIntegral (Data.Vector.length $ (events)) :: Word32))
+                                               (pPEvents)
+                                               (srcStageMask)
+                                               (dstStageMask)
+                                               ((fromIntegral (Data.Vector.length $ (memoryBarriers)) :: Word32))
+                                               (pPMemoryBarriers)
+                                               ((fromIntegral (Data.Vector.length $ (bufferMemoryBarriers)) :: Word32))
+                                               (pPBufferMemoryBarriers)
+                                               ((fromIntegral (Data.Vector.length $ (imageMemoryBarriers)) :: Word32))
+                                               (forgetExtensions (pPImageMemoryBarriers)))
   pure $ ()
 
 -- | vkCmdWaitEvents - Wait for one or more events and insert a set of memory
@@ -11460,7 +11684,13 @@ cmdPipelineBarrier :: forall io
                       -- 'Vulkan.Core10.OtherTypes.ImageMemoryBarrier' structures.
                       ("imageMemoryBarriers" ::: Vector (SomeStruct ImageMemoryBarrier))
                    -> io ()
-cmdPipelineBarrier commandBuffer srcStageMask dstStageMask dependencyFlags memoryBarriers bufferMemoryBarriers imageMemoryBarriers = liftIO . evalContT $ do
+cmdPipelineBarrier commandBuffer
+                     srcStageMask
+                     dstStageMask
+                     dependencyFlags
+                     memoryBarriers
+                     bufferMemoryBarriers
+                     imageMemoryBarriers = liftIO . evalContT $ do
   let vkCmdPipelineBarrierPtr = pVkCmdPipelineBarrier (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdPipelineBarrierPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPipelineBarrier is null" Nothing Nothing
@@ -11471,7 +11701,17 @@ cmdPipelineBarrier commandBuffer srcStageMask dstStageMask dependencyFlags memor
   lift $ Data.Vector.imapM_ (\i e -> poke (pPBufferMemoryBarriers `plusPtr` (56 * (i)) :: Ptr BufferMemoryBarrier) (e)) (bufferMemoryBarriers)
   pPImageMemoryBarriers <- ContT $ allocaBytes @(ImageMemoryBarrier _) ((Data.Vector.length (imageMemoryBarriers)) * 72)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPImageMemoryBarriers `plusPtr` (72 * (i)) :: Ptr (ImageMemoryBarrier _))) (e) . ($ ())) (imageMemoryBarriers)
-  lift $ traceAroundEvent "vkCmdPipelineBarrier" (vkCmdPipelineBarrier' (commandBufferHandle (commandBuffer)) (srcStageMask) (dstStageMask) (dependencyFlags) ((fromIntegral (Data.Vector.length $ (memoryBarriers)) :: Word32)) (pPMemoryBarriers) ((fromIntegral (Data.Vector.length $ (bufferMemoryBarriers)) :: Word32)) (pPBufferMemoryBarriers) ((fromIntegral (Data.Vector.length $ (imageMemoryBarriers)) :: Word32)) (forgetExtensions (pPImageMemoryBarriers)))
+  lift $ traceAroundEvent "vkCmdPipelineBarrier" (vkCmdPipelineBarrier'
+                                                    (commandBufferHandle (commandBuffer))
+                                                    (srcStageMask)
+                                                    (dstStageMask)
+                                                    (dependencyFlags)
+                                                    ((fromIntegral (Data.Vector.length $ (memoryBarriers)) :: Word32))
+                                                    (pPMemoryBarriers)
+                                                    ((fromIntegral (Data.Vector.length $ (bufferMemoryBarriers)) :: Word32))
+                                                    (pPBufferMemoryBarriers)
+                                                    ((fromIntegral (Data.Vector.length $ (imageMemoryBarriers)) :: Word32))
+                                                    (forgetExtensions (pPImageMemoryBarriers)))
   pure $ ()
 
 
@@ -11757,7 +11997,11 @@ cmdBeginQuery commandBuffer queryPool query flags = liftIO $ do
   unless (vkCmdBeginQueryPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginQuery is null" Nothing Nothing
   let vkCmdBeginQuery' = mkVkCmdBeginQuery vkCmdBeginQueryPtr
-  traceAroundEvent "vkCmdBeginQuery" (vkCmdBeginQuery' (commandBufferHandle (commandBuffer)) (queryPool) (query) (flags))
+  traceAroundEvent "vkCmdBeginQuery" (vkCmdBeginQuery'
+                                        (commandBufferHandle (commandBuffer))
+                                        (queryPool)
+                                        (query)
+                                        (flags))
   pure $ ()
 
 -- | This function will call the supplied action between calls to
@@ -11767,7 +12011,10 @@ cmdBeginQuery commandBuffer queryPool query flags = liftIO $ do
 -- inner action.
 cmdUseQuery :: forall io r . MonadIO io => CommandBuffer -> QueryPool -> Word32 -> QueryControlFlags -> io r -> io r
 cmdUseQuery commandBuffer queryPool query flags a =
-  (cmdBeginQuery commandBuffer queryPool query flags) *> a <* (cmdEndQuery commandBuffer queryPool query)
+  (cmdBeginQuery commandBuffer
+                   queryPool
+                   query
+                   flags) *> a <* (cmdEndQuery commandBuffer queryPool query)
 
 
 foreign import ccall
@@ -11906,7 +12153,10 @@ cmdEndQuery commandBuffer queryPool query = liftIO $ do
   unless (vkCmdEndQueryPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndQuery is null" Nothing Nothing
   let vkCmdEndQuery' = mkVkCmdEndQuery vkCmdEndQueryPtr
-  traceAroundEvent "vkCmdEndQuery" (vkCmdEndQuery' (commandBufferHandle (commandBuffer)) (queryPool) (query))
+  traceAroundEvent "vkCmdEndQuery" (vkCmdEndQuery'
+                                      (commandBufferHandle (commandBuffer))
+                                      (queryPool)
+                                      (query))
   pure $ ()
 
 
@@ -12050,7 +12300,11 @@ cmdResetQueryPool commandBuffer queryPool firstQuery queryCount = liftIO $ do
   unless (vkCmdResetQueryPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdResetQueryPool is null" Nothing Nothing
   let vkCmdResetQueryPool' = mkVkCmdResetQueryPool vkCmdResetQueryPoolPtr
-  traceAroundEvent "vkCmdResetQueryPool" (vkCmdResetQueryPool' (commandBufferHandle (commandBuffer)) (queryPool) (firstQuery) (queryCount))
+  traceAroundEvent "vkCmdResetQueryPool" (vkCmdResetQueryPool'
+                                            (commandBufferHandle (commandBuffer))
+                                            (queryPool)
+                                            (firstQuery)
+                                            (queryCount))
   pure $ ()
 
 
@@ -12270,7 +12524,11 @@ cmdWriteTimestamp commandBuffer pipelineStage queryPool query = liftIO $ do
   unless (vkCmdWriteTimestampPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWriteTimestamp is null" Nothing Nothing
   let vkCmdWriteTimestamp' = mkVkCmdWriteTimestamp vkCmdWriteTimestampPtr
-  traceAroundEvent "vkCmdWriteTimestamp" (vkCmdWriteTimestamp' (commandBufferHandle (commandBuffer)) (pipelineStage) (queryPool) (query))
+  traceAroundEvent "vkCmdWriteTimestamp" (vkCmdWriteTimestamp'
+                                            (commandBufferHandle (commandBuffer))
+                                            (pipelineStage)
+                                            (queryPool)
+                                            (query))
   pure $ ()
 
 
@@ -12532,12 +12790,27 @@ cmdCopyQueryPoolResults :: forall io
                            -- how and when results are returned.
                            QueryResultFlags
                         -> io ()
-cmdCopyQueryPoolResults commandBuffer queryPool firstQuery queryCount dstBuffer dstOffset stride flags = liftIO $ do
+cmdCopyQueryPoolResults commandBuffer
+                          queryPool
+                          firstQuery
+                          queryCount
+                          dstBuffer
+                          dstOffset
+                          stride
+                          flags = liftIO $ do
   let vkCmdCopyQueryPoolResultsPtr = pVkCmdCopyQueryPoolResults (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdCopyQueryPoolResultsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyQueryPoolResults is null" Nothing Nothing
   let vkCmdCopyQueryPoolResults' = mkVkCmdCopyQueryPoolResults vkCmdCopyQueryPoolResultsPtr
-  traceAroundEvent "vkCmdCopyQueryPoolResults" (vkCmdCopyQueryPoolResults' (commandBufferHandle (commandBuffer)) (queryPool) (firstQuery) (queryCount) (dstBuffer) (dstOffset) (stride) (flags))
+  traceAroundEvent "vkCmdCopyQueryPoolResults" (vkCmdCopyQueryPoolResults'
+                                                  (commandBufferHandle (commandBuffer))
+                                                  (queryPool)
+                                                  (firstQuery)
+                                                  (queryCount)
+                                                  (dstBuffer)
+                                                  (dstOffset)
+                                                  (stride)
+                                                  (flags))
   pure $ ()
 
 
@@ -12684,12 +12957,23 @@ cmdPushConstants :: forall io
                     -- push constant values.
                     ("values" ::: Ptr ())
                  -> io ()
-cmdPushConstants commandBuffer layout stageFlags offset size values = liftIO $ do
+cmdPushConstants commandBuffer
+                   layout
+                   stageFlags
+                   offset
+                   size
+                   values = liftIO $ do
   let vkCmdPushConstantsPtr = pVkCmdPushConstants (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdPushConstantsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPushConstants is null" Nothing Nothing
   let vkCmdPushConstants' = mkVkCmdPushConstants vkCmdPushConstantsPtr
-  traceAroundEvent "vkCmdPushConstants" (vkCmdPushConstants' (commandBufferHandle (commandBuffer)) (layout) (stageFlags) (offset) (size) (values))
+  traceAroundEvent "vkCmdPushConstants" (vkCmdPushConstants'
+                                           (commandBufferHandle (commandBuffer))
+                                           (layout)
+                                           (stageFlags)
+                                           (offset)
+                                           (size)
+                                           (values))
   pure $ ()
 
 
@@ -12936,13 +13220,18 @@ cmdBeginRenderPass :: forall a io
                       -- value specifying how the commands in the first subpass will be provided.
                       SubpassContents
                    -> io ()
-cmdBeginRenderPass commandBuffer renderPassBegin contents = liftIO . evalContT $ do
+cmdBeginRenderPass commandBuffer
+                     renderPassBegin
+                     contents = liftIO . evalContT $ do
   let vkCmdBeginRenderPassPtr = pVkCmdBeginRenderPass (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBeginRenderPassPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginRenderPass is null" Nothing Nothing
   let vkCmdBeginRenderPass' = mkVkCmdBeginRenderPass vkCmdBeginRenderPassPtr
   pRenderPassBegin <- ContT $ withCStruct (renderPassBegin)
-  lift $ traceAroundEvent "vkCmdBeginRenderPass" (vkCmdBeginRenderPass' (commandBufferHandle (commandBuffer)) (forgetExtensions pRenderPassBegin) (contents))
+  lift $ traceAroundEvent "vkCmdBeginRenderPass" (vkCmdBeginRenderPass'
+                                                    (commandBufferHandle (commandBuffer))
+                                                    (forgetExtensions pRenderPassBegin)
+                                                    (contents))
   pure $ ()
 
 -- | This function will call the supplied action between calls to
@@ -12952,7 +13241,9 @@ cmdBeginRenderPass commandBuffer renderPassBegin contents = liftIO . evalContT $
 -- by the inner action.
 cmdUseRenderPass :: forall a io r . (Extendss RenderPassBeginInfo a, PokeChain a, MonadIO io) => CommandBuffer -> RenderPassBeginInfo a -> SubpassContents -> io r -> io r
 cmdUseRenderPass commandBuffer pRenderPassBegin contents a =
-  (cmdBeginRenderPass commandBuffer pRenderPassBegin contents) *> a <* (cmdEndRenderPass commandBuffer)
+  (cmdBeginRenderPass commandBuffer
+                        pRenderPassBegin
+                        contents) *> a <* (cmdEndRenderPass commandBuffer)
 
 
 foreign import ccall
@@ -13059,7 +13350,9 @@ cmdNextSubpass commandBuffer contents = liftIO $ do
   unless (vkCmdNextSubpassPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdNextSubpass is null" Nothing Nothing
   let vkCmdNextSubpass' = mkVkCmdNextSubpass vkCmdNextSubpassPtr
-  traceAroundEvent "vkCmdNextSubpass" (vkCmdNextSubpass' (commandBufferHandle (commandBuffer)) (contents))
+  traceAroundEvent "vkCmdNextSubpass" (vkCmdNextSubpass'
+                                         (commandBufferHandle (commandBuffer))
+                                         (contents))
   pure $ ()
 
 
@@ -13151,7 +13444,8 @@ cmdEndRenderPass commandBuffer = liftIO $ do
   unless (vkCmdEndRenderPassPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndRenderPass is null" Nothing Nothing
   let vkCmdEndRenderPass' = mkVkCmdEndRenderPass vkCmdEndRenderPassPtr
-  traceAroundEvent "vkCmdEndRenderPass" (vkCmdEndRenderPass' (commandBufferHandle (commandBuffer)))
+  traceAroundEvent "vkCmdEndRenderPass" (vkCmdEndRenderPass'
+                                           (commandBufferHandle (commandBuffer)))
   pure $ ()
 
 
@@ -13710,7 +14004,10 @@ cmdExecuteCommands commandBuffer commandBuffers = liftIO . evalContT $ do
   let vkCmdExecuteCommands' = mkVkCmdExecuteCommands vkCmdExecuteCommandsPtr
   pPCommandBuffers <- ContT $ allocaBytes @(Ptr CommandBuffer_T) ((Data.Vector.length (commandBuffers)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPCommandBuffers `plusPtr` (8 * (i)) :: Ptr (Ptr CommandBuffer_T)) (commandBufferHandle (e))) (commandBuffers)
-  lift $ traceAroundEvent "vkCmdExecuteCommands" (vkCmdExecuteCommands' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (commandBuffers)) :: Word32)) (pPCommandBuffers))
+  lift $ traceAroundEvent "vkCmdExecuteCommands" (vkCmdExecuteCommands'
+                                                    (commandBufferHandle (commandBuffer))
+                                                    ((fromIntegral (Data.Vector.length $ (commandBuffers)) :: Word32))
+                                                    (pPCommandBuffers))
   pure $ ()
 
 
@@ -14140,7 +14437,10 @@ instance FromCStruct ImageBlit where
     dstOffsets0 <- peekCStruct @Offset3D ((pdstOffsets `advancePtrBytes` 0 :: Ptr Offset3D))
     dstOffsets1 <- peekCStruct @Offset3D ((pdstOffsets `advancePtrBytes` 12 :: Ptr Offset3D))
     pure $ ImageBlit
-             srcSubresource ((srcOffsets0, srcOffsets1)) dstSubresource ((dstOffsets0, dstOffsets1))
+             srcSubresource
+             ((srcOffsets0, srcOffsets1))
+             dstSubresource
+             ((dstOffsets0, dstOffsets1))
 
 instance Storable ImageBlit where
   sizeOf ~_ = 80
@@ -14300,7 +14600,12 @@ instance FromCStruct BufferImageCopy where
     imageOffset <- peekCStruct @Offset3D ((p `plusPtr` 32 :: Ptr Offset3D))
     imageExtent <- peekCStruct @Extent3D ((p `plusPtr` 44 :: Ptr Extent3D))
     pure $ BufferImageCopy
-             bufferOffset bufferRowLength bufferImageHeight imageSubresource imageOffset imageExtent
+             bufferOffset
+             bufferRowLength
+             bufferImageHeight
+             imageSubresource
+             imageOffset
+             imageExtent
 
 instance Storable BufferImageCopy where
   sizeOf ~_ = 56
@@ -14745,7 +15050,8 @@ instance Extensible RenderPassBeginInfo where
     | Just Refl <- eqT @e @DeviceGroupRenderPassBeginInfo = Just f
     | otherwise = Nothing
 
-instance (Extendss RenderPassBeginInfo es, PokeChain es) => ToCStruct (RenderPassBeginInfo es) where
+instance ( Extendss RenderPassBeginInfo es
+         , PokeChain es ) => ToCStruct (RenderPassBeginInfo es) where
   withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RenderPassBeginInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO)

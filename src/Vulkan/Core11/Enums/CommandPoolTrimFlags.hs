@@ -28,8 +28,6 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 newtype CommandPoolTrimFlags = CommandPoolTrimFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameCommandPoolTrimFlags :: String
 conNameCommandPoolTrimFlags = "CommandPoolTrimFlags"
 
@@ -40,15 +38,18 @@ showTableCommandPoolTrimFlags :: [(CommandPoolTrimFlags, String)]
 showTableCommandPoolTrimFlags = []
 
 instance Show CommandPoolTrimFlags where
-  showsPrec = enumShowsPrec enumPrefixCommandPoolTrimFlags
-                            showTableCommandPoolTrimFlags
-                            conNameCommandPoolTrimFlags
-                            (\(CommandPoolTrimFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixCommandPoolTrimFlags
+      showTableCommandPoolTrimFlags
+      conNameCommandPoolTrimFlags
+      (\(CommandPoolTrimFlags x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read CommandPoolTrimFlags where
-  readPrec = enumReadPrec enumPrefixCommandPoolTrimFlags
-                          showTableCommandPoolTrimFlags
-                          conNameCommandPoolTrimFlags
-                          CommandPoolTrimFlags
-
+  readPrec =
+    enumReadPrec
+      enumPrefixCommandPoolTrimFlags
+      showTableCommandPoolTrimFlags
+      conNameCommandPoolTrimFlags
+      CommandPoolTrimFlags

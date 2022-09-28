@@ -119,7 +119,11 @@ resetQueryPool device queryPool firstQuery queryCount = liftIO $ do
   unless (vkResetQueryPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetQueryPool is null" Nothing Nothing
   let vkResetQueryPool' = mkVkResetQueryPool vkResetQueryPoolPtr
-  traceAroundEvent "vkResetQueryPool" (vkResetQueryPool' (deviceHandle (device)) (queryPool) (firstQuery) (queryCount))
+  traceAroundEvent "vkResetQueryPool" (vkResetQueryPool'
+                                         (deviceHandle (device))
+                                         (queryPool)
+                                         (firstQuery)
+                                         (queryCount))
   pure $ ()
 
 

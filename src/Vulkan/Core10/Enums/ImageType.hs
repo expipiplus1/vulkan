@@ -32,13 +32,19 @@ newtype ImageType = ImageType Int32
 
 -- | 'IMAGE_TYPE_1D' specifies a one-dimensional image.
 pattern IMAGE_TYPE_1D = ImageType 0
+
 -- | 'IMAGE_TYPE_2D' specifies a two-dimensional image.
 pattern IMAGE_TYPE_2D = ImageType 1
+
 -- | 'IMAGE_TYPE_3D' specifies a three-dimensional image.
 pattern IMAGE_TYPE_3D = ImageType 2
-{-# complete IMAGE_TYPE_1D,
-             IMAGE_TYPE_2D,
-             IMAGE_TYPE_3D :: ImageType #-}
+
+{-# COMPLETE
+  IMAGE_TYPE_1D
+  , IMAGE_TYPE_2D
+  , IMAGE_TYPE_3D ::
+    ImageType
+  #-}
 
 conNameImageType :: String
 conNameImageType = "ImageType"
@@ -47,12 +53,25 @@ enumPrefixImageType :: String
 enumPrefixImageType = "IMAGE_TYPE_"
 
 showTableImageType :: [(ImageType, String)]
-showTableImageType = [(IMAGE_TYPE_1D, "1D"), (IMAGE_TYPE_2D, "2D"), (IMAGE_TYPE_3D, "3D")]
+showTableImageType =
+  [ (IMAGE_TYPE_1D, "1D")
+  , (IMAGE_TYPE_2D, "2D")
+  , (IMAGE_TYPE_3D, "3D")
+  ]
 
 instance Show ImageType where
   showsPrec =
-    enumShowsPrec enumPrefixImageType showTableImageType conNameImageType (\(ImageType x) -> x) (showsPrec 11)
+    enumShowsPrec
+      enumPrefixImageType
+      showTableImageType
+      conNameImageType
+      (\(ImageType x) -> x)
+      (showsPrec 11)
 
 instance Read ImageType where
-  readPrec = enumReadPrec enumPrefixImageType showTableImageType conNameImageType ImageType
-
+  readPrec =
+    enumReadPrec
+      enumPrefixImageType
+      showTableImageType
+      conNameImageType
+      ImageType

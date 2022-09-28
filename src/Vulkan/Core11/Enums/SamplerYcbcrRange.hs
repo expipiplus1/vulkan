@@ -43,14 +43,19 @@ newtype SamplerYcbcrRange = SamplerYcbcrRange Int32
 -- | 'SAMPLER_YCBCR_RANGE_ITU_FULL' specifies that the full range of the
 -- encoded values are valid and interpreted according to the ITU “full
 -- range” quantization rules.
-pattern SAMPLER_YCBCR_RANGE_ITU_FULL   = SamplerYcbcrRange 0
+pattern SAMPLER_YCBCR_RANGE_ITU_FULL = SamplerYcbcrRange 0
+
 -- | 'SAMPLER_YCBCR_RANGE_ITU_NARROW' specifies that headroom and foot room
 -- are reserved in the numerical range of encoded values, and the remaining
 -- values are expanded according to the ITU “narrow range” quantization
 -- rules.
 pattern SAMPLER_YCBCR_RANGE_ITU_NARROW = SamplerYcbcrRange 1
-{-# complete SAMPLER_YCBCR_RANGE_ITU_FULL,
-             SAMPLER_YCBCR_RANGE_ITU_NARROW :: SamplerYcbcrRange #-}
+
+{-# COMPLETE
+  SAMPLER_YCBCR_RANGE_ITU_FULL
+  , SAMPLER_YCBCR_RANGE_ITU_NARROW ::
+    SamplerYcbcrRange
+  #-}
 
 conNameSamplerYcbcrRange :: String
 conNameSamplerYcbcrRange = "SamplerYcbcrRange"
@@ -59,16 +64,24 @@ enumPrefixSamplerYcbcrRange :: String
 enumPrefixSamplerYcbcrRange = "SAMPLER_YCBCR_RANGE_ITU_"
 
 showTableSamplerYcbcrRange :: [(SamplerYcbcrRange, String)]
-showTableSamplerYcbcrRange = [(SAMPLER_YCBCR_RANGE_ITU_FULL, "FULL"), (SAMPLER_YCBCR_RANGE_ITU_NARROW, "NARROW")]
+showTableSamplerYcbcrRange =
+  [ (SAMPLER_YCBCR_RANGE_ITU_FULL, "FULL")
+  , (SAMPLER_YCBCR_RANGE_ITU_NARROW, "NARROW")
+  ]
 
 instance Show SamplerYcbcrRange where
-  showsPrec = enumShowsPrec enumPrefixSamplerYcbcrRange
-                            showTableSamplerYcbcrRange
-                            conNameSamplerYcbcrRange
-                            (\(SamplerYcbcrRange x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixSamplerYcbcrRange
+      showTableSamplerYcbcrRange
+      conNameSamplerYcbcrRange
+      (\(SamplerYcbcrRange x) -> x)
+      (showsPrec 11)
 
 instance Read SamplerYcbcrRange where
   readPrec =
-    enumReadPrec enumPrefixSamplerYcbcrRange showTableSamplerYcbcrRange conNameSamplerYcbcrRange SamplerYcbcrRange
-
+    enumReadPrec
+      enumPrefixSamplerYcbcrRange
+      showTableSamplerYcbcrRange
+      conNameSamplerYcbcrRange
+      SamplerYcbcrRange

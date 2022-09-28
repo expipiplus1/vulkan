@@ -709,12 +709,18 @@ getPhysicalDeviceDisplayPropertiesKHR physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceDisplayPropertiesKHR' = mkVkGetPhysicalDeviceDisplayPropertiesKHR vkGetPhysicalDeviceDisplayPropertiesKHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceDisplayPropertiesKHR" (vkGetPhysicalDeviceDisplayPropertiesKHR' physicalDevice' (pPPropertyCount) (nullPtr))
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceDisplayPropertiesKHR" (vkGetPhysicalDeviceDisplayPropertiesKHR'
+                                                                            physicalDevice'
+                                                                            (pPPropertyCount)
+                                                                            (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPropertyCount <- lift $ peek @Word32 pPPropertyCount
   pPProperties <- ContT $ bracket (callocBytes @DisplayPropertiesKHR ((fromIntegral (pPropertyCount)) * 48)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 48) :: Ptr DisplayPropertiesKHR) . ($ ())) [0..(fromIntegral (pPropertyCount)) - 1]
-  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceDisplayPropertiesKHR" (vkGetPhysicalDeviceDisplayPropertiesKHR' physicalDevice' (pPPropertyCount) ((pPProperties)))
+  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceDisplayPropertiesKHR" (vkGetPhysicalDeviceDisplayPropertiesKHR'
+                                                                             physicalDevice'
+                                                                             (pPPropertyCount)
+                                                                             ((pPProperties)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pPropertyCount' <- lift $ peek @Word32 pPPropertyCount
   pProperties' <- lift $ generateM (fromIntegral (pPropertyCount')) (\i -> peekCStruct @DisplayPropertiesKHR (((pPProperties) `advancePtrBytes` (48 * (i)) :: Ptr DisplayPropertiesKHR)))
@@ -787,12 +793,18 @@ getPhysicalDeviceDisplayPlanePropertiesKHR physicalDevice = liftIO . evalContT $
   let vkGetPhysicalDeviceDisplayPlanePropertiesKHR' = mkVkGetPhysicalDeviceDisplayPlanePropertiesKHR vkGetPhysicalDeviceDisplayPlanePropertiesKHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceDisplayPlanePropertiesKHR" (vkGetPhysicalDeviceDisplayPlanePropertiesKHR' physicalDevice' (pPPropertyCount) (nullPtr))
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceDisplayPlanePropertiesKHR" (vkGetPhysicalDeviceDisplayPlanePropertiesKHR'
+                                                                                 physicalDevice'
+                                                                                 (pPPropertyCount)
+                                                                                 (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPropertyCount <- lift $ peek @Word32 pPPropertyCount
   pPProperties <- ContT $ bracket (callocBytes @DisplayPlanePropertiesKHR ((fromIntegral (pPropertyCount)) * 16)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 16) :: Ptr DisplayPlanePropertiesKHR) . ($ ())) [0..(fromIntegral (pPropertyCount)) - 1]
-  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceDisplayPlanePropertiesKHR" (vkGetPhysicalDeviceDisplayPlanePropertiesKHR' physicalDevice' (pPPropertyCount) ((pPProperties)))
+  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceDisplayPlanePropertiesKHR" (vkGetPhysicalDeviceDisplayPlanePropertiesKHR'
+                                                                                  physicalDevice'
+                                                                                  (pPPropertyCount)
+                                                                                  ((pPProperties)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pPropertyCount' <- lift $ peek @Word32 pPPropertyCount
   pProperties' <- lift $ generateM (fromIntegral (pPropertyCount')) (\i -> peekCStruct @DisplayPlanePropertiesKHR (((pPProperties) `advancePtrBytes` (16 * (i)) :: Ptr DisplayPlanePropertiesKHR)))
@@ -871,18 +883,27 @@ getDisplayPlaneSupportedDisplaysKHR :: forall io
                                        -- /must/ be in the range [0, physical device plane count - 1].
                                        ("planeIndex" ::: Word32)
                                     -> io (Result, ("displays" ::: Vector DisplayKHR))
-getDisplayPlaneSupportedDisplaysKHR physicalDevice planeIndex = liftIO . evalContT $ do
+getDisplayPlaneSupportedDisplaysKHR physicalDevice
+                                      planeIndex = liftIO . evalContT $ do
   let vkGetDisplayPlaneSupportedDisplaysKHRPtr = pVkGetDisplayPlaneSupportedDisplaysKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetDisplayPlaneSupportedDisplaysKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDisplayPlaneSupportedDisplaysKHR is null" Nothing Nothing
   let vkGetDisplayPlaneSupportedDisplaysKHR' = mkVkGetDisplayPlaneSupportedDisplaysKHR vkGetDisplayPlaneSupportedDisplaysKHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPDisplayCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "vkGetDisplayPlaneSupportedDisplaysKHR" (vkGetDisplayPlaneSupportedDisplaysKHR' physicalDevice' (planeIndex) (pPDisplayCount) (nullPtr))
+  r <- lift $ traceAroundEvent "vkGetDisplayPlaneSupportedDisplaysKHR" (vkGetDisplayPlaneSupportedDisplaysKHR'
+                                                                          physicalDevice'
+                                                                          (planeIndex)
+                                                                          (pPDisplayCount)
+                                                                          (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pDisplayCount <- lift $ peek @Word32 pPDisplayCount
   pPDisplays <- ContT $ bracket (callocBytes @DisplayKHR ((fromIntegral (pDisplayCount)) * 8)) free
-  r' <- lift $ traceAroundEvent "vkGetDisplayPlaneSupportedDisplaysKHR" (vkGetDisplayPlaneSupportedDisplaysKHR' physicalDevice' (planeIndex) (pPDisplayCount) (pPDisplays))
+  r' <- lift $ traceAroundEvent "vkGetDisplayPlaneSupportedDisplaysKHR" (vkGetDisplayPlaneSupportedDisplaysKHR'
+                                                                           physicalDevice'
+                                                                           (planeIndex)
+                                                                           (pPDisplayCount)
+                                                                           (pPDisplays))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pDisplayCount' <- lift $ peek @Word32 pPDisplayCount
   pDisplays' <- lift $ generateM (fromIntegral (pDisplayCount')) (\i -> peek @DisplayKHR ((pPDisplays `advancePtrBytes` (8 * (i)) :: Ptr DisplayKHR)))
@@ -966,12 +987,20 @@ getDisplayModePropertiesKHR physicalDevice display = liftIO . evalContT $ do
   let vkGetDisplayModePropertiesKHR' = mkVkGetDisplayModePropertiesKHR vkGetDisplayModePropertiesKHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "vkGetDisplayModePropertiesKHR" (vkGetDisplayModePropertiesKHR' physicalDevice' (display) (pPPropertyCount) (nullPtr))
+  r <- lift $ traceAroundEvent "vkGetDisplayModePropertiesKHR" (vkGetDisplayModePropertiesKHR'
+                                                                  physicalDevice'
+                                                                  (display)
+                                                                  (pPPropertyCount)
+                                                                  (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPropertyCount <- lift $ peek @Word32 pPPropertyCount
   pPProperties <- ContT $ bracket (callocBytes @DisplayModePropertiesKHR ((fromIntegral (pPropertyCount)) * 24)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 24) :: Ptr DisplayModePropertiesKHR) . ($ ())) [0..(fromIntegral (pPropertyCount)) - 1]
-  r' <- lift $ traceAroundEvent "vkGetDisplayModePropertiesKHR" (vkGetDisplayModePropertiesKHR' physicalDevice' (display) (pPPropertyCount) ((pPProperties)))
+  r' <- lift $ traceAroundEvent "vkGetDisplayModePropertiesKHR" (vkGetDisplayModePropertiesKHR'
+                                                                   physicalDevice'
+                                                                   (display)
+                                                                   (pPPropertyCount)
+                                                                   ((pPProperties)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pPropertyCount' <- lift $ peek @Word32 pPPropertyCount
   pProperties' <- lift $ generateM (fromIntegral (pPropertyCount')) (\i -> peekCStruct @DisplayModePropertiesKHR (((pPProperties) `advancePtrBytes` (24 * (i)) :: Ptr DisplayModePropertiesKHR)))
@@ -1050,7 +1079,10 @@ createDisplayModeKHR :: forall io
                         -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
                         ("allocator" ::: Maybe AllocationCallbacks)
                      -> io (DisplayModeKHR)
-createDisplayModeKHR physicalDevice display createInfo allocator = liftIO . evalContT $ do
+createDisplayModeKHR physicalDevice
+                       display
+                       createInfo
+                       allocator = liftIO . evalContT $ do
   let vkCreateDisplayModeKHRPtr = pVkCreateDisplayModeKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateDisplayModeKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDisplayModeKHR is null" Nothing Nothing
@@ -1060,7 +1092,12 @@ createDisplayModeKHR physicalDevice display createInfo allocator = liftIO . eval
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPMode <- ContT $ bracket (callocBytes @DisplayModeKHR 8) free
-  r <- lift $ traceAroundEvent "vkCreateDisplayModeKHR" (vkCreateDisplayModeKHR' (physicalDeviceHandle (physicalDevice)) (display) pCreateInfo pAllocator (pPMode))
+  r <- lift $ traceAroundEvent "vkCreateDisplayModeKHR" (vkCreateDisplayModeKHR'
+                                                           (physicalDeviceHandle (physicalDevice))
+                                                           (display)
+                                                           pCreateInfo
+                                                           pAllocator
+                                                           (pPMode))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pMode <- lift $ peek @DisplayModeKHR pPMode
   pure $ (pMode)
@@ -1124,13 +1161,19 @@ getDisplayPlaneCapabilitiesKHR :: forall io
                                   -- device.
                                   ("planeIndex" ::: Word32)
                                -> io (DisplayPlaneCapabilitiesKHR)
-getDisplayPlaneCapabilitiesKHR physicalDevice mode planeIndex = liftIO . evalContT $ do
+getDisplayPlaneCapabilitiesKHR physicalDevice
+                                 mode
+                                 planeIndex = liftIO . evalContT $ do
   let vkGetDisplayPlaneCapabilitiesKHRPtr = pVkGetDisplayPlaneCapabilitiesKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetDisplayPlaneCapabilitiesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDisplayPlaneCapabilitiesKHR is null" Nothing Nothing
   let vkGetDisplayPlaneCapabilitiesKHR' = mkVkGetDisplayPlaneCapabilitiesKHR vkGetDisplayPlaneCapabilitiesKHRPtr
   pPCapabilities <- ContT (withZeroCStruct @DisplayPlaneCapabilitiesKHR)
-  r <- lift $ traceAroundEvent "vkGetDisplayPlaneCapabilitiesKHR" (vkGetDisplayPlaneCapabilitiesKHR' (physicalDeviceHandle (physicalDevice)) (mode) (planeIndex) (pPCapabilities))
+  r <- lift $ traceAroundEvent "vkGetDisplayPlaneCapabilitiesKHR" (vkGetDisplayPlaneCapabilitiesKHR'
+                                                                     (physicalDeviceHandle (physicalDevice))
+                                                                     (mode)
+                                                                     (planeIndex)
+                                                                     (pPCapabilities))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pCapabilities <- lift $ peekCStruct @DisplayPlaneCapabilitiesKHR pPCapabilities
   pure $ (pCapabilities)
@@ -1197,7 +1240,9 @@ createDisplayPlaneSurfaceKHR :: forall io
                                 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
                                 ("allocator" ::: Maybe AllocationCallbacks)
                              -> io (SurfaceKHR)
-createDisplayPlaneSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
+createDisplayPlaneSurfaceKHR instance'
+                               createInfo
+                               allocator = liftIO . evalContT $ do
   let vkCreateDisplayPlaneSurfaceKHRPtr = pVkCreateDisplayPlaneSurfaceKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateDisplayPlaneSurfaceKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDisplayPlaneSurfaceKHR is null" Nothing Nothing
@@ -1207,7 +1252,11 @@ createDisplayPlaneSurfaceKHR instance' createInfo allocator = liftIO . evalContT
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSurface <- ContT $ bracket (callocBytes @SurfaceKHR 8) free
-  r <- lift $ traceAroundEvent "vkCreateDisplayPlaneSurfaceKHR" (vkCreateDisplayPlaneSurfaceKHR' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface))
+  r <- lift $ traceAroundEvent "vkCreateDisplayPlaneSurfaceKHR" (vkCreateDisplayPlaneSurfaceKHR'
+                                                                   (instanceHandle (instance'))
+                                                                   pCreateInfo
+                                                                   pAllocator
+                                                                   (pPSurface))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurface <- lift $ peek @SurfaceKHR pPSurface
   pure $ (pSurface)
@@ -1309,7 +1358,13 @@ instance FromCStruct DisplayPropertiesKHR where
     planeReorderPossible <- peek @Bool32 ((p `plusPtr` 36 :: Ptr Bool32))
     persistentContent <- peek @Bool32 ((p `plusPtr` 40 :: Ptr Bool32))
     pure $ DisplayPropertiesKHR
-             display displayName physicalDimensions physicalResolution supportedTransforms (bool32ToBool planeReorderPossible) (bool32ToBool persistentContent)
+             display
+             displayName
+             physicalDimensions
+             physicalResolution
+             supportedTransforms
+             (bool32ToBool planeReorderPossible)
+             (bool32ToBool persistentContent)
 
 instance Zero DisplayPropertiesKHR where
   zero = DisplayPropertiesKHR
@@ -1693,7 +1748,15 @@ instance FromCStruct DisplayPlaneCapabilitiesKHR where
     minDstExtent <- peekCStruct @Extent2D ((p `plusPtr` 52 :: Ptr Extent2D))
     maxDstExtent <- peekCStruct @Extent2D ((p `plusPtr` 60 :: Ptr Extent2D))
     pure $ DisplayPlaneCapabilitiesKHR
-             supportedAlpha minSrcPosition maxSrcPosition minSrcExtent maxSrcExtent minDstPosition maxDstPosition minDstExtent maxDstExtent
+             supportedAlpha
+             minSrcPosition
+             maxSrcPosition
+             minSrcExtent
+             maxSrcExtent
+             minDstPosition
+             maxDstPosition
+             minDstExtent
+             maxDstExtent
 
 instance Storable DisplayPlaneCapabilitiesKHR where
   sizeOf ~_ = 68
@@ -1865,7 +1928,14 @@ instance FromCStruct DisplaySurfaceCreateInfoKHR where
     alphaMode <- peek @DisplayPlaneAlphaFlagBitsKHR ((p `plusPtr` 48 :: Ptr DisplayPlaneAlphaFlagBitsKHR))
     imageExtent <- peekCStruct @Extent2D ((p `plusPtr` 52 :: Ptr Extent2D))
     pure $ DisplaySurfaceCreateInfoKHR
-             flags displayMode planeIndex planeStackIndex transform (coerce @CFloat @Float globalAlpha) alphaMode imageExtent
+             flags
+             displayMode
+             planeIndex
+             planeStackIndex
+             transform
+             (coerce @CFloat @Float globalAlpha)
+             alphaMode
+             imageExtent
 
 instance Storable DisplaySurfaceCreateInfoKHR where
   sizeOf ~_ = 64
@@ -1899,8 +1969,6 @@ instance Zero DisplaySurfaceCreateInfoKHR where
 newtype DisplayModeCreateFlagsKHR = DisplayModeCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameDisplayModeCreateFlagsKHR :: String
 conNameDisplayModeCreateFlagsKHR = "DisplayModeCreateFlagsKHR"
 
@@ -1911,18 +1979,21 @@ showTableDisplayModeCreateFlagsKHR :: [(DisplayModeCreateFlagsKHR, String)]
 showTableDisplayModeCreateFlagsKHR = []
 
 instance Show DisplayModeCreateFlagsKHR where
-  showsPrec = enumShowsPrec enumPrefixDisplayModeCreateFlagsKHR
-                            showTableDisplayModeCreateFlagsKHR
-                            conNameDisplayModeCreateFlagsKHR
-                            (\(DisplayModeCreateFlagsKHR x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDisplayModeCreateFlagsKHR
+      showTableDisplayModeCreateFlagsKHR
+      conNameDisplayModeCreateFlagsKHR
+      (\(DisplayModeCreateFlagsKHR x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read DisplayModeCreateFlagsKHR where
-  readPrec = enumReadPrec enumPrefixDisplayModeCreateFlagsKHR
-                          showTableDisplayModeCreateFlagsKHR
-                          conNameDisplayModeCreateFlagsKHR
-                          DisplayModeCreateFlagsKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDisplayModeCreateFlagsKHR
+      showTableDisplayModeCreateFlagsKHR
+      conNameDisplayModeCreateFlagsKHR
+      DisplayModeCreateFlagsKHR
 
 -- | VkDisplaySurfaceCreateFlagsKHR - Reserved for future use
 --
@@ -1938,8 +2009,6 @@ instance Read DisplayModeCreateFlagsKHR where
 newtype DisplaySurfaceCreateFlagsKHR = DisplaySurfaceCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameDisplaySurfaceCreateFlagsKHR :: String
 conNameDisplaySurfaceCreateFlagsKHR = "DisplaySurfaceCreateFlagsKHR"
 
@@ -1950,18 +2019,21 @@ showTableDisplaySurfaceCreateFlagsKHR :: [(DisplaySurfaceCreateFlagsKHR, String)
 showTableDisplaySurfaceCreateFlagsKHR = []
 
 instance Show DisplaySurfaceCreateFlagsKHR where
-  showsPrec = enumShowsPrec enumPrefixDisplaySurfaceCreateFlagsKHR
-                            showTableDisplaySurfaceCreateFlagsKHR
-                            conNameDisplaySurfaceCreateFlagsKHR
-                            (\(DisplaySurfaceCreateFlagsKHR x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDisplaySurfaceCreateFlagsKHR
+      showTableDisplaySurfaceCreateFlagsKHR
+      conNameDisplaySurfaceCreateFlagsKHR
+      (\(DisplaySurfaceCreateFlagsKHR x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read DisplaySurfaceCreateFlagsKHR where
-  readPrec = enumReadPrec enumPrefixDisplaySurfaceCreateFlagsKHR
-                          showTableDisplaySurfaceCreateFlagsKHR
-                          conNameDisplaySurfaceCreateFlagsKHR
-                          DisplaySurfaceCreateFlagsKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDisplaySurfaceCreateFlagsKHR
+      showTableDisplaySurfaceCreateFlagsKHR
+      conNameDisplaySurfaceCreateFlagsKHR
+      DisplaySurfaceCreateFlagsKHR
 
 type DisplayPlaneAlphaFlagsKHR = DisplayPlaneAlphaFlagBitsKHR
 
@@ -1976,17 +2048,20 @@ newtype DisplayPlaneAlphaFlagBitsKHR = DisplayPlaneAlphaFlagBitsKHR Flags
 
 -- | 'DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR' specifies that the source image
 -- will be treated as opaque.
-pattern DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR                  = DisplayPlaneAlphaFlagBitsKHR 0x00000001
+pattern DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR = DisplayPlaneAlphaFlagBitsKHR 0x00000001
+
 -- | 'DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR' specifies that a global alpha value
 -- /must/ be specified that will be applied to all pixels in the source
 -- image.
-pattern DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR                  = DisplayPlaneAlphaFlagBitsKHR 0x00000002
+pattern DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR = DisplayPlaneAlphaFlagBitsKHR 0x00000002
+
 -- | 'DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR' specifies that the alpha value
 -- will be determined by the alpha component of the source image’s pixels.
 -- If the source format contains no alpha values, no blending will be
 -- applied. The source alpha values are not premultiplied into the source
 -- image’s other color components.
-pattern DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR               = DisplayPlaneAlphaFlagBitsKHR 0x00000004
+pattern DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = DisplayPlaneAlphaFlagBitsKHR 0x00000004
+
 -- | 'DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR' is equivalent to
 -- 'DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR', except the source alpha values
 -- are assumed to be premultiplied into the source image’s other color
@@ -2001,25 +2076,40 @@ enumPrefixDisplayPlaneAlphaFlagBitsKHR = "DISPLAY_PLANE_ALPHA_"
 
 showTableDisplayPlaneAlphaFlagBitsKHR :: [(DisplayPlaneAlphaFlagBitsKHR, String)]
 showTableDisplayPlaneAlphaFlagBitsKHR =
-  [ (DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR                 , "OPAQUE_BIT_KHR")
-  , (DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR                 , "GLOBAL_BIT_KHR")
-  , (DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR              , "PER_PIXEL_BIT_KHR")
-  , (DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR, "PER_PIXEL_PREMULTIPLIED_BIT_KHR")
+  [
+    ( DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR
+    , "OPAQUE_BIT_KHR"
+    )
+  ,
+    ( DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR
+    , "GLOBAL_BIT_KHR"
+    )
+  ,
+    ( DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR
+    , "PER_PIXEL_BIT_KHR"
+    )
+  ,
+    ( DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR
+    , "PER_PIXEL_PREMULTIPLIED_BIT_KHR"
+    )
   ]
 
 instance Show DisplayPlaneAlphaFlagBitsKHR where
-  showsPrec = enumShowsPrec enumPrefixDisplayPlaneAlphaFlagBitsKHR
-                            showTableDisplayPlaneAlphaFlagBitsKHR
-                            conNameDisplayPlaneAlphaFlagBitsKHR
-                            (\(DisplayPlaneAlphaFlagBitsKHR x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDisplayPlaneAlphaFlagBitsKHR
+      showTableDisplayPlaneAlphaFlagBitsKHR
+      conNameDisplayPlaneAlphaFlagBitsKHR
+      (\(DisplayPlaneAlphaFlagBitsKHR x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read DisplayPlaneAlphaFlagBitsKHR where
-  readPrec = enumReadPrec enumPrefixDisplayPlaneAlphaFlagBitsKHR
-                          showTableDisplayPlaneAlphaFlagBitsKHR
-                          conNameDisplayPlaneAlphaFlagBitsKHR
-                          DisplayPlaneAlphaFlagBitsKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDisplayPlaneAlphaFlagBitsKHR
+      showTableDisplayPlaneAlphaFlagBitsKHR
+      conNameDisplayPlaneAlphaFlagBitsKHR
+      DisplayPlaneAlphaFlagBitsKHR
 
 type KHR_DISPLAY_SPEC_VERSION = 23
 

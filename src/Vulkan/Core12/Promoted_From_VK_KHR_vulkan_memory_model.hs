@@ -106,7 +106,9 @@ instance FromCStruct PhysicalDeviceVulkanMemoryModelFeatures where
     vulkanMemoryModelDeviceScope <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     vulkanMemoryModelAvailabilityVisibilityChains <- peek @Bool32 ((p `plusPtr` 24 :: Ptr Bool32))
     pure $ PhysicalDeviceVulkanMemoryModelFeatures
-             (bool32ToBool vulkanMemoryModel) (bool32ToBool vulkanMemoryModelDeviceScope) (bool32ToBool vulkanMemoryModelAvailabilityVisibilityChains)
+             (bool32ToBool vulkanMemoryModel)
+             (bool32ToBool vulkanMemoryModelDeviceScope)
+             (bool32ToBool vulkanMemoryModelAvailabilityVisibilityChains)
 
 instance Storable PhysicalDeviceVulkanMemoryModelFeatures where
   sizeOf ~_ = 32

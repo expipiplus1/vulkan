@@ -368,7 +368,9 @@ instance FromCStruct PhysicalDeviceImageProcessingFeaturesQCOM where
     textureBoxFilter <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     textureBlockMatch <- peek @Bool32 ((p `plusPtr` 24 :: Ptr Bool32))
     pure $ PhysicalDeviceImageProcessingFeaturesQCOM
-             (bool32ToBool textureSampleWeighted) (bool32ToBool textureBoxFilter) (bool32ToBool textureBlockMatch)
+             (bool32ToBool textureSampleWeighted)
+             (bool32ToBool textureBoxFilter)
+             (bool32ToBool textureBlockMatch)
 
 instance Storable PhysicalDeviceImageProcessingFeaturesQCOM where
   sizeOf ~_ = 32
@@ -478,7 +480,10 @@ instance FromCStruct PhysicalDeviceImageProcessingPropertiesQCOM where
     maxBlockMatchRegion <- peekCStruct @Extent2D ((p `plusPtr` 28 :: Ptr Extent2D))
     maxBoxFilterBlockSize <- peekCStruct @Extent2D ((p `plusPtr` 36 :: Ptr Extent2D))
     pure $ PhysicalDeviceImageProcessingPropertiesQCOM
-             maxWeightFilterPhases maxWeightFilterDimension maxBlockMatchRegion maxBoxFilterBlockSize
+             maxWeightFilterPhases
+             maxWeightFilterDimension
+             maxBlockMatchRegion
+             maxBoxFilterBlockSize
 
 instance Storable PhysicalDeviceImageProcessingPropertiesQCOM where
   sizeOf ~_ = 48

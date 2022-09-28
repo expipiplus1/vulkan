@@ -33,14 +33,20 @@ newtype Filter = Filter Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- | 'FILTER_NEAREST' specifies nearest filtering.
-pattern FILTER_NEAREST   = Filter 0
+pattern FILTER_NEAREST = Filter 0
+
 -- | 'FILTER_LINEAR' specifies linear filtering.
-pattern FILTER_LINEAR    = Filter 1
+pattern FILTER_LINEAR = Filter 1
+
 -- | 'FILTER_CUBIC_EXT' specifies cubic filtering.
 pattern FILTER_CUBIC_EXT = Filter 1000015000
-{-# complete FILTER_NEAREST,
-             FILTER_LINEAR,
-             FILTER_CUBIC_EXT :: Filter #-}
+
+{-# COMPLETE
+  FILTER_NEAREST
+  , FILTER_LINEAR
+  , FILTER_CUBIC_EXT ::
+    Filter
+  #-}
 
 conNameFilter :: String
 conNameFilter = "Filter"
@@ -49,11 +55,25 @@ enumPrefixFilter :: String
 enumPrefixFilter = "FILTER_"
 
 showTableFilter :: [(Filter, String)]
-showTableFilter = [(FILTER_NEAREST, "NEAREST"), (FILTER_LINEAR, "LINEAR"), (FILTER_CUBIC_EXT, "CUBIC_EXT")]
+showTableFilter =
+  [ (FILTER_NEAREST, "NEAREST")
+  , (FILTER_LINEAR, "LINEAR")
+  , (FILTER_CUBIC_EXT, "CUBIC_EXT")
+  ]
 
 instance Show Filter where
-  showsPrec = enumShowsPrec enumPrefixFilter showTableFilter conNameFilter (\(Filter x) -> x) (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixFilter
+      showTableFilter
+      conNameFilter
+      (\(Filter x) -> x)
+      (showsPrec 11)
 
 instance Read Filter where
-  readPrec = enumReadPrec enumPrefixFilter showTableFilter conNameFilter Filter
-
+  readPrec =
+    enumReadPrec
+      enumPrefixFilter
+      showTableFilter
+      conNameFilter
+      Filter

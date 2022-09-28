@@ -729,7 +729,9 @@ cmdTraceRaysIndirect2KHR commandBuffer indirectDeviceAddress = liftIO $ do
   unless (vkCmdTraceRaysIndirect2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdTraceRaysIndirect2KHR is null" Nothing Nothing
   let vkCmdTraceRaysIndirect2KHR' = mkVkCmdTraceRaysIndirect2KHR vkCmdTraceRaysIndirect2KHRPtr
-  traceAroundEvent "vkCmdTraceRaysIndirect2KHR" (vkCmdTraceRaysIndirect2KHR' (commandBufferHandle (commandBuffer)) (indirectDeviceAddress))
+  traceAroundEvent "vkCmdTraceRaysIndirect2KHR" (vkCmdTraceRaysIndirect2KHR'
+                                                   (commandBufferHandle (commandBuffer))
+                                                   (indirectDeviceAddress))
   pure $ ()
 
 
@@ -1031,7 +1033,20 @@ instance FromCStruct TraceRaysIndirectCommand2KHR where
     height <- peek @Word32 ((p `plusPtr` 92 :: Ptr Word32))
     depth <- peek @Word32 ((p `plusPtr` 96 :: Ptr Word32))
     pure $ TraceRaysIndirectCommand2KHR
-             raygenShaderRecordAddress raygenShaderRecordSize missShaderBindingTableAddress missShaderBindingTableSize missShaderBindingTableStride hitShaderBindingTableAddress hitShaderBindingTableSize hitShaderBindingTableStride callableShaderBindingTableAddress callableShaderBindingTableSize callableShaderBindingTableStride width height depth
+             raygenShaderRecordAddress
+             raygenShaderRecordSize
+             missShaderBindingTableAddress
+             missShaderBindingTableSize
+             missShaderBindingTableStride
+             hitShaderBindingTableAddress
+             hitShaderBindingTableSize
+             hitShaderBindingTableStride
+             callableShaderBindingTableAddress
+             callableShaderBindingTableSize
+             callableShaderBindingTableStride
+             width
+             height
+             depth
 
 instance Storable TraceRaysIndirectCommand2KHR where
   sizeOf ~_ = 104
@@ -1136,7 +1151,8 @@ instance FromCStruct PhysicalDeviceRayTracingMaintenance1FeaturesKHR where
     rayTracingMaintenance1 <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     rayTracingPipelineTraceRaysIndirect2 <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ PhysicalDeviceRayTracingMaintenance1FeaturesKHR
-             (bool32ToBool rayTracingMaintenance1) (bool32ToBool rayTracingPipelineTraceRaysIndirect2)
+             (bool32ToBool rayTracingMaintenance1)
+             (bool32ToBool rayTracingPipelineTraceRaysIndirect2)
 
 instance Storable PhysicalDeviceRayTracingMaintenance1FeaturesKHR where
   sizeOf ~_ = 24

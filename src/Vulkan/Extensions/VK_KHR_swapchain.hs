@@ -1445,7 +1445,9 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'SwapchainCreateInfoKHR',
 -- 'Vulkan.Extensions.Handles.SwapchainKHR'
 createSwapchainKHR :: forall a io
-                    . (Extendss SwapchainCreateInfoKHR a, PokeChain a, MonadIO io)
+                    . ( Extendss SwapchainCreateInfoKHR a
+                      , PokeChain a
+                      , MonadIO io )
                    => -- | @device@ is the device to create the swapchain for.
                       Device
                    -> -- | @pCreateInfo@ is a pointer to a 'SwapchainCreateInfoKHR' structure
@@ -1466,7 +1468,11 @@ createSwapchainKHR device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSwapchain <- ContT $ bracket (callocBytes @SwapchainKHR 8) free
-  r <- lift $ traceAroundEvent "vkCreateSwapchainKHR" (vkCreateSwapchainKHR' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPSwapchain))
+  r <- lift $ traceAroundEvent "vkCreateSwapchainKHR" (vkCreateSwapchainKHR'
+                                                         (deviceHandle (device))
+                                                         (forgetExtensions pCreateInfo)
+                                                         pAllocator
+                                                         (pPSwapchain))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSwapchain <- lift $ peek @SwapchainKHR pPSwapchain
   pure $ (pSwapchain)
@@ -1581,7 +1587,10 @@ destroySwapchainKHR device swapchain allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroySwapchainKHR" (vkDestroySwapchainKHR' (deviceHandle (device)) (swapchain) pAllocator)
+  lift $ traceAroundEvent "vkDestroySwapchainKHR" (vkDestroySwapchainKHR'
+                                                     (deviceHandle (device))
+                                                     (swapchain)
+                                                     pAllocator)
   pure $ ()
 
 
@@ -1664,11 +1673,19 @@ getSwapchainImagesKHR device swapchain = liftIO . evalContT $ do
   let vkGetSwapchainImagesKHR' = mkVkGetSwapchainImagesKHR vkGetSwapchainImagesKHRPtr
   let device' = deviceHandle (device)
   pPSwapchainImageCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "vkGetSwapchainImagesKHR" (vkGetSwapchainImagesKHR' device' (swapchain) (pPSwapchainImageCount) (nullPtr))
+  r <- lift $ traceAroundEvent "vkGetSwapchainImagesKHR" (vkGetSwapchainImagesKHR'
+                                                            device'
+                                                            (swapchain)
+                                                            (pPSwapchainImageCount)
+                                                            (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSwapchainImageCount <- lift $ peek @Word32 pPSwapchainImageCount
   pPSwapchainImages <- ContT $ bracket (callocBytes @Image ((fromIntegral (pSwapchainImageCount)) * 8)) free
-  r' <- lift $ traceAroundEvent "vkGetSwapchainImagesKHR" (vkGetSwapchainImagesKHR' device' (swapchain) (pPSwapchainImageCount) (pPSwapchainImages))
+  r' <- lift $ traceAroundEvent "vkGetSwapchainImagesKHR" (vkGetSwapchainImagesKHR'
+                                                             device'
+                                                             (swapchain)
+                                                             (pPSwapchainImageCount)
+                                                             (pPSwapchainImages))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pSwapchainImageCount' <- lift $ peek @Word32 pPSwapchainImageCount
   pSwapchainImages' <- lift $ generateM (fromIntegral (pSwapchainImageCount')) (\i -> peek @Image ((pPSwapchainImages `advancePtrBytes` (8 * (i)) :: Ptr Image)))
@@ -1705,13 +1722,23 @@ acquireNextImageKHRSafeOrUnsafe :: forall io
                                    -- signal.
                                    Fence
                                 -> io (Result, ("imageIndex" ::: Word32))
-acquireNextImageKHRSafeOrUnsafe mkVkAcquireNextImageKHR device swapchain timeout semaphore fence = liftIO . evalContT $ do
+acquireNextImageKHRSafeOrUnsafe mkVkAcquireNextImageKHR device
+                                                          swapchain
+                                                          timeout
+                                                          semaphore
+                                                          fence = liftIO . evalContT $ do
   let vkAcquireNextImageKHRPtr = pVkAcquireNextImageKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkAcquireNextImageKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireNextImageKHR is null" Nothing Nothing
   let vkAcquireNextImageKHR' = mkVkAcquireNextImageKHR vkAcquireNextImageKHRPtr
   pPImageIndex <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "vkAcquireNextImageKHR" (vkAcquireNextImageKHR' (deviceHandle (device)) (swapchain) (timeout) (semaphore) (fence) (pPImageIndex))
+  r <- lift $ traceAroundEvent "vkAcquireNextImageKHR" (vkAcquireNextImageKHR'
+                                                          (deviceHandle (device))
+                                                          (swapchain)
+                                                          (timeout)
+                                                          (semaphore)
+                                                          (fence)
+                                                          (pPImageIndex))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pImageIndex <- lift $ peek @Word32 pPImageIndex
   pure $ (r, pImageIndex)
@@ -2039,7 +2066,9 @@ queuePresentKHR queue presentInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueuePresentKHR is null" Nothing Nothing
   let vkQueuePresentKHR' = mkVkQueuePresentKHR vkQueuePresentKHRPtr
   pPresentInfo <- ContT $ withCStruct (presentInfo)
-  r <- lift $ traceAroundEvent "vkQueuePresentKHR" (vkQueuePresentKHR' (queueHandle (queue)) (forgetExtensions pPresentInfo))
+  r <- lift $ traceAroundEvent "vkQueuePresentKHR" (vkQueuePresentKHR'
+                                                      (queueHandle (queue))
+                                                      (forgetExtensions pPresentInfo))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 
@@ -2087,7 +2116,9 @@ getDeviceGroupPresentCapabilitiesKHR device = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceGroupPresentCapabilitiesKHR is null" Nothing Nothing
   let vkGetDeviceGroupPresentCapabilitiesKHR' = mkVkGetDeviceGroupPresentCapabilitiesKHR vkGetDeviceGroupPresentCapabilitiesKHRPtr
   pPDeviceGroupPresentCapabilities <- ContT (withZeroCStruct @DeviceGroupPresentCapabilitiesKHR)
-  r <- lift $ traceAroundEvent "vkGetDeviceGroupPresentCapabilitiesKHR" (vkGetDeviceGroupPresentCapabilitiesKHR' (deviceHandle (device)) (pPDeviceGroupPresentCapabilities))
+  r <- lift $ traceAroundEvent "vkGetDeviceGroupPresentCapabilitiesKHR" (vkGetDeviceGroupPresentCapabilitiesKHR'
+                                                                           (deviceHandle (device))
+                                                                           (pPDeviceGroupPresentCapabilities))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pDeviceGroupPresentCapabilities <- lift $ peekCStruct @DeviceGroupPresentCapabilitiesKHR pPDeviceGroupPresentCapabilities
   pure $ (pDeviceGroupPresentCapabilities)
@@ -2174,7 +2205,10 @@ getDeviceGroupSurfacePresentModesKHR device surface = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceGroupSurfacePresentModesKHR is null" Nothing Nothing
   let vkGetDeviceGroupSurfacePresentModesKHR' = mkVkGetDeviceGroupSurfacePresentModesKHR vkGetDeviceGroupSurfacePresentModesKHRPtr
   pPModes <- ContT $ bracket (callocBytes @DeviceGroupPresentModeFlagsKHR 4) free
-  r <- lift $ traceAroundEvent "vkGetDeviceGroupSurfacePresentModesKHR" (vkGetDeviceGroupSurfacePresentModesKHR' (deviceHandle (device)) (surface) (pPModes))
+  r <- lift $ traceAroundEvent "vkGetDeviceGroupSurfacePresentModesKHR" (vkGetDeviceGroupSurfacePresentModesKHR'
+                                                                           (deviceHandle (device))
+                                                                           (surface)
+                                                                           (pPModes))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pModes <- lift $ peek @DeviceGroupPresentModeFlagsKHR pPModes
   pure $ (pModes)
@@ -2201,14 +2235,18 @@ acquireNextImage2KHRSafeOrUnsafe :: forall io
                                     -- containing parameters of the acquire.
                                     ("acquireInfo" ::: AcquireNextImageInfoKHR)
                                  -> io (Result, ("imageIndex" ::: Word32))
-acquireNextImage2KHRSafeOrUnsafe mkVkAcquireNextImage2KHR device acquireInfo = liftIO . evalContT $ do
+acquireNextImage2KHRSafeOrUnsafe mkVkAcquireNextImage2KHR device
+                                                            acquireInfo = liftIO . evalContT $ do
   let vkAcquireNextImage2KHRPtr = pVkAcquireNextImage2KHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkAcquireNextImage2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireNextImage2KHR is null" Nothing Nothing
   let vkAcquireNextImage2KHR' = mkVkAcquireNextImage2KHR vkAcquireNextImage2KHRPtr
   pAcquireInfo <- ContT $ withCStruct (acquireInfo)
   pPImageIndex <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "vkAcquireNextImage2KHR" (vkAcquireNextImage2KHR' (deviceHandle (device)) pAcquireInfo (pPImageIndex))
+  r <- lift $ traceAroundEvent "vkAcquireNextImage2KHR" (vkAcquireNextImage2KHR'
+                                                           (deviceHandle (device))
+                                                           pAcquireInfo
+                                                           (pPImageIndex))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pImageIndex <- lift $ peek @Word32 pPImageIndex
   pure $ (r, pImageIndex)
@@ -2389,19 +2427,28 @@ getPhysicalDevicePresentRectanglesKHR :: forall io
                                       -> -- | @surface@ is the surface.
                                          SurfaceKHR
                                       -> io (Result, ("rects" ::: Vector Rect2D))
-getPhysicalDevicePresentRectanglesKHR physicalDevice surface = liftIO . evalContT $ do
+getPhysicalDevicePresentRectanglesKHR physicalDevice
+                                        surface = liftIO . evalContT $ do
   let vkGetPhysicalDevicePresentRectanglesKHRPtr = pVkGetPhysicalDevicePresentRectanglesKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDevicePresentRectanglesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDevicePresentRectanglesKHR is null" Nothing Nothing
   let vkGetPhysicalDevicePresentRectanglesKHR' = mkVkGetPhysicalDevicePresentRectanglesKHR vkGetPhysicalDevicePresentRectanglesKHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPRectCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "vkGetPhysicalDevicePresentRectanglesKHR" (vkGetPhysicalDevicePresentRectanglesKHR' physicalDevice' (surface) (pPRectCount) (nullPtr))
+  r <- lift $ traceAroundEvent "vkGetPhysicalDevicePresentRectanglesKHR" (vkGetPhysicalDevicePresentRectanglesKHR'
+                                                                            physicalDevice'
+                                                                            (surface)
+                                                                            (pPRectCount)
+                                                                            (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pRectCount <- lift $ peek @Word32 pPRectCount
   pPRects <- ContT $ bracket (callocBytes @Rect2D ((fromIntegral (pRectCount)) * 16)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPRects `advancePtrBytes` (i * 16) :: Ptr Rect2D) . ($ ())) [0..(fromIntegral (pRectCount)) - 1]
-  r' <- lift $ traceAroundEvent "vkGetPhysicalDevicePresentRectanglesKHR" (vkGetPhysicalDevicePresentRectanglesKHR' physicalDevice' (surface) (pPRectCount) ((pPRects)))
+  r' <- lift $ traceAroundEvent "vkGetPhysicalDevicePresentRectanglesKHR" (vkGetPhysicalDevicePresentRectanglesKHR'
+                                                                             physicalDevice'
+                                                                             (surface)
+                                                                             (pPRectCount)
+                                                                             ((pPRects)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pRectCount' <- lift $ peek @Word32 pPRectCount
   pRects' <- lift $ generateM (fromIntegral (pRectCount')) (\i -> peekCStruct @Rect2D (((pPRects) `advancePtrBytes` (16 * (i)) :: Ptr Rect2D)))
@@ -2749,9 +2796,10 @@ data SwapchainCreateInfoKHR (es :: [Type]) = SwapchainCreateInfoKHR
     --
     -- Note
     --
-    -- On some platforms, it is normal that @maxImageExtent@ /may/ become @(0,
-    -- 0)@, for example when the window is minimized. In such a case, it is not
-    -- possible to create a swapchain due to the Valid Usage requirements.
+    -- On some platforms, it is normal that @maxImageExtent@ /may/ become
+    -- @(0, 0)@, for example when the window is minimized. In such a case, it
+    -- is not possible to create a swapchain due to the Valid Usage
+    -- requirements.
     imageExtent :: Extent2D
   , -- | @imageArrayLayers@ is the number of views in a multiview\/stereo
     -- surface. For non-stereoscopic-3D applications, this value is 1.
@@ -2841,7 +2889,8 @@ instance Extensible SwapchainCreateInfoKHR where
     | Just Refl <- eqT @e @SwapchainCounterCreateInfoEXT = Just f
     | otherwise = Nothing
 
-instance (Extendss SwapchainCreateInfoKHR es, PokeChain es) => ToCStruct (SwapchainCreateInfoKHR es) where
+instance ( Extendss SwapchainCreateInfoKHR es
+         , PokeChain es ) => ToCStruct (SwapchainCreateInfoKHR es) where
   withCStruct x f = allocaBytes 104 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainCreateInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR)
@@ -2886,7 +2935,8 @@ instance (Extendss SwapchainCreateInfoKHR es, PokeChain es) => ToCStruct (Swapch
     lift $ poke ((p `plusPtr` 92 :: Ptr Bool32)) (boolToBool32 (zero))
     lift $ f
 
-instance (Extendss SwapchainCreateInfoKHR es, PeekChain es) => FromCStruct (SwapchainCreateInfoKHR es) where
+instance ( Extendss SwapchainCreateInfoKHR es
+         , PeekChain es ) => FromCStruct (SwapchainCreateInfoKHR es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -2908,7 +2958,22 @@ instance (Extendss SwapchainCreateInfoKHR es, PeekChain es) => FromCStruct (Swap
     clipped <- peek @Bool32 ((p `plusPtr` 92 :: Ptr Bool32))
     oldSwapchain <- peek @SwapchainKHR ((p `plusPtr` 96 :: Ptr SwapchainKHR))
     pure $ SwapchainCreateInfoKHR
-             next flags surface minImageCount imageFormat imageColorSpace imageExtent imageArrayLayers imageUsage imageSharingMode pQueueFamilyIndices' preTransform compositeAlpha presentMode (bool32ToBool clipped) oldSwapchain
+             next
+             flags
+             surface
+             minImageCount
+             imageFormat
+             imageColorSpace
+             imageExtent
+             imageArrayLayers
+             imageUsage
+             imageSharingMode
+             pQueueFamilyIndices'
+             preTransform
+             compositeAlpha
+             presentMode
+             (bool32ToBool clipped)
+             oldSwapchain
 
 instance es ~ '[] => Zero (SwapchainCreateInfoKHR es) where
   zero = SwapchainCreateInfoKHR
@@ -3069,7 +3134,8 @@ instance Extensible PresentInfoKHR where
     | Just Refl <- eqT @e @DisplayPresentInfoKHR = Just f
     | otherwise = Nothing
 
-instance (Extendss PresentInfoKHR es, PokeChain es) => ToCStruct (PresentInfoKHR es) where
+instance ( Extendss PresentInfoKHR es
+         , PokeChain es ) => ToCStruct (PresentInfoKHR es) where
   withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PresentInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PRESENT_INFO_KHR)
@@ -3099,7 +3165,8 @@ instance (Extendss PresentInfoKHR es, PokeChain es) => ToCStruct (PresentInfoKHR
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ f
 
-instance (Extendss PresentInfoKHR es, PeekChain es) => FromCStruct (PresentInfoKHR es) where
+instance ( Extendss PresentInfoKHR es
+         , PeekChain es ) => FromCStruct (PresentInfoKHR es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -3745,15 +3812,18 @@ newtype DeviceGroupPresentModeFlagBitsKHR = DeviceGroupPresentModeFlagBitsKHR Fl
 -- | 'DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR' specifies that any physical
 -- device with a presentation engine /can/ present its own swapchain
 -- images.
-pattern DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR              = DeviceGroupPresentModeFlagBitsKHR 0x00000001
+pattern DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR = DeviceGroupPresentModeFlagBitsKHR 0x00000001
+
 -- | 'DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR' specifies that any physical
 -- device with a presentation engine /can/ present swapchain images from
 -- any physical device in its @presentMask@.
-pattern DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR             = DeviceGroupPresentModeFlagBitsKHR 0x00000002
+pattern DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR = DeviceGroupPresentModeFlagBitsKHR 0x00000002
+
 -- | 'DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR' specifies that any physical
 -- device with a presentation engine /can/ present the sum of swapchain
 -- images from any physical devices in its @presentMask@.
-pattern DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR                = DeviceGroupPresentModeFlagBitsKHR 0x00000004
+pattern DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR = DeviceGroupPresentModeFlagBitsKHR 0x00000004
+
 -- | 'DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR' specifies that
 -- multiple physical devices with a presentation engine /can/ each present
 -- their own swapchain images.
@@ -3767,25 +3837,40 @@ enumPrefixDeviceGroupPresentModeFlagBitsKHR = "DEVICE_GROUP_PRESENT_MODE_"
 
 showTableDeviceGroupPresentModeFlagBitsKHR :: [(DeviceGroupPresentModeFlagBitsKHR, String)]
 showTableDeviceGroupPresentModeFlagBitsKHR =
-  [ (DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR             , "LOCAL_BIT_KHR")
-  , (DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR            , "REMOTE_BIT_KHR")
-  , (DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR               , "SUM_BIT_KHR")
-  , (DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR, "LOCAL_MULTI_DEVICE_BIT_KHR")
+  [
+    ( DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR
+    , "LOCAL_BIT_KHR"
+    )
+  ,
+    ( DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR
+    , "REMOTE_BIT_KHR"
+    )
+  ,
+    ( DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR
+    , "SUM_BIT_KHR"
+    )
+  ,
+    ( DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR
+    , "LOCAL_MULTI_DEVICE_BIT_KHR"
+    )
   ]
 
 instance Show DeviceGroupPresentModeFlagBitsKHR where
-  showsPrec = enumShowsPrec enumPrefixDeviceGroupPresentModeFlagBitsKHR
-                            showTableDeviceGroupPresentModeFlagBitsKHR
-                            conNameDeviceGroupPresentModeFlagBitsKHR
-                            (\(DeviceGroupPresentModeFlagBitsKHR x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDeviceGroupPresentModeFlagBitsKHR
+      showTableDeviceGroupPresentModeFlagBitsKHR
+      conNameDeviceGroupPresentModeFlagBitsKHR
+      (\(DeviceGroupPresentModeFlagBitsKHR x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read DeviceGroupPresentModeFlagBitsKHR where
-  readPrec = enumReadPrec enumPrefixDeviceGroupPresentModeFlagBitsKHR
-                          showTableDeviceGroupPresentModeFlagBitsKHR
-                          conNameDeviceGroupPresentModeFlagBitsKHR
-                          DeviceGroupPresentModeFlagBitsKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDeviceGroupPresentModeFlagBitsKHR
+      showTableDeviceGroupPresentModeFlagBitsKHR
+      conNameDeviceGroupPresentModeFlagBitsKHR
+      DeviceGroupPresentModeFlagBitsKHR
 
 type SwapchainCreateFlagsKHR = SwapchainCreateFlagBitsKHR
 
@@ -3809,15 +3894,17 @@ newtype SwapchainCreateFlagBitsKHR = SwapchainCreateFlagBitsKHR Flags
 -- flags that are not supported for the format the swapchain is created
 -- with but are supported for at least one of the allowed image view
 -- formats.
-pattern SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR              = SwapchainCreateFlagBitsKHR 0x00000004
+pattern SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR = SwapchainCreateFlagBitsKHR 0x00000004
+
 -- | 'SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR' specifies that
 -- images created from the swapchain (i.e. with the @swapchain@ member of
 -- 'ImageSwapchainCreateInfoKHR' set to this swapchain’s handle) /must/ use
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT'.
 pattern SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR = SwapchainCreateFlagBitsKHR 0x00000001
+
 -- | 'SWAPCHAIN_CREATE_PROTECTED_BIT_KHR' specifies that images created from
 -- the swapchain are protected images.
-pattern SWAPCHAIN_CREATE_PROTECTED_BIT_KHR                   = SwapchainCreateFlagBitsKHR 0x00000002
+pattern SWAPCHAIN_CREATE_PROTECTED_BIT_KHR = SwapchainCreateFlagBitsKHR 0x00000002
 
 conNameSwapchainCreateFlagBitsKHR :: String
 conNameSwapchainCreateFlagBitsKHR = "SwapchainCreateFlagBitsKHR"
@@ -3827,24 +3914,36 @@ enumPrefixSwapchainCreateFlagBitsKHR = "SWAPCHAIN_CREATE_"
 
 showTableSwapchainCreateFlagBitsKHR :: [(SwapchainCreateFlagBitsKHR, String)]
 showTableSwapchainCreateFlagBitsKHR =
-  [ (SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR             , "MUTABLE_FORMAT_BIT_KHR")
-  , (SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR, "SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR")
-  , (SWAPCHAIN_CREATE_PROTECTED_BIT_KHR                  , "PROTECTED_BIT_KHR")
+  [
+    ( SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR
+    , "MUTABLE_FORMAT_BIT_KHR"
+    )
+  ,
+    ( SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR
+    , "SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR"
+    )
+  ,
+    ( SWAPCHAIN_CREATE_PROTECTED_BIT_KHR
+    , "PROTECTED_BIT_KHR"
+    )
   ]
 
 instance Show SwapchainCreateFlagBitsKHR where
-  showsPrec = enumShowsPrec enumPrefixSwapchainCreateFlagBitsKHR
-                            showTableSwapchainCreateFlagBitsKHR
-                            conNameSwapchainCreateFlagBitsKHR
-                            (\(SwapchainCreateFlagBitsKHR x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixSwapchainCreateFlagBitsKHR
+      showTableSwapchainCreateFlagBitsKHR
+      conNameSwapchainCreateFlagBitsKHR
+      (\(SwapchainCreateFlagBitsKHR x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read SwapchainCreateFlagBitsKHR where
-  readPrec = enumReadPrec enumPrefixSwapchainCreateFlagBitsKHR
-                          showTableSwapchainCreateFlagBitsKHR
-                          conNameSwapchainCreateFlagBitsKHR
-                          SwapchainCreateFlagBitsKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixSwapchainCreateFlagBitsKHR
+      showTableSwapchainCreateFlagBitsKHR
+      conNameSwapchainCreateFlagBitsKHR
+      SwapchainCreateFlagBitsKHR
 
 type KHR_SWAPCHAIN_SPEC_VERSION = 70
 

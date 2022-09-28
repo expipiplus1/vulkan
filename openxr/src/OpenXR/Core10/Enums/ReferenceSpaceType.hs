@@ -36,6 +36,7 @@ import GHC.Show (Show(showsPrec))
 -- 'OpenXR.Core10.Space.getReferenceSpaceBoundsRect'
 newtype ReferenceSpaceType = ReferenceSpaceType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
+
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
 -- | 'REFERENCE_SPACE_TYPE_VIEW'. The @VIEW@ space tracks the view origin
@@ -54,7 +55,8 @@ newtype ReferenceSpaceType = ReferenceSpaceType Int32
 -- instead of using this space.
 --
 -- Runtimes /must/ support this reference space.
-pattern REFERENCE_SPACE_TYPE_VIEW           = ReferenceSpaceType 1
+pattern REFERENCE_SPACE_TYPE_VIEW = ReferenceSpaceType 1
+
 -- | 'REFERENCE_SPACE_TYPE_LOCAL'. The @LOCAL@ reference space establishes a
 -- world-locked origin, gravity-aligned to exclude pitch and roll, with +Y
 -- up, +X to the right, and -Z forward. This space locks in both its
@@ -100,7 +102,8 @@ pattern REFERENCE_SPACE_TYPE_VIEW           = ReferenceSpaceType 1
 -- origin.
 --
 -- Runtimes /must/ support this reference space.
-pattern REFERENCE_SPACE_TYPE_LOCAL          = ReferenceSpaceType 2
+pattern REFERENCE_SPACE_TYPE_LOCAL = ReferenceSpaceType 2
+
 -- | 'REFERENCE_SPACE_TYPE_STAGE'. The @STAGE@ reference space is a
 -- runtime-defined flat, rectangular space that is empty and can be walked
 -- around on. The origin is on the floor at the center of the rectangle,
@@ -146,13 +149,18 @@ pattern REFERENCE_SPACE_TYPE_LOCAL          = ReferenceSpaceType 2
 -- When tracking is recovered, runtimes /should/ snap the pose of other
 -- spaces back into position relative to the @STAGE@ space’s original
 -- origin.
-pattern REFERENCE_SPACE_TYPE_STAGE          = ReferenceSpaceType 3
+pattern REFERENCE_SPACE_TYPE_STAGE = ReferenceSpaceType 3
+
 -- No documentation found for Nested "XrReferenceSpaceType" "XR_REFERENCE_SPACE_TYPE_UNBOUNDED_MSFT"
 pattern REFERENCE_SPACE_TYPE_UNBOUNDED_MSFT = ReferenceSpaceType 1000038000
-{-# complete REFERENCE_SPACE_TYPE_VIEW,
-             REFERENCE_SPACE_TYPE_LOCAL,
-             REFERENCE_SPACE_TYPE_STAGE,
-             REFERENCE_SPACE_TYPE_UNBOUNDED_MSFT :: ReferenceSpaceType #-}
+
+{-# COMPLETE
+  REFERENCE_SPACE_TYPE_VIEW
+  , REFERENCE_SPACE_TYPE_LOCAL
+  , REFERENCE_SPACE_TYPE_STAGE
+  , REFERENCE_SPACE_TYPE_UNBOUNDED_MSFT ::
+    ReferenceSpaceType
+  #-}
 
 conNameReferenceSpaceType :: String
 conNameReferenceSpaceType = "ReferenceSpaceType"
@@ -162,20 +170,28 @@ enumPrefixReferenceSpaceType = "REFERENCE_SPACE_TYPE_"
 
 showTableReferenceSpaceType :: [(ReferenceSpaceType, String)]
 showTableReferenceSpaceType =
-  [ (REFERENCE_SPACE_TYPE_VIEW          , "VIEW")
-  , (REFERENCE_SPACE_TYPE_LOCAL         , "LOCAL")
-  , (REFERENCE_SPACE_TYPE_STAGE         , "STAGE")
-  , (REFERENCE_SPACE_TYPE_UNBOUNDED_MSFT, "UNBOUNDED_MSFT")
+  [ (REFERENCE_SPACE_TYPE_VIEW, "VIEW")
+  , (REFERENCE_SPACE_TYPE_LOCAL, "LOCAL")
+  , (REFERENCE_SPACE_TYPE_STAGE, "STAGE")
+  ,
+    ( REFERENCE_SPACE_TYPE_UNBOUNDED_MSFT
+    , "UNBOUNDED_MSFT"
+    )
   ]
 
 instance Show ReferenceSpaceType where
-  showsPrec = enumShowsPrec enumPrefixReferenceSpaceType
-                            showTableReferenceSpaceType
-                            conNameReferenceSpaceType
-                            (\(ReferenceSpaceType x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixReferenceSpaceType
+      showTableReferenceSpaceType
+      conNameReferenceSpaceType
+      (\(ReferenceSpaceType x) -> x)
+      (showsPrec 11)
 
 instance Read ReferenceSpaceType where
   readPrec =
-    enumReadPrec enumPrefixReferenceSpaceType showTableReferenceSpaceType conNameReferenceSpaceType ReferenceSpaceType
-
+    enumReadPrec
+      enumPrefixReferenceSpaceType
+      showTableReferenceSpaceType
+      conNameReferenceSpaceType
+      ReferenceSpaceType

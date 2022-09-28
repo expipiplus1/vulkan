@@ -42,15 +42,18 @@ showTableDeviceQueueCreateFlagBits :: [(DeviceQueueCreateFlagBits, String)]
 showTableDeviceQueueCreateFlagBits = [(DEVICE_QUEUE_CREATE_PROTECTED_BIT, "")]
 
 instance Show DeviceQueueCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixDeviceQueueCreateFlagBits
-                            showTableDeviceQueueCreateFlagBits
-                            conNameDeviceQueueCreateFlagBits
-                            (\(DeviceQueueCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDeviceQueueCreateFlagBits
+      showTableDeviceQueueCreateFlagBits
+      conNameDeviceQueueCreateFlagBits
+      (\(DeviceQueueCreateFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read DeviceQueueCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixDeviceQueueCreateFlagBits
-                          showTableDeviceQueueCreateFlagBits
-                          conNameDeviceQueueCreateFlagBits
-                          DeviceQueueCreateFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDeviceQueueCreateFlagBits
+      showTableDeviceQueueCreateFlagBits
+      conNameDeviceQueueCreateFlagBits
+      DeviceQueueCreateFlagBits

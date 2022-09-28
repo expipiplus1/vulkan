@@ -119,7 +119,8 @@ instance FromCStruct PhysicalDeviceSamplerFilterMinmaxProperties where
     filterMinmaxSingleComponentFormats <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     filterMinmaxImageComponentMapping <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ PhysicalDeviceSamplerFilterMinmaxProperties
-             (bool32ToBool filterMinmaxSingleComponentFormats) (bool32ToBool filterMinmaxImageComponentMapping)
+             (bool32ToBool filterMinmaxSingleComponentFormats)
+             (bool32ToBool filterMinmaxImageComponentMapping)
 
 instance Storable PhysicalDeviceSamplerFilterMinmaxProperties where
   sizeOf ~_ = 24

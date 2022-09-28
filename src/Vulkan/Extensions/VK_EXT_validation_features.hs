@@ -289,7 +289,8 @@ newtype ValidationFeatureEnableEXT = ValidationFeatureEnableEXT Int32
 -- validation is enabled. Activating this feature instruments shader
 -- programs to generate additional diagnostic data. This feature is
 -- disabled by default.
-pattern VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT                      = ValidationFeatureEnableEXT 0
+pattern VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT = ValidationFeatureEnableEXT 0
+
 -- | 'VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT'
 -- specifies that the validation layers reserve a descriptor set binding
 -- slot for their own use. The layer reports a value for
@@ -299,28 +300,35 @@ pattern VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT                      = Valida
 -- does not perform GPU-assisted validation. This feature is disabled by
 -- default.
 pattern VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT = ValidationFeatureEnableEXT 1
+
 -- | 'VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT' specifies that Vulkan
 -- best-practices validation is enabled. Activating this feature enables
 -- the output of warnings related to common misuse of the API, but which
 -- are not explicitly prohibited by the specification. This feature is
 -- disabled by default.
-pattern VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT                    = ValidationFeatureEnableEXT 2
+pattern VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT = ValidationFeatureEnableEXT 2
+
 -- | 'VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT' specifies that the layers
 -- will process @debugPrintfEXT@ operations in shaders and send the
 -- resulting output to the debug callback. This feature is disabled by
 -- default.
-pattern VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT                      = ValidationFeatureEnableEXT 3
+pattern VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT = ValidationFeatureEnableEXT 3
+
 -- | 'VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT' specifies
 -- that Vulkan synchronization validation is enabled. This feature reports
 -- resource access conflicts due to missing or incorrect synchronization
 -- operations between actions (Draw, Copy, Dispatch, Blit) reading or
 -- writing the same regions of memory. This feature is disabled by default.
-pattern VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT        = ValidationFeatureEnableEXT 4
-{-# complete VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT,
-             VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT,
-             VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT,
-             VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT,
-             VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT :: ValidationFeatureEnableEXT #-}
+pattern VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT = ValidationFeatureEnableEXT 4
+
+{-# COMPLETE
+  VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT
+  , VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT
+  , VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT
+  , VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT
+  , VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT ::
+    ValidationFeatureEnableEXT
+  #-}
 
 conNameValidationFeatureEnableEXT :: String
 conNameValidationFeatureEnableEXT = "ValidationFeatureEnableEXT"
@@ -330,26 +338,44 @@ enumPrefixValidationFeatureEnableEXT = "VALIDATION_FEATURE_ENABLE_"
 
 showTableValidationFeatureEnableEXT :: [(ValidationFeatureEnableEXT, String)]
 showTableValidationFeatureEnableEXT =
-  [ (VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT                     , "GPU_ASSISTED_EXT")
-  , (VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT, "GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT")
-  , (VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT                   , "BEST_PRACTICES_EXT")
-  , (VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT                     , "DEBUG_PRINTF_EXT")
-  , (VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT       , "SYNCHRONIZATION_VALIDATION_EXT")
+  [
+    ( VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT
+    , "GPU_ASSISTED_EXT"
+    )
+  ,
+    ( VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT
+    , "GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT"
+    )
+  ,
+    ( VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT
+    , "BEST_PRACTICES_EXT"
+    )
+  ,
+    ( VALIDATION_FEATURE_ENABLE_DEBUG_PRINTF_EXT
+    , "DEBUG_PRINTF_EXT"
+    )
+  ,
+    ( VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT
+    , "SYNCHRONIZATION_VALIDATION_EXT"
+    )
   ]
 
 instance Show ValidationFeatureEnableEXT where
-  showsPrec = enumShowsPrec enumPrefixValidationFeatureEnableEXT
-                            showTableValidationFeatureEnableEXT
-                            conNameValidationFeatureEnableEXT
-                            (\(ValidationFeatureEnableEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixValidationFeatureEnableEXT
+      showTableValidationFeatureEnableEXT
+      conNameValidationFeatureEnableEXT
+      (\(ValidationFeatureEnableEXT x) -> x)
+      (showsPrec 11)
 
 instance Read ValidationFeatureEnableEXT where
-  readPrec = enumReadPrec enumPrefixValidationFeatureEnableEXT
-                          showTableValidationFeatureEnableEXT
-                          conNameValidationFeatureEnableEXT
-                          ValidationFeatureEnableEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixValidationFeatureEnableEXT
+      showTableValidationFeatureEnableEXT
+      conNameValidationFeatureEnableEXT
+      ValidationFeatureEnableEXT
 
 -- | VkValidationFeatureDisableEXT - Specify validation features to disable
 --
@@ -362,41 +388,52 @@ newtype ValidationFeatureDisableEXT = ValidationFeatureDisableEXT Int32
 
 -- | 'VALIDATION_FEATURE_DISABLE_ALL_EXT' specifies that all validation
 -- checks are disabled.
-pattern VALIDATION_FEATURE_DISABLE_ALL_EXT                     = ValidationFeatureDisableEXT 0
+pattern VALIDATION_FEATURE_DISABLE_ALL_EXT = ValidationFeatureDisableEXT 0
+
 -- | 'VALIDATION_FEATURE_DISABLE_SHADERS_EXT' specifies that shader
 -- validation is disabled. This feature is enabled by default.
-pattern VALIDATION_FEATURE_DISABLE_SHADERS_EXT                 = ValidationFeatureDisableEXT 1
+pattern VALIDATION_FEATURE_DISABLE_SHADERS_EXT = ValidationFeatureDisableEXT 1
+
 -- | 'VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT' specifies that thread
 -- safety validation is disabled. This feature is enabled by default.
-pattern VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT           = ValidationFeatureDisableEXT 2
+pattern VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT = ValidationFeatureDisableEXT 2
+
 -- | 'VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT' specifies that stateless
 -- parameter validation is disabled. This feature is enabled by default.
-pattern VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT          = ValidationFeatureDisableEXT 3
+pattern VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT = ValidationFeatureDisableEXT 3
+
 -- | 'VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT' specifies that object
 -- lifetime validation is disabled. This feature is enabled by default.
-pattern VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT        = ValidationFeatureDisableEXT 4
+pattern VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT = ValidationFeatureDisableEXT 4
+
 -- | 'VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT' specifies that core
 -- validation checks are disabled. This feature is enabled by default. If
 -- this feature is disabled, the shader validation and GPU-assisted
 -- validation features are also disabled.
-pattern VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT             = ValidationFeatureDisableEXT 5
+pattern VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT = ValidationFeatureDisableEXT 5
+
 -- | 'VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT' specifies that
 -- protection against duplicate non-dispatchable object handles is
 -- disabled. This feature is enabled by default.
-pattern VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT          = ValidationFeatureDisableEXT 6
+pattern VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT = ValidationFeatureDisableEXT 6
+
 -- | 'VALIDATION_FEATURE_DISABLE_SHADER_VALIDATION_CACHE_EXT' specifies that
 -- there will be no caching of shader validation results and every shader
 -- will be validated on every application execution. Shader validation
 -- caching is enabled by default.
 pattern VALIDATION_FEATURE_DISABLE_SHADER_VALIDATION_CACHE_EXT = ValidationFeatureDisableEXT 7
-{-# complete VALIDATION_FEATURE_DISABLE_ALL_EXT,
-             VALIDATION_FEATURE_DISABLE_SHADERS_EXT,
-             VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT,
-             VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT,
-             VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT,
-             VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT,
-             VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT,
-             VALIDATION_FEATURE_DISABLE_SHADER_VALIDATION_CACHE_EXT :: ValidationFeatureDisableEXT #-}
+
+{-# COMPLETE
+  VALIDATION_FEATURE_DISABLE_ALL_EXT
+  , VALIDATION_FEATURE_DISABLE_SHADERS_EXT
+  , VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT
+  , VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT
+  , VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT
+  , VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT
+  , VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT
+  , VALIDATION_FEATURE_DISABLE_SHADER_VALIDATION_CACHE_EXT ::
+    ValidationFeatureDisableEXT
+  #-}
 
 conNameValidationFeatureDisableEXT :: String
 conNameValidationFeatureDisableEXT = "ValidationFeatureDisableEXT"
@@ -406,29 +443,56 @@ enumPrefixValidationFeatureDisableEXT = "VALIDATION_FEATURE_DISABLE_"
 
 showTableValidationFeatureDisableEXT :: [(ValidationFeatureDisableEXT, String)]
 showTableValidationFeatureDisableEXT =
-  [ (VALIDATION_FEATURE_DISABLE_ALL_EXT                    , "ALL_EXT")
-  , (VALIDATION_FEATURE_DISABLE_SHADERS_EXT                , "SHADERS_EXT")
-  , (VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT          , "THREAD_SAFETY_EXT")
-  , (VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT         , "API_PARAMETERS_EXT")
-  , (VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT       , "OBJECT_LIFETIMES_EXT")
-  , (VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT            , "CORE_CHECKS_EXT")
-  , (VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT         , "UNIQUE_HANDLES_EXT")
-  , (VALIDATION_FEATURE_DISABLE_SHADER_VALIDATION_CACHE_EXT, "SHADER_VALIDATION_CACHE_EXT")
+  [
+    ( VALIDATION_FEATURE_DISABLE_ALL_EXT
+    , "ALL_EXT"
+    )
+  ,
+    ( VALIDATION_FEATURE_DISABLE_SHADERS_EXT
+    , "SHADERS_EXT"
+    )
+  ,
+    ( VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT
+    , "THREAD_SAFETY_EXT"
+    )
+  ,
+    ( VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT
+    , "API_PARAMETERS_EXT"
+    )
+  ,
+    ( VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT
+    , "OBJECT_LIFETIMES_EXT"
+    )
+  ,
+    ( VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT
+    , "CORE_CHECKS_EXT"
+    )
+  ,
+    ( VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT
+    , "UNIQUE_HANDLES_EXT"
+    )
+  ,
+    ( VALIDATION_FEATURE_DISABLE_SHADER_VALIDATION_CACHE_EXT
+    , "SHADER_VALIDATION_CACHE_EXT"
+    )
   ]
 
 instance Show ValidationFeatureDisableEXT where
-  showsPrec = enumShowsPrec enumPrefixValidationFeatureDisableEXT
-                            showTableValidationFeatureDisableEXT
-                            conNameValidationFeatureDisableEXT
-                            (\(ValidationFeatureDisableEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixValidationFeatureDisableEXT
+      showTableValidationFeatureDisableEXT
+      conNameValidationFeatureDisableEXT
+      (\(ValidationFeatureDisableEXT x) -> x)
+      (showsPrec 11)
 
 instance Read ValidationFeatureDisableEXT where
-  readPrec = enumReadPrec enumPrefixValidationFeatureDisableEXT
-                          showTableValidationFeatureDisableEXT
-                          conNameValidationFeatureDisableEXT
-                          ValidationFeatureDisableEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixValidationFeatureDisableEXT
+      showTableValidationFeatureDisableEXT
+      conNameValidationFeatureDisableEXT
+      ValidationFeatureDisableEXT
 
 type EXT_VALIDATION_FEATURES_SPEC_VERSION = 5
 

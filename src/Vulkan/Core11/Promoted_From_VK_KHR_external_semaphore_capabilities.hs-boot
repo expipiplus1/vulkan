@@ -22,8 +22,10 @@ instance FromCStruct ExternalSemaphoreProperties
 type role PhysicalDeviceExternalSemaphoreInfo nominal
 data PhysicalDeviceExternalSemaphoreInfo (es :: [Type])
 
-instance (Extendss PhysicalDeviceExternalSemaphoreInfo es, PokeChain es) => ToCStruct (PhysicalDeviceExternalSemaphoreInfo es)
+instance ( Extendss PhysicalDeviceExternalSemaphoreInfo es
+         , PokeChain es ) => ToCStruct (PhysicalDeviceExternalSemaphoreInfo es)
 instance Show (Chain es) => Show (PhysicalDeviceExternalSemaphoreInfo es)
 
-instance (Extendss PhysicalDeviceExternalSemaphoreInfo es, PeekChain es) => FromCStruct (PhysicalDeviceExternalSemaphoreInfo es)
+instance ( Extendss PhysicalDeviceExternalSemaphoreInfo es
+         , PeekChain es ) => FromCStruct (PhysicalDeviceExternalSemaphoreInfo es)
 

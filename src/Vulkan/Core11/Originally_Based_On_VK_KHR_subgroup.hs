@@ -133,7 +133,10 @@ instance FromCStruct PhysicalDeviceSubgroupProperties where
     supportedOperations <- peek @SubgroupFeatureFlags ((p `plusPtr` 24 :: Ptr SubgroupFeatureFlags))
     quadOperationsInAllStages <- peek @Bool32 ((p `plusPtr` 28 :: Ptr Bool32))
     pure $ PhysicalDeviceSubgroupProperties
-             subgroupSize supportedStages supportedOperations (bool32ToBool quadOperationsInAllStages)
+             subgroupSize
+             supportedStages
+             supportedOperations
+             (bool32ToBool quadOperationsInAllStages)
 
 instance Storable PhysicalDeviceSubgroupProperties where
   sizeOf ~_ = 32

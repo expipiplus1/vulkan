@@ -139,7 +139,11 @@ createSemaphore device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSemaphore <- ContT $ bracket (callocBytes @Semaphore 8) free
-  r <- lift $ traceAroundEvent "vkCreateSemaphore" (vkCreateSemaphore' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPSemaphore))
+  r <- lift $ traceAroundEvent "vkCreateSemaphore" (vkCreateSemaphore'
+                                                      (deviceHandle (device))
+                                                      (forgetExtensions pCreateInfo)
+                                                      pAllocator
+                                                      (pPSemaphore))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSemaphore <- lift $ peek @Semaphore pPSemaphore
   pure $ (pSemaphore)
@@ -226,7 +230,10 @@ destroySemaphore device semaphore allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroySemaphore" (vkDestroySemaphore' (deviceHandle (device)) (semaphore) pAllocator)
+  lift $ traceAroundEvent "vkDestroySemaphore" (vkDestroySemaphore'
+                                                  (deviceHandle (device))
+                                                  (semaphore)
+                                                  pAllocator)
   pure $ ()
 
 
@@ -293,7 +300,8 @@ instance Extensible SemaphoreCreateInfo where
     | Just Refl <- eqT @e @ExportSemaphoreCreateInfo = Just f
     | otherwise = Nothing
 
-instance (Extendss SemaphoreCreateInfo es, PokeChain es) => ToCStruct (SemaphoreCreateInfo es) where
+instance ( Extendss SemaphoreCreateInfo es
+         , PokeChain es ) => ToCStruct (SemaphoreCreateInfo es) where
   withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SemaphoreCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO)
@@ -309,7 +317,8 @@ instance (Extendss SemaphoreCreateInfo es, PokeChain es) => ToCStruct (Semaphore
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ f
 
-instance (Extendss SemaphoreCreateInfo es, PeekChain es) => FromCStruct (SemaphoreCreateInfo es) where
+instance ( Extendss SemaphoreCreateInfo es
+         , PeekChain es ) => FromCStruct (SemaphoreCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

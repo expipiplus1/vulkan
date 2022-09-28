@@ -29,27 +29,35 @@ newtype SamplerAddressMode = SamplerAddressMode Int32
 
 -- | 'SAMPLER_ADDRESS_MODE_REPEAT' specifies that the repeat wrap mode will
 -- be used.
-pattern SAMPLER_ADDRESS_MODE_REPEAT               = SamplerAddressMode 0
+pattern SAMPLER_ADDRESS_MODE_REPEAT = SamplerAddressMode 0
+
 -- | 'SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT' specifies that the mirrored
 -- repeat wrap mode will be used.
-pattern SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT      = SamplerAddressMode 1
+pattern SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT = SamplerAddressMode 1
+
 -- | 'SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE' specifies that the clamp to edge
 -- wrap mode will be used.
-pattern SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE        = SamplerAddressMode 2
+pattern SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE = SamplerAddressMode 2
+
 -- | 'SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER' specifies that the clamp to
 -- border wrap mode will be used.
-pattern SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER      = SamplerAddressMode 3
+pattern SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = SamplerAddressMode 3
+
 -- | 'SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE' specifies that the mirror
 -- clamp to edge wrap mode will be used. This is only valid if
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-samplerMirrorClampToEdge samplerMirrorClampToEdge>
 -- is enabled, or if the @VK_KHR_sampler_mirror_clamp_to_edge@ extension is
 -- enabled.
 pattern SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = SamplerAddressMode 4
-{-# complete SAMPLER_ADDRESS_MODE_REPEAT,
-             SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT,
-             SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
-             SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER,
-             SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE :: SamplerAddressMode #-}
+
+{-# COMPLETE
+  SAMPLER_ADDRESS_MODE_REPEAT
+  , SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT
+  , SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE
+  , SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER
+  , SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE ::
+    SamplerAddressMode
+  #-}
 
 conNameSamplerAddressMode :: String
 conNameSamplerAddressMode = "SamplerAddressMode"
@@ -59,21 +67,38 @@ enumPrefixSamplerAddressMode = "SAMPLER_ADDRESS_MODE_"
 
 showTableSamplerAddressMode :: [(SamplerAddressMode, String)]
 showTableSamplerAddressMode =
-  [ (SAMPLER_ADDRESS_MODE_REPEAT              , "REPEAT")
-  , (SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT     , "MIRRORED_REPEAT")
-  , (SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE       , "CLAMP_TO_EDGE")
-  , (SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER     , "CLAMP_TO_BORDER")
-  , (SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE, "MIRROR_CLAMP_TO_EDGE")
+  [ (SAMPLER_ADDRESS_MODE_REPEAT, "REPEAT")
+  ,
+    ( SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT
+    , "MIRRORED_REPEAT"
+    )
+  ,
+    ( SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE
+    , "CLAMP_TO_EDGE"
+    )
+  ,
+    ( SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER
+    , "CLAMP_TO_BORDER"
+    )
+  ,
+    ( SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE
+    , "MIRROR_CLAMP_TO_EDGE"
+    )
   ]
 
 instance Show SamplerAddressMode where
-  showsPrec = enumShowsPrec enumPrefixSamplerAddressMode
-                            showTableSamplerAddressMode
-                            conNameSamplerAddressMode
-                            (\(SamplerAddressMode x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixSamplerAddressMode
+      showTableSamplerAddressMode
+      conNameSamplerAddressMode
+      (\(SamplerAddressMode x) -> x)
+      (showsPrec 11)
 
 instance Read SamplerAddressMode where
   readPrec =
-    enumReadPrec enumPrefixSamplerAddressMode showTableSamplerAddressMode conNameSamplerAddressMode SamplerAddressMode
-
+    enumReadPrec
+      enumPrefixSamplerAddressMode
+      showTableSamplerAddressMode
+      conNameSamplerAddressMode
+      SamplerAddressMode

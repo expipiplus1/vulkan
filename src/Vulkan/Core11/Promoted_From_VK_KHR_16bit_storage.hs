@@ -119,7 +119,10 @@ instance FromCStruct PhysicalDevice16BitStorageFeatures where
     storagePushConstant16 <- peek @Bool32 ((p `plusPtr` 24 :: Ptr Bool32))
     storageInputOutput16 <- peek @Bool32 ((p `plusPtr` 28 :: Ptr Bool32))
     pure $ PhysicalDevice16BitStorageFeatures
-             (bool32ToBool storageBuffer16BitAccess) (bool32ToBool uniformAndStorageBuffer16BitAccess) (bool32ToBool storagePushConstant16) (bool32ToBool storageInputOutput16)
+             (bool32ToBool storageBuffer16BitAccess)
+             (bool32ToBool uniformAndStorageBuffer16BitAccess)
+             (bool32ToBool storagePushConstant16)
+             (bool32ToBool storageInputOutput16)
 
 instance Storable PhysicalDevice16BitStorageFeatures where
   sizeOf ~_ = 32

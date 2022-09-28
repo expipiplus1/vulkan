@@ -14,10 +14,12 @@ import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
 type role ImageCreateInfo nominal
 data ImageCreateInfo (es :: [Type])
 
-instance (Extendss ImageCreateInfo es, PokeChain es) => ToCStruct (ImageCreateInfo es)
+instance ( Extendss ImageCreateInfo es
+         , PokeChain es ) => ToCStruct (ImageCreateInfo es)
 instance Show (Chain es) => Show (ImageCreateInfo es)
 
-instance (Extendss ImageCreateInfo es, PeekChain es) => FromCStruct (ImageCreateInfo es)
+instance ( Extendss ImageCreateInfo es
+         , PeekChain es ) => FromCStruct (ImageCreateInfo es)
 
 
 data SubresourceLayout

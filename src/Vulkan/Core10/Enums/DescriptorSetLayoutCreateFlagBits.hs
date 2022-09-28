@@ -41,12 +41,14 @@ newtype DescriptorSetLayoutCreateFlagBits = DescriptorSetLayoutCreateFlagBits Fl
 -- limited for implementation specific reasons. Implementations /may/ limit
 -- the number of supported descriptors to UpdateAfterBind limits or
 -- non-UpdateAfterBind limits, whichever is larger.
-pattern DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT     = DescriptorSetLayoutCreateFlagBits 0x00000004
+pattern DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT = DescriptorSetLayoutCreateFlagBits 0x00000004
+
 -- | 'DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR' specifies that
 -- descriptor sets /must/ not be allocated using this layout, and
 -- descriptors are instead pushed by
 -- 'Vulkan.Extensions.VK_KHR_push_descriptor.cmdPushDescriptorSetKHR'.
-pattern DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR    = DescriptorSetLayoutCreateFlagBits 0x00000001
+pattern DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR = DescriptorSetLayoutCreateFlagBits 0x00000001
+
 -- | 'DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT' specifies that
 -- descriptor sets using this layout /must/ be allocated from a descriptor
 -- pool created with the
@@ -67,21 +69,33 @@ enumPrefixDescriptorSetLayoutCreateFlagBits = "DESCRIPTOR_SET_LAYOUT_CREATE_"
 
 showTableDescriptorSetLayoutCreateFlagBits :: [(DescriptorSetLayoutCreateFlagBits, String)]
 showTableDescriptorSetLayoutCreateFlagBits =
-  [ (DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT    , "HOST_ONLY_POOL_BIT_EXT")
-  , (DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR   , "PUSH_DESCRIPTOR_BIT_KHR")
-  , (DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT, "UPDATE_AFTER_BIND_POOL_BIT")
+  [
+    ( DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT
+    , "HOST_ONLY_POOL_BIT_EXT"
+    )
+  ,
+    ( DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR
+    , "PUSH_DESCRIPTOR_BIT_KHR"
+    )
+  ,
+    ( DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT
+    , "UPDATE_AFTER_BIND_POOL_BIT"
+    )
   ]
 
 instance Show DescriptorSetLayoutCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixDescriptorSetLayoutCreateFlagBits
-                            showTableDescriptorSetLayoutCreateFlagBits
-                            conNameDescriptorSetLayoutCreateFlagBits
-                            (\(DescriptorSetLayoutCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDescriptorSetLayoutCreateFlagBits
+      showTableDescriptorSetLayoutCreateFlagBits
+      conNameDescriptorSetLayoutCreateFlagBits
+      (\(DescriptorSetLayoutCreateFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read DescriptorSetLayoutCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixDescriptorSetLayoutCreateFlagBits
-                          showTableDescriptorSetLayoutCreateFlagBits
-                          conNameDescriptorSetLayoutCreateFlagBits
-                          DescriptorSetLayoutCreateFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDescriptorSetLayoutCreateFlagBits
+      showTableDescriptorSetLayoutCreateFlagBits
+      conNameDescriptorSetLayoutCreateFlagBits
+      DescriptorSetLayoutCreateFlagBits

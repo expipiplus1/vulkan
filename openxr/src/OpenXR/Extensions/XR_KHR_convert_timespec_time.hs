@@ -152,7 +152,10 @@ convertTimeToTimespecTimeKHR instance' time = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrConvertTimeToTimespecTimeKHR is null" Nothing Nothing
   let xrConvertTimeToTimespecTimeKHR' = mkXrConvertTimeToTimespecTimeKHR xrConvertTimeToTimespecTimeKHRPtr
   pTimespecTime <- ContT $ bracket (callocBytes @Timespec 16) free
-  r <- lift $ traceAroundEvent "xrConvertTimeToTimespecTimeKHR" (xrConvertTimeToTimespecTimeKHR' (instanceHandle (instance')) (time) (pTimespecTime))
+  r <- lift $ traceAroundEvent "xrConvertTimeToTimespecTimeKHR" (xrConvertTimeToTimespecTimeKHR'
+                                                                   (instanceHandle (instance'))
+                                                                   (time)
+                                                                   (pTimespecTime))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   timespecTime <- lift $ peek @Timespec pTimespecTime
   pure $ (timespecTime)
@@ -235,7 +238,10 @@ convertTimespecTimeToTimeKHR instance' timespecTime = liftIO . evalContT $ do
   let xrConvertTimespecTimeToTimeKHR' = mkXrConvertTimespecTimeToTimeKHR xrConvertTimespecTimeToTimeKHRPtr
   timespecTime' <- ContT $ with (timespecTime)
   pTime <- ContT $ bracket (callocBytes @Time 8) free
-  r <- lift $ traceAroundEvent "xrConvertTimespecTimeToTimeKHR" (xrConvertTimespecTimeToTimeKHR' (instanceHandle (instance')) timespecTime' (pTime))
+  r <- lift $ traceAroundEvent "xrConvertTimespecTimeToTimeKHR" (xrConvertTimespecTimeToTimeKHR'
+                                                                   (instanceHandle (instance'))
+                                                                   timespecTime'
+                                                                   (pTime))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   time <- lift $ peek @Time pTime
   pure $ (time)

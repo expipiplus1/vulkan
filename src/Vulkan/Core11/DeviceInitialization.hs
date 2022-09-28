@@ -73,7 +73,8 @@ enumerateInstanceVersion  = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkEnumerateInstanceVersion is null" Nothing Nothing
   let vkEnumerateInstanceVersion' = mkVkEnumerateInstanceVersion vkEnumerateInstanceVersionPtr
   pPApiVersion <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "vkEnumerateInstanceVersion" (vkEnumerateInstanceVersion' (pPApiVersion))
+  r <- lift $ traceAroundEvent "vkEnumerateInstanceVersion" (vkEnumerateInstanceVersion'
+                                                               (pPApiVersion))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pApiVersion <- lift $ peek @Word32 pPApiVersion
   pure $ (pApiVersion)

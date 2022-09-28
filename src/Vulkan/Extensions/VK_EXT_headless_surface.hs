@@ -229,7 +229,9 @@ createHeadlessSurfaceEXT :: forall io
                             -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
                             ("allocator" ::: Maybe AllocationCallbacks)
                          -> io (SurfaceKHR)
-createHeadlessSurfaceEXT instance' createInfo allocator = liftIO . evalContT $ do
+createHeadlessSurfaceEXT instance'
+                           createInfo
+                           allocator = liftIO . evalContT $ do
   let vkCreateHeadlessSurfaceEXTPtr = pVkCreateHeadlessSurfaceEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateHeadlessSurfaceEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateHeadlessSurfaceEXT is null" Nothing Nothing
@@ -239,7 +241,11 @@ createHeadlessSurfaceEXT instance' createInfo allocator = liftIO . evalContT $ d
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSurface <- ContT $ bracket (callocBytes @SurfaceKHR 8) free
-  r <- lift $ traceAroundEvent "vkCreateHeadlessSurfaceEXT" (vkCreateHeadlessSurfaceEXT' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface))
+  r <- lift $ traceAroundEvent "vkCreateHeadlessSurfaceEXT" (vkCreateHeadlessSurfaceEXT'
+                                                               (instanceHandle (instance'))
+                                                               pCreateInfo
+                                                               pAllocator
+                                                               (pPSurface))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurface <- lift $ peek @SurfaceKHR pPSurface
   pure $ (pSurface)
@@ -313,8 +319,6 @@ instance Zero HeadlessSurfaceCreateInfoEXT where
 newtype HeadlessSurfaceCreateFlagsEXT = HeadlessSurfaceCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameHeadlessSurfaceCreateFlagsEXT :: String
 conNameHeadlessSurfaceCreateFlagsEXT = "HeadlessSurfaceCreateFlagsEXT"
 
@@ -325,18 +329,21 @@ showTableHeadlessSurfaceCreateFlagsEXT :: [(HeadlessSurfaceCreateFlagsEXT, Strin
 showTableHeadlessSurfaceCreateFlagsEXT = []
 
 instance Show HeadlessSurfaceCreateFlagsEXT where
-  showsPrec = enumShowsPrec enumPrefixHeadlessSurfaceCreateFlagsEXT
-                            showTableHeadlessSurfaceCreateFlagsEXT
-                            conNameHeadlessSurfaceCreateFlagsEXT
-                            (\(HeadlessSurfaceCreateFlagsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixHeadlessSurfaceCreateFlagsEXT
+      showTableHeadlessSurfaceCreateFlagsEXT
+      conNameHeadlessSurfaceCreateFlagsEXT
+      (\(HeadlessSurfaceCreateFlagsEXT x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read HeadlessSurfaceCreateFlagsEXT where
-  readPrec = enumReadPrec enumPrefixHeadlessSurfaceCreateFlagsEXT
-                          showTableHeadlessSurfaceCreateFlagsEXT
-                          conNameHeadlessSurfaceCreateFlagsEXT
-                          HeadlessSurfaceCreateFlagsEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixHeadlessSurfaceCreateFlagsEXT
+      showTableHeadlessSurfaceCreateFlagsEXT
+      conNameHeadlessSurfaceCreateFlagsEXT
+      HeadlessSurfaceCreateFlagsEXT
 
 type EXT_HEADLESS_SURFACE_SPEC_VERSION = 1
 

@@ -230,7 +230,9 @@ createDirectFBSurfaceEXT :: forall io
                             -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
                             ("allocator" ::: Maybe AllocationCallbacks)
                          -> io (SurfaceKHR)
-createDirectFBSurfaceEXT instance' createInfo allocator = liftIO . evalContT $ do
+createDirectFBSurfaceEXT instance'
+                           createInfo
+                           allocator = liftIO . evalContT $ do
   let vkCreateDirectFBSurfaceEXTPtr = pVkCreateDirectFBSurfaceEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateDirectFBSurfaceEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDirectFBSurfaceEXT is null" Nothing Nothing
@@ -240,7 +242,11 @@ createDirectFBSurfaceEXT instance' createInfo allocator = liftIO . evalContT $ d
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSurface <- ContT $ bracket (callocBytes @SurfaceKHR 8) free
-  r <- lift $ traceAroundEvent "vkCreateDirectFBSurfaceEXT" (vkCreateDirectFBSurfaceEXT' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface))
+  r <- lift $ traceAroundEvent "vkCreateDirectFBSurfaceEXT" (vkCreateDirectFBSurfaceEXT'
+                                                               (instanceHandle (instance'))
+                                                               pCreateInfo
+                                                               pAllocator
+                                                               (pPSurface))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurface <- lift $ peek @SurfaceKHR pPSurface
   pure $ (pSurface)
@@ -289,12 +295,17 @@ getPhysicalDeviceDirectFBPresentationSupportEXT :: forall io
                                                    -- @dfb@ /must/ be a valid pointer to an 'IDirectFB' value
                                                    ("dfb" ::: Ptr IDirectFB)
                                                 -> io (Bool)
-getPhysicalDeviceDirectFBPresentationSupportEXT physicalDevice queueFamilyIndex dfb = liftIO $ do
+getPhysicalDeviceDirectFBPresentationSupportEXT physicalDevice
+                                                  queueFamilyIndex
+                                                  dfb = liftIO $ do
   let vkGetPhysicalDeviceDirectFBPresentationSupportEXTPtr = pVkGetPhysicalDeviceDirectFBPresentationSupportEXT (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   unless (vkGetPhysicalDeviceDirectFBPresentationSupportEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceDirectFBPresentationSupportEXT is null" Nothing Nothing
   let vkGetPhysicalDeviceDirectFBPresentationSupportEXT' = mkVkGetPhysicalDeviceDirectFBPresentationSupportEXT vkGetPhysicalDeviceDirectFBPresentationSupportEXTPtr
-  r <- traceAroundEvent "vkGetPhysicalDeviceDirectFBPresentationSupportEXT" (vkGetPhysicalDeviceDirectFBPresentationSupportEXT' (physicalDeviceHandle (physicalDevice)) (queueFamilyIndex) (dfb))
+  r <- traceAroundEvent "vkGetPhysicalDeviceDirectFBPresentationSupportEXT" (vkGetPhysicalDeviceDirectFBPresentationSupportEXT'
+                                                                               (physicalDeviceHandle (physicalDevice))
+                                                                               (queueFamilyIndex)
+                                                                               (dfb))
   pure $ ((bool32ToBool r))
 
 
@@ -385,8 +396,6 @@ instance Zero DirectFBSurfaceCreateInfoEXT where
 newtype DirectFBSurfaceCreateFlagsEXT = DirectFBSurfaceCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameDirectFBSurfaceCreateFlagsEXT :: String
 conNameDirectFBSurfaceCreateFlagsEXT = "DirectFBSurfaceCreateFlagsEXT"
 
@@ -397,18 +406,21 @@ showTableDirectFBSurfaceCreateFlagsEXT :: [(DirectFBSurfaceCreateFlagsEXT, Strin
 showTableDirectFBSurfaceCreateFlagsEXT = []
 
 instance Show DirectFBSurfaceCreateFlagsEXT where
-  showsPrec = enumShowsPrec enumPrefixDirectFBSurfaceCreateFlagsEXT
-                            showTableDirectFBSurfaceCreateFlagsEXT
-                            conNameDirectFBSurfaceCreateFlagsEXT
-                            (\(DirectFBSurfaceCreateFlagsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDirectFBSurfaceCreateFlagsEXT
+      showTableDirectFBSurfaceCreateFlagsEXT
+      conNameDirectFBSurfaceCreateFlagsEXT
+      (\(DirectFBSurfaceCreateFlagsEXT x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read DirectFBSurfaceCreateFlagsEXT where
-  readPrec = enumReadPrec enumPrefixDirectFBSurfaceCreateFlagsEXT
-                          showTableDirectFBSurfaceCreateFlagsEXT
-                          conNameDirectFBSurfaceCreateFlagsEXT
-                          DirectFBSurfaceCreateFlagsEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDirectFBSurfaceCreateFlagsEXT
+      showTableDirectFBSurfaceCreateFlagsEXT
+      conNameDirectFBSurfaceCreateFlagsEXT
+      DirectFBSurfaceCreateFlagsEXT
 
 type EXT_DIRECTFB_SURFACE_SPEC_VERSION = 1
 

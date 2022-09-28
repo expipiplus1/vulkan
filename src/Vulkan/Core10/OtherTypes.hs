@@ -326,7 +326,13 @@ instance FromCStruct BufferMemoryBarrier where
     offset <- peek @DeviceSize ((p `plusPtr` 40 :: Ptr DeviceSize))
     size <- peek @DeviceSize ((p `plusPtr` 48 :: Ptr DeviceSize))
     pure $ BufferMemoryBarrier
-             srcAccessMask dstAccessMask srcQueueFamilyIndex dstQueueFamilyIndex buffer offset size
+             srcAccessMask
+             dstAccessMask
+             srcQueueFamilyIndex
+             dstQueueFamilyIndex
+             buffer
+             offset
+             size
 
 instance Storable BufferMemoryBarrier where
   sizeOf ~_ = 56
@@ -798,7 +804,8 @@ instance Extensible ImageMemoryBarrier where
     | Just Refl <- eqT @e @SampleLocationsInfoEXT = Just f
     | otherwise = Nothing
 
-instance (Extendss ImageMemoryBarrier es, PokeChain es) => ToCStruct (ImageMemoryBarrier es) where
+instance ( Extendss ImageMemoryBarrier es
+         , PokeChain es ) => ToCStruct (ImageMemoryBarrier es) where
   withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageMemoryBarrier{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER)
@@ -829,7 +836,8 @@ instance (Extendss ImageMemoryBarrier es, PokeChain es) => ToCStruct (ImageMemor
     lift $ poke ((p `plusPtr` 48 :: Ptr ImageSubresourceRange)) (zero)
     lift $ f
 
-instance (Extendss ImageMemoryBarrier es, PeekChain es) => FromCStruct (ImageMemoryBarrier es) where
+instance ( Extendss ImageMemoryBarrier es
+         , PeekChain es ) => FromCStruct (ImageMemoryBarrier es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -842,7 +850,15 @@ instance (Extendss ImageMemoryBarrier es, PeekChain es) => FromCStruct (ImageMem
     image <- peek @Image ((p `plusPtr` 40 :: Ptr Image))
     subresourceRange <- peekCStruct @ImageSubresourceRange ((p `plusPtr` 48 :: Ptr ImageSubresourceRange))
     pure $ ImageMemoryBarrier
-             next srcAccessMask dstAccessMask oldLayout newLayout srcQueueFamilyIndex dstQueueFamilyIndex image subresourceRange
+             next
+             srcAccessMask
+             dstAccessMask
+             oldLayout
+             newLayout
+             srcQueueFamilyIndex
+             dstQueueFamilyIndex
+             image
+             subresourceRange
 
 instance es ~ '[] => Zero (ImageMemoryBarrier es) where
   zero = ImageMemoryBarrier

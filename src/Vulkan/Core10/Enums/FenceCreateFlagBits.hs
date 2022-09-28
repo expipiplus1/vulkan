@@ -43,15 +43,18 @@ showTableFenceCreateFlagBits :: [(FenceCreateFlagBits, String)]
 showTableFenceCreateFlagBits = [(FENCE_CREATE_SIGNALED_BIT, "")]
 
 instance Show FenceCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixFenceCreateFlagBits
-                            showTableFenceCreateFlagBits
-                            conNameFenceCreateFlagBits
-                            (\(FenceCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixFenceCreateFlagBits
+      showTableFenceCreateFlagBits
+      conNameFenceCreateFlagBits
+      (\(FenceCreateFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read FenceCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixFenceCreateFlagBits
-                          showTableFenceCreateFlagBits
-                          conNameFenceCreateFlagBits
-                          FenceCreateFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixFenceCreateFlagBits
+      showTableFenceCreateFlagBits
+      conNameFenceCreateFlagBits
+      FenceCreateFlagBits

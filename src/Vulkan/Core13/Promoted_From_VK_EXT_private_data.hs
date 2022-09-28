@@ -149,7 +149,11 @@ createPrivateDataSlot device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPPrivateDataSlot <- ContT $ bracket (callocBytes @PrivateDataSlot 8) free
-  r <- lift $ traceAroundEvent "vkCreatePrivateDataSlot" (vkCreatePrivateDataSlot' (deviceHandle (device)) pCreateInfo pAllocator (pPPrivateDataSlot))
+  r <- lift $ traceAroundEvent "vkCreatePrivateDataSlot" (vkCreatePrivateDataSlot'
+                                                            (deviceHandle (device))
+                                                            pCreateInfo
+                                                            pAllocator
+                                                            (pPPrivateDataSlot))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPrivateDataSlot <- lift $ peek @PrivateDataSlot pPPrivateDataSlot
   pure $ (pPrivateDataSlot)
@@ -229,7 +233,9 @@ destroyPrivateDataSlot :: forall io
                           -- chapter.
                           ("allocator" ::: Maybe AllocationCallbacks)
                        -> io ()
-destroyPrivateDataSlot device privateDataSlot allocator = liftIO . evalContT $ do
+destroyPrivateDataSlot device
+                         privateDataSlot
+                         allocator = liftIO . evalContT $ do
   let vkDestroyPrivateDataSlotPtr = pVkDestroyPrivateDataSlot (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyPrivateDataSlotPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyPrivateDataSlot is null" Nothing Nothing
@@ -237,7 +243,10 @@ destroyPrivateDataSlot device privateDataSlot allocator = liftIO . evalContT $ d
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyPrivateDataSlot" (vkDestroyPrivateDataSlot' (deviceHandle (device)) (privateDataSlot) pAllocator)
+  lift $ traceAroundEvent "vkDestroyPrivateDataSlot" (vkDestroyPrivateDataSlot'
+                                                        (deviceHandle (device))
+                                                        (privateDataSlot)
+                                                        pAllocator)
   pure $ ()
 
 
@@ -302,12 +311,21 @@ setPrivateData :: forall io
                   -- be stored at @privateDataSlot@.
                   ("data" ::: Word64)
                -> io ()
-setPrivateData device objectType objectHandle privateDataSlot data' = liftIO $ do
+setPrivateData device
+                 objectType
+                 objectHandle
+                 privateDataSlot
+                 data' = liftIO $ do
   let vkSetPrivateDataPtr = pVkSetPrivateData (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkSetPrivateDataPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetPrivateData is null" Nothing Nothing
   let vkSetPrivateData' = mkVkSetPrivateData vkSetPrivateDataPtr
-  r <- traceAroundEvent "vkSetPrivateData" (vkSetPrivateData' (deviceHandle (device)) (objectType) (objectHandle) (privateDataSlot) (data'))
+  r <- traceAroundEvent "vkSetPrivateData" (vkSetPrivateData'
+                                              (deviceHandle (device))
+                                              (objectType)
+                                              (objectHandle)
+                                              (privateDataSlot)
+                                              (data'))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -370,13 +388,21 @@ getPrivateData :: forall io
                   -- have been created, allocated, or retrieved from @device@
                   PrivateDataSlot
                -> io (("data" ::: Word64))
-getPrivateData device objectType objectHandle privateDataSlot = liftIO . evalContT $ do
+getPrivateData device
+                 objectType
+                 objectHandle
+                 privateDataSlot = liftIO . evalContT $ do
   let vkGetPrivateDataPtr = pVkGetPrivateData (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetPrivateDataPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPrivateData is null" Nothing Nothing
   let vkGetPrivateData' = mkVkGetPrivateData vkGetPrivateDataPtr
   pPData <- ContT $ bracket (callocBytes @Word64 8) free
-  lift $ traceAroundEvent "vkGetPrivateData" (vkGetPrivateData' (deviceHandle (device)) (objectType) (objectHandle) (privateDataSlot) (pPData))
+  lift $ traceAroundEvent "vkGetPrivateData" (vkGetPrivateData'
+                                                (deviceHandle (device))
+                                                (objectType)
+                                                (objectHandle)
+                                                (privateDataSlot)
+                                                (pPData))
   pData <- lift $ peek @Word64 pPData
   pure $ (pData)
 

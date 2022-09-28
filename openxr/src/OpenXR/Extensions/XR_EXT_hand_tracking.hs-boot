@@ -64,10 +64,12 @@ instance FromCStruct HandJointLocationEXT
 type role HandJointLocationsEXT nominal
 data HandJointLocationsEXT (es :: [Type])
 
-instance (Extendss HandJointLocationsEXT es, PokeChain es) => ToCStruct (HandJointLocationsEXT es)
+instance ( Extendss HandJointLocationsEXT es
+         , PokeChain es ) => ToCStruct (HandJointLocationsEXT es)
 instance Show (Chain es) => Show (HandJointLocationsEXT es)
 
-instance (Extendss HandJointLocationsEXT es, PeekChain es) => FromCStruct (HandJointLocationsEXT es)
+instance ( Extendss HandJointLocationsEXT es
+         , PeekChain es ) => FromCStruct (HandJointLocationsEXT es)
 
 
 data HandJointVelocitiesEXT
@@ -97,10 +99,12 @@ instance FromCStruct HandJointsLocateInfoEXT
 type role HandTrackerCreateInfoEXT nominal
 data HandTrackerCreateInfoEXT (es :: [Type])
 
-instance (Extendss HandTrackerCreateInfoEXT es, PokeChain es) => ToCStruct (HandTrackerCreateInfoEXT es)
+instance ( Extendss HandTrackerCreateInfoEXT es
+         , PokeChain es ) => ToCStruct (HandTrackerCreateInfoEXT es)
 instance Show (Chain es) => Show (HandTrackerCreateInfoEXT es)
 
-instance (Extendss HandTrackerCreateInfoEXT es, PeekChain es) => FromCStruct (HandTrackerCreateInfoEXT es)
+instance ( Extendss HandTrackerCreateInfoEXT es
+         , PeekChain es ) => FromCStruct (HandTrackerCreateInfoEXT es)
 
 
 data SystemHandTrackingPropertiesEXT

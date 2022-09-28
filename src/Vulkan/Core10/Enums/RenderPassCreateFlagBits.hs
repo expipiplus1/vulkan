@@ -41,18 +41,26 @@ enumPrefixRenderPassCreateFlagBits :: String
 enumPrefixRenderPassCreateFlagBits = "RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM"
 
 showTableRenderPassCreateFlagBits :: [(RenderPassCreateFlagBits, String)]
-showTableRenderPassCreateFlagBits = [(RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM, "")]
+showTableRenderPassCreateFlagBits =
+  [
+    ( RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM
+    , ""
+    )
+  ]
 
 instance Show RenderPassCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixRenderPassCreateFlagBits
-                            showTableRenderPassCreateFlagBits
-                            conNameRenderPassCreateFlagBits
-                            (\(RenderPassCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixRenderPassCreateFlagBits
+      showTableRenderPassCreateFlagBits
+      conNameRenderPassCreateFlagBits
+      (\(RenderPassCreateFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read RenderPassCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixRenderPassCreateFlagBits
-                          showTableRenderPassCreateFlagBits
-                          conNameRenderPassCreateFlagBits
-                          RenderPassCreateFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixRenderPassCreateFlagBits
+      showTableRenderPassCreateFlagBits
+      conNameRenderPassCreateFlagBits
+      RenderPassCreateFlagBits

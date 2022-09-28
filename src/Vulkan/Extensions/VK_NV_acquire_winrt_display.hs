@@ -298,7 +298,9 @@ acquireWinrtDisplayNV physicalDevice display = liftIO $ do
   unless (vkAcquireWinrtDisplayNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireWinrtDisplayNV is null" Nothing Nothing
   let vkAcquireWinrtDisplayNV' = mkVkAcquireWinrtDisplayNV vkAcquireWinrtDisplayNVPtr
-  r <- traceAroundEvent "vkAcquireWinrtDisplayNV" (vkAcquireWinrtDisplayNV' (physicalDeviceHandle (physicalDevice)) (display))
+  r <- traceAroundEvent "vkAcquireWinrtDisplayNV" (vkAcquireWinrtDisplayNV'
+                                                     (physicalDeviceHandle (physicalDevice))
+                                                     (display))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -365,7 +367,10 @@ getWinrtDisplayNV physicalDevice deviceRelativeId = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetWinrtDisplayNV is null" Nothing Nothing
   let vkGetWinrtDisplayNV' = mkVkGetWinrtDisplayNV vkGetWinrtDisplayNVPtr
   pPDisplay <- ContT $ bracket (callocBytes @DisplayKHR 8) free
-  r <- lift $ traceAroundEvent "vkGetWinrtDisplayNV" (vkGetWinrtDisplayNV' (physicalDeviceHandle (physicalDevice)) (deviceRelativeId) (pPDisplay))
+  r <- lift $ traceAroundEvent "vkGetWinrtDisplayNV" (vkGetWinrtDisplayNV'
+                                                        (physicalDeviceHandle (physicalDevice))
+                                                        (deviceRelativeId)
+                                                        (pPDisplay))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pDisplay <- lift $ peek @DisplayKHR pPDisplay
   pure $ (pDisplay)

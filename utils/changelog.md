@@ -2,6 +2,12 @@
 
 ## WIP
 
+## [0.5.10] - 2022-09-27
+- Improve error messages for requirements TH
+
+## [0.5.9.1] - 2022-09-26
+- Fix tests on ghc 9.2
+
 ## [0.5.9] - 2022-09-24
 - Relax bounds on `vulkan`
 

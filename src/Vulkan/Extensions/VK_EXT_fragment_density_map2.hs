@@ -285,7 +285,10 @@ instance FromCStruct PhysicalDeviceFragmentDensityMap2PropertiesEXT where
     maxSubsampledArrayLayers <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
     maxDescriptorSetSubsampledSamplers <- peek @Word32 ((p `plusPtr` 28 :: Ptr Word32))
     pure $ PhysicalDeviceFragmentDensityMap2PropertiesEXT
-             (bool32ToBool subsampledLoads) (bool32ToBool subsampledCoarseReconstructionEarlyAccess) maxSubsampledArrayLayers maxDescriptorSetSubsampledSamplers
+             (bool32ToBool subsampledLoads)
+             (bool32ToBool subsampledCoarseReconstructionEarlyAccess)
+             maxSubsampledArrayLayers
+             maxDescriptorSetSubsampledSamplers
 
 instance Storable PhysicalDeviceFragmentDensityMap2PropertiesEXT where
   sizeOf ~_ = 32

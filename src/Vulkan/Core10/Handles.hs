@@ -114,7 +114,8 @@ data Instance = Instance
 instance Zero Instance where
   zero = Instance zero zero
 instance HasObjectType Instance where
-  objectTypeAndHandle (Instance (ptrToWordPtr -> WordPtr h) _) = (OBJECT_TYPE_INSTANCE, fromIntegral h)
+  objectTypeAndHandle (Instance (ptrToWordPtr -> WordPtr h) _) = ( OBJECT_TYPE_INSTANCE
+                                                                 , fromIntegral h )
 
 
 -- | An opaque type for representing pointers to VkPhysicalDevice handles
@@ -210,7 +211,8 @@ data PhysicalDevice = PhysicalDevice
 instance Zero PhysicalDevice where
   zero = PhysicalDevice zero zero
 instance HasObjectType PhysicalDevice where
-  objectTypeAndHandle (PhysicalDevice (ptrToWordPtr -> WordPtr h) _) = (OBJECT_TYPE_PHYSICAL_DEVICE, fromIntegral h)
+  objectTypeAndHandle (PhysicalDevice (ptrToWordPtr -> WordPtr h) _) = ( OBJECT_TYPE_PHYSICAL_DEVICE
+                                                                       , fromIntegral h )
 
 
 -- | An opaque type for representing pointers to VkDevice handles
@@ -478,7 +480,8 @@ data Device = Device
 instance Zero Device where
   zero = Device zero zero
 instance HasObjectType Device where
-  objectTypeAndHandle (Device (ptrToWordPtr -> WordPtr h) _) = (OBJECT_TYPE_DEVICE, fromIntegral h)
+  objectTypeAndHandle (Device (ptrToWordPtr -> WordPtr h) _) = ( OBJECT_TYPE_DEVICE
+                                                               , fromIntegral h )
 
 
 -- | An opaque type for representing pointers to VkQueue handles
@@ -512,7 +515,8 @@ data Queue = Queue
 instance Zero Queue where
   zero = Queue zero zero
 instance HasObjectType Queue where
-  objectTypeAndHandle (Queue (ptrToWordPtr -> WordPtr h) _) = (OBJECT_TYPE_QUEUE, fromIntegral h)
+  objectTypeAndHandle (Queue (ptrToWordPtr -> WordPtr h) _) = ( OBJECT_TYPE_QUEUE
+                                                              , fromIntegral h )
 
 
 -- | An opaque type for representing pointers to VkCommandBuffer handles
@@ -723,7 +727,8 @@ data CommandBuffer = CommandBuffer
 instance Zero CommandBuffer where
   zero = CommandBuffer zero zero
 instance HasObjectType CommandBuffer where
-  objectTypeAndHandle (CommandBuffer (ptrToWordPtr -> WordPtr h) _) = (OBJECT_TYPE_COMMAND_BUFFER, fromIntegral h)
+  objectTypeAndHandle (CommandBuffer (ptrToWordPtr -> WordPtr h) _) = ( OBJECT_TYPE_COMMAND_BUFFER
+                                                                      , fromIntegral h )
 
 
 -- | VkDeviceMemory - Opaque handle to a device memory object
@@ -1085,7 +1090,8 @@ newtype DescriptorSetLayout = DescriptorSetLayout Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
 instance HasObjectType DescriptorSetLayout where
-  objectTypeAndHandle (DescriptorSetLayout h) = (OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT, h)
+  objectTypeAndHandle (DescriptorSetLayout h) = ( OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT
+                                                , h )
 instance Show DescriptorSetLayout where
   showsPrec p (DescriptorSetLayout x) = showParen (p >= 11) (showString "DescriptorSetLayout 0x" . showHex x)
 

@@ -28,8 +28,6 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 newtype PrivateDataSlotCreateFlags = PrivateDataSlotCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNamePrivateDataSlotCreateFlags :: String
 conNamePrivateDataSlotCreateFlags = "PrivateDataSlotCreateFlags"
 
@@ -40,15 +38,18 @@ showTablePrivateDataSlotCreateFlags :: [(PrivateDataSlotCreateFlags, String)]
 showTablePrivateDataSlotCreateFlags = []
 
 instance Show PrivateDataSlotCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixPrivateDataSlotCreateFlags
-                            showTablePrivateDataSlotCreateFlags
-                            conNamePrivateDataSlotCreateFlags
-                            (\(PrivateDataSlotCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPrivateDataSlotCreateFlags
+      showTablePrivateDataSlotCreateFlags
+      conNamePrivateDataSlotCreateFlags
+      (\(PrivateDataSlotCreateFlags x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read PrivateDataSlotCreateFlags where
-  readPrec = enumReadPrec enumPrefixPrivateDataSlotCreateFlags
-                          showTablePrivateDataSlotCreateFlags
-                          conNamePrivateDataSlotCreateFlags
-                          PrivateDataSlotCreateFlags
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPrivateDataSlotCreateFlags
+      showTablePrivateDataSlotCreateFlags
+      conNamePrivateDataSlotCreateFlags
+      PrivateDataSlotCreateFlags

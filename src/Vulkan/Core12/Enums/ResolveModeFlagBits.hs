@@ -37,19 +37,23 @@ newtype ResolveModeFlagBits = ResolveModeFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'RESOLVE_MODE_NONE' indicates that no resolve operation is done.
-pattern RESOLVE_MODE_NONE            = ResolveModeFlagBits 0x00000000
+pattern RESOLVE_MODE_NONE = ResolveModeFlagBits 0x00000000
+
 -- | 'RESOLVE_MODE_SAMPLE_ZERO_BIT' indicates that result of the resolve
 -- operation is equal to the value of sample 0.
 pattern RESOLVE_MODE_SAMPLE_ZERO_BIT = ResolveModeFlagBits 0x00000001
+
 -- | 'RESOLVE_MODE_AVERAGE_BIT' indicates that result of the resolve
 -- operation is the average of the sample values.
-pattern RESOLVE_MODE_AVERAGE_BIT     = ResolveModeFlagBits 0x00000002
+pattern RESOLVE_MODE_AVERAGE_BIT = ResolveModeFlagBits 0x00000002
+
 -- | 'RESOLVE_MODE_MIN_BIT' indicates that result of the resolve operation is
 -- the minimum of the sample values.
-pattern RESOLVE_MODE_MIN_BIT         = ResolveModeFlagBits 0x00000004
+pattern RESOLVE_MODE_MIN_BIT = ResolveModeFlagBits 0x00000004
+
 -- | 'RESOLVE_MODE_MAX_BIT' indicates that result of the resolve operation is
 -- the maximum of the sample values.
-pattern RESOLVE_MODE_MAX_BIT         = ResolveModeFlagBits 0x00000008
+pattern RESOLVE_MODE_MAX_BIT = ResolveModeFlagBits 0x00000008
 
 conNameResolveModeFlagBits :: String
 conNameResolveModeFlagBits = "ResolveModeFlagBits"
@@ -59,23 +63,29 @@ enumPrefixResolveModeFlagBits = "RESOLVE_MODE_"
 
 showTableResolveModeFlagBits :: [(ResolveModeFlagBits, String)]
 showTableResolveModeFlagBits =
-  [ (RESOLVE_MODE_NONE           , "NONE")
-  , (RESOLVE_MODE_SAMPLE_ZERO_BIT, "SAMPLE_ZERO_BIT")
-  , (RESOLVE_MODE_AVERAGE_BIT    , "AVERAGE_BIT")
-  , (RESOLVE_MODE_MIN_BIT        , "MIN_BIT")
-  , (RESOLVE_MODE_MAX_BIT        , "MAX_BIT")
+  [ (RESOLVE_MODE_NONE, "NONE")
+  ,
+    ( RESOLVE_MODE_SAMPLE_ZERO_BIT
+    , "SAMPLE_ZERO_BIT"
+    )
+  , (RESOLVE_MODE_AVERAGE_BIT, "AVERAGE_BIT")
+  , (RESOLVE_MODE_MIN_BIT, "MIN_BIT")
+  , (RESOLVE_MODE_MAX_BIT, "MAX_BIT")
   ]
 
 instance Show ResolveModeFlagBits where
-  showsPrec = enumShowsPrec enumPrefixResolveModeFlagBits
-                            showTableResolveModeFlagBits
-                            conNameResolveModeFlagBits
-                            (\(ResolveModeFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixResolveModeFlagBits
+      showTableResolveModeFlagBits
+      conNameResolveModeFlagBits
+      (\(ResolveModeFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read ResolveModeFlagBits where
-  readPrec = enumReadPrec enumPrefixResolveModeFlagBits
-                          showTableResolveModeFlagBits
-                          conNameResolveModeFlagBits
-                          ResolveModeFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixResolveModeFlagBits
+      showTableResolveModeFlagBits
+      conNameResolveModeFlagBits
+      ResolveModeFlagBits

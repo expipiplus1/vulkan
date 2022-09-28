@@ -245,7 +245,9 @@ instance FromCStruct PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT where
     primitivesGeneratedQueryWithRasterizerDiscard <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     primitivesGeneratedQueryWithNonZeroStreams <- peek @Bool32 ((p `plusPtr` 24 :: Ptr Bool32))
     pure $ PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT
-             (bool32ToBool primitivesGeneratedQuery) (bool32ToBool primitivesGeneratedQueryWithRasterizerDiscard) (bool32ToBool primitivesGeneratedQueryWithNonZeroStreams)
+             (bool32ToBool primitivesGeneratedQuery)
+             (bool32ToBool primitivesGeneratedQueryWithRasterizerDiscard)
+             (bool32ToBool primitivesGeneratedQueryWithNonZeroStreams)
 
 instance Storable PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT where
   sizeOf ~_ = 32

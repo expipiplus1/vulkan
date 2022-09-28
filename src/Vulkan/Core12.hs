@@ -268,7 +268,18 @@ instance FromCStruct PhysicalDeviceVulkan11Features where
     samplerYcbcrConversion <- peek @Bool32 ((p `plusPtr` 56 :: Ptr Bool32))
     shaderDrawParameters <- peek @Bool32 ((p `plusPtr` 60 :: Ptr Bool32))
     pure $ PhysicalDeviceVulkan11Features
-             (bool32ToBool storageBuffer16BitAccess) (bool32ToBool uniformAndStorageBuffer16BitAccess) (bool32ToBool storagePushConstant16) (bool32ToBool storageInputOutput16) (bool32ToBool multiview) (bool32ToBool multiviewGeometryShader) (bool32ToBool multiviewTessellationShader) (bool32ToBool variablePointersStorageBuffer) (bool32ToBool variablePointers) (bool32ToBool protectedMemory) (bool32ToBool samplerYcbcrConversion) (bool32ToBool shaderDrawParameters)
+             (bool32ToBool storageBuffer16BitAccess)
+             (bool32ToBool uniformAndStorageBuffer16BitAccess)
+             (bool32ToBool storagePushConstant16)
+             (bool32ToBool storageInputOutput16)
+             (bool32ToBool multiview)
+             (bool32ToBool multiviewGeometryShader)
+             (bool32ToBool multiviewTessellationShader)
+             (bool32ToBool variablePointersStorageBuffer)
+             (bool32ToBool variablePointers)
+             (bool32ToBool protectedMemory)
+             (bool32ToBool samplerYcbcrConversion)
+             (bool32ToBool shaderDrawParameters)
 
 instance Storable PhysicalDeviceVulkan11Features where
   sizeOf ~_ = 64
@@ -489,7 +500,21 @@ instance FromCStruct PhysicalDeviceVulkan11Properties where
     maxPerSetDescriptors <- peek @Word32 ((p `plusPtr` 96 :: Ptr Word32))
     maxMemoryAllocationSize <- peek @DeviceSize ((p `plusPtr` 104 :: Ptr DeviceSize))
     pure $ PhysicalDeviceVulkan11Properties
-             deviceUUID driverUUID deviceLUID deviceNodeMask (bool32ToBool deviceLUIDValid) subgroupSize subgroupSupportedStages subgroupSupportedOperations (bool32ToBool subgroupQuadOperationsInAllStages) pointClippingBehavior maxMultiviewViewCount maxMultiviewInstanceIndex (bool32ToBool protectedNoFault) maxPerSetDescriptors maxMemoryAllocationSize
+             deviceUUID
+             driverUUID
+             deviceLUID
+             deviceNodeMask
+             (bool32ToBool deviceLUIDValid)
+             subgroupSize
+             subgroupSupportedStages
+             subgroupSupportedOperations
+             (bool32ToBool subgroupQuadOperationsInAllStages)
+             pointClippingBehavior
+             maxMultiviewViewCount
+             maxMultiviewInstanceIndex
+             (bool32ToBool protectedNoFault)
+             maxPerSetDescriptors
+             maxMemoryAllocationSize
 
 instance Storable PhysicalDeviceVulkan11Properties where
   sizeOf ~_ = 112
@@ -1202,7 +1227,53 @@ instance FromCStruct PhysicalDeviceVulkan12Features where
     shaderOutputLayer <- peek @Bool32 ((p `plusPtr` 196 :: Ptr Bool32))
     subgroupBroadcastDynamicId <- peek @Bool32 ((p `plusPtr` 200 :: Ptr Bool32))
     pure $ PhysicalDeviceVulkan12Features
-             (bool32ToBool samplerMirrorClampToEdge) (bool32ToBool drawIndirectCount) (bool32ToBool storageBuffer8BitAccess) (bool32ToBool uniformAndStorageBuffer8BitAccess) (bool32ToBool storagePushConstant8) (bool32ToBool shaderBufferInt64Atomics) (bool32ToBool shaderSharedInt64Atomics) (bool32ToBool shaderFloat16) (bool32ToBool shaderInt8) (bool32ToBool descriptorIndexing) (bool32ToBool shaderInputAttachmentArrayDynamicIndexing) (bool32ToBool shaderUniformTexelBufferArrayDynamicIndexing) (bool32ToBool shaderStorageTexelBufferArrayDynamicIndexing) (bool32ToBool shaderUniformBufferArrayNonUniformIndexing) (bool32ToBool shaderSampledImageArrayNonUniformIndexing) (bool32ToBool shaderStorageBufferArrayNonUniformIndexing) (bool32ToBool shaderStorageImageArrayNonUniformIndexing) (bool32ToBool shaderInputAttachmentArrayNonUniformIndexing) (bool32ToBool shaderUniformTexelBufferArrayNonUniformIndexing) (bool32ToBool shaderStorageTexelBufferArrayNonUniformIndexing) (bool32ToBool descriptorBindingUniformBufferUpdateAfterBind) (bool32ToBool descriptorBindingSampledImageUpdateAfterBind) (bool32ToBool descriptorBindingStorageImageUpdateAfterBind) (bool32ToBool descriptorBindingStorageBufferUpdateAfterBind) (bool32ToBool descriptorBindingUniformTexelBufferUpdateAfterBind) (bool32ToBool descriptorBindingStorageTexelBufferUpdateAfterBind) (bool32ToBool descriptorBindingUpdateUnusedWhilePending) (bool32ToBool descriptorBindingPartiallyBound) (bool32ToBool descriptorBindingVariableDescriptorCount) (bool32ToBool runtimeDescriptorArray) (bool32ToBool samplerFilterMinmax) (bool32ToBool scalarBlockLayout) (bool32ToBool imagelessFramebuffer) (bool32ToBool uniformBufferStandardLayout) (bool32ToBool shaderSubgroupExtendedTypes) (bool32ToBool separateDepthStencilLayouts) (bool32ToBool hostQueryReset) (bool32ToBool timelineSemaphore) (bool32ToBool bufferDeviceAddress) (bool32ToBool bufferDeviceAddressCaptureReplay) (bool32ToBool bufferDeviceAddressMultiDevice) (bool32ToBool vulkanMemoryModel) (bool32ToBool vulkanMemoryModelDeviceScope) (bool32ToBool vulkanMemoryModelAvailabilityVisibilityChains) (bool32ToBool shaderOutputViewportIndex) (bool32ToBool shaderOutputLayer) (bool32ToBool subgroupBroadcastDynamicId)
+             (bool32ToBool samplerMirrorClampToEdge)
+             (bool32ToBool drawIndirectCount)
+             (bool32ToBool storageBuffer8BitAccess)
+             (bool32ToBool uniformAndStorageBuffer8BitAccess)
+             (bool32ToBool storagePushConstant8)
+             (bool32ToBool shaderBufferInt64Atomics)
+             (bool32ToBool shaderSharedInt64Atomics)
+             (bool32ToBool shaderFloat16)
+             (bool32ToBool shaderInt8)
+             (bool32ToBool descriptorIndexing)
+             (bool32ToBool shaderInputAttachmentArrayDynamicIndexing)
+             (bool32ToBool shaderUniformTexelBufferArrayDynamicIndexing)
+             (bool32ToBool shaderStorageTexelBufferArrayDynamicIndexing)
+             (bool32ToBool shaderUniformBufferArrayNonUniformIndexing)
+             (bool32ToBool shaderSampledImageArrayNonUniformIndexing)
+             (bool32ToBool shaderStorageBufferArrayNonUniformIndexing)
+             (bool32ToBool shaderStorageImageArrayNonUniformIndexing)
+             (bool32ToBool shaderInputAttachmentArrayNonUniformIndexing)
+             (bool32ToBool shaderUniformTexelBufferArrayNonUniformIndexing)
+             (bool32ToBool shaderStorageTexelBufferArrayNonUniformIndexing)
+             (bool32ToBool descriptorBindingUniformBufferUpdateAfterBind)
+             (bool32ToBool descriptorBindingSampledImageUpdateAfterBind)
+             (bool32ToBool descriptorBindingStorageImageUpdateAfterBind)
+             (bool32ToBool descriptorBindingStorageBufferUpdateAfterBind)
+             (bool32ToBool descriptorBindingUniformTexelBufferUpdateAfterBind)
+             (bool32ToBool descriptorBindingStorageTexelBufferUpdateAfterBind)
+             (bool32ToBool descriptorBindingUpdateUnusedWhilePending)
+             (bool32ToBool descriptorBindingPartiallyBound)
+             (bool32ToBool descriptorBindingVariableDescriptorCount)
+             (bool32ToBool runtimeDescriptorArray)
+             (bool32ToBool samplerFilterMinmax)
+             (bool32ToBool scalarBlockLayout)
+             (bool32ToBool imagelessFramebuffer)
+             (bool32ToBool uniformBufferStandardLayout)
+             (bool32ToBool shaderSubgroupExtendedTypes)
+             (bool32ToBool separateDepthStencilLayouts)
+             (bool32ToBool hostQueryReset)
+             (bool32ToBool timelineSemaphore)
+             (bool32ToBool bufferDeviceAddress)
+             (bool32ToBool bufferDeviceAddressCaptureReplay)
+             (bool32ToBool bufferDeviceAddressMultiDevice)
+             (bool32ToBool vulkanMemoryModel)
+             (bool32ToBool vulkanMemoryModelDeviceScope)
+             (bool32ToBool vulkanMemoryModelAvailabilityVisibilityChains)
+             (bool32ToBool shaderOutputViewportIndex)
+             (bool32ToBool shaderOutputLayer)
+             (bool32ToBool subgroupBroadcastDynamicId)
 
 instance Storable PhysicalDeviceVulkan12Features where
   sizeOf ~_ = 208
@@ -1836,7 +1907,58 @@ instance FromCStruct PhysicalDeviceVulkan12Properties where
     maxTimelineSemaphoreValueDifference <- peek @Word64 ((p `plusPtr` 720 :: Ptr Word64))
     framebufferIntegerColorSampleCounts <- peek @SampleCountFlags ((p `plusPtr` 728 :: Ptr SampleCountFlags))
     pure $ PhysicalDeviceVulkan12Properties
-             driverID driverName driverInfo conformanceVersion denormBehaviorIndependence roundingModeIndependence (bool32ToBool shaderSignedZeroInfNanPreserveFloat16) (bool32ToBool shaderSignedZeroInfNanPreserveFloat32) (bool32ToBool shaderSignedZeroInfNanPreserveFloat64) (bool32ToBool shaderDenormPreserveFloat16) (bool32ToBool shaderDenormPreserveFloat32) (bool32ToBool shaderDenormPreserveFloat64) (bool32ToBool shaderDenormFlushToZeroFloat16) (bool32ToBool shaderDenormFlushToZeroFloat32) (bool32ToBool shaderDenormFlushToZeroFloat64) (bool32ToBool shaderRoundingModeRTEFloat16) (bool32ToBool shaderRoundingModeRTEFloat32) (bool32ToBool shaderRoundingModeRTEFloat64) (bool32ToBool shaderRoundingModeRTZFloat16) (bool32ToBool shaderRoundingModeRTZFloat32) (bool32ToBool shaderRoundingModeRTZFloat64) maxUpdateAfterBindDescriptorsInAllPools (bool32ToBool shaderUniformBufferArrayNonUniformIndexingNative) (bool32ToBool shaderSampledImageArrayNonUniformIndexingNative) (bool32ToBool shaderStorageBufferArrayNonUniformIndexingNative) (bool32ToBool shaderStorageImageArrayNonUniformIndexingNative) (bool32ToBool shaderInputAttachmentArrayNonUniformIndexingNative) (bool32ToBool robustBufferAccessUpdateAfterBind) (bool32ToBool quadDivergentImplicitLod) maxPerStageDescriptorUpdateAfterBindSamplers maxPerStageDescriptorUpdateAfterBindUniformBuffers maxPerStageDescriptorUpdateAfterBindStorageBuffers maxPerStageDescriptorUpdateAfterBindSampledImages maxPerStageDescriptorUpdateAfterBindStorageImages maxPerStageDescriptorUpdateAfterBindInputAttachments maxPerStageUpdateAfterBindResources maxDescriptorSetUpdateAfterBindSamplers maxDescriptorSetUpdateAfterBindUniformBuffers maxDescriptorSetUpdateAfterBindUniformBuffersDynamic maxDescriptorSetUpdateAfterBindStorageBuffers maxDescriptorSetUpdateAfterBindStorageBuffersDynamic maxDescriptorSetUpdateAfterBindSampledImages maxDescriptorSetUpdateAfterBindStorageImages maxDescriptorSetUpdateAfterBindInputAttachments supportedDepthResolveModes supportedStencilResolveModes (bool32ToBool independentResolveNone) (bool32ToBool independentResolve) (bool32ToBool filterMinmaxSingleComponentFormats) (bool32ToBool filterMinmaxImageComponentMapping) maxTimelineSemaphoreValueDifference framebufferIntegerColorSampleCounts
+             driverID
+             driverName
+             driverInfo
+             conformanceVersion
+             denormBehaviorIndependence
+             roundingModeIndependence
+             (bool32ToBool shaderSignedZeroInfNanPreserveFloat16)
+             (bool32ToBool shaderSignedZeroInfNanPreserveFloat32)
+             (bool32ToBool shaderSignedZeroInfNanPreserveFloat64)
+             (bool32ToBool shaderDenormPreserveFloat16)
+             (bool32ToBool shaderDenormPreserveFloat32)
+             (bool32ToBool shaderDenormPreserveFloat64)
+             (bool32ToBool shaderDenormFlushToZeroFloat16)
+             (bool32ToBool shaderDenormFlushToZeroFloat32)
+             (bool32ToBool shaderDenormFlushToZeroFloat64)
+             (bool32ToBool shaderRoundingModeRTEFloat16)
+             (bool32ToBool shaderRoundingModeRTEFloat32)
+             (bool32ToBool shaderRoundingModeRTEFloat64)
+             (bool32ToBool shaderRoundingModeRTZFloat16)
+             (bool32ToBool shaderRoundingModeRTZFloat32)
+             (bool32ToBool shaderRoundingModeRTZFloat64)
+             maxUpdateAfterBindDescriptorsInAllPools
+             (bool32ToBool shaderUniformBufferArrayNonUniformIndexingNative)
+             (bool32ToBool shaderSampledImageArrayNonUniformIndexingNative)
+             (bool32ToBool shaderStorageBufferArrayNonUniformIndexingNative)
+             (bool32ToBool shaderStorageImageArrayNonUniformIndexingNative)
+             (bool32ToBool shaderInputAttachmentArrayNonUniformIndexingNative)
+             (bool32ToBool robustBufferAccessUpdateAfterBind)
+             (bool32ToBool quadDivergentImplicitLod)
+             maxPerStageDescriptorUpdateAfterBindSamplers
+             maxPerStageDescriptorUpdateAfterBindUniformBuffers
+             maxPerStageDescriptorUpdateAfterBindStorageBuffers
+             maxPerStageDescriptorUpdateAfterBindSampledImages
+             maxPerStageDescriptorUpdateAfterBindStorageImages
+             maxPerStageDescriptorUpdateAfterBindInputAttachments
+             maxPerStageUpdateAfterBindResources
+             maxDescriptorSetUpdateAfterBindSamplers
+             maxDescriptorSetUpdateAfterBindUniformBuffers
+             maxDescriptorSetUpdateAfterBindUniformBuffersDynamic
+             maxDescriptorSetUpdateAfterBindStorageBuffers
+             maxDescriptorSetUpdateAfterBindStorageBuffersDynamic
+             maxDescriptorSetUpdateAfterBindSampledImages
+             maxDescriptorSetUpdateAfterBindStorageImages
+             maxDescriptorSetUpdateAfterBindInputAttachments
+             supportedDepthResolveModes
+             supportedStencilResolveModes
+             (bool32ToBool independentResolveNone)
+             (bool32ToBool independentResolve)
+             (bool32ToBool filterMinmaxSingleComponentFormats)
+             (bool32ToBool filterMinmaxImageComponentMapping)
+             maxTimelineSemaphoreValueDifference
+             framebufferIntegerColorSampleCounts
 
 instance Storable PhysicalDeviceVulkan12Properties where
   sizeOf ~_ = 736

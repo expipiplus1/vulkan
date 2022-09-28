@@ -153,7 +153,11 @@ createFence device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPFence <- ContT $ bracket (callocBytes @Fence 8) free
-  r <- lift $ traceAroundEvent "vkCreateFence" (vkCreateFence' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPFence))
+  r <- lift $ traceAroundEvent "vkCreateFence" (vkCreateFence'
+                                                  (deviceHandle (device))
+                                                  (forgetExtensions pCreateInfo)
+                                                  pAllocator
+                                                  (pPFence))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pFence <- lift $ peek @Fence pPFence
   pure $ (pFence)
@@ -240,7 +244,10 @@ destroyFence device fence allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyFence" (vkDestroyFence' (deviceHandle (device)) (fence) pAllocator)
+  lift $ traceAroundEvent "vkDestroyFence" (vkDestroyFence'
+                                              (deviceHandle (device))
+                                              (fence)
+                                              pAllocator)
   pure $ ()
 
 
@@ -323,7 +330,10 @@ resetFences device fences = liftIO . evalContT $ do
   let vkResetFences' = mkVkResetFences vkResetFencesPtr
   pPFences <- ContT $ allocaBytes @Fence ((Data.Vector.length (fences)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPFences `plusPtr` (8 * (i)) :: Ptr Fence) (e)) (fences)
-  r <- lift $ traceAroundEvent "vkResetFences" (vkResetFences' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (fences)) :: Word32)) (pPFences))
+  r <- lift $ traceAroundEvent "vkResetFences" (vkResetFences'
+                                                  (deviceHandle (device))
+                                                  ((fromIntegral (Data.Vector.length $ (fences)) :: Word32))
+                                                  (pPFences))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -407,7 +417,9 @@ getFenceStatus device fence = liftIO $ do
   unless (vkGetFenceStatusPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetFenceStatus is null" Nothing Nothing
   let vkGetFenceStatus' = mkVkGetFenceStatus vkGetFenceStatusPtr
-  r <- traceAroundEvent "vkGetFenceStatus" (vkGetFenceStatus' (deviceHandle (device)) (fence))
+  r <- traceAroundEvent "vkGetFenceStatus" (vkGetFenceStatus'
+                                              (deviceHandle (device))
+                                              (fence))
   when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 
@@ -443,14 +455,22 @@ waitForFencesSafeOrUnsafe :: forall io
                              -- nanosecond, and /may/ be longer than the requested period.
                              ("timeout" ::: Word64)
                           -> io (Result)
-waitForFencesSafeOrUnsafe mkVkWaitForFences device fences waitAll timeout = liftIO . evalContT $ do
+waitForFencesSafeOrUnsafe mkVkWaitForFences device
+                                              fences
+                                              waitAll
+                                              timeout = liftIO . evalContT $ do
   let vkWaitForFencesPtr = pVkWaitForFences (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkWaitForFencesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkWaitForFences is null" Nothing Nothing
   let vkWaitForFences' = mkVkWaitForFences vkWaitForFencesPtr
   pPFences <- ContT $ allocaBytes @Fence ((Data.Vector.length (fences)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPFences `plusPtr` (8 * (i)) :: Ptr Fence) (e)) (fences)
-  r <- lift $ traceAroundEvent "vkWaitForFences" (vkWaitForFences' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (fences)) :: Word32)) (pPFences) (boolToBool32 (waitAll)) (timeout))
+  r <- lift $ traceAroundEvent "vkWaitForFences" (vkWaitForFences'
+                                                    (deviceHandle (device))
+                                                    ((fromIntegral (Data.Vector.length $ (fences)) :: Word32))
+                                                    (pPFences)
+                                                    (boolToBool32 (waitAll))
+                                                    (timeout))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 
@@ -618,7 +638,8 @@ instance Extensible FenceCreateInfo where
     | Just Refl <- eqT @e @ExportFenceCreateInfo = Just f
     | otherwise = Nothing
 
-instance (Extendss FenceCreateInfo es, PokeChain es) => ToCStruct (FenceCreateInfo es) where
+instance ( Extendss FenceCreateInfo es
+         , PokeChain es ) => ToCStruct (FenceCreateInfo es) where
   withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FenceCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FENCE_CREATE_INFO)
@@ -634,7 +655,8 @@ instance (Extendss FenceCreateInfo es, PokeChain es) => ToCStruct (FenceCreateIn
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ f
 
-instance (Extendss FenceCreateInfo es, PeekChain es) => FromCStruct (FenceCreateInfo es) where
+instance ( Extendss FenceCreateInfo es
+         , PeekChain es ) => FromCStruct (FenceCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

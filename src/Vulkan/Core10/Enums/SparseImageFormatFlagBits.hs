@@ -33,11 +33,13 @@ newtype SparseImageFormatFlagBits = SparseImageFormatFlagBits Flags
 
 -- | 'SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT' specifies that the image uses a
 -- single mip tail region for all array layers.
-pattern SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT         = SparseImageFormatFlagBits 0x00000001
+pattern SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT = SparseImageFormatFlagBits 0x00000001
+
 -- | 'SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT' specifies that the first mip
 -- level whose dimensions are not integer multiples of the corresponding
 -- dimensions of the sparse image block begins the mip tail region.
-pattern SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT       = SparseImageFormatFlagBits 0x00000002
+pattern SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT = SparseImageFormatFlagBits 0x00000002
+
 -- | 'SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT' specifies that the
 -- image uses non-standard sparse image block dimensions, and the
 -- @imageGranularity@ values do not match the standard sparse image block
@@ -52,21 +54,33 @@ enumPrefixSparseImageFormatFlagBits = "SPARSE_IMAGE_FORMAT_"
 
 showTableSparseImageFormatFlagBits :: [(SparseImageFormatFlagBits, String)]
 showTableSparseImageFormatFlagBits =
-  [ (SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT        , "SINGLE_MIPTAIL_BIT")
-  , (SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT      , "ALIGNED_MIP_SIZE_BIT")
-  , (SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT, "NONSTANDARD_BLOCK_SIZE_BIT")
+  [
+    ( SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT
+    , "SINGLE_MIPTAIL_BIT"
+    )
+  ,
+    ( SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT
+    , "ALIGNED_MIP_SIZE_BIT"
+    )
+  ,
+    ( SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT
+    , "NONSTANDARD_BLOCK_SIZE_BIT"
+    )
   ]
 
 instance Show SparseImageFormatFlagBits where
-  showsPrec = enumShowsPrec enumPrefixSparseImageFormatFlagBits
-                            showTableSparseImageFormatFlagBits
-                            conNameSparseImageFormatFlagBits
-                            (\(SparseImageFormatFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixSparseImageFormatFlagBits
+      showTableSparseImageFormatFlagBits
+      conNameSparseImageFormatFlagBits
+      (\(SparseImageFormatFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read SparseImageFormatFlagBits where
-  readPrec = enumReadPrec enumPrefixSparseImageFormatFlagBits
-                          showTableSparseImageFormatFlagBits
-                          conNameSparseImageFormatFlagBits
-                          SparseImageFormatFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixSparseImageFormatFlagBits
+      showTableSparseImageFormatFlagBits
+      conNameSparseImageFormatFlagBits
+      SparseImageFormatFlagBits

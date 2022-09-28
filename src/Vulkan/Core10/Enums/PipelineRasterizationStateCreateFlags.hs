@@ -27,8 +27,6 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 newtype PipelineRasterizationStateCreateFlags = PipelineRasterizationStateCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNamePipelineRasterizationStateCreateFlags :: String
 conNamePipelineRasterizationStateCreateFlags = "PipelineRasterizationStateCreateFlags"
 
@@ -39,15 +37,18 @@ showTablePipelineRasterizationStateCreateFlags :: [(PipelineRasterizationStateCr
 showTablePipelineRasterizationStateCreateFlags = []
 
 instance Show PipelineRasterizationStateCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixPipelineRasterizationStateCreateFlags
-                            showTablePipelineRasterizationStateCreateFlags
-                            conNamePipelineRasterizationStateCreateFlags
-                            (\(PipelineRasterizationStateCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineRasterizationStateCreateFlags
+      showTablePipelineRasterizationStateCreateFlags
+      conNamePipelineRasterizationStateCreateFlags
+      (\(PipelineRasterizationStateCreateFlags x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read PipelineRasterizationStateCreateFlags where
-  readPrec = enumReadPrec enumPrefixPipelineRasterizationStateCreateFlags
-                          showTablePipelineRasterizationStateCreateFlags
-                          conNamePipelineRasterizationStateCreateFlags
-                          PipelineRasterizationStateCreateFlags
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineRasterizationStateCreateFlags
+      showTablePipelineRasterizationStateCreateFlags
+      conNamePipelineRasterizationStateCreateFlags
+      PipelineRasterizationStateCreateFlags

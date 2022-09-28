@@ -217,7 +217,11 @@ createFramebuffer device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPFramebuffer <- ContT $ bracket (callocBytes @Framebuffer 8) free
-  r <- lift $ traceAroundEvent "vkCreateFramebuffer" (vkCreateFramebuffer' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPFramebuffer))
+  r <- lift $ traceAroundEvent "vkCreateFramebuffer" (vkCreateFramebuffer'
+                                                        (deviceHandle (device))
+                                                        (forgetExtensions pCreateInfo)
+                                                        pAllocator
+                                                        (pPFramebuffer))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pFramebuffer <- lift $ peek @Framebuffer pPFramebuffer
   pure $ (pFramebuffer)
@@ -305,7 +309,10 @@ destroyFramebuffer device framebuffer allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyFramebuffer" (vkDestroyFramebuffer' (deviceHandle (device)) (framebuffer) pAllocator)
+  lift $ traceAroundEvent "vkDestroyFramebuffer" (vkDestroyFramebuffer'
+                                                    (deviceHandle (device))
+                                                    (framebuffer)
+                                                    pAllocator)
   pure $ ()
 
 
@@ -373,7 +380,11 @@ createRenderPass device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPRenderPass <- ContT $ bracket (callocBytes @RenderPass 8) free
-  r <- lift $ traceAroundEvent "vkCreateRenderPass" (vkCreateRenderPass' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPRenderPass))
+  r <- lift $ traceAroundEvent "vkCreateRenderPass" (vkCreateRenderPass'
+                                                       (deviceHandle (device))
+                                                       (forgetExtensions pCreateInfo)
+                                                       pAllocator
+                                                       (pPRenderPass))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pRenderPass <- lift $ peek @RenderPass pPRenderPass
   pure $ (pRenderPass)
@@ -461,7 +472,10 @@ destroyRenderPass device renderPass allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyRenderPass" (vkDestroyRenderPass' (deviceHandle (device)) (renderPass) pAllocator)
+  lift $ traceAroundEvent "vkDestroyRenderPass" (vkDestroyRenderPass'
+                                                   (deviceHandle (device))
+                                                   (renderPass)
+                                                   pAllocator)
   pure $ ()
 
 
@@ -538,7 +552,10 @@ getRenderAreaGranularity device renderPass = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRenderAreaGranularity is null" Nothing Nothing
   let vkGetRenderAreaGranularity' = mkVkGetRenderAreaGranularity vkGetRenderAreaGranularityPtr
   pPGranularity <- ContT (withZeroCStruct @Extent2D)
-  lift $ traceAroundEvent "vkGetRenderAreaGranularity" (vkGetRenderAreaGranularity' (deviceHandle (device)) (renderPass) (pPGranularity))
+  lift $ traceAroundEvent "vkGetRenderAreaGranularity" (vkGetRenderAreaGranularity'
+                                                          (deviceHandle (device))
+                                                          (renderPass)
+                                                          (pPGranularity))
   pGranularity <- lift $ peekCStruct @Extent2D pPGranularity
   pure $ (pGranularity)
 
@@ -972,7 +989,15 @@ instance FromCStruct AttachmentDescription where
     initialLayout <- peek @ImageLayout ((p `plusPtr` 28 :: Ptr ImageLayout))
     finalLayout <- peek @ImageLayout ((p `plusPtr` 32 :: Ptr ImageLayout))
     pure $ AttachmentDescription
-             flags format samples loadOp storeOp stencilLoadOp stencilStoreOp initialLayout finalLayout
+             flags
+             format
+             samples
+             loadOp
+             storeOp
+             stencilLoadOp
+             stencilStoreOp
+             initialLayout
+             finalLayout
 
 instance Storable AttachmentDescription where
   sizeOf ~_ = 36
@@ -1597,7 +1622,13 @@ instance FromCStruct SubpassDescription where
     pPreserveAttachments <- peek @(Ptr Word32) ((p `plusPtr` 64 :: Ptr (Ptr Word32)))
     pPreserveAttachments' <- generateM (fromIntegral preserveAttachmentCount) (\i -> peek @Word32 ((pPreserveAttachments `advancePtrBytes` (4 * (i)) :: Ptr Word32)))
     pure $ SubpassDescription
-             flags pipelineBindPoint pInputAttachments' pColorAttachments' pResolveAttachments' pDepthStencilAttachment' pPreserveAttachments'
+             flags
+             pipelineBindPoint
+             pInputAttachments'
+             pColorAttachments'
+             pResolveAttachments'
+             pDepthStencilAttachment'
+             pPreserveAttachments'
 
 instance Zero SubpassDescription where
   zero = SubpassDescription
@@ -1938,7 +1969,13 @@ instance FromCStruct SubpassDependency where
     dstAccessMask <- peek @AccessFlags ((p `plusPtr` 20 :: Ptr AccessFlags))
     dependencyFlags <- peek @DependencyFlags ((p `plusPtr` 24 :: Ptr DependencyFlags))
     pure $ SubpassDependency
-             srcSubpass dstSubpass srcStageMask dstStageMask srcAccessMask dstAccessMask dependencyFlags
+             srcSubpass
+             dstSubpass
+             srcStageMask
+             dstStageMask
+             srcAccessMask
+             dstAccessMask
+             dependencyFlags
 
 instance Storable SubpassDependency where
   sizeOf ~_ = 28
@@ -2193,7 +2230,8 @@ instance Extensible RenderPassCreateInfo where
     | Just Refl <- eqT @e @RenderPassMultiviewCreateInfo = Just f
     | otherwise = Nothing
 
-instance (Extendss RenderPassCreateInfo es, PokeChain es) => ToCStruct (RenderPassCreateInfo es) where
+instance ( Extendss RenderPassCreateInfo es
+         , PokeChain es ) => ToCStruct (RenderPassCreateInfo es) where
   withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RenderPassCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO)
@@ -2221,7 +2259,8 @@ instance (Extendss RenderPassCreateInfo es, PokeChain es) => ToCStruct (RenderPa
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ f
 
-instance (Extendss RenderPassCreateInfo es, PeekChain es) => FromCStruct (RenderPassCreateInfo es) where
+instance ( Extendss RenderPassCreateInfo es
+         , PeekChain es ) => FromCStruct (RenderPassCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -2804,7 +2843,8 @@ instance Extensible FramebufferCreateInfo where
     | Just Refl <- eqT @e @FramebufferAttachmentsCreateInfo = Just f
     | otherwise = Nothing
 
-instance (Extendss FramebufferCreateInfo es, PokeChain es) => ToCStruct (FramebufferCreateInfo es) where
+instance ( Extendss FramebufferCreateInfo es
+         , PokeChain es ) => ToCStruct (FramebufferCreateInfo es) where
   withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FramebufferCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO)
@@ -2832,7 +2872,8 @@ instance (Extendss FramebufferCreateInfo es, PokeChain es) => ToCStruct (Framebu
     lift $ poke ((p `plusPtr` 56 :: Ptr Word32)) (zero)
     lift $ f
 
-instance (Extendss FramebufferCreateInfo es, PeekChain es) => FromCStruct (FramebufferCreateInfo es) where
+instance ( Extendss FramebufferCreateInfo es
+         , PeekChain es ) => FromCStruct (FramebufferCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

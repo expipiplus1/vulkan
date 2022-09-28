@@ -217,7 +217,8 @@ instance FromCStruct PhysicalDeviceComputeShaderDerivativesFeaturesNV where
     computeDerivativeGroupQuads <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     computeDerivativeGroupLinear <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ PhysicalDeviceComputeShaderDerivativesFeaturesNV
-             (bool32ToBool computeDerivativeGroupQuads) (bool32ToBool computeDerivativeGroupLinear)
+             (bool32ToBool computeDerivativeGroupQuads)
+             (bool32ToBool computeDerivativeGroupLinear)
 
 instance Storable PhysicalDeviceComputeShaderDerivativesFeaturesNV where
   sizeOf ~_ = 24

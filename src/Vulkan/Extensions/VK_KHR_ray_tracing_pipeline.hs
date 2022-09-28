@@ -1508,7 +1508,14 @@ cmdTraceRaysKHR :: forall io
                 -> -- | @depth@ is depth of the ray trace query dimensions.
                    ("depth" ::: Word32)
                 -> io ()
-cmdTraceRaysKHR commandBuffer raygenShaderBindingTable missShaderBindingTable hitShaderBindingTable callableShaderBindingTable width height depth = liftIO . evalContT $ do
+cmdTraceRaysKHR commandBuffer
+                  raygenShaderBindingTable
+                  missShaderBindingTable
+                  hitShaderBindingTable
+                  callableShaderBindingTable
+                  width
+                  height
+                  depth = liftIO . evalContT $ do
   let vkCmdTraceRaysKHRPtr = pVkCmdTraceRaysKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdTraceRaysKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdTraceRaysKHR is null" Nothing Nothing
@@ -1517,7 +1524,15 @@ cmdTraceRaysKHR commandBuffer raygenShaderBindingTable missShaderBindingTable hi
   pMissShaderBindingTable <- ContT $ withCStruct (missShaderBindingTable)
   pHitShaderBindingTable <- ContT $ withCStruct (hitShaderBindingTable)
   pCallableShaderBindingTable <- ContT $ withCStruct (callableShaderBindingTable)
-  lift $ traceAroundEvent "vkCmdTraceRaysKHR" (vkCmdTraceRaysKHR' (commandBufferHandle (commandBuffer)) pRaygenShaderBindingTable pMissShaderBindingTable pHitShaderBindingTable pCallableShaderBindingTable (width) (height) (depth))
+  lift $ traceAroundEvent "vkCmdTraceRaysKHR" (vkCmdTraceRaysKHR'
+                                                 (commandBufferHandle (commandBuffer))
+                                                 pRaygenShaderBindingTable
+                                                 pMissShaderBindingTable
+                                                 pHitShaderBindingTable
+                                                 pCallableShaderBindingTable
+                                                 (width)
+                                                 (height)
+                                                 (depth))
   pure $ ()
 
 
@@ -1607,12 +1622,23 @@ getRayTracingShaderGroupHandlesKHR :: forall io
                                       -- be written.
                                       ("data" ::: Ptr ())
                                    -> io ()
-getRayTracingShaderGroupHandlesKHR device pipeline firstGroup groupCount dataSize data' = liftIO $ do
+getRayTracingShaderGroupHandlesKHR device
+                                     pipeline
+                                     firstGroup
+                                     groupCount
+                                     dataSize
+                                     data' = liftIO $ do
   let vkGetRayTracingShaderGroupHandlesKHRPtr = pVkGetRayTracingShaderGroupHandlesKHR (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetRayTracingShaderGroupHandlesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRayTracingShaderGroupHandlesKHR is null" Nothing Nothing
   let vkGetRayTracingShaderGroupHandlesKHR' = mkVkGetRayTracingShaderGroupHandlesKHR vkGetRayTracingShaderGroupHandlesKHRPtr
-  r <- traceAroundEvent "vkGetRayTracingShaderGroupHandlesKHR" (vkGetRayTracingShaderGroupHandlesKHR' (deviceHandle (device)) (pipeline) (firstGroup) (groupCount) (CSize (dataSize)) (data'))
+  r <- traceAroundEvent "vkGetRayTracingShaderGroupHandlesKHR" (vkGetRayTracingShaderGroupHandlesKHR'
+                                                                  (deviceHandle (device))
+                                                                  (pipeline)
+                                                                  (firstGroup)
+                                                                  (groupCount)
+                                                                  (CSize (dataSize))
+                                                                  (data'))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -1707,12 +1733,23 @@ getRayTracingCaptureReplayShaderGroupHandlesKHR :: forall io
                                                    -- be written.
                                                    ("data" ::: Ptr ())
                                                 -> io ()
-getRayTracingCaptureReplayShaderGroupHandlesKHR device pipeline firstGroup groupCount dataSize data' = liftIO $ do
+getRayTracingCaptureReplayShaderGroupHandlesKHR device
+                                                  pipeline
+                                                  firstGroup
+                                                  groupCount
+                                                  dataSize
+                                                  data' = liftIO $ do
   let vkGetRayTracingCaptureReplayShaderGroupHandlesKHRPtr = pVkGetRayTracingCaptureReplayShaderGroupHandlesKHR (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetRayTracingCaptureReplayShaderGroupHandlesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRayTracingCaptureReplayShaderGroupHandlesKHR is null" Nothing Nothing
   let vkGetRayTracingCaptureReplayShaderGroupHandlesKHR' = mkVkGetRayTracingCaptureReplayShaderGroupHandlesKHR vkGetRayTracingCaptureReplayShaderGroupHandlesKHRPtr
-  r <- traceAroundEvent "vkGetRayTracingCaptureReplayShaderGroupHandlesKHR" (vkGetRayTracingCaptureReplayShaderGroupHandlesKHR' (deviceHandle (device)) (pipeline) (firstGroup) (groupCount) (CSize (dataSize)) (data'))
+  r <- traceAroundEvent "vkGetRayTracingCaptureReplayShaderGroupHandlesKHR" (vkGetRayTracingCaptureReplayShaderGroupHandlesKHR'
+                                                                               (deviceHandle (device))
+                                                                               (pipeline)
+                                                                               (firstGroup)
+                                                                               (groupCount)
+                                                                               (CSize (dataSize))
+                                                                               (data'))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -1870,7 +1907,11 @@ createRayTracingPipelinesKHR :: forall io
                                 -- chapter.
                                 ("allocator" ::: Maybe AllocationCallbacks)
                              -> io (Result, ("pipelines" ::: Vector Pipeline))
-createRayTracingPipelinesKHR device deferredOperation pipelineCache createInfos allocator = liftIO . evalContT $ do
+createRayTracingPipelinesKHR device
+                               deferredOperation
+                               pipelineCache
+                               createInfos
+                               allocator = liftIO . evalContT $ do
   let vkCreateRayTracingPipelinesKHRPtr = pVkCreateRayTracingPipelinesKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateRayTracingPipelinesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateRayTracingPipelinesKHR is null" Nothing Nothing
@@ -1881,7 +1922,14 @@ createRayTracingPipelinesKHR device deferredOperation pipelineCache createInfos 
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPPipelines <- ContT $ bracket (callocBytes @Pipeline ((fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) * 8)) free
-  r <- lift $ traceAroundEvent "vkCreateRayTracingPipelinesKHR" (vkCreateRayTracingPipelinesKHR' (deviceHandle (device)) (deferredOperation) (pipelineCache) ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32)) (forgetExtensions (pPCreateInfos)) pAllocator (pPPipelines))
+  r <- lift $ traceAroundEvent "vkCreateRayTracingPipelinesKHR" (vkCreateRayTracingPipelinesKHR'
+                                                                   (deviceHandle (device))
+                                                                   (deferredOperation)
+                                                                   (pipelineCache)
+                                                                   ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))
+                                                                   (forgetExtensions (pPCreateInfos))
+                                                                   pAllocator
+                                                                   (pPPipelines))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPipelines <- lift $ generateM (fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) (\i -> peek @Pipeline ((pPPipelines `advancePtrBytes` (8 * (i)) :: Ptr Pipeline)))
   pure $ (r, pPipelines)
@@ -1895,9 +1943,20 @@ createRayTracingPipelinesKHR device deferredOperation pipelineCache createInfos 
 -- To just extract the pair pass '(,)' as the last argument.
 --
 withRayTracingPipelinesKHR :: forall io r . MonadIO io => Device -> DeferredOperationKHR -> PipelineCache -> Vector (SomeStruct RayTracingPipelineCreateInfoKHR) -> Maybe AllocationCallbacks -> (io (Result, Vector Pipeline) -> ((Result, Vector Pipeline) -> io ()) -> r) -> r
-withRayTracingPipelinesKHR device deferredOperation pipelineCache pCreateInfos pAllocator b =
-  b (createRayTracingPipelinesKHR device deferredOperation pipelineCache pCreateInfos pAllocator)
-    (\(_, o1) -> traverse_ (\o1Elem -> destroyPipeline device o1Elem pAllocator) o1)
+withRayTracingPipelinesKHR device
+                             deferredOperation
+                             pipelineCache
+                             pCreateInfos
+                             pAllocator
+                             b =
+  b (createRayTracingPipelinesKHR device
+                                    deferredOperation
+                                    pipelineCache
+                                    pCreateInfos
+                                    pAllocator)
+    (\(_, o1) -> traverse_ (\o1Elem -> destroyPipeline device
+                                                         o1Elem
+                                                         pAllocator) o1)
 
 
 foreign import ccall
@@ -2546,7 +2605,12 @@ cmdTraceRaysIndirectKHR :: forall io
                            -- parameters.
                            ("indirectDeviceAddress" ::: DeviceAddress)
                         -> io ()
-cmdTraceRaysIndirectKHR commandBuffer raygenShaderBindingTable missShaderBindingTable hitShaderBindingTable callableShaderBindingTable indirectDeviceAddress = liftIO . evalContT $ do
+cmdTraceRaysIndirectKHR commandBuffer
+                          raygenShaderBindingTable
+                          missShaderBindingTable
+                          hitShaderBindingTable
+                          callableShaderBindingTable
+                          indirectDeviceAddress = liftIO . evalContT $ do
   let vkCmdTraceRaysIndirectKHRPtr = pVkCmdTraceRaysIndirectKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdTraceRaysIndirectKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdTraceRaysIndirectKHR is null" Nothing Nothing
@@ -2555,7 +2619,13 @@ cmdTraceRaysIndirectKHR commandBuffer raygenShaderBindingTable missShaderBinding
   pMissShaderBindingTable <- ContT $ withCStruct (missShaderBindingTable)
   pHitShaderBindingTable <- ContT $ withCStruct (hitShaderBindingTable)
   pCallableShaderBindingTable <- ContT $ withCStruct (callableShaderBindingTable)
-  lift $ traceAroundEvent "vkCmdTraceRaysIndirectKHR" (vkCmdTraceRaysIndirectKHR' (commandBufferHandle (commandBuffer)) pRaygenShaderBindingTable pMissShaderBindingTable pHitShaderBindingTable pCallableShaderBindingTable (indirectDeviceAddress))
+  lift $ traceAroundEvent "vkCmdTraceRaysIndirectKHR" (vkCmdTraceRaysIndirectKHR'
+                                                         (commandBufferHandle (commandBuffer))
+                                                         pRaygenShaderBindingTable
+                                                         pMissShaderBindingTable
+                                                         pHitShaderBindingTable
+                                                         pCallableShaderBindingTable
+                                                         (indirectDeviceAddress))
   pure $ ()
 
 
@@ -2619,12 +2689,19 @@ getRayTracingShaderGroupStackSizeKHR :: forall io
                                      -> -- | @groupShader@ is the type of shader from the group to query.
                                         ShaderGroupShaderKHR
                                      -> io (DeviceSize)
-getRayTracingShaderGroupStackSizeKHR device pipeline group groupShader = liftIO $ do
+getRayTracingShaderGroupStackSizeKHR device
+                                       pipeline
+                                       group
+                                       groupShader = liftIO $ do
   let vkGetRayTracingShaderGroupStackSizeKHRPtr = pVkGetRayTracingShaderGroupStackSizeKHR (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetRayTracingShaderGroupStackSizeKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRayTracingShaderGroupStackSizeKHR is null" Nothing Nothing
   let vkGetRayTracingShaderGroupStackSizeKHR' = mkVkGetRayTracingShaderGroupStackSizeKHR vkGetRayTracingShaderGroupStackSizeKHRPtr
-  r <- traceAroundEvent "vkGetRayTracingShaderGroupStackSizeKHR" (vkGetRayTracingShaderGroupStackSizeKHR' (deviceHandle (device)) (pipeline) (group) (groupShader))
+  r <- traceAroundEvent "vkGetRayTracingShaderGroupStackSizeKHR" (vkGetRayTracingShaderGroupStackSizeKHR'
+                                                                    (deviceHandle (device))
+                                                                    (pipeline)
+                                                                    (group)
+                                                                    (groupShader))
   pure $ (r)
 
 
@@ -2706,12 +2783,15 @@ cmdSetRayTracingPipelineStackSizeKHR :: forall io
                                         -- trace commands.
                                         ("pipelineStackSize" ::: Word32)
                                      -> io ()
-cmdSetRayTracingPipelineStackSizeKHR commandBuffer pipelineStackSize = liftIO $ do
+cmdSetRayTracingPipelineStackSizeKHR commandBuffer
+                                       pipelineStackSize = liftIO $ do
   let vkCmdSetRayTracingPipelineStackSizeKHRPtr = pVkCmdSetRayTracingPipelineStackSizeKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetRayTracingPipelineStackSizeKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetRayTracingPipelineStackSizeKHR is null" Nothing Nothing
   let vkCmdSetRayTracingPipelineStackSizeKHR' = mkVkCmdSetRayTracingPipelineStackSizeKHR vkCmdSetRayTracingPipelineStackSizeKHRPtr
-  traceAroundEvent "vkCmdSetRayTracingPipelineStackSizeKHR" (vkCmdSetRayTracingPipelineStackSizeKHR' (commandBufferHandle (commandBuffer)) (pipelineStackSize))
+  traceAroundEvent "vkCmdSetRayTracingPipelineStackSizeKHR" (vkCmdSetRayTracingPipelineStackSizeKHR'
+                                                               (commandBufferHandle (commandBuffer))
+                                                               (pipelineStackSize))
   pure $ ()
 
 
@@ -2869,7 +2949,12 @@ instance FromCStruct RayTracingShaderGroupCreateInfoKHR where
     intersectionShader <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
     pShaderGroupCaptureReplayHandle <- peek @(Ptr ()) ((p `plusPtr` 40 :: Ptr (Ptr ())))
     pure $ RayTracingShaderGroupCreateInfoKHR
-             type' generalShader closestHitShader anyHitShader intersectionShader pShaderGroupCaptureReplayHandle
+             type'
+             generalShader
+             closestHitShader
+             anyHitShader
+             intersectionShader
+             pShaderGroupCaptureReplayHandle
 
 instance Storable RayTracingShaderGroupCreateInfoKHR where
   sizeOf ~_ = 48
@@ -3281,7 +3366,8 @@ instance Extensible RayTracingPipelineCreateInfoKHR where
     | Just Refl <- eqT @e @PipelineCreationFeedbackCreateInfo = Just f
     | otherwise = Nothing
 
-instance (Extendss RayTracingPipelineCreateInfoKHR es, PokeChain es) => ToCStruct (RayTracingPipelineCreateInfoKHR es) where
+instance ( Extendss RayTracingPipelineCreateInfoKHR es
+         , PokeChain es ) => ToCStruct (RayTracingPipelineCreateInfoKHR es) where
   withCStruct x f = allocaBytes 104 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RayTracingPipelineCreateInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR)
@@ -3324,7 +3410,8 @@ instance (Extendss RayTracingPipelineCreateInfoKHR es, PokeChain es) => ToCStruc
     lift $ poke ((p `plusPtr` 96 :: Ptr Int32)) (zero)
     lift $ f
 
-instance (Extendss RayTracingPipelineCreateInfoKHR es, PeekChain es) => FromCStruct (RayTracingPipelineCreateInfoKHR es) where
+instance ( Extendss RayTracingPipelineCreateInfoKHR es
+         , PeekChain es ) => FromCStruct (RayTracingPipelineCreateInfoKHR es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -3346,7 +3433,17 @@ instance (Extendss RayTracingPipelineCreateInfoKHR es, PeekChain es) => FromCStr
     basePipelineHandle <- peek @Pipeline ((p `plusPtr` 88 :: Ptr Pipeline))
     basePipelineIndex <- peek @Int32 ((p `plusPtr` 96 :: Ptr Int32))
     pure $ RayTracingPipelineCreateInfoKHR
-             next flags pStages' pGroups' maxPipelineRayRecursionDepth pLibraryInfo' pLibraryInterface' pDynamicState' layout basePipelineHandle basePipelineIndex
+             next
+             flags
+             pStages'
+             pGroups'
+             maxPipelineRayRecursionDepth
+             pLibraryInfo'
+             pLibraryInterface'
+             pDynamicState'
+             layout
+             basePipelineHandle
+             basePipelineIndex
 
 instance es ~ '[] => Zero (RayTracingPipelineCreateInfoKHR es) where
   zero = RayTracingPipelineCreateInfoKHR
@@ -3483,7 +3580,11 @@ instance FromCStruct PhysicalDeviceRayTracingPipelineFeaturesKHR where
     rayTracingPipelineTraceRaysIndirect <- peek @Bool32 ((p `plusPtr` 28 :: Ptr Bool32))
     rayTraversalPrimitiveCulling <- peek @Bool32 ((p `plusPtr` 32 :: Ptr Bool32))
     pure $ PhysicalDeviceRayTracingPipelineFeaturesKHR
-             (bool32ToBool rayTracingPipeline) (bool32ToBool rayTracingPipelineShaderGroupHandleCaptureReplay) (bool32ToBool rayTracingPipelineShaderGroupHandleCaptureReplayMixed) (bool32ToBool rayTracingPipelineTraceRaysIndirect) (bool32ToBool rayTraversalPrimitiveCulling)
+             (bool32ToBool rayTracingPipeline)
+             (bool32ToBool rayTracingPipelineShaderGroupHandleCaptureReplay)
+             (bool32ToBool rayTracingPipelineShaderGroupHandleCaptureReplayMixed)
+             (bool32ToBool rayTracingPipelineTraceRaysIndirect)
+             (bool32ToBool rayTraversalPrimitiveCulling)
 
 instance Storable PhysicalDeviceRayTracingPipelineFeaturesKHR where
   sizeOf ~_ = 40
@@ -3595,7 +3696,14 @@ instance FromCStruct PhysicalDeviceRayTracingPipelinePropertiesKHR where
     shaderGroupHandleAlignment <- peek @Word32 ((p `plusPtr` 40 :: Ptr Word32))
     maxRayHitAttributeSize <- peek @Word32 ((p `plusPtr` 44 :: Ptr Word32))
     pure $ PhysicalDeviceRayTracingPipelinePropertiesKHR
-             shaderGroupHandleSize maxRayRecursionDepth maxShaderGroupStride shaderGroupBaseAlignment shaderGroupHandleCaptureReplaySize maxRayDispatchInvocationCount shaderGroupHandleAlignment maxRayHitAttributeSize
+             shaderGroupHandleSize
+             maxRayRecursionDepth
+             maxShaderGroupStride
+             shaderGroupBaseAlignment
+             shaderGroupHandleCaptureReplaySize
+             maxRayDispatchInvocationCount
+             shaderGroupHandleAlignment
+             maxRayHitAttributeSize
 
 instance Storable PhysicalDeviceRayTracingPipelinePropertiesKHR where
   sizeOf ~_ = 48
@@ -3880,19 +3988,25 @@ newtype RayTracingShaderGroupTypeKHR = RayTracingShaderGroupTypeKHR Int32
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_MISS_BIT_KHR', or
 -- 'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_CALLABLE_BIT_KHR'
 -- shader in it.
-pattern RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR              = RayTracingShaderGroupTypeKHR 0
+pattern RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR = RayTracingShaderGroupTypeKHR 0
+
 -- | 'RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR' specifies a
 -- shader group that only hits triangles and /must/ not contain an
 -- intersection shader, only closest hit and any-hit shaders.
-pattern RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR  = RayTracingShaderGroupTypeKHR 1
+pattern RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR = RayTracingShaderGroupTypeKHR 1
+
 -- | 'RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR' specifies a
 -- shader group that only intersects with custom geometry and /must/
 -- contain an intersection shader and /may/ contain closest hit and any-hit
 -- shaders.
 pattern RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR = RayTracingShaderGroupTypeKHR 2
-{-# complete RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR,
-             RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR,
-             RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR :: RayTracingShaderGroupTypeKHR #-}
+
+{-# COMPLETE
+  RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR
+  , RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR
+  , RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR ::
+    RayTracingShaderGroupTypeKHR
+  #-}
 
 conNameRayTracingShaderGroupTypeKHR :: String
 conNameRayTracingShaderGroupTypeKHR = "RayTracingShaderGroupTypeKHR"
@@ -3902,24 +4016,36 @@ enumPrefixRayTracingShaderGroupTypeKHR = "RAY_TRACING_SHADER_GROUP_TYPE_"
 
 showTableRayTracingShaderGroupTypeKHR :: [(RayTracingShaderGroupTypeKHR, String)]
 showTableRayTracingShaderGroupTypeKHR =
-  [ (RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR             , "GENERAL_KHR")
-  , (RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR , "TRIANGLES_HIT_GROUP_KHR")
-  , (RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR, "PROCEDURAL_HIT_GROUP_KHR")
+  [
+    ( RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR
+    , "GENERAL_KHR"
+    )
+  ,
+    ( RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR
+    , "TRIANGLES_HIT_GROUP_KHR"
+    )
+  ,
+    ( RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_KHR
+    , "PROCEDURAL_HIT_GROUP_KHR"
+    )
   ]
 
 instance Show RayTracingShaderGroupTypeKHR where
-  showsPrec = enumShowsPrec enumPrefixRayTracingShaderGroupTypeKHR
-                            showTableRayTracingShaderGroupTypeKHR
-                            conNameRayTracingShaderGroupTypeKHR
-                            (\(RayTracingShaderGroupTypeKHR x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixRayTracingShaderGroupTypeKHR
+      showTableRayTracingShaderGroupTypeKHR
+      conNameRayTracingShaderGroupTypeKHR
+      (\(RayTracingShaderGroupTypeKHR x) -> x)
+      (showsPrec 11)
 
 instance Read RayTracingShaderGroupTypeKHR where
-  readPrec = enumReadPrec enumPrefixRayTracingShaderGroupTypeKHR
-                          showTableRayTracingShaderGroupTypeKHR
-                          conNameRayTracingShaderGroupTypeKHR
-                          RayTracingShaderGroupTypeKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixRayTracingShaderGroupTypeKHR
+      showTableRayTracingShaderGroupTypeKHR
+      conNameRayTracingShaderGroupTypeKHR
+      RayTracingShaderGroupTypeKHR
 
 -- | VkShaderGroupShaderKHR - Shader group shaders
 --
@@ -3932,20 +4058,27 @@ newtype ShaderGroupShaderKHR = ShaderGroupShaderKHR Int32
 
 -- | 'SHADER_GROUP_SHADER_GENERAL_KHR' uses the shader specified in the group
 -- with 'RayTracingShaderGroupCreateInfoKHR'::@generalShader@
-pattern SHADER_GROUP_SHADER_GENERAL_KHR      = ShaderGroupShaderKHR 0
+pattern SHADER_GROUP_SHADER_GENERAL_KHR = ShaderGroupShaderKHR 0
+
 -- | 'SHADER_GROUP_SHADER_CLOSEST_HIT_KHR' uses the shader specified in the
 -- group with 'RayTracingShaderGroupCreateInfoKHR'::@closestHitShader@
-pattern SHADER_GROUP_SHADER_CLOSEST_HIT_KHR  = ShaderGroupShaderKHR 1
+pattern SHADER_GROUP_SHADER_CLOSEST_HIT_KHR = ShaderGroupShaderKHR 1
+
 -- | 'SHADER_GROUP_SHADER_ANY_HIT_KHR' uses the shader specified in the group
 -- with 'RayTracingShaderGroupCreateInfoKHR'::@anyHitShader@
-pattern SHADER_GROUP_SHADER_ANY_HIT_KHR      = ShaderGroupShaderKHR 2
+pattern SHADER_GROUP_SHADER_ANY_HIT_KHR = ShaderGroupShaderKHR 2
+
 -- | 'SHADER_GROUP_SHADER_INTERSECTION_KHR' uses the shader specified in the
 -- group with 'RayTracingShaderGroupCreateInfoKHR'::@intersectionShader@
 pattern SHADER_GROUP_SHADER_INTERSECTION_KHR = ShaderGroupShaderKHR 3
-{-# complete SHADER_GROUP_SHADER_GENERAL_KHR,
-             SHADER_GROUP_SHADER_CLOSEST_HIT_KHR,
-             SHADER_GROUP_SHADER_ANY_HIT_KHR,
-             SHADER_GROUP_SHADER_INTERSECTION_KHR :: ShaderGroupShaderKHR #-}
+
+{-# COMPLETE
+  SHADER_GROUP_SHADER_GENERAL_KHR
+  , SHADER_GROUP_SHADER_CLOSEST_HIT_KHR
+  , SHADER_GROUP_SHADER_ANY_HIT_KHR
+  , SHADER_GROUP_SHADER_INTERSECTION_KHR ::
+    ShaderGroupShaderKHR
+  #-}
 
 conNameShaderGroupShaderKHR :: String
 conNameShaderGroupShaderKHR = "ShaderGroupShaderKHR"
@@ -3955,25 +4088,40 @@ enumPrefixShaderGroupShaderKHR = "SHADER_GROUP_SHADER_"
 
 showTableShaderGroupShaderKHR :: [(ShaderGroupShaderKHR, String)]
 showTableShaderGroupShaderKHR =
-  [ (SHADER_GROUP_SHADER_GENERAL_KHR     , "GENERAL_KHR")
-  , (SHADER_GROUP_SHADER_CLOSEST_HIT_KHR , "CLOSEST_HIT_KHR")
-  , (SHADER_GROUP_SHADER_ANY_HIT_KHR     , "ANY_HIT_KHR")
-  , (SHADER_GROUP_SHADER_INTERSECTION_KHR, "INTERSECTION_KHR")
+  [
+    ( SHADER_GROUP_SHADER_GENERAL_KHR
+    , "GENERAL_KHR"
+    )
+  ,
+    ( SHADER_GROUP_SHADER_CLOSEST_HIT_KHR
+    , "CLOSEST_HIT_KHR"
+    )
+  ,
+    ( SHADER_GROUP_SHADER_ANY_HIT_KHR
+    , "ANY_HIT_KHR"
+    )
+  ,
+    ( SHADER_GROUP_SHADER_INTERSECTION_KHR
+    , "INTERSECTION_KHR"
+    )
   ]
 
 instance Show ShaderGroupShaderKHR where
-  showsPrec = enumShowsPrec enumPrefixShaderGroupShaderKHR
-                            showTableShaderGroupShaderKHR
-                            conNameShaderGroupShaderKHR
-                            (\(ShaderGroupShaderKHR x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixShaderGroupShaderKHR
+      showTableShaderGroupShaderKHR
+      conNameShaderGroupShaderKHR
+      (\(ShaderGroupShaderKHR x) -> x)
+      (showsPrec 11)
 
 instance Read ShaderGroupShaderKHR where
-  readPrec = enumReadPrec enumPrefixShaderGroupShaderKHR
-                          showTableShaderGroupShaderKHR
-                          conNameShaderGroupShaderKHR
-                          ShaderGroupShaderKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixShaderGroupShaderKHR
+      showTableShaderGroupShaderKHR
+      conNameShaderGroupShaderKHR
+      ShaderGroupShaderKHR
 
 type KHR_RAY_TRACING_PIPELINE_SPEC_VERSION = 1
 

@@ -14,10 +14,12 @@ import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
 type role DescriptorSetLayoutSupport nominal
 data DescriptorSetLayoutSupport (es :: [Type])
 
-instance (Extendss DescriptorSetLayoutSupport es, PokeChain es) => ToCStruct (DescriptorSetLayoutSupport es)
+instance ( Extendss DescriptorSetLayoutSupport es
+         , PokeChain es ) => ToCStruct (DescriptorSetLayoutSupport es)
 instance Show (Chain es) => Show (DescriptorSetLayoutSupport es)
 
-instance (Extendss DescriptorSetLayoutSupport es, PeekChain es) => FromCStruct (DescriptorSetLayoutSupport es)
+instance ( Extendss DescriptorSetLayoutSupport es
+         , PeekChain es ) => FromCStruct (DescriptorSetLayoutSupport es)
 
 
 data PhysicalDeviceMaintenance3Properties

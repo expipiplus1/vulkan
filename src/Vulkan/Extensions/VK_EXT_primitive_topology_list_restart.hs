@@ -193,7 +193,8 @@ instance FromCStruct PhysicalDevicePrimitiveTopologyListRestartFeaturesEXT where
     primitiveTopologyListRestart <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     primitiveTopologyPatchListRestart <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ PhysicalDevicePrimitiveTopologyListRestartFeaturesEXT
-             (bool32ToBool primitiveTopologyListRestart) (bool32ToBool primitiveTopologyPatchListRestart)
+             (bool32ToBool primitiveTopologyListRestart)
+             (bool32ToBool primitiveTopologyPatchListRestart)
 
 instance Storable PhysicalDevicePrimitiveTopologyListRestartFeaturesEXT where
   sizeOf ~_ = 24

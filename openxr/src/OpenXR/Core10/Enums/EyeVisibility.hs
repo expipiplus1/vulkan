@@ -30,16 +30,22 @@ newtype EyeVisibility = EyeVisibility Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- | 'EYE_VISIBILITY_BOTH' displays the layer to both eyes.
-pattern EYE_VISIBILITY_BOTH  = EyeVisibility 0
+pattern EYE_VISIBILITY_BOTH = EyeVisibility 0
+
 -- | 'EYE_VISIBILITY_LEFT' displays the layer to the viewer’s physical left
 -- eye.
-pattern EYE_VISIBILITY_LEFT  = EyeVisibility 1
+pattern EYE_VISIBILITY_LEFT = EyeVisibility 1
+
 -- | 'EYE_VISIBILITY_RIGHT' displays the layer to the viewer’s physical right
 -- eye.
 pattern EYE_VISIBILITY_RIGHT = EyeVisibility 2
-{-# complete EYE_VISIBILITY_BOTH,
-             EYE_VISIBILITY_LEFT,
-             EYE_VISIBILITY_RIGHT :: EyeVisibility #-}
+
+{-# COMPLETE
+  EYE_VISIBILITY_BOTH
+  , EYE_VISIBILITY_LEFT
+  , EYE_VISIBILITY_RIGHT ::
+    EyeVisibility
+  #-}
 
 conNameEyeVisibility :: String
 conNameEyeVisibility = "EyeVisibility"
@@ -49,15 +55,24 @@ enumPrefixEyeVisibility = "EYE_VISIBILITY_"
 
 showTableEyeVisibility :: [(EyeVisibility, String)]
 showTableEyeVisibility =
-  [(EYE_VISIBILITY_BOTH, "BOTH"), (EYE_VISIBILITY_LEFT, "LEFT"), (EYE_VISIBILITY_RIGHT, "RIGHT")]
+  [ (EYE_VISIBILITY_BOTH, "BOTH")
+  , (EYE_VISIBILITY_LEFT, "LEFT")
+  , (EYE_VISIBILITY_RIGHT, "RIGHT")
+  ]
 
 instance Show EyeVisibility where
-  showsPrec = enumShowsPrec enumPrefixEyeVisibility
-                            showTableEyeVisibility
-                            conNameEyeVisibility
-                            (\(EyeVisibility x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixEyeVisibility
+      showTableEyeVisibility
+      conNameEyeVisibility
+      (\(EyeVisibility x) -> x)
+      (showsPrec 11)
 
 instance Read EyeVisibility where
-  readPrec = enumReadPrec enumPrefixEyeVisibility showTableEyeVisibility conNameEyeVisibility EyeVisibility
-
+  readPrec =
+    enumReadPrec
+      enumPrefixEyeVisibility
+      showTableEyeVisibility
+      conNameEyeVisibility
+      EyeVisibility

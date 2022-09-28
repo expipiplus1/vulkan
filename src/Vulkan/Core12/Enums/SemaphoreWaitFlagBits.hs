@@ -52,15 +52,18 @@ showTableSemaphoreWaitFlagBits :: [(SemaphoreWaitFlagBits, String)]
 showTableSemaphoreWaitFlagBits = [(SEMAPHORE_WAIT_ANY_BIT, "")]
 
 instance Show SemaphoreWaitFlagBits where
-  showsPrec = enumShowsPrec enumPrefixSemaphoreWaitFlagBits
-                            showTableSemaphoreWaitFlagBits
-                            conNameSemaphoreWaitFlagBits
-                            (\(SemaphoreWaitFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixSemaphoreWaitFlagBits
+      showTableSemaphoreWaitFlagBits
+      conNameSemaphoreWaitFlagBits
+      (\(SemaphoreWaitFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read SemaphoreWaitFlagBits where
-  readPrec = enumReadPrec enumPrefixSemaphoreWaitFlagBits
-                          showTableSemaphoreWaitFlagBits
-                          conNameSemaphoreWaitFlagBits
-                          SemaphoreWaitFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixSemaphoreWaitFlagBits
+      showTableSemaphoreWaitFlagBits
+      conNameSemaphoreWaitFlagBits
+      SemaphoreWaitFlagBits

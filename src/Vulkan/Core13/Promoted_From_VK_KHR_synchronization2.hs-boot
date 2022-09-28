@@ -44,10 +44,12 @@ instance FromCStruct DependencyInfo
 type role ImageMemoryBarrier2 nominal
 data ImageMemoryBarrier2 (es :: [Type])
 
-instance (Extendss ImageMemoryBarrier2 es, PokeChain es) => ToCStruct (ImageMemoryBarrier2 es)
+instance ( Extendss ImageMemoryBarrier2 es
+         , PokeChain es ) => ToCStruct (ImageMemoryBarrier2 es)
 instance Show (Chain es) => Show (ImageMemoryBarrier2 es)
 
-instance (Extendss ImageMemoryBarrier2 es, PeekChain es) => FromCStruct (ImageMemoryBarrier2 es)
+instance ( Extendss ImageMemoryBarrier2 es
+         , PeekChain es ) => FromCStruct (ImageMemoryBarrier2 es)
 
 
 data MemoryBarrier2

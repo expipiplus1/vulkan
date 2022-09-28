@@ -408,7 +408,9 @@ debugMarkerSetObjectNameEXT device nameInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDebugMarkerSetObjectNameEXT is null" Nothing Nothing
   let vkDebugMarkerSetObjectNameEXT' = mkVkDebugMarkerSetObjectNameEXT vkDebugMarkerSetObjectNameEXTPtr
   pNameInfo <- ContT $ withCStruct (nameInfo)
-  r <- lift $ traceAroundEvent "vkDebugMarkerSetObjectNameEXT" (vkDebugMarkerSetObjectNameEXT' (deviceHandle (device)) pNameInfo)
+  r <- lift $ traceAroundEvent "vkDebugMarkerSetObjectNameEXT" (vkDebugMarkerSetObjectNameEXT'
+                                                                  (deviceHandle (device))
+                                                                  pNameInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -464,7 +466,9 @@ debugMarkerSetObjectTagEXT device tagInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDebugMarkerSetObjectTagEXT is null" Nothing Nothing
   let vkDebugMarkerSetObjectTagEXT' = mkVkDebugMarkerSetObjectTagEXT vkDebugMarkerSetObjectTagEXTPtr
   pTagInfo <- ContT $ withCStruct (tagInfo)
-  r <- lift $ traceAroundEvent "vkDebugMarkerSetObjectTagEXT" (vkDebugMarkerSetObjectTagEXT' (deviceHandle (device)) pTagInfo)
+  r <- lift $ traceAroundEvent "vkDebugMarkerSetObjectTagEXT" (vkDebugMarkerSetObjectTagEXT'
+                                                                 (deviceHandle (device))
+                                                                 pTagInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -535,7 +539,9 @@ cmdDebugMarkerBeginEXT commandBuffer markerInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDebugMarkerBeginEXT is null" Nothing Nothing
   let vkCmdDebugMarkerBeginEXT' = mkVkCmdDebugMarkerBeginEXT vkCmdDebugMarkerBeginEXTPtr
   pMarkerInfo <- ContT $ withCStruct (markerInfo)
-  lift $ traceAroundEvent "vkCmdDebugMarkerBeginEXT" (vkCmdDebugMarkerBeginEXT' (commandBufferHandle (commandBuffer)) pMarkerInfo)
+  lift $ traceAroundEvent "vkCmdDebugMarkerBeginEXT" (vkCmdDebugMarkerBeginEXT'
+                                                        (commandBufferHandle (commandBuffer))
+                                                        pMarkerInfo)
   pure $ ()
 
 
@@ -619,7 +625,8 @@ cmdDebugMarkerEndEXT commandBuffer = liftIO $ do
   unless (vkCmdDebugMarkerEndEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDebugMarkerEndEXT is null" Nothing Nothing
   let vkCmdDebugMarkerEndEXT' = mkVkCmdDebugMarkerEndEXT vkCmdDebugMarkerEndEXTPtr
-  traceAroundEvent "vkCmdDebugMarkerEndEXT" (vkCmdDebugMarkerEndEXT' (commandBufferHandle (commandBuffer)))
+  traceAroundEvent "vkCmdDebugMarkerEndEXT" (vkCmdDebugMarkerEndEXT'
+                                               (commandBufferHandle (commandBuffer)))
   pure $ ()
 
 
@@ -690,7 +697,9 @@ cmdDebugMarkerInsertEXT commandBuffer markerInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDebugMarkerInsertEXT is null" Nothing Nothing
   let vkCmdDebugMarkerInsertEXT' = mkVkCmdDebugMarkerInsertEXT vkCmdDebugMarkerInsertEXTPtr
   pMarkerInfo <- ContT $ withCStruct (markerInfo)
-  lift $ traceAroundEvent "vkCmdDebugMarkerInsertEXT" (vkCmdDebugMarkerInsertEXT' (commandBufferHandle (commandBuffer)) pMarkerInfo)
+  lift $ traceAroundEvent "vkCmdDebugMarkerInsertEXT" (vkCmdDebugMarkerInsertEXT'
+                                                         (commandBufferHandle (commandBuffer))
+                                                         pMarkerInfo)
   pure $ ()
 
 
@@ -958,7 +967,11 @@ instance FromCStruct DebugMarkerMarkerInfoEXT where
     color2 <- peek @CFloat ((pcolor `advancePtrBytes` 8 :: Ptr CFloat))
     color3 <- peek @CFloat ((pcolor `advancePtrBytes` 12 :: Ptr CFloat))
     pure $ DebugMarkerMarkerInfoEXT
-             pMarkerName (((coerce @CFloat @Float color0), (coerce @CFloat @Float color1), (coerce @CFloat @Float color2), (coerce @CFloat @Float color3)))
+             pMarkerName
+             (( (coerce @CFloat @Float color0)
+              , (coerce @CFloat @Float color1)
+              , (coerce @CFloat @Float color2)
+              , (coerce @CFloat @Float color3) ))
 
 instance Zero DebugMarkerMarkerInfoEXT where
   zero = DebugMarkerMarkerInfoEXT

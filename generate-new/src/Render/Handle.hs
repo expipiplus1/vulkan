@@ -44,8 +44,8 @@ renderHandle Handle {..} = context (unCName hName) $ do
             <>  line
             <>  indent
                   2
-                  ("objectTypeAndHandle (" <> pretty c <+> "h) =" <+> tupled
-                    [pretty objectType, "h"]
+                  ("objectTypeAndHandle (" <> pretty c <+> "h) =" <+> align
+                    (tupled [pretty objectType, "h"])
                   )
         tellDocWithHaddock $ \getDoc ->
           vsep
@@ -105,7 +105,7 @@ renderHandle Handle {..} = context (unCName hName) $ do
                         <+> "_"
                         )
                   <+> "="
-                  <+> tupled [pretty objectType, "fromIntegral h"]
+                  <+> align (tupled [pretty objectType, "fromIntegral h"])
                   )
         tellDocWithHaddock $ \getDoc ->
           vsep

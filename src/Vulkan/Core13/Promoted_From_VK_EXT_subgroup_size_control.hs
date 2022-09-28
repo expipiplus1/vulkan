@@ -129,7 +129,8 @@ instance FromCStruct PhysicalDeviceSubgroupSizeControlFeatures where
     subgroupSizeControl <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     computeFullSubgroups <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ PhysicalDeviceSubgroupSizeControlFeatures
-             (bool32ToBool subgroupSizeControl) (bool32ToBool computeFullSubgroups)
+             (bool32ToBool subgroupSizeControl)
+             (bool32ToBool computeFullSubgroups)
 
 instance Storable PhysicalDeviceSubgroupSizeControlFeatures where
   sizeOf ~_ = 24
@@ -232,7 +233,10 @@ instance FromCStruct PhysicalDeviceSubgroupSizeControlProperties where
     maxComputeWorkgroupSubgroups <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
     requiredSubgroupSizeStages <- peek @ShaderStageFlags ((p `plusPtr` 28 :: Ptr ShaderStageFlags))
     pure $ PhysicalDeviceSubgroupSizeControlProperties
-             minSubgroupSize maxSubgroupSize maxComputeWorkgroupSubgroups requiredSubgroupSizeStages
+             minSubgroupSize
+             maxSubgroupSize
+             maxComputeWorkgroupSubgroups
+             requiredSubgroupSizeStages
 
 instance Storable PhysicalDeviceSubgroupSizeControlProperties where
   sizeOf ~_ = 32

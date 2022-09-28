@@ -33,11 +33,16 @@ newtype FrontFace = FrontFace Int32
 -- | 'FRONT_FACE_COUNTER_CLOCKWISE' specifies that a triangle with positive
 -- area is considered front-facing.
 pattern FRONT_FACE_COUNTER_CLOCKWISE = FrontFace 0
+
 -- | 'FRONT_FACE_CLOCKWISE' specifies that a triangle with negative area is
 -- considered front-facing.
-pattern FRONT_FACE_CLOCKWISE         = FrontFace 1
-{-# complete FRONT_FACE_COUNTER_CLOCKWISE,
-             FRONT_FACE_CLOCKWISE :: FrontFace #-}
+pattern FRONT_FACE_CLOCKWISE = FrontFace 1
+
+{-# COMPLETE
+  FRONT_FACE_COUNTER_CLOCKWISE
+  , FRONT_FACE_CLOCKWISE ::
+    FrontFace
+  #-}
 
 conNameFrontFace :: String
 conNameFrontFace = "FrontFace"
@@ -46,12 +51,24 @@ enumPrefixFrontFace :: String
 enumPrefixFrontFace = "FRONT_FACE_C"
 
 showTableFrontFace :: [(FrontFace, String)]
-showTableFrontFace = [(FRONT_FACE_COUNTER_CLOCKWISE, "OUNTER_CLOCKWISE"), (FRONT_FACE_CLOCKWISE, "LOCKWISE")]
+showTableFrontFace =
+  [ (FRONT_FACE_COUNTER_CLOCKWISE, "OUNTER_CLOCKWISE")
+  , (FRONT_FACE_CLOCKWISE, "LOCKWISE")
+  ]
 
 instance Show FrontFace where
   showsPrec =
-    enumShowsPrec enumPrefixFrontFace showTableFrontFace conNameFrontFace (\(FrontFace x) -> x) (showsPrec 11)
+    enumShowsPrec
+      enumPrefixFrontFace
+      showTableFrontFace
+      conNameFrontFace
+      (\(FrontFace x) -> x)
+      (showsPrec 11)
 
 instance Read FrontFace where
-  readPrec = enumReadPrec enumPrefixFrontFace showTableFrontFace conNameFrontFace FrontFace
-
+  readPrec =
+    enumReadPrec
+      enumPrefixFrontFace
+      showTableFrontFace
+      conNameFrontFace
+      FrontFace

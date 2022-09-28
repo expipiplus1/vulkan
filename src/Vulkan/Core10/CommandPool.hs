@@ -142,7 +142,11 @@ createCommandPool device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPCommandPool <- ContT $ bracket (callocBytes @CommandPool 8) free
-  r <- lift $ traceAroundEvent "vkCreateCommandPool" (vkCreateCommandPool' (deviceHandle (device)) pCreateInfo pAllocator (pPCommandPool))
+  r <- lift $ traceAroundEvent "vkCreateCommandPool" (vkCreateCommandPool'
+                                                        (deviceHandle (device))
+                                                        pCreateInfo
+                                                        pAllocator
+                                                        (pPCommandPool))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pCommandPool <- lift $ peek @CommandPool pPCommandPool
   pure $ (pCommandPool)
@@ -244,7 +248,10 @@ destroyCommandPool device commandPool allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyCommandPool" (vkDestroyCommandPool' (deviceHandle (device)) (commandPool) pAllocator)
+  lift $ traceAroundEvent "vkDestroyCommandPool" (vkDestroyCommandPool'
+                                                    (deviceHandle (device))
+                                                    (commandPool)
+                                                    pAllocator)
   pure $ ()
 
 
@@ -331,7 +338,10 @@ resetCommandPool device commandPool flags = liftIO $ do
   unless (vkResetCommandPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetCommandPool is null" Nothing Nothing
   let vkResetCommandPool' = mkVkResetCommandPool vkResetCommandPoolPtr
-  r <- traceAroundEvent "vkResetCommandPool" (vkResetCommandPool' (deviceHandle (device)) (commandPool) (flags))
+  r <- traceAroundEvent "vkResetCommandPool" (vkResetCommandPool'
+                                                (deviceHandle (device))
+                                                (commandPool)
+                                                (flags))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 

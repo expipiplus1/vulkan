@@ -204,11 +204,21 @@ getVulkanInstanceExtensionsKHR instance' systemId = liftIO . evalContT $ do
   let xrGetVulkanInstanceExtensionsKHR' = mkXrGetVulkanInstanceExtensionsKHR xrGetVulkanInstanceExtensionsKHRPtr
   let instance'' = instanceHandle (instance')
   pBufferCountOutput <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "xrGetVulkanInstanceExtensionsKHR" (xrGetVulkanInstanceExtensionsKHR' instance'' (systemId) (0) (pBufferCountOutput) (nullPtr))
+  r <- lift $ traceAroundEvent "xrGetVulkanInstanceExtensionsKHR" (xrGetVulkanInstanceExtensionsKHR'
+                                                                     instance''
+                                                                     (systemId)
+                                                                     (0)
+                                                                     (pBufferCountOutput)
+                                                                     (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   bufferCountOutput <- lift $ peek @Word32 pBufferCountOutput
   pBuffer <- ContT $ bracket (callocBytes @CChar (fromIntegral (bufferCountOutput))) free
-  r' <- lift $ traceAroundEvent "xrGetVulkanInstanceExtensionsKHR" (xrGetVulkanInstanceExtensionsKHR' instance'' (systemId) ((bufferCountOutput)) (pBufferCountOutput) (pBuffer))
+  r' <- lift $ traceAroundEvent "xrGetVulkanInstanceExtensionsKHR" (xrGetVulkanInstanceExtensionsKHR'
+                                                                      instance''
+                                                                      (systemId)
+                                                                      ((bufferCountOutput))
+                                                                      (pBufferCountOutput)
+                                                                      (pBuffer))
   lift $ when (r' < SUCCESS) (throwIO (OpenXrException r'))
   buffer' <- lift $ packCString pBuffer
   pure $ (buffer')
@@ -306,11 +316,21 @@ getVulkanDeviceExtensionsKHR instance' systemId = liftIO . evalContT $ do
   let xrGetVulkanDeviceExtensionsKHR' = mkXrGetVulkanDeviceExtensionsKHR xrGetVulkanDeviceExtensionsKHRPtr
   let instance'' = instanceHandle (instance')
   pBufferCountOutput <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "xrGetVulkanDeviceExtensionsKHR" (xrGetVulkanDeviceExtensionsKHR' instance'' (systemId) (0) (pBufferCountOutput) (nullPtr))
+  r <- lift $ traceAroundEvent "xrGetVulkanDeviceExtensionsKHR" (xrGetVulkanDeviceExtensionsKHR'
+                                                                   instance''
+                                                                   (systemId)
+                                                                   (0)
+                                                                   (pBufferCountOutput)
+                                                                   (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   bufferCountOutput <- lift $ peek @Word32 pBufferCountOutput
   pBuffer <- ContT $ bracket (callocBytes @CChar (fromIntegral (bufferCountOutput))) free
-  r' <- lift $ traceAroundEvent "xrGetVulkanDeviceExtensionsKHR" (xrGetVulkanDeviceExtensionsKHR' instance'' (systemId) ((bufferCountOutput)) (pBufferCountOutput) (pBuffer))
+  r' <- lift $ traceAroundEvent "xrGetVulkanDeviceExtensionsKHR" (xrGetVulkanDeviceExtensionsKHR'
+                                                                    instance''
+                                                                    (systemId)
+                                                                    ((bufferCountOutput))
+                                                                    (pBufferCountOutput)
+                                                                    (pBuffer))
   lift $ when (r' < SUCCESS) (throwIO (OpenXrException r'))
   buffer' <- lift $ packCString pBuffer
   pure $ (buffer')
@@ -388,13 +408,19 @@ getVulkanGraphicsDeviceKHR :: forall io
                            -> -- | @vkInstance@ is a valid Vulkan @VkInstance@.
                               ("vkInstance" ::: Ptr OpenXR.VulkanTypes.Instance_T)
                            -> io (("vkPhysicalDevice" ::: Ptr OpenXR.VulkanTypes.PhysicalDevice_T))
-getVulkanGraphicsDeviceKHR instance' systemId vkInstance = liftIO . evalContT $ do
+getVulkanGraphicsDeviceKHR instance'
+                             systemId
+                             vkInstance = liftIO . evalContT $ do
   let xrGetVulkanGraphicsDeviceKHRPtr = pXrGetVulkanGraphicsDeviceKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetVulkanGraphicsDeviceKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetVulkanGraphicsDeviceKHR is null" Nothing Nothing
   let xrGetVulkanGraphicsDeviceKHR' = mkXrGetVulkanGraphicsDeviceKHR xrGetVulkanGraphicsDeviceKHRPtr
   pVkPhysicalDevice <- ContT $ bracket (callocBytes @(Ptr OpenXR.VulkanTypes.PhysicalDevice_T) 8) free
-  r <- lift $ traceAroundEvent "xrGetVulkanGraphicsDeviceKHR" (xrGetVulkanGraphicsDeviceKHR' (instanceHandle (instance')) (systemId) (vkInstance) (pVkPhysicalDevice))
+  r <- lift $ traceAroundEvent "xrGetVulkanGraphicsDeviceKHR" (xrGetVulkanGraphicsDeviceKHR'
+                                                                 (instanceHandle (instance'))
+                                                                 (systemId)
+                                                                 (vkInstance)
+                                                                 (pVkPhysicalDevice))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   vkPhysicalDevice <- lift $ peek @(Ptr OpenXR.VulkanTypes.PhysicalDevice_T) pVkPhysicalDevice
   pure $ (vkPhysicalDevice)
@@ -476,7 +502,10 @@ getVulkanGraphicsRequirementsKHR instance' systemId = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetVulkanGraphicsRequirementsKHR is null" Nothing Nothing
   let xrGetVulkanGraphicsRequirementsKHR' = mkXrGetVulkanGraphicsRequirementsKHR xrGetVulkanGraphicsRequirementsKHRPtr
   pGraphicsRequirements <- ContT (withZeroCStruct @GraphicsRequirementsVulkanKHR)
-  r <- lift $ traceAroundEvent "xrGetVulkanGraphicsRequirementsKHR" (xrGetVulkanGraphicsRequirementsKHR' (instanceHandle (instance')) (systemId) (pGraphicsRequirements))
+  r <- lift $ traceAroundEvent "xrGetVulkanGraphicsRequirementsKHR" (xrGetVulkanGraphicsRequirementsKHR'
+                                                                       (instanceHandle (instance'))
+                                                                       (systemId)
+                                                                       (pGraphicsRequirements))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   graphicsRequirements <- lift $ peekCStruct @GraphicsRequirementsVulkanKHR pGraphicsRequirements
   pure $ (graphicsRequirements)

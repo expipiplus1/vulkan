@@ -229,7 +229,11 @@ createMetalSurfaceEXT instance' createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSurface <- ContT $ bracket (callocBytes @SurfaceKHR 8) free
-  r <- lift $ traceAroundEvent "vkCreateMetalSurfaceEXT" (vkCreateMetalSurfaceEXT' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface))
+  r <- lift $ traceAroundEvent "vkCreateMetalSurfaceEXT" (vkCreateMetalSurfaceEXT'
+                                                            (instanceHandle (instance'))
+                                                            pCreateInfo
+                                                            pAllocator
+                                                            (pPSurface))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurface <- lift $ peek @SurfaceKHR pPSurface
   pure $ (pSurface)
@@ -311,8 +315,6 @@ instance Zero MetalSurfaceCreateInfoEXT where
 newtype MetalSurfaceCreateFlagsEXT = MetalSurfaceCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameMetalSurfaceCreateFlagsEXT :: String
 conNameMetalSurfaceCreateFlagsEXT = "MetalSurfaceCreateFlagsEXT"
 
@@ -323,18 +325,21 @@ showTableMetalSurfaceCreateFlagsEXT :: [(MetalSurfaceCreateFlagsEXT, String)]
 showTableMetalSurfaceCreateFlagsEXT = []
 
 instance Show MetalSurfaceCreateFlagsEXT where
-  showsPrec = enumShowsPrec enumPrefixMetalSurfaceCreateFlagsEXT
-                            showTableMetalSurfaceCreateFlagsEXT
-                            conNameMetalSurfaceCreateFlagsEXT
-                            (\(MetalSurfaceCreateFlagsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixMetalSurfaceCreateFlagsEXT
+      showTableMetalSurfaceCreateFlagsEXT
+      conNameMetalSurfaceCreateFlagsEXT
+      (\(MetalSurfaceCreateFlagsEXT x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read MetalSurfaceCreateFlagsEXT where
-  readPrec = enumReadPrec enumPrefixMetalSurfaceCreateFlagsEXT
-                          showTableMetalSurfaceCreateFlagsEXT
-                          conNameMetalSurfaceCreateFlagsEXT
-                          MetalSurfaceCreateFlagsEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixMetalSurfaceCreateFlagsEXT
+      showTableMetalSurfaceCreateFlagsEXT
+      conNameMetalSurfaceCreateFlagsEXT
+      MetalSurfaceCreateFlagsEXT
 
 type EXT_METAL_SURFACE_SPEC_VERSION = 1
 

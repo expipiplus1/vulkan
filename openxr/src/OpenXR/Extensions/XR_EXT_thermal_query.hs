@@ -156,12 +156,20 @@ thermalGetTemperatureTrendEXT session domain = liftIO . evalContT $ do
   pNotificationLevel <- ContT $ bracket (callocBytes @PerfSettingsNotificationLevelEXT 4) free
   pTempHeadroom <- ContT $ bracket (callocBytes @CFloat 4) free
   pTempSlope <- ContT $ bracket (callocBytes @CFloat 4) free
-  r <- lift $ traceAroundEvent "xrThermalGetTemperatureTrendEXT" (xrThermalGetTemperatureTrendEXT' (sessionHandle (session)) (domain) (pNotificationLevel) (pTempHeadroom) (pTempSlope))
+  r <- lift $ traceAroundEvent "xrThermalGetTemperatureTrendEXT" (xrThermalGetTemperatureTrendEXT'
+                                                                    (sessionHandle (session))
+                                                                    (domain)
+                                                                    (pNotificationLevel)
+                                                                    (pTempHeadroom)
+                                                                    (pTempSlope))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   notificationLevel <- lift $ peek @PerfSettingsNotificationLevelEXT pNotificationLevel
   tempHeadroom <- lift $ peek @CFloat pTempHeadroom
   tempSlope <- lift $ peek @CFloat pTempSlope
-  pure $ (r, notificationLevel, (coerce @CFloat @Float tempHeadroom), (coerce @CFloat @Float tempSlope))
+  pure $ ( r
+         , notificationLevel
+         , (coerce @CFloat @Float tempHeadroom)
+         , (coerce @CFloat @Float tempSlope) )
 
 
 type EXT_thermal_query_SPEC_VERSION = 1

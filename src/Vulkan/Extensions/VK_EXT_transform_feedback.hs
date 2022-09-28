@@ -469,7 +469,11 @@ cmdBindTransformFeedbackBuffersEXT :: forall io
                                       -- buffer minus the buffer offset.
                                       ("sizes" ::: Vector DeviceSize)
                                    -> io ()
-cmdBindTransformFeedbackBuffersEXT commandBuffer firstBinding buffers offsets sizes = liftIO . evalContT $ do
+cmdBindTransformFeedbackBuffersEXT commandBuffer
+                                     firstBinding
+                                     buffers
+                                     offsets
+                                     sizes = liftIO . evalContT $ do
   let vkCmdBindTransformFeedbackBuffersEXTPtr = pVkCmdBindTransformFeedbackBuffersEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBindTransformFeedbackBuffersEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindTransformFeedbackBuffersEXT is null" Nothing Nothing
@@ -490,7 +494,13 @@ cmdBindTransformFeedbackBuffersEXT commandBuffer firstBinding buffers offsets si
       pPSizes <- ContT $ allocaBytes @DeviceSize (((Data.Vector.length (sizes))) * 8)
       lift $ Data.Vector.imapM_ (\i e -> poke (pPSizes `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((sizes))
       pure $ pPSizes
-  lift $ traceAroundEvent "vkCmdBindTransformFeedbackBuffersEXT" (vkCmdBindTransformFeedbackBuffersEXT' (commandBufferHandle (commandBuffer)) (firstBinding) ((fromIntegral pBuffersLength :: Word32)) (pPBuffers) (pPOffsets) pSizes)
+  lift $ traceAroundEvent "vkCmdBindTransformFeedbackBuffersEXT" (vkCmdBindTransformFeedbackBuffersEXT'
+                                                                    (commandBufferHandle (commandBuffer))
+                                                                    (firstBinding)
+                                                                    ((fromIntegral pBuffersLength :: Word32))
+                                                                    (pPBuffers)
+                                                                    (pPOffsets)
+                                                                    pSizes)
   pure $ ()
 
 
@@ -650,7 +660,10 @@ cmdBeginTransformFeedbackEXT :: forall io
                                 -- offsets are zero.
                                 ("counterBufferOffsets" ::: Vector DeviceSize)
                              -> io ()
-cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers counterBufferOffsets = liftIO . evalContT $ do
+cmdBeginTransformFeedbackEXT commandBuffer
+                               firstCounterBuffer
+                               counterBuffers
+                               counterBufferOffsets = liftIO . evalContT $ do
   let vkCmdBeginTransformFeedbackEXTPtr = pVkCmdBeginTransformFeedbackEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBeginTransformFeedbackEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginTransformFeedbackEXT is null" Nothing Nothing
@@ -667,7 +680,12 @@ cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers cou
       pPCounterBufferOffsets <- ContT $ allocaBytes @DeviceSize (((Data.Vector.length (counterBufferOffsets))) * 8)
       lift $ Data.Vector.imapM_ (\i e -> poke (pPCounterBufferOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((counterBufferOffsets))
       pure $ pPCounterBufferOffsets
-  lift $ traceAroundEvent "vkCmdBeginTransformFeedbackEXT" (vkCmdBeginTransformFeedbackEXT' (commandBufferHandle (commandBuffer)) (firstCounterBuffer) ((fromIntegral pCounterBuffersLength :: Word32)) (pPCounterBuffers) pCounterBufferOffsets)
+  lift $ traceAroundEvent "vkCmdBeginTransformFeedbackEXT" (vkCmdBeginTransformFeedbackEXT'
+                                                              (commandBufferHandle (commandBuffer))
+                                                              (firstCounterBuffer)
+                                                              ((fromIntegral pCounterBuffersLength :: Word32))
+                                                              (pPCounterBuffers)
+                                                              pCounterBufferOffsets)
   pure $ ()
 
 -- | This function will call the supplied action between calls to
@@ -676,8 +694,18 @@ cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers cou
 -- Note that 'cmdEndTransformFeedbackEXT' is *not* called if an exception
 -- is thrown by the inner action.
 cmdUseTransformFeedbackEXT :: forall io r . MonadIO io => CommandBuffer -> Word32 -> Vector Buffer -> Vector DeviceSize -> io r -> io r
-cmdUseTransformFeedbackEXT commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets a =
-  (cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets) *> a <* (cmdEndTransformFeedbackEXT commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets)
+cmdUseTransformFeedbackEXT commandBuffer
+                             firstCounterBuffer
+                             pCounterBuffers
+                             pCounterBufferOffsets
+                             a =
+  (cmdBeginTransformFeedbackEXT commandBuffer
+                                  firstCounterBuffer
+                                  pCounterBuffers
+                                  pCounterBufferOffsets) *> a <* (cmdEndTransformFeedbackEXT commandBuffer
+                                                                                               firstCounterBuffer
+                                                                                               pCounterBuffers
+                                                                                               pCounterBufferOffsets)
 
 
 foreign import ccall
@@ -812,7 +840,10 @@ cmdEndTransformFeedbackEXT :: forall io
                               -- zero.
                               ("counterBufferOffsets" ::: Vector DeviceSize)
                            -> io ()
-cmdEndTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers counterBufferOffsets = liftIO . evalContT $ do
+cmdEndTransformFeedbackEXT commandBuffer
+                             firstCounterBuffer
+                             counterBuffers
+                             counterBufferOffsets = liftIO . evalContT $ do
   let vkCmdEndTransformFeedbackEXTPtr = pVkCmdEndTransformFeedbackEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdEndTransformFeedbackEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndTransformFeedbackEXT is null" Nothing Nothing
@@ -829,7 +860,12 @@ cmdEndTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers count
       pPCounterBufferOffsets <- ContT $ allocaBytes @DeviceSize (((Data.Vector.length (counterBufferOffsets))) * 8)
       lift $ Data.Vector.imapM_ (\i e -> poke (pPCounterBufferOffsets `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((counterBufferOffsets))
       pure $ pPCounterBufferOffsets
-  lift $ traceAroundEvent "vkCmdEndTransformFeedbackEXT" (vkCmdEndTransformFeedbackEXT' (commandBufferHandle (commandBuffer)) (firstCounterBuffer) ((fromIntegral pCounterBuffersLength :: Word32)) (pPCounterBuffers) pCounterBufferOffsets)
+  lift $ traceAroundEvent "vkCmdEndTransformFeedbackEXT" (vkCmdEndTransformFeedbackEXT'
+                                                            (commandBufferHandle (commandBuffer))
+                                                            (firstCounterBuffer)
+                                                            ((fromIntegral pCounterBuffersLength :: Word32))
+                                                            (pPCounterBuffers)
+                                                            pCounterBufferOffsets)
   pure $ ()
 
 
@@ -1136,7 +1172,12 @@ cmdBeginQueryIndexedEXT commandBuffer queryPool query flags index = liftIO $ do
   unless (vkCmdBeginQueryIndexedEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginQueryIndexedEXT is null" Nothing Nothing
   let vkCmdBeginQueryIndexedEXT' = mkVkCmdBeginQueryIndexedEXT vkCmdBeginQueryIndexedEXTPtr
-  traceAroundEvent "vkCmdBeginQueryIndexedEXT" (vkCmdBeginQueryIndexedEXT' (commandBufferHandle (commandBuffer)) (queryPool) (query) (flags) (index))
+  traceAroundEvent "vkCmdBeginQueryIndexedEXT" (vkCmdBeginQueryIndexedEXT'
+                                                  (commandBufferHandle (commandBuffer))
+                                                  (queryPool)
+                                                  (query)
+                                                  (flags)
+                                                  (index))
   pure $ ()
 
 -- | This function will call the supplied action between calls to
@@ -1146,7 +1187,14 @@ cmdBeginQueryIndexedEXT commandBuffer queryPool query flags index = liftIO $ do
 -- thrown by the inner action.
 cmdUseQueryIndexedEXT :: forall io r . MonadIO io => CommandBuffer -> QueryPool -> Word32 -> QueryControlFlags -> Word32 -> io r -> io r
 cmdUseQueryIndexedEXT commandBuffer queryPool query flags index a =
-  (cmdBeginQueryIndexedEXT commandBuffer queryPool query flags index) *> a <* (cmdEndQueryIndexedEXT commandBuffer queryPool query index)
+  (cmdBeginQueryIndexedEXT commandBuffer
+                             queryPool
+                             query
+                             flags
+                             index) *> a <* (cmdEndQueryIndexedEXT commandBuffer
+                                                                     queryPool
+                                                                     query
+                                                                     index)
 
 
 foreign import ccall
@@ -1301,7 +1349,11 @@ cmdEndQueryIndexedEXT commandBuffer queryPool query index = liftIO $ do
   unless (vkCmdEndQueryIndexedEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndQueryIndexedEXT is null" Nothing Nothing
   let vkCmdEndQueryIndexedEXT' = mkVkCmdEndQueryIndexedEXT vkCmdEndQueryIndexedEXTPtr
-  traceAroundEvent "vkCmdEndQueryIndexedEXT" (vkCmdEndQueryIndexedEXT' (commandBufferHandle (commandBuffer)) (queryPool) (query) (index))
+  traceAroundEvent "vkCmdEndQueryIndexedEXT" (vkCmdEndQueryIndexedEXT'
+                                                (commandBufferHandle (commandBuffer))
+                                                (queryPool)
+                                                (query)
+                                                (index))
   pure $ ()
 
 
@@ -2426,12 +2478,25 @@ cmdDrawIndirectByteCountEXT :: forall io
                                -- @XfbStride@.
                                ("vertexStride" ::: Word32)
                             -> io ()
-cmdDrawIndirectByteCountEXT commandBuffer instanceCount firstInstance counterBuffer counterBufferOffset counterOffset vertexStride = liftIO $ do
+cmdDrawIndirectByteCountEXT commandBuffer
+                              instanceCount
+                              firstInstance
+                              counterBuffer
+                              counterBufferOffset
+                              counterOffset
+                              vertexStride = liftIO $ do
   let vkCmdDrawIndirectByteCountEXTPtr = pVkCmdDrawIndirectByteCountEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDrawIndirectByteCountEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawIndirectByteCountEXT is null" Nothing Nothing
   let vkCmdDrawIndirectByteCountEXT' = mkVkCmdDrawIndirectByteCountEXT vkCmdDrawIndirectByteCountEXTPtr
-  traceAroundEvent "vkCmdDrawIndirectByteCountEXT" (vkCmdDrawIndirectByteCountEXT' (commandBufferHandle (commandBuffer)) (instanceCount) (firstInstance) (counterBuffer) (counterBufferOffset) (counterOffset) (vertexStride))
+  traceAroundEvent "vkCmdDrawIndirectByteCountEXT" (vkCmdDrawIndirectByteCountEXT'
+                                                      (commandBufferHandle (commandBuffer))
+                                                      (instanceCount)
+                                                      (firstInstance)
+                                                      (counterBuffer)
+                                                      (counterBufferOffset)
+                                                      (counterOffset)
+                                                      (vertexStride))
   pure $ ()
 
 
@@ -2647,7 +2712,16 @@ instance FromCStruct PhysicalDeviceTransformFeedbackPropertiesEXT where
     transformFeedbackRasterizationStreamSelect <- peek @Bool32 ((p `plusPtr` 52 :: Ptr Bool32))
     transformFeedbackDraw <- peek @Bool32 ((p `plusPtr` 56 :: Ptr Bool32))
     pure $ PhysicalDeviceTransformFeedbackPropertiesEXT
-             maxTransformFeedbackStreams maxTransformFeedbackBuffers maxTransformFeedbackBufferSize maxTransformFeedbackStreamDataSize maxTransformFeedbackBufferDataSize maxTransformFeedbackBufferDataStride (bool32ToBool transformFeedbackQueries) (bool32ToBool transformFeedbackStreamsLinesTriangles) (bool32ToBool transformFeedbackRasterizationStreamSelect) (bool32ToBool transformFeedbackDraw)
+             maxTransformFeedbackStreams
+             maxTransformFeedbackBuffers
+             maxTransformFeedbackBufferSize
+             maxTransformFeedbackStreamDataSize
+             maxTransformFeedbackBufferDataSize
+             maxTransformFeedbackBufferDataStride
+             (bool32ToBool transformFeedbackQueries)
+             (bool32ToBool transformFeedbackStreamsLinesTriangles)
+             (bool32ToBool transformFeedbackRasterizationStreamSelect)
+             (bool32ToBool transformFeedbackDraw)
 
 instance Storable PhysicalDeviceTransformFeedbackPropertiesEXT where
   sizeOf ~_ = 64
@@ -2758,8 +2832,6 @@ instance Zero PipelineRasterizationStateStreamCreateInfoEXT where
 newtype PipelineRasterizationStateStreamCreateFlagsEXT = PipelineRasterizationStateStreamCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNamePipelineRasterizationStateStreamCreateFlagsEXT :: String
 conNamePipelineRasterizationStateStreamCreateFlagsEXT = "PipelineRasterizationStateStreamCreateFlagsEXT"
 
@@ -2770,18 +2842,21 @@ showTablePipelineRasterizationStateStreamCreateFlagsEXT :: [(PipelineRasterizati
 showTablePipelineRasterizationStateStreamCreateFlagsEXT = []
 
 instance Show PipelineRasterizationStateStreamCreateFlagsEXT where
-  showsPrec = enumShowsPrec enumPrefixPipelineRasterizationStateStreamCreateFlagsEXT
-                            showTablePipelineRasterizationStateStreamCreateFlagsEXT
-                            conNamePipelineRasterizationStateStreamCreateFlagsEXT
-                            (\(PipelineRasterizationStateStreamCreateFlagsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineRasterizationStateStreamCreateFlagsEXT
+      showTablePipelineRasterizationStateStreamCreateFlagsEXT
+      conNamePipelineRasterizationStateStreamCreateFlagsEXT
+      (\(PipelineRasterizationStateStreamCreateFlagsEXT x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read PipelineRasterizationStateStreamCreateFlagsEXT where
-  readPrec = enumReadPrec enumPrefixPipelineRasterizationStateStreamCreateFlagsEXT
-                          showTablePipelineRasterizationStateStreamCreateFlagsEXT
-                          conNamePipelineRasterizationStateStreamCreateFlagsEXT
-                          PipelineRasterizationStateStreamCreateFlagsEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineRasterizationStateStreamCreateFlagsEXT
+      showTablePipelineRasterizationStateStreamCreateFlagsEXT
+      conNamePipelineRasterizationStateStreamCreateFlagsEXT
+      PipelineRasterizationStateStreamCreateFlagsEXT
 
 type EXT_TRANSFORM_FEEDBACK_SPEC_VERSION = 1
 

@@ -342,7 +342,10 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceFeatures2'
 getPhysicalDeviceFeatures2 :: forall a io
-                            . (Extendss PhysicalDeviceFeatures2 a, PokeChain a, PeekChain a, MonadIO io)
+                            . ( Extendss PhysicalDeviceFeatures2 a
+                              , PokeChain a
+                              , PeekChain a
+                              , MonadIO io )
                            => -- | @physicalDevice@ is the physical device from which to query the
                               -- supported features.
                               --
@@ -357,7 +360,9 @@ getPhysicalDeviceFeatures2 physicalDevice = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceFeatures2 is null" Nothing Nothing
   let vkGetPhysicalDeviceFeatures2' = mkVkGetPhysicalDeviceFeatures2 vkGetPhysicalDeviceFeatures2Ptr
   pPFeatures <- ContT (withZeroCStruct @(PhysicalDeviceFeatures2 _))
-  lift $ traceAroundEvent "vkGetPhysicalDeviceFeatures2" (vkGetPhysicalDeviceFeatures2' (physicalDeviceHandle (physicalDevice)) (forgetExtensions (pPFeatures)))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceFeatures2" (vkGetPhysicalDeviceFeatures2'
+                                                            (physicalDeviceHandle (physicalDevice))
+                                                            (forgetExtensions (pPFeatures)))
   pFeatures <- lift $ peekCStruct @(PhysicalDeviceFeatures2 _) pPFeatures
   pure $ (pFeatures)
 
@@ -385,7 +390,10 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceProperties2'
 getPhysicalDeviceProperties2 :: forall a io
-                              . (Extendss PhysicalDeviceProperties2 a, PokeChain a, PeekChain a, MonadIO io)
+                              . ( Extendss PhysicalDeviceProperties2 a
+                                , PokeChain a
+                                , PeekChain a
+                                , MonadIO io )
                              => -- | @physicalDevice@ is the handle to the physical device whose properties
                                 -- will be queried.
                                 --
@@ -400,7 +408,9 @@ getPhysicalDeviceProperties2 physicalDevice = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceProperties2 is null" Nothing Nothing
   let vkGetPhysicalDeviceProperties2' = mkVkGetPhysicalDeviceProperties2 vkGetPhysicalDeviceProperties2Ptr
   pPProperties <- ContT (withZeroCStruct @(PhysicalDeviceProperties2 _))
-  lift $ traceAroundEvent "vkGetPhysicalDeviceProperties2" (vkGetPhysicalDeviceProperties2' (physicalDeviceHandle (physicalDevice)) (forgetExtensions (pPProperties)))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceProperties2" (vkGetPhysicalDeviceProperties2'
+                                                              (physicalDeviceHandle (physicalDevice))
+                                                              (forgetExtensions (pPProperties)))
   pProperties <- lift $ peekCStruct @(PhysicalDeviceProperties2 _) pPProperties
   pure $ (pProperties)
 
@@ -430,7 +440,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.Format.Format', 'FormatProperties2',
 -- 'Vulkan.Core10.Handles.PhysicalDevice'
 getPhysicalDeviceFormatProperties2 :: forall a io
-                                    . (Extendss FormatProperties2 a, PokeChain a, PeekChain a, MonadIO io)
+                                    . ( Extendss FormatProperties2 a
+                                      , PokeChain a
+                                      , PeekChain a
+                                      , MonadIO io )
                                    => -- | @physicalDevice@ is the physical device from which to query the format
                                       -- properties.
                                       --
@@ -444,13 +457,17 @@ getPhysicalDeviceFormatProperties2 :: forall a io
                                       -- /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
                                       Format
                                    -> io (FormatProperties2 a)
-getPhysicalDeviceFormatProperties2 physicalDevice format = liftIO . evalContT $ do
+getPhysicalDeviceFormatProperties2 physicalDevice
+                                     format = liftIO . evalContT $ do
   let vkGetPhysicalDeviceFormatProperties2Ptr = pVkGetPhysicalDeviceFormatProperties2 (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceFormatProperties2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceFormatProperties2 is null" Nothing Nothing
   let vkGetPhysicalDeviceFormatProperties2' = mkVkGetPhysicalDeviceFormatProperties2 vkGetPhysicalDeviceFormatProperties2Ptr
   pPFormatProperties <- ContT (withZeroCStruct @(FormatProperties2 _))
-  lift $ traceAroundEvent "vkGetPhysicalDeviceFormatProperties2" (vkGetPhysicalDeviceFormatProperties2' (physicalDeviceHandle (physicalDevice)) (format) (forgetExtensions (pPFormatProperties)))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceFormatProperties2" (vkGetPhysicalDeviceFormatProperties2'
+                                                                    (physicalDeviceHandle (physicalDevice))
+                                                                    (format)
+                                                                    (forgetExtensions (pPFormatProperties)))
   pFormatProperties <- lift $ peekCStruct @(FormatProperties2 _) pPFormatProperties
   pure $ (pFormatProperties)
 
@@ -542,7 +559,12 @@ foreign import ccall
 -- 'ImageFormatProperties2', 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceImageFormatInfo2'
 getPhysicalDeviceImageFormatProperties2 :: forall a b io
-                                         . (Extendss PhysicalDeviceImageFormatInfo2 a, PokeChain a, Extendss ImageFormatProperties2 b, PokeChain b, PeekChain b, MonadIO io)
+                                         . ( Extendss PhysicalDeviceImageFormatInfo2 a
+                                           , PokeChain a
+                                           , Extendss ImageFormatProperties2 b
+                                           , PokeChain b
+                                           , PeekChain b
+                                           , MonadIO io )
                                         => -- | @physicalDevice@ is the physical device from which to query the image
                                            -- capabilities.
                                            PhysicalDevice
@@ -551,14 +573,18 @@ getPhysicalDeviceImageFormatProperties2 :: forall a b io
                                            -- 'Vulkan.Core10.Image.createImage'.
                                            (PhysicalDeviceImageFormatInfo2 a)
                                         -> io (ImageFormatProperties2 b)
-getPhysicalDeviceImageFormatProperties2 physicalDevice imageFormatInfo = liftIO . evalContT $ do
+getPhysicalDeviceImageFormatProperties2 physicalDevice
+                                          imageFormatInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceImageFormatProperties2Ptr = pVkGetPhysicalDeviceImageFormatProperties2 (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceImageFormatProperties2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceImageFormatProperties2 is null" Nothing Nothing
   let vkGetPhysicalDeviceImageFormatProperties2' = mkVkGetPhysicalDeviceImageFormatProperties2 vkGetPhysicalDeviceImageFormatProperties2Ptr
   pImageFormatInfo <- ContT $ withCStruct (imageFormatInfo)
   pPImageFormatProperties <- ContT (withZeroCStruct @(ImageFormatProperties2 _))
-  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceImageFormatProperties2" (vkGetPhysicalDeviceImageFormatProperties2' (physicalDeviceHandle (physicalDevice)) (forgetExtensions pImageFormatInfo) (forgetExtensions (pPImageFormatProperties)))
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceImageFormatProperties2" (vkGetPhysicalDeviceImageFormatProperties2'
+                                                                              (physicalDeviceHandle (physicalDevice))
+                                                                              (forgetExtensions pImageFormatInfo)
+                                                                              (forgetExtensions (pPImageFormatProperties)))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pImageFormatProperties <- lift $ peekCStruct @(ImageFormatProperties2 _) pPImageFormatProperties
   pure $ (pImageFormatProperties)
@@ -602,7 +628,10 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_1 VK_VERSION_1_1>,
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'QueueFamilyProperties2'
 getPhysicalDeviceQueueFamilyProperties2 :: forall a io
-                                         . (Extendss QueueFamilyProperties2 a, PokeChain a, PeekChain a, MonadIO io)
+                                         . ( Extendss QueueFamilyProperties2 a
+                                           , PokeChain a
+                                           , PeekChain a
+                                           , MonadIO io )
                                         => -- | @physicalDevice@ is the handle to the physical device whose properties
                                            -- will be queried.
                                            PhysicalDevice
@@ -614,11 +643,17 @@ getPhysicalDeviceQueueFamilyProperties2 physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceQueueFamilyProperties2' = mkVkGetPhysicalDeviceQueueFamilyProperties2 vkGetPhysicalDeviceQueueFamilyProperties2Ptr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPQueueFamilyPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
-  lift $ traceAroundEvent "vkGetPhysicalDeviceQueueFamilyProperties2" (vkGetPhysicalDeviceQueueFamilyProperties2' physicalDevice' (pPQueueFamilyPropertyCount) (forgetExtensions (nullPtr)))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceQueueFamilyProperties2" (vkGetPhysicalDeviceQueueFamilyProperties2'
+                                                                         physicalDevice'
+                                                                         (pPQueueFamilyPropertyCount)
+                                                                         (forgetExtensions (nullPtr)))
   pQueueFamilyPropertyCount <- lift $ peek @Word32 pPQueueFamilyPropertyCount
   pPQueueFamilyProperties <- ContT $ bracket (callocBytes @(QueueFamilyProperties2 _) ((fromIntegral (pQueueFamilyPropertyCount)) * 40)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPQueueFamilyProperties `advancePtrBytes` (i * 40) :: Ptr (QueueFamilyProperties2 _)) . ($ ())) [0..(fromIntegral (pQueueFamilyPropertyCount)) - 1]
-  lift $ traceAroundEvent "vkGetPhysicalDeviceQueueFamilyProperties2" (vkGetPhysicalDeviceQueueFamilyProperties2' physicalDevice' (pPQueueFamilyPropertyCount) (forgetExtensions ((pPQueueFamilyProperties))))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceQueueFamilyProperties2" (vkGetPhysicalDeviceQueueFamilyProperties2'
+                                                                         physicalDevice'
+                                                                         (pPQueueFamilyPropertyCount)
+                                                                         (forgetExtensions ((pPQueueFamilyProperties))))
   pQueueFamilyPropertyCount' <- lift $ peek @Word32 pPQueueFamilyPropertyCount
   pQueueFamilyProperties' <- lift $ generateM (fromIntegral (pQueueFamilyPropertyCount')) (\i -> peekCStruct @(QueueFamilyProperties2 _) (((pPQueueFamilyProperties) `advancePtrBytes` (40 * (i)) :: Ptr (QueueFamilyProperties2 _))))
   pure $ (pQueueFamilyProperties')
@@ -649,7 +684,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceMemoryProperties2'
 getPhysicalDeviceMemoryProperties2 :: forall a io
-                                    . (Extendss PhysicalDeviceMemoryProperties2 a, PokeChain a, PeekChain a, MonadIO io)
+                                    . ( Extendss PhysicalDeviceMemoryProperties2 a
+                                      , PokeChain a
+                                      , PeekChain a
+                                      , MonadIO io )
                                    => -- | @physicalDevice@ is the handle to the device to query.
                                       --
                                       -- #VUID-vkGetPhysicalDeviceMemoryProperties2-physicalDevice-parameter#
@@ -663,7 +701,9 @@ getPhysicalDeviceMemoryProperties2 physicalDevice = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceMemoryProperties2 is null" Nothing Nothing
   let vkGetPhysicalDeviceMemoryProperties2' = mkVkGetPhysicalDeviceMemoryProperties2 vkGetPhysicalDeviceMemoryProperties2Ptr
   pPMemoryProperties <- ContT (withZeroCStruct @(PhysicalDeviceMemoryProperties2 _))
-  lift $ traceAroundEvent "vkGetPhysicalDeviceMemoryProperties2" (vkGetPhysicalDeviceMemoryProperties2' (physicalDeviceHandle (physicalDevice)) (forgetExtensions (pPMemoryProperties)))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceMemoryProperties2" (vkGetPhysicalDeviceMemoryProperties2'
+                                                                    (physicalDeviceHandle (physicalDevice))
+                                                                    (forgetExtensions (pPMemoryProperties)))
   pMemoryProperties <- lift $ peekCStruct @(PhysicalDeviceMemoryProperties2 _) pPMemoryProperties
   pure $ (pMemoryProperties)
 
@@ -718,7 +758,8 @@ getPhysicalDeviceSparseImageFormatProperties2 :: forall io
                                                  -- structure containing input parameters to the command.
                                                  PhysicalDeviceSparseImageFormatInfo2
                                               -> io (("properties" ::: Vector SparseImageFormatProperties2))
-getPhysicalDeviceSparseImageFormatProperties2 physicalDevice formatInfo = liftIO . evalContT $ do
+getPhysicalDeviceSparseImageFormatProperties2 physicalDevice
+                                                formatInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSparseImageFormatProperties2Ptr = pVkGetPhysicalDeviceSparseImageFormatProperties2 (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceSparseImageFormatProperties2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSparseImageFormatProperties2 is null" Nothing Nothing
@@ -726,11 +767,19 @@ getPhysicalDeviceSparseImageFormatProperties2 physicalDevice formatInfo = liftIO
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pFormatInfo <- ContT $ withCStruct (formatInfo)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
-  lift $ traceAroundEvent "vkGetPhysicalDeviceSparseImageFormatProperties2" (vkGetPhysicalDeviceSparseImageFormatProperties2' physicalDevice' pFormatInfo (pPPropertyCount) (nullPtr))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceSparseImageFormatProperties2" (vkGetPhysicalDeviceSparseImageFormatProperties2'
+                                                                               physicalDevice'
+                                                                               pFormatInfo
+                                                                               (pPPropertyCount)
+                                                                               (nullPtr))
   pPropertyCount <- lift $ peek @Word32 pPPropertyCount
   pPProperties <- ContT $ bracket (callocBytes @SparseImageFormatProperties2 ((fromIntegral (pPropertyCount)) * 40)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 40) :: Ptr SparseImageFormatProperties2) . ($ ())) [0..(fromIntegral (pPropertyCount)) - 1]
-  lift $ traceAroundEvent "vkGetPhysicalDeviceSparseImageFormatProperties2" (vkGetPhysicalDeviceSparseImageFormatProperties2' physicalDevice' pFormatInfo (pPPropertyCount) ((pPProperties)))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceSparseImageFormatProperties2" (vkGetPhysicalDeviceSparseImageFormatProperties2'
+                                                                               physicalDevice'
+                                                                               pFormatInfo
+                                                                               (pPPropertyCount)
+                                                                               ((pPProperties)))
   pPropertyCount' <- lift $ peek @Word32 pPPropertyCount
   pProperties' <- lift $ generateM (fromIntegral (pPropertyCount')) (\i -> peekCStruct @SparseImageFormatProperties2 (((pPProperties) `advancePtrBytes` (40 * (i)) :: Ptr SparseImageFormatProperties2)))
   pure $ (pProperties')
@@ -909,7 +958,8 @@ instance Extensible PhysicalDeviceFeatures2 where
     | Just Refl <- eqT @e @PhysicalDeviceDeviceGeneratedCommandsFeaturesNV = Just f
     | otherwise = Nothing
 
-instance (Extendss PhysicalDeviceFeatures2 es, PokeChain es) => ToCStruct (PhysicalDeviceFeatures2 es) where
+instance ( Extendss PhysicalDeviceFeatures2 es
+         , PokeChain es ) => ToCStruct (PhysicalDeviceFeatures2 es) where
   withCStruct x f = allocaBytes 240 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceFeatures2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2)
@@ -926,7 +976,8 @@ instance (Extendss PhysicalDeviceFeatures2 es, PokeChain es) => ToCStruct (Physi
     lift $ poke ((p `plusPtr` 16 :: Ptr PhysicalDeviceFeatures)) (zero)
     lift $ f
 
-instance (Extendss PhysicalDeviceFeatures2 es, PeekChain es) => FromCStruct (PhysicalDeviceFeatures2 es) where
+instance ( Extendss PhysicalDeviceFeatures2 es
+         , PeekChain es ) => FromCStruct (PhysicalDeviceFeatures2 es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -1111,7 +1162,8 @@ instance Extensible PhysicalDeviceProperties2 where
     | Just Refl <- eqT @e @PhysicalDeviceDeviceGeneratedCommandsPropertiesNV = Just f
     | otherwise = Nothing
 
-instance (Extendss PhysicalDeviceProperties2 es, PokeChain es) => ToCStruct (PhysicalDeviceProperties2 es) where
+instance ( Extendss PhysicalDeviceProperties2 es
+         , PokeChain es ) => ToCStruct (PhysicalDeviceProperties2 es) where
   withCStruct x f = allocaBytes 840 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceProperties2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2)
@@ -1128,7 +1180,8 @@ instance (Extendss PhysicalDeviceProperties2 es, PokeChain es) => ToCStruct (Phy
     lift $ poke ((p `plusPtr` 16 :: Ptr PhysicalDeviceProperties)) (zero)
     lift $ f
 
-instance (Extendss PhysicalDeviceProperties2 es, PeekChain es) => FromCStruct (PhysicalDeviceProperties2 es) where
+instance ( Extendss PhysicalDeviceProperties2 es
+         , PeekChain es ) => FromCStruct (PhysicalDeviceProperties2 es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -1194,7 +1247,8 @@ instance Extensible FormatProperties2 where
     | Just Refl <- eqT @e @DrmFormatModifierPropertiesListEXT = Just f
     | otherwise = Nothing
 
-instance (Extendss FormatProperties2 es, PokeChain es) => ToCStruct (FormatProperties2 es) where
+instance ( Extendss FormatProperties2 es
+         , PokeChain es ) => ToCStruct (FormatProperties2 es) where
   withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FormatProperties2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FORMAT_PROPERTIES_2)
@@ -1211,7 +1265,8 @@ instance (Extendss FormatProperties2 es, PokeChain es) => ToCStruct (FormatPrope
     lift $ poke ((p `plusPtr` 16 :: Ptr FormatProperties)) (zero)
     lift $ f
 
-instance (Extendss FormatProperties2 es, PeekChain es) => FromCStruct (FormatProperties2 es) where
+instance ( Extendss FormatProperties2 es
+         , PeekChain es ) => FromCStruct (FormatProperties2 es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -1301,7 +1356,8 @@ instance Extensible ImageFormatProperties2 where
     | Just Refl <- eqT @e @ExternalImageFormatProperties = Just f
     | otherwise = Nothing
 
-instance (Extendss ImageFormatProperties2 es, PokeChain es) => ToCStruct (ImageFormatProperties2 es) where
+instance ( Extendss ImageFormatProperties2 es
+         , PokeChain es ) => ToCStruct (ImageFormatProperties2 es) where
   withCStruct x f = allocaBytes 48 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageFormatProperties2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2)
@@ -1318,7 +1374,8 @@ instance (Extendss ImageFormatProperties2 es, PokeChain es) => ToCStruct (ImageF
     lift $ poke ((p `plusPtr` 16 :: Ptr ImageFormatProperties)) (zero)
     lift $ f
 
-instance (Extendss ImageFormatProperties2 es, PeekChain es) => FromCStruct (ImageFormatProperties2 es) where
+instance ( Extendss ImageFormatProperties2 es
+         , PeekChain es ) => FromCStruct (ImageFormatProperties2 es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -1460,7 +1517,8 @@ instance Extensible PhysicalDeviceImageFormatInfo2 where
     | Just Refl <- eqT @e @PhysicalDeviceExternalImageFormatInfo = Just f
     | otherwise = Nothing
 
-instance (Extendss PhysicalDeviceImageFormatInfo2 es, PokeChain es) => ToCStruct (PhysicalDeviceImageFormatInfo2 es) where
+instance ( Extendss PhysicalDeviceImageFormatInfo2 es
+         , PokeChain es ) => ToCStruct (PhysicalDeviceImageFormatInfo2 es) where
   withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceImageFormatInfo2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2)
@@ -1484,7 +1542,8 @@ instance (Extendss PhysicalDeviceImageFormatInfo2 es, PokeChain es) => ToCStruct
     lift $ poke ((p `plusPtr` 28 :: Ptr ImageUsageFlags)) (zero)
     lift $ f
 
-instance (Extendss PhysicalDeviceImageFormatInfo2 es, PeekChain es) => FromCStruct (PhysicalDeviceImageFormatInfo2 es) where
+instance ( Extendss PhysicalDeviceImageFormatInfo2 es
+         , PeekChain es ) => FromCStruct (PhysicalDeviceImageFormatInfo2 es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -1560,7 +1619,8 @@ instance Extensible QueueFamilyProperties2 where
     | Just Refl <- eqT @e @QueueFamilyGlobalPriorityPropertiesKHR = Just f
     | otherwise = Nothing
 
-instance (Extendss QueueFamilyProperties2 es, PokeChain es) => ToCStruct (QueueFamilyProperties2 es) where
+instance ( Extendss QueueFamilyProperties2 es
+         , PokeChain es ) => ToCStruct (QueueFamilyProperties2 es) where
   withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p QueueFamilyProperties2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2)
@@ -1577,7 +1637,8 @@ instance (Extendss QueueFamilyProperties2 es, PokeChain es) => ToCStruct (QueueF
     lift $ poke ((p `plusPtr` 16 :: Ptr QueueFamilyProperties)) (zero)
     lift $ f
 
-instance (Extendss QueueFamilyProperties2 es, PeekChain es) => FromCStruct (QueueFamilyProperties2 es) where
+instance ( Extendss QueueFamilyProperties2 es
+         , PeekChain es ) => FromCStruct (QueueFamilyProperties2 es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -1638,7 +1699,8 @@ instance Extensible PhysicalDeviceMemoryProperties2 where
     | Just Refl <- eqT @e @PhysicalDeviceMemoryBudgetPropertiesEXT = Just f
     | otherwise = Nothing
 
-instance (Extendss PhysicalDeviceMemoryProperties2 es, PokeChain es) => ToCStruct (PhysicalDeviceMemoryProperties2 es) where
+instance ( Extendss PhysicalDeviceMemoryProperties2 es
+         , PokeChain es ) => ToCStruct (PhysicalDeviceMemoryProperties2 es) where
   withCStruct x f = allocaBytes 536 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceMemoryProperties2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2)
@@ -1655,7 +1717,8 @@ instance (Extendss PhysicalDeviceMemoryProperties2 es, PokeChain es) => ToCStruc
     lift $ poke ((p `plusPtr` 16 :: Ptr PhysicalDeviceMemoryProperties)) (zero)
     lift $ f
 
-instance (Extendss PhysicalDeviceMemoryProperties2 es, PeekChain es) => FromCStruct (PhysicalDeviceMemoryProperties2 es) where
+instance ( Extendss PhysicalDeviceMemoryProperties2 es
+         , PeekChain es ) => FromCStruct (PhysicalDeviceMemoryProperties2 es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

@@ -151,7 +151,8 @@ instance FromCStruct MemoryDedicatedRequirements where
     prefersDedicatedAllocation <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     requiresDedicatedAllocation <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ MemoryDedicatedRequirements
-             (bool32ToBool prefersDedicatedAllocation) (bool32ToBool requiresDedicatedAllocation)
+             (bool32ToBool prefersDedicatedAllocation)
+             (bool32ToBool requiresDedicatedAllocation)
 
 instance Storable MemoryDedicatedRequirements where
   sizeOf ~_ = 24

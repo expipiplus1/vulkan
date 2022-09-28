@@ -31,7 +31,7 @@ zeroScheme = runNonDetMaybe . go
     EitherWord32 _    -> pure $ parens "Left 0"
     Tupled n s        -> do
       z <- go s
-      pure $ tupled (replicate (fromIntegral n) z)
+      pure $ align (tupled (replicate (fromIntegral n) z))
     Returned      _ -> empty
     InOutCount    _ -> empty
     OutCount      _ -> empty

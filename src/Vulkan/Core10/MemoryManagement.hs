@@ -97,7 +97,10 @@ getBufferMemoryRequirements device buffer = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetBufferMemoryRequirements is null" Nothing Nothing
   let vkGetBufferMemoryRequirements' = mkVkGetBufferMemoryRequirements vkGetBufferMemoryRequirementsPtr
   pPMemoryRequirements <- ContT (withZeroCStruct @MemoryRequirements)
-  lift $ traceAroundEvent "vkGetBufferMemoryRequirements" (vkGetBufferMemoryRequirements' (deviceHandle (device)) (buffer) (pPMemoryRequirements))
+  lift $ traceAroundEvent "vkGetBufferMemoryRequirements" (vkGetBufferMemoryRequirements'
+                                                             (deviceHandle (device))
+                                                             (buffer)
+                                                             (pPMemoryRequirements))
   pMemoryRequirements <- lift $ peekCStruct @MemoryRequirements pPMemoryRequirements
   pure $ (pMemoryRequirements)
 
@@ -285,7 +288,11 @@ bindBufferMemory device buffer memory memoryOffset = liftIO $ do
   unless (vkBindBufferMemoryPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBindBufferMemory is null" Nothing Nothing
   let vkBindBufferMemory' = mkVkBindBufferMemory vkBindBufferMemoryPtr
-  r <- traceAroundEvent "vkBindBufferMemory" (vkBindBufferMemory' (deviceHandle (device)) (buffer) (memory) (memoryOffset))
+  r <- traceAroundEvent "vkBindBufferMemory" (vkBindBufferMemory'
+                                                (deviceHandle (device))
+                                                (buffer)
+                                                (memory)
+                                                (memoryOffset))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -344,7 +351,10 @@ getImageMemoryRequirements device image = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetImageMemoryRequirements is null" Nothing Nothing
   let vkGetImageMemoryRequirements' = mkVkGetImageMemoryRequirements vkGetImageMemoryRequirementsPtr
   pPMemoryRequirements <- ContT (withZeroCStruct @MemoryRequirements)
-  lift $ traceAroundEvent "vkGetImageMemoryRequirements" (vkGetImageMemoryRequirements' (deviceHandle (device)) (image) (pPMemoryRequirements))
+  lift $ traceAroundEvent "vkGetImageMemoryRequirements" (vkGetImageMemoryRequirements'
+                                                            (deviceHandle (device))
+                                                            (image)
+                                                            (pPMemoryRequirements))
   pMemoryRequirements <- lift $ peekCStruct @MemoryRequirements pPMemoryRequirements
   pure $ (pMemoryRequirements)
 
@@ -547,7 +557,11 @@ bindImageMemory device image memory memoryOffset = liftIO $ do
   unless (vkBindImageMemoryPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBindImageMemory is null" Nothing Nothing
   let vkBindImageMemory' = mkVkBindImageMemory vkBindImageMemoryPtr
-  r <- traceAroundEvent "vkBindImageMemory" (vkBindImageMemory' (deviceHandle (device)) (image) (memory) (memoryOffset))
+  r <- traceAroundEvent "vkBindImageMemory" (vkBindImageMemory'
+                                               (deviceHandle (device))
+                                               (image)
+                                               (memory)
+                                               (memoryOffset))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 

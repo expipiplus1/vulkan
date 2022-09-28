@@ -86,7 +86,9 @@ foreign import ccall
 -- 'ExternalSemaphoreProperties', 'Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceExternalSemaphoreInfo'
 getPhysicalDeviceExternalSemaphoreProperties :: forall a io
-                                              . (Extendss PhysicalDeviceExternalSemaphoreInfo a, PokeChain a, MonadIO io)
+                                              . ( Extendss PhysicalDeviceExternalSemaphoreInfo a
+                                                , PokeChain a
+                                                , MonadIO io )
                                              => -- | @physicalDevice@ is the physical device from which to query the
                                                 -- semaphore capabilities.
                                                 --
@@ -104,14 +106,18 @@ getPhysicalDeviceExternalSemaphoreProperties :: forall a io
                                                 -- 'PhysicalDeviceExternalSemaphoreInfo' structure
                                                 (PhysicalDeviceExternalSemaphoreInfo a)
                                              -> io (ExternalSemaphoreProperties)
-getPhysicalDeviceExternalSemaphoreProperties physicalDevice externalSemaphoreInfo = liftIO . evalContT $ do
+getPhysicalDeviceExternalSemaphoreProperties physicalDevice
+                                               externalSemaphoreInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceExternalSemaphorePropertiesPtr = pVkGetPhysicalDeviceExternalSemaphoreProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceExternalSemaphorePropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceExternalSemaphoreProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceExternalSemaphoreProperties' = mkVkGetPhysicalDeviceExternalSemaphoreProperties vkGetPhysicalDeviceExternalSemaphorePropertiesPtr
   pExternalSemaphoreInfo <- ContT $ withCStruct (externalSemaphoreInfo)
   pPExternalSemaphoreProperties <- ContT (withZeroCStruct @ExternalSemaphoreProperties)
-  lift $ traceAroundEvent "vkGetPhysicalDeviceExternalSemaphoreProperties" (vkGetPhysicalDeviceExternalSemaphoreProperties' (physicalDeviceHandle (physicalDevice)) (forgetExtensions pExternalSemaphoreInfo) (pPExternalSemaphoreProperties))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceExternalSemaphoreProperties" (vkGetPhysicalDeviceExternalSemaphoreProperties'
+                                                                              (physicalDeviceHandle (physicalDevice))
+                                                                              (forgetExtensions pExternalSemaphoreInfo)
+                                                                              (pPExternalSemaphoreProperties))
   pExternalSemaphoreProperties <- lift $ peekCStruct @ExternalSemaphoreProperties pPExternalSemaphoreProperties
   pure $ (pExternalSemaphoreProperties)
 
@@ -168,7 +174,8 @@ instance Extensible PhysicalDeviceExternalSemaphoreInfo where
     | Just Refl <- eqT @e @SemaphoreTypeCreateInfo = Just f
     | otherwise = Nothing
 
-instance (Extendss PhysicalDeviceExternalSemaphoreInfo es, PokeChain es) => ToCStruct (PhysicalDeviceExternalSemaphoreInfo es) where
+instance ( Extendss PhysicalDeviceExternalSemaphoreInfo es
+         , PokeChain es ) => ToCStruct (PhysicalDeviceExternalSemaphoreInfo es) where
   withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceExternalSemaphoreInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO)
@@ -185,7 +192,8 @@ instance (Extendss PhysicalDeviceExternalSemaphoreInfo es, PokeChain es) => ToCS
     lift $ poke ((p `plusPtr` 16 :: Ptr ExternalSemaphoreHandleTypeFlagBits)) (zero)
     lift $ f
 
-instance (Extendss PhysicalDeviceExternalSemaphoreInfo es, PeekChain es) => FromCStruct (PhysicalDeviceExternalSemaphoreInfo es) where
+instance ( Extendss PhysicalDeviceExternalSemaphoreInfo es
+         , PeekChain es ) => FromCStruct (PhysicalDeviceExternalSemaphoreInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -264,7 +272,9 @@ instance FromCStruct ExternalSemaphoreProperties where
     compatibleHandleTypes <- peek @ExternalSemaphoreHandleTypeFlags ((p `plusPtr` 20 :: Ptr ExternalSemaphoreHandleTypeFlags))
     externalSemaphoreFeatures <- peek @ExternalSemaphoreFeatureFlags ((p `plusPtr` 24 :: Ptr ExternalSemaphoreFeatureFlags))
     pure $ ExternalSemaphoreProperties
-             exportFromImportedHandleTypes compatibleHandleTypes externalSemaphoreFeatures
+             exportFromImportedHandleTypes
+             compatibleHandleTypes
+             externalSemaphoreFeatures
 
 instance Storable ExternalSemaphoreProperties where
   sizeOf ~_ = 32

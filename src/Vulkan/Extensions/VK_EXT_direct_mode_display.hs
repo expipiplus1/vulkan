@@ -173,7 +173,9 @@ releaseDisplayEXT physicalDevice display = liftIO $ do
   unless (vkReleaseDisplayEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkReleaseDisplayEXT is null" Nothing Nothing
   let vkReleaseDisplayEXT' = mkVkReleaseDisplayEXT vkReleaseDisplayEXTPtr
-  _ <- traceAroundEvent "vkReleaseDisplayEXT" (vkReleaseDisplayEXT' (physicalDeviceHandle (physicalDevice)) (display))
+  _ <- traceAroundEvent "vkReleaseDisplayEXT" (vkReleaseDisplayEXT'
+                                                 (physicalDeviceHandle (physicalDevice))
+                                                 (display))
   pure $ ()
 
 

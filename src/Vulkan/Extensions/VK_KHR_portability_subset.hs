@@ -362,7 +362,21 @@ instance FromCStruct PhysicalDevicePortabilitySubsetFeaturesKHR where
     triangleFans <- peek @Bool32 ((p `plusPtr` 68 :: Ptr Bool32))
     vertexAttributeAccessBeyondStride <- peek @Bool32 ((p `plusPtr` 72 :: Ptr Bool32))
     pure $ PhysicalDevicePortabilitySubsetFeaturesKHR
-             (bool32ToBool constantAlphaColorBlendFactors) (bool32ToBool events) (bool32ToBool imageViewFormatReinterpretation) (bool32ToBool imageViewFormatSwizzle) (bool32ToBool imageView2DOn3DImage) (bool32ToBool multisampleArrayImage) (bool32ToBool mutableComparisonSamplers) (bool32ToBool pointPolygons) (bool32ToBool samplerMipLodBias) (bool32ToBool separateStencilMaskRef) (bool32ToBool shaderSampleRateInterpolationFunctions) (bool32ToBool tessellationIsolines) (bool32ToBool tessellationPointMode) (bool32ToBool triangleFans) (bool32ToBool vertexAttributeAccessBeyondStride)
+             (bool32ToBool constantAlphaColorBlendFactors)
+             (bool32ToBool events)
+             (bool32ToBool imageViewFormatReinterpretation)
+             (bool32ToBool imageViewFormatSwizzle)
+             (bool32ToBool imageView2DOn3DImage)
+             (bool32ToBool multisampleArrayImage)
+             (bool32ToBool mutableComparisonSamplers)
+             (bool32ToBool pointPolygons)
+             (bool32ToBool samplerMipLodBias)
+             (bool32ToBool separateStencilMaskRef)
+             (bool32ToBool shaderSampleRateInterpolationFunctions)
+             (bool32ToBool tessellationIsolines)
+             (bool32ToBool tessellationPointMode)
+             (bool32ToBool triangleFans)
+             (bool32ToBool vertexAttributeAccessBeyondStride)
 
 instance Storable PhysicalDevicePortabilitySubsetFeaturesKHR where
   sizeOf ~_ = 80

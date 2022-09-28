@@ -269,8 +269,8 @@
 -- is the inverse of @EGL_EXT_image_dma_buf_import_modifiers@.
 --
 -- The Linux kernel modesetting API (KMS), when configuring the display’s
--- framebuffer with @struct
--- drm_mode_fb_cmd2@<https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn4 4>^,
+-- framebuffer with
+-- @struct drm_mode_fb_cmd2@<https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn4 4>^,
 -- allows one to specify the frambuffer’s /modifier/ as well as a per-plane
 -- memory handle, offset, and row pitch.
 --
@@ -377,8 +377,8 @@
 -- __DISCUSSION__: Prior art, such as
 -- @EGL_EXT_image_dma_buf_import_modifiers@<https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn2 2>^,
 -- @struct drm_mode_fb_cmd2@<https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn4 4>^,
--- and @struct
--- gbm_import_fd_modifier_data@<https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn5 5>^,
+-- and
+-- @struct gbm_import_fd_modifier_data@<https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn5 5>^,
 -- allows defining one /modifier/ per plane. However, developers of the GBM
 -- and kernel APIs concede it was a mistake. Beginning in Linux 4.10, the
 -- kernel requires that the application provide the same DRM format
@@ -403,8 +403,8 @@
 -- __DISCUSSION__: Prior art, such as
 -- @EGL_EXT_image_dma_buf_import_modifiers@<https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn2 2>^,
 -- @struct drm_mode_fb_cmd2@<https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn4 4>^,
--- and @struct
--- gbm_import_fd_modifier_data@<https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn5 5>^,
+-- and
+-- @struct gbm_import_fd_modifier_data@<https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#VK_EXT_image_drm_format_modifier-fn5 5>^,
 -- omits from the API the size of each plane. Instead, the APIs infer each
 -- plane’s size from the import parameters, which include the image’s pixel
 -- format and a dma_buf, offset, and row pitch for each plane.
@@ -521,8 +521,7 @@
 --     <https://registry.khronos.org/EGL/extensions/MESA/EGL_MESA_image_dma_buf_export.txt EGL_MESA_image_dma_buf_export>
 --
 -- 4.  #VK_EXT_image_drm_format_modifier-fn4#
---     <https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/include/uapi/drm/drm_mode.h?id=refs/tags/v4.10#n392 struct
---     drm_mode_fb_cmd2>
+--     <https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/include/uapi/drm/drm_mode.h?id=refs/tags/v4.10#n392 struct drm_mode_fb_cmd2>
 --
 -- 5.  #VK_EXT_image_drm_format_modifier-fn5#
 --     <https://cgit.freedesktop.org/mesa/mesa/tree/src/gbm/main/gbm.h?id=refs/tags/mesa-18.0.0-rc1 gbm.h>

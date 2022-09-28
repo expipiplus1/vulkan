@@ -39,10 +39,12 @@ instance FromCStruct BufferCopy2
 type role BufferImageCopy2 nominal
 data BufferImageCopy2 (es :: [Type])
 
-instance (Extendss BufferImageCopy2 es, PokeChain es) => ToCStruct (BufferImageCopy2 es)
+instance ( Extendss BufferImageCopy2 es
+         , PokeChain es ) => ToCStruct (BufferImageCopy2 es)
 instance Show (Chain es) => Show (BufferImageCopy2 es)
 
-instance (Extendss BufferImageCopy2 es, PeekChain es) => FromCStruct (BufferImageCopy2 es)
+instance ( Extendss BufferImageCopy2 es
+         , PeekChain es ) => FromCStruct (BufferImageCopy2 es)
 
 
 data CopyBufferInfo2

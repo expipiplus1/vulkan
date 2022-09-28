@@ -27,8 +27,6 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 newtype BufferViewCreateFlags = BufferViewCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameBufferViewCreateFlags :: String
 conNameBufferViewCreateFlags = "BufferViewCreateFlags"
 
@@ -39,15 +37,18 @@ showTableBufferViewCreateFlags :: [(BufferViewCreateFlags, String)]
 showTableBufferViewCreateFlags = []
 
 instance Show BufferViewCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixBufferViewCreateFlags
-                            showTableBufferViewCreateFlags
-                            conNameBufferViewCreateFlags
-                            (\(BufferViewCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixBufferViewCreateFlags
+      showTableBufferViewCreateFlags
+      conNameBufferViewCreateFlags
+      (\(BufferViewCreateFlags x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read BufferViewCreateFlags where
-  readPrec = enumReadPrec enumPrefixBufferViewCreateFlags
-                          showTableBufferViewCreateFlags
-                          conNameBufferViewCreateFlags
-                          BufferViewCreateFlags
-
+  readPrec =
+    enumReadPrec
+      enumPrefixBufferViewCreateFlags
+      showTableBufferViewCreateFlags
+      conNameBufferViewCreateFlags
+      BufferViewCreateFlags

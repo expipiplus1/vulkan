@@ -292,18 +292,21 @@ newtype DeviceDiagnosticsConfigFlagBitsNV = DeviceDiagnosticsConfigFlagBitsNV Fl
 
 -- | 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV' enables the
 -- generation of debug information for shaders.
-pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV      = DeviceDiagnosticsConfigFlagBitsNV 0x00000001
+pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV = DeviceDiagnosticsConfigFlagBitsNV 0x00000001
+
 -- | 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV' enables
 -- driver side tracking of resources (images, buffers, etc.) used to
 -- augment the device fault information.
-pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV      = DeviceDiagnosticsConfigFlagBitsNV 0x00000002
+pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV = DeviceDiagnosticsConfigFlagBitsNV 0x00000002
+
 -- | 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV' enables
 -- automatic insertion of
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#device-diagnostic-checkpoints diagnostic checkpoints>
 -- for draw calls, dispatches, trace rays, and copies. The CPU call stack
 -- at the time of the command will be associated as the marker data for the
 -- automatically inserted checkpoints.
-pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV  = DeviceDiagnosticsConfigFlagBitsNV 0x00000004
+pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV = DeviceDiagnosticsConfigFlagBitsNV 0x00000004
+
 -- | 'DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_ERROR_REPORTING_BIT_NV' enables
 -- shader error reporting.
 pattern DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_ERROR_REPORTING_BIT_NV = DeviceDiagnosticsConfigFlagBitsNV 0x00000008
@@ -316,25 +319,40 @@ enumPrefixDeviceDiagnosticsConfigFlagBitsNV = "DEVICE_DIAGNOSTICS_CONFIG_ENABLE_
 
 showTableDeviceDiagnosticsConfigFlagBitsNV :: [(DeviceDiagnosticsConfigFlagBitsNV, String)]
 showTableDeviceDiagnosticsConfigFlagBitsNV =
-  [ (DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV     , "SHADER_DEBUG_INFO_BIT_NV")
-  , (DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV     , "RESOURCE_TRACKING_BIT_NV")
-  , (DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV , "AUTOMATIC_CHECKPOINTS_BIT_NV")
-  , (DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_ERROR_REPORTING_BIT_NV, "SHADER_ERROR_REPORTING_BIT_NV")
+  [
+    ( DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV
+    , "SHADER_DEBUG_INFO_BIT_NV"
+    )
+  ,
+    ( DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV
+    , "RESOURCE_TRACKING_BIT_NV"
+    )
+  ,
+    ( DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV
+    , "AUTOMATIC_CHECKPOINTS_BIT_NV"
+    )
+  ,
+    ( DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_ERROR_REPORTING_BIT_NV
+    , "SHADER_ERROR_REPORTING_BIT_NV"
+    )
   ]
 
 instance Show DeviceDiagnosticsConfigFlagBitsNV where
-  showsPrec = enumShowsPrec enumPrefixDeviceDiagnosticsConfigFlagBitsNV
-                            showTableDeviceDiagnosticsConfigFlagBitsNV
-                            conNameDeviceDiagnosticsConfigFlagBitsNV
-                            (\(DeviceDiagnosticsConfigFlagBitsNV x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDeviceDiagnosticsConfigFlagBitsNV
+      showTableDeviceDiagnosticsConfigFlagBitsNV
+      conNameDeviceDiagnosticsConfigFlagBitsNV
+      (\(DeviceDiagnosticsConfigFlagBitsNV x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read DeviceDiagnosticsConfigFlagBitsNV where
-  readPrec = enumReadPrec enumPrefixDeviceDiagnosticsConfigFlagBitsNV
-                          showTableDeviceDiagnosticsConfigFlagBitsNV
-                          conNameDeviceDiagnosticsConfigFlagBitsNV
-                          DeviceDiagnosticsConfigFlagBitsNV
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDeviceDiagnosticsConfigFlagBitsNV
+      showTableDeviceDiagnosticsConfigFlagBitsNV
+      conNameDeviceDiagnosticsConfigFlagBitsNV
+      DeviceDiagnosticsConfigFlagBitsNV
 
 type NV_DEVICE_DIAGNOSTICS_CONFIG_SPEC_VERSION = 2
 

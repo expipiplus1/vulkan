@@ -355,14 +355,24 @@ cmdPushDescriptorSetKHR :: forall io
                            -- the descriptors to be updated.
                            ("descriptorWrites" ::: Vector (SomeStruct WriteDescriptorSet))
                         -> io ()
-cmdPushDescriptorSetKHR commandBuffer pipelineBindPoint layout set descriptorWrites = liftIO . evalContT $ do
+cmdPushDescriptorSetKHR commandBuffer
+                          pipelineBindPoint
+                          layout
+                          set
+                          descriptorWrites = liftIO . evalContT $ do
   let vkCmdPushDescriptorSetKHRPtr = pVkCmdPushDescriptorSetKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdPushDescriptorSetKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPushDescriptorSetKHR is null" Nothing Nothing
   let vkCmdPushDescriptorSetKHR' = mkVkCmdPushDescriptorSetKHR vkCmdPushDescriptorSetKHRPtr
   pPDescriptorWrites <- ContT $ allocaBytes @(WriteDescriptorSet _) ((Data.Vector.length (descriptorWrites)) * 64)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPDescriptorWrites `plusPtr` (64 * (i)) :: Ptr (WriteDescriptorSet _))) (e) . ($ ())) (descriptorWrites)
-  lift $ traceAroundEvent "vkCmdPushDescriptorSetKHR" (vkCmdPushDescriptorSetKHR' (commandBufferHandle (commandBuffer)) (pipelineBindPoint) (layout) (set) ((fromIntegral (Data.Vector.length $ (descriptorWrites)) :: Word32)) (forgetExtensions (pPDescriptorWrites)))
+  lift $ traceAroundEvent "vkCmdPushDescriptorSetKHR" (vkCmdPushDescriptorSetKHR'
+                                                         (commandBufferHandle (commandBuffer))
+                                                         (pipelineBindPoint)
+                                                         (layout)
+                                                         (set)
+                                                         ((fromIntegral (Data.Vector.length $ (descriptorWrites)) :: Word32))
+                                                         (forgetExtensions (pPDescriptorWrites)))
   pure $ ()
 
 
@@ -524,12 +534,21 @@ cmdPushDescriptorSetWithTemplateKHR :: forall io
                                        -- update.
                                        ("data" ::: Ptr ())
                                     -> io ()
-cmdPushDescriptorSetWithTemplateKHR commandBuffer descriptorUpdateTemplate layout set data' = liftIO $ do
+cmdPushDescriptorSetWithTemplateKHR commandBuffer
+                                      descriptorUpdateTemplate
+                                      layout
+                                      set
+                                      data' = liftIO $ do
   let vkCmdPushDescriptorSetWithTemplateKHRPtr = pVkCmdPushDescriptorSetWithTemplateKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdPushDescriptorSetWithTemplateKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPushDescriptorSetWithTemplateKHR is null" Nothing Nothing
   let vkCmdPushDescriptorSetWithTemplateKHR' = mkVkCmdPushDescriptorSetWithTemplateKHR vkCmdPushDescriptorSetWithTemplateKHRPtr
-  traceAroundEvent "vkCmdPushDescriptorSetWithTemplateKHR" (vkCmdPushDescriptorSetWithTemplateKHR' (commandBufferHandle (commandBuffer)) (descriptorUpdateTemplate) (layout) (set) (data'))
+  traceAroundEvent "vkCmdPushDescriptorSetWithTemplateKHR" (vkCmdPushDescriptorSetWithTemplateKHR'
+                                                              (commandBufferHandle (commandBuffer))
+                                                              (descriptorUpdateTemplate)
+                                                              (layout)
+                                                              (set)
+                                                              (data'))
   pure $ ()
 
 

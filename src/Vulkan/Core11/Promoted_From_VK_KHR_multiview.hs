@@ -149,7 +149,9 @@ instance FromCStruct PhysicalDeviceMultiviewFeatures where
     multiviewGeometryShader <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     multiviewTessellationShader <- peek @Bool32 ((p `plusPtr` 24 :: Ptr Bool32))
     pure $ PhysicalDeviceMultiviewFeatures
-             (bool32ToBool multiview) (bool32ToBool multiviewGeometryShader) (bool32ToBool multiviewTessellationShader)
+             (bool32ToBool multiview)
+             (bool32ToBool multiviewGeometryShader)
+             (bool32ToBool multiviewTessellationShader)
 
 instance Storable PhysicalDeviceMultiviewFeatures where
   sizeOf ~_ = 32

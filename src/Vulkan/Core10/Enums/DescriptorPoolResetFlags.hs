@@ -27,8 +27,6 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 newtype DescriptorPoolResetFlags = DescriptorPoolResetFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameDescriptorPoolResetFlags :: String
 conNameDescriptorPoolResetFlags = "DescriptorPoolResetFlags"
 
@@ -39,15 +37,18 @@ showTableDescriptorPoolResetFlags :: [(DescriptorPoolResetFlags, String)]
 showTableDescriptorPoolResetFlags = []
 
 instance Show DescriptorPoolResetFlags where
-  showsPrec = enumShowsPrec enumPrefixDescriptorPoolResetFlags
-                            showTableDescriptorPoolResetFlags
-                            conNameDescriptorPoolResetFlags
-                            (\(DescriptorPoolResetFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDescriptorPoolResetFlags
+      showTableDescriptorPoolResetFlags
+      conNameDescriptorPoolResetFlags
+      (\(DescriptorPoolResetFlags x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read DescriptorPoolResetFlags where
-  readPrec = enumReadPrec enumPrefixDescriptorPoolResetFlags
-                          showTableDescriptorPoolResetFlags
-                          conNameDescriptorPoolResetFlags
-                          DescriptorPoolResetFlags
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDescriptorPoolResetFlags
+      showTableDescriptorPoolResetFlags
+      conNameDescriptorPoolResetFlags
+      DescriptorPoolResetFlags

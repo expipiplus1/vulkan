@@ -483,22 +483,30 @@ instance Zero QueueFamilyGlobalPriorityPropertiesKHR where
 -- 'QueueFamilyGlobalPriorityPropertiesKHR'
 newtype QueueGlobalPriorityKHR = QueueGlobalPriorityKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
+
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
 -- | 'QUEUE_GLOBAL_PRIORITY_LOW_KHR' is below the system default. Useful for
 -- non-interactive tasks.
-pattern QUEUE_GLOBAL_PRIORITY_LOW_KHR      = QueueGlobalPriorityKHR 128
+pattern QUEUE_GLOBAL_PRIORITY_LOW_KHR = QueueGlobalPriorityKHR 128
+
 -- | 'QUEUE_GLOBAL_PRIORITY_MEDIUM_KHR' is the system default priority.
-pattern QUEUE_GLOBAL_PRIORITY_MEDIUM_KHR   = QueueGlobalPriorityKHR 256
+pattern QUEUE_GLOBAL_PRIORITY_MEDIUM_KHR = QueueGlobalPriorityKHR 256
+
 -- | 'QUEUE_GLOBAL_PRIORITY_HIGH_KHR' is above the system default.
-pattern QUEUE_GLOBAL_PRIORITY_HIGH_KHR     = QueueGlobalPriorityKHR 512
+pattern QUEUE_GLOBAL_PRIORITY_HIGH_KHR = QueueGlobalPriorityKHR 512
+
 -- | 'QUEUE_GLOBAL_PRIORITY_REALTIME_KHR' is the highest priority. Useful for
 -- critical tasks.
 pattern QUEUE_GLOBAL_PRIORITY_REALTIME_KHR = QueueGlobalPriorityKHR 1024
-{-# complete QUEUE_GLOBAL_PRIORITY_LOW_KHR,
-             QUEUE_GLOBAL_PRIORITY_MEDIUM_KHR,
-             QUEUE_GLOBAL_PRIORITY_HIGH_KHR,
-             QUEUE_GLOBAL_PRIORITY_REALTIME_KHR :: QueueGlobalPriorityKHR #-}
+
+{-# COMPLETE
+  QUEUE_GLOBAL_PRIORITY_LOW_KHR
+  , QUEUE_GLOBAL_PRIORITY_MEDIUM_KHR
+  , QUEUE_GLOBAL_PRIORITY_HIGH_KHR
+  , QUEUE_GLOBAL_PRIORITY_REALTIME_KHR ::
+    QueueGlobalPriorityKHR
+  #-}
 
 conNameQueueGlobalPriorityKHR :: String
 conNameQueueGlobalPriorityKHR = "QueueGlobalPriorityKHR"
@@ -508,25 +516,34 @@ enumPrefixQueueGlobalPriorityKHR = "QUEUE_GLOBAL_PRIORITY_"
 
 showTableQueueGlobalPriorityKHR :: [(QueueGlobalPriorityKHR, String)]
 showTableQueueGlobalPriorityKHR =
-  [ (QUEUE_GLOBAL_PRIORITY_LOW_KHR     , "LOW_KHR")
-  , (QUEUE_GLOBAL_PRIORITY_MEDIUM_KHR  , "MEDIUM_KHR")
-  , (QUEUE_GLOBAL_PRIORITY_HIGH_KHR    , "HIGH_KHR")
-  , (QUEUE_GLOBAL_PRIORITY_REALTIME_KHR, "REALTIME_KHR")
+  [ (QUEUE_GLOBAL_PRIORITY_LOW_KHR, "LOW_KHR")
+  ,
+    ( QUEUE_GLOBAL_PRIORITY_MEDIUM_KHR
+    , "MEDIUM_KHR"
+    )
+  , (QUEUE_GLOBAL_PRIORITY_HIGH_KHR, "HIGH_KHR")
+  ,
+    ( QUEUE_GLOBAL_PRIORITY_REALTIME_KHR
+    , "REALTIME_KHR"
+    )
   ]
 
 instance Show QueueGlobalPriorityKHR where
-  showsPrec = enumShowsPrec enumPrefixQueueGlobalPriorityKHR
-                            showTableQueueGlobalPriorityKHR
-                            conNameQueueGlobalPriorityKHR
-                            (\(QueueGlobalPriorityKHR x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixQueueGlobalPriorityKHR
+      showTableQueueGlobalPriorityKHR
+      conNameQueueGlobalPriorityKHR
+      (\(QueueGlobalPriorityKHR x) -> x)
+      (showsPrec 11)
 
 instance Read QueueGlobalPriorityKHR where
-  readPrec = enumReadPrec enumPrefixQueueGlobalPriorityKHR
-                          showTableQueueGlobalPriorityKHR
-                          conNameQueueGlobalPriorityKHR
-                          QueueGlobalPriorityKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixQueueGlobalPriorityKHR
+      showTableQueueGlobalPriorityKHR
+      conNameQueueGlobalPriorityKHR
+      QueueGlobalPriorityKHR
 
 type KHR_GLOBAL_PRIORITY_SPEC_VERSION = 1
 

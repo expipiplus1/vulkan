@@ -27,8 +27,6 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 newtype PipelineMultisampleStateCreateFlags = PipelineMultisampleStateCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNamePipelineMultisampleStateCreateFlags :: String
 conNamePipelineMultisampleStateCreateFlags = "PipelineMultisampleStateCreateFlags"
 
@@ -39,15 +37,18 @@ showTablePipelineMultisampleStateCreateFlags :: [(PipelineMultisampleStateCreate
 showTablePipelineMultisampleStateCreateFlags = []
 
 instance Show PipelineMultisampleStateCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixPipelineMultisampleStateCreateFlags
-                            showTablePipelineMultisampleStateCreateFlags
-                            conNamePipelineMultisampleStateCreateFlags
-                            (\(PipelineMultisampleStateCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineMultisampleStateCreateFlags
+      showTablePipelineMultisampleStateCreateFlags
+      conNamePipelineMultisampleStateCreateFlags
+      (\(PipelineMultisampleStateCreateFlags x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read PipelineMultisampleStateCreateFlags where
-  readPrec = enumReadPrec enumPrefixPipelineMultisampleStateCreateFlags
-                          showTablePipelineMultisampleStateCreateFlags
-                          conNamePipelineMultisampleStateCreateFlags
-                          PipelineMultisampleStateCreateFlags
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineMultisampleStateCreateFlags
+      showTablePipelineMultisampleStateCreateFlags
+      conNamePipelineMultisampleStateCreateFlags
+      PipelineMultisampleStateCreateFlags

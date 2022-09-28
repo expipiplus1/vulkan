@@ -206,7 +206,10 @@ allocateCommandBuffers device allocateInfo = liftIO . evalContT $ do
   let vkAllocateCommandBuffers' = mkVkAllocateCommandBuffers vkAllocateCommandBuffersPtr
   pAllocateInfo <- ContT $ withCStruct (allocateInfo)
   pPCommandBuffers <- ContT $ bracket (callocBytes @(Ptr CommandBuffer_T) ((fromIntegral $ commandBufferCount ((allocateInfo) :: CommandBufferAllocateInfo)) * 8)) free
-  r <- lift $ traceAroundEvent "vkAllocateCommandBuffers" (vkAllocateCommandBuffers' (deviceHandle (device)) pAllocateInfo (pPCommandBuffers))
+  r <- lift $ traceAroundEvent "vkAllocateCommandBuffers" (vkAllocateCommandBuffers'
+                                                             (deviceHandle (device))
+                                                             pAllocateInfo
+                                                             (pPCommandBuffers))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pCommandBuffers <- lift $ generateM (fromIntegral $ commandBufferCount ((allocateInfo) :: CommandBufferAllocateInfo)) (\i -> do
     pCommandBuffersElem <- peek @(Ptr CommandBuffer_T) ((pPCommandBuffers `advancePtrBytes` (8 * (i)) :: Ptr (Ptr CommandBuffer_T)))
@@ -224,7 +227,9 @@ allocateCommandBuffers device allocateInfo = liftIO . evalContT $ do
 withCommandBuffers :: forall io r . MonadIO io => Device -> CommandBufferAllocateInfo -> (io (Vector CommandBuffer) -> (Vector CommandBuffer -> io ()) -> r) -> r
 withCommandBuffers device pAllocateInfo b =
   b (allocateCommandBuffers device pAllocateInfo)
-    (\(o0) -> freeCommandBuffers device (commandPool (pAllocateInfo :: CommandBufferAllocateInfo)) o0)
+    (\(o0) -> freeCommandBuffers device
+                                   (commandPool (pAllocateInfo :: CommandBufferAllocateInfo))
+                                   o0)
 
 
 foreign import ccall
@@ -302,7 +307,11 @@ freeCommandBuffers device commandPool commandBuffers = liftIO . evalContT $ do
   let vkFreeCommandBuffers' = mkVkFreeCommandBuffers vkFreeCommandBuffersPtr
   pPCommandBuffers <- ContT $ allocaBytes @(Ptr CommandBuffer_T) ((Data.Vector.length (commandBuffers)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPCommandBuffers `plusPtr` (8 * (i)) :: Ptr (Ptr CommandBuffer_T)) (commandBufferHandle (e))) (commandBuffers)
-  lift $ traceAroundEvent "vkFreeCommandBuffers" (vkFreeCommandBuffers' (deviceHandle (device)) (commandPool) ((fromIntegral (Data.Vector.length $ (commandBuffers)) :: Word32)) (pPCommandBuffers))
+  lift $ traceAroundEvent "vkFreeCommandBuffers" (vkFreeCommandBuffers'
+                                                    (deviceHandle (device))
+                                                    (commandPool)
+                                                    ((fromIntegral (Data.Vector.length $ (commandBuffers)) :: Word32))
+                                                    (pPCommandBuffers))
   pure $ ()
 
 
@@ -382,7 +391,9 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Core10.Handles.CommandBuffer', 'CommandBufferBeginInfo'
 beginCommandBuffer :: forall a io
-                    . (Extendss CommandBufferBeginInfo a, PokeChain a, MonadIO io)
+                    . ( Extendss CommandBufferBeginInfo a
+                      , PokeChain a
+                      , MonadIO io )
                    => -- | @commandBuffer@ is the handle of the command buffer which is to be put
                       -- in the recording state.
                       CommandBuffer
@@ -397,7 +408,9 @@ beginCommandBuffer commandBuffer beginInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBeginCommandBuffer is null" Nothing Nothing
   let vkBeginCommandBuffer' = mkVkBeginCommandBuffer vkBeginCommandBufferPtr
   pBeginInfo <- ContT $ withCStruct (beginInfo)
-  r <- lift $ traceAroundEvent "vkBeginCommandBuffer" (vkBeginCommandBuffer' (commandBufferHandle (commandBuffer)) (forgetExtensions pBeginInfo))
+  r <- lift $ traceAroundEvent "vkBeginCommandBuffer" (vkBeginCommandBuffer'
+                                                         (commandBufferHandle (commandBuffer))
+                                                         (forgetExtensions pBeginInfo))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 -- | This function will call the supplied action between calls to
@@ -407,7 +420,8 @@ beginCommandBuffer commandBuffer beginInfo = liftIO . evalContT $ do
 -- by the inner action.
 useCommandBuffer :: forall a io r . (Extendss CommandBufferBeginInfo a, PokeChain a, MonadIO io) => CommandBuffer -> CommandBufferBeginInfo a -> io r -> io r
 useCommandBuffer commandBuffer pBeginInfo a =
-  (beginCommandBuffer commandBuffer pBeginInfo) *> a <* (endCommandBuffer commandBuffer)
+  (beginCommandBuffer commandBuffer
+                        pBeginInfo) *> a <* (endCommandBuffer commandBuffer)
 
 
 foreign import ccall
@@ -505,7 +519,8 @@ endCommandBuffer commandBuffer = liftIO $ do
   unless (vkEndCommandBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkEndCommandBuffer is null" Nothing Nothing
   let vkEndCommandBuffer' = mkVkEndCommandBuffer vkEndCommandBufferPtr
-  r <- traceAroundEvent "vkEndCommandBuffer" (vkEndCommandBuffer' (commandBufferHandle (commandBuffer)))
+  r <- traceAroundEvent "vkEndCommandBuffer" (vkEndCommandBuffer'
+                                                (commandBufferHandle (commandBuffer)))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -585,7 +600,9 @@ resetCommandBuffer commandBuffer flags = liftIO $ do
   unless (vkResetCommandBufferPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetCommandBuffer is null" Nothing Nothing
   let vkResetCommandBuffer' = mkVkResetCommandBuffer vkResetCommandBufferPtr
-  r <- traceAroundEvent "vkResetCommandBuffer" (vkResetCommandBuffer' (commandBufferHandle (commandBuffer)) (flags))
+  r <- traceAroundEvent "vkResetCommandBuffer" (vkResetCommandBuffer'
+                                                  (commandBufferHandle (commandBuffer))
+                                                  (flags))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -809,7 +826,8 @@ instance Extensible CommandBufferInheritanceInfo where
     | Just Refl <- eqT @e @CommandBufferInheritanceConditionalRenderingInfoEXT = Just f
     | otherwise = Nothing
 
-instance (Extendss CommandBufferInheritanceInfo es, PokeChain es) => ToCStruct (CommandBufferInheritanceInfo es) where
+instance ( Extendss CommandBufferInheritanceInfo es
+         , PokeChain es ) => ToCStruct (CommandBufferInheritanceInfo es) where
   withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CommandBufferInheritanceInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO)
@@ -832,7 +850,8 @@ instance (Extendss CommandBufferInheritanceInfo es, PokeChain es) => ToCStruct (
     lift $ poke ((p `plusPtr` 40 :: Ptr Bool32)) (boolToBool32 (zero))
     lift $ f
 
-instance (Extendss CommandBufferInheritanceInfo es, PeekChain es) => FromCStruct (CommandBufferInheritanceInfo es) where
+instance ( Extendss CommandBufferInheritanceInfo es
+         , PeekChain es ) => FromCStruct (CommandBufferInheritanceInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -843,7 +862,13 @@ instance (Extendss CommandBufferInheritanceInfo es, PeekChain es) => FromCStruct
     queryFlags <- peek @QueryControlFlags ((p `plusPtr` 44 :: Ptr QueryControlFlags))
     pipelineStatistics <- peek @QueryPipelineStatisticFlags ((p `plusPtr` 48 :: Ptr QueryPipelineStatisticFlags))
     pure $ CommandBufferInheritanceInfo
-             next renderPass subpass framebuffer (bool32ToBool occlusionQueryEnable) queryFlags pipelineStatistics
+             next
+             renderPass
+             subpass
+             framebuffer
+             (bool32ToBool occlusionQueryEnable)
+             queryFlags
+             pipelineStatistics
 
 instance es ~ '[] => Zero (CommandBufferInheritanceInfo es) where
   zero = CommandBufferInheritanceInfo
@@ -951,7 +976,8 @@ instance Extensible CommandBufferBeginInfo where
     | Just Refl <- eqT @e @DeviceGroupCommandBufferBeginInfo = Just f
     | otherwise = Nothing
 
-instance (Extendss CommandBufferBeginInfo es, PokeChain es) => ToCStruct (CommandBufferBeginInfo es) where
+instance ( Extendss CommandBufferBeginInfo es
+         , PokeChain es ) => ToCStruct (CommandBufferBeginInfo es) where
   withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CommandBufferBeginInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO)
@@ -971,7 +997,8 @@ instance (Extendss CommandBufferBeginInfo es, PokeChain es) => ToCStruct (Comman
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ f
 
-instance (Extendss CommandBufferBeginInfo es, PeekChain es) => FromCStruct (CommandBufferBeginInfo es) where
+instance ( Extendss CommandBufferBeginInfo es
+         , PeekChain es ) => FromCStruct (CommandBufferBeginInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

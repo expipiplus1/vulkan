@@ -27,8 +27,6 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 newtype MemoryMapFlags = MemoryMapFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameMemoryMapFlags :: String
 conNameMemoryMapFlags = "MemoryMapFlags"
 
@@ -39,12 +37,18 @@ showTableMemoryMapFlags :: [(MemoryMapFlags, String)]
 showTableMemoryMapFlags = []
 
 instance Show MemoryMapFlags where
-  showsPrec = enumShowsPrec enumPrefixMemoryMapFlags
-                            showTableMemoryMapFlags
-                            conNameMemoryMapFlags
-                            (\(MemoryMapFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixMemoryMapFlags
+      showTableMemoryMapFlags
+      conNameMemoryMapFlags
+      (\(MemoryMapFlags x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read MemoryMapFlags where
-  readPrec = enumReadPrec enumPrefixMemoryMapFlags showTableMemoryMapFlags conNameMemoryMapFlags MemoryMapFlags
-
+  readPrec =
+    enumReadPrec
+      enumPrefixMemoryMapFlags
+      showTableMemoryMapFlags
+      conNameMemoryMapFlags
+      MemoryMapFlags

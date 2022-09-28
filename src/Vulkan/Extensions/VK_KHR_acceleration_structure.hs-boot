@@ -1227,10 +1227,12 @@ instance FromCStruct AccelerationStructureBuildSizesInfoKHR
 type role AccelerationStructureCreateInfoKHR nominal
 data AccelerationStructureCreateInfoKHR (es :: [Type])
 
-instance (Extendss AccelerationStructureCreateInfoKHR es, PokeChain es) => ToCStruct (AccelerationStructureCreateInfoKHR es)
+instance ( Extendss AccelerationStructureCreateInfoKHR es
+         , PokeChain es ) => ToCStruct (AccelerationStructureCreateInfoKHR es)
 instance Show (Chain es) => Show (AccelerationStructureCreateInfoKHR es)
 
-instance (Extendss AccelerationStructureCreateInfoKHR es, PeekChain es) => FromCStruct (AccelerationStructureCreateInfoKHR es)
+instance ( Extendss AccelerationStructureCreateInfoKHR es
+         , PeekChain es ) => FromCStruct (AccelerationStructureCreateInfoKHR es)
 
 
 data AccelerationStructureDeviceAddressInfoKHR
@@ -1262,7 +1264,8 @@ instance Show AccelerationStructureGeometryKHR
 type role AccelerationStructureGeometryTrianglesDataKHR nominal
 data AccelerationStructureGeometryTrianglesDataKHR (es :: [Type])
 
-instance (Extendss AccelerationStructureGeometryTrianglesDataKHR es, PokeChain es) => ToCStruct (AccelerationStructureGeometryTrianglesDataKHR es)
+instance ( Extendss AccelerationStructureGeometryTrianglesDataKHR es
+         , PokeChain es ) => ToCStruct (AccelerationStructureGeometryTrianglesDataKHR es)
 instance Show (Chain es) => Show (AccelerationStructureGeometryTrianglesDataKHR es)
 
 

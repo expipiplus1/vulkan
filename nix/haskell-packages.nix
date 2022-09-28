@@ -91,14 +91,6 @@ let
       # Overrides for examples
       #
       # profiling
-      eventlog2html = markUnbroken (overrideSrc {
-        src = pkgs.fetchFromGitHub {
-          owner = "expipiplus1";
-          repo = "eventlog2html";
-          rev = "3612e7000cfbb1498349c331b5adaa2d17f02206"; # ellie-size
-          sha256 = "0s2wxqwmaldqyz9yz52wxy0dla9pahqlpq6cx4pm4c744ggmpswd";
-        };
-      } super.eventlog2html);
       hs-speedscope = markUnbroken (addBuildDepend self.machines (overrideSrc {
         src = pkgs.fetchFromGitHub {
           owner = "mpickering";
@@ -108,11 +100,15 @@ let
         };
       } super.hs-speedscope));
 
+      autoapply = doJailbreak super.autoapply;
+      sdl2 = doJailbreak super.sdl2;
+
       #
       # Overrides for generate
       #
       pandoc = appendPatch ../generate-new/patches/pandoc-haddock-tables.patch
         super.pandoc;
+      fourmolu = doJailbreak super.fourmolu;
     } // pkgs.lib.optionalAttrs hoogle {
       ghc = super.ghc // { withPackages = super.ghc.withHoogle; };
       ghcWithPackages = super.ghcWithPackages.override { withHoogle = true; };

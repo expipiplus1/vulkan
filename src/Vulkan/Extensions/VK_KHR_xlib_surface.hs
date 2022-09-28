@@ -318,7 +318,11 @@ createXlibSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSurface <- ContT $ bracket (callocBytes @SurfaceKHR 8) free
-  r <- lift $ traceAroundEvent "vkCreateXlibSurfaceKHR" (vkCreateXlibSurfaceKHR' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface))
+  r <- lift $ traceAroundEvent "vkCreateXlibSurfaceKHR" (vkCreateXlibSurfaceKHR'
+                                                           (instanceHandle (instance'))
+                                                           pCreateInfo
+                                                           pAllocator
+                                                           (pPSurface))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurface <- lift $ peek @SurfaceKHR pPSurface
   pure $ (pSurface)
@@ -369,12 +373,19 @@ getPhysicalDeviceXlibPresentationSupportKHR :: forall io
                                             -> -- No documentation found for Nested "vkGetPhysicalDeviceXlibPresentationSupportKHR" "visualID"
                                                VisualID
                                             -> io (Bool)
-getPhysicalDeviceXlibPresentationSupportKHR physicalDevice queueFamilyIndex dpy visualID = liftIO $ do
+getPhysicalDeviceXlibPresentationSupportKHR physicalDevice
+                                              queueFamilyIndex
+                                              dpy
+                                              visualID = liftIO $ do
   let vkGetPhysicalDeviceXlibPresentationSupportKHRPtr = pVkGetPhysicalDeviceXlibPresentationSupportKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   unless (vkGetPhysicalDeviceXlibPresentationSupportKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceXlibPresentationSupportKHR is null" Nothing Nothing
   let vkGetPhysicalDeviceXlibPresentationSupportKHR' = mkVkGetPhysicalDeviceXlibPresentationSupportKHR vkGetPhysicalDeviceXlibPresentationSupportKHRPtr
-  r <- traceAroundEvent "vkGetPhysicalDeviceXlibPresentationSupportKHR" (vkGetPhysicalDeviceXlibPresentationSupportKHR' (physicalDeviceHandle (physicalDevice)) (queueFamilyIndex) (dpy) (visualID))
+  r <- traceAroundEvent "vkGetPhysicalDeviceXlibPresentationSupportKHR" (vkGetPhysicalDeviceXlibPresentationSupportKHR'
+                                                                           (physicalDeviceHandle (physicalDevice))
+                                                                           (queueFamilyIndex)
+                                                                           (dpy)
+                                                                           (visualID))
   pure $ ((bool32ToBool r))
 
 
@@ -464,8 +475,6 @@ instance Zero XlibSurfaceCreateInfoKHR where
 newtype XlibSurfaceCreateFlagsKHR = XlibSurfaceCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameXlibSurfaceCreateFlagsKHR :: String
 conNameXlibSurfaceCreateFlagsKHR = "XlibSurfaceCreateFlagsKHR"
 
@@ -476,18 +485,21 @@ showTableXlibSurfaceCreateFlagsKHR :: [(XlibSurfaceCreateFlagsKHR, String)]
 showTableXlibSurfaceCreateFlagsKHR = []
 
 instance Show XlibSurfaceCreateFlagsKHR where
-  showsPrec = enumShowsPrec enumPrefixXlibSurfaceCreateFlagsKHR
-                            showTableXlibSurfaceCreateFlagsKHR
-                            conNameXlibSurfaceCreateFlagsKHR
-                            (\(XlibSurfaceCreateFlagsKHR x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixXlibSurfaceCreateFlagsKHR
+      showTableXlibSurfaceCreateFlagsKHR
+      conNameXlibSurfaceCreateFlagsKHR
+      (\(XlibSurfaceCreateFlagsKHR x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read XlibSurfaceCreateFlagsKHR where
-  readPrec = enumReadPrec enumPrefixXlibSurfaceCreateFlagsKHR
-                          showTableXlibSurfaceCreateFlagsKHR
-                          conNameXlibSurfaceCreateFlagsKHR
-                          XlibSurfaceCreateFlagsKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixXlibSurfaceCreateFlagsKHR
+      showTableXlibSurfaceCreateFlagsKHR
+      conNameXlibSurfaceCreateFlagsKHR
+      XlibSurfaceCreateFlagsKHR
 
 type KHR_XLIB_SURFACE_SPEC_VERSION = 6
 

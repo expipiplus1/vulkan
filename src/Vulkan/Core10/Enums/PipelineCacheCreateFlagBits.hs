@@ -45,18 +45,26 @@ enumPrefixPipelineCacheCreateFlagBits :: String
 enumPrefixPipelineCacheCreateFlagBits = "PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT"
 
 showTablePipelineCacheCreateFlagBits :: [(PipelineCacheCreateFlagBits, String)]
-showTablePipelineCacheCreateFlagBits = [(PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT, "")]
+showTablePipelineCacheCreateFlagBits =
+  [
+    ( PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT
+    , ""
+    )
+  ]
 
 instance Show PipelineCacheCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixPipelineCacheCreateFlagBits
-                            showTablePipelineCacheCreateFlagBits
-                            conNamePipelineCacheCreateFlagBits
-                            (\(PipelineCacheCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineCacheCreateFlagBits
+      showTablePipelineCacheCreateFlagBits
+      conNamePipelineCacheCreateFlagBits
+      (\(PipelineCacheCreateFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read PipelineCacheCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixPipelineCacheCreateFlagBits
-                          showTablePipelineCacheCreateFlagBits
-                          conNamePipelineCacheCreateFlagBits
-                          PipelineCacheCreateFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineCacheCreateFlagBits
+      showTablePipelineCacheCreateFlagBits
+      conNamePipelineCacheCreateFlagBits
+      PipelineCacheCreateFlagBits

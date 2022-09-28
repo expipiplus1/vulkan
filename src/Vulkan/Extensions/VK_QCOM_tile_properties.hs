@@ -258,11 +258,19 @@ getFramebufferTilePropertiesQCOM device framebuffer = liftIO . evalContT $ do
   let vkGetFramebufferTilePropertiesQCOM' = mkVkGetFramebufferTilePropertiesQCOM vkGetFramebufferTilePropertiesQCOMPtr
   let device' = deviceHandle (device)
   pPPropertiesCount <- ContT $ bracket (callocBytes @Word32 4) free
-  _ <- lift $ traceAroundEvent "vkGetFramebufferTilePropertiesQCOM" (vkGetFramebufferTilePropertiesQCOM' device' (framebuffer) (pPPropertiesCount) (nullPtr))
+  _ <- lift $ traceAroundEvent "vkGetFramebufferTilePropertiesQCOM" (vkGetFramebufferTilePropertiesQCOM'
+                                                                       device'
+                                                                       (framebuffer)
+                                                                       (pPPropertiesCount)
+                                                                       (nullPtr))
   pPropertiesCount <- lift $ peek @Word32 pPPropertiesCount
   pPProperties <- ContT $ bracket (callocBytes @TilePropertiesQCOM ((fromIntegral (pPropertiesCount)) * 48)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 48) :: Ptr TilePropertiesQCOM) . ($ ())) [0..(fromIntegral (pPropertiesCount)) - 1]
-  r <- lift $ traceAroundEvent "vkGetFramebufferTilePropertiesQCOM" (vkGetFramebufferTilePropertiesQCOM' device' (framebuffer) (pPPropertiesCount) ((pPProperties)))
+  r <- lift $ traceAroundEvent "vkGetFramebufferTilePropertiesQCOM" (vkGetFramebufferTilePropertiesQCOM'
+                                                                       device'
+                                                                       (framebuffer)
+                                                                       (pPPropertiesCount)
+                                                                       ((pPProperties)))
   pPropertiesCount' <- lift $ peek @Word32 pPPropertiesCount
   pProperties' <- lift $ generateM (fromIntegral (pPropertiesCount')) (\i -> peekCStruct @TilePropertiesQCOM (((pPProperties) `advancePtrBytes` (48 * (i)) :: Ptr TilePropertiesQCOM)))
   pure $ (r, pProperties')
@@ -291,7 +299,9 @@ foreign import ccall
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo',
 -- 'TilePropertiesQCOM'
 getDynamicRenderingTilePropertiesQCOM :: forall a io
-                                       . (Extendss RenderingInfo a, PokeChain a, MonadIO io)
+                                       . ( Extendss RenderingInfo a
+                                         , PokeChain a
+                                         , MonadIO io )
                                       => -- | @device@ is a logical device associated with the render pass.
                                          --
                                          -- #VUID-vkGetDynamicRenderingTilePropertiesQCOM-device-parameter# @device@
@@ -308,14 +318,18 @@ getDynamicRenderingTilePropertiesQCOM :: forall a io
                                          -- structure
                                          (RenderingInfo a)
                                       -> io (TilePropertiesQCOM)
-getDynamicRenderingTilePropertiesQCOM device renderingInfo = liftIO . evalContT $ do
+getDynamicRenderingTilePropertiesQCOM device
+                                        renderingInfo = liftIO . evalContT $ do
   let vkGetDynamicRenderingTilePropertiesQCOMPtr = pVkGetDynamicRenderingTilePropertiesQCOM (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDynamicRenderingTilePropertiesQCOMPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDynamicRenderingTilePropertiesQCOM is null" Nothing Nothing
   let vkGetDynamicRenderingTilePropertiesQCOM' = mkVkGetDynamicRenderingTilePropertiesQCOM vkGetDynamicRenderingTilePropertiesQCOMPtr
   pRenderingInfo <- ContT $ withCStruct (renderingInfo)
   pPProperties <- ContT (withZeroCStruct @TilePropertiesQCOM)
-  _ <- lift $ traceAroundEvent "vkGetDynamicRenderingTilePropertiesQCOM" (vkGetDynamicRenderingTilePropertiesQCOM' (deviceHandle (device)) (forgetExtensions pRenderingInfo) (pPProperties))
+  _ <- lift $ traceAroundEvent "vkGetDynamicRenderingTilePropertiesQCOM" (vkGetDynamicRenderingTilePropertiesQCOM'
+                                                                            (deviceHandle (device))
+                                                                            (forgetExtensions pRenderingInfo)
+                                                                            (pPProperties))
   pProperties <- lift $ peekCStruct @TilePropertiesQCOM pPProperties
   pure $ (pProperties)
 

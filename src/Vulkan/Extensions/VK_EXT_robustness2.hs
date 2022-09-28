@@ -266,7 +266,9 @@ instance FromCStruct PhysicalDeviceRobustness2FeaturesEXT where
     robustImageAccess2 <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     nullDescriptor <- peek @Bool32 ((p `plusPtr` 24 :: Ptr Bool32))
     pure $ PhysicalDeviceRobustness2FeaturesEXT
-             (bool32ToBool robustBufferAccess2) (bool32ToBool robustImageAccess2) (bool32ToBool nullDescriptor)
+             (bool32ToBool robustBufferAccess2)
+             (bool32ToBool robustImageAccess2)
+             (bool32ToBool nullDescriptor)
 
 instance Storable PhysicalDeviceRobustness2FeaturesEXT where
   sizeOf ~_ = 32
@@ -346,7 +348,8 @@ instance FromCStruct PhysicalDeviceRobustness2PropertiesEXT where
     robustStorageBufferAccessSizeAlignment <- peek @DeviceSize ((p `plusPtr` 16 :: Ptr DeviceSize))
     robustUniformBufferAccessSizeAlignment <- peek @DeviceSize ((p `plusPtr` 24 :: Ptr DeviceSize))
     pure $ PhysicalDeviceRobustness2PropertiesEXT
-             robustStorageBufferAccessSizeAlignment robustUniformBufferAccessSizeAlignment
+             robustStorageBufferAccessSizeAlignment
+             robustUniformBufferAccessSizeAlignment
 
 instance Storable PhysicalDeviceRobustness2PropertiesEXT where
   sizeOf ~_ = 32

@@ -50,33 +50,39 @@ newtype SubpassDescriptionFlagBits = SubpassDescriptionFlagBits Flags
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-legacy-dithering Legacy Dithering>
 -- is enabled for this subpass.
 pattern SUBPASS_DESCRIPTION_ENABLE_LEGACY_DITHERING_BIT_EXT = SubpassDescriptionFlagBits 0x00000080
+
 -- | 'SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT'
 -- specifies that this subpass supports pipelines created with
 -- 'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT'.
-pattern SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT =
-  SubpassDescriptionFlagBits 0x00000040
+pattern SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT = SubpassDescriptionFlagBits 0x00000040
+
 -- | 'SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT'
 -- specifies that this subpass supports pipelines created with
 -- 'Vulkan.Core10.Enums.PipelineDepthStencilStateCreateFlagBits.PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT'.
 pattern SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT = SubpassDescriptionFlagBits 0x00000020
+
 -- | 'SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_EXT'
 -- specifies that this subpass supports pipelines created with
 -- 'Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits.PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_EXT'.
 pattern SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_EXT = SubpassDescriptionFlagBits 0x00000010
+
 -- | 'SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM' specifies that the subpass
 -- performs shader resolve operations.
-pattern SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM                             = SubpassDescriptionFlagBits 0x00000008
+pattern SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM = SubpassDescriptionFlagBits 0x00000008
+
 -- | 'SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM' specifies that the
 -- framebuffer region is the fragment region, that is, the minimum region
 -- dependencies are by pixel rather than by sample, such that any fragment
 -- shader invocation /can/ access any sample associated with that fragment
 -- shader invocation.
-pattern SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM                            = SubpassDescriptionFlagBits 0x00000004
+pattern SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM = SubpassDescriptionFlagBits 0x00000004
+
 -- | 'SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX' specifies that
 -- shaders compiled for this subpass use per-view positions which only
 -- differ in value in the x component. Per-view viewport mask /can/ also be
 -- used.
-pattern SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX                    = SubpassDescriptionFlagBits 0x00000002
+pattern SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX = SubpassDescriptionFlagBits 0x00000002
+
 -- | 'SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX' specifies that shaders
 -- compiled for this subpass write the attributes for all views in a single
 -- invocation of each
@@ -84,7 +90,7 @@ pattern SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX                    
 -- All pipelines compiled against a subpass that includes this bit /must/
 -- write per-view attributes to the @*PerViewNV[]@ shader outputs, in
 -- addition to the non-per-view (e.g. @Position@) outputs.
-pattern SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX                         = SubpassDescriptionFlagBits 0x00000001
+pattern SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX = SubpassDescriptionFlagBits 0x00000001
 
 conNameSubpassDescriptionFlagBits :: String
 conNameSubpassDescriptionFlagBits = "SubpassDescriptionFlagBits"
@@ -94,32 +100,53 @@ enumPrefixSubpassDescriptionFlagBits = "SUBPASS_DESCRIPTION_"
 
 showTableSubpassDescriptionFlagBits :: [(SubpassDescriptionFlagBits, String)]
 showTableSubpassDescriptionFlagBits =
-  [ (SUBPASS_DESCRIPTION_ENABLE_LEGACY_DITHERING_BIT_EXT, "ENABLE_LEGACY_DITHERING_BIT_EXT")
-  , ( SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT
+  [
+    ( SUBPASS_DESCRIPTION_ENABLE_LEGACY_DITHERING_BIT_EXT
+    , "ENABLE_LEGACY_DITHERING_BIT_EXT"
+    )
+  ,
+    ( SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT
     , "RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT"
     )
-  , ( SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT
+  ,
+    ( SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT
     , "RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT"
     )
-  , ( SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_EXT
+  ,
+    ( SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_EXT
     , "RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_EXT"
     )
-  , (SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM         , "SHADER_RESOLVE_BIT_QCOM")
-  , (SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM        , "FRAGMENT_REGION_BIT_QCOM")
-  , (SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX, "PER_VIEW_POSITION_X_ONLY_BIT_NVX")
-  , (SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX     , "PER_VIEW_ATTRIBUTES_BIT_NVX")
+  ,
+    ( SUBPASS_DESCRIPTION_SHADER_RESOLVE_BIT_QCOM
+    , "SHADER_RESOLVE_BIT_QCOM"
+    )
+  ,
+    ( SUBPASS_DESCRIPTION_FRAGMENT_REGION_BIT_QCOM
+    , "FRAGMENT_REGION_BIT_QCOM"
+    )
+  ,
+    ( SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX
+    , "PER_VIEW_POSITION_X_ONLY_BIT_NVX"
+    )
+  ,
+    ( SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX
+    , "PER_VIEW_ATTRIBUTES_BIT_NVX"
+    )
   ]
 
 instance Show SubpassDescriptionFlagBits where
-  showsPrec = enumShowsPrec enumPrefixSubpassDescriptionFlagBits
-                            showTableSubpassDescriptionFlagBits
-                            conNameSubpassDescriptionFlagBits
-                            (\(SubpassDescriptionFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixSubpassDescriptionFlagBits
+      showTableSubpassDescriptionFlagBits
+      conNameSubpassDescriptionFlagBits
+      (\(SubpassDescriptionFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read SubpassDescriptionFlagBits where
-  readPrec = enumReadPrec enumPrefixSubpassDescriptionFlagBits
-                          showTableSubpassDescriptionFlagBits
-                          conNameSubpassDescriptionFlagBits
-                          SubpassDescriptionFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixSubpassDescriptionFlagBits
+      showTableSubpassDescriptionFlagBits
+      conNameSubpassDescriptionFlagBits
+      SubpassDescriptionFlagBits

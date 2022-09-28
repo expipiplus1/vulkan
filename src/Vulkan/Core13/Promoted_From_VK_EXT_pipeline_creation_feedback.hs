@@ -197,7 +197,9 @@ instance FromCStruct PipelineCreationFeedbackCreateInfo where
     pipelineStageCreationFeedbackCount <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
     pPipelineStageCreationFeedbacks <- peek @(Ptr PipelineCreationFeedback) ((p `plusPtr` 32 :: Ptr (Ptr PipelineCreationFeedback)))
     pure $ PipelineCreationFeedbackCreateInfo
-             pPipelineCreationFeedback pipelineStageCreationFeedbackCount pPipelineStageCreationFeedbacks
+             pPipelineCreationFeedback
+             pipelineStageCreationFeedbackCount
+             pPipelineStageCreationFeedbacks
 
 instance Storable PipelineCreationFeedbackCreateInfo where
   sizeOf ~_ = 40

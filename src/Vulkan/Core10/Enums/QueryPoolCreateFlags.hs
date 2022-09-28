@@ -27,8 +27,6 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 newtype QueryPoolCreateFlags = QueryPoolCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameQueryPoolCreateFlags :: String
 conNameQueryPoolCreateFlags = "QueryPoolCreateFlags"
 
@@ -39,15 +37,18 @@ showTableQueryPoolCreateFlags :: [(QueryPoolCreateFlags, String)]
 showTableQueryPoolCreateFlags = []
 
 instance Show QueryPoolCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixQueryPoolCreateFlags
-                            showTableQueryPoolCreateFlags
-                            conNameQueryPoolCreateFlags
-                            (\(QueryPoolCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixQueryPoolCreateFlags
+      showTableQueryPoolCreateFlags
+      conNameQueryPoolCreateFlags
+      (\(QueryPoolCreateFlags x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read QueryPoolCreateFlags where
-  readPrec = enumReadPrec enumPrefixQueryPoolCreateFlags
-                          showTableQueryPoolCreateFlags
-                          conNameQueryPoolCreateFlags
-                          QueryPoolCreateFlags
-
+  readPrec =
+    enumReadPrec
+      enumPrefixQueryPoolCreateFlags
+      showTableQueryPoolCreateFlags
+      conNameQueryPoolCreateFlags
+      QueryPoolCreateFlags

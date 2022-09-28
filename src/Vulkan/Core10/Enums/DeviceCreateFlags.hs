@@ -27,8 +27,6 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 newtype DeviceCreateFlags = DeviceCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameDeviceCreateFlags :: String
 conNameDeviceCreateFlags = "DeviceCreateFlags"
 
@@ -39,13 +37,18 @@ showTableDeviceCreateFlags :: [(DeviceCreateFlags, String)]
 showTableDeviceCreateFlags = []
 
 instance Show DeviceCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixDeviceCreateFlags
-                            showTableDeviceCreateFlags
-                            conNameDeviceCreateFlags
-                            (\(DeviceCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDeviceCreateFlags
+      showTableDeviceCreateFlags
+      conNameDeviceCreateFlags
+      (\(DeviceCreateFlags x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read DeviceCreateFlags where
   readPrec =
-    enumReadPrec enumPrefixDeviceCreateFlags showTableDeviceCreateFlags conNameDeviceCreateFlags DeviceCreateFlags
-
+    enumReadPrec
+      enumPrefixDeviceCreateFlags
+      showTableDeviceCreateFlags
+      conNameDeviceCreateFlags
+      DeviceCreateFlags

@@ -437,10 +437,15 @@ newtype Bool32 = Bool32 Int32
 
 -- | 'FALSE' represents a false value.
 pattern FALSE = Bool32 0
+
 -- | 'TRUE' represents a true value.
-pattern TRUE  = Bool32 1
-{-# complete FALSE,
-             TRUE :: Bool32 #-}
+pattern TRUE = Bool32 1
+
+{-# COMPLETE
+  FALSE
+  , TRUE ::
+    Bool32
+  #-}
 
 conNameBool32 :: String
 conNameBool32 = "Bool32"
@@ -452,11 +457,21 @@ showTableBool32 :: [(Bool32, String)]
 showTableBool32 = [(FALSE, "FALSE"), (TRUE, "TRUE")]
 
 instance Show Bool32 where
-  showsPrec = enumShowsPrec enumPrefixBool32 showTableBool32 conNameBool32 (\(Bool32 x) -> x) (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixBool32
+      showTableBool32
+      conNameBool32
+      (\(Bool32 x) -> x)
+      (showsPrec 11)
 
 instance Read Bool32 where
-  readPrec = enumReadPrec enumPrefixBool32 showTableBool32 conNameBool32 Bool32
-
+  readPrec =
+    enumReadPrec
+      enumPrefixBool32
+      showTableBool32
+      conNameBool32
+      Bool32
 
 -- | XrFlags64 - OpenXR bitmasks
 --

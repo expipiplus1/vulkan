@@ -153,45 +153,57 @@ newtype SessionState = SessionState Int32
 -- | 'SESSION_STATE_UNKNOWN'. An unknown state. The runtime /must/ not return
 -- this value in an 'OpenXR.Core10.OtherTypes.EventDataSessionStateChanged'
 -- event.
-pattern SESSION_STATE_UNKNOWN      = SessionState 0
+pattern SESSION_STATE_UNKNOWN = SessionState 0
+
 -- | 'SESSION_STATE_IDLE'. The initial state after calling
 -- 'OpenXR.Core10.Device.createSession' or returned to after calling
 -- 'OpenXR.Core10.Session.endSession'.
-pattern SESSION_STATE_IDLE         = SessionState 1
+pattern SESSION_STATE_IDLE = SessionState 1
+
 -- | 'SESSION_STATE_READY'. The application is ready to call
 -- 'OpenXR.Core10.Session.beginSession' and
 -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#sync_frame_loop sync its frame loop with the runtime.>
-pattern SESSION_STATE_READY        = SessionState 2
+pattern SESSION_STATE_READY = SessionState 2
+
 -- | 'SESSION_STATE_SYNCHRONIZED'. The application has synced its frame loop
 -- with the runtime but is not visible to the user.
 pattern SESSION_STATE_SYNCHRONIZED = SessionState 3
+
 -- | 'SESSION_STATE_VISIBLE'. The application has
 -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#sync_frame_loop synced its frame loop with the runtime>
 -- and is visible to the user but cannot receive XR input.
-pattern SESSION_STATE_VISIBLE      = SessionState 4
+pattern SESSION_STATE_VISIBLE = SessionState 4
+
 -- | 'SESSION_STATE_FOCUSED'. The application has
 -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#sync_frame_loop synced its frame loop with the runtime>,
 -- is visible to the user and can receive XR input.
-pattern SESSION_STATE_FOCUSED      = SessionState 5
+pattern SESSION_STATE_FOCUSED = SessionState 5
+
 -- | 'SESSION_STATE_STOPPING'. The application should exit its frame loop and
 -- call 'OpenXR.Core10.Session.endSession'.
-pattern SESSION_STATE_STOPPING     = SessionState 6
+pattern SESSION_STATE_STOPPING = SessionState 6
+
 -- | 'SESSION_STATE_LOSS_PENDING'. The session is in the process of being
 -- lost. The application should destroy the current session and can
 -- optionally recreate it.
 pattern SESSION_STATE_LOSS_PENDING = SessionState 7
+
 -- | 'SESSION_STATE_EXITING'. The application should end its XR experience
 -- and not automatically restart it.
-pattern SESSION_STATE_EXITING      = SessionState 8
-{-# complete SESSION_STATE_UNKNOWN,
-             SESSION_STATE_IDLE,
-             SESSION_STATE_READY,
-             SESSION_STATE_SYNCHRONIZED,
-             SESSION_STATE_VISIBLE,
-             SESSION_STATE_FOCUSED,
-             SESSION_STATE_STOPPING,
-             SESSION_STATE_LOSS_PENDING,
-             SESSION_STATE_EXITING :: SessionState #-}
+pattern SESSION_STATE_EXITING = SessionState 8
+
+{-# COMPLETE
+  SESSION_STATE_UNKNOWN
+  , SESSION_STATE_IDLE
+  , SESSION_STATE_READY
+  , SESSION_STATE_SYNCHRONIZED
+  , SESSION_STATE_VISIBLE
+  , SESSION_STATE_FOCUSED
+  , SESSION_STATE_STOPPING
+  , SESSION_STATE_LOSS_PENDING
+  , SESSION_STATE_EXITING ::
+    SessionState
+  #-}
 
 conNameSessionState :: String
 conNameSessionState = "SessionState"
@@ -201,24 +213,30 @@ enumPrefixSessionState = "SESSION_STATE_"
 
 showTableSessionState :: [(SessionState, String)]
 showTableSessionState =
-  [ (SESSION_STATE_UNKNOWN     , "UNKNOWN")
-  , (SESSION_STATE_IDLE        , "IDLE")
-  , (SESSION_STATE_READY       , "READY")
+  [ (SESSION_STATE_UNKNOWN, "UNKNOWN")
+  , (SESSION_STATE_IDLE, "IDLE")
+  , (SESSION_STATE_READY, "READY")
   , (SESSION_STATE_SYNCHRONIZED, "SYNCHRONIZED")
-  , (SESSION_STATE_VISIBLE     , "VISIBLE")
-  , (SESSION_STATE_FOCUSED     , "FOCUSED")
-  , (SESSION_STATE_STOPPING    , "STOPPING")
+  , (SESSION_STATE_VISIBLE, "VISIBLE")
+  , (SESSION_STATE_FOCUSED, "FOCUSED")
+  , (SESSION_STATE_STOPPING, "STOPPING")
   , (SESSION_STATE_LOSS_PENDING, "LOSS_PENDING")
-  , (SESSION_STATE_EXITING     , "EXITING")
+  , (SESSION_STATE_EXITING, "EXITING")
   ]
 
 instance Show SessionState where
-  showsPrec = enumShowsPrec enumPrefixSessionState
-                            showTableSessionState
-                            conNameSessionState
-                            (\(SessionState x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixSessionState
+      showTableSessionState
+      conNameSessionState
+      (\(SessionState x) -> x)
+      (showsPrec 11)
 
 instance Read SessionState where
-  readPrec = enumReadPrec enumPrefixSessionState showTableSessionState conNameSessionState SessionState
-
+  readPrec =
+    enumReadPrec
+      enumPrefixSessionState
+      showTableSessionState
+      conNameSessionState
+      SessionState

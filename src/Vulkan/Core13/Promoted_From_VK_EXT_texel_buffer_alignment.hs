@@ -120,7 +120,10 @@ instance FromCStruct PhysicalDeviceTexelBufferAlignmentProperties where
     uniformTexelBufferOffsetAlignmentBytes <- peek @DeviceSize ((p `plusPtr` 32 :: Ptr DeviceSize))
     uniformTexelBufferOffsetSingleTexelAlignment <- peek @Bool32 ((p `plusPtr` 40 :: Ptr Bool32))
     pure $ PhysicalDeviceTexelBufferAlignmentProperties
-             storageTexelBufferOffsetAlignmentBytes (bool32ToBool storageTexelBufferOffsetSingleTexelAlignment) uniformTexelBufferOffsetAlignmentBytes (bool32ToBool uniformTexelBufferOffsetSingleTexelAlignment)
+             storageTexelBufferOffsetAlignmentBytes
+             (bool32ToBool storageTexelBufferOffsetSingleTexelAlignment)
+             uniformTexelBufferOffsetAlignmentBytes
+             (bool32ToBool uniformTexelBufferOffsetSingleTexelAlignment)
 
 instance Storable PhysicalDeviceTexelBufferAlignmentProperties where
   sizeOf ~_ = 48

@@ -184,7 +184,9 @@ cmdBeginRendering commandBuffer renderingInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginRendering is null" Nothing Nothing
   let vkCmdBeginRendering' = mkVkCmdBeginRendering vkCmdBeginRenderingPtr
   pRenderingInfo <- ContT $ withCStruct (renderingInfo)
-  lift $ traceAroundEvent "vkCmdBeginRendering" (vkCmdBeginRendering' (commandBufferHandle (commandBuffer)) (forgetExtensions pRenderingInfo))
+  lift $ traceAroundEvent "vkCmdBeginRendering" (vkCmdBeginRendering'
+                                                   (commandBufferHandle (commandBuffer))
+                                                   (forgetExtensions pRenderingInfo))
   pure $ ()
 
 -- | This function will call the supplied action between calls to
@@ -194,7 +196,8 @@ cmdBeginRendering commandBuffer renderingInfo = liftIO . evalContT $ do
 -- the inner action.
 cmdUseRendering :: forall a io r . (Extendss RenderingInfo a, PokeChain a, MonadIO io) => CommandBuffer -> RenderingInfo a -> io r -> io r
 cmdUseRendering commandBuffer pRenderingInfo a =
-  (cmdBeginRendering commandBuffer pRenderingInfo) *> a <* (cmdEndRendering commandBuffer)
+  (cmdBeginRendering commandBuffer
+                       pRenderingInfo) *> a <* (cmdEndRendering commandBuffer)
 
 
 foreign import ccall
@@ -283,7 +286,8 @@ cmdEndRendering commandBuffer = liftIO $ do
   unless (vkCmdEndRenderingPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndRendering is null" Nothing Nothing
   let vkCmdEndRendering' = mkVkCmdEndRendering vkCmdEndRenderingPtr
-  traceAroundEvent "vkCmdEndRendering" (vkCmdEndRendering' (commandBufferHandle (commandBuffer)))
+  traceAroundEvent "vkCmdEndRendering" (vkCmdEndRendering'
+                                          (commandBufferHandle (commandBuffer)))
   pure $ ()
 
 
@@ -370,7 +374,10 @@ instance FromCStruct PipelineRenderingCreateInfo where
     depthAttachmentFormat <- peek @Format ((p `plusPtr` 32 :: Ptr Format))
     stencilAttachmentFormat <- peek @Format ((p `plusPtr` 36 :: Ptr Format))
     pure $ PipelineRenderingCreateInfo
-             viewMask pColorAttachmentFormats' depthAttachmentFormat stencilAttachmentFormat
+             viewMask
+             pColorAttachmentFormats'
+             depthAttachmentFormat
+             stencilAttachmentFormat
 
 instance Zero PipelineRenderingCreateInfo where
   zero = PipelineRenderingCreateInfo
@@ -927,7 +934,8 @@ instance Extensible RenderingInfo where
     | Just Refl <- eqT @e @DeviceGroupRenderPassBeginInfo = Just f
     | otherwise = Nothing
 
-instance (Extendss RenderingInfo es, PokeChain es) => ToCStruct (RenderingInfo es) where
+instance ( Extendss RenderingInfo es
+         , PokeChain es ) => ToCStruct (RenderingInfo es) where
   withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p RenderingInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_RENDERING_INFO)
@@ -1548,7 +1556,12 @@ instance FromCStruct CommandBufferInheritanceRenderingInfo where
     stencilAttachmentFormat <- peek @Format ((p `plusPtr` 44 :: Ptr Format))
     rasterizationSamples <- peek @SampleCountFlagBits ((p `plusPtr` 48 :: Ptr SampleCountFlagBits))
     pure $ CommandBufferInheritanceRenderingInfo
-             flags viewMask pColorAttachmentFormats' depthAttachmentFormat stencilAttachmentFormat rasterizationSamples
+             flags
+             viewMask
+             pColorAttachmentFormats'
+             depthAttachmentFormat
+             stencilAttachmentFormat
+             rasterizationSamples
 
 instance Zero CommandBufferInheritanceRenderingInfo where
   zero = CommandBufferInheritanceRenderingInfo

@@ -41,6 +41,7 @@ newtype DescriptorPoolCreateFlagBits = DescriptorPoolCreateFlagBits Flags
 -- 'Vulkan.Core10.DescriptorSet.allocateDescriptorSets' and
 -- 'Vulkan.Core10.DescriptorSet.resetDescriptorPool' are allowed.
 pattern DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = DescriptorPoolCreateFlagBits 0x00000001
+
 -- | 'DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_EXT' specifies that this
 -- descriptor pool and the descriptor sets allocated from it reside
 -- entirely in host memory and cannot be bound. Similar to descriptor sets
@@ -53,7 +54,8 @@ pattern DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = DescriptorPoolCreateFla
 -- and their descriptors can be updated concurrently in different threads,
 -- though the same descriptor /must/ not be updated concurrently by two
 -- threads.
-pattern DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_EXT       = DescriptorPoolCreateFlagBits 0x00000004
+pattern DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_EXT = DescriptorPoolCreateFlagBits 0x00000004
+
 -- | 'DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT' specifies that descriptor
 -- sets allocated from this pool /can/ include bindings with the
 -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
@@ -62,7 +64,7 @@ pattern DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_EXT       = DescriptorPoolCreateFla
 -- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
 -- bit from a pool that has 'DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
 -- set.
-pattern DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT   = DescriptorPoolCreateFlagBits 0x00000002
+pattern DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT = DescriptorPoolCreateFlagBits 0x00000002
 
 conNameDescriptorPoolCreateFlagBits :: String
 conNameDescriptorPoolCreateFlagBits = "DescriptorPoolCreateFlagBits"
@@ -72,21 +74,33 @@ enumPrefixDescriptorPoolCreateFlagBits = "DESCRIPTOR_POOL_CREATE_"
 
 showTableDescriptorPoolCreateFlagBits :: [(DescriptorPoolCreateFlagBits, String)]
 showTableDescriptorPoolCreateFlagBits =
-  [ (DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT, "FREE_DESCRIPTOR_SET_BIT")
-  , (DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_EXT      , "HOST_ONLY_BIT_EXT")
-  , (DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT  , "UPDATE_AFTER_BIND_BIT")
+  [
+    ( DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT
+    , "FREE_DESCRIPTOR_SET_BIT"
+    )
+  ,
+    ( DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_EXT
+    , "HOST_ONLY_BIT_EXT"
+    )
+  ,
+    ( DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT
+    , "UPDATE_AFTER_BIND_BIT"
+    )
   ]
 
 instance Show DescriptorPoolCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixDescriptorPoolCreateFlagBits
-                            showTableDescriptorPoolCreateFlagBits
-                            conNameDescriptorPoolCreateFlagBits
-                            (\(DescriptorPoolCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDescriptorPoolCreateFlagBits
+      showTableDescriptorPoolCreateFlagBits
+      conNameDescriptorPoolCreateFlagBits
+      (\(DescriptorPoolCreateFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read DescriptorPoolCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixDescriptorPoolCreateFlagBits
-                          showTableDescriptorPoolCreateFlagBits
-                          conNameDescriptorPoolCreateFlagBits
-                          DescriptorPoolCreateFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDescriptorPoolCreateFlagBits
+      showTableDescriptorPoolCreateFlagBits
+      conNameDescriptorPoolCreateFlagBits
+      DescriptorPoolCreateFlagBits

@@ -243,7 +243,10 @@ getFenceFdKHR device getFdInfo = liftIO . evalContT $ do
   let vkGetFenceFdKHR' = mkVkGetFenceFdKHR vkGetFenceFdKHRPtr
   pGetFdInfo <- ContT $ withCStruct (getFdInfo)
   pPFd <- ContT $ bracket (callocBytes @CInt 4) free
-  r <- lift $ traceAroundEvent "vkGetFenceFdKHR" (vkGetFenceFdKHR' (deviceHandle (device)) pGetFdInfo (pPFd))
+  r <- lift $ traceAroundEvent "vkGetFenceFdKHR" (vkGetFenceFdKHR'
+                                                    (deviceHandle (device))
+                                                    pGetFdInfo
+                                                    (pPFd))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pFd <- lift $ peek @CInt pPFd
   pure $ ((coerce @CInt @Int32 pFd))
@@ -306,7 +309,9 @@ importFenceFdKHR device importFenceFdInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkImportFenceFdKHR is null" Nothing Nothing
   let vkImportFenceFdKHR' = mkVkImportFenceFdKHR vkImportFenceFdKHRPtr
   pImportFenceFdInfo <- ContT $ withCStruct (importFenceFdInfo)
-  r <- lift $ traceAroundEvent "vkImportFenceFdKHR" (vkImportFenceFdKHR' (deviceHandle (device)) pImportFenceFdInfo)
+  r <- lift $ traceAroundEvent "vkImportFenceFdKHR" (vkImportFenceFdKHR'
+                                                       (deviceHandle (device))
+                                                       pImportFenceFdInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 

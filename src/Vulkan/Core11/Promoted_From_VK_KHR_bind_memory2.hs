@@ -132,7 +132,10 @@ bindBufferMemory2 device bindInfos = liftIO . evalContT $ do
   let vkBindBufferMemory2' = mkVkBindBufferMemory2 vkBindBufferMemory2Ptr
   pPBindInfos <- ContT $ allocaBytes @(BindBufferMemoryInfo _) ((Data.Vector.length (bindInfos)) * 40)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPBindInfos `plusPtr` (40 * (i)) :: Ptr (BindBufferMemoryInfo _))) (e) . ($ ())) (bindInfos)
-  r <- lift $ traceAroundEvent "vkBindBufferMemory2" (vkBindBufferMemory2' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (bindInfos)) :: Word32)) (forgetExtensions (pPBindInfos)))
+  r <- lift $ traceAroundEvent "vkBindBufferMemory2" (vkBindBufferMemory2'
+                                                        (deviceHandle (device))
+                                                        ((fromIntegral (Data.Vector.length $ (bindInfos)) :: Word32))
+                                                        (forgetExtensions (pPBindInfos)))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -204,7 +207,10 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
   let vkBindImageMemory2' = mkVkBindImageMemory2 vkBindImageMemory2Ptr
   pPBindInfos <- ContT $ allocaBytes @(BindImageMemoryInfo _) ((Data.Vector.length (bindInfos)) * 40)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPBindInfos `plusPtr` (40 * (i)) :: Ptr (BindImageMemoryInfo _))) (e) . ($ ())) (bindInfos)
-  r <- lift $ traceAroundEvent "vkBindImageMemory2" (vkBindImageMemory2' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (bindInfos)) :: Word32)) (forgetExtensions (pPBindInfos)))
+  r <- lift $ traceAroundEvent "vkBindImageMemory2" (vkBindImageMemory2'
+                                                       (deviceHandle (device))
+                                                       ((fromIntegral (Data.Vector.length $ (bindInfos)) :: Word32))
+                                                       (forgetExtensions (pPBindInfos)))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -393,7 +399,8 @@ instance Extensible BindBufferMemoryInfo where
     | Just Refl <- eqT @e @BindBufferMemoryDeviceGroupInfo = Just f
     | otherwise = Nothing
 
-instance (Extendss BindBufferMemoryInfo es, PokeChain es) => ToCStruct (BindBufferMemoryInfo es) where
+instance ( Extendss BindBufferMemoryInfo es
+         , PokeChain es ) => ToCStruct (BindBufferMemoryInfo es) where
   withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindBufferMemoryInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO)
@@ -414,7 +421,8 @@ instance (Extendss BindBufferMemoryInfo es, PokeChain es) => ToCStruct (BindBuff
     lift $ poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (zero)
     lift $ f
 
-instance (Extendss BindBufferMemoryInfo es, PeekChain es) => FromCStruct (BindBufferMemoryInfo es) where
+instance ( Extendss BindBufferMemoryInfo es
+         , PeekChain es ) => FromCStruct (BindBufferMemoryInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -734,7 +742,8 @@ instance Extensible BindImageMemoryInfo where
     | Just Refl <- eqT @e @BindImageMemoryDeviceGroupInfo = Just f
     | otherwise = Nothing
 
-instance (Extendss BindImageMemoryInfo es, PokeChain es) => ToCStruct (BindImageMemoryInfo es) where
+instance ( Extendss BindImageMemoryInfo es
+         , PokeChain es ) => ToCStruct (BindImageMemoryInfo es) where
   withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BindImageMemoryInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO)
@@ -755,7 +764,8 @@ instance (Extendss BindImageMemoryInfo es, PokeChain es) => ToCStruct (BindImage
     lift $ poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (zero)
     lift $ f
 
-instance (Extendss BindImageMemoryInfo es, PeekChain es) => FromCStruct (BindImageMemoryInfo es) where
+instance ( Extendss BindImageMemoryInfo es
+         , PeekChain es ) => FromCStruct (BindImageMemoryInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

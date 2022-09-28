@@ -48,10 +48,12 @@ instance FromCStruct ImageFormatProperties
 type role InstanceCreateInfo nominal
 data InstanceCreateInfo (es :: [Type])
 
-instance (Extendss InstanceCreateInfo es, PokeChain es) => ToCStruct (InstanceCreateInfo es)
+instance ( Extendss InstanceCreateInfo es
+         , PokeChain es ) => ToCStruct (InstanceCreateInfo es)
 instance Show (Chain es) => Show (InstanceCreateInfo es)
 
-instance (Extendss InstanceCreateInfo es, PeekChain es) => FromCStruct (InstanceCreateInfo es)
+instance ( Extendss InstanceCreateInfo es
+         , PeekChain es ) => FromCStruct (InstanceCreateInfo es)
 
 
 data MemoryHeap

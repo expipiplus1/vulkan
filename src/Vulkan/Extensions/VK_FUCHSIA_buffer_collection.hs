@@ -408,7 +408,9 @@ createBufferCollectionFUCHSIA :: forall io
                                  -- chapter
                                  ("allocator" ::: Maybe AllocationCallbacks)
                               -> io (BufferCollectionFUCHSIA)
-createBufferCollectionFUCHSIA device createInfo allocator = liftIO . evalContT $ do
+createBufferCollectionFUCHSIA device
+                                createInfo
+                                allocator = liftIO . evalContT $ do
   let vkCreateBufferCollectionFUCHSIAPtr = pVkCreateBufferCollectionFUCHSIA (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateBufferCollectionFUCHSIAPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateBufferCollectionFUCHSIA is null" Nothing Nothing
@@ -418,7 +420,11 @@ createBufferCollectionFUCHSIA device createInfo allocator = liftIO . evalContT $
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPCollection <- ContT $ bracket (callocBytes @BufferCollectionFUCHSIA 8) free
-  r <- lift $ traceAroundEvent "vkCreateBufferCollectionFUCHSIA" (vkCreateBufferCollectionFUCHSIA' (deviceHandle (device)) pCreateInfo pAllocator (pPCollection))
+  r <- lift $ traceAroundEvent "vkCreateBufferCollectionFUCHSIA" (vkCreateBufferCollectionFUCHSIA'
+                                                                    (deviceHandle (device))
+                                                                    pCreateInfo
+                                                                    pAllocator
+                                                                    (pPCollection))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pCollection <- lift $ peek @BufferCollectionFUCHSIA pPCollection
   pure $ (pCollection)
@@ -500,13 +506,18 @@ setBufferCollectionBufferConstraintsFUCHSIA :: forall io
                                                -- 'BufferConstraintsInfoFUCHSIA' structure
                                                BufferConstraintsInfoFUCHSIA
                                             -> io ()
-setBufferCollectionBufferConstraintsFUCHSIA device collection bufferConstraintsInfo = liftIO . evalContT $ do
+setBufferCollectionBufferConstraintsFUCHSIA device
+                                              collection
+                                              bufferConstraintsInfo = liftIO . evalContT $ do
   let vkSetBufferCollectionBufferConstraintsFUCHSIAPtr = pVkSetBufferCollectionBufferConstraintsFUCHSIA (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkSetBufferCollectionBufferConstraintsFUCHSIAPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetBufferCollectionBufferConstraintsFUCHSIA is null" Nothing Nothing
   let vkSetBufferCollectionBufferConstraintsFUCHSIA' = mkVkSetBufferCollectionBufferConstraintsFUCHSIA vkSetBufferCollectionBufferConstraintsFUCHSIAPtr
   pBufferConstraintsInfo <- ContT $ withCStruct (bufferConstraintsInfo)
-  r <- lift $ traceAroundEvent "vkSetBufferCollectionBufferConstraintsFUCHSIA" (vkSetBufferCollectionBufferConstraintsFUCHSIA' (deviceHandle (device)) (collection) pBufferConstraintsInfo)
+  r <- lift $ traceAroundEvent "vkSetBufferCollectionBufferConstraintsFUCHSIA" (vkSetBufferCollectionBufferConstraintsFUCHSIA'
+                                                                                  (deviceHandle (device))
+                                                                                  (collection)
+                                                                                  pBufferConstraintsInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -579,13 +590,18 @@ setBufferCollectionImageConstraintsFUCHSIA :: forall io
                                               -- 'ImageConstraintsInfoFUCHSIA' structure
                                               ImageConstraintsInfoFUCHSIA
                                            -> io ()
-setBufferCollectionImageConstraintsFUCHSIA device collection imageConstraintsInfo = liftIO . evalContT $ do
+setBufferCollectionImageConstraintsFUCHSIA device
+                                             collection
+                                             imageConstraintsInfo = liftIO . evalContT $ do
   let vkSetBufferCollectionImageConstraintsFUCHSIAPtr = pVkSetBufferCollectionImageConstraintsFUCHSIA (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkSetBufferCollectionImageConstraintsFUCHSIAPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetBufferCollectionImageConstraintsFUCHSIA is null" Nothing Nothing
   let vkSetBufferCollectionImageConstraintsFUCHSIA' = mkVkSetBufferCollectionImageConstraintsFUCHSIA vkSetBufferCollectionImageConstraintsFUCHSIAPtr
   pImageConstraintsInfo <- ContT $ withCStruct (imageConstraintsInfo)
-  r <- lift $ traceAroundEvent "vkSetBufferCollectionImageConstraintsFUCHSIA" (vkSetBufferCollectionImageConstraintsFUCHSIA' (deviceHandle (device)) (collection) pImageConstraintsInfo)
+  r <- lift $ traceAroundEvent "vkSetBufferCollectionImageConstraintsFUCHSIA" (vkSetBufferCollectionImageConstraintsFUCHSIA'
+                                                                                 (deviceHandle (device))
+                                                                                 (collection)
+                                                                                 pImageConstraintsInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -648,7 +664,9 @@ destroyBufferCollectionFUCHSIA :: forall io
                                   -- chapter
                                   ("allocator" ::: Maybe AllocationCallbacks)
                                -> io ()
-destroyBufferCollectionFUCHSIA device collection allocator = liftIO . evalContT $ do
+destroyBufferCollectionFUCHSIA device
+                                 collection
+                                 allocator = liftIO . evalContT $ do
   let vkDestroyBufferCollectionFUCHSIAPtr = pVkDestroyBufferCollectionFUCHSIA (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyBufferCollectionFUCHSIAPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyBufferCollectionFUCHSIA is null" Nothing Nothing
@@ -656,7 +674,10 @@ destroyBufferCollectionFUCHSIA device collection allocator = liftIO . evalContT 
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyBufferCollectionFUCHSIA" (vkDestroyBufferCollectionFUCHSIA' (deviceHandle (device)) (collection) pAllocator)
+  lift $ traceAroundEvent "vkDestroyBufferCollectionFUCHSIA" (vkDestroyBufferCollectionFUCHSIA'
+                                                                (deviceHandle (device))
+                                                                (collection)
+                                                                pAllocator)
   pure $ ()
 
 
@@ -746,7 +767,10 @@ getBufferCollectionPropertiesFUCHSIA device collection = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetBufferCollectionPropertiesFUCHSIA is null" Nothing Nothing
   let vkGetBufferCollectionPropertiesFUCHSIA' = mkVkGetBufferCollectionPropertiesFUCHSIA vkGetBufferCollectionPropertiesFUCHSIAPtr
   pPProperties <- ContT (withZeroCStruct @BufferCollectionPropertiesFUCHSIA)
-  r <- lift $ traceAroundEvent "vkGetBufferCollectionPropertiesFUCHSIA" (vkGetBufferCollectionPropertiesFUCHSIA' (deviceHandle (device)) (collection) (pPProperties))
+  r <- lift $ traceAroundEvent "vkGetBufferCollectionPropertiesFUCHSIA" (vkGetBufferCollectionPropertiesFUCHSIA'
+                                                                           (deviceHandle (device))
+                                                                           (collection)
+                                                                           (pPProperties))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pProperties <- lift $ peekCStruct @BufferCollectionPropertiesFUCHSIA pPProperties
   pure $ (pProperties)
@@ -1173,7 +1197,17 @@ instance FromCStruct BufferCollectionPropertiesFUCHSIA where
     suggestedXChromaOffset <- peek @ChromaLocation ((p `plusPtr` 96 :: Ptr ChromaLocation))
     suggestedYChromaOffset <- peek @ChromaLocation ((p `plusPtr` 100 :: Ptr ChromaLocation))
     pure $ BufferCollectionPropertiesFUCHSIA
-             memoryTypeBits bufferCount createInfoIndex sysmemPixelFormat formatFeatures sysmemColorSpaceIndex samplerYcbcrConversionComponents suggestedYcbcrModel suggestedYcbcrRange suggestedXChromaOffset suggestedYChromaOffset
+             memoryTypeBits
+             bufferCount
+             createInfoIndex
+             sysmemPixelFormat
+             formatFeatures
+             sysmemColorSpaceIndex
+             samplerYcbcrConversionComponents
+             suggestedYcbcrModel
+             suggestedYcbcrRange
+             suggestedXChromaOffset
+             suggestedYChromaOffset
 
 instance Storable BufferCollectionPropertiesFUCHSIA where
   sizeOf ~_ = 104
@@ -1430,7 +1464,11 @@ instance FromCStruct ImageFormatConstraintsInfoFUCHSIA where
     pColorSpaces <- peek @(Ptr SysmemColorSpaceFUCHSIA) ((p `plusPtr` 128 :: Ptr (Ptr SysmemColorSpaceFUCHSIA)))
     pColorSpaces' <- generateM (fromIntegral colorSpaceCount) (\i -> peekCStruct @SysmemColorSpaceFUCHSIA ((pColorSpaces `advancePtrBytes` (24 * (i)) :: Ptr SysmemColorSpaceFUCHSIA)))
     pure $ ImageFormatConstraintsInfoFUCHSIA
-             imageCreateInfo requiredFormatFeatures flags sysmemPixelFormat pColorSpaces'
+             imageCreateInfo
+             requiredFormatFeatures
+             flags
+             sysmemPixelFormat
+             pColorSpaces'
 
 instance Zero ImageFormatConstraintsInfoFUCHSIA where
   zero = ImageFormatConstraintsInfoFUCHSIA
@@ -1664,7 +1702,11 @@ instance FromCStruct BufferCollectionConstraintsInfoFUCHSIA where
     minBufferCountForDedicatedSlack <- peek @Word32 ((p `plusPtr` 28 :: Ptr Word32))
     minBufferCountForSharedSlack <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
     pure $ BufferCollectionConstraintsInfoFUCHSIA
-             minBufferCount maxBufferCount minBufferCountForCamping minBufferCountForDedicatedSlack minBufferCountForSharedSlack
+             minBufferCount
+             maxBufferCount
+             minBufferCountForCamping
+             minBufferCountForDedicatedSlack
+             minBufferCountForSharedSlack
 
 instance Storable BufferCollectionConstraintsInfoFUCHSIA where
   sizeOf ~_ = 40
@@ -1695,8 +1737,6 @@ instance Zero BufferCollectionConstraintsInfoFUCHSIA where
 newtype ImageFormatConstraintsFlagsFUCHSIA = ImageFormatConstraintsFlagsFUCHSIA Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameImageFormatConstraintsFlagsFUCHSIA :: String
 conNameImageFormatConstraintsFlagsFUCHSIA = "ImageFormatConstraintsFlagsFUCHSIA"
 
@@ -1707,18 +1747,21 @@ showTableImageFormatConstraintsFlagsFUCHSIA :: [(ImageFormatConstraintsFlagsFUCH
 showTableImageFormatConstraintsFlagsFUCHSIA = []
 
 instance Show ImageFormatConstraintsFlagsFUCHSIA where
-  showsPrec = enumShowsPrec enumPrefixImageFormatConstraintsFlagsFUCHSIA
-                            showTableImageFormatConstraintsFlagsFUCHSIA
-                            conNameImageFormatConstraintsFlagsFUCHSIA
-                            (\(ImageFormatConstraintsFlagsFUCHSIA x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixImageFormatConstraintsFlagsFUCHSIA
+      showTableImageFormatConstraintsFlagsFUCHSIA
+      conNameImageFormatConstraintsFlagsFUCHSIA
+      (\(ImageFormatConstraintsFlagsFUCHSIA x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read ImageFormatConstraintsFlagsFUCHSIA where
-  readPrec = enumReadPrec enumPrefixImageFormatConstraintsFlagsFUCHSIA
-                          showTableImageFormatConstraintsFlagsFUCHSIA
-                          conNameImageFormatConstraintsFlagsFUCHSIA
-                          ImageFormatConstraintsFlagsFUCHSIA
-
+  readPrec =
+    enumReadPrec
+      enumPrefixImageFormatConstraintsFlagsFUCHSIA
+      showTableImageFormatConstraintsFlagsFUCHSIA
+      conNameImageFormatConstraintsFlagsFUCHSIA
+      ImageFormatConstraintsFlagsFUCHSIA
 
 type ImageConstraintsInfoFlagsFUCHSIA = ImageConstraintsInfoFlagBitsFUCHSIA
 
@@ -1745,13 +1788,17 @@ newtype ImageConstraintsInfoFlagBitsFUCHSIA = ImageConstraintsInfoFlagBitsFUCHSI
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'IMAGE_CONSTRAINTS_INFO_CPU_READ_RARELY_FUCHSIA'
-pattern IMAGE_CONSTRAINTS_INFO_CPU_READ_RARELY_FUCHSIA    = ImageConstraintsInfoFlagBitsFUCHSIA 0x00000001
+pattern IMAGE_CONSTRAINTS_INFO_CPU_READ_RARELY_FUCHSIA = ImageConstraintsInfoFlagBitsFUCHSIA 0x00000001
+
 -- | 'IMAGE_CONSTRAINTS_INFO_CPU_READ_OFTEN_FUCHSIA'
-pattern IMAGE_CONSTRAINTS_INFO_CPU_READ_OFTEN_FUCHSIA     = ImageConstraintsInfoFlagBitsFUCHSIA 0x00000002
+pattern IMAGE_CONSTRAINTS_INFO_CPU_READ_OFTEN_FUCHSIA = ImageConstraintsInfoFlagBitsFUCHSIA 0x00000002
+
 -- | 'IMAGE_CONSTRAINTS_INFO_CPU_WRITE_RARELY_FUCHSIA'
-pattern IMAGE_CONSTRAINTS_INFO_CPU_WRITE_RARELY_FUCHSIA   = ImageConstraintsInfoFlagBitsFUCHSIA 0x00000004
+pattern IMAGE_CONSTRAINTS_INFO_CPU_WRITE_RARELY_FUCHSIA = ImageConstraintsInfoFlagBitsFUCHSIA 0x00000004
+
 -- | 'IMAGE_CONSTRAINTS_INFO_CPU_WRITE_OFTEN_FUCHSIA'
-pattern IMAGE_CONSTRAINTS_INFO_CPU_WRITE_OFTEN_FUCHSIA    = ImageConstraintsInfoFlagBitsFUCHSIA 0x00000008
+pattern IMAGE_CONSTRAINTS_INFO_CPU_WRITE_OFTEN_FUCHSIA = ImageConstraintsInfoFlagBitsFUCHSIA 0x00000008
+
 -- | 'IMAGE_CONSTRAINTS_INFO_PROTECTED_OPTIONAL_FUCHSIA' specifies that
 -- protected memory is optional for the buffer collection.
 pattern IMAGE_CONSTRAINTS_INFO_PROTECTED_OPTIONAL_FUCHSIA = ImageConstraintsInfoFlagBitsFUCHSIA 0x00000010
@@ -1764,26 +1811,44 @@ enumPrefixImageConstraintsInfoFlagBitsFUCHSIA = "IMAGE_CONSTRAINTS_INFO_"
 
 showTableImageConstraintsInfoFlagBitsFUCHSIA :: [(ImageConstraintsInfoFlagBitsFUCHSIA, String)]
 showTableImageConstraintsInfoFlagBitsFUCHSIA =
-  [ (IMAGE_CONSTRAINTS_INFO_CPU_READ_RARELY_FUCHSIA   , "CPU_READ_RARELY_FUCHSIA")
-  , (IMAGE_CONSTRAINTS_INFO_CPU_READ_OFTEN_FUCHSIA    , "CPU_READ_OFTEN_FUCHSIA")
-  , (IMAGE_CONSTRAINTS_INFO_CPU_WRITE_RARELY_FUCHSIA  , "CPU_WRITE_RARELY_FUCHSIA")
-  , (IMAGE_CONSTRAINTS_INFO_CPU_WRITE_OFTEN_FUCHSIA   , "CPU_WRITE_OFTEN_FUCHSIA")
-  , (IMAGE_CONSTRAINTS_INFO_PROTECTED_OPTIONAL_FUCHSIA, "PROTECTED_OPTIONAL_FUCHSIA")
+  [
+    ( IMAGE_CONSTRAINTS_INFO_CPU_READ_RARELY_FUCHSIA
+    , "CPU_READ_RARELY_FUCHSIA"
+    )
+  ,
+    ( IMAGE_CONSTRAINTS_INFO_CPU_READ_OFTEN_FUCHSIA
+    , "CPU_READ_OFTEN_FUCHSIA"
+    )
+  ,
+    ( IMAGE_CONSTRAINTS_INFO_CPU_WRITE_RARELY_FUCHSIA
+    , "CPU_WRITE_RARELY_FUCHSIA"
+    )
+  ,
+    ( IMAGE_CONSTRAINTS_INFO_CPU_WRITE_OFTEN_FUCHSIA
+    , "CPU_WRITE_OFTEN_FUCHSIA"
+    )
+  ,
+    ( IMAGE_CONSTRAINTS_INFO_PROTECTED_OPTIONAL_FUCHSIA
+    , "PROTECTED_OPTIONAL_FUCHSIA"
+    )
   ]
 
 instance Show ImageConstraintsInfoFlagBitsFUCHSIA where
-  showsPrec = enumShowsPrec enumPrefixImageConstraintsInfoFlagBitsFUCHSIA
-                            showTableImageConstraintsInfoFlagBitsFUCHSIA
-                            conNameImageConstraintsInfoFlagBitsFUCHSIA
-                            (\(ImageConstraintsInfoFlagBitsFUCHSIA x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixImageConstraintsInfoFlagBitsFUCHSIA
+      showTableImageConstraintsInfoFlagBitsFUCHSIA
+      conNameImageConstraintsInfoFlagBitsFUCHSIA
+      (\(ImageConstraintsInfoFlagBitsFUCHSIA x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read ImageConstraintsInfoFlagBitsFUCHSIA where
-  readPrec = enumReadPrec enumPrefixImageConstraintsInfoFlagBitsFUCHSIA
-                          showTableImageConstraintsInfoFlagBitsFUCHSIA
-                          conNameImageConstraintsInfoFlagBitsFUCHSIA
-                          ImageConstraintsInfoFlagBitsFUCHSIA
-
+  readPrec =
+    enumReadPrec
+      enumPrefixImageConstraintsInfoFlagBitsFUCHSIA
+      showTableImageConstraintsInfoFlagBitsFUCHSIA
+      conNameImageConstraintsInfoFlagBitsFUCHSIA
+      ImageConstraintsInfoFlagBitsFUCHSIA
 
 type FUCHSIA_BUFFER_COLLECTION_SPEC_VERSION = 2
 

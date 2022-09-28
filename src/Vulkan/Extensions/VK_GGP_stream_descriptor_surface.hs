@@ -251,7 +251,9 @@ createStreamDescriptorSurfaceGGP :: forall io
                                     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
                                     ("allocator" ::: Maybe AllocationCallbacks)
                                  -> io (SurfaceKHR)
-createStreamDescriptorSurfaceGGP instance' createInfo allocator = liftIO . evalContT $ do
+createStreamDescriptorSurfaceGGP instance'
+                                   createInfo
+                                   allocator = liftIO . evalContT $ do
   let vkCreateStreamDescriptorSurfaceGGPPtr = pVkCreateStreamDescriptorSurfaceGGP (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateStreamDescriptorSurfaceGGPPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateStreamDescriptorSurfaceGGP is null" Nothing Nothing
@@ -261,7 +263,11 @@ createStreamDescriptorSurfaceGGP instance' createInfo allocator = liftIO . evalC
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSurface <- ContT $ bracket (callocBytes @SurfaceKHR 8) free
-  r <- lift $ traceAroundEvent "vkCreateStreamDescriptorSurfaceGGP" (vkCreateStreamDescriptorSurfaceGGP' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface))
+  r <- lift $ traceAroundEvent "vkCreateStreamDescriptorSurfaceGGP" (vkCreateStreamDescriptorSurfaceGGP'
+                                                                       (instanceHandle (instance'))
+                                                                       pCreateInfo
+                                                                       pAllocator
+                                                                       (pPSurface))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurface <- lift $ peek @SurfaceKHR pPSurface
   pure $ (pSurface)
@@ -346,8 +352,6 @@ instance Zero StreamDescriptorSurfaceCreateInfoGGP where
 newtype StreamDescriptorSurfaceCreateFlagsGGP = StreamDescriptorSurfaceCreateFlagsGGP Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameStreamDescriptorSurfaceCreateFlagsGGP :: String
 conNameStreamDescriptorSurfaceCreateFlagsGGP = "StreamDescriptorSurfaceCreateFlagsGGP"
 
@@ -358,18 +362,21 @@ showTableStreamDescriptorSurfaceCreateFlagsGGP :: [(StreamDescriptorSurfaceCreat
 showTableStreamDescriptorSurfaceCreateFlagsGGP = []
 
 instance Show StreamDescriptorSurfaceCreateFlagsGGP where
-  showsPrec = enumShowsPrec enumPrefixStreamDescriptorSurfaceCreateFlagsGGP
-                            showTableStreamDescriptorSurfaceCreateFlagsGGP
-                            conNameStreamDescriptorSurfaceCreateFlagsGGP
-                            (\(StreamDescriptorSurfaceCreateFlagsGGP x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixStreamDescriptorSurfaceCreateFlagsGGP
+      showTableStreamDescriptorSurfaceCreateFlagsGGP
+      conNameStreamDescriptorSurfaceCreateFlagsGGP
+      (\(StreamDescriptorSurfaceCreateFlagsGGP x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read StreamDescriptorSurfaceCreateFlagsGGP where
-  readPrec = enumReadPrec enumPrefixStreamDescriptorSurfaceCreateFlagsGGP
-                          showTableStreamDescriptorSurfaceCreateFlagsGGP
-                          conNameStreamDescriptorSurfaceCreateFlagsGGP
-                          StreamDescriptorSurfaceCreateFlagsGGP
-
+  readPrec =
+    enumReadPrec
+      enumPrefixStreamDescriptorSurfaceCreateFlagsGGP
+      showTableStreamDescriptorSurfaceCreateFlagsGGP
+      conNameStreamDescriptorSurfaceCreateFlagsGGP
+      StreamDescriptorSurfaceCreateFlagsGGP
 
 type GGP_STREAM_DESCRIPTOR_SURFACE_SPEC_VERSION = 1
 

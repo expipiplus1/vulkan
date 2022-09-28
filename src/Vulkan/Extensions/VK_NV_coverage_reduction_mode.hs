@@ -285,12 +285,18 @@ getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV physicalDevice =
   let vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV' = mkVkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNVPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPCombinationCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV" (vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV' physicalDevice' (pPCombinationCount) (nullPtr))
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV" (vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV'
+                                                                                                      physicalDevice'
+                                                                                                      (pPCombinationCount)
+                                                                                                      (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pCombinationCount <- lift $ peek @Word32 pPCombinationCount
   pPCombinations <- ContT $ bracket (callocBytes @FramebufferMixedSamplesCombinationNV ((fromIntegral (pCombinationCount)) * 32)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPCombinations `advancePtrBytes` (i * 32) :: Ptr FramebufferMixedSamplesCombinationNV) . ($ ())) [0..(fromIntegral (pCombinationCount)) - 1]
-  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV" (vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV' physicalDevice' (pPCombinationCount) ((pPCombinations)))
+  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV" (vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV'
+                                                                                                       physicalDevice'
+                                                                                                       (pPCombinationCount)
+                                                                                                       ((pPCombinations)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pCombinationCount' <- lift $ peek @Word32 pPCombinationCount
   pCombinations' <- lift $ generateM (fromIntegral (pCombinationCount')) (\i -> peekCStruct @FramebufferMixedSamplesCombinationNV (((pPCombinations) `advancePtrBytes` (32 * (i)) :: Ptr FramebufferMixedSamplesCombinationNV)))
@@ -519,7 +525,10 @@ instance FromCStruct FramebufferMixedSamplesCombinationNV where
     depthStencilSamples <- peek @SampleCountFlags ((p `plusPtr` 24 :: Ptr SampleCountFlags))
     colorSamples <- peek @SampleCountFlags ((p `plusPtr` 28 :: Ptr SampleCountFlags))
     pure $ FramebufferMixedSamplesCombinationNV
-             coverageReductionMode rasterizationSamples depthStencilSamples colorSamples
+             coverageReductionMode
+             rasterizationSamples
+             depthStencilSamples
+             colorSamples
 
 instance Storable FramebufferMixedSamplesCombinationNV where
   sizeOf ~_ = 32
@@ -549,8 +558,6 @@ instance Zero FramebufferMixedSamplesCombinationNV where
 newtype PipelineCoverageReductionStateCreateFlagsNV = PipelineCoverageReductionStateCreateFlagsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNamePipelineCoverageReductionStateCreateFlagsNV :: String
 conNamePipelineCoverageReductionStateCreateFlagsNV = "PipelineCoverageReductionStateCreateFlagsNV"
 
@@ -561,18 +568,21 @@ showTablePipelineCoverageReductionStateCreateFlagsNV :: [(PipelineCoverageReduct
 showTablePipelineCoverageReductionStateCreateFlagsNV = []
 
 instance Show PipelineCoverageReductionStateCreateFlagsNV where
-  showsPrec = enumShowsPrec enumPrefixPipelineCoverageReductionStateCreateFlagsNV
-                            showTablePipelineCoverageReductionStateCreateFlagsNV
-                            conNamePipelineCoverageReductionStateCreateFlagsNV
-                            (\(PipelineCoverageReductionStateCreateFlagsNV x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineCoverageReductionStateCreateFlagsNV
+      showTablePipelineCoverageReductionStateCreateFlagsNV
+      conNamePipelineCoverageReductionStateCreateFlagsNV
+      (\(PipelineCoverageReductionStateCreateFlagsNV x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read PipelineCoverageReductionStateCreateFlagsNV where
-  readPrec = enumReadPrec enumPrefixPipelineCoverageReductionStateCreateFlagsNV
-                          showTablePipelineCoverageReductionStateCreateFlagsNV
-                          conNamePipelineCoverageReductionStateCreateFlagsNV
-                          PipelineCoverageReductionStateCreateFlagsNV
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineCoverageReductionStateCreateFlagsNV
+      showTablePipelineCoverageReductionStateCreateFlagsNV
+      conNamePipelineCoverageReductionStateCreateFlagsNV
+      PipelineCoverageReductionStateCreateFlagsNV
 
 -- | VkCoverageReductionModeNV - Specify the coverage reduction mode
 --
@@ -588,15 +598,20 @@ newtype CoverageReductionModeNV = CoverageReductionModeNV Int32
 -- be associated with an implementation-dependent subset of samples in the
 -- pixel coverage. If any of those associated samples are covered, the
 -- color sample is covered.
-pattern COVERAGE_REDUCTION_MODE_MERGE_NV    = CoverageReductionModeNV 0
+pattern COVERAGE_REDUCTION_MODE_MERGE_NV = CoverageReductionModeNV 0
+
 -- | 'COVERAGE_REDUCTION_MODE_TRUNCATE_NV' specifies that for color samples
 -- present in the color attachments, a color sample is covered if the pixel
 -- coverage sample with the same
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-multisampling-coverage-mask sample index>
 -- i is covered; other pixel coverage samples are discarded.
 pattern COVERAGE_REDUCTION_MODE_TRUNCATE_NV = CoverageReductionModeNV 1
-{-# complete COVERAGE_REDUCTION_MODE_MERGE_NV,
-             COVERAGE_REDUCTION_MODE_TRUNCATE_NV :: CoverageReductionModeNV #-}
+
+{-# COMPLETE
+  COVERAGE_REDUCTION_MODE_MERGE_NV
+  , COVERAGE_REDUCTION_MODE_TRUNCATE_NV ::
+    CoverageReductionModeNV
+  #-}
 
 conNameCoverageReductionModeNV :: String
 conNameCoverageReductionModeNV = "CoverageReductionModeNV"
@@ -606,21 +621,32 @@ enumPrefixCoverageReductionModeNV = "COVERAGE_REDUCTION_MODE_"
 
 showTableCoverageReductionModeNV :: [(CoverageReductionModeNV, String)]
 showTableCoverageReductionModeNV =
-  [(COVERAGE_REDUCTION_MODE_MERGE_NV, "MERGE_NV"), (COVERAGE_REDUCTION_MODE_TRUNCATE_NV, "TRUNCATE_NV")]
+  [
+    ( COVERAGE_REDUCTION_MODE_MERGE_NV
+    , "MERGE_NV"
+    )
+  ,
+    ( COVERAGE_REDUCTION_MODE_TRUNCATE_NV
+    , "TRUNCATE_NV"
+    )
+  ]
 
 instance Show CoverageReductionModeNV where
-  showsPrec = enumShowsPrec enumPrefixCoverageReductionModeNV
-                            showTableCoverageReductionModeNV
-                            conNameCoverageReductionModeNV
-                            (\(CoverageReductionModeNV x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixCoverageReductionModeNV
+      showTableCoverageReductionModeNV
+      conNameCoverageReductionModeNV
+      (\(CoverageReductionModeNV x) -> x)
+      (showsPrec 11)
 
 instance Read CoverageReductionModeNV where
-  readPrec = enumReadPrec enumPrefixCoverageReductionModeNV
-                          showTableCoverageReductionModeNV
-                          conNameCoverageReductionModeNV
-                          CoverageReductionModeNV
-
+  readPrec =
+    enumReadPrec
+      enumPrefixCoverageReductionModeNV
+      showTableCoverageReductionModeNV
+      conNameCoverageReductionModeNV
+      CoverageReductionModeNV
 
 type NV_COVERAGE_REDUCTION_MODE_SPEC_VERSION = 1
 

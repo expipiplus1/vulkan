@@ -9,7 +9,7 @@ import qualified Data.Text                     as T
 import qualified Data.Text.Lazy                as T
                                                 ( toStrict )
 import qualified Data.Text.Lazy                as TL
-import           Relude
+import           Relude                  hiding ( getArgs )
 import           Replace.Attoparsec.Text.Lazy
 import           Say
 import           Spec.Flavor

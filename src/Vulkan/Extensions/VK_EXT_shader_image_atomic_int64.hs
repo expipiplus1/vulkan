@@ -199,7 +199,8 @@ instance FromCStruct PhysicalDeviceShaderImageAtomicInt64FeaturesEXT where
     shaderImageInt64Atomics <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     sparseImageInt64Atomics <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ PhysicalDeviceShaderImageAtomicInt64FeaturesEXT
-             (bool32ToBool shaderImageInt64Atomics) (bool32ToBool sparseImageInt64Atomics)
+             (bool32ToBool shaderImageInt64Atomics)
+             (bool32ToBool sparseImageInt64Atomics)
 
 instance Storable PhysicalDeviceShaderImageAtomicInt64FeaturesEXT where
   sizeOf ~_ = 24

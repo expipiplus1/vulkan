@@ -196,7 +196,14 @@ instance FromCStruct CompositionLayerEquirectKHR where
     scale <- peekCStruct @Vector2f ((p `plusPtr` 104 :: Ptr Vector2f))
     bias <- peekCStruct @Vector2f ((p `plusPtr` 112 :: Ptr Vector2f))
     pure $ CompositionLayerEquirectKHR
-             layerFlags space eyeVisibility subImage pose (coerce @CFloat @Float radius) scale bias
+             layerFlags
+             space
+             eyeVisibility
+             subImage
+             pose
+             (coerce @CFloat @Float radius)
+             scale
+             bias
 
 instance Storable CompositionLayerEquirectKHR where
   sizeOf ~_ = 120

@@ -226,7 +226,9 @@ instance FromCStruct PhysicalDeviceFragmentShaderInterlockFeaturesEXT where
     fragmentShaderPixelInterlock <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     fragmentShaderShadingRateInterlock <- peek @Bool32 ((p `plusPtr` 24 :: Ptr Bool32))
     pure $ PhysicalDeviceFragmentShaderInterlockFeaturesEXT
-             (bool32ToBool fragmentShaderSampleInterlock) (bool32ToBool fragmentShaderPixelInterlock) (bool32ToBool fragmentShaderShadingRateInterlock)
+             (bool32ToBool fragmentShaderSampleInterlock)
+             (bool32ToBool fragmentShaderPixelInterlock)
+             (bool32ToBool fragmentShaderShadingRateInterlock)
 
 instance Storable PhysicalDeviceFragmentShaderInterlockFeaturesEXT where
   sizeOf ~_ = 32

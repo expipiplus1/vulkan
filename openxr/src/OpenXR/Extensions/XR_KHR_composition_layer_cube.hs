@@ -178,7 +178,12 @@ instance FromCStruct CompositionLayerCubeKHR where
     imageArrayIndex <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
     orientation <- peekCStruct @Quaternionf ((p `plusPtr` 52 :: Ptr Quaternionf))
     pure $ CompositionLayerCubeKHR
-             layerFlags space eyeVisibility swapchain imageArrayIndex orientation
+             layerFlags
+             space
+             eyeVisibility
+             swapchain
+             imageArrayIndex
+             orientation
 
 instance Storable CompositionLayerCubeKHR where
   sizeOf ~_ = 72

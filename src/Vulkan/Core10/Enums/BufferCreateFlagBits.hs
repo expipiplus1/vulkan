@@ -43,27 +43,31 @@ newtype BufferCreateFlagBits = BufferCreateFlagBits Flags
 
 -- | 'BUFFER_CREATE_SPARSE_BINDING_BIT' specifies that the buffer will be
 -- backed using sparse memory binding.
-pattern BUFFER_CREATE_SPARSE_BINDING_BIT                = BufferCreateFlagBits 0x00000001
+pattern BUFFER_CREATE_SPARSE_BINDING_BIT = BufferCreateFlagBits 0x00000001
+
 -- | 'BUFFER_CREATE_SPARSE_RESIDENCY_BIT' specifies that the buffer /can/ be
 -- partially backed using sparse memory binding. Buffers created with this
 -- flag /must/ also be created with the 'BUFFER_CREATE_SPARSE_BINDING_BIT'
 -- flag.
-pattern BUFFER_CREATE_SPARSE_RESIDENCY_BIT              = BufferCreateFlagBits 0x00000002
+pattern BUFFER_CREATE_SPARSE_RESIDENCY_BIT = BufferCreateFlagBits 0x00000002
+
 -- | 'BUFFER_CREATE_SPARSE_ALIASED_BIT' specifies that the buffer will be
 -- backed using sparse memory binding with memory ranges that might also
 -- simultaneously be backing another buffer (or another portion of the same
 -- buffer). Buffers created with this flag /must/ also be created with the
 -- 'BUFFER_CREATE_SPARSE_BINDING_BIT' flag.
-pattern BUFFER_CREATE_SPARSE_ALIASED_BIT                = BufferCreateFlagBits 0x00000004
+pattern BUFFER_CREATE_SPARSE_ALIASED_BIT = BufferCreateFlagBits 0x00000004
+
 -- | 'BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT' specifies that the
 -- buffer’s address /can/ be saved and reused on a subsequent run (e.g. for
 -- trace capture and replay), see
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.BufferOpaqueCaptureAddressCreateInfo'
 -- for more detail.
 pattern BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT = BufferCreateFlagBits 0x00000010
+
 -- | 'BUFFER_CREATE_PROTECTED_BIT' specifies that the buffer is a protected
 -- buffer.
-pattern BUFFER_CREATE_PROTECTED_BIT                     = BufferCreateFlagBits 0x00000008
+pattern BUFFER_CREATE_PROTECTED_BIT = BufferCreateFlagBits 0x00000008
 
 conNameBufferCreateFlagBits :: String
 conNameBufferCreateFlagBits = "BufferCreateFlagBits"
@@ -73,23 +77,41 @@ enumPrefixBufferCreateFlagBits = "BUFFER_CREATE_"
 
 showTableBufferCreateFlagBits :: [(BufferCreateFlagBits, String)]
 showTableBufferCreateFlagBits =
-  [ (BUFFER_CREATE_SPARSE_BINDING_BIT               , "SPARSE_BINDING_BIT")
-  , (BUFFER_CREATE_SPARSE_RESIDENCY_BIT             , "SPARSE_RESIDENCY_BIT")
-  , (BUFFER_CREATE_SPARSE_ALIASED_BIT               , "SPARSE_ALIASED_BIT")
-  , (BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT, "DEVICE_ADDRESS_CAPTURE_REPLAY_BIT")
-  , (BUFFER_CREATE_PROTECTED_BIT                    , "PROTECTED_BIT")
+  [
+    ( BUFFER_CREATE_SPARSE_BINDING_BIT
+    , "SPARSE_BINDING_BIT"
+    )
+  ,
+    ( BUFFER_CREATE_SPARSE_RESIDENCY_BIT
+    , "SPARSE_RESIDENCY_BIT"
+    )
+  ,
+    ( BUFFER_CREATE_SPARSE_ALIASED_BIT
+    , "SPARSE_ALIASED_BIT"
+    )
+  ,
+    ( BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT
+    , "DEVICE_ADDRESS_CAPTURE_REPLAY_BIT"
+    )
+  ,
+    ( BUFFER_CREATE_PROTECTED_BIT
+    , "PROTECTED_BIT"
+    )
   ]
 
 instance Show BufferCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixBufferCreateFlagBits
-                            showTableBufferCreateFlagBits
-                            conNameBufferCreateFlagBits
-                            (\(BufferCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixBufferCreateFlagBits
+      showTableBufferCreateFlagBits
+      conNameBufferCreateFlagBits
+      (\(BufferCreateFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read BufferCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixBufferCreateFlagBits
-                          showTableBufferCreateFlagBits
-                          conNameBufferCreateFlagBits
-                          BufferCreateFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixBufferCreateFlagBits
+      showTableBufferCreateFlagBits
+      conNameBufferCreateFlagBits
+      BufferCreateFlagBits

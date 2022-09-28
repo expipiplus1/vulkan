@@ -166,7 +166,9 @@ beginSession session beginInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrBeginSession is null" Nothing Nothing
   let xrBeginSession' = mkXrBeginSession xrBeginSessionPtr
   beginInfo' <- ContT $ withCStruct (beginInfo)
-  r <- lift $ traceAroundEvent "xrBeginSession" (xrBeginSession' (sessionHandle (session)) (forgetExtensions beginInfo'))
+  r <- lift $ traceAroundEvent "xrBeginSession" (xrBeginSession'
+                                                   (sessionHandle (session))
+                                                   (forgetExtensions beginInfo'))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   pure $ (r)
 
@@ -344,7 +346,8 @@ requestExitSession session = liftIO $ do
   unless (xrRequestExitSessionPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrRequestExitSession is null" Nothing Nothing
   let xrRequestExitSession' = mkXrRequestExitSession xrRequestExitSessionPtr
-  r <- traceAroundEvent "xrRequestExitSession" (xrRequestExitSession' (sessionHandle (session)))
+  r <- traceAroundEvent "xrRequestExitSession" (xrRequestExitSession'
+                                                  (sessionHandle (session)))
   when (r < SUCCESS) (throwIO (OpenXrException r))
   pure $ (r)
 
@@ -393,7 +396,8 @@ instance Extensible SessionBeginInfo where
     | Just Refl <- eqT @e @SecondaryViewConfigurationSessionBeginInfoMSFT = Just f
     | otherwise = Nothing
 
-instance (Extendss SessionBeginInfo es, PokeChain es) => ToCStruct (SessionBeginInfo es) where
+instance ( Extendss SessionBeginInfo es
+         , PokeChain es ) => ToCStruct (SessionBeginInfo es) where
   withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SessionBeginInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SESSION_BEGIN_INFO)
@@ -410,7 +414,8 @@ instance (Extendss SessionBeginInfo es, PokeChain es) => ToCStruct (SessionBegin
     lift $ poke ((p `plusPtr` 16 :: Ptr ViewConfigurationType)) (zero)
     lift $ f
 
-instance (Extendss SessionBeginInfo es, PeekChain es) => FromCStruct (SessionBeginInfo es) where
+instance ( Extendss SessionBeginInfo es
+         , PeekChain es ) => FromCStruct (SessionBeginInfo es) where
   peekCStruct p = do
     next <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next' <- peekChain (castPtr next)

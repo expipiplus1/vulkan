@@ -31,8 +31,10 @@ instance FromCStruct ImageSubresourceRange
 type role ImageViewCreateInfo nominal
 data ImageViewCreateInfo (es :: [Type])
 
-instance (Extendss ImageViewCreateInfo es, PokeChain es) => ToCStruct (ImageViewCreateInfo es)
+instance ( Extendss ImageViewCreateInfo es
+         , PokeChain es ) => ToCStruct (ImageViewCreateInfo es)
 instance Show (Chain es) => Show (ImageViewCreateInfo es)
 
-instance (Extendss ImageViewCreateInfo es, PeekChain es) => FromCStruct (ImageViewCreateInfo es)
+instance ( Extendss ImageViewCreateInfo es
+         , PeekChain es ) => FromCStruct (ImageViewCreateInfo es)
 

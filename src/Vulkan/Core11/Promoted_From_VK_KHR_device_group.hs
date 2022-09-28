@@ -136,13 +136,21 @@ getDeviceGroupPeerMemoryFeatures :: forall io
                                     -- @remoteDeviceIndex@ /must/ be a valid device index
                                     ("remoteDeviceIndex" ::: Word32)
                                  -> io (("peerMemoryFeatures" ::: PeerMemoryFeatureFlags))
-getDeviceGroupPeerMemoryFeatures device heapIndex localDeviceIndex remoteDeviceIndex = liftIO . evalContT $ do
+getDeviceGroupPeerMemoryFeatures device
+                                   heapIndex
+                                   localDeviceIndex
+                                   remoteDeviceIndex = liftIO . evalContT $ do
   let vkGetDeviceGroupPeerMemoryFeaturesPtr = pVkGetDeviceGroupPeerMemoryFeatures (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDeviceGroupPeerMemoryFeaturesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceGroupPeerMemoryFeatures is null" Nothing Nothing
   let vkGetDeviceGroupPeerMemoryFeatures' = mkVkGetDeviceGroupPeerMemoryFeatures vkGetDeviceGroupPeerMemoryFeaturesPtr
   pPPeerMemoryFeatures <- ContT $ bracket (callocBytes @PeerMemoryFeatureFlags 4) free
-  lift $ traceAroundEvent "vkGetDeviceGroupPeerMemoryFeatures" (vkGetDeviceGroupPeerMemoryFeatures' (deviceHandle (device)) (heapIndex) (localDeviceIndex) (remoteDeviceIndex) (pPPeerMemoryFeatures))
+  lift $ traceAroundEvent "vkGetDeviceGroupPeerMemoryFeatures" (vkGetDeviceGroupPeerMemoryFeatures'
+                                                                  (deviceHandle (device))
+                                                                  (heapIndex)
+                                                                  (localDeviceIndex)
+                                                                  (remoteDeviceIndex)
+                                                                  (pPPeerMemoryFeatures))
   pPeerMemoryFeatures <- lift $ peek @PeerMemoryFeatureFlags pPPeerMemoryFeatures
   pure $ (pPeerMemoryFeatures)
 
@@ -235,7 +243,9 @@ cmdSetDeviceMask commandBuffer deviceMask = liftIO $ do
   unless (vkCmdSetDeviceMaskPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDeviceMask is null" Nothing Nothing
   let vkCmdSetDeviceMask' = mkVkCmdSetDeviceMask vkCmdSetDeviceMaskPtr
-  traceAroundEvent "vkCmdSetDeviceMask" (vkCmdSetDeviceMask' (commandBufferHandle (commandBuffer)) (deviceMask))
+  traceAroundEvent "vkCmdSetDeviceMask" (vkCmdSetDeviceMask'
+                                           (commandBufferHandle (commandBuffer))
+                                           (deviceMask))
   pure $ ()
 
 
@@ -731,12 +741,25 @@ cmdDispatchBase :: forall io
                    -- dimension.
                    ("groupCountZ" ::: Word32)
                 -> io ()
-cmdDispatchBase commandBuffer baseGroupX baseGroupY baseGroupZ groupCountX groupCountY groupCountZ = liftIO $ do
+cmdDispatchBase commandBuffer
+                  baseGroupX
+                  baseGroupY
+                  baseGroupZ
+                  groupCountX
+                  groupCountY
+                  groupCountZ = liftIO $ do
   let vkCmdDispatchBasePtr = pVkCmdDispatchBase (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDispatchBasePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDispatchBase is null" Nothing Nothing
   let vkCmdDispatchBase' = mkVkCmdDispatchBase vkCmdDispatchBasePtr
-  traceAroundEvent "vkCmdDispatchBase" (vkCmdDispatchBase' (commandBufferHandle (commandBuffer)) (baseGroupX) (baseGroupY) (baseGroupZ) (groupCountX) (groupCountY) (groupCountZ))
+  traceAroundEvent "vkCmdDispatchBase" (vkCmdDispatchBase'
+                                          (commandBufferHandle (commandBuffer))
+                                          (baseGroupX)
+                                          (baseGroupY)
+                                          (baseGroupZ)
+                                          (groupCountX)
+                                          (groupCountY)
+                                          (groupCountZ))
   pure $ ()
 
 
@@ -1161,7 +1184,9 @@ instance FromCStruct DeviceGroupSubmitInfo where
     pSignalSemaphoreDeviceIndices <- peek @(Ptr Word32) ((p `plusPtr` 56 :: Ptr (Ptr Word32)))
     pSignalSemaphoreDeviceIndices' <- generateM (fromIntegral signalSemaphoreCount) (\i -> peek @Word32 ((pSignalSemaphoreDeviceIndices `advancePtrBytes` (4 * (i)) :: Ptr Word32)))
     pure $ DeviceGroupSubmitInfo
-             pWaitSemaphoreDeviceIndices' pCommandBufferDeviceMasks' pSignalSemaphoreDeviceIndices'
+             pWaitSemaphoreDeviceIndices'
+             pCommandBufferDeviceMasks'
+             pSignalSemaphoreDeviceIndices'
 
 instance Zero DeviceGroupSubmitInfo where
   zero = DeviceGroupSubmitInfo

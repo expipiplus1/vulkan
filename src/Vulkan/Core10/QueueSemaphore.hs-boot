@@ -12,8 +12,10 @@ import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
 type role SemaphoreCreateInfo nominal
 data SemaphoreCreateInfo (es :: [Type])
 
-instance (Extendss SemaphoreCreateInfo es, PokeChain es) => ToCStruct (SemaphoreCreateInfo es)
+instance ( Extendss SemaphoreCreateInfo es
+         , PokeChain es ) => ToCStruct (SemaphoreCreateInfo es)
 instance Show (Chain es) => Show (SemaphoreCreateInfo es)
 
-instance (Extendss SemaphoreCreateInfo es, PeekChain es) => FromCStruct (SemaphoreCreateInfo es)
+instance ( Extendss SemaphoreCreateInfo es
+         , PeekChain es ) => FromCStruct (SemaphoreCreateInfo es)
 

@@ -330,7 +330,10 @@ createInstance createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPInstance <- ContT $ bracket (callocBytes @(Ptr Instance_T) 8) free
-  r <- lift $ traceAroundEvent "vkCreateInstance" (vkCreateInstance' (forgetExtensions pCreateInfo) pAllocator (pPInstance))
+  r <- lift $ traceAroundEvent "vkCreateInstance" (vkCreateInstance'
+                                                     (forgetExtensions pCreateInfo)
+                                                     pAllocator
+                                                     (pPInstance))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pInstance <- lift $ peek @(Ptr Instance_T) pPInstance
   pInstance' <- lift $ (\h -> Instance h <$> initInstanceCmds h) pInstance
@@ -413,7 +416,9 @@ destroyInstance instance' allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyInstance" (vkDestroyInstance' (instanceHandle (instance')) pAllocator)
+  lift $ traceAroundEvent "vkDestroyInstance" (vkDestroyInstance'
+                                                 (instanceHandle (instance'))
+                                                 pAllocator)
   pure $ ()
 
 
@@ -489,11 +494,17 @@ enumeratePhysicalDevices instance' = liftIO . evalContT $ do
   let vkEnumeratePhysicalDevices' = mkVkEnumeratePhysicalDevices vkEnumeratePhysicalDevicesPtr
   let instance'' = instanceHandle (instance')
   pPPhysicalDeviceCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "vkEnumeratePhysicalDevices" (vkEnumeratePhysicalDevices' instance'' (pPPhysicalDeviceCount) (nullPtr))
+  r <- lift $ traceAroundEvent "vkEnumeratePhysicalDevices" (vkEnumeratePhysicalDevices'
+                                                               instance''
+                                                               (pPPhysicalDeviceCount)
+                                                               (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPhysicalDeviceCount <- lift $ peek @Word32 pPPhysicalDeviceCount
   pPPhysicalDevices <- ContT $ bracket (callocBytes @(Ptr PhysicalDevice_T) ((fromIntegral (pPhysicalDeviceCount)) * 8)) free
-  r' <- lift $ traceAroundEvent "vkEnumeratePhysicalDevices" (vkEnumeratePhysicalDevices' instance'' (pPPhysicalDeviceCount) (pPPhysicalDevices))
+  r' <- lift $ traceAroundEvent "vkEnumeratePhysicalDevices" (vkEnumeratePhysicalDevices'
+                                                                instance''
+                                                                (pPPhysicalDeviceCount)
+                                                                (pPPhysicalDevices))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pPhysicalDeviceCount' <- lift $ peek @Word32 pPPhysicalDeviceCount
   pPhysicalDevices' <- lift $ generateM (fromIntegral (pPhysicalDeviceCount')) (\i -> do
@@ -598,7 +609,9 @@ getDeviceProcAddr device name = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceProcAddr is null" Nothing Nothing
   let vkGetDeviceProcAddr' = mkVkGetDeviceProcAddr vkGetDeviceProcAddrPtr
   pName <- ContT $ useAsCString (name)
-  r <- lift $ traceAroundEvent "vkGetDeviceProcAddr" (vkGetDeviceProcAddr' (deviceHandle (device)) pName)
+  r <- lift $ traceAroundEvent "vkGetDeviceProcAddr" (vkGetDeviceProcAddr'
+                                                        (deviceHandle (device))
+                                                        pName)
   pure $ (r)
 
 
@@ -718,7 +731,9 @@ getInstanceProcAddr instance' name = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetInstanceProcAddr is null" Nothing Nothing
   let vkGetInstanceProcAddr' = mkVkGetInstanceProcAddr vkGetInstanceProcAddrPtr
   pName <- ContT $ useAsCString (name)
-  r <- lift $ traceAroundEvent "vkGetInstanceProcAddr" (vkGetInstanceProcAddr' (instanceHandle (instance')) pName)
+  r <- lift $ traceAroundEvent "vkGetInstanceProcAddr" (vkGetInstanceProcAddr'
+                                                          (instanceHandle (instance'))
+                                                          pName)
   pure $ (r)
 
 
@@ -753,7 +768,9 @@ getPhysicalDeviceProperties physicalDevice = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceProperties' = mkVkGetPhysicalDeviceProperties vkGetPhysicalDevicePropertiesPtr
   pPProperties <- ContT (withZeroCStruct @PhysicalDeviceProperties)
-  lift $ traceAroundEvent "vkGetPhysicalDeviceProperties" (vkGetPhysicalDeviceProperties' (physicalDeviceHandle (physicalDevice)) (pPProperties))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceProperties" (vkGetPhysicalDeviceProperties'
+                                                             (physicalDeviceHandle (physicalDevice))
+                                                             (pPProperties))
   pProperties <- lift $ peekCStruct @PhysicalDeviceProperties pPProperties
   pure $ (pProperties)
 
@@ -814,11 +831,17 @@ getPhysicalDeviceQueueFamilyProperties physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceQueueFamilyProperties' = mkVkGetPhysicalDeviceQueueFamilyProperties vkGetPhysicalDeviceQueueFamilyPropertiesPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPQueueFamilyPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
-  lift $ traceAroundEvent "vkGetPhysicalDeviceQueueFamilyProperties" (vkGetPhysicalDeviceQueueFamilyProperties' physicalDevice' (pPQueueFamilyPropertyCount) (nullPtr))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceQueueFamilyProperties" (vkGetPhysicalDeviceQueueFamilyProperties'
+                                                                        physicalDevice'
+                                                                        (pPQueueFamilyPropertyCount)
+                                                                        (nullPtr))
   pQueueFamilyPropertyCount <- lift $ peek @Word32 pPQueueFamilyPropertyCount
   pPQueueFamilyProperties <- ContT $ bracket (callocBytes @QueueFamilyProperties ((fromIntegral (pQueueFamilyPropertyCount)) * 24)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPQueueFamilyProperties `advancePtrBytes` (i * 24) :: Ptr QueueFamilyProperties) . ($ ())) [0..(fromIntegral (pQueueFamilyPropertyCount)) - 1]
-  lift $ traceAroundEvent "vkGetPhysicalDeviceQueueFamilyProperties" (vkGetPhysicalDeviceQueueFamilyProperties' physicalDevice' (pPQueueFamilyPropertyCount) ((pPQueueFamilyProperties)))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceQueueFamilyProperties" (vkGetPhysicalDeviceQueueFamilyProperties'
+                                                                        physicalDevice'
+                                                                        (pPQueueFamilyPropertyCount)
+                                                                        ((pPQueueFamilyProperties)))
   pQueueFamilyPropertyCount' <- lift $ peek @Word32 pPQueueFamilyPropertyCount
   pQueueFamilyProperties' <- lift $ generateM (fromIntegral (pQueueFamilyPropertyCount')) (\i -> peekCStruct @QueueFamilyProperties (((pPQueueFamilyProperties) `advancePtrBytes` (24 * (i)) :: Ptr QueueFamilyProperties)))
   pure $ (pQueueFamilyProperties')
@@ -855,7 +878,9 @@ getPhysicalDeviceMemoryProperties physicalDevice = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceMemoryProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceMemoryProperties' = mkVkGetPhysicalDeviceMemoryProperties vkGetPhysicalDeviceMemoryPropertiesPtr
   pPMemoryProperties <- ContT (withZeroCStruct @PhysicalDeviceMemoryProperties)
-  lift $ traceAroundEvent "vkGetPhysicalDeviceMemoryProperties" (vkGetPhysicalDeviceMemoryProperties' (physicalDeviceHandle (physicalDevice)) (pPMemoryProperties))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceMemoryProperties" (vkGetPhysicalDeviceMemoryProperties'
+                                                                   (physicalDeviceHandle (physicalDevice))
+                                                                   (pPMemoryProperties))
   pMemoryProperties <- lift $ peekCStruct @PhysicalDeviceMemoryProperties pPMemoryProperties
   pure $ (pMemoryProperties)
 
@@ -891,7 +916,9 @@ getPhysicalDeviceFeatures physicalDevice = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceFeatures is null" Nothing Nothing
   let vkGetPhysicalDeviceFeatures' = mkVkGetPhysicalDeviceFeatures vkGetPhysicalDeviceFeaturesPtr
   pPFeatures <- ContT (withZeroCStruct @PhysicalDeviceFeatures)
-  lift $ traceAroundEvent "vkGetPhysicalDeviceFeatures" (vkGetPhysicalDeviceFeatures' (physicalDeviceHandle (physicalDevice)) (pPFeatures))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceFeatures" (vkGetPhysicalDeviceFeatures'
+                                                           (physicalDeviceHandle (physicalDevice))
+                                                           (pPFeatures))
   pFeatures <- lift $ peekCStruct @PhysicalDeviceFeatures pPFeatures
   pure $ (pFeatures)
 
@@ -928,13 +955,17 @@ getPhysicalDeviceFormatProperties :: forall io
                                      -- /must/ be a valid 'Vulkan.Core10.Enums.Format.Format' value
                                      Format
                                   -> io (FormatProperties)
-getPhysicalDeviceFormatProperties physicalDevice format = liftIO . evalContT $ do
+getPhysicalDeviceFormatProperties physicalDevice
+                                    format = liftIO . evalContT $ do
   let vkGetPhysicalDeviceFormatPropertiesPtr = pVkGetPhysicalDeviceFormatProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceFormatPropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceFormatProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceFormatProperties' = mkVkGetPhysicalDeviceFormatProperties vkGetPhysicalDeviceFormatPropertiesPtr
   pPFormatProperties <- ContT (withZeroCStruct @FormatProperties)
-  lift $ traceAroundEvent "vkGetPhysicalDeviceFormatProperties" (vkGetPhysicalDeviceFormatProperties' (physicalDeviceHandle (physicalDevice)) (format) (pPFormatProperties))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceFormatProperties" (vkGetPhysicalDeviceFormatProperties'
+                                                                   (physicalDeviceHandle (physicalDevice))
+                                                                   (format)
+                                                                   (pPFormatProperties))
   pFormatProperties <- lift $ peekCStruct @FormatProperties pPFormatProperties
   pure $ (pFormatProperties)
 
@@ -1056,13 +1087,25 @@ getPhysicalDeviceImageFormatProperties :: forall io
                                           -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits' values
                                           ImageCreateFlags
                                        -> io (ImageFormatProperties)
-getPhysicalDeviceImageFormatProperties physicalDevice format type' tiling usage flags = liftIO . evalContT $ do
+getPhysicalDeviceImageFormatProperties physicalDevice
+                                         format
+                                         type'
+                                         tiling
+                                         usage
+                                         flags = liftIO . evalContT $ do
   let vkGetPhysicalDeviceImageFormatPropertiesPtr = pVkGetPhysicalDeviceImageFormatProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceImageFormatPropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceImageFormatProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceImageFormatProperties' = mkVkGetPhysicalDeviceImageFormatProperties vkGetPhysicalDeviceImageFormatPropertiesPtr
   pPImageFormatProperties <- ContT (withZeroCStruct @ImageFormatProperties)
-  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceImageFormatProperties" (vkGetPhysicalDeviceImageFormatProperties' (physicalDeviceHandle (physicalDevice)) (format) (type') (tiling) (usage) (flags) (pPImageFormatProperties))
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceImageFormatProperties" (vkGetPhysicalDeviceImageFormatProperties'
+                                                                             (physicalDeviceHandle (physicalDevice))
+                                                                             (format)
+                                                                             (type')
+                                                                             (tiling)
+                                                                             (usage)
+                                                                             (flags)
+                                                                             (pPImageFormatProperties))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pImageFormatProperties <- lift $ peekCStruct @ImageFormatProperties pPImageFormatProperties
   pure $ (pImageFormatProperties)
@@ -1237,7 +1280,15 @@ instance FromCStruct PhysicalDeviceProperties where
     limits <- peekCStruct @PhysicalDeviceLimits ((p `plusPtr` 296 :: Ptr PhysicalDeviceLimits))
     sparseProperties <- peekCStruct @PhysicalDeviceSparseProperties ((p `plusPtr` 800 :: Ptr PhysicalDeviceSparseProperties))
     pure $ PhysicalDeviceProperties
-             apiVersion driverVersion vendorID deviceID deviceType deviceName pipelineCacheUUID limits sparseProperties
+             apiVersion
+             driverVersion
+             vendorID
+             deviceID
+             deviceType
+             deviceName
+             pipelineCacheUUID
+             limits
+             sparseProperties
 
 instance Storable PhysicalDeviceProperties where
   sizeOf ~_ = 824
@@ -1406,7 +1457,11 @@ instance FromCStruct ApplicationInfo where
     engineVersion <- peek @Word32 ((p `plusPtr` 40 :: Ptr Word32))
     apiVersion <- peek @Word32 ((p `plusPtr` 44 :: Ptr Word32))
     pure $ ApplicationInfo
-             pApplicationName' applicationVersion pEngineName' engineVersion apiVersion
+             pApplicationName'
+             applicationVersion
+             pEngineName'
+             engineVersion
+             apiVersion
 
 instance Zero ApplicationInfo where
   zero = ApplicationInfo
@@ -1552,7 +1607,8 @@ instance Extensible InstanceCreateInfo where
     | Just Refl <- eqT @e @DebugReportCallbackCreateInfoEXT = Just f
     | otherwise = Nothing
 
-instance (Extendss InstanceCreateInfo es, PokeChain es) => ToCStruct (InstanceCreateInfo es) where
+instance ( Extendss InstanceCreateInfo es
+         , PokeChain es ) => ToCStruct (InstanceCreateInfo es) where
   withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p InstanceCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_INSTANCE_CREATE_INFO)
@@ -1584,7 +1640,8 @@ instance (Extendss InstanceCreateInfo es, PokeChain es) => ToCStruct (InstanceCr
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ f
 
-instance (Extendss InstanceCreateInfo es, PeekChain es) => FromCStruct (InstanceCreateInfo es) where
+instance ( Extendss InstanceCreateInfo es
+         , PeekChain es ) => FromCStruct (InstanceCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -1598,7 +1655,11 @@ instance (Extendss InstanceCreateInfo es, PeekChain es) => FromCStruct (Instance
     ppEnabledExtensionNames <- peek @(Ptr (Ptr CChar)) ((p `plusPtr` 56 :: Ptr (Ptr (Ptr CChar))))
     ppEnabledExtensionNames' <- generateM (fromIntegral enabledExtensionCount) (\i -> packCString =<< peek ((ppEnabledExtensionNames `advancePtrBytes` (8 * (i)) :: Ptr (Ptr CChar))))
     pure $ InstanceCreateInfo
-             next flags pApplicationInfo' ppEnabledLayerNames' ppEnabledExtensionNames'
+             next
+             flags
+             pApplicationInfo'
+             ppEnabledLayerNames'
+             ppEnabledExtensionNames'
 
 instance es ~ '[] => Zero (InstanceCreateInfo es) where
   zero = InstanceCreateInfo
@@ -1734,7 +1795,10 @@ instance FromCStruct QueueFamilyProperties where
     timestampValidBits <- peek @Word32 ((p `plusPtr` 8 :: Ptr Word32))
     minImageTransferGranularity <- peekCStruct @Extent3D ((p `plusPtr` 12 :: Ptr Extent3D))
     pure $ QueueFamilyProperties
-             queueFlags queueCount timestampValidBits minImageTransferGranularity
+             queueFlags
+             queueCount
+             timestampValidBits
+             minImageTransferGranularity
 
 instance Storable QueueFamilyProperties where
   sizeOf ~_ = 24
@@ -3517,7 +3581,61 @@ instance FromCStruct PhysicalDeviceFeatures where
     variableMultisampleRate <- peek @Bool32 ((p `plusPtr` 212 :: Ptr Bool32))
     inheritedQueries <- peek @Bool32 ((p `plusPtr` 216 :: Ptr Bool32))
     pure $ PhysicalDeviceFeatures
-             (bool32ToBool robustBufferAccess) (bool32ToBool fullDrawIndexUint32) (bool32ToBool imageCubeArray) (bool32ToBool independentBlend) (bool32ToBool geometryShader) (bool32ToBool tessellationShader) (bool32ToBool sampleRateShading) (bool32ToBool dualSrcBlend) (bool32ToBool logicOp) (bool32ToBool multiDrawIndirect) (bool32ToBool drawIndirectFirstInstance) (bool32ToBool depthClamp) (bool32ToBool depthBiasClamp) (bool32ToBool fillModeNonSolid) (bool32ToBool depthBounds) (bool32ToBool wideLines) (bool32ToBool largePoints) (bool32ToBool alphaToOne) (bool32ToBool multiViewport) (bool32ToBool samplerAnisotropy) (bool32ToBool textureCompressionETC2) (bool32ToBool textureCompressionASTC_LDR) (bool32ToBool textureCompressionBC) (bool32ToBool occlusionQueryPrecise) (bool32ToBool pipelineStatisticsQuery) (bool32ToBool vertexPipelineStoresAndAtomics) (bool32ToBool fragmentStoresAndAtomics) (bool32ToBool shaderTessellationAndGeometryPointSize) (bool32ToBool shaderImageGatherExtended) (bool32ToBool shaderStorageImageExtendedFormats) (bool32ToBool shaderStorageImageMultisample) (bool32ToBool shaderStorageImageReadWithoutFormat) (bool32ToBool shaderStorageImageWriteWithoutFormat) (bool32ToBool shaderUniformBufferArrayDynamicIndexing) (bool32ToBool shaderSampledImageArrayDynamicIndexing) (bool32ToBool shaderStorageBufferArrayDynamicIndexing) (bool32ToBool shaderStorageImageArrayDynamicIndexing) (bool32ToBool shaderClipDistance) (bool32ToBool shaderCullDistance) (bool32ToBool shaderFloat64) (bool32ToBool shaderInt64) (bool32ToBool shaderInt16) (bool32ToBool shaderResourceResidency) (bool32ToBool shaderResourceMinLod) (bool32ToBool sparseBinding) (bool32ToBool sparseResidencyBuffer) (bool32ToBool sparseResidencyImage2D) (bool32ToBool sparseResidencyImage3D) (bool32ToBool sparseResidency2Samples) (bool32ToBool sparseResidency4Samples) (bool32ToBool sparseResidency8Samples) (bool32ToBool sparseResidency16Samples) (bool32ToBool sparseResidencyAliased) (bool32ToBool variableMultisampleRate) (bool32ToBool inheritedQueries)
+             (bool32ToBool robustBufferAccess)
+             (bool32ToBool fullDrawIndexUint32)
+             (bool32ToBool imageCubeArray)
+             (bool32ToBool independentBlend)
+             (bool32ToBool geometryShader)
+             (bool32ToBool tessellationShader)
+             (bool32ToBool sampleRateShading)
+             (bool32ToBool dualSrcBlend)
+             (bool32ToBool logicOp)
+             (bool32ToBool multiDrawIndirect)
+             (bool32ToBool drawIndirectFirstInstance)
+             (bool32ToBool depthClamp)
+             (bool32ToBool depthBiasClamp)
+             (bool32ToBool fillModeNonSolid)
+             (bool32ToBool depthBounds)
+             (bool32ToBool wideLines)
+             (bool32ToBool largePoints)
+             (bool32ToBool alphaToOne)
+             (bool32ToBool multiViewport)
+             (bool32ToBool samplerAnisotropy)
+             (bool32ToBool textureCompressionETC2)
+             (bool32ToBool textureCompressionASTC_LDR)
+             (bool32ToBool textureCompressionBC)
+             (bool32ToBool occlusionQueryPrecise)
+             (bool32ToBool pipelineStatisticsQuery)
+             (bool32ToBool vertexPipelineStoresAndAtomics)
+             (bool32ToBool fragmentStoresAndAtomics)
+             (bool32ToBool shaderTessellationAndGeometryPointSize)
+             (bool32ToBool shaderImageGatherExtended)
+             (bool32ToBool shaderStorageImageExtendedFormats)
+             (bool32ToBool shaderStorageImageMultisample)
+             (bool32ToBool shaderStorageImageReadWithoutFormat)
+             (bool32ToBool shaderStorageImageWriteWithoutFormat)
+             (bool32ToBool shaderUniformBufferArrayDynamicIndexing)
+             (bool32ToBool shaderSampledImageArrayDynamicIndexing)
+             (bool32ToBool shaderStorageBufferArrayDynamicIndexing)
+             (bool32ToBool shaderStorageImageArrayDynamicIndexing)
+             (bool32ToBool shaderClipDistance)
+             (bool32ToBool shaderCullDistance)
+             (bool32ToBool shaderFloat64)
+             (bool32ToBool shaderInt64)
+             (bool32ToBool shaderInt16)
+             (bool32ToBool shaderResourceResidency)
+             (bool32ToBool shaderResourceMinLod)
+             (bool32ToBool sparseBinding)
+             (bool32ToBool sparseResidencyBuffer)
+             (bool32ToBool sparseResidencyImage2D)
+             (bool32ToBool sparseResidencyImage3D)
+             (bool32ToBool sparseResidency2Samples)
+             (bool32ToBool sparseResidency4Samples)
+             (bool32ToBool sparseResidency8Samples)
+             (bool32ToBool sparseResidency16Samples)
+             (bool32ToBool sparseResidencyAliased)
+             (bool32ToBool variableMultisampleRate)
+             (bool32ToBool inheritedQueries)
 
 instance Storable PhysicalDeviceFeatures where
   sizeOf ~_ = 220
@@ -3680,7 +3798,11 @@ instance FromCStruct PhysicalDeviceSparseProperties where
     residencyAlignedMipSize <- peek @Bool32 ((p `plusPtr` 12 :: Ptr Bool32))
     residencyNonResidentStrict <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     pure $ PhysicalDeviceSparseProperties
-             (bool32ToBool residencyStandard2DBlockShape) (bool32ToBool residencyStandard2DMultisampleBlockShape) (bool32ToBool residencyStandard3DBlockShape) (bool32ToBool residencyAlignedMipSize) (bool32ToBool residencyNonResidentStrict)
+             (bool32ToBool residencyStandard2DBlockShape)
+             (bool32ToBool residencyStandard2DMultisampleBlockShape)
+             (bool32ToBool residencyStandard3DBlockShape)
+             (bool32ToBool residencyAlignedMipSize)
+             (bool32ToBool residencyNonResidentStrict)
 
 instance Storable PhysicalDeviceSparseProperties where
   sizeOf ~_ = 20
@@ -4970,7 +5092,119 @@ instance FromCStruct PhysicalDeviceLimits where
     optimalBufferCopyRowPitchAlignment <- peek @DeviceSize ((p `plusPtr` 488 :: Ptr DeviceSize))
     nonCoherentAtomSize <- peek @DeviceSize ((p `plusPtr` 496 :: Ptr DeviceSize))
     pure $ PhysicalDeviceLimits
-             maxImageDimension1D maxImageDimension2D maxImageDimension3D maxImageDimensionCube maxImageArrayLayers maxTexelBufferElements maxUniformBufferRange maxStorageBufferRange maxPushConstantsSize maxMemoryAllocationCount maxSamplerAllocationCount bufferImageGranularity sparseAddressSpaceSize maxBoundDescriptorSets maxPerStageDescriptorSamplers maxPerStageDescriptorUniformBuffers maxPerStageDescriptorStorageBuffers maxPerStageDescriptorSampledImages maxPerStageDescriptorStorageImages maxPerStageDescriptorInputAttachments maxPerStageResources maxDescriptorSetSamplers maxDescriptorSetUniformBuffers maxDescriptorSetUniformBuffersDynamic maxDescriptorSetStorageBuffers maxDescriptorSetStorageBuffersDynamic maxDescriptorSetSampledImages maxDescriptorSetStorageImages maxDescriptorSetInputAttachments maxVertexInputAttributes maxVertexInputBindings maxVertexInputAttributeOffset maxVertexInputBindingStride maxVertexOutputComponents maxTessellationGenerationLevel maxTessellationPatchSize maxTessellationControlPerVertexInputComponents maxTessellationControlPerVertexOutputComponents maxTessellationControlPerPatchOutputComponents maxTessellationControlTotalOutputComponents maxTessellationEvaluationInputComponents maxTessellationEvaluationOutputComponents maxGeometryShaderInvocations maxGeometryInputComponents maxGeometryOutputComponents maxGeometryOutputVertices maxGeometryTotalOutputComponents maxFragmentInputComponents maxFragmentOutputAttachments maxFragmentDualSrcAttachments maxFragmentCombinedOutputResources maxComputeSharedMemorySize ((maxComputeWorkGroupCount0, maxComputeWorkGroupCount1, maxComputeWorkGroupCount2)) maxComputeWorkGroupInvocations ((maxComputeWorkGroupSize0, maxComputeWorkGroupSize1, maxComputeWorkGroupSize2)) subPixelPrecisionBits subTexelPrecisionBits mipmapPrecisionBits maxDrawIndexedIndexValue maxDrawIndirectCount (coerce @CFloat @Float maxSamplerLodBias) (coerce @CFloat @Float maxSamplerAnisotropy) maxViewports ((maxViewportDimensions0, maxViewportDimensions1)) (((coerce @CFloat @Float viewportBoundsRange0), (coerce @CFloat @Float viewportBoundsRange1))) viewportSubPixelBits (coerce @CSize @Word64 minMemoryMapAlignment) minTexelBufferOffsetAlignment minUniformBufferOffsetAlignment minStorageBufferOffsetAlignment minTexelOffset maxTexelOffset minTexelGatherOffset maxTexelGatherOffset (coerce @CFloat @Float minInterpolationOffset) (coerce @CFloat @Float maxInterpolationOffset) subPixelInterpolationOffsetBits maxFramebufferWidth maxFramebufferHeight maxFramebufferLayers framebufferColorSampleCounts framebufferDepthSampleCounts framebufferStencilSampleCounts framebufferNoAttachmentsSampleCounts maxColorAttachments sampledImageColorSampleCounts sampledImageIntegerSampleCounts sampledImageDepthSampleCounts sampledImageStencilSampleCounts storageImageSampleCounts maxSampleMaskWords (bool32ToBool timestampComputeAndGraphics) (coerce @CFloat @Float timestampPeriod) maxClipDistances maxCullDistances maxCombinedClipAndCullDistances discreteQueuePriorities (((coerce @CFloat @Float pointSizeRange0), (coerce @CFloat @Float pointSizeRange1))) (((coerce @CFloat @Float lineWidthRange0), (coerce @CFloat @Float lineWidthRange1))) (coerce @CFloat @Float pointSizeGranularity) (coerce @CFloat @Float lineWidthGranularity) (bool32ToBool strictLines) (bool32ToBool standardSampleLocations) optimalBufferCopyOffsetAlignment optimalBufferCopyRowPitchAlignment nonCoherentAtomSize
+             maxImageDimension1D
+             maxImageDimension2D
+             maxImageDimension3D
+             maxImageDimensionCube
+             maxImageArrayLayers
+             maxTexelBufferElements
+             maxUniformBufferRange
+             maxStorageBufferRange
+             maxPushConstantsSize
+             maxMemoryAllocationCount
+             maxSamplerAllocationCount
+             bufferImageGranularity
+             sparseAddressSpaceSize
+             maxBoundDescriptorSets
+             maxPerStageDescriptorSamplers
+             maxPerStageDescriptorUniformBuffers
+             maxPerStageDescriptorStorageBuffers
+             maxPerStageDescriptorSampledImages
+             maxPerStageDescriptorStorageImages
+             maxPerStageDescriptorInputAttachments
+             maxPerStageResources
+             maxDescriptorSetSamplers
+             maxDescriptorSetUniformBuffers
+             maxDescriptorSetUniformBuffersDynamic
+             maxDescriptorSetStorageBuffers
+             maxDescriptorSetStorageBuffersDynamic
+             maxDescriptorSetSampledImages
+             maxDescriptorSetStorageImages
+             maxDescriptorSetInputAttachments
+             maxVertexInputAttributes
+             maxVertexInputBindings
+             maxVertexInputAttributeOffset
+             maxVertexInputBindingStride
+             maxVertexOutputComponents
+             maxTessellationGenerationLevel
+             maxTessellationPatchSize
+             maxTessellationControlPerVertexInputComponents
+             maxTessellationControlPerVertexOutputComponents
+             maxTessellationControlPerPatchOutputComponents
+             maxTessellationControlTotalOutputComponents
+             maxTessellationEvaluationInputComponents
+             maxTessellationEvaluationOutputComponents
+             maxGeometryShaderInvocations
+             maxGeometryInputComponents
+             maxGeometryOutputComponents
+             maxGeometryOutputVertices
+             maxGeometryTotalOutputComponents
+             maxFragmentInputComponents
+             maxFragmentOutputAttachments
+             maxFragmentDualSrcAttachments
+             maxFragmentCombinedOutputResources
+             maxComputeSharedMemorySize
+             (( maxComputeWorkGroupCount0
+              , maxComputeWorkGroupCount1
+              , maxComputeWorkGroupCount2 ))
+             maxComputeWorkGroupInvocations
+             (( maxComputeWorkGroupSize0
+              , maxComputeWorkGroupSize1
+              , maxComputeWorkGroupSize2 ))
+             subPixelPrecisionBits
+             subTexelPrecisionBits
+             mipmapPrecisionBits
+             maxDrawIndexedIndexValue
+             maxDrawIndirectCount
+             (coerce @CFloat @Float maxSamplerLodBias)
+             (coerce @CFloat @Float maxSamplerAnisotropy)
+             maxViewports
+             ((maxViewportDimensions0, maxViewportDimensions1))
+             (( (coerce @CFloat @Float viewportBoundsRange0)
+              , (coerce @CFloat @Float viewportBoundsRange1) ))
+             viewportSubPixelBits
+             (coerce @CSize @Word64 minMemoryMapAlignment)
+             minTexelBufferOffsetAlignment
+             minUniformBufferOffsetAlignment
+             minStorageBufferOffsetAlignment
+             minTexelOffset
+             maxTexelOffset
+             minTexelGatherOffset
+             maxTexelGatherOffset
+             (coerce @CFloat @Float minInterpolationOffset)
+             (coerce @CFloat @Float maxInterpolationOffset)
+             subPixelInterpolationOffsetBits
+             maxFramebufferWidth
+             maxFramebufferHeight
+             maxFramebufferLayers
+             framebufferColorSampleCounts
+             framebufferDepthSampleCounts
+             framebufferStencilSampleCounts
+             framebufferNoAttachmentsSampleCounts
+             maxColorAttachments
+             sampledImageColorSampleCounts
+             sampledImageIntegerSampleCounts
+             sampledImageDepthSampleCounts
+             sampledImageStencilSampleCounts
+             storageImageSampleCounts
+             maxSampleMaskWords
+             (bool32ToBool timestampComputeAndGraphics)
+             (coerce @CFloat @Float timestampPeriod)
+             maxClipDistances
+             maxCullDistances
+             maxCombinedClipAndCullDistances
+             discreteQueuePriorities
+             (( (coerce @CFloat @Float pointSizeRange0)
+              , (coerce @CFloat @Float pointSizeRange1) ))
+             (( (coerce @CFloat @Float lineWidthRange0)
+              , (coerce @CFloat @Float lineWidthRange1) ))
+             (coerce @CFloat @Float pointSizeGranularity)
+             (coerce @CFloat @Float lineWidthGranularity)
+             (bool32ToBool strictLines)
+             (bool32ToBool standardSampleLocations)
+             optimalBufferCopyOffsetAlignment
+             optimalBufferCopyRowPitchAlignment
+             nonCoherentAtomSize
 
 instance Storable PhysicalDeviceLimits where
   sizeOf ~_ = 504

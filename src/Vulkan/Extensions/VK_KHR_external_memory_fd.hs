@@ -252,7 +252,10 @@ getMemoryFdKHR device getFdInfo = liftIO . evalContT $ do
   let vkGetMemoryFdKHR' = mkVkGetMemoryFdKHR vkGetMemoryFdKHRPtr
   pGetFdInfo <- ContT $ withCStruct (getFdInfo)
   pPFd <- ContT $ bracket (callocBytes @CInt 4) free
-  r <- lift $ traceAroundEvent "vkGetMemoryFdKHR" (vkGetMemoryFdKHR' (deviceHandle (device)) pGetFdInfo (pPFd))
+  r <- lift $ traceAroundEvent "vkGetMemoryFdKHR" (vkGetMemoryFdKHR'
+                                                     (deviceHandle (device))
+                                                     pGetFdInfo
+                                                     (pPFd))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pFd <- lift $ peek @CInt pPFd
   pure $ ((coerce @CInt @Int32 pFd))
@@ -318,7 +321,11 @@ getMemoryFdPropertiesKHR device handleType fd = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryFdPropertiesKHR is null" Nothing Nothing
   let vkGetMemoryFdPropertiesKHR' = mkVkGetMemoryFdPropertiesKHR vkGetMemoryFdPropertiesKHRPtr
   pPMemoryFdProperties <- ContT (withZeroCStruct @MemoryFdPropertiesKHR)
-  r <- lift $ traceAroundEvent "vkGetMemoryFdPropertiesKHR" (vkGetMemoryFdPropertiesKHR' (deviceHandle (device)) (handleType) (CInt (fd)) (pPMemoryFdProperties))
+  r <- lift $ traceAroundEvent "vkGetMemoryFdPropertiesKHR" (vkGetMemoryFdPropertiesKHR'
+                                                               (deviceHandle (device))
+                                                               (handleType)
+                                                               (CInt (fd))
+                                                               (pPMemoryFdProperties))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pMemoryFdProperties <- lift $ peekCStruct @MemoryFdPropertiesKHR pPMemoryFdProperties
   pure $ (pMemoryFdProperties)

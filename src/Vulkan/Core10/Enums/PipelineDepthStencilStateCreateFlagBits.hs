@@ -36,42 +36,47 @@ newtype PipelineDepthStencilStateCreateFlagBits = PipelineDepthStencilStateCreat
 -- See
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-feedbackloop renderpass feedback loops>
 -- for more information.
-pattern PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT =
-  PipelineDepthStencilStateCreateFlagBits 0x00000002
+pattern PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT = PipelineDepthStencilStateCreateFlagBits 0x00000002
+
 -- | 'PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT'
 -- indicates that access to the depth aspects of depth\/stencil and input
 -- attachments will have implicit framebuffer-local memory dependencies.
 -- See
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-feedbackloop renderpass feedback loops>
 -- for more information.
-pattern PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT =
-  PipelineDepthStencilStateCreateFlagBits 0x00000001
+pattern PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT = PipelineDepthStencilStateCreateFlagBits 0x00000001
 
 conNamePipelineDepthStencilStateCreateFlagBits :: String
 conNamePipelineDepthStencilStateCreateFlagBits = "PipelineDepthStencilStateCreateFlagBits"
 
 enumPrefixPipelineDepthStencilStateCreateFlagBits :: String
-enumPrefixPipelineDepthStencilStateCreateFlagBits =
-  "PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_"
+enumPrefixPipelineDepthStencilStateCreateFlagBits = "PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_"
 
 showTablePipelineDepthStencilStateCreateFlagBits :: [(PipelineDepthStencilStateCreateFlagBits, String)]
 showTablePipelineDepthStencilStateCreateFlagBits =
-  [ ( PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT
+  [
+    ( PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT
     , "STENCIL_ACCESS_BIT_EXT"
     )
-  , (PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT, "DEPTH_ACCESS_BIT_EXT")
+  ,
+    ( PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT
+    , "DEPTH_ACCESS_BIT_EXT"
+    )
   ]
 
 instance Show PipelineDepthStencilStateCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixPipelineDepthStencilStateCreateFlagBits
-                            showTablePipelineDepthStencilStateCreateFlagBits
-                            conNamePipelineDepthStencilStateCreateFlagBits
-                            (\(PipelineDepthStencilStateCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineDepthStencilStateCreateFlagBits
+      showTablePipelineDepthStencilStateCreateFlagBits
+      conNamePipelineDepthStencilStateCreateFlagBits
+      (\(PipelineDepthStencilStateCreateFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read PipelineDepthStencilStateCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixPipelineDepthStencilStateCreateFlagBits
-                          showTablePipelineDepthStencilStateCreateFlagBits
-                          conNamePipelineDepthStencilStateCreateFlagBits
-                          PipelineDepthStencilStateCreateFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineDepthStencilStateCreateFlagBits
+      showTablePipelineDepthStencilStateCreateFlagBits
+      conNamePipelineDepthStencilStateCreateFlagBits
+      PipelineDepthStencilStateCreateFlagBits

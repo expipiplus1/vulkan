@@ -132,10 +132,12 @@ instance FromCStruct InteractionProfileState
 type role InteractionProfileSuggestedBinding nominal
 data InteractionProfileSuggestedBinding (es :: [Type])
 
-instance (Extendss InteractionProfileSuggestedBinding es, PokeChain es) => ToCStruct (InteractionProfileSuggestedBinding es)
+instance ( Extendss InteractionProfileSuggestedBinding es
+         , PokeChain es ) => ToCStruct (InteractionProfileSuggestedBinding es)
 instance Show (Chain es) => Show (InteractionProfileSuggestedBinding es)
 
-instance (Extendss InteractionProfileSuggestedBinding es, PeekChain es) => FromCStruct (InteractionProfileSuggestedBinding es)
+instance ( Extendss InteractionProfileSuggestedBinding es
+         , PeekChain es ) => FromCStruct (InteractionProfileSuggestedBinding es)
 
 
 data SessionActionSetsAttachInfo

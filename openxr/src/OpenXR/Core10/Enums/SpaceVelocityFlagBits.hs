@@ -25,7 +25,8 @@ newtype SpaceVelocityFlagBits = SpaceVelocityFlagBits Flags64
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- No documentation found for Nested "XrSpaceVelocityFlagBits" "XR_SPACE_VELOCITY_LINEAR_VALID_BIT"
-pattern SPACE_VELOCITY_LINEAR_VALID_BIT  = SpaceVelocityFlagBits 0x0000000000000001
+pattern SPACE_VELOCITY_LINEAR_VALID_BIT = SpaceVelocityFlagBits 0x0000000000000001
+
 -- No documentation found for Nested "XrSpaceVelocityFlagBits" "XR_SPACE_VELOCITY_ANGULAR_VALID_BIT"
 pattern SPACE_VELOCITY_ANGULAR_VALID_BIT = SpaceVelocityFlagBits 0x0000000000000002
 
@@ -37,18 +38,29 @@ enumPrefixSpaceVelocityFlagBits = "SPACE_VELOCITY_"
 
 showTableSpaceVelocityFlagBits :: [(SpaceVelocityFlagBits, String)]
 showTableSpaceVelocityFlagBits =
-  [(SPACE_VELOCITY_LINEAR_VALID_BIT, "LINEAR_VALID_BIT"), (SPACE_VELOCITY_ANGULAR_VALID_BIT, "ANGULAR_VALID_BIT")]
+  [
+    ( SPACE_VELOCITY_LINEAR_VALID_BIT
+    , "LINEAR_VALID_BIT"
+    )
+  ,
+    ( SPACE_VELOCITY_ANGULAR_VALID_BIT
+    , "ANGULAR_VALID_BIT"
+    )
+  ]
 
 instance Show SpaceVelocityFlagBits where
-  showsPrec = enumShowsPrec enumPrefixSpaceVelocityFlagBits
-                            showTableSpaceVelocityFlagBits
-                            conNameSpaceVelocityFlagBits
-                            (\(SpaceVelocityFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixSpaceVelocityFlagBits
+      showTableSpaceVelocityFlagBits
+      conNameSpaceVelocityFlagBits
+      (\(SpaceVelocityFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read SpaceVelocityFlagBits where
-  readPrec = enumReadPrec enumPrefixSpaceVelocityFlagBits
-                          showTableSpaceVelocityFlagBits
-                          conNameSpaceVelocityFlagBits
-                          SpaceVelocityFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixSpaceVelocityFlagBits
+      showTableSpaceVelocityFlagBits
+      conNameSpaceVelocityFlagBits
+      SpaceVelocityFlagBits

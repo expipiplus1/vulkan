@@ -312,7 +312,12 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceSurfaceInfo2KHR',
 -- 'SurfaceCapabilities2KHR'
 getPhysicalDeviceSurfaceCapabilities2KHR :: forall a b io
-                                          . (Extendss PhysicalDeviceSurfaceInfo2KHR a, PokeChain a, Extendss SurfaceCapabilities2KHR b, PokeChain b, PeekChain b, MonadIO io)
+                                          . ( Extendss PhysicalDeviceSurfaceInfo2KHR a
+                                            , PokeChain a
+                                            , Extendss SurfaceCapabilities2KHR b
+                                            , PokeChain b
+                                            , PeekChain b
+                                            , MonadIO io )
                                          => -- | @physicalDevice@ is the physical device that will be associated with the
                                             -- swapchain to be created, as described for
                                             -- 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
@@ -322,14 +327,18 @@ getPhysicalDeviceSurfaceCapabilities2KHR :: forall a b io
                                             -- be consumed by 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
                                             (PhysicalDeviceSurfaceInfo2KHR a)
                                          -> io (SurfaceCapabilities2KHR b)
-getPhysicalDeviceSurfaceCapabilities2KHR physicalDevice surfaceInfo = liftIO . evalContT $ do
+getPhysicalDeviceSurfaceCapabilities2KHR physicalDevice
+                                           surfaceInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfaceCapabilities2KHRPtr = pVkGetPhysicalDeviceSurfaceCapabilities2KHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceSurfaceCapabilities2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSurfaceCapabilities2KHR is null" Nothing Nothing
   let vkGetPhysicalDeviceSurfaceCapabilities2KHR' = mkVkGetPhysicalDeviceSurfaceCapabilities2KHR vkGetPhysicalDeviceSurfaceCapabilities2KHRPtr
   pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
   pPSurfaceCapabilities <- ContT (withZeroCStruct @(SurfaceCapabilities2KHR _))
-  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceSurfaceCapabilities2KHR" (vkGetPhysicalDeviceSurfaceCapabilities2KHR' (physicalDeviceHandle (physicalDevice)) (forgetExtensions pSurfaceInfo) (forgetExtensions (pPSurfaceCapabilities)))
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceSurfaceCapabilities2KHR" (vkGetPhysicalDeviceSurfaceCapabilities2KHR'
+                                                                               (physicalDeviceHandle (physicalDevice))
+                                                                               (forgetExtensions pSurfaceInfo)
+                                                                               (forgetExtensions (pPSurfaceCapabilities)))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurfaceCapabilities <- lift $ peekCStruct @(SurfaceCapabilities2KHR _) pPSurfaceCapabilities
   pure $ (pSurfaceCapabilities)
@@ -419,7 +428,12 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.PhysicalDevice', 'PhysicalDeviceSurfaceInfo2KHR',
 -- 'SurfaceFormat2KHR'
 getPhysicalDeviceSurfaceFormats2KHR :: forall a b io
-                                     . (Extendss PhysicalDeviceSurfaceInfo2KHR a, PokeChain a, Extendss SurfaceFormat2KHR b, PokeChain b, PeekChain b, MonadIO io)
+                                     . ( Extendss PhysicalDeviceSurfaceInfo2KHR a
+                                       , PokeChain a
+                                       , Extendss SurfaceFormat2KHR b
+                                       , PokeChain b
+                                       , PeekChain b
+                                       , MonadIO io )
                                     => -- | @physicalDevice@ is the physical device that will be associated with the
                                        -- swapchain to be created, as described for
                                        -- 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
@@ -429,7 +443,8 @@ getPhysicalDeviceSurfaceFormats2KHR :: forall a b io
                                        -- be consumed by 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
                                        (PhysicalDeviceSurfaceInfo2KHR a)
                                     -> io (Result, ("surfaceFormats" ::: Vector (SurfaceFormat2KHR b)))
-getPhysicalDeviceSurfaceFormats2KHR physicalDevice surfaceInfo = liftIO . evalContT $ do
+getPhysicalDeviceSurfaceFormats2KHR physicalDevice
+                                      surfaceInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfaceFormats2KHRPtr = pVkGetPhysicalDeviceSurfaceFormats2KHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceSurfaceFormats2KHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSurfaceFormats2KHR is null" Nothing Nothing
@@ -438,12 +453,20 @@ getPhysicalDeviceSurfaceFormats2KHR physicalDevice surfaceInfo = liftIO . evalCo
   pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
   let x9 = forgetExtensions pSurfaceInfo
   pPSurfaceFormatCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceSurfaceFormats2KHR" (vkGetPhysicalDeviceSurfaceFormats2KHR' physicalDevice' x9 (pPSurfaceFormatCount) (forgetExtensions (nullPtr)))
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceSurfaceFormats2KHR" (vkGetPhysicalDeviceSurfaceFormats2KHR'
+                                                                          physicalDevice'
+                                                                          x9
+                                                                          (pPSurfaceFormatCount)
+                                                                          (forgetExtensions (nullPtr)))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurfaceFormatCount <- lift $ peek @Word32 pPSurfaceFormatCount
   pPSurfaceFormats <- ContT $ bracket (callocBytes @(SurfaceFormat2KHR _) ((fromIntegral (pSurfaceFormatCount)) * 24)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPSurfaceFormats `advancePtrBytes` (i * 24) :: Ptr (SurfaceFormat2KHR _)) . ($ ())) [0..(fromIntegral (pSurfaceFormatCount)) - 1]
-  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceSurfaceFormats2KHR" (vkGetPhysicalDeviceSurfaceFormats2KHR' physicalDevice' x9 (pPSurfaceFormatCount) (forgetExtensions ((pPSurfaceFormats))))
+  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceSurfaceFormats2KHR" (vkGetPhysicalDeviceSurfaceFormats2KHR'
+                                                                           physicalDevice'
+                                                                           x9
+                                                                           (pPSurfaceFormatCount)
+                                                                           (forgetExtensions ((pPSurfaceFormats))))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pSurfaceFormatCount' <- lift $ peek @Word32 pPSurfaceFormatCount
   pSurfaceFormats' <- lift $ generateM (fromIntegral (pSurfaceFormatCount')) (\i -> peekCStruct @(SurfaceFormat2KHR _) (((pPSurfaceFormats) `advancePtrBytes` (24 * (i)) :: Ptr (SurfaceFormat2KHR _))))
@@ -562,7 +585,8 @@ instance Extensible PhysicalDeviceSurfaceInfo2KHR where
     | Just Refl <- eqT @e @SurfaceFullScreenExclusiveInfoEXT = Just f
     | otherwise = Nothing
 
-instance (Extendss PhysicalDeviceSurfaceInfo2KHR es, PokeChain es) => ToCStruct (PhysicalDeviceSurfaceInfo2KHR es) where
+instance ( Extendss PhysicalDeviceSurfaceInfo2KHR es
+         , PokeChain es ) => ToCStruct (PhysicalDeviceSurfaceInfo2KHR es) where
   withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceSurfaceInfo2KHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR)
@@ -578,7 +602,8 @@ instance (Extendss PhysicalDeviceSurfaceInfo2KHR es, PokeChain es) => ToCStruct 
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ f
 
-instance (Extendss PhysicalDeviceSurfaceInfo2KHR es, PeekChain es) => FromCStruct (PhysicalDeviceSurfaceInfo2KHR es) where
+instance ( Extendss PhysicalDeviceSurfaceInfo2KHR es
+         , PeekChain es ) => FromCStruct (PhysicalDeviceSurfaceInfo2KHR es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -661,7 +686,8 @@ instance Extensible SurfaceCapabilities2KHR where
     | Just Refl <- eqT @e @DisplayNativeHdrSurfaceCapabilitiesAMD = Just f
     | otherwise = Nothing
 
-instance (Extendss SurfaceCapabilities2KHR es, PokeChain es) => ToCStruct (SurfaceCapabilities2KHR es) where
+instance ( Extendss SurfaceCapabilities2KHR es
+         , PokeChain es ) => ToCStruct (SurfaceCapabilities2KHR es) where
   withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SurfaceCapabilities2KHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR)
@@ -678,7 +704,8 @@ instance (Extendss SurfaceCapabilities2KHR es, PokeChain es) => ToCStruct (Surfa
     lift $ poke ((p `plusPtr` 16 :: Ptr SurfaceCapabilitiesKHR)) (zero)
     lift $ f
 
-instance (Extendss SurfaceCapabilities2KHR es, PeekChain es) => FromCStruct (SurfaceCapabilities2KHR es) where
+instance ( Extendss SurfaceCapabilities2KHR es
+         , PeekChain es ) => FromCStruct (SurfaceCapabilities2KHR es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -744,7 +771,8 @@ instance Extensible SurfaceFormat2KHR where
     | Just Refl <- eqT @e @ImageCompressionPropertiesEXT = Just f
     | otherwise = Nothing
 
-instance (Extendss SurfaceFormat2KHR es, PokeChain es) => ToCStruct (SurfaceFormat2KHR es) where
+instance ( Extendss SurfaceFormat2KHR es
+         , PokeChain es ) => ToCStruct (SurfaceFormat2KHR es) where
   withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SurfaceFormat2KHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR)
@@ -761,7 +789,8 @@ instance (Extendss SurfaceFormat2KHR es, PokeChain es) => ToCStruct (SurfaceForm
     lift $ poke ((p `plusPtr` 16 :: Ptr SurfaceFormatKHR)) (zero)
     lift $ f
 
-instance (Extendss SurfaceFormat2KHR es, PeekChain es) => FromCStruct (SurfaceFormat2KHR es) where
+instance ( Extendss SurfaceFormat2KHR es
+         , PeekChain es ) => FromCStruct (SurfaceFormat2KHR es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

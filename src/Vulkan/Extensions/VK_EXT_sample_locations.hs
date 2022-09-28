@@ -343,13 +343,16 @@ cmdSetSampleLocationsEXT :: forall io
                          -> -- | @pSampleLocationsInfo@ is the sample locations state to set.
                             SampleLocationsInfoEXT
                          -> io ()
-cmdSetSampleLocationsEXT commandBuffer sampleLocationsInfo = liftIO . evalContT $ do
+cmdSetSampleLocationsEXT commandBuffer
+                           sampleLocationsInfo = liftIO . evalContT $ do
   let vkCmdSetSampleLocationsEXTPtr = pVkCmdSetSampleLocationsEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetSampleLocationsEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetSampleLocationsEXT is null" Nothing Nothing
   let vkCmdSetSampleLocationsEXT' = mkVkCmdSetSampleLocationsEXT vkCmdSetSampleLocationsEXTPtr
   pSampleLocationsInfo <- ContT $ withCStruct (sampleLocationsInfo)
-  lift $ traceAroundEvent "vkCmdSetSampleLocationsEXT" (vkCmdSetSampleLocationsEXT' (commandBufferHandle (commandBuffer)) pSampleLocationsInfo)
+  lift $ traceAroundEvent "vkCmdSetSampleLocationsEXT" (vkCmdSetSampleLocationsEXT'
+                                                          (commandBufferHandle (commandBuffer))
+                                                          pSampleLocationsInfo)
   pure $ ()
 
 
@@ -388,13 +391,17 @@ getPhysicalDeviceMultisamplePropertiesEXT :: forall io
                                              -- 'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
                                              ("samples" ::: SampleCountFlagBits)
                                           -> io (MultisamplePropertiesEXT)
-getPhysicalDeviceMultisamplePropertiesEXT physicalDevice samples = liftIO . evalContT $ do
+getPhysicalDeviceMultisamplePropertiesEXT physicalDevice
+                                            samples = liftIO . evalContT $ do
   let vkGetPhysicalDeviceMultisamplePropertiesEXTPtr = pVkGetPhysicalDeviceMultisamplePropertiesEXT (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceMultisamplePropertiesEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceMultisamplePropertiesEXT is null" Nothing Nothing
   let vkGetPhysicalDeviceMultisamplePropertiesEXT' = mkVkGetPhysicalDeviceMultisamplePropertiesEXT vkGetPhysicalDeviceMultisamplePropertiesEXTPtr
   pPMultisampleProperties <- ContT (withZeroCStruct @MultisamplePropertiesEXT)
-  lift $ traceAroundEvent "vkGetPhysicalDeviceMultisamplePropertiesEXT" (vkGetPhysicalDeviceMultisamplePropertiesEXT' (physicalDeviceHandle (physicalDevice)) (samples) (pPMultisampleProperties))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceMultisamplePropertiesEXT" (vkGetPhysicalDeviceMultisamplePropertiesEXT'
+                                                                           (physicalDeviceHandle (physicalDevice))
+                                                                           (samples)
+                                                                           (pPMultisampleProperties))
   pMultisampleProperties <- lift $ peekCStruct @MultisamplePropertiesEXT pPMultisampleProperties
   pure $ (pMultisampleProperties)
 
@@ -967,7 +974,12 @@ instance FromCStruct PhysicalDeviceSampleLocationsPropertiesEXT where
     sampleLocationSubPixelBits <- peek @Word32 ((p `plusPtr` 36 :: Ptr Word32))
     variableSampleLocations <- peek @Bool32 ((p `plusPtr` 40 :: Ptr Bool32))
     pure $ PhysicalDeviceSampleLocationsPropertiesEXT
-             sampleLocationSampleCounts maxSampleLocationGridSize (((coerce @CFloat @Float sampleLocationCoordinateRange0), (coerce @CFloat @Float sampleLocationCoordinateRange1))) sampleLocationSubPixelBits (bool32ToBool variableSampleLocations)
+             sampleLocationSampleCounts
+             maxSampleLocationGridSize
+             (( (coerce @CFloat @Float sampleLocationCoordinateRange0)
+              , (coerce @CFloat @Float sampleLocationCoordinateRange1) ))
+             sampleLocationSubPixelBits
+             (bool32ToBool variableSampleLocations)
 
 instance Storable PhysicalDeviceSampleLocationsPropertiesEXT where
   sizeOf ~_ = 48

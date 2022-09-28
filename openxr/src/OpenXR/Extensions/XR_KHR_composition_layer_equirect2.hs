@@ -202,7 +202,15 @@ instance FromCStruct CompositionLayerEquirect2KHR where
     upperVerticalAngle <- peek @CFloat ((p `plusPtr` 108 :: Ptr CFloat))
     lowerVerticalAngle <- peek @CFloat ((p `plusPtr` 112 :: Ptr CFloat))
     pure $ CompositionLayerEquirect2KHR
-             layerFlags space eyeVisibility subImage pose (coerce @CFloat @Float radius) (coerce @CFloat @Float centralHorizontalAngle) (coerce @CFloat @Float upperVerticalAngle) (coerce @CFloat @Float lowerVerticalAngle)
+             layerFlags
+             space
+             eyeVisibility
+             subImage
+             pose
+             (coerce @CFloat @Float radius)
+             (coerce @CFloat @Float centralHorizontalAngle)
+             (coerce @CFloat @Float upperVerticalAngle)
+             (coerce @CFloat @Float lowerVerticalAngle)
 
 instance Storable CompositionLayerEquirect2KHR where
   sizeOf ~_ = 120

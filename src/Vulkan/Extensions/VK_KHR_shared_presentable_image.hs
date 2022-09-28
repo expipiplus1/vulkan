@@ -335,7 +335,9 @@ getSwapchainStatusKHR device swapchain = liftIO $ do
   unless (vkGetSwapchainStatusKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSwapchainStatusKHR is null" Nothing Nothing
   let vkGetSwapchainStatusKHR' = mkVkGetSwapchainStatusKHR vkGetSwapchainStatusKHRPtr
-  r <- traceAroundEvent "vkGetSwapchainStatusKHR" (vkGetSwapchainStatusKHR' (deviceHandle (device)) (swapchain))
+  r <- traceAroundEvent "vkGetSwapchainStatusKHR" (vkGetSwapchainStatusKHR'
+                                                     (deviceHandle (device))
+                                                     (swapchain))
   when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 

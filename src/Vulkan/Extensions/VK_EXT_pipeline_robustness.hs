@@ -535,7 +535,10 @@ instance FromCStruct PhysicalDevicePipelineRobustnessPropertiesEXT where
     defaultRobustnessVertexInputs <- peek @PipelineRobustnessBufferBehaviorEXT ((p `plusPtr` 24 :: Ptr PipelineRobustnessBufferBehaviorEXT))
     defaultRobustnessImages <- peek @PipelineRobustnessImageBehaviorEXT ((p `plusPtr` 28 :: Ptr PipelineRobustnessImageBehaviorEXT))
     pure $ PhysicalDevicePipelineRobustnessPropertiesEXT
-             defaultRobustnessStorageBuffers defaultRobustnessUniformBuffers defaultRobustnessVertexInputs defaultRobustnessImages
+             defaultRobustnessStorageBuffers
+             defaultRobustnessUniformBuffers
+             defaultRobustnessVertexInputs
+             defaultRobustnessImages
 
 instance Storable PhysicalDevicePipelineRobustnessPropertiesEXT where
   sizeOf ~_ = 32
@@ -565,27 +568,34 @@ newtype PipelineRobustnessBufferBehaviorEXT = PipelineRobustnessBufferBehaviorEX
 -- | 'PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DEVICE_DEFAULT_EXT' specifies that
 -- this pipeline stage follows the robustness behavior of the logical
 -- device that created this pipeline
-pattern PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DEVICE_DEFAULT_EXT         = PipelineRobustnessBufferBehaviorEXT 0
+pattern PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DEVICE_DEFAULT_EXT = PipelineRobustnessBufferBehaviorEXT 0
+
 -- | 'PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DISABLED_EXT' specifies that buffer
 -- accesses by this pipeline stage to the relevant resource types /must/
 -- not be out of bounds
-pattern PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DISABLED_EXT               = PipelineRobustnessBufferBehaviorEXT 1
+pattern PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DISABLED_EXT = PipelineRobustnessBufferBehaviorEXT 1
+
 -- | 'PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT' specifies
 -- that out of bounds accesses by this pipeline stage to the relevant
 -- resource types behave as if the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
 -- feature is enabled
-pattern PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT   = PipelineRobustnessBufferBehaviorEXT 2
+pattern PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT = PipelineRobustnessBufferBehaviorEXT 2
+
 -- | 'PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_2_EXT'
 -- specifies that out of bounds accesses by this pipeline stage to the
 -- relevant resource types behave as if the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
 -- feature is enabled
 pattern PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_2_EXT = PipelineRobustnessBufferBehaviorEXT 3
-{-# complete PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DEVICE_DEFAULT_EXT,
-             PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DISABLED_EXT,
-             PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT,
-             PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_2_EXT :: PipelineRobustnessBufferBehaviorEXT #-}
+
+{-# COMPLETE
+  PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DEVICE_DEFAULT_EXT
+  , PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DISABLED_EXT
+  , PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT
+  , PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_2_EXT ::
+    PipelineRobustnessBufferBehaviorEXT
+  #-}
 
 conNamePipelineRobustnessBufferBehaviorEXT :: String
 conNamePipelineRobustnessBufferBehaviorEXT = "PipelineRobustnessBufferBehaviorEXT"
@@ -595,25 +605,40 @@ enumPrefixPipelineRobustnessBufferBehaviorEXT = "PIPELINE_ROBUSTNESS_BUFFER_BEHA
 
 showTablePipelineRobustnessBufferBehaviorEXT :: [(PipelineRobustnessBufferBehaviorEXT, String)]
 showTablePipelineRobustnessBufferBehaviorEXT =
-  [ (PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DEVICE_DEFAULT_EXT        , "DEVICE_DEFAULT_EXT")
-  , (PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DISABLED_EXT              , "DISABLED_EXT")
-  , (PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT  , "ROBUST_BUFFER_ACCESS_EXT")
-  , (PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_2_EXT, "ROBUST_BUFFER_ACCESS_2_EXT")
+  [
+    ( PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DEVICE_DEFAULT_EXT
+    , "DEVICE_DEFAULT_EXT"
+    )
+  ,
+    ( PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DISABLED_EXT
+    , "DISABLED_EXT"
+    )
+  ,
+    ( PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT
+    , "ROBUST_BUFFER_ACCESS_EXT"
+    )
+  ,
+    ( PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_2_EXT
+    , "ROBUST_BUFFER_ACCESS_2_EXT"
+    )
   ]
 
 instance Show PipelineRobustnessBufferBehaviorEXT where
-  showsPrec = enumShowsPrec enumPrefixPipelineRobustnessBufferBehaviorEXT
-                            showTablePipelineRobustnessBufferBehaviorEXT
-                            conNamePipelineRobustnessBufferBehaviorEXT
-                            (\(PipelineRobustnessBufferBehaviorEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineRobustnessBufferBehaviorEXT
+      showTablePipelineRobustnessBufferBehaviorEXT
+      conNamePipelineRobustnessBufferBehaviorEXT
+      (\(PipelineRobustnessBufferBehaviorEXT x) -> x)
+      (showsPrec 11)
 
 instance Read PipelineRobustnessBufferBehaviorEXT where
-  readPrec = enumReadPrec enumPrefixPipelineRobustnessBufferBehaviorEXT
-                          showTablePipelineRobustnessBufferBehaviorEXT
-                          conNamePipelineRobustnessBufferBehaviorEXT
-                          PipelineRobustnessBufferBehaviorEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineRobustnessBufferBehaviorEXT
+      showTablePipelineRobustnessBufferBehaviorEXT
+      conNamePipelineRobustnessBufferBehaviorEXT
+      PipelineRobustnessBufferBehaviorEXT
 
 -- | VkPipelineRobustnessImageBehaviorEXT - Enum controlling the robustness
 -- of image accesses in a pipeline stage
@@ -629,27 +654,34 @@ newtype PipelineRobustnessImageBehaviorEXT = PipelineRobustnessImageBehaviorEXT 
 -- | 'PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DEVICE_DEFAULT_EXT' specifies that
 -- this pipeline stage follows the robustness behavior of the logical
 -- device that created this pipeline
-pattern PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DEVICE_DEFAULT_EXT        = PipelineRobustnessImageBehaviorEXT 0
+pattern PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DEVICE_DEFAULT_EXT = PipelineRobustnessImageBehaviorEXT 0
+
 -- | 'PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DISABLED_EXT' specifies that image
 -- accesses by this pipeline stage to the relevant resource types /must/
 -- not be out of bounds
-pattern PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DISABLED_EXT              = PipelineRobustnessImageBehaviorEXT 1
+pattern PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DISABLED_EXT = PipelineRobustnessImageBehaviorEXT 1
+
 -- | 'PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_ROBUST_IMAGE_ACCESS_EXT' specifies
 -- that out of bounds accesses by this pipeline stage to images behave as
 -- if the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustImageAccess robustImageAccess>
 -- feature is enabled
-pattern PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_ROBUST_IMAGE_ACCESS_EXT   = PipelineRobustnessImageBehaviorEXT 2
+pattern PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_ROBUST_IMAGE_ACCESS_EXT = PipelineRobustnessImageBehaviorEXT 2
+
 -- | 'PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_ROBUST_IMAGE_ACCESS_2_EXT' specifies
 -- that out of bounds accesses by this pipeline stage to images behave as
 -- if the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustImageAccess2 robustImageAccess2>
 -- feature is enabled
 pattern PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_ROBUST_IMAGE_ACCESS_2_EXT = PipelineRobustnessImageBehaviorEXT 3
-{-# complete PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DEVICE_DEFAULT_EXT,
-             PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DISABLED_EXT,
-             PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_ROBUST_IMAGE_ACCESS_EXT,
-             PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_ROBUST_IMAGE_ACCESS_2_EXT :: PipelineRobustnessImageBehaviorEXT #-}
+
+{-# COMPLETE
+  PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DEVICE_DEFAULT_EXT
+  , PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DISABLED_EXT
+  , PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_ROBUST_IMAGE_ACCESS_EXT
+  , PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_ROBUST_IMAGE_ACCESS_2_EXT ::
+    PipelineRobustnessImageBehaviorEXT
+  #-}
 
 conNamePipelineRobustnessImageBehaviorEXT :: String
 conNamePipelineRobustnessImageBehaviorEXT = "PipelineRobustnessImageBehaviorEXT"
@@ -659,25 +691,40 @@ enumPrefixPipelineRobustnessImageBehaviorEXT = "PIPELINE_ROBUSTNESS_IMAGE_BEHAVI
 
 showTablePipelineRobustnessImageBehaviorEXT :: [(PipelineRobustnessImageBehaviorEXT, String)]
 showTablePipelineRobustnessImageBehaviorEXT =
-  [ (PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DEVICE_DEFAULT_EXT       , "DEVICE_DEFAULT_EXT")
-  , (PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DISABLED_EXT             , "DISABLED_EXT")
-  , (PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_ROBUST_IMAGE_ACCESS_EXT  , "ROBUST_IMAGE_ACCESS_EXT")
-  , (PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_ROBUST_IMAGE_ACCESS_2_EXT, "ROBUST_IMAGE_ACCESS_2_EXT")
+  [
+    ( PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DEVICE_DEFAULT_EXT
+    , "DEVICE_DEFAULT_EXT"
+    )
+  ,
+    ( PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DISABLED_EXT
+    , "DISABLED_EXT"
+    )
+  ,
+    ( PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_ROBUST_IMAGE_ACCESS_EXT
+    , "ROBUST_IMAGE_ACCESS_EXT"
+    )
+  ,
+    ( PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_ROBUST_IMAGE_ACCESS_2_EXT
+    , "ROBUST_IMAGE_ACCESS_2_EXT"
+    )
   ]
 
 instance Show PipelineRobustnessImageBehaviorEXT where
-  showsPrec = enumShowsPrec enumPrefixPipelineRobustnessImageBehaviorEXT
-                            showTablePipelineRobustnessImageBehaviorEXT
-                            conNamePipelineRobustnessImageBehaviorEXT
-                            (\(PipelineRobustnessImageBehaviorEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineRobustnessImageBehaviorEXT
+      showTablePipelineRobustnessImageBehaviorEXT
+      conNamePipelineRobustnessImageBehaviorEXT
+      (\(PipelineRobustnessImageBehaviorEXT x) -> x)
+      (showsPrec 11)
 
 instance Read PipelineRobustnessImageBehaviorEXT where
-  readPrec = enumReadPrec enumPrefixPipelineRobustnessImageBehaviorEXT
-                          showTablePipelineRobustnessImageBehaviorEXT
-                          conNamePipelineRobustnessImageBehaviorEXT
-                          PipelineRobustnessImageBehaviorEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineRobustnessImageBehaviorEXT
+      showTablePipelineRobustnessImageBehaviorEXT
+      conNamePipelineRobustnessImageBehaviorEXT
+      PipelineRobustnessImageBehaviorEXT
 
 type EXT_PIPELINE_ROBUSTNESS_SPEC_VERSION = 1
 

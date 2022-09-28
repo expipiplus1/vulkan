@@ -40,18 +40,26 @@ enumPrefixAttachmentDescriptionFlagBits :: String
 enumPrefixAttachmentDescriptionFlagBits = "ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT"
 
 showTableAttachmentDescriptionFlagBits :: [(AttachmentDescriptionFlagBits, String)]
-showTableAttachmentDescriptionFlagBits = [(ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT, "")]
+showTableAttachmentDescriptionFlagBits =
+  [
+    ( ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT
+    , ""
+    )
+  ]
 
 instance Show AttachmentDescriptionFlagBits where
-  showsPrec = enumShowsPrec enumPrefixAttachmentDescriptionFlagBits
-                            showTableAttachmentDescriptionFlagBits
-                            conNameAttachmentDescriptionFlagBits
-                            (\(AttachmentDescriptionFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixAttachmentDescriptionFlagBits
+      showTableAttachmentDescriptionFlagBits
+      conNameAttachmentDescriptionFlagBits
+      (\(AttachmentDescriptionFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read AttachmentDescriptionFlagBits where
-  readPrec = enumReadPrec enumPrefixAttachmentDescriptionFlagBits
-                          showTableAttachmentDescriptionFlagBits
-                          conNameAttachmentDescriptionFlagBits
-                          AttachmentDescriptionFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixAttachmentDescriptionFlagBits
+      showTableAttachmentDescriptionFlagBits
+      conNameAttachmentDescriptionFlagBits
+      AttachmentDescriptionFlagBits

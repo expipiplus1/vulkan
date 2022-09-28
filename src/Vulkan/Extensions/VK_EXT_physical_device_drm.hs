@@ -211,7 +211,12 @@ instance FromCStruct PhysicalDeviceDrmPropertiesEXT where
     renderMajor <- peek @Int64 ((p `plusPtr` 40 :: Ptr Int64))
     renderMinor <- peek @Int64 ((p `plusPtr` 48 :: Ptr Int64))
     pure $ PhysicalDeviceDrmPropertiesEXT
-             (bool32ToBool hasPrimary) (bool32ToBool hasRender) primaryMajor primaryMinor renderMajor renderMinor
+             (bool32ToBool hasPrimary)
+             (bool32ToBool hasRender)
+             primaryMajor
+             primaryMinor
+             renderMajor
+             renderMinor
 
 instance Storable PhysicalDeviceDrmPropertiesEXT where
   sizeOf ~_ = 56

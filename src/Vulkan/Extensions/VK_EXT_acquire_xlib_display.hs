@@ -230,7 +230,10 @@ acquireXlibDisplayEXT physicalDevice dpy display = liftIO $ do
   unless (vkAcquireXlibDisplayEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireXlibDisplayEXT is null" Nothing Nothing
   let vkAcquireXlibDisplayEXT' = mkVkAcquireXlibDisplayEXT vkAcquireXlibDisplayEXTPtr
-  r <- traceAroundEvent "vkAcquireXlibDisplayEXT" (vkAcquireXlibDisplayEXT' (physicalDeviceHandle (physicalDevice)) (dpy) (display))
+  r <- traceAroundEvent "vkAcquireXlibDisplayEXT" (vkAcquireXlibDisplayEXT'
+                                                     (physicalDeviceHandle (physicalDevice))
+                                                     (dpy)
+                                                     (display))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -287,7 +290,11 @@ getRandROutputDisplayEXT physicalDevice dpy rrOutput = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetRandROutputDisplayEXT is null" Nothing Nothing
   let vkGetRandROutputDisplayEXT' = mkVkGetRandROutputDisplayEXT vkGetRandROutputDisplayEXTPtr
   pPDisplay <- ContT $ bracket (callocBytes @DisplayKHR 8) free
-  r <- lift $ traceAroundEvent "vkGetRandROutputDisplayEXT" (vkGetRandROutputDisplayEXT' (physicalDeviceHandle (physicalDevice)) (dpy) (rrOutput) (pPDisplay))
+  r <- lift $ traceAroundEvent "vkGetRandROutputDisplayEXT" (vkGetRandROutputDisplayEXT'
+                                                               (physicalDeviceHandle (physicalDevice))
+                                                               (dpy)
+                                                               (rrOutput)
+                                                               (pPDisplay))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pDisplay <- lift $ peek @DisplayKHR pPDisplay
   pure $ (pDisplay)

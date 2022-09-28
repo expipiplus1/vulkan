@@ -214,12 +214,17 @@ newtype ValidationCheckEXT = ValidationCheckEXT Int32
 
 -- | 'VALIDATION_CHECK_ALL_EXT' specifies that all validation checks are
 -- disabled.
-pattern VALIDATION_CHECK_ALL_EXT     = ValidationCheckEXT 0
+pattern VALIDATION_CHECK_ALL_EXT = ValidationCheckEXT 0
+
 -- | 'VALIDATION_CHECK_SHADERS_EXT' specifies that shader validation is
 -- disabled.
 pattern VALIDATION_CHECK_SHADERS_EXT = ValidationCheckEXT 1
-{-# complete VALIDATION_CHECK_ALL_EXT,
-             VALIDATION_CHECK_SHADERS_EXT :: ValidationCheckEXT #-}
+
+{-# COMPLETE
+  VALIDATION_CHECK_ALL_EXT
+  , VALIDATION_CHECK_SHADERS_EXT ::
+    ValidationCheckEXT
+  #-}
 
 conNameValidationCheckEXT :: String
 conNameValidationCheckEXT = "ValidationCheckEXT"
@@ -228,19 +233,27 @@ enumPrefixValidationCheckEXT :: String
 enumPrefixValidationCheckEXT = "VALIDATION_CHECK_"
 
 showTableValidationCheckEXT :: [(ValidationCheckEXT, String)]
-showTableValidationCheckEXT = [(VALIDATION_CHECK_ALL_EXT, "ALL_EXT"), (VALIDATION_CHECK_SHADERS_EXT, "SHADERS_EXT")]
+showTableValidationCheckEXT =
+  [ (VALIDATION_CHECK_ALL_EXT, "ALL_EXT")
+  , (VALIDATION_CHECK_SHADERS_EXT, "SHADERS_EXT")
+  ]
 
 instance Show ValidationCheckEXT where
-  showsPrec = enumShowsPrec enumPrefixValidationCheckEXT
-                            showTableValidationCheckEXT
-                            conNameValidationCheckEXT
-                            (\(ValidationCheckEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixValidationCheckEXT
+      showTableValidationCheckEXT
+      conNameValidationCheckEXT
+      (\(ValidationCheckEXT x) -> x)
+      (showsPrec 11)
 
 instance Read ValidationCheckEXT where
   readPrec =
-    enumReadPrec enumPrefixValidationCheckEXT showTableValidationCheckEXT conNameValidationCheckEXT ValidationCheckEXT
-
+    enumReadPrec
+      enumPrefixValidationCheckEXT
+      showTableValidationCheckEXT
+      conNameValidationCheckEXT
+      ValidationCheckEXT
 
 type EXT_VALIDATION_FLAGS_SPEC_VERSION = 2
 

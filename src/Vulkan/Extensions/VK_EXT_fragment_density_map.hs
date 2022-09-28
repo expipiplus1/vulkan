@@ -310,7 +310,9 @@ instance FromCStruct PhysicalDeviceFragmentDensityMapFeaturesEXT where
     fragmentDensityMapDynamic <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     fragmentDensityMapNonSubsampledImages <- peek @Bool32 ((p `plusPtr` 24 :: Ptr Bool32))
     pure $ PhysicalDeviceFragmentDensityMapFeaturesEXT
-             (bool32ToBool fragmentDensityMap) (bool32ToBool fragmentDensityMapDynamic) (bool32ToBool fragmentDensityMapNonSubsampledImages)
+             (bool32ToBool fragmentDensityMap)
+             (bool32ToBool fragmentDensityMapDynamic)
+             (bool32ToBool fragmentDensityMapNonSubsampledImages)
 
 instance Storable PhysicalDeviceFragmentDensityMapFeaturesEXT where
   sizeOf ~_ = 32
@@ -391,7 +393,9 @@ instance FromCStruct PhysicalDeviceFragmentDensityMapPropertiesEXT where
     maxFragmentDensityTexelSize <- peekCStruct @Extent2D ((p `plusPtr` 24 :: Ptr Extent2D))
     fragmentDensityInvocations <- peek @Bool32 ((p `plusPtr` 32 :: Ptr Bool32))
     pure $ PhysicalDeviceFragmentDensityMapPropertiesEXT
-             minFragmentDensityTexelSize maxFragmentDensityTexelSize (bool32ToBool fragmentDensityInvocations)
+             minFragmentDensityTexelSize
+             maxFragmentDensityTexelSize
+             (bool32ToBool fragmentDensityInvocations)
 
 instance Storable PhysicalDeviceFragmentDensityMapPropertiesEXT where
   sizeOf ~_ = 40

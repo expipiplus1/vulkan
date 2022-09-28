@@ -35,30 +35,35 @@ newtype PipelineColorBlendStateCreateFlagBits = PipelineColorBlendStateCreateFla
 -- custom blending operations in a fragment shader. See
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-feedbackloop renderpass feedback loops>
 -- for more information.
-pattern PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_EXT =
-  PipelineColorBlendStateCreateFlagBits 0x00000001
+pattern PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_EXT = PipelineColorBlendStateCreateFlagBits 0x00000001
 
 conNamePipelineColorBlendStateCreateFlagBits :: String
 conNamePipelineColorBlendStateCreateFlagBits = "PipelineColorBlendStateCreateFlagBits"
 
 enumPrefixPipelineColorBlendStateCreateFlagBits :: String
-enumPrefixPipelineColorBlendStateCreateFlagBits =
-  "PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_EXT"
+enumPrefixPipelineColorBlendStateCreateFlagBits = "PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_EXT"
 
 showTablePipelineColorBlendStateCreateFlagBits :: [(PipelineColorBlendStateCreateFlagBits, String)]
 showTablePipelineColorBlendStateCreateFlagBits =
-  [(PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_EXT, "")]
+  [
+    ( PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_EXT
+    , ""
+    )
+  ]
 
 instance Show PipelineColorBlendStateCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixPipelineColorBlendStateCreateFlagBits
-                            showTablePipelineColorBlendStateCreateFlagBits
-                            conNamePipelineColorBlendStateCreateFlagBits
-                            (\(PipelineColorBlendStateCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineColorBlendStateCreateFlagBits
+      showTablePipelineColorBlendStateCreateFlagBits
+      conNamePipelineColorBlendStateCreateFlagBits
+      (\(PipelineColorBlendStateCreateFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read PipelineColorBlendStateCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixPipelineColorBlendStateCreateFlagBits
-                          showTablePipelineColorBlendStateCreateFlagBits
-                          conNamePipelineColorBlendStateCreateFlagBits
-                          PipelineColorBlendStateCreateFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineColorBlendStateCreateFlagBits
+      showTablePipelineColorBlendStateCreateFlagBits
+      conNamePipelineColorBlendStateCreateFlagBits
+      PipelineColorBlendStateCreateFlagBits

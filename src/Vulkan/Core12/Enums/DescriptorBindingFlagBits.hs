@@ -59,7 +59,8 @@ newtype DescriptorBindingFlagBits = DescriptorBindingFlagBits Flags
 -- concurrently by two threads. Descriptors with this flag set /can/ be
 -- updated concurrently with the set being bound to a command buffer in
 -- another thread, but not concurrently with the set being reset or freed.
-pattern DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT           = DescriptorBindingFlagBits 0x00000001
+pattern DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT = DescriptorBindingFlagBits 0x00000001
+
 -- | 'DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT' indicates that
 -- descriptors in this binding /can/ be updated after a command buffer has
 -- bound this descriptor set, or while a command buffer that uses this
@@ -76,6 +77,7 @@ pattern DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT           = DescriptorBindingFl
 -- then descriptors /can/ be updated as long as they are not statically
 -- used by any shader invocations.
 pattern DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT = DescriptorBindingFlagBits 0x00000002
+
 -- | 'DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT' indicates that descriptors in
 -- this binding that are not /dynamically used/ need not contain valid
 -- descriptors at the time the descriptors are consumed. A descriptor is
@@ -83,7 +85,8 @@ pattern DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT = DescriptorBindingFl
 -- performs any memory access using the descriptor. If a descriptor is not
 -- dynamically used, any resource referenced by the descriptor is not
 -- considered to be referenced during command execution.
-pattern DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT             = DescriptorBindingFlagBits 0x00000004
+pattern DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT = DescriptorBindingFlagBits 0x00000004
+
 -- | 'DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT' indicates that this
 -- is a /variable-sized descriptor binding/ whose size will be specified
 -- when a descriptor set is allocated using this layout. The value of
@@ -100,7 +103,7 @@ pattern DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT             = DescriptorBindingFl
 -- and
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxInlineUniformTotalSize maxInlineUniformTotalSize>
 -- limits instead.
-pattern DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT   = DescriptorBindingFlagBits 0x00000008
+pattern DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT = DescriptorBindingFlagBits 0x00000008
 
 conNameDescriptorBindingFlagBits :: String
 conNameDescriptorBindingFlagBits = "DescriptorBindingFlagBits"
@@ -110,22 +113,37 @@ enumPrefixDescriptorBindingFlagBits = "DESCRIPTOR_BINDING_"
 
 showTableDescriptorBindingFlagBits :: [(DescriptorBindingFlagBits, String)]
 showTableDescriptorBindingFlagBits =
-  [ (DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT          , "UPDATE_AFTER_BIND_BIT")
-  , (DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT, "UPDATE_UNUSED_WHILE_PENDING_BIT")
-  , (DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT            , "PARTIALLY_BOUND_BIT")
-  , (DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT  , "VARIABLE_DESCRIPTOR_COUNT_BIT")
+  [
+    ( DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT
+    , "UPDATE_AFTER_BIND_BIT"
+    )
+  ,
+    ( DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT
+    , "UPDATE_UNUSED_WHILE_PENDING_BIT"
+    )
+  ,
+    ( DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT
+    , "PARTIALLY_BOUND_BIT"
+    )
+  ,
+    ( DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT
+    , "VARIABLE_DESCRIPTOR_COUNT_BIT"
+    )
   ]
 
 instance Show DescriptorBindingFlagBits where
-  showsPrec = enumShowsPrec enumPrefixDescriptorBindingFlagBits
-                            showTableDescriptorBindingFlagBits
-                            conNameDescriptorBindingFlagBits
-                            (\(DescriptorBindingFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDescriptorBindingFlagBits
+      showTableDescriptorBindingFlagBits
+      conNameDescriptorBindingFlagBits
+      (\(DescriptorBindingFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read DescriptorBindingFlagBits where
-  readPrec = enumReadPrec enumPrefixDescriptorBindingFlagBits
-                          showTableDescriptorBindingFlagBits
-                          conNameDescriptorBindingFlagBits
-                          DescriptorBindingFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDescriptorBindingFlagBits
+      showTableDescriptorBindingFlagBits
+      conNameDescriptorBindingFlagBits
+      DescriptorBindingFlagBits

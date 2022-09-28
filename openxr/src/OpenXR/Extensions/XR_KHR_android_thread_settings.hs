@@ -154,7 +154,10 @@ setAndroidApplicationThreadKHR session threadType threadId = liftIO $ do
   unless (xrSetAndroidApplicationThreadKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrSetAndroidApplicationThreadKHR is null" Nothing Nothing
   let xrSetAndroidApplicationThreadKHR' = mkXrSetAndroidApplicationThreadKHR xrSetAndroidApplicationThreadKHRPtr
-  r <- traceAroundEvent "xrSetAndroidApplicationThreadKHR" (xrSetAndroidApplicationThreadKHR' (sessionHandle (session)) (threadType) (threadId))
+  r <- traceAroundEvent "xrSetAndroidApplicationThreadKHR" (xrSetAndroidApplicationThreadKHR'
+                                                              (sessionHandle (session))
+                                                              (threadType)
+                                                              (threadId))
   when (r < SUCCESS) (throwIO (OpenXrException r))
   pure $ (r)
 
@@ -168,26 +171,34 @@ setAndroidApplicationThreadKHR session threadType threadId = liftIO $ do
 -- 'setAndroidApplicationThreadKHR'
 newtype AndroidThreadTypeKHR = AndroidThreadTypeKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
+
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
 -- | 'ANDROID_THREAD_TYPE_APPLICATION_MAIN_KHR'
 -- hints the XR runtime that the thread is doing background CPU tasks
-pattern ANDROID_THREAD_TYPE_APPLICATION_MAIN_KHR   = AndroidThreadTypeKHR 1
+pattern ANDROID_THREAD_TYPE_APPLICATION_MAIN_KHR = AndroidThreadTypeKHR 1
+
 -- | 'ANDROID_THREAD_TYPE_APPLICATION_WORKER_KHR'
 -- hints the XR runtime that the thread is doing time critical CPU tasks
 pattern ANDROID_THREAD_TYPE_APPLICATION_WORKER_KHR = AndroidThreadTypeKHR 2
+
 -- | 'ANDROID_THREAD_TYPE_RENDERER_MAIN_KHR'
 -- hints the XR runtime that the thread is doing background graphics device
 -- tasks
-pattern ANDROID_THREAD_TYPE_RENDERER_MAIN_KHR      = AndroidThreadTypeKHR 3
+pattern ANDROID_THREAD_TYPE_RENDERER_MAIN_KHR = AndroidThreadTypeKHR 3
+
 -- | 'ANDROID_THREAD_TYPE_RENDERER_WORKER_KHR'
 -- hints the XR runtime that the thread is doing time critical graphics
 -- device tasks
-pattern ANDROID_THREAD_TYPE_RENDERER_WORKER_KHR    = AndroidThreadTypeKHR 4
-{-# complete ANDROID_THREAD_TYPE_APPLICATION_MAIN_KHR,
-             ANDROID_THREAD_TYPE_APPLICATION_WORKER_KHR,
-             ANDROID_THREAD_TYPE_RENDERER_MAIN_KHR,
-             ANDROID_THREAD_TYPE_RENDERER_WORKER_KHR :: AndroidThreadTypeKHR #-}
+pattern ANDROID_THREAD_TYPE_RENDERER_WORKER_KHR = AndroidThreadTypeKHR 4
+
+{-# COMPLETE
+  ANDROID_THREAD_TYPE_APPLICATION_MAIN_KHR
+  , ANDROID_THREAD_TYPE_APPLICATION_WORKER_KHR
+  , ANDROID_THREAD_TYPE_RENDERER_MAIN_KHR
+  , ANDROID_THREAD_TYPE_RENDERER_WORKER_KHR ::
+    AndroidThreadTypeKHR
+  #-}
 
 conNameAndroidThreadTypeKHR :: String
 conNameAndroidThreadTypeKHR = "AndroidThreadTypeKHR"
@@ -197,25 +208,40 @@ enumPrefixAndroidThreadTypeKHR = "ANDROID_THREAD_TYPE_"
 
 showTableAndroidThreadTypeKHR :: [(AndroidThreadTypeKHR, String)]
 showTableAndroidThreadTypeKHR =
-  [ (ANDROID_THREAD_TYPE_APPLICATION_MAIN_KHR  , "APPLICATION_MAIN_KHR")
-  , (ANDROID_THREAD_TYPE_APPLICATION_WORKER_KHR, "APPLICATION_WORKER_KHR")
-  , (ANDROID_THREAD_TYPE_RENDERER_MAIN_KHR     , "RENDERER_MAIN_KHR")
-  , (ANDROID_THREAD_TYPE_RENDERER_WORKER_KHR   , "RENDERER_WORKER_KHR")
+  [
+    ( ANDROID_THREAD_TYPE_APPLICATION_MAIN_KHR
+    , "APPLICATION_MAIN_KHR"
+    )
+  ,
+    ( ANDROID_THREAD_TYPE_APPLICATION_WORKER_KHR
+    , "APPLICATION_WORKER_KHR"
+    )
+  ,
+    ( ANDROID_THREAD_TYPE_RENDERER_MAIN_KHR
+    , "RENDERER_MAIN_KHR"
+    )
+  ,
+    ( ANDROID_THREAD_TYPE_RENDERER_WORKER_KHR
+    , "RENDERER_WORKER_KHR"
+    )
   ]
 
 instance Show AndroidThreadTypeKHR where
-  showsPrec = enumShowsPrec enumPrefixAndroidThreadTypeKHR
-                            showTableAndroidThreadTypeKHR
-                            conNameAndroidThreadTypeKHR
-                            (\(AndroidThreadTypeKHR x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixAndroidThreadTypeKHR
+      showTableAndroidThreadTypeKHR
+      conNameAndroidThreadTypeKHR
+      (\(AndroidThreadTypeKHR x) -> x)
+      (showsPrec 11)
 
 instance Read AndroidThreadTypeKHR where
-  readPrec = enumReadPrec enumPrefixAndroidThreadTypeKHR
-                          showTableAndroidThreadTypeKHR
-                          conNameAndroidThreadTypeKHR
-                          AndroidThreadTypeKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixAndroidThreadTypeKHR
+      showTableAndroidThreadTypeKHR
+      conNameAndroidThreadTypeKHR
+      AndroidThreadTypeKHR
 
 type KHR_android_thread_settings_SPEC_VERSION = 5
 

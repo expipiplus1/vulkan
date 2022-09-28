@@ -198,7 +198,9 @@ cmdCopyBuffer2 commandBuffer copyBufferInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyBuffer2 is null" Nothing Nothing
   let vkCmdCopyBuffer2' = mkVkCmdCopyBuffer2 vkCmdCopyBuffer2Ptr
   pCopyBufferInfo <- ContT $ withCStruct (copyBufferInfo)
-  lift $ traceAroundEvent "vkCmdCopyBuffer2" (vkCmdCopyBuffer2' (commandBufferHandle (commandBuffer)) pCopyBufferInfo)
+  lift $ traceAroundEvent "vkCmdCopyBuffer2" (vkCmdCopyBuffer2'
+                                                (commandBufferHandle (commandBuffer))
+                                                pCopyBufferInfo)
   pure $ ()
 
 
@@ -297,7 +299,9 @@ cmdCopyImage2 commandBuffer copyImageInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyImage2 is null" Nothing Nothing
   let vkCmdCopyImage2' = mkVkCmdCopyImage2 vkCmdCopyImage2Ptr
   pCopyImageInfo <- ContT $ withCStruct (copyImageInfo)
-  lift $ traceAroundEvent "vkCmdCopyImage2" (vkCmdCopyImage2' (commandBufferHandle (commandBuffer)) pCopyImageInfo)
+  lift $ traceAroundEvent "vkCmdCopyImage2" (vkCmdCopyImage2'
+                                               (commandBufferHandle (commandBuffer))
+                                               pCopyImageInfo)
   pure $ ()
 
 
@@ -395,7 +399,9 @@ cmdBlitImage2 commandBuffer blitImageInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBlitImage2 is null" Nothing Nothing
   let vkCmdBlitImage2' = mkVkCmdBlitImage2 vkCmdBlitImage2Ptr
   pBlitImageInfo <- ContT $ withCStruct (blitImageInfo)
-  lift $ traceAroundEvent "vkCmdBlitImage2" (vkCmdBlitImage2' (commandBufferHandle (commandBuffer)) pBlitImageInfo)
+  lift $ traceAroundEvent "vkCmdBlitImage2" (vkCmdBlitImage2'
+                                               (commandBufferHandle (commandBuffer))
+                                               pBlitImageInfo)
   pure $ ()
 
 
@@ -490,13 +496,16 @@ cmdCopyBufferToImage2 :: forall io
                          -- structure describing the copy parameters.
                          CopyBufferToImageInfo2
                       -> io ()
-cmdCopyBufferToImage2 commandBuffer copyBufferToImageInfo = liftIO . evalContT $ do
+cmdCopyBufferToImage2 commandBuffer
+                        copyBufferToImageInfo = liftIO . evalContT $ do
   let vkCmdCopyBufferToImage2Ptr = pVkCmdCopyBufferToImage2 (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyBufferToImage2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyBufferToImage2 is null" Nothing Nothing
   let vkCmdCopyBufferToImage2' = mkVkCmdCopyBufferToImage2 vkCmdCopyBufferToImage2Ptr
   pCopyBufferToImageInfo <- ContT $ withCStruct (copyBufferToImageInfo)
-  lift $ traceAroundEvent "vkCmdCopyBufferToImage2" (vkCmdCopyBufferToImage2' (commandBufferHandle (commandBuffer)) pCopyBufferToImageInfo)
+  lift $ traceAroundEvent "vkCmdCopyBufferToImage2" (vkCmdCopyBufferToImage2'
+                                                       (commandBufferHandle (commandBuffer))
+                                                       pCopyBufferToImageInfo)
   pure $ ()
 
 
@@ -591,13 +600,16 @@ cmdCopyImageToBuffer2 :: forall io
                          -- structure describing the copy parameters.
                          CopyImageToBufferInfo2
                       -> io ()
-cmdCopyImageToBuffer2 commandBuffer copyImageToBufferInfo = liftIO . evalContT $ do
+cmdCopyImageToBuffer2 commandBuffer
+                        copyImageToBufferInfo = liftIO . evalContT $ do
   let vkCmdCopyImageToBuffer2Ptr = pVkCmdCopyImageToBuffer2 (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyImageToBuffer2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyImageToBuffer2 is null" Nothing Nothing
   let vkCmdCopyImageToBuffer2' = mkVkCmdCopyImageToBuffer2 vkCmdCopyImageToBuffer2Ptr
   pCopyImageToBufferInfo <- ContT $ withCStruct (copyImageToBufferInfo)
-  lift $ traceAroundEvent "vkCmdCopyImageToBuffer2" (vkCmdCopyImageToBuffer2' (commandBufferHandle (commandBuffer)) pCopyImageToBufferInfo)
+  lift $ traceAroundEvent "vkCmdCopyImageToBuffer2" (vkCmdCopyImageToBuffer2'
+                                                       (commandBufferHandle (commandBuffer))
+                                                       pCopyImageToBufferInfo)
   pure $ ()
 
 
@@ -695,7 +707,9 @@ cmdResolveImage2 commandBuffer resolveImageInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdResolveImage2 is null" Nothing Nothing
   let vkCmdResolveImage2' = mkVkCmdResolveImage2 vkCmdResolveImage2Ptr
   pResolveImageInfo <- ContT $ withCStruct (resolveImageInfo)
-  lift $ traceAroundEvent "vkCmdResolveImage2" (vkCmdResolveImage2' (commandBufferHandle (commandBuffer)) pResolveImageInfo)
+  lift $ traceAroundEvent "vkCmdResolveImage2" (vkCmdResolveImage2'
+                                                  (commandBufferHandle (commandBuffer))
+                                                  pResolveImageInfo)
   pure $ ()
 
 
@@ -962,7 +976,8 @@ instance Extensible ImageBlit2 where
     | Just Refl <- eqT @e @CopyCommandTransformInfoQCOM = Just f
     | otherwise = Nothing
 
-instance (Extendss ImageBlit2 es, PokeChain es) => ToCStruct (ImageBlit2 es) where
+instance ( Extendss ImageBlit2 es
+         , PokeChain es ) => ToCStruct (ImageBlit2 es) where
   withCStruct x f = allocaBytes 96 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageBlit2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_BLIT_2)
@@ -1001,7 +1016,8 @@ instance (Extendss ImageBlit2 es, PokeChain es) => ToCStruct (ImageBlit2 es) whe
         poke (pDstOffsets' `plusPtr` 12 :: Ptr Offset3D) (e1)
     lift $ f
 
-instance (Extendss ImageBlit2 es, PeekChain es) => FromCStruct (ImageBlit2 es) where
+instance ( Extendss ImageBlit2 es
+         , PeekChain es ) => FromCStruct (ImageBlit2 es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -1014,7 +1030,11 @@ instance (Extendss ImageBlit2 es, PeekChain es) => FromCStruct (ImageBlit2 es) w
     dstOffsets0 <- peekCStruct @Offset3D ((pdstOffsets `advancePtrBytes` 0 :: Ptr Offset3D))
     dstOffsets1 <- peekCStruct @Offset3D ((pdstOffsets `advancePtrBytes` 12 :: Ptr Offset3D))
     pure $ ImageBlit2
-             next srcSubresource ((srcOffsets0, srcOffsets1)) dstSubresource ((dstOffsets0, dstOffsets1))
+             next
+             srcSubresource
+             ((srcOffsets0, srcOffsets1))
+             dstSubresource
+             ((dstOffsets0, dstOffsets1))
 
 instance es ~ '[] => Zero (ImageBlit2 es) where
   zero = ImageBlit2
@@ -1123,7 +1143,8 @@ instance Extensible BufferImageCopy2 where
     | Just Refl <- eqT @e @CopyCommandTransformInfoQCOM = Just f
     | otherwise = Nothing
 
-instance (Extendss BufferImageCopy2 es, PokeChain es) => ToCStruct (BufferImageCopy2 es) where
+instance ( Extendss BufferImageCopy2 es
+         , PokeChain es ) => ToCStruct (BufferImageCopy2 es) where
   withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferImageCopy2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2)
@@ -1150,7 +1171,8 @@ instance (Extendss BufferImageCopy2 es, PokeChain es) => ToCStruct (BufferImageC
     lift $ poke ((p `plusPtr` 60 :: Ptr Extent3D)) (zero)
     lift $ f
 
-instance (Extendss BufferImageCopy2 es, PeekChain es) => FromCStruct (BufferImageCopy2 es) where
+instance ( Extendss BufferImageCopy2 es
+         , PeekChain es ) => FromCStruct (BufferImageCopy2 es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -1161,7 +1183,13 @@ instance (Extendss BufferImageCopy2 es, PeekChain es) => FromCStruct (BufferImag
     imageOffset <- peekCStruct @Offset3D ((p `plusPtr` 48 :: Ptr Offset3D))
     imageExtent <- peekCStruct @Extent3D ((p `plusPtr` 60 :: Ptr Extent3D))
     pure $ BufferImageCopy2
-             next bufferOffset bufferRowLength bufferImageHeight imageSubresource imageOffset imageExtent
+             next
+             bufferOffset
+             bufferRowLength
+             bufferImageHeight
+             imageSubresource
+             imageOffset
+             imageExtent
 
 instance es ~ '[] => Zero (BufferImageCopy2 es) where
   zero = BufferImageCopy2

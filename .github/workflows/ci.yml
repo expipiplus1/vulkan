@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        ghc: ['9.0', '8.10', '8.8']
+        ghc: ['9.2', '9.0', '8.10', '8.8']
         os: [ubuntu-20.04, macOS-latest, windows-latest]
       fail-fast: false
 
@@ -238,7 +238,7 @@ jobs:
 
     strategy:
       matrix:
-        ghc: ['null', '"ghc902"']
+        ghc: ['null', '"ghc902"', '"ghc924"']
       fail-fast: false
 
     steps:
@@ -294,7 +294,7 @@ jobs:
         name: vulkan-haskell
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
 
-    - run: nix-build -A generate-new
+    - run: nix-build --argstr compiler ghc8107 -A generate-new
 
   nix-shell-profiling:
     runs-on: ubuntu-latest

@@ -132,7 +132,9 @@ getBufferOpaqueCaptureAddress device info = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetBufferOpaqueCaptureAddress is null" Nothing Nothing
   let vkGetBufferOpaqueCaptureAddress' = mkVkGetBufferOpaqueCaptureAddress vkGetBufferOpaqueCaptureAddressPtr
   pInfo <- ContT $ withCStruct (info)
-  r <- lift $ traceAroundEvent "vkGetBufferOpaqueCaptureAddress" (vkGetBufferOpaqueCaptureAddress' (deviceHandle (device)) pInfo)
+  r <- lift $ traceAroundEvent "vkGetBufferOpaqueCaptureAddress" (vkGetBufferOpaqueCaptureAddress'
+                                                                    (deviceHandle (device))
+                                                                    pInfo)
   pure $ (r)
 
 
@@ -212,7 +214,9 @@ getBufferDeviceAddress device info = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetBufferDeviceAddress is null" Nothing Nothing
   let vkGetBufferDeviceAddress' = mkVkGetBufferDeviceAddress vkGetBufferDeviceAddressPtr
   pInfo <- ContT $ withCStruct (info)
-  r <- lift $ traceAroundEvent "vkGetBufferDeviceAddress" (vkGetBufferDeviceAddress' (deviceHandle (device)) pInfo)
+  r <- lift $ traceAroundEvent "vkGetBufferDeviceAddress" (vkGetBufferDeviceAddress'
+                                                             (deviceHandle (device))
+                                                             pInfo)
   pure $ (r)
 
 
@@ -280,7 +284,9 @@ getDeviceMemoryOpaqueCaptureAddress device info = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceMemoryOpaqueCaptureAddress is null" Nothing Nothing
   let vkGetDeviceMemoryOpaqueCaptureAddress' = mkVkGetDeviceMemoryOpaqueCaptureAddress vkGetDeviceMemoryOpaqueCaptureAddressPtr
   pInfo <- ContT $ withCStruct (info)
-  r <- lift $ traceAroundEvent "vkGetDeviceMemoryOpaqueCaptureAddress" (vkGetDeviceMemoryOpaqueCaptureAddress' (deviceHandle (device)) pInfo)
+  r <- lift $ traceAroundEvent "vkGetDeviceMemoryOpaqueCaptureAddress" (vkGetDeviceMemoryOpaqueCaptureAddress'
+                                                                          (deviceHandle (device))
+                                                                          pInfo)
   pure $ (r)
 
 
@@ -369,7 +375,9 @@ instance FromCStruct PhysicalDeviceBufferDeviceAddressFeatures where
     bufferDeviceAddressCaptureReplay <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     bufferDeviceAddressMultiDevice <- peek @Bool32 ((p `plusPtr` 24 :: Ptr Bool32))
     pure $ PhysicalDeviceBufferDeviceAddressFeatures
-             (bool32ToBool bufferDeviceAddress) (bool32ToBool bufferDeviceAddressCaptureReplay) (bool32ToBool bufferDeviceAddressMultiDevice)
+             (bool32ToBool bufferDeviceAddress)
+             (bool32ToBool bufferDeviceAddressCaptureReplay)
+             (bool32ToBool bufferDeviceAddressMultiDevice)
 
 instance Storable PhysicalDeviceBufferDeviceAddressFeatures where
   sizeOf ~_ = 32

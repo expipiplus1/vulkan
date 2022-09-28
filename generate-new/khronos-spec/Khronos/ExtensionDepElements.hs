@@ -45,7 +45,8 @@ renderDeps exts = do
           let deps = siExtensionDeps exName
           depPatterns <- traverse (fmap fst . extensionPatterns) deps
           traverse_ tellImport (namePattern : depPatterns)
-          pure $ pretty namePattern <+> "->" <+> list (pretty <$> depPatterns)
+          pure $ pretty namePattern <+> "->" <+> align
+            (list (pretty <$> depPatterns))
   tellImport (TyConName ":::")
   tellImport ''ByteString
   tellExport (ETerm (TermName "extensionDependencies"))

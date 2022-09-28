@@ -98,7 +98,10 @@ foreign import ccall
 -- 'BufferMemoryRequirementsInfo2', 'Vulkan.Core10.Handles.Device',
 -- 'MemoryRequirements2'
 getBufferMemoryRequirements2 :: forall a io
-                              . (Extendss MemoryRequirements2 a, PokeChain a, PeekChain a, MonadIO io)
+                              . ( Extendss MemoryRequirements2 a
+                                , PokeChain a
+                                , PeekChain a
+                                , MonadIO io )
                              => -- | @device@ is the logical device that owns the buffer.
                                 --
                                 -- #VUID-vkGetBufferMemoryRequirements2-device-parameter# @device@ /must/
@@ -118,7 +121,10 @@ getBufferMemoryRequirements2 device info = liftIO . evalContT $ do
   let vkGetBufferMemoryRequirements2' = mkVkGetBufferMemoryRequirements2 vkGetBufferMemoryRequirements2Ptr
   pInfo <- ContT $ withCStruct (info)
   pPMemoryRequirements <- ContT (withZeroCStruct @(MemoryRequirements2 _))
-  lift $ traceAroundEvent "vkGetBufferMemoryRequirements2" (vkGetBufferMemoryRequirements2' (deviceHandle (device)) pInfo (forgetExtensions (pPMemoryRequirements)))
+  lift $ traceAroundEvent "vkGetBufferMemoryRequirements2" (vkGetBufferMemoryRequirements2'
+                                                              (deviceHandle (device))
+                                                              pInfo
+                                                              (forgetExtensions (pPMemoryRequirements)))
   pMemoryRequirements <- lift $ peekCStruct @(MemoryRequirements2 _) pPMemoryRequirements
   pure $ (pMemoryRequirements)
 
@@ -141,7 +147,12 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'ImageMemoryRequirementsInfo2',
 -- 'MemoryRequirements2'
 getImageMemoryRequirements2 :: forall a b io
-                             . (Extendss ImageMemoryRequirementsInfo2 a, PokeChain a, Extendss MemoryRequirements2 b, PokeChain b, PeekChain b, MonadIO io)
+                             . ( Extendss ImageMemoryRequirementsInfo2 a
+                               , PokeChain a
+                               , Extendss MemoryRequirements2 b
+                               , PokeChain b
+                               , PeekChain b
+                               , MonadIO io )
                             => -- | @device@ is the logical device that owns the image.
                                --
                                -- #VUID-vkGetImageMemoryRequirements2-device-parameter# @device@ /must/ be
@@ -161,7 +172,10 @@ getImageMemoryRequirements2 device info = liftIO . evalContT $ do
   let vkGetImageMemoryRequirements2' = mkVkGetImageMemoryRequirements2 vkGetImageMemoryRequirements2Ptr
   pInfo <- ContT $ withCStruct (info)
   pPMemoryRequirements <- ContT (withZeroCStruct @(MemoryRequirements2 _))
-  lift $ traceAroundEvent "vkGetImageMemoryRequirements2" (vkGetImageMemoryRequirements2' (deviceHandle (device)) (forgetExtensions pInfo) (forgetExtensions (pPMemoryRequirements)))
+  lift $ traceAroundEvent "vkGetImageMemoryRequirements2" (vkGetImageMemoryRequirements2'
+                                                             (deviceHandle (device))
+                                                             (forgetExtensions pInfo)
+                                                             (forgetExtensions (pPMemoryRequirements)))
   pMemoryRequirements <- lift $ peekCStruct @(MemoryRequirements2 _) pPMemoryRequirements
   pure $ (pMemoryRequirements)
 
@@ -217,11 +231,19 @@ getImageSparseMemoryRequirements2 device info = liftIO . evalContT $ do
   let device' = deviceHandle (device)
   pInfo <- ContT $ withCStruct (info)
   pPSparseMemoryRequirementCount <- ContT $ bracket (callocBytes @Word32 4) free
-  lift $ traceAroundEvent "vkGetImageSparseMemoryRequirements2" (vkGetImageSparseMemoryRequirements2' device' pInfo (pPSparseMemoryRequirementCount) (nullPtr))
+  lift $ traceAroundEvent "vkGetImageSparseMemoryRequirements2" (vkGetImageSparseMemoryRequirements2'
+                                                                   device'
+                                                                   pInfo
+                                                                   (pPSparseMemoryRequirementCount)
+                                                                   (nullPtr))
   pSparseMemoryRequirementCount <- lift $ peek @Word32 pPSparseMemoryRequirementCount
   pPSparseMemoryRequirements <- ContT $ bracket (callocBytes @SparseImageMemoryRequirements2 ((fromIntegral (pSparseMemoryRequirementCount)) * 64)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPSparseMemoryRequirements `advancePtrBytes` (i * 64) :: Ptr SparseImageMemoryRequirements2) . ($ ())) [0..(fromIntegral (pSparseMemoryRequirementCount)) - 1]
-  lift $ traceAroundEvent "vkGetImageSparseMemoryRequirements2" (vkGetImageSparseMemoryRequirements2' device' pInfo (pPSparseMemoryRequirementCount) ((pPSparseMemoryRequirements)))
+  lift $ traceAroundEvent "vkGetImageSparseMemoryRequirements2" (vkGetImageSparseMemoryRequirements2'
+                                                                   device'
+                                                                   pInfo
+                                                                   (pPSparseMemoryRequirementCount)
+                                                                   ((pPSparseMemoryRequirements)))
   pSparseMemoryRequirementCount' <- lift $ peek @Word32 pPSparseMemoryRequirementCount
   pSparseMemoryRequirements' <- lift $ generateM (fromIntegral (pSparseMemoryRequirementCount')) (\i -> peekCStruct @SparseImageMemoryRequirements2 (((pPSparseMemoryRequirements) `advancePtrBytes` (64 * (i)) :: Ptr SparseImageMemoryRequirements2)))
   pure $ (pSparseMemoryRequirements')
@@ -368,7 +390,8 @@ instance Extensible ImageMemoryRequirementsInfo2 where
     | Just Refl <- eqT @e @ImagePlaneMemoryRequirementsInfo = Just f
     | otherwise = Nothing
 
-instance (Extendss ImageMemoryRequirementsInfo2 es, PokeChain es) => ToCStruct (ImageMemoryRequirementsInfo2 es) where
+instance ( Extendss ImageMemoryRequirementsInfo2 es
+         , PokeChain es ) => ToCStruct (ImageMemoryRequirementsInfo2 es) where
   withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageMemoryRequirementsInfo2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2)
@@ -385,7 +408,8 @@ instance (Extendss ImageMemoryRequirementsInfo2 es, PokeChain es) => ToCStruct (
     lift $ poke ((p `plusPtr` 16 :: Ptr Image)) (zero)
     lift $ f
 
-instance (Extendss ImageMemoryRequirementsInfo2 es, PeekChain es) => FromCStruct (ImageMemoryRequirementsInfo2 es) where
+instance ( Extendss ImageMemoryRequirementsInfo2 es
+         , PeekChain es ) => FromCStruct (ImageMemoryRequirementsInfo2 es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -505,7 +529,8 @@ instance Extensible MemoryRequirements2 where
     | Just Refl <- eqT @e @MemoryDedicatedRequirements = Just f
     | otherwise = Nothing
 
-instance (Extendss MemoryRequirements2 es, PokeChain es) => ToCStruct (MemoryRequirements2 es) where
+instance ( Extendss MemoryRequirements2 es
+         , PokeChain es ) => ToCStruct (MemoryRequirements2 es) where
   withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryRequirements2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2)
@@ -522,7 +547,8 @@ instance (Extendss MemoryRequirements2 es, PokeChain es) => ToCStruct (MemoryReq
     lift $ poke ((p `plusPtr` 16 :: Ptr MemoryRequirements)) (zero)
     lift $ f
 
-instance (Extendss MemoryRequirements2 es, PeekChain es) => FromCStruct (MemoryRequirements2 es) where
+instance ( Extendss MemoryRequirements2 es
+         , PeekChain es ) => FromCStruct (MemoryRequirements2 es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

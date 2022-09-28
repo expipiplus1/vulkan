@@ -341,7 +341,8 @@ instance FromCStruct PhysicalDeviceRayTracingMotionBlurFeaturesNV where
     rayTracingMotionBlur <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     rayTracingMotionBlurPipelineTraceRaysIndirect <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ PhysicalDeviceRayTracingMotionBlurFeaturesNV
-             (bool32ToBool rayTracingMotionBlur) (bool32ToBool rayTracingMotionBlurPipelineTraceRaysIndirect)
+             (bool32ToBool rayTracingMotionBlur)
+             (bool32ToBool rayTracingMotionBlurPipelineTraceRaysIndirect)
 
 instance Storable PhysicalDeviceRayTracingMotionBlurFeaturesNV where
   sizeOf ~_ = 24
@@ -620,7 +621,22 @@ instance FromCStruct SRTDataNV where
     ty <- peek @CFloat ((p `plusPtr` 56 :: Ptr CFloat))
     tz <- peek @CFloat ((p `plusPtr` 60 :: Ptr CFloat))
     pure $ SRTDataNV
-             (coerce @CFloat @Float sx) (coerce @CFloat @Float a) (coerce @CFloat @Float b) (coerce @CFloat @Float pvx) (coerce @CFloat @Float sy) (coerce @CFloat @Float c) (coerce @CFloat @Float pvy) (coerce @CFloat @Float sz) (coerce @CFloat @Float pvz) (coerce @CFloat @Float qx) (coerce @CFloat @Float qy) (coerce @CFloat @Float qz) (coerce @CFloat @Float qw) (coerce @CFloat @Float tx) (coerce @CFloat @Float ty) (coerce @CFloat @Float tz)
+             (coerce @CFloat @Float sx)
+             (coerce @CFloat @Float a)
+             (coerce @CFloat @Float b)
+             (coerce @CFloat @Float pvx)
+             (coerce @CFloat @Float sy)
+             (coerce @CFloat @Float c)
+             (coerce @CFloat @Float pvy)
+             (coerce @CFloat @Float sz)
+             (coerce @CFloat @Float pvz)
+             (coerce @CFloat @Float qx)
+             (coerce @CFloat @Float qy)
+             (coerce @CFloat @Float qz)
+             (coerce @CFloat @Float qw)
+             (coerce @CFloat @Float tx)
+             (coerce @CFloat @Float ty)
+             (coerce @CFloat @Float tz)
 
 instance Storable SRTDataNV where
   sizeOf ~_ = 64
@@ -767,7 +783,13 @@ instance FromCStruct AccelerationStructureSRTMotionInstanceNV where
     let flags' = ((((flags `shiftR` 24)) .&. coerce @Word32 0xff))
     accelerationStructureReference <- peek @Word64 ((p `plusPtr` 136 :: Ptr Word64))
     pure $ AccelerationStructureSRTMotionInstanceNV
-             transformT0 transformT1 instanceCustomIndex' mask' instanceShaderBindingTableRecordOffset' flags' accelerationStructureReference
+             transformT0
+             transformT1
+             instanceCustomIndex'
+             mask'
+             instanceShaderBindingTableRecordOffset'
+             flags'
+             accelerationStructureReference
 
 instance Storable AccelerationStructureSRTMotionInstanceNV where
   sizeOf ~_ = 144
@@ -909,7 +931,13 @@ instance FromCStruct AccelerationStructureMatrixMotionInstanceNV where
     let flags' = ((((flags `shiftR` 24)) .&. coerce @Word32 0xff))
     accelerationStructureReference <- peek @Word64 ((p `plusPtr` 104 :: Ptr Word64))
     pure $ AccelerationStructureMatrixMotionInstanceNV
-             transformT0 transformT1 instanceCustomIndex' mask' instanceShaderBindingTableRecordOffset' flags' accelerationStructureReference
+             transformT0
+             transformT1
+             instanceCustomIndex'
+             mask'
+             instanceShaderBindingTableRecordOffset'
+             flags'
+             accelerationStructureReference
 
 instance Storable AccelerationStructureMatrixMotionInstanceNV where
   sizeOf ~_ = 112
@@ -1047,8 +1075,6 @@ instance Zero AccelerationStructureMotionInstanceDataNV where
 newtype AccelerationStructureMotionInfoFlagsNV = AccelerationStructureMotionInfoFlagsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameAccelerationStructureMotionInfoFlagsNV :: String
 conNameAccelerationStructureMotionInfoFlagsNV = "AccelerationStructureMotionInfoFlagsNV"
 
@@ -1059,18 +1085,21 @@ showTableAccelerationStructureMotionInfoFlagsNV :: [(AccelerationStructureMotion
 showTableAccelerationStructureMotionInfoFlagsNV = []
 
 instance Show AccelerationStructureMotionInfoFlagsNV where
-  showsPrec = enumShowsPrec enumPrefixAccelerationStructureMotionInfoFlagsNV
-                            showTableAccelerationStructureMotionInfoFlagsNV
-                            conNameAccelerationStructureMotionInfoFlagsNV
-                            (\(AccelerationStructureMotionInfoFlagsNV x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixAccelerationStructureMotionInfoFlagsNV
+      showTableAccelerationStructureMotionInfoFlagsNV
+      conNameAccelerationStructureMotionInfoFlagsNV
+      (\(AccelerationStructureMotionInfoFlagsNV x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read AccelerationStructureMotionInfoFlagsNV where
-  readPrec = enumReadPrec enumPrefixAccelerationStructureMotionInfoFlagsNV
-                          showTableAccelerationStructureMotionInfoFlagsNV
-                          conNameAccelerationStructureMotionInfoFlagsNV
-                          AccelerationStructureMotionInfoFlagsNV
-
+  readPrec =
+    enumReadPrec
+      enumPrefixAccelerationStructureMotionInfoFlagsNV
+      showTableAccelerationStructureMotionInfoFlagsNV
+      conNameAccelerationStructureMotionInfoFlagsNV
+      AccelerationStructureMotionInfoFlagsNV
 
 -- | VkAccelerationStructureMotionInstanceFlagsNV - Reserved for future use
 --
@@ -1086,8 +1115,6 @@ instance Read AccelerationStructureMotionInfoFlagsNV where
 newtype AccelerationStructureMotionInstanceFlagsNV = AccelerationStructureMotionInstanceFlagsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameAccelerationStructureMotionInstanceFlagsNV :: String
 conNameAccelerationStructureMotionInstanceFlagsNV = "AccelerationStructureMotionInstanceFlagsNV"
 
@@ -1098,18 +1125,21 @@ showTableAccelerationStructureMotionInstanceFlagsNV :: [(AccelerationStructureMo
 showTableAccelerationStructureMotionInstanceFlagsNV = []
 
 instance Show AccelerationStructureMotionInstanceFlagsNV where
-  showsPrec = enumShowsPrec enumPrefixAccelerationStructureMotionInstanceFlagsNV
-                            showTableAccelerationStructureMotionInstanceFlagsNV
-                            conNameAccelerationStructureMotionInstanceFlagsNV
-                            (\(AccelerationStructureMotionInstanceFlagsNV x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixAccelerationStructureMotionInstanceFlagsNV
+      showTableAccelerationStructureMotionInstanceFlagsNV
+      conNameAccelerationStructureMotionInstanceFlagsNV
+      (\(AccelerationStructureMotionInstanceFlagsNV x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read AccelerationStructureMotionInstanceFlagsNV where
-  readPrec = enumReadPrec enumPrefixAccelerationStructureMotionInstanceFlagsNV
-                          showTableAccelerationStructureMotionInstanceFlagsNV
-                          conNameAccelerationStructureMotionInstanceFlagsNV
-                          AccelerationStructureMotionInstanceFlagsNV
-
+  readPrec =
+    enumReadPrec
+      enumPrefixAccelerationStructureMotionInstanceFlagsNV
+      showTableAccelerationStructureMotionInstanceFlagsNV
+      conNameAccelerationStructureMotionInstanceFlagsNV
+      AccelerationStructureMotionInstanceFlagsNV
 
 -- | VkAccelerationStructureMotionInstanceTypeNV - Enum specifying a type of
 -- acceleration structure motion instance data for building into an
@@ -1124,18 +1154,24 @@ newtype AccelerationStructureMotionInstanceTypeNV = AccelerationStructureMotionI
 
 -- | 'ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_STATIC_NV' specifies that
 -- the instance is a static instance with no instance motion.
-pattern ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_STATIC_NV        = AccelerationStructureMotionInstanceTypeNV 0
+pattern ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_STATIC_NV = AccelerationStructureMotionInstanceTypeNV 0
+
 -- | 'ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_MATRIX_MOTION_NV' specifies
 -- that the instance is a motion instance with motion specified by
 -- interpolation between two matrices.
 pattern ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_MATRIX_MOTION_NV = AccelerationStructureMotionInstanceTypeNV 1
+
 -- | 'ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_SRT_MOTION_NV' specifies
 -- that the instance is a motion instance with motion specified by
 -- interpolation in the SRT decomposition.
-pattern ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_SRT_MOTION_NV    = AccelerationStructureMotionInstanceTypeNV 2
-{-# complete ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_STATIC_NV,
-             ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_MATRIX_MOTION_NV,
-             ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_SRT_MOTION_NV :: AccelerationStructureMotionInstanceTypeNV #-}
+pattern ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_SRT_MOTION_NV = AccelerationStructureMotionInstanceTypeNV 2
+
+{-# COMPLETE
+  ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_STATIC_NV
+  , ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_MATRIX_MOTION_NV
+  , ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_SRT_MOTION_NV ::
+    AccelerationStructureMotionInstanceTypeNV
+  #-}
 
 conNameAccelerationStructureMotionInstanceTypeNV :: String
 conNameAccelerationStructureMotionInstanceTypeNV = "AccelerationStructureMotionInstanceTypeNV"
@@ -1145,24 +1181,36 @@ enumPrefixAccelerationStructureMotionInstanceTypeNV = "ACCELERATION_STRUCTURE_MO
 
 showTableAccelerationStructureMotionInstanceTypeNV :: [(AccelerationStructureMotionInstanceTypeNV, String)]
 showTableAccelerationStructureMotionInstanceTypeNV =
-  [ (ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_STATIC_NV       , "STATIC_NV")
-  , (ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_MATRIX_MOTION_NV, "MATRIX_MOTION_NV")
-  , (ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_SRT_MOTION_NV   , "SRT_MOTION_NV")
+  [
+    ( ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_STATIC_NV
+    , "STATIC_NV"
+    )
+  ,
+    ( ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_MATRIX_MOTION_NV
+    , "MATRIX_MOTION_NV"
+    )
+  ,
+    ( ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_SRT_MOTION_NV
+    , "SRT_MOTION_NV"
+    )
   ]
 
 instance Show AccelerationStructureMotionInstanceTypeNV where
-  showsPrec = enumShowsPrec enumPrefixAccelerationStructureMotionInstanceTypeNV
-                            showTableAccelerationStructureMotionInstanceTypeNV
-                            conNameAccelerationStructureMotionInstanceTypeNV
-                            (\(AccelerationStructureMotionInstanceTypeNV x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixAccelerationStructureMotionInstanceTypeNV
+      showTableAccelerationStructureMotionInstanceTypeNV
+      conNameAccelerationStructureMotionInstanceTypeNV
+      (\(AccelerationStructureMotionInstanceTypeNV x) -> x)
+      (showsPrec 11)
 
 instance Read AccelerationStructureMotionInstanceTypeNV where
-  readPrec = enumReadPrec enumPrefixAccelerationStructureMotionInstanceTypeNV
-                          showTableAccelerationStructureMotionInstanceTypeNV
-                          conNameAccelerationStructureMotionInstanceTypeNV
-                          AccelerationStructureMotionInstanceTypeNV
-
+  readPrec =
+    enumReadPrec
+      enumPrefixAccelerationStructureMotionInstanceTypeNV
+      showTableAccelerationStructureMotionInstanceTypeNV
+      conNameAccelerationStructureMotionInstanceTypeNV
+      AccelerationStructureMotionInstanceTypeNV
 
 type NV_RAY_TRACING_MOTION_BLUR_SPEC_VERSION = 1
 

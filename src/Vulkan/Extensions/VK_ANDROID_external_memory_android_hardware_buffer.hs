@@ -401,7 +401,10 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ANDROID_external_memory_android_hardware_buffer VK_ANDROID_external_memory_android_hardware_buffer>,
 -- 'AndroidHardwareBufferPropertiesANDROID', 'Vulkan.Core10.Handles.Device'
 getAndroidHardwareBufferPropertiesANDROID :: forall a io
-                                           . (Extendss AndroidHardwareBufferPropertiesANDROID a, PokeChain a, PeekChain a, MonadIO io)
+                                           . ( Extendss AndroidHardwareBufferPropertiesANDROID a
+                                             , PokeChain a
+                                             , PeekChain a
+                                             , MonadIO io )
                                           => -- | @device@ is the logical device that will be importing @buffer@.
                                              --
                                              -- #VUID-vkGetAndroidHardwareBufferPropertiesANDROID-device-parameter#
@@ -418,13 +421,17 @@ getAndroidHardwareBufferPropertiesANDROID :: forall a io
                                              -- @buffer@ /must/ be a valid pointer to a valid 'AHardwareBuffer' value
                                              (Ptr AHardwareBuffer)
                                           -> io (AndroidHardwareBufferPropertiesANDROID a)
-getAndroidHardwareBufferPropertiesANDROID device buffer = liftIO . evalContT $ do
+getAndroidHardwareBufferPropertiesANDROID device
+                                            buffer = liftIO . evalContT $ do
   let vkGetAndroidHardwareBufferPropertiesANDROIDPtr = pVkGetAndroidHardwareBufferPropertiesANDROID (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetAndroidHardwareBufferPropertiesANDROIDPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetAndroidHardwareBufferPropertiesANDROID is null" Nothing Nothing
   let vkGetAndroidHardwareBufferPropertiesANDROID' = mkVkGetAndroidHardwareBufferPropertiesANDROID vkGetAndroidHardwareBufferPropertiesANDROIDPtr
   pPProperties <- ContT (withZeroCStruct @(AndroidHardwareBufferPropertiesANDROID _))
-  r <- lift $ traceAroundEvent "vkGetAndroidHardwareBufferPropertiesANDROID" (vkGetAndroidHardwareBufferPropertiesANDROID' (deviceHandle (device)) (buffer) (forgetExtensions (pPProperties)))
+  r <- lift $ traceAroundEvent "vkGetAndroidHardwareBufferPropertiesANDROID" (vkGetAndroidHardwareBufferPropertiesANDROID'
+                                                                                (deviceHandle (device))
+                                                                                (buffer)
+                                                                                (forgetExtensions (pPProperties)))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pProperties <- lift $ peekCStruct @(AndroidHardwareBufferPropertiesANDROID _) pPProperties
   pure $ (pProperties)
@@ -494,7 +501,10 @@ getMemoryAndroidHardwareBufferANDROID device info = liftIO . evalContT $ do
   let vkGetMemoryAndroidHardwareBufferANDROID' = mkVkGetMemoryAndroidHardwareBufferANDROID vkGetMemoryAndroidHardwareBufferANDROIDPtr
   pInfo <- ContT $ withCStruct (info)
   pPBuffer <- ContT $ bracket (callocBytes @(Ptr AHardwareBuffer) 8) free
-  r <- lift $ traceAroundEvent "vkGetMemoryAndroidHardwareBufferANDROID" (vkGetMemoryAndroidHardwareBufferANDROID' (deviceHandle (device)) pInfo (pPBuffer))
+  r <- lift $ traceAroundEvent "vkGetMemoryAndroidHardwareBufferANDROID" (vkGetMemoryAndroidHardwareBufferANDROID'
+                                                                            (deviceHandle (device))
+                                                                            pInfo
+                                                                            (pPBuffer))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pBuffer <- lift $ peek @(Ptr AHardwareBuffer) pPBuffer
   pure $ (pBuffer)
@@ -703,7 +713,8 @@ instance Extensible AndroidHardwareBufferPropertiesANDROID where
     | Just Refl <- eqT @e @AndroidHardwareBufferFormatPropertiesANDROID = Just f
     | otherwise = Nothing
 
-instance (Extendss AndroidHardwareBufferPropertiesANDROID es, PokeChain es) => ToCStruct (AndroidHardwareBufferPropertiesANDROID es) where
+instance ( Extendss AndroidHardwareBufferPropertiesANDROID es
+         , PokeChain es ) => ToCStruct (AndroidHardwareBufferPropertiesANDROID es) where
   withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AndroidHardwareBufferPropertiesANDROID{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_PROPERTIES_ANDROID)
@@ -722,7 +733,8 @@ instance (Extendss AndroidHardwareBufferPropertiesANDROID es, PokeChain es) => T
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
     lift $ f
 
-instance (Extendss AndroidHardwareBufferPropertiesANDROID es, PeekChain es) => FromCStruct (AndroidHardwareBufferPropertiesANDROID es) where
+instance ( Extendss AndroidHardwareBufferPropertiesANDROID es
+         , PeekChain es ) => FromCStruct (AndroidHardwareBufferPropertiesANDROID es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -990,7 +1002,14 @@ instance FromCStruct AndroidHardwareBufferFormatPropertiesANDROID where
     suggestedXChromaOffset <- peek @ChromaLocation ((p `plusPtr` 60 :: Ptr ChromaLocation))
     suggestedYChromaOffset <- peek @ChromaLocation ((p `plusPtr` 64 :: Ptr ChromaLocation))
     pure $ AndroidHardwareBufferFormatPropertiesANDROID
-             format externalFormat formatFeatures samplerYcbcrConversionComponents suggestedYcbcrModel suggestedYcbcrRange suggestedXChromaOffset suggestedYChromaOffset
+             format
+             externalFormat
+             formatFeatures
+             samplerYcbcrConversionComponents
+             suggestedYcbcrModel
+             suggestedYcbcrRange
+             suggestedXChromaOffset
+             suggestedYChromaOffset
 
 instance Storable AndroidHardwareBufferFormatPropertiesANDROID where
   sizeOf ~_ = 72
@@ -1168,7 +1187,14 @@ instance FromCStruct AndroidHardwareBufferFormatProperties2ANDROID where
     suggestedXChromaOffset <- peek @ChromaLocation ((p `plusPtr` 64 :: Ptr ChromaLocation))
     suggestedYChromaOffset <- peek @ChromaLocation ((p `plusPtr` 68 :: Ptr ChromaLocation))
     pure $ AndroidHardwareBufferFormatProperties2ANDROID
-             format externalFormat formatFeatures samplerYcbcrConversionComponents suggestedYcbcrModel suggestedYcbcrRange suggestedXChromaOffset suggestedYChromaOffset
+             format
+             externalFormat
+             formatFeatures
+             samplerYcbcrConversionComponents
+             suggestedYcbcrModel
+             suggestedYcbcrRange
+             suggestedXChromaOffset
+             suggestedYChromaOffset
 
 instance Storable AndroidHardwareBufferFormatProperties2ANDROID where
   sizeOf ~_ = 72

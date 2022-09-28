@@ -29,7 +29,8 @@ newtype SubpassContents = SubpassContents Int32
 -- | 'SUBPASS_CONTENTS_INLINE' specifies that the contents of the subpass
 -- will be recorded inline in the primary command buffer, and secondary
 -- command buffers /must/ not be executed within the subpass.
-pattern SUBPASS_CONTENTS_INLINE                    = SubpassContents 0
+pattern SUBPASS_CONTENTS_INLINE = SubpassContents 0
+
 -- | 'SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS' specifies that the contents
 -- are recorded in secondary command buffers that will be called from the
 -- primary command buffer, and
@@ -38,8 +39,12 @@ pattern SUBPASS_CONTENTS_INLINE                    = SubpassContents 0
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdNextSubpass' or
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdEndRenderPass'.
 pattern SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS = SubpassContents 1
-{-# complete SUBPASS_CONTENTS_INLINE,
-             SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS :: SubpassContents #-}
+
+{-# COMPLETE
+  SUBPASS_CONTENTS_INLINE
+  , SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS ::
+    SubpassContents
+  #-}
 
 conNameSubpassContents :: String
 conNameSubpassContents = "SubpassContents"
@@ -49,15 +54,26 @@ enumPrefixSubpassContents = "SUBPASS_CONTENTS_"
 
 showTableSubpassContents :: [(SubpassContents, String)]
 showTableSubpassContents =
-  [(SUBPASS_CONTENTS_INLINE, "INLINE"), (SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS, "SECONDARY_COMMAND_BUFFERS")]
+  [ (SUBPASS_CONTENTS_INLINE, "INLINE")
+  ,
+    ( SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS
+    , "SECONDARY_COMMAND_BUFFERS"
+    )
+  ]
 
 instance Show SubpassContents where
-  showsPrec = enumShowsPrec enumPrefixSubpassContents
-                            showTableSubpassContents
-                            conNameSubpassContents
-                            (\(SubpassContents x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixSubpassContents
+      showTableSubpassContents
+      conNameSubpassContents
+      (\(SubpassContents x) -> x)
+      (showsPrec 11)
 
 instance Read SubpassContents where
-  readPrec = enumReadPrec enumPrefixSubpassContents showTableSubpassContents conNameSubpassContents SubpassContents
-
+  readPrec =
+    enumReadPrec
+      enumPrefixSubpassContents
+      showTableSubpassContents
+      conNameSubpassContents
+      SubpassContents

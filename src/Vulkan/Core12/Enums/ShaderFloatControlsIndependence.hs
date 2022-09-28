@@ -31,15 +31,21 @@ newtype ShaderFloatControlsIndependence = ShaderFloatControlsIndependence Int32
 -- float controls for 32-bit floating point /can/ be set independently;
 -- other bit widths /must/ be set identically to each other.
 pattern SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY = ShaderFloatControlsIndependence 0
+
 -- | 'SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL' specifies that shader float
 -- controls for all bit widths /can/ be set independently.
-pattern SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL         = ShaderFloatControlsIndependence 1
+pattern SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL = ShaderFloatControlsIndependence 1
+
 -- | 'SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE' specifies that shader float
 -- controls for all bit widths /must/ be set identically.
-pattern SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE        = ShaderFloatControlsIndependence 2
-{-# complete SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY,
-             SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL,
-             SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE :: ShaderFloatControlsIndependence #-}
+pattern SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE = ShaderFloatControlsIndependence 2
+
+{-# COMPLETE
+  SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY
+  , SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL
+  , SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE ::
+    ShaderFloatControlsIndependence
+  #-}
 
 conNameShaderFloatControlsIndependence :: String
 conNameShaderFloatControlsIndependence = "ShaderFloatControlsIndependence"
@@ -49,21 +55,33 @@ enumPrefixShaderFloatControlsIndependence = "SHADER_FLOAT_CONTROLS_INDEPENDENCE_
 
 showTableShaderFloatControlsIndependence :: [(ShaderFloatControlsIndependence, String)]
 showTableShaderFloatControlsIndependence =
-  [ (SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY, "32_BIT_ONLY")
-  , (SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL        , "ALL")
-  , (SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE       , "NONE")
+  [
+    ( SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY
+    , "32_BIT_ONLY"
+    )
+  ,
+    ( SHADER_FLOAT_CONTROLS_INDEPENDENCE_ALL
+    , "ALL"
+    )
+  ,
+    ( SHADER_FLOAT_CONTROLS_INDEPENDENCE_NONE
+    , "NONE"
+    )
   ]
 
 instance Show ShaderFloatControlsIndependence where
-  showsPrec = enumShowsPrec enumPrefixShaderFloatControlsIndependence
-                            showTableShaderFloatControlsIndependence
-                            conNameShaderFloatControlsIndependence
-                            (\(ShaderFloatControlsIndependence x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixShaderFloatControlsIndependence
+      showTableShaderFloatControlsIndependence
+      conNameShaderFloatControlsIndependence
+      (\(ShaderFloatControlsIndependence x) -> x)
+      (showsPrec 11)
 
 instance Read ShaderFloatControlsIndependence where
-  readPrec = enumReadPrec enumPrefixShaderFloatControlsIndependence
-                          showTableShaderFloatControlsIndependence
-                          conNameShaderFloatControlsIndependence
-                          ShaderFloatControlsIndependence
-
+  readPrec =
+    enumReadPrec
+      enumPrefixShaderFloatControlsIndependence
+      showTableShaderFloatControlsIndependence
+      conNameShaderFloatControlsIndependence
+      ShaderFloatControlsIndependence

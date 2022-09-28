@@ -225,12 +225,19 @@ waitForPresentKHRSafeOrUnsafe :: forall io
                                  -- nanosecond, and /may/ be longer than the requested period.
                                  ("timeout" ::: Word64)
                               -> io (Result)
-waitForPresentKHRSafeOrUnsafe mkVkWaitForPresentKHR device swapchain presentId timeout = liftIO $ do
+waitForPresentKHRSafeOrUnsafe mkVkWaitForPresentKHR device
+                                                      swapchain
+                                                      presentId
+                                                      timeout = liftIO $ do
   let vkWaitForPresentKHRPtr = pVkWaitForPresentKHR (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkWaitForPresentKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkWaitForPresentKHR is null" Nothing Nothing
   let vkWaitForPresentKHR' = mkVkWaitForPresentKHR vkWaitForPresentKHRPtr
-  r <- traceAroundEvent "vkWaitForPresentKHR" (vkWaitForPresentKHR' (deviceHandle (device)) (swapchain) (presentId) (timeout))
+  r <- traceAroundEvent "vkWaitForPresentKHR" (vkWaitForPresentKHR'
+                                                 (deviceHandle (device))
+                                                 (swapchain)
+                                                 (presentId)
+                                                 (timeout))
   when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 

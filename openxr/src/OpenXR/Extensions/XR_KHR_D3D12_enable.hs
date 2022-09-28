@@ -179,7 +179,10 @@ getD3D12GraphicsRequirementsKHR instance' systemId = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetD3D12GraphicsRequirementsKHR is null" Nothing Nothing
   let xrGetD3D12GraphicsRequirementsKHR' = mkXrGetD3D12GraphicsRequirementsKHR xrGetD3D12GraphicsRequirementsKHRPtr
   pGraphicsRequirements <- ContT (withZeroCStruct @GraphicsRequirementsD3D12KHR)
-  r <- lift $ traceAroundEvent "xrGetD3D12GraphicsRequirementsKHR" (xrGetD3D12GraphicsRequirementsKHR' (instanceHandle (instance')) (systemId) (pGraphicsRequirements))
+  r <- lift $ traceAroundEvent "xrGetD3D12GraphicsRequirementsKHR" (xrGetD3D12GraphicsRequirementsKHR'
+                                                                      (instanceHandle (instance'))
+                                                                      (systemId)
+                                                                      (pGraphicsRequirements))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   graphicsRequirements <- lift $ peekCStruct @GraphicsRequirementsD3D12KHR pGraphicsRequirements
   pure $ (graphicsRequirements)

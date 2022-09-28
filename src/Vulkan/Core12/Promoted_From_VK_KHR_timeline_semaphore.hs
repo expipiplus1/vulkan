@@ -151,7 +151,10 @@ getSemaphoreCounterValue device semaphore = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSemaphoreCounterValue is null" Nothing Nothing
   let vkGetSemaphoreCounterValue' = mkVkGetSemaphoreCounterValue vkGetSemaphoreCounterValuePtr
   pPValue <- ContT $ bracket (callocBytes @Word64 8) free
-  r <- lift $ traceAroundEvent "vkGetSemaphoreCounterValue" (vkGetSemaphoreCounterValue' (deviceHandle (device)) (semaphore) (pPValue))
+  r <- lift $ traceAroundEvent "vkGetSemaphoreCounterValue" (vkGetSemaphoreCounterValue'
+                                                               (deviceHandle (device))
+                                                               (semaphore)
+                                                               (pPValue))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pValue <- lift $ peek @Word64 pPValue
   pure $ (pValue)
@@ -189,13 +192,18 @@ waitSemaphoresSafeOrUnsafe :: forall io
                               -- nanosecond, and /may/ be longer than the requested period.
                               ("timeout" ::: Word64)
                            -> io (Result)
-waitSemaphoresSafeOrUnsafe mkVkWaitSemaphores device waitInfo timeout = liftIO . evalContT $ do
+waitSemaphoresSafeOrUnsafe mkVkWaitSemaphores device
+                                                waitInfo
+                                                timeout = liftIO . evalContT $ do
   let vkWaitSemaphoresPtr = pVkWaitSemaphores (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkWaitSemaphoresPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkWaitSemaphores is null" Nothing Nothing
   let vkWaitSemaphores' = mkVkWaitSemaphores vkWaitSemaphoresPtr
   pWaitInfo <- ContT $ withCStruct (waitInfo)
-  r <- lift $ traceAroundEvent "vkWaitSemaphores" (vkWaitSemaphores' (deviceHandle (device)) pWaitInfo (timeout))
+  r <- lift $ traceAroundEvent "vkWaitSemaphores" (vkWaitSemaphores'
+                                                     (deviceHandle (device))
+                                                     pWaitInfo
+                                                     (timeout))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 
@@ -350,7 +358,9 @@ signalSemaphore device signalInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSignalSemaphore is null" Nothing Nothing
   let vkSignalSemaphore' = mkVkSignalSemaphore vkSignalSemaphorePtr
   pSignalInfo <- ContT $ withCStruct (signalInfo)
-  r <- lift $ traceAroundEvent "vkSignalSemaphore" (vkSignalSemaphore' (deviceHandle (device)) pSignalInfo)
+  r <- lift $ traceAroundEvent "vkSignalSemaphore" (vkSignalSemaphore'
+                                                      (deviceHandle (device))
+                                                      pSignalInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -694,7 +704,10 @@ instance FromCStruct TimelineSemaphoreSubmitInfo where
     let pSignalSemaphoreValuesLength = if pSignalSemaphoreValues == nullPtr then 0 else (fromIntegral signalSemaphoreValueCount)
     pSignalSemaphoreValues' <- generateM pSignalSemaphoreValuesLength (\i -> peek @Word64 ((pSignalSemaphoreValues `advancePtrBytes` (8 * (i)) :: Ptr Word64)))
     pure $ TimelineSemaphoreSubmitInfo
-             waitSemaphoreValueCount pWaitSemaphoreValues' signalSemaphoreValueCount pSignalSemaphoreValues'
+             waitSemaphoreValueCount
+             pWaitSemaphoreValues'
+             signalSemaphoreValueCount
+             pSignalSemaphoreValues'
 
 instance Zero TimelineSemaphoreSubmitInfo where
   zero = TimelineSemaphoreSubmitInfo

@@ -41,7 +41,8 @@ newtype AttachmentStoreOp = AttachmentStoreOp Int32
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT'.
 -- For attachments with a color format, this uses the access type
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_WRITE_BIT'.
-pattern ATTACHMENT_STORE_OP_STORE     = AttachmentStoreOp 0
+pattern ATTACHMENT_STORE_OP_STORE = AttachmentStoreOp 0
+
 -- | 'ATTACHMENT_STORE_OP_DONT_CARE' specifies the contents within the render
 -- area are not needed after rendering, and /may/ be discarded; the
 -- contents of the attachment will be undefined inside the render area. For
@@ -50,14 +51,19 @@ pattern ATTACHMENT_STORE_OP_STORE     = AttachmentStoreOp 0
 -- For attachments with a color format, this uses the access type
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_WRITE_BIT'.
 pattern ATTACHMENT_STORE_OP_DONT_CARE = AttachmentStoreOp 1
+
 -- | 'ATTACHMENT_STORE_OP_NONE' specifies the contents within the render area
 -- are not accessed by the store operation. However, if the attachment was
 -- written to during the render pass, the contents of the attachment will
 -- be undefined inside the render area.
-pattern ATTACHMENT_STORE_OP_NONE      = AttachmentStoreOp 1000301000
-{-# complete ATTACHMENT_STORE_OP_STORE,
-             ATTACHMENT_STORE_OP_DONT_CARE,
-             ATTACHMENT_STORE_OP_NONE :: AttachmentStoreOp #-}
+pattern ATTACHMENT_STORE_OP_NONE = AttachmentStoreOp 1000301000
+
+{-# COMPLETE
+  ATTACHMENT_STORE_OP_STORE
+  , ATTACHMENT_STORE_OP_DONT_CARE
+  , ATTACHMENT_STORE_OP_NONE ::
+    AttachmentStoreOp
+  #-}
 
 conNameAttachmentStoreOp :: String
 conNameAttachmentStoreOp = "AttachmentStoreOp"
@@ -67,19 +73,24 @@ enumPrefixAttachmentStoreOp = "ATTACHMENT_STORE_OP_"
 
 showTableAttachmentStoreOp :: [(AttachmentStoreOp, String)]
 showTableAttachmentStoreOp =
-  [ (ATTACHMENT_STORE_OP_STORE    , "STORE")
+  [ (ATTACHMENT_STORE_OP_STORE, "STORE")
   , (ATTACHMENT_STORE_OP_DONT_CARE, "DONT_CARE")
-  , (ATTACHMENT_STORE_OP_NONE     , "NONE")
+  , (ATTACHMENT_STORE_OP_NONE, "NONE")
   ]
 
 instance Show AttachmentStoreOp where
-  showsPrec = enumShowsPrec enumPrefixAttachmentStoreOp
-                            showTableAttachmentStoreOp
-                            conNameAttachmentStoreOp
-                            (\(AttachmentStoreOp x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixAttachmentStoreOp
+      showTableAttachmentStoreOp
+      conNameAttachmentStoreOp
+      (\(AttachmentStoreOp x) -> x)
+      (showsPrec 11)
 
 instance Read AttachmentStoreOp where
   readPrec =
-    enumReadPrec enumPrefixAttachmentStoreOp showTableAttachmentStoreOp conNameAttachmentStoreOp AttachmentStoreOp
-
+    enumReadPrec
+      enumPrefixAttachmentStoreOp
+      showTableAttachmentStoreOp
+      conNameAttachmentStoreOp
+      AttachmentStoreOp

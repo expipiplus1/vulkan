@@ -18,10 +18,12 @@ import {-# SOURCE #-} OpenXR.CStruct.Extends (PokeChain)
 type role SessionCreateInfo nominal
 data SessionCreateInfo (es :: [Type])
 
-instance (Extendss SessionCreateInfo es, PokeChain es) => ToCStruct (SessionCreateInfo es)
+instance ( Extendss SessionCreateInfo es
+         , PokeChain es ) => ToCStruct (SessionCreateInfo es)
 instance Show (Chain es) => Show (SessionCreateInfo es)
 
-instance (Extendss SessionCreateInfo es, PeekChain es) => FromCStruct (SessionCreateInfo es)
+instance ( Extendss SessionCreateInfo es
+         , PeekChain es ) => FromCStruct (SessionCreateInfo es)
 
 
 data SystemGetInfo
@@ -43,10 +45,12 @@ instance FromCStruct SystemGraphicsProperties
 type role SystemProperties nominal
 data SystemProperties (es :: [Type])
 
-instance (Extendss SystemProperties es, PokeChain es) => ToCStruct (SystemProperties es)
+instance ( Extendss SystemProperties es
+         , PokeChain es ) => ToCStruct (SystemProperties es)
 instance Show (Chain es) => Show (SystemProperties es)
 
-instance (Extendss SystemProperties es, PeekChain es) => FromCStruct (SystemProperties es)
+instance ( Extendss SystemProperties es
+         , PeekChain es ) => FromCStruct (SystemProperties es)
 
 
 data SystemTrackingProperties

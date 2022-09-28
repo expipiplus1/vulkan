@@ -241,7 +241,11 @@ setHdrMetadataEXT device swapchains metadata = liftIO . evalContT $ do
   lift $ Data.Vector.imapM_ (\i e -> poke (pPSwapchains `plusPtr` (8 * (i)) :: Ptr SwapchainKHR) (e)) (swapchains)
   pPMetadata <- ContT $ allocaBytes @HdrMetadataEXT ((Data.Vector.length (metadata)) * 64)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPMetadata `plusPtr` (64 * (i)) :: Ptr HdrMetadataEXT) (e)) (metadata)
-  lift $ traceAroundEvent "vkSetHdrMetadataEXT" (vkSetHdrMetadataEXT' (deviceHandle (device)) ((fromIntegral pSwapchainsLength :: Word32)) (pPSwapchains) (pPMetadata))
+  lift $ traceAroundEvent "vkSetHdrMetadataEXT" (vkSetHdrMetadataEXT'
+                                                   (deviceHandle (device))
+                                                   ((fromIntegral pSwapchainsLength :: Word32))
+                                                   (pPSwapchains)
+                                                   (pPMetadata))
   pure $ ()
 
 
@@ -383,7 +387,14 @@ instance FromCStruct HdrMetadataEXT where
     maxContentLightLevel <- peek @CFloat ((p `plusPtr` 56 :: Ptr CFloat))
     maxFrameAverageLightLevel <- peek @CFloat ((p `plusPtr` 60 :: Ptr CFloat))
     pure $ HdrMetadataEXT
-             displayPrimaryRed displayPrimaryGreen displayPrimaryBlue whitePoint (coerce @CFloat @Float maxLuminance) (coerce @CFloat @Float minLuminance) (coerce @CFloat @Float maxContentLightLevel) (coerce @CFloat @Float maxFrameAverageLightLevel)
+             displayPrimaryRed
+             displayPrimaryGreen
+             displayPrimaryBlue
+             whitePoint
+             (coerce @CFloat @Float maxLuminance)
+             (coerce @CFloat @Float minLuminance)
+             (coerce @CFloat @Float maxContentLightLevel)
+             (coerce @CFloat @Float maxFrameAverageLightLevel)
 
 instance Storable HdrMetadataEXT where
   sizeOf ~_ = 64

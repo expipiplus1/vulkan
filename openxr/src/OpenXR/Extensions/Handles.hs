@@ -50,7 +50,8 @@ data DebugUtilsMessengerEXT = DebugUtilsMessengerEXT
 instance Zero DebugUtilsMessengerEXT where
   zero = DebugUtilsMessengerEXT zero zero
 instance HasObjectType DebugUtilsMessengerEXT where
-  objectTypeAndHandle (DebugUtilsMessengerEXT (ptrToWordPtr -> WordPtr h) _) = (OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT, fromIntegral h)
+  objectTypeAndHandle (DebugUtilsMessengerEXT (ptrToWordPtr -> WordPtr h) _) = ( OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT
+                                                                               , fromIntegral h )
 
 
 -- | An opaque type for representing pointers to XrSpatialAnchorMSFT handles
@@ -86,7 +87,8 @@ data SpatialAnchorMSFT = SpatialAnchorMSFT
 instance Zero SpatialAnchorMSFT where
   zero = SpatialAnchorMSFT zero zero
 instance HasObjectType SpatialAnchorMSFT where
-  objectTypeAndHandle (SpatialAnchorMSFT (ptrToWordPtr -> WordPtr h) _) = (OBJECT_TYPE_SPATIAL_ANCHOR_MSFT, fromIntegral h)
+  objectTypeAndHandle (SpatialAnchorMSFT (ptrToWordPtr -> WordPtr h) _) = ( OBJECT_TYPE_SPATIAL_ANCHOR_MSFT
+                                                                          , fromIntegral h )
 
 
 -- | An opaque type for representing pointers to XrHandTrackerEXT handles
@@ -121,5 +123,6 @@ data HandTrackerEXT = HandTrackerEXT
 instance Zero HandTrackerEXT where
   zero = HandTrackerEXT zero zero
 instance HasObjectType HandTrackerEXT where
-  objectTypeAndHandle (HandTrackerEXT (ptrToWordPtr -> WordPtr h) _) = (OBJECT_TYPE_HAND_TRACKER_EXT, fromIntegral h)
+  objectTypeAndHandle (HandTrackerEXT (ptrToWordPtr -> WordPtr h) _) = ( OBJECT_TYPE_HAND_TRACKER_EXT
+                                                                       , fromIntegral h )
 

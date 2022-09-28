@@ -521,7 +521,9 @@ createDebugReportCallbackEXT :: forall io
                                 -- chapter.
                                 ("allocator" ::: Maybe AllocationCallbacks)
                              -> io (DebugReportCallbackEXT)
-createDebugReportCallbackEXT instance' createInfo allocator = liftIO . evalContT $ do
+createDebugReportCallbackEXT instance'
+                               createInfo
+                               allocator = liftIO . evalContT $ do
   let vkCreateDebugReportCallbackEXTPtr = pVkCreateDebugReportCallbackEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateDebugReportCallbackEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDebugReportCallbackEXT is null" Nothing Nothing
@@ -531,7 +533,11 @@ createDebugReportCallbackEXT instance' createInfo allocator = liftIO . evalContT
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPCallback <- ContT $ bracket (callocBytes @DebugReportCallbackEXT 8) free
-  r <- lift $ traceAroundEvent "vkCreateDebugReportCallbackEXT" (vkCreateDebugReportCallbackEXT' (instanceHandle (instance')) pCreateInfo pAllocator (pPCallback))
+  r <- lift $ traceAroundEvent "vkCreateDebugReportCallbackEXT" (vkCreateDebugReportCallbackEXT'
+                                                                   (instanceHandle (instance'))
+                                                                   pCreateInfo
+                                                                   pAllocator
+                                                                   (pPCallback))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pCallback <- lift $ peek @DebugReportCallbackEXT pPCallback
   pure $ (pCallback)
@@ -614,7 +620,9 @@ destroyDebugReportCallbackEXT :: forall io
                                  -- chapter.
                                  ("allocator" ::: Maybe AllocationCallbacks)
                               -> io ()
-destroyDebugReportCallbackEXT instance' callback allocator = liftIO . evalContT $ do
+destroyDebugReportCallbackEXT instance'
+                                callback
+                                allocator = liftIO . evalContT $ do
   let vkDestroyDebugReportCallbackEXTPtr = pVkDestroyDebugReportCallbackEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkDestroyDebugReportCallbackEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyDebugReportCallbackEXT is null" Nothing Nothing
@@ -622,7 +630,10 @@ destroyDebugReportCallbackEXT instance' callback allocator = liftIO . evalContT 
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyDebugReportCallbackEXT" (vkDestroyDebugReportCallbackEXT' (instanceHandle (instance')) (callback) pAllocator)
+  lift $ traceAroundEvent "vkDestroyDebugReportCallbackEXT" (vkDestroyDebugReportCallbackEXT'
+                                                               (instanceHandle (instance'))
+                                                               (callback)
+                                                               pAllocator)
   pure $ ()
 
 
@@ -703,14 +714,29 @@ debugReportMessageEXT :: forall io
                       -> -- | @pMessage@ is a null-terminated string detailing the trigger conditions.
                          ("message" ::: ByteString)
                       -> io ()
-debugReportMessageEXT instance' flags objectType object location messageCode layerPrefix message = liftIO . evalContT $ do
+debugReportMessageEXT instance'
+                        flags
+                        objectType
+                        object
+                        location
+                        messageCode
+                        layerPrefix
+                        message = liftIO . evalContT $ do
   let vkDebugReportMessageEXTPtr = pVkDebugReportMessageEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkDebugReportMessageEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDebugReportMessageEXT is null" Nothing Nothing
   let vkDebugReportMessageEXT' = mkVkDebugReportMessageEXT vkDebugReportMessageEXTPtr
   pLayerPrefix <- ContT $ useAsCString (layerPrefix)
   pMessage <- ContT $ useAsCString (message)
-  lift $ traceAroundEvent "vkDebugReportMessageEXT" (vkDebugReportMessageEXT' (instanceHandle (instance')) (flags) (objectType) (object) (CSize (location)) (messageCode) pLayerPrefix pMessage)
+  lift $ traceAroundEvent "vkDebugReportMessageEXT" (vkDebugReportMessageEXT'
+                                                       (instanceHandle (instance'))
+                                                       (flags)
+                                                       (objectType)
+                                                       (object)
+                                                       (CSize (location))
+                                                       (messageCode)
+                                                       pLayerPrefix
+                                                       pMessage)
   pure $ ()
 
 
@@ -833,7 +859,8 @@ newtype DebugReportFlagBitsEXT = DebugReportFlagBitsEXT Flags
 -- | 'DEBUG_REPORT_INFORMATION_BIT_EXT' specifies an informational message
 -- such as resource details that may be handy when debugging an
 -- application.
-pattern DEBUG_REPORT_INFORMATION_BIT_EXT         = DebugReportFlagBitsEXT 0x00000001
+pattern DEBUG_REPORT_INFORMATION_BIT_EXT = DebugReportFlagBitsEXT 0x00000001
+
 -- | 'DEBUG_REPORT_WARNING_BIT_EXT' specifies use of Vulkan that /may/ expose
 -- an app bug. Such cases may not be immediately harmful, such as a
 -- fragment shader outputting to a location with no attachment. Other cases
@@ -841,7 +868,8 @@ pattern DEBUG_REPORT_INFORMATION_BIT_EXT         = DebugReportFlagBitsEXT 0x0000
 -- such as using an image whose memory has not been filled. In general if
 -- you see a warning but you know that the behavior is intended\/desired,
 -- then simply ignore the warning.
-pattern DEBUG_REPORT_WARNING_BIT_EXT             = DebugReportFlagBitsEXT 0x00000002
+pattern DEBUG_REPORT_WARNING_BIT_EXT = DebugReportFlagBitsEXT 0x00000002
+
 -- | 'DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT' specifies a potentially
 -- non-optimal use of Vulkan, e.g. using
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdClearColorImage' when setting
@@ -849,12 +877,14 @@ pattern DEBUG_REPORT_WARNING_BIT_EXT             = DebugReportFlagBitsEXT 0x0000
 -- 'Vulkan.Core10.Enums.AttachmentLoadOp.ATTACHMENT_LOAD_OP_CLEAR' would
 -- have worked.
 pattern DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT = DebugReportFlagBitsEXT 0x00000004
+
 -- | 'DEBUG_REPORT_ERROR_BIT_EXT' specifies that the application has violated
 -- a valid usage condition of the specification.
-pattern DEBUG_REPORT_ERROR_BIT_EXT               = DebugReportFlagBitsEXT 0x00000008
+pattern DEBUG_REPORT_ERROR_BIT_EXT = DebugReportFlagBitsEXT 0x00000008
+
 -- | 'DEBUG_REPORT_DEBUG_BIT_EXT' specifies diagnostic information from the
 -- implementation and layers.
-pattern DEBUG_REPORT_DEBUG_BIT_EXT               = DebugReportFlagBitsEXT 0x00000010
+pattern DEBUG_REPORT_DEBUG_BIT_EXT = DebugReportFlagBitsEXT 0x00000010
 
 conNameDebugReportFlagBitsEXT :: String
 conNameDebugReportFlagBitsEXT = "DebugReportFlagBitsEXT"
@@ -864,26 +894,44 @@ enumPrefixDebugReportFlagBitsEXT = "DEBUG_REPORT_"
 
 showTableDebugReportFlagBitsEXT :: [(DebugReportFlagBitsEXT, String)]
 showTableDebugReportFlagBitsEXT =
-  [ (DEBUG_REPORT_INFORMATION_BIT_EXT        , "INFORMATION_BIT_EXT")
-  , (DEBUG_REPORT_WARNING_BIT_EXT            , "WARNING_BIT_EXT")
-  , (DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT, "PERFORMANCE_WARNING_BIT_EXT")
-  , (DEBUG_REPORT_ERROR_BIT_EXT              , "ERROR_BIT_EXT")
-  , (DEBUG_REPORT_DEBUG_BIT_EXT              , "DEBUG_BIT_EXT")
+  [
+    ( DEBUG_REPORT_INFORMATION_BIT_EXT
+    , "INFORMATION_BIT_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_WARNING_BIT_EXT
+    , "WARNING_BIT_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT
+    , "PERFORMANCE_WARNING_BIT_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_ERROR_BIT_EXT
+    , "ERROR_BIT_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_DEBUG_BIT_EXT
+    , "DEBUG_BIT_EXT"
+    )
   ]
 
 instance Show DebugReportFlagBitsEXT where
-  showsPrec = enumShowsPrec enumPrefixDebugReportFlagBitsEXT
-                            showTableDebugReportFlagBitsEXT
-                            conNameDebugReportFlagBitsEXT
-                            (\(DebugReportFlagBitsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDebugReportFlagBitsEXT
+      showTableDebugReportFlagBitsEXT
+      conNameDebugReportFlagBitsEXT
+      (\(DebugReportFlagBitsEXT x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read DebugReportFlagBitsEXT where
-  readPrec = enumReadPrec enumPrefixDebugReportFlagBitsEXT
-                          showTableDebugReportFlagBitsEXT
-                          conNameDebugReportFlagBitsEXT
-                          DebugReportFlagBitsEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDebugReportFlagBitsEXT
+      showTableDebugReportFlagBitsEXT
+      conNameDebugReportFlagBitsEXT
+      DebugReportFlagBitsEXT
 
 -- | VkDebugReportObjectTypeEXT - Specify the type of an object handle
 --
@@ -979,122 +1027,164 @@ newtype DebugReportObjectTypeEXT = DebugReportObjectTypeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT                    = DebugReportObjectTypeEXT 0
+pattern DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT = DebugReportObjectTypeEXT 0
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT                   = DebugReportObjectTypeEXT 1
+pattern DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT = DebugReportObjectTypeEXT 1
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT            = DebugReportObjectTypeEXT 2
+pattern DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT = DebugReportObjectTypeEXT 2
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT                     = DebugReportObjectTypeEXT 3
+pattern DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT = DebugReportObjectTypeEXT 3
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT                      = DebugReportObjectTypeEXT 4
+pattern DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT = DebugReportObjectTypeEXT 4
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_EXT                  = DebugReportObjectTypeEXT 5
+pattern DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_EXT = DebugReportObjectTypeEXT 5
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT             = DebugReportObjectTypeEXT 6
+pattern DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT = DebugReportObjectTypeEXT 6
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_FENCE_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_FENCE_EXT                      = DebugReportObjectTypeEXT 7
+pattern DEBUG_REPORT_OBJECT_TYPE_FENCE_EXT = DebugReportObjectTypeEXT 7
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT              = DebugReportObjectTypeEXT 8
+pattern DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT = DebugReportObjectTypeEXT 8
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT                     = DebugReportObjectTypeEXT 9
+pattern DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT = DebugReportObjectTypeEXT 9
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT                      = DebugReportObjectTypeEXT 10
+pattern DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT = DebugReportObjectTypeEXT 10
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_EVENT_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_EVENT_EXT                      = DebugReportObjectTypeEXT 11
+pattern DEBUG_REPORT_OBJECT_TYPE_EVENT_EXT = DebugReportObjectTypeEXT 11
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_QUERY_POOL_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_QUERY_POOL_EXT                 = DebugReportObjectTypeEXT 12
+pattern DEBUG_REPORT_OBJECT_TYPE_QUERY_POOL_EXT = DebugReportObjectTypeEXT 12
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT                = DebugReportObjectTypeEXT 13
+pattern DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT = DebugReportObjectTypeEXT 13
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT                 = DebugReportObjectTypeEXT 14
+pattern DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT = DebugReportObjectTypeEXT 14
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT              = DebugReportObjectTypeEXT 15
+pattern DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT = DebugReportObjectTypeEXT 15
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_CACHE_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_PIPELINE_CACHE_EXT             = DebugReportObjectTypeEXT 16
+pattern DEBUG_REPORT_OBJECT_TYPE_PIPELINE_CACHE_EXT = DebugReportObjectTypeEXT 16
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT            = DebugReportObjectTypeEXT 17
+pattern DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT = DebugReportObjectTypeEXT 17
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT                = DebugReportObjectTypeEXT 18
+pattern DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT = DebugReportObjectTypeEXT 18
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT                   = DebugReportObjectTypeEXT 19
+pattern DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT = DebugReportObjectTypeEXT 19
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT      = DebugReportObjectTypeEXT 20
+pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT = DebugReportObjectTypeEXT 20
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT                    = DebugReportObjectTypeEXT 21
+pattern DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT = DebugReportObjectTypeEXT 21
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT            = DebugReportObjectTypeEXT 22
+pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT = DebugReportObjectTypeEXT 22
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT             = DebugReportObjectTypeEXT 23
+pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT = DebugReportObjectTypeEXT 23
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT                = DebugReportObjectTypeEXT 24
+pattern DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT = DebugReportObjectTypeEXT 24
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_POOL_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_COMMAND_POOL_EXT               = DebugReportObjectTypeEXT 25
+pattern DEBUG_REPORT_OBJECT_TYPE_COMMAND_POOL_EXT = DebugReportObjectTypeEXT 25
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT                = DebugReportObjectTypeEXT 26
+pattern DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT = DebugReportObjectTypeEXT 26
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT              = DebugReportObjectTypeEXT 27
+pattern DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT = DebugReportObjectTypeEXT 27
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT  = DebugReportObjectTypeEXT 28
+pattern DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT = DebugReportObjectTypeEXT 28
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT                = DebugReportObjectTypeEXT 29
+pattern DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT = DebugReportObjectTypeEXT 29
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT           = DebugReportObjectTypeEXT 30
+pattern DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT = DebugReportObjectTypeEXT 30
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT       = DebugReportObjectTypeEXT 33
+pattern DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT = DebugReportObjectTypeEXT 33
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT  = DebugReportObjectTypeEXT 1000366000
+pattern DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT = DebugReportObjectTypeEXT 1000366000
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT  = DebugReportObjectTypeEXT 1000165000
+pattern DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT = DebugReportObjectTypeEXT 1000165000
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT   = DebugReportObjectTypeEXT 1000156000
+pattern DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT = DebugReportObjectTypeEXT 1000156000
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT"
 pattern DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT = DebugReportObjectTypeEXT 1000150000
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_CU_FUNCTION_NVX_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_CU_FUNCTION_NVX_EXT            = DebugReportObjectTypeEXT 1000029001
+pattern DEBUG_REPORT_OBJECT_TYPE_CU_FUNCTION_NVX_EXT = DebugReportObjectTypeEXT 1000029001
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_CU_MODULE_NVX_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_CU_MODULE_NVX_EXT              = DebugReportObjectTypeEXT 1000029000
+pattern DEBUG_REPORT_OBJECT_TYPE_CU_MODULE_NVX_EXT = DebugReportObjectTypeEXT 1000029000
+
 -- No documentation found for Nested "VkDebugReportObjectTypeEXT" "VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT"
 pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT = DebugReportObjectTypeEXT 1000085000
-{-# complete DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_FENCE_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_EVENT_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_QUERY_POOL_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_PIPELINE_CACHE_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_COMMAND_POOL_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_CU_FUNCTION_NVX_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_CU_MODULE_NVX_EXT,
-             DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT :: DebugReportObjectTypeEXT #-}
+
+{-# COMPLETE
+  DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_FENCE_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_EVENT_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_QUERY_POOL_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_PIPELINE_CACHE_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_COMMAND_POOL_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_CU_FUNCTION_NVX_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_CU_MODULE_NVX_EXT
+  , DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT ::
+    DebugReportObjectTypeEXT
+  #-}
 
 conNameDebugReportObjectTypeEXT :: String
 conNameDebugReportObjectTypeEXT = "DebugReportObjectTypeEXT"
@@ -1104,60 +1194,180 @@ enumPrefixDebugReportObjectTypeEXT = "DEBUG_REPORT_OBJECT_TYPE_"
 
 showTableDebugReportObjectTypeEXT :: [(DebugReportObjectTypeEXT, String)]
 showTableDebugReportObjectTypeEXT =
-  [ (DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT                   , "UNKNOWN_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT                  , "INSTANCE_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT           , "PHYSICAL_DEVICE_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT                    , "DEVICE_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT                     , "QUEUE_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_EXT                 , "SEMAPHORE_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT            , "COMMAND_BUFFER_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_FENCE_EXT                     , "FENCE_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT             , "DEVICE_MEMORY_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT                    , "BUFFER_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT                     , "IMAGE_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_EVENT_EXT                     , "EVENT_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_QUERY_POOL_EXT                , "QUERY_POOL_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT               , "BUFFER_VIEW_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT                , "IMAGE_VIEW_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT             , "SHADER_MODULE_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_PIPELINE_CACHE_EXT            , "PIPELINE_CACHE_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT           , "PIPELINE_LAYOUT_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT               , "RENDER_PASS_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT                  , "PIPELINE_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT     , "DESCRIPTOR_SET_LAYOUT_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT                   , "SAMPLER_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT           , "DESCRIPTOR_POOL_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT            , "DESCRIPTOR_SET_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT               , "FRAMEBUFFER_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_COMMAND_POOL_EXT              , "COMMAND_POOL_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT               , "SURFACE_KHR_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT             , "SWAPCHAIN_KHR_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT , "DEBUG_REPORT_CALLBACK_EXT_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT               , "DISPLAY_KHR_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT          , "DISPLAY_MODE_KHR_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT      , "VALIDATION_CACHE_EXT_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT , "BUFFER_COLLECTION_FUCHSIA_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT , "ACCELERATION_STRUCTURE_NV_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT  , "SAMPLER_YCBCR_CONVERSION_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT, "ACCELERATION_STRUCTURE_KHR_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_CU_FUNCTION_NVX_EXT           , "CU_FUNCTION_NVX_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_CU_MODULE_NVX_EXT             , "CU_MODULE_NVX_EXT")
-  , (DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT, "DESCRIPTOR_UPDATE_TEMPLATE_EXT")
+  [
+    ( DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT
+    , "UNKNOWN_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT
+    , "INSTANCE_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT
+    , "PHYSICAL_DEVICE_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT
+    , "DEVICE_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT
+    , "QUEUE_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_EXT
+    , "SEMAPHORE_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT
+    , "COMMAND_BUFFER_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_FENCE_EXT
+    , "FENCE_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT
+    , "DEVICE_MEMORY_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT
+    , "BUFFER_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT
+    , "IMAGE_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_EVENT_EXT
+    , "EVENT_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_QUERY_POOL_EXT
+    , "QUERY_POOL_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT
+    , "BUFFER_VIEW_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT
+    , "IMAGE_VIEW_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT
+    , "SHADER_MODULE_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_PIPELINE_CACHE_EXT
+    , "PIPELINE_CACHE_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT
+    , "PIPELINE_LAYOUT_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT
+    , "RENDER_PASS_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT
+    , "PIPELINE_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT
+    , "DESCRIPTOR_SET_LAYOUT_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT
+    , "SAMPLER_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT
+    , "DESCRIPTOR_POOL_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT
+    , "DESCRIPTOR_SET_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT
+    , "FRAMEBUFFER_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_COMMAND_POOL_EXT
+    , "COMMAND_POOL_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT
+    , "SURFACE_KHR_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT
+    , "SWAPCHAIN_KHR_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT
+    , "DEBUG_REPORT_CALLBACK_EXT_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT
+    , "DISPLAY_KHR_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT
+    , "DISPLAY_MODE_KHR_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT
+    , "VALIDATION_CACHE_EXT_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA_EXT
+    , "BUFFER_COLLECTION_FUCHSIA_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT
+    , "ACCELERATION_STRUCTURE_NV_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT
+    , "SAMPLER_YCBCR_CONVERSION_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR_EXT
+    , "ACCELERATION_STRUCTURE_KHR_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_CU_FUNCTION_NVX_EXT
+    , "CU_FUNCTION_NVX_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_CU_MODULE_NVX_EXT
+    , "CU_MODULE_NVX_EXT"
+    )
+  ,
+    ( DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT
+    , "DESCRIPTOR_UPDATE_TEMPLATE_EXT"
+    )
   ]
 
 instance Show DebugReportObjectTypeEXT where
-  showsPrec = enumShowsPrec enumPrefixDebugReportObjectTypeEXT
-                            showTableDebugReportObjectTypeEXT
-                            conNameDebugReportObjectTypeEXT
-                            (\(DebugReportObjectTypeEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDebugReportObjectTypeEXT
+      showTableDebugReportObjectTypeEXT
+      conNameDebugReportObjectTypeEXT
+      (\(DebugReportObjectTypeEXT x) -> x)
+      (showsPrec 11)
 
 instance Read DebugReportObjectTypeEXT where
-  readPrec = enumReadPrec enumPrefixDebugReportObjectTypeEXT
-                          showTableDebugReportObjectTypeEXT
-                          conNameDebugReportObjectTypeEXT
-                          DebugReportObjectTypeEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDebugReportObjectTypeEXT
+      showTableDebugReportObjectTypeEXT
+      conNameDebugReportObjectTypeEXT
+      DebugReportObjectTypeEXT
 
 type FN_vkDebugReportCallbackEXT = DebugReportFlagsEXT -> DebugReportObjectTypeEXT -> ("object" ::: Word64) -> ("location" ::: CSize) -> ("messageCode" ::: Int32) -> ("pLayerPrefix" ::: Ptr CChar) -> ("pMessage" ::: Ptr CChar) -> ("pUserData" ::: Ptr ()) -> IO Bool32
 -- | PFN_vkDebugReportCallbackEXT - Application-defined debug report callback

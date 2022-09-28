@@ -258,14 +258,18 @@ cmdSetColorWriteEnableEXT :: forall io
                              -- attachment.
                              ("colorWriteEnables" ::: Vector Bool)
                           -> io ()
-cmdSetColorWriteEnableEXT commandBuffer colorWriteEnables = liftIO . evalContT $ do
+cmdSetColorWriteEnableEXT commandBuffer
+                            colorWriteEnables = liftIO . evalContT $ do
   let vkCmdSetColorWriteEnableEXTPtr = pVkCmdSetColorWriteEnableEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetColorWriteEnableEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetColorWriteEnableEXT is null" Nothing Nothing
   let vkCmdSetColorWriteEnableEXT' = mkVkCmdSetColorWriteEnableEXT vkCmdSetColorWriteEnableEXTPtr
   pPColorWriteEnables <- ContT $ allocaBytes @Bool32 ((Data.Vector.length (colorWriteEnables)) * 4)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPColorWriteEnables `plusPtr` (4 * (i)) :: Ptr Bool32) (boolToBool32 (e))) (colorWriteEnables)
-  lift $ traceAroundEvent "vkCmdSetColorWriteEnableEXT" (vkCmdSetColorWriteEnableEXT' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (colorWriteEnables)) :: Word32)) (pPColorWriteEnables))
+  lift $ traceAroundEvent "vkCmdSetColorWriteEnableEXT" (vkCmdSetColorWriteEnableEXT'
+                                                           (commandBufferHandle (commandBuffer))
+                                                           ((fromIntegral (Data.Vector.length $ (colorWriteEnables)) :: Word32))
+                                                           (pPColorWriteEnables))
   pure $ ()
 
 

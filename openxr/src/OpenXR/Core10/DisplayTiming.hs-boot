@@ -30,7 +30,8 @@ data FrameEndInfo (es :: [Type])
 instance (Extendss FrameEndInfo es, PokeChain es) => ToCStruct (FrameEndInfo es)
 instance Show (Chain es) => Show (FrameEndInfo es)
 
-instance (Extendss FrameEndInfo es, PeekChain es) => FromCStruct (FrameEndInfo es)
+instance ( Extendss FrameEndInfo es
+         , PeekChain es ) => FromCStruct (FrameEndInfo es)
 
 
 type role FrameState nominal

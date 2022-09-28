@@ -854,7 +854,7 @@ tupleIndirect name size toElem fromElem valueRef firstAddrRef =
     ValueDoc value <- use valueRef
     pure . con . ValueDoc $ "case" <+> value <+> "of" <> line <> indent
       2
-      (tupled (pretty <$> elemNames) <+> "->" <+> d)
+      (align (tupled (pretty <$> elemNames)) <+> "->" <+> d)
 
 
 fixedArrayIndirect

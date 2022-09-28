@@ -111,7 +111,12 @@ foreign import ccall
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo',
 -- 'DescriptorSetLayoutSupport', 'Vulkan.Core10.Handles.Device'
 getDescriptorSetLayoutSupport :: forall a b io
-                               . (Extendss DescriptorSetLayoutCreateInfo a, PokeChain a, Extendss DescriptorSetLayoutSupport b, PokeChain b, PeekChain b, MonadIO io)
+                               . ( Extendss DescriptorSetLayoutCreateInfo a
+                                 , PokeChain a
+                                 , Extendss DescriptorSetLayoutSupport b
+                                 , PokeChain b
+                                 , PeekChain b
+                                 , MonadIO io )
                               => -- | @device@ is the logical device that would create the descriptor set
                                  -- layout.
                                  --
@@ -134,7 +139,10 @@ getDescriptorSetLayoutSupport device createInfo = liftIO . evalContT $ do
   let vkGetDescriptorSetLayoutSupport' = mkVkGetDescriptorSetLayoutSupport vkGetDescriptorSetLayoutSupportPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPSupport <- ContT (withZeroCStruct @(DescriptorSetLayoutSupport _))
-  lift $ traceAroundEvent "vkGetDescriptorSetLayoutSupport" (vkGetDescriptorSetLayoutSupport' (deviceHandle (device)) (forgetExtensions pCreateInfo) (forgetExtensions (pPSupport)))
+  lift $ traceAroundEvent "vkGetDescriptorSetLayoutSupport" (vkGetDescriptorSetLayoutSupport'
+                                                               (deviceHandle (device))
+                                                               (forgetExtensions pCreateInfo)
+                                                               (forgetExtensions (pPSupport)))
   pSupport <- lift $ peekCStruct @(DescriptorSetLayoutSupport _) pPSupport
   pure $ (pSupport)
 
@@ -264,7 +272,8 @@ instance Extensible DescriptorSetLayoutSupport where
     | Just Refl <- eqT @e @DescriptorSetVariableDescriptorCountLayoutSupport = Just f
     | otherwise = Nothing
 
-instance (Extendss DescriptorSetLayoutSupport es, PokeChain es) => ToCStruct (DescriptorSetLayoutSupport es) where
+instance ( Extendss DescriptorSetLayoutSupport es
+         , PokeChain es ) => ToCStruct (DescriptorSetLayoutSupport es) where
   withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DescriptorSetLayoutSupport{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT)
@@ -281,7 +290,8 @@ instance (Extendss DescriptorSetLayoutSupport es, PokeChain es) => ToCStruct (De
     lift $ poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
     lift $ f
 
-instance (Extendss DescriptorSetLayoutSupport es, PeekChain es) => FromCStruct (DescriptorSetLayoutSupport es) where
+instance ( Extendss DescriptorSetLayoutSupport es
+         , PeekChain es ) => FromCStruct (DescriptorSetLayoutSupport es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

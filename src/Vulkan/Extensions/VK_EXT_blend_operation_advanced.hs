@@ -505,7 +505,12 @@ instance FromCStruct PhysicalDeviceBlendOperationAdvancedPropertiesEXT where
     advancedBlendCorrelatedOverlap <- peek @Bool32 ((p `plusPtr` 32 :: Ptr Bool32))
     advancedBlendAllOperations <- peek @Bool32 ((p `plusPtr` 36 :: Ptr Bool32))
     pure $ PhysicalDeviceBlendOperationAdvancedPropertiesEXT
-             advancedBlendMaxColorAttachments (bool32ToBool advancedBlendIndependentBlend) (bool32ToBool advancedBlendNonPremultipliedSrcColor) (bool32ToBool advancedBlendNonPremultipliedDstColor) (bool32ToBool advancedBlendCorrelatedOverlap) (bool32ToBool advancedBlendAllOperations)
+             advancedBlendMaxColorAttachments
+             (bool32ToBool advancedBlendIndependentBlend)
+             (bool32ToBool advancedBlendNonPremultipliedSrcColor)
+             (bool32ToBool advancedBlendNonPremultipliedDstColor)
+             (bool32ToBool advancedBlendCorrelatedOverlap)
+             (bool32ToBool advancedBlendAllOperations)
 
 instance Storable PhysicalDeviceBlendOperationAdvancedPropertiesEXT where
   sizeOf ~_ = 40
@@ -609,7 +614,9 @@ instance FromCStruct PipelineColorBlendAdvancedStateCreateInfoEXT where
     dstPremultiplied <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     blendOverlap <- peek @BlendOverlapEXT ((p `plusPtr` 24 :: Ptr BlendOverlapEXT))
     pure $ PipelineColorBlendAdvancedStateCreateInfoEXT
-             (bool32ToBool srcPremultiplied) (bool32ToBool dstPremultiplied) blendOverlap
+             (bool32ToBool srcPremultiplied)
+             (bool32ToBool dstPremultiplied)
+             blendOverlap
 
 instance Storable PipelineColorBlendAdvancedStateCreateInfoEXT where
   sizeOf ~_ = 32
@@ -664,15 +671,21 @@ newtype BlendOverlapEXT = BlendOverlapEXT Int32
 -- | 'BLEND_OVERLAP_UNCORRELATED_EXT' specifies that there is no correlation
 -- between the source and destination coverage.
 pattern BLEND_OVERLAP_UNCORRELATED_EXT = BlendOverlapEXT 0
+
 -- | 'BLEND_OVERLAP_DISJOINT_EXT' specifies that the source and destination
 -- coverage are considered to have minimal overlap.
-pattern BLEND_OVERLAP_DISJOINT_EXT     = BlendOverlapEXT 1
+pattern BLEND_OVERLAP_DISJOINT_EXT = BlendOverlapEXT 1
+
 -- | 'BLEND_OVERLAP_CONJOINT_EXT' specifies that the source and destination
 -- coverage are considered to have maximal overlap.
-pattern BLEND_OVERLAP_CONJOINT_EXT     = BlendOverlapEXT 2
-{-# complete BLEND_OVERLAP_UNCORRELATED_EXT,
-             BLEND_OVERLAP_DISJOINT_EXT,
-             BLEND_OVERLAP_CONJOINT_EXT :: BlendOverlapEXT #-}
+pattern BLEND_OVERLAP_CONJOINT_EXT = BlendOverlapEXT 2
+
+{-# COMPLETE
+  BLEND_OVERLAP_UNCORRELATED_EXT
+  , BLEND_OVERLAP_DISJOINT_EXT
+  , BLEND_OVERLAP_CONJOINT_EXT ::
+    BlendOverlapEXT
+  #-}
 
 conNameBlendOverlapEXT :: String
 conNameBlendOverlapEXT = "BlendOverlapEXT"
@@ -682,21 +695,30 @@ enumPrefixBlendOverlapEXT = "BLEND_OVERLAP_"
 
 showTableBlendOverlapEXT :: [(BlendOverlapEXT, String)]
 showTableBlendOverlapEXT =
-  [ (BLEND_OVERLAP_UNCORRELATED_EXT, "UNCORRELATED_EXT")
-  , (BLEND_OVERLAP_DISJOINT_EXT    , "DISJOINT_EXT")
-  , (BLEND_OVERLAP_CONJOINT_EXT    , "CONJOINT_EXT")
+  [
+    ( BLEND_OVERLAP_UNCORRELATED_EXT
+    , "UNCORRELATED_EXT"
+    )
+  , (BLEND_OVERLAP_DISJOINT_EXT, "DISJOINT_EXT")
+  , (BLEND_OVERLAP_CONJOINT_EXT, "CONJOINT_EXT")
   ]
 
 instance Show BlendOverlapEXT where
-  showsPrec = enumShowsPrec enumPrefixBlendOverlapEXT
-                            showTableBlendOverlapEXT
-                            conNameBlendOverlapEXT
-                            (\(BlendOverlapEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixBlendOverlapEXT
+      showTableBlendOverlapEXT
+      conNameBlendOverlapEXT
+      (\(BlendOverlapEXT x) -> x)
+      (showsPrec 11)
 
 instance Read BlendOverlapEXT where
-  readPrec = enumReadPrec enumPrefixBlendOverlapEXT showTableBlendOverlapEXT conNameBlendOverlapEXT BlendOverlapEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixBlendOverlapEXT
+      showTableBlendOverlapEXT
+      conNameBlendOverlapEXT
+      BlendOverlapEXT
 
 type EXT_BLEND_OPERATION_ADVANCED_SPEC_VERSION = 2
 

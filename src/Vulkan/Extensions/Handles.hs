@@ -107,7 +107,8 @@ newtype IndirectCommandsLayoutNV = IndirectCommandsLayoutNV Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
 instance HasObjectType IndirectCommandsLayoutNV where
-  objectTypeAndHandle (IndirectCommandsLayoutNV h) = (OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV, h)
+  objectTypeAndHandle (IndirectCommandsLayoutNV h) = ( OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV
+                                                     , h )
 instance Show IndirectCommandsLayoutNV where
   showsPrec p (IndirectCommandsLayoutNV x) = showParen (p >= 11) (showString "IndirectCommandsLayoutNV 0x" . showHex x)
 
@@ -126,7 +127,8 @@ newtype ValidationCacheEXT = ValidationCacheEXT Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
 instance HasObjectType ValidationCacheEXT where
-  objectTypeAndHandle (ValidationCacheEXT h) = (OBJECT_TYPE_VALIDATION_CACHE_EXT, h)
+  objectTypeAndHandle (ValidationCacheEXT h) = ( OBJECT_TYPE_VALIDATION_CACHE_EXT
+                                               , h )
 instance Show ValidationCacheEXT where
   showsPrec p (ValidationCacheEXT x) = showParen (p >= 11) (showString "ValidationCacheEXT 0x" . showHex x)
 
@@ -151,7 +153,8 @@ newtype AccelerationStructureKHR = AccelerationStructureKHR Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
 instance HasObjectType AccelerationStructureKHR where
-  objectTypeAndHandle (AccelerationStructureKHR h) = (OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR, h)
+  objectTypeAndHandle (AccelerationStructureKHR h) = ( OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR
+                                                     , h )
 instance Show AccelerationStructureKHR where
   showsPrec p (AccelerationStructureKHR x) = showParen (p >= 11) (showString "AccelerationStructureKHR 0x" . showHex x)
 
@@ -175,7 +178,8 @@ newtype AccelerationStructureNV = AccelerationStructureNV Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
 instance HasObjectType AccelerationStructureNV where
-  objectTypeAndHandle (AccelerationStructureNV h) = (OBJECT_TYPE_ACCELERATION_STRUCTURE_NV, h)
+  objectTypeAndHandle (AccelerationStructureNV h) = ( OBJECT_TYPE_ACCELERATION_STRUCTURE_NV
+                                                    , h )
 instance Show AccelerationStructureNV where
   showsPrec p (AccelerationStructureNV x) = showParen (p >= 11) (showString "AccelerationStructureNV 0x" . showHex x)
 
@@ -193,7 +197,8 @@ newtype PerformanceConfigurationINTEL = PerformanceConfigurationINTEL Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
 instance HasObjectType PerformanceConfigurationINTEL where
-  objectTypeAndHandle (PerformanceConfigurationINTEL h) = (OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL, h)
+  objectTypeAndHandle (PerformanceConfigurationINTEL h) = ( OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL
+                                                          , h )
 instance Show PerformanceConfigurationINTEL where
   showsPrec p (PerformanceConfigurationINTEL x) = showParen (p >= 11) (showString "PerformanceConfigurationINTEL 0x" . showHex x)
 
@@ -215,7 +220,8 @@ newtype BufferCollectionFUCHSIA = BufferCollectionFUCHSIA Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
 instance HasObjectType BufferCollectionFUCHSIA where
-  objectTypeAndHandle (BufferCollectionFUCHSIA h) = (OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA, h)
+  objectTypeAndHandle (BufferCollectionFUCHSIA h) = ( OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA
+                                                    , h )
 instance Show BufferCollectionFUCHSIA where
   showsPrec p (BufferCollectionFUCHSIA x) = showParen (p >= 11) (showString "BufferCollectionFUCHSIA 0x" . showHex x)
 
@@ -244,7 +250,8 @@ newtype DeferredOperationKHR = DeferredOperationKHR Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
 instance HasObjectType DeferredOperationKHR where
-  objectTypeAndHandle (DeferredOperationKHR h) = (OBJECT_TYPE_DEFERRED_OPERATION_KHR, h)
+  objectTypeAndHandle (DeferredOperationKHR h) = ( OBJECT_TYPE_DEFERRED_OPERATION_KHR
+                                                 , h )
 instance Show DeferredOperationKHR where
   showsPrec p (DeferredOperationKHR x) = showParen (p >= 11) (showString "DeferredOperationKHR 0x" . showHex x)
 
@@ -479,7 +486,8 @@ newtype DebugReportCallbackEXT = DebugReportCallbackEXT Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
 instance HasObjectType DebugReportCallbackEXT where
-  objectTypeAndHandle (DebugReportCallbackEXT h) = (OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT, h)
+  objectTypeAndHandle (DebugReportCallbackEXT h) = ( OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT
+                                                   , h )
 instance Show DebugReportCallbackEXT where
   showsPrec p (DebugReportCallbackEXT x) = showParen (p >= 11) (showString "DebugReportCallbackEXT 0x" . showHex x)
 
@@ -505,7 +513,8 @@ newtype DebugUtilsMessengerEXT = DebugUtilsMessengerEXT Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
 instance HasObjectType DebugUtilsMessengerEXT where
-  objectTypeAndHandle (DebugUtilsMessengerEXT h) = (OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT, h)
+  objectTypeAndHandle (DebugUtilsMessengerEXT h) = ( OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT
+                                                   , h )
 instance Show DebugUtilsMessengerEXT where
   showsPrec p (DebugUtilsMessengerEXT x) = showParen (p >= 11) (showString "DebugUtilsMessengerEXT 0x" . showHex x)
 

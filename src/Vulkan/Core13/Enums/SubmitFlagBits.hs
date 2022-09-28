@@ -48,12 +48,18 @@ showTableSubmitFlagBits :: [(SubmitFlagBits, String)]
 showTableSubmitFlagBits = [(SUBMIT_PROTECTED_BIT, "")]
 
 instance Show SubmitFlagBits where
-  showsPrec = enumShowsPrec enumPrefixSubmitFlagBits
-                            showTableSubmitFlagBits
-                            conNameSubmitFlagBits
-                            (\(SubmitFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixSubmitFlagBits
+      showTableSubmitFlagBits
+      conNameSubmitFlagBits
+      (\(SubmitFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read SubmitFlagBits where
-  readPrec = enumReadPrec enumPrefixSubmitFlagBits showTableSubmitFlagBits conNameSubmitFlagBits SubmitFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixSubmitFlagBits
+      showTableSubmitFlagBits
+      conNameSubmitFlagBits
+      SubmitFlagBits

@@ -330,7 +330,11 @@ instance FromCStruct PipelineCoverageModulationStateCreateInfoNV where
       pCoverageModulationTableElem <- peek @CFloat ((pCoverageModulationTable `advancePtrBytes` (4 * (i)) :: Ptr CFloat))
       pure $ coerce @CFloat @Float pCoverageModulationTableElem)
     pure $ PipelineCoverageModulationStateCreateInfoNV
-             flags coverageModulationMode (bool32ToBool coverageModulationTableEnable) coverageModulationTableCount pCoverageModulationTable'
+             flags
+             coverageModulationMode
+             (bool32ToBool coverageModulationTableEnable)
+             coverageModulationTableCount
+             pCoverageModulationTable'
 
 instance Zero PipelineCoverageModulationStateCreateInfoNV where
   zero = PipelineCoverageModulationStateCreateInfoNV
@@ -355,8 +359,6 @@ instance Zero PipelineCoverageModulationStateCreateInfoNV where
 newtype PipelineCoverageModulationStateCreateFlagsNV = PipelineCoverageModulationStateCreateFlagsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNamePipelineCoverageModulationStateCreateFlagsNV :: String
 conNamePipelineCoverageModulationStateCreateFlagsNV = "PipelineCoverageModulationStateCreateFlagsNV"
 
@@ -367,18 +369,21 @@ showTablePipelineCoverageModulationStateCreateFlagsNV :: [(PipelineCoverageModul
 showTablePipelineCoverageModulationStateCreateFlagsNV = []
 
 instance Show PipelineCoverageModulationStateCreateFlagsNV where
-  showsPrec = enumShowsPrec enumPrefixPipelineCoverageModulationStateCreateFlagsNV
-                            showTablePipelineCoverageModulationStateCreateFlagsNV
-                            conNamePipelineCoverageModulationStateCreateFlagsNV
-                            (\(PipelineCoverageModulationStateCreateFlagsNV x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineCoverageModulationStateCreateFlagsNV
+      showTablePipelineCoverageModulationStateCreateFlagsNV
+      conNamePipelineCoverageModulationStateCreateFlagsNV
+      (\(PipelineCoverageModulationStateCreateFlagsNV x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read PipelineCoverageModulationStateCreateFlagsNV where
-  readPrec = enumReadPrec enumPrefixPipelineCoverageModulationStateCreateFlagsNV
-                          showTablePipelineCoverageModulationStateCreateFlagsNV
-                          conNamePipelineCoverageModulationStateCreateFlagsNV
-                          PipelineCoverageModulationStateCreateFlagsNV
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineCoverageModulationStateCreateFlagsNV
+      showTablePipelineCoverageModulationStateCreateFlagsNV
+      conNamePipelineCoverageModulationStateCreateFlagsNV
+      PipelineCoverageModulationStateCreateFlagsNV
 
 -- | VkCoverageModulationModeNV - Specify the coverage modulation mode
 --
@@ -391,20 +396,27 @@ newtype CoverageModulationModeNV = CoverageModulationModeNV Int32
 
 -- | 'COVERAGE_MODULATION_MODE_NONE_NV' specifies that no components are
 -- multiplied by the modulation factor.
-pattern COVERAGE_MODULATION_MODE_NONE_NV  = CoverageModulationModeNV 0
+pattern COVERAGE_MODULATION_MODE_NONE_NV = CoverageModulationModeNV 0
+
 -- | 'COVERAGE_MODULATION_MODE_RGB_NV' specifies that the red, green, and
 -- blue components are multiplied by the modulation factor.
-pattern COVERAGE_MODULATION_MODE_RGB_NV   = CoverageModulationModeNV 1
+pattern COVERAGE_MODULATION_MODE_RGB_NV = CoverageModulationModeNV 1
+
 -- | 'COVERAGE_MODULATION_MODE_ALPHA_NV' specifies that the alpha component
 -- is multiplied by the modulation factor.
 pattern COVERAGE_MODULATION_MODE_ALPHA_NV = CoverageModulationModeNV 2
+
 -- | 'COVERAGE_MODULATION_MODE_RGBA_NV' specifies that all components are
 -- multiplied by the modulation factor.
-pattern COVERAGE_MODULATION_MODE_RGBA_NV  = CoverageModulationModeNV 3
-{-# complete COVERAGE_MODULATION_MODE_NONE_NV,
-             COVERAGE_MODULATION_MODE_RGB_NV,
-             COVERAGE_MODULATION_MODE_ALPHA_NV,
-             COVERAGE_MODULATION_MODE_RGBA_NV :: CoverageModulationModeNV #-}
+pattern COVERAGE_MODULATION_MODE_RGBA_NV = CoverageModulationModeNV 3
+
+{-# COMPLETE
+  COVERAGE_MODULATION_MODE_NONE_NV
+  , COVERAGE_MODULATION_MODE_RGB_NV
+  , COVERAGE_MODULATION_MODE_ALPHA_NV
+  , COVERAGE_MODULATION_MODE_RGBA_NV ::
+    CoverageModulationModeNV
+  #-}
 
 conNameCoverageModulationModeNV :: String
 conNameCoverageModulationModeNV = "CoverageModulationModeNV"
@@ -414,25 +426,40 @@ enumPrefixCoverageModulationModeNV = "COVERAGE_MODULATION_MODE_"
 
 showTableCoverageModulationModeNV :: [(CoverageModulationModeNV, String)]
 showTableCoverageModulationModeNV =
-  [ (COVERAGE_MODULATION_MODE_NONE_NV , "NONE_NV")
-  , (COVERAGE_MODULATION_MODE_RGB_NV  , "RGB_NV")
-  , (COVERAGE_MODULATION_MODE_ALPHA_NV, "ALPHA_NV")
-  , (COVERAGE_MODULATION_MODE_RGBA_NV , "RGBA_NV")
+  [
+    ( COVERAGE_MODULATION_MODE_NONE_NV
+    , "NONE_NV"
+    )
+  ,
+    ( COVERAGE_MODULATION_MODE_RGB_NV
+    , "RGB_NV"
+    )
+  ,
+    ( COVERAGE_MODULATION_MODE_ALPHA_NV
+    , "ALPHA_NV"
+    )
+  ,
+    ( COVERAGE_MODULATION_MODE_RGBA_NV
+    , "RGBA_NV"
+    )
   ]
 
 instance Show CoverageModulationModeNV where
-  showsPrec = enumShowsPrec enumPrefixCoverageModulationModeNV
-                            showTableCoverageModulationModeNV
-                            conNameCoverageModulationModeNV
-                            (\(CoverageModulationModeNV x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixCoverageModulationModeNV
+      showTableCoverageModulationModeNV
+      conNameCoverageModulationModeNV
+      (\(CoverageModulationModeNV x) -> x)
+      (showsPrec 11)
 
 instance Read CoverageModulationModeNV where
-  readPrec = enumReadPrec enumPrefixCoverageModulationModeNV
-                          showTableCoverageModulationModeNV
-                          conNameCoverageModulationModeNV
-                          CoverageModulationModeNV
-
+  readPrec =
+    enumReadPrec
+      enumPrefixCoverageModulationModeNV
+      showTableCoverageModulationModeNV
+      conNameCoverageModulationModeNV
+      CoverageModulationModeNV
 
 type NV_FRAMEBUFFER_MIXED_SAMPLES_SPEC_VERSION = 1
 

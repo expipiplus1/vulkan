@@ -300,13 +300,16 @@ cmdBeginConditionalRenderingEXT :: forall io
                                    -- conditional rendering.
                                    ConditionalRenderingBeginInfoEXT
                                 -> io ()
-cmdBeginConditionalRenderingEXT commandBuffer conditionalRenderingBegin = liftIO . evalContT $ do
+cmdBeginConditionalRenderingEXT commandBuffer
+                                  conditionalRenderingBegin = liftIO . evalContT $ do
   let vkCmdBeginConditionalRenderingEXTPtr = pVkCmdBeginConditionalRenderingEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBeginConditionalRenderingEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginConditionalRenderingEXT is null" Nothing Nothing
   let vkCmdBeginConditionalRenderingEXT' = mkVkCmdBeginConditionalRenderingEXT vkCmdBeginConditionalRenderingEXTPtr
   pConditionalRenderingBegin <- ContT $ withCStruct (conditionalRenderingBegin)
-  lift $ traceAroundEvent "vkCmdBeginConditionalRenderingEXT" (vkCmdBeginConditionalRenderingEXT' (commandBufferHandle (commandBuffer)) pConditionalRenderingBegin)
+  lift $ traceAroundEvent "vkCmdBeginConditionalRenderingEXT" (vkCmdBeginConditionalRenderingEXT'
+                                                                 (commandBufferHandle (commandBuffer))
+                                                                 pConditionalRenderingBegin)
   pure $ ()
 
 -- | This function will call the supplied action between calls to
@@ -316,7 +319,8 @@ cmdBeginConditionalRenderingEXT commandBuffer conditionalRenderingBegin = liftIO
 -- exception is thrown by the inner action.
 cmdUseConditionalRenderingEXT :: forall io r . MonadIO io => CommandBuffer -> ConditionalRenderingBeginInfoEXT -> io r -> io r
 cmdUseConditionalRenderingEXT commandBuffer pConditionalRenderingBegin a =
-  (cmdBeginConditionalRenderingEXT commandBuffer pConditionalRenderingBegin) *> a <* (cmdEndConditionalRenderingEXT commandBuffer)
+  (cmdBeginConditionalRenderingEXT commandBuffer
+                                     pConditionalRenderingBegin) *> a <* (cmdEndConditionalRenderingEXT commandBuffer)
 
 
 foreign import ccall
@@ -400,7 +404,8 @@ cmdEndConditionalRenderingEXT commandBuffer = liftIO $ do
   unless (vkCmdEndConditionalRenderingEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndConditionalRenderingEXT is null" Nothing Nothing
   let vkCmdEndConditionalRenderingEXT' = mkVkCmdEndConditionalRenderingEXT vkCmdEndConditionalRenderingEXTPtr
-  traceAroundEvent "vkCmdEndConditionalRenderingEXT" (vkCmdEndConditionalRenderingEXT' (commandBufferHandle (commandBuffer)))
+  traceAroundEvent "vkCmdEndConditionalRenderingEXT" (vkCmdEndConditionalRenderingEXT'
+                                                        (commandBufferHandle (commandBuffer)))
   pure $ ()
 
 
@@ -650,7 +655,8 @@ instance FromCStruct PhysicalDeviceConditionalRenderingFeaturesEXT where
     conditionalRendering <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     inheritedConditionalRendering <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ PhysicalDeviceConditionalRenderingFeaturesEXT
-             (bool32ToBool conditionalRendering) (bool32ToBool inheritedConditionalRendering)
+             (bool32ToBool conditionalRendering)
+             (bool32ToBool inheritedConditionalRendering)
 
 instance Storable PhysicalDeviceConditionalRenderingFeaturesEXT where
   sizeOf ~_ = 24
@@ -690,21 +696,29 @@ enumPrefixConditionalRenderingFlagBitsEXT :: String
 enumPrefixConditionalRenderingFlagBitsEXT = "CONDITIONAL_RENDERING_INVERTED_BIT_EXT"
 
 showTableConditionalRenderingFlagBitsEXT :: [(ConditionalRenderingFlagBitsEXT, String)]
-showTableConditionalRenderingFlagBitsEXT = [(CONDITIONAL_RENDERING_INVERTED_BIT_EXT, "")]
+showTableConditionalRenderingFlagBitsEXT =
+  [
+    ( CONDITIONAL_RENDERING_INVERTED_BIT_EXT
+    , ""
+    )
+  ]
 
 instance Show ConditionalRenderingFlagBitsEXT where
-  showsPrec = enumShowsPrec enumPrefixConditionalRenderingFlagBitsEXT
-                            showTableConditionalRenderingFlagBitsEXT
-                            conNameConditionalRenderingFlagBitsEXT
-                            (\(ConditionalRenderingFlagBitsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixConditionalRenderingFlagBitsEXT
+      showTableConditionalRenderingFlagBitsEXT
+      conNameConditionalRenderingFlagBitsEXT
+      (\(ConditionalRenderingFlagBitsEXT x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read ConditionalRenderingFlagBitsEXT where
-  readPrec = enumReadPrec enumPrefixConditionalRenderingFlagBitsEXT
-                          showTableConditionalRenderingFlagBitsEXT
-                          conNameConditionalRenderingFlagBitsEXT
-                          ConditionalRenderingFlagBitsEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixConditionalRenderingFlagBitsEXT
+      showTableConditionalRenderingFlagBitsEXT
+      conNameConditionalRenderingFlagBitsEXT
+      ConditionalRenderingFlagBitsEXT
 
 type EXT_CONDITIONAL_RENDERING_SPEC_VERSION = 2
 

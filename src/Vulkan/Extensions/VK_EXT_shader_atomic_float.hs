@@ -264,7 +264,18 @@ instance FromCStruct PhysicalDeviceShaderAtomicFloatFeaturesEXT where
     sparseImageFloat32Atomics <- peek @Bool32 ((p `plusPtr` 56 :: Ptr Bool32))
     sparseImageFloat32AtomicAdd <- peek @Bool32 ((p `plusPtr` 60 :: Ptr Bool32))
     pure $ PhysicalDeviceShaderAtomicFloatFeaturesEXT
-             (bool32ToBool shaderBufferFloat32Atomics) (bool32ToBool shaderBufferFloat32AtomicAdd) (bool32ToBool shaderBufferFloat64Atomics) (bool32ToBool shaderBufferFloat64AtomicAdd) (bool32ToBool shaderSharedFloat32Atomics) (bool32ToBool shaderSharedFloat32AtomicAdd) (bool32ToBool shaderSharedFloat64Atomics) (bool32ToBool shaderSharedFloat64AtomicAdd) (bool32ToBool shaderImageFloat32Atomics) (bool32ToBool shaderImageFloat32AtomicAdd) (bool32ToBool sparseImageFloat32Atomics) (bool32ToBool sparseImageFloat32AtomicAdd)
+             (bool32ToBool shaderBufferFloat32Atomics)
+             (bool32ToBool shaderBufferFloat32AtomicAdd)
+             (bool32ToBool shaderBufferFloat64Atomics)
+             (bool32ToBool shaderBufferFloat64AtomicAdd)
+             (bool32ToBool shaderSharedFloat32Atomics)
+             (bool32ToBool shaderSharedFloat32AtomicAdd)
+             (bool32ToBool shaderSharedFloat64Atomics)
+             (bool32ToBool shaderSharedFloat64AtomicAdd)
+             (bool32ToBool shaderImageFloat32Atomics)
+             (bool32ToBool shaderImageFloat32AtomicAdd)
+             (bool32ToBool sparseImageFloat32Atomics)
+             (bool32ToBool sparseImageFloat32AtomicAdd)
 
 instance Storable PhysicalDeviceShaderAtomicFloatFeaturesEXT where
   sizeOf ~_ = 64

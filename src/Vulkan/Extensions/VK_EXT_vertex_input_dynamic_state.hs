@@ -295,7 +295,9 @@ cmdSetVertexInputEXT :: forall io
                         -- 'VertexInputAttributeDescription2EXT' structures.
                         ("vertexAttributeDescriptions" ::: Vector VertexInputAttributeDescription2EXT)
                      -> io ()
-cmdSetVertexInputEXT commandBuffer vertexBindingDescriptions vertexAttributeDescriptions = liftIO . evalContT $ do
+cmdSetVertexInputEXT commandBuffer
+                       vertexBindingDescriptions
+                       vertexAttributeDescriptions = liftIO . evalContT $ do
   let vkCmdSetVertexInputEXTPtr = pVkCmdSetVertexInputEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetVertexInputEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetVertexInputEXT is null" Nothing Nothing
@@ -304,7 +306,12 @@ cmdSetVertexInputEXT commandBuffer vertexBindingDescriptions vertexAttributeDesc
   lift $ Data.Vector.imapM_ (\i e -> poke (pPVertexBindingDescriptions `plusPtr` (32 * (i)) :: Ptr VertexInputBindingDescription2EXT) (e)) (vertexBindingDescriptions)
   pPVertexAttributeDescriptions <- ContT $ allocaBytes @VertexInputAttributeDescription2EXT ((Data.Vector.length (vertexAttributeDescriptions)) * 32)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPVertexAttributeDescriptions `plusPtr` (32 * (i)) :: Ptr VertexInputAttributeDescription2EXT) (e)) (vertexAttributeDescriptions)
-  lift $ traceAroundEvent "vkCmdSetVertexInputEXT" (vkCmdSetVertexInputEXT' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (vertexBindingDescriptions)) :: Word32)) (pPVertexBindingDescriptions) ((fromIntegral (Data.Vector.length $ (vertexAttributeDescriptions)) :: Word32)) (pPVertexAttributeDescriptions))
+  lift $ traceAroundEvent "vkCmdSetVertexInputEXT" (vkCmdSetVertexInputEXT'
+                                                      (commandBufferHandle (commandBuffer))
+                                                      ((fromIntegral (Data.Vector.length $ (vertexBindingDescriptions)) :: Word32))
+                                                      (pPVertexBindingDescriptions)
+                                                      ((fromIntegral (Data.Vector.length $ (vertexAttributeDescriptions)) :: Word32))
+                                                      (pPVertexAttributeDescriptions))
   pure $ ()
 
 

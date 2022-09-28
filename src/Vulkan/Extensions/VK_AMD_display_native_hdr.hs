@@ -228,7 +228,10 @@ setLocalDimmingAMD device swapChain localDimmingEnable = liftIO $ do
   unless (vkSetLocalDimmingAMDPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetLocalDimmingAMD is null" Nothing Nothing
   let vkSetLocalDimmingAMD' = mkVkSetLocalDimmingAMD vkSetLocalDimmingAMDPtr
-  traceAroundEvent "vkSetLocalDimmingAMD" (vkSetLocalDimmingAMD' (deviceHandle (device)) (swapChain) (boolToBool32 (localDimmingEnable)))
+  traceAroundEvent "vkSetLocalDimmingAMD" (vkSetLocalDimmingAMD'
+                                             (deviceHandle (device))
+                                             (swapChain)
+                                             (boolToBool32 (localDimmingEnable)))
   pure $ ()
 
 

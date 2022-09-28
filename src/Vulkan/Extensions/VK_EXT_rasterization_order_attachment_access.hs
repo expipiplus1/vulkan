@@ -226,7 +226,9 @@ instance FromCStruct PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT
     rasterizationOrderDepthAttachmentAccess <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     rasterizationOrderStencilAttachmentAccess <- peek @Bool32 ((p `plusPtr` 24 :: Ptr Bool32))
     pure $ PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT
-             (bool32ToBool rasterizationOrderColorAttachmentAccess) (bool32ToBool rasterizationOrderDepthAttachmentAccess) (bool32ToBool rasterizationOrderStencilAttachmentAccess)
+             (bool32ToBool rasterizationOrderColorAttachmentAccess)
+             (bool32ToBool rasterizationOrderDepthAttachmentAccess)
+             (bool32ToBool rasterizationOrderStencilAttachmentAccess)
 
 instance Storable PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT where
   sizeOf ~_ = 32

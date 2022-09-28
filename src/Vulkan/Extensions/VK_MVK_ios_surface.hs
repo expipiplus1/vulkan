@@ -267,7 +267,11 @@ createIOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSurface <- ContT $ bracket (callocBytes @SurfaceKHR 8) free
-  r <- lift $ traceAroundEvent "vkCreateIOSSurfaceMVK" (vkCreateIOSSurfaceMVK' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface))
+  r <- lift $ traceAroundEvent "vkCreateIOSSurfaceMVK" (vkCreateIOSSurfaceMVK'
+                                                          (instanceHandle (instance'))
+                                                          pCreateInfo
+                                                          pAllocator
+                                                          (pPSurface))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurface <- lift $ peek @SurfaceKHR pPSurface
   pure $ (pSurface)
@@ -368,8 +372,6 @@ instance Zero IOSSurfaceCreateInfoMVK where
 newtype IOSSurfaceCreateFlagsMVK = IOSSurfaceCreateFlagsMVK Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameIOSSurfaceCreateFlagsMVK :: String
 conNameIOSSurfaceCreateFlagsMVK = "IOSSurfaceCreateFlagsMVK"
 
@@ -380,18 +382,21 @@ showTableIOSSurfaceCreateFlagsMVK :: [(IOSSurfaceCreateFlagsMVK, String)]
 showTableIOSSurfaceCreateFlagsMVK = []
 
 instance Show IOSSurfaceCreateFlagsMVK where
-  showsPrec = enumShowsPrec enumPrefixIOSSurfaceCreateFlagsMVK
-                            showTableIOSSurfaceCreateFlagsMVK
-                            conNameIOSSurfaceCreateFlagsMVK
-                            (\(IOSSurfaceCreateFlagsMVK x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixIOSSurfaceCreateFlagsMVK
+      showTableIOSSurfaceCreateFlagsMVK
+      conNameIOSSurfaceCreateFlagsMVK
+      (\(IOSSurfaceCreateFlagsMVK x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read IOSSurfaceCreateFlagsMVK where
-  readPrec = enumReadPrec enumPrefixIOSSurfaceCreateFlagsMVK
-                          showTableIOSSurfaceCreateFlagsMVK
-                          conNameIOSSurfaceCreateFlagsMVK
-                          IOSSurfaceCreateFlagsMVK
-
+  readPrec =
+    enumReadPrec
+      enumPrefixIOSSurfaceCreateFlagsMVK
+      showTableIOSSurfaceCreateFlagsMVK
+      conNameIOSSurfaceCreateFlagsMVK
+      IOSSurfaceCreateFlagsMVK
 
 type MVK_IOS_SURFACE_SPEC_VERSION = 3
 

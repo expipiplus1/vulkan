@@ -240,14 +240,18 @@ getSemaphoreZirconHandleFUCHSIA :: forall io
                                    -- 'SemaphoreGetZirconHandleInfoFUCHSIA' structure
                                    SemaphoreGetZirconHandleInfoFUCHSIA
                                 -> io (("zirconHandle" ::: Zx_handle_t))
-getSemaphoreZirconHandleFUCHSIA device getZirconHandleInfo = liftIO . evalContT $ do
+getSemaphoreZirconHandleFUCHSIA device
+                                  getZirconHandleInfo = liftIO . evalContT $ do
   let vkGetSemaphoreZirconHandleFUCHSIAPtr = pVkGetSemaphoreZirconHandleFUCHSIA (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetSemaphoreZirconHandleFUCHSIAPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSemaphoreZirconHandleFUCHSIA is null" Nothing Nothing
   let vkGetSemaphoreZirconHandleFUCHSIA' = mkVkGetSemaphoreZirconHandleFUCHSIA vkGetSemaphoreZirconHandleFUCHSIAPtr
   pGetZirconHandleInfo <- ContT $ withCStruct (getZirconHandleInfo)
   pPZirconHandle <- ContT $ bracket (callocBytes @Zx_handle_t 4) free
-  r <- lift $ traceAroundEvent "vkGetSemaphoreZirconHandleFUCHSIA" (vkGetSemaphoreZirconHandleFUCHSIA' (deviceHandle (device)) pGetZirconHandleInfo (pPZirconHandle))
+  r <- lift $ traceAroundEvent "vkGetSemaphoreZirconHandleFUCHSIA" (vkGetSemaphoreZirconHandleFUCHSIA'
+                                                                      (deviceHandle (device))
+                                                                      pGetZirconHandleInfo
+                                                                      (pPZirconHandle))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pZirconHandle <- lift $ peek @Zx_handle_t pPZirconHandle
   pure $ (pZirconHandle)
@@ -306,13 +310,16 @@ importSemaphoreZirconHandleFUCHSIA :: forall io
                                       -- 'ImportSemaphoreZirconHandleInfoFUCHSIA' structure
                                       ImportSemaphoreZirconHandleInfoFUCHSIA
                                    -> io ()
-importSemaphoreZirconHandleFUCHSIA device importSemaphoreZirconHandleInfo = liftIO . evalContT $ do
+importSemaphoreZirconHandleFUCHSIA device
+                                     importSemaphoreZirconHandleInfo = liftIO . evalContT $ do
   let vkImportSemaphoreZirconHandleFUCHSIAPtr = pVkImportSemaphoreZirconHandleFUCHSIA (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkImportSemaphoreZirconHandleFUCHSIAPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkImportSemaphoreZirconHandleFUCHSIA is null" Nothing Nothing
   let vkImportSemaphoreZirconHandleFUCHSIA' = mkVkImportSemaphoreZirconHandleFUCHSIA vkImportSemaphoreZirconHandleFUCHSIAPtr
   pImportSemaphoreZirconHandleInfo <- ContT $ withCStruct (importSemaphoreZirconHandleInfo)
-  r <- lift $ traceAroundEvent "vkImportSemaphoreZirconHandleFUCHSIA" (vkImportSemaphoreZirconHandleFUCHSIA' (deviceHandle (device)) pImportSemaphoreZirconHandleInfo)
+  r <- lift $ traceAroundEvent "vkImportSemaphoreZirconHandleFUCHSIA" (vkImportSemaphoreZirconHandleFUCHSIA'
+                                                                         (deviceHandle (device))
+                                                                         pImportSemaphoreZirconHandleInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 

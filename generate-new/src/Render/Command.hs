@@ -168,7 +168,7 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
         [ getDoc (TopLevel (cName mcCommand))
         , pretty commandName
           <+> indent 0 ("::" <> renderWithComments getDoc chtDoc)
-        , pretty commandName <+> sep paramNiceNames <+> "=" <+> rhs
+        , pretty commandName <+> hang 2 (sep paramNiceNames) <+> "=" <+> rhs
         ]
     else do
       ffiTy <- cToHsTypeWrapped
@@ -200,7 +200,7 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
         [ comment $ unName commandName <> " with selectable safeness"
         , safeOrUnsafeName
           <+> indent 0 ("::" <> renderWithComments getDoc chtSafeOrUnsafeDoc)
-        , safeOrUnsafeName <+> dynName <+> sep paramNiceNames <+> "=" <+> rhs
+        , safeOrUnsafeName <+> dynName <+> hang 2 (sep paramNiceNames) <+> "=" <+> rhs
         ]
 
       tellDocWithHaddock $ \getDoc -> vsep
@@ -300,7 +300,7 @@ commandRHS m@MarshaledCommand {..} = context "commandRHS" $ do
         .   ValueDoc
         $   "traceAroundEvent"
         <+> viaShow traceName
-        <+> parens (sep (fun : (unValueDoc <$> toList pokes)))
+        <+> parens (hang 2 (sep (fun : (unValueDoc <$> toList pokes))))
     retRef        <- unwrapIdiomaticType (Just name) wrappedRef
 
     -- check the result
@@ -310,7 +310,7 @@ commandRHS m@MarshaledCommand {..} = context "commandRHS" $ do
       after checkedResult
       let peeks = catMaybes (toList peekRefs)
       rets <- traverse use $ if includeReturnType then retRef : peeks else peeks
-      pure . Pure NeverInline $ tupled @() (unValueDoc <$> rets)
+      pure . Pure NeverInline $ align (tupled @() (unValueDoc <$> rets))
 
   case stmtsDoc of
     IOStmts d -> do
@@ -494,7 +494,7 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
       after ret2
       let peeks = catMaybes (toList getVectorsPeeks)
       rets <- traverse use $ if includeReturnType then ret2 : peeks else peeks
-      pure . Pure NeverInline $ tupled @() (unValueDoc <$> rets)
+      pure . Pure NeverInline $ align (tupled @() (unValueDoc <$> rets))
 
   rhs <- case stmtsDoc of
     IOStmts d -> do
@@ -508,7 +508,7 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
   tellDocWithHaddock $ \getDoc -> vsep
     [ getDoc (TopLevel (cName mcCommand))
     , pretty commandName <+> indent 0 ("::" <> renderWithComments getDoc chtDoc)
-    , pretty commandName <+> sep paramNiceNames <+> "=" <+> rhs
+    , pretty commandName <+> hang 2 (sep paramNiceNames) <+> "=" <+> rhs
     ]
 
 data CountParameter a
@@ -784,7 +784,7 @@ runWithPokes includeReturnType MarshaledCommand {..} funRef pokes = do
       .   ValueDoc
       $   "traceAroundEvent"
       <+> viaShow traceName
-      <+> parens (sep (fun : (unValueDoc <$> toList pokes)))
+      <+> parens (hang 2 (sep (fun : (unValueDoc <$> toList pokes))))
 
   checkResultMaybe mcCommand retRef
 
@@ -1186,10 +1186,10 @@ renderWithComments getDoc CommandHaskellType {..} =
       (indent 1 <$> (withComment <$> toList chtArgs) <> [chtResult])
     vars = if V.null chtVars
       then Nothing
-      else Just ("forall" <+> hsep (toList chtVars))
+      else Just ("forall" <+> align (hsep (toList chtVars)))
     preds = if V.null chtConstraints
       then Nothing
-      else Just (tupled (toList chtConstraints))
+      else Just (align (tupled (toList chtConstraints)))
   in
     maybe mempty (\v -> indent 1 v <> line <> " .") vars
     <> maybe mempty (\p -> indent 1 p <> line <> "=>") preds

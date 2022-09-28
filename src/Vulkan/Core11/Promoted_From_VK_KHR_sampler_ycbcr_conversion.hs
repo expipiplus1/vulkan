@@ -177,7 +177,9 @@ foreign import ccall
 -- 'Vulkan.Core11.Handles.SamplerYcbcrConversion',
 -- 'SamplerYcbcrConversionCreateInfo'
 createSamplerYcbcrConversion :: forall a io
-                              . (Extendss SamplerYcbcrConversionCreateInfo a, PokeChain a, MonadIO io)
+                              . ( Extendss SamplerYcbcrConversionCreateInfo a
+                                , PokeChain a
+                                , MonadIO io )
                              => -- | @device@ is the logical device that creates the sampler Y′CBCR
                                 -- conversion.
                                 Device
@@ -189,7 +191,9 @@ createSamplerYcbcrConversion :: forall a io
                                 -- chapter.
                                 ("allocator" ::: Maybe AllocationCallbacks)
                              -> io (SamplerYcbcrConversion)
-createSamplerYcbcrConversion device createInfo allocator = liftIO . evalContT $ do
+createSamplerYcbcrConversion device
+                               createInfo
+                               allocator = liftIO . evalContT $ do
   let vkCreateSamplerYcbcrConversionPtr = pVkCreateSamplerYcbcrConversion (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateSamplerYcbcrConversionPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateSamplerYcbcrConversion is null" Nothing Nothing
@@ -199,7 +203,11 @@ createSamplerYcbcrConversion device createInfo allocator = liftIO . evalContT $ 
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPYcbcrConversion <- ContT $ bracket (callocBytes @SamplerYcbcrConversion 8) free
-  r <- lift $ traceAroundEvent "vkCreateSamplerYcbcrConversion" (vkCreateSamplerYcbcrConversion' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPYcbcrConversion))
+  r <- lift $ traceAroundEvent "vkCreateSamplerYcbcrConversion" (vkCreateSamplerYcbcrConversion'
+                                                                   (deviceHandle (device))
+                                                                   (forgetExtensions pCreateInfo)
+                                                                   pAllocator
+                                                                   (pPYcbcrConversion))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pYcbcrConversion <- lift $ peek @SamplerYcbcrConversion pPYcbcrConversion
   pure $ (pYcbcrConversion)
@@ -267,7 +275,9 @@ destroySamplerYcbcrConversion :: forall io
                                  -- chapter.
                                  ("allocator" ::: Maybe AllocationCallbacks)
                               -> io ()
-destroySamplerYcbcrConversion device ycbcrConversion allocator = liftIO . evalContT $ do
+destroySamplerYcbcrConversion device
+                                ycbcrConversion
+                                allocator = liftIO . evalContT $ do
   let vkDestroySamplerYcbcrConversionPtr = pVkDestroySamplerYcbcrConversion (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroySamplerYcbcrConversionPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroySamplerYcbcrConversion is null" Nothing Nothing
@@ -275,7 +285,10 @@ destroySamplerYcbcrConversion device ycbcrConversion allocator = liftIO . evalCo
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroySamplerYcbcrConversion" (vkDestroySamplerYcbcrConversion' (deviceHandle (device)) (ycbcrConversion) pAllocator)
+  lift $ traceAroundEvent "vkDestroySamplerYcbcrConversion" (vkDestroySamplerYcbcrConversion'
+                                                               (deviceHandle (device))
+                                                               (ycbcrConversion)
+                                                               pAllocator)
   pure $ ()
 
 
@@ -573,7 +586,8 @@ instance Extensible SamplerYcbcrConversionCreateInfo where
     | Just Refl <- eqT @e @ExternalFormatANDROID = Just f
     | otherwise = Nothing
 
-instance (Extendss SamplerYcbcrConversionCreateInfo es, PokeChain es) => ToCStruct (SamplerYcbcrConversionCreateInfo es) where
+instance ( Extendss SamplerYcbcrConversionCreateInfo es
+         , PokeChain es ) => ToCStruct (SamplerYcbcrConversionCreateInfo es) where
   withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SamplerYcbcrConversionCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO)
@@ -604,7 +618,8 @@ instance (Extendss SamplerYcbcrConversionCreateInfo es, PokeChain es) => ToCStru
     lift $ poke ((p `plusPtr` 56 :: Ptr Bool32)) (boolToBool32 (zero))
     lift $ f
 
-instance (Extendss SamplerYcbcrConversionCreateInfo es, PeekChain es) => FromCStruct (SamplerYcbcrConversionCreateInfo es) where
+instance ( Extendss SamplerYcbcrConversionCreateInfo es
+         , PeekChain es ) => FromCStruct (SamplerYcbcrConversionCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -617,7 +632,15 @@ instance (Extendss SamplerYcbcrConversionCreateInfo es, PeekChain es) => FromCSt
     chromaFilter <- peek @Filter ((p `plusPtr` 52 :: Ptr Filter))
     forceExplicitReconstruction <- peek @Bool32 ((p `plusPtr` 56 :: Ptr Bool32))
     pure $ SamplerYcbcrConversionCreateInfo
-             next format ycbcrModel ycbcrRange components xChromaOffset yChromaOffset chromaFilter (bool32ToBool forceExplicitReconstruction)
+             next
+             format
+             ycbcrModel
+             ycbcrRange
+             components
+             xChromaOffset
+             yChromaOffset
+             chromaFilter
+             (bool32ToBool forceExplicitReconstruction)
 
 instance es ~ '[] => Zero (SamplerYcbcrConversionCreateInfo es) where
   zero = SamplerYcbcrConversionCreateInfo

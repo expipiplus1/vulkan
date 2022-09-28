@@ -264,10 +264,12 @@ instance FromCStruct ExportMetalObjectCreateInfoEXT
 type role ExportMetalObjectsInfoEXT nominal
 data ExportMetalObjectsInfoEXT (es :: [Type])
 
-instance (Extendss ExportMetalObjectsInfoEXT es, PokeChain es) => ToCStruct (ExportMetalObjectsInfoEXT es)
+instance ( Extendss ExportMetalObjectsInfoEXT es
+         , PokeChain es ) => ToCStruct (ExportMetalObjectsInfoEXT es)
 instance Show (Chain es) => Show (ExportMetalObjectsInfoEXT es)
 
-instance (Extendss ExportMetalObjectsInfoEXT es, PeekChain es) => FromCStruct (ExportMetalObjectsInfoEXT es)
+instance ( Extendss ExportMetalObjectsInfoEXT es
+         , PeekChain es ) => FromCStruct (ExportMetalObjectsInfoEXT es)
 
 
 data ExportMetalSharedEventInfoEXT

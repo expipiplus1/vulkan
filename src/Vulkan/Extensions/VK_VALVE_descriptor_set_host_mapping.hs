@@ -320,14 +320,18 @@ getDescriptorSetLayoutHostMappingInfoVALVE :: forall io
                                               -- 'DescriptorSetBindingReferenceVALVE' structure
                                               DescriptorSetBindingReferenceVALVE
                                            -> io (DescriptorSetLayoutHostMappingInfoVALVE)
-getDescriptorSetLayoutHostMappingInfoVALVE device bindingReference = liftIO . evalContT $ do
+getDescriptorSetLayoutHostMappingInfoVALVE device
+                                             bindingReference = liftIO . evalContT $ do
   let vkGetDescriptorSetLayoutHostMappingInfoVALVEPtr = pVkGetDescriptorSetLayoutHostMappingInfoVALVE (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDescriptorSetLayoutHostMappingInfoVALVEPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDescriptorSetLayoutHostMappingInfoVALVE is null" Nothing Nothing
   let vkGetDescriptorSetLayoutHostMappingInfoVALVE' = mkVkGetDescriptorSetLayoutHostMappingInfoVALVE vkGetDescriptorSetLayoutHostMappingInfoVALVEPtr
   pBindingReference <- ContT $ withCStruct (bindingReference)
   pPHostMapping <- ContT (withZeroCStruct @DescriptorSetLayoutHostMappingInfoVALVE)
-  lift $ traceAroundEvent "vkGetDescriptorSetLayoutHostMappingInfoVALVE" (vkGetDescriptorSetLayoutHostMappingInfoVALVE' (deviceHandle (device)) pBindingReference (pPHostMapping))
+  lift $ traceAroundEvent "vkGetDescriptorSetLayoutHostMappingInfoVALVE" (vkGetDescriptorSetLayoutHostMappingInfoVALVE'
+                                                                            (deviceHandle (device))
+                                                                            pBindingReference
+                                                                            (pPHostMapping))
   pHostMapping <- lift $ peekCStruct @DescriptorSetLayoutHostMappingInfoVALVE pPHostMapping
   pure $ (pHostMapping)
 
@@ -364,7 +368,10 @@ getDescriptorSetHostMappingVALVE device descriptorSet = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDescriptorSetHostMappingVALVE is null" Nothing Nothing
   let vkGetDescriptorSetHostMappingVALVE' = mkVkGetDescriptorSetHostMappingVALVE vkGetDescriptorSetHostMappingVALVEPtr
   pPpData <- ContT $ bracket (callocBytes @(Ptr ()) 8) free
-  lift $ traceAroundEvent "vkGetDescriptorSetHostMappingVALVE" (vkGetDescriptorSetHostMappingVALVE' (deviceHandle (device)) (descriptorSet) (pPpData))
+  lift $ traceAroundEvent "vkGetDescriptorSetHostMappingVALVE" (vkGetDescriptorSetHostMappingVALVE'
+                                                                  (deviceHandle (device))
+                                                                  (descriptorSet)
+                                                                  (pPpData))
   ppData <- lift $ peek @(Ptr ()) pPpData
   pure $ (ppData)
 

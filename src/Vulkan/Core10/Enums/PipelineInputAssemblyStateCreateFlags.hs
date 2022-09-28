@@ -27,8 +27,6 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 newtype PipelineInputAssemblyStateCreateFlags = PipelineInputAssemblyStateCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNamePipelineInputAssemblyStateCreateFlags :: String
 conNamePipelineInputAssemblyStateCreateFlags = "PipelineInputAssemblyStateCreateFlags"
 
@@ -39,15 +37,18 @@ showTablePipelineInputAssemblyStateCreateFlags :: [(PipelineInputAssemblyStateCr
 showTablePipelineInputAssemblyStateCreateFlags = []
 
 instance Show PipelineInputAssemblyStateCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixPipelineInputAssemblyStateCreateFlags
-                            showTablePipelineInputAssemblyStateCreateFlags
-                            conNamePipelineInputAssemblyStateCreateFlags
-                            (\(PipelineInputAssemblyStateCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineInputAssemblyStateCreateFlags
+      showTablePipelineInputAssemblyStateCreateFlags
+      conNamePipelineInputAssemblyStateCreateFlags
+      (\(PipelineInputAssemblyStateCreateFlags x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read PipelineInputAssemblyStateCreateFlags where
-  readPrec = enumReadPrec enumPrefixPipelineInputAssemblyStateCreateFlags
-                          showTablePipelineInputAssemblyStateCreateFlags
-                          conNamePipelineInputAssemblyStateCreateFlags
-                          PipelineInputAssemblyStateCreateFlags
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineInputAssemblyStateCreateFlags
+      showTablePipelineInputAssemblyStateCreateFlags
+      conNamePipelineInputAssemblyStateCreateFlags
+      PipelineInputAssemblyStateCreateFlags

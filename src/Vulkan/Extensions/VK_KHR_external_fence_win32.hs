@@ -255,7 +255,10 @@ getFenceWin32HandleKHR device getWin32HandleInfo = liftIO . evalContT $ do
   let vkGetFenceWin32HandleKHR' = mkVkGetFenceWin32HandleKHR vkGetFenceWin32HandleKHRPtr
   pGetWin32HandleInfo <- ContT $ withCStruct (getWin32HandleInfo)
   pPHandle <- ContT $ bracket (callocBytes @HANDLE 8) free
-  r <- lift $ traceAroundEvent "vkGetFenceWin32HandleKHR" (vkGetFenceWin32HandleKHR' (deviceHandle (device)) pGetWin32HandleInfo (pPHandle))
+  r <- lift $ traceAroundEvent "vkGetFenceWin32HandleKHR" (vkGetFenceWin32HandleKHR'
+                                                             (deviceHandle (device))
+                                                             pGetWin32HandleInfo
+                                                             (pPHandle))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pHandle <- lift $ peek @HANDLE pPHandle
   pure $ (pHandle)
@@ -313,13 +316,16 @@ importFenceWin32HandleKHR :: forall io
                              -- 'ImportFenceWin32HandleInfoKHR' structure
                              ImportFenceWin32HandleInfoKHR
                           -> io ()
-importFenceWin32HandleKHR device importFenceWin32HandleInfo = liftIO . evalContT $ do
+importFenceWin32HandleKHR device
+                            importFenceWin32HandleInfo = liftIO . evalContT $ do
   let vkImportFenceWin32HandleKHRPtr = pVkImportFenceWin32HandleKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkImportFenceWin32HandleKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkImportFenceWin32HandleKHR is null" Nothing Nothing
   let vkImportFenceWin32HandleKHR' = mkVkImportFenceWin32HandleKHR vkImportFenceWin32HandleKHRPtr
   pImportFenceWin32HandleInfo <- ContT $ withCStruct (importFenceWin32HandleInfo)
-  r <- lift $ traceAroundEvent "vkImportFenceWin32HandleKHR" (vkImportFenceWin32HandleKHR' (deviceHandle (device)) pImportFenceWin32HandleInfo)
+  r <- lift $ traceAroundEvent "vkImportFenceWin32HandleKHR" (vkImportFenceWin32HandleKHR'
+                                                                (deviceHandle (device))
+                                                                pImportFenceWin32HandleInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 

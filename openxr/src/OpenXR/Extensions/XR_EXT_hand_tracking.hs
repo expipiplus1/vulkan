@@ -246,7 +246,9 @@ foreign import ccall
 -- 'HandTrackerCreateInfoEXT', 'OpenXR.Extensions.Handles.HandTrackerEXT',
 -- 'OpenXR.Core10.Handles.Session'
 createHandTrackerEXT :: forall a io
-                      . (Extendss HandTrackerCreateInfoEXT a, PokeChain a, MonadIO io)
+                      . ( Extendss HandTrackerCreateInfoEXT a
+                        , PokeChain a
+                        , MonadIO io )
                      => -- | @session@ is an 'OpenXR.Core10.Handles.Session' in which the hand
                         -- tracker will be active.
                         Session
@@ -262,7 +264,10 @@ createHandTrackerEXT session createInfo = liftIO . evalContT $ do
   let xrCreateHandTrackerEXT' = mkXrCreateHandTrackerEXT xrCreateHandTrackerEXTPtr
   createInfo' <- ContT $ withCStruct (createInfo)
   pHandTracker <- ContT $ bracket (callocBytes @(Ptr HandTrackerEXT_T) 8) free
-  r <- lift $ traceAroundEvent "xrCreateHandTrackerEXT" (xrCreateHandTrackerEXT' (sessionHandle (session)) (forgetExtensions createInfo') (pHandTracker))
+  r <- lift $ traceAroundEvent "xrCreateHandTrackerEXT" (xrCreateHandTrackerEXT'
+                                                           (sessionHandle (session))
+                                                           (forgetExtensions createInfo')
+                                                           (pHandTracker))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   handTracker <- lift $ peek @(Ptr HandTrackerEXT_T) pHandTracker
   pure $ (r, ((\h -> HandTrackerEXT h cmds ) handTracker))
@@ -330,7 +335,8 @@ destroyHandTrackerEXT handTracker = liftIO $ do
   unless (xrDestroyHandTrackerEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrDestroyHandTrackerEXT is null" Nothing Nothing
   let xrDestroyHandTrackerEXT' = mkXrDestroyHandTrackerEXT xrDestroyHandTrackerEXTPtr
-  r <- traceAroundEvent "xrDestroyHandTrackerEXT" (xrDestroyHandTrackerEXT' (handTrackerEXTHandle (handTracker)))
+  r <- traceAroundEvent "xrDestroyHandTrackerEXT" (xrDestroyHandTrackerEXT'
+                                                     (handTrackerEXTHandle (handTracker)))
   when (r < SUCCESS) (throwIO (OpenXrException r))
 
 
@@ -387,7 +393,10 @@ foreign import ccall
 -- 'HandJointLocationsEXT', 'HandJointsLocateInfoEXT',
 -- 'OpenXR.Extensions.Handles.HandTrackerEXT'
 locateHandJointsEXT :: forall a io
-                     . (Extendss HandJointLocationsEXT a, PokeChain a, PeekChain a, MonadIO io)
+                     . ( Extendss HandJointLocationsEXT a
+                       , PokeChain a
+                       , PeekChain a
+                       , MonadIO io )
                     => -- | @handTracker@ is an 'OpenXR.Extensions.Handles.HandTrackerEXT'
                        -- previously created by 'createHandTrackerEXT'.
                        HandTrackerEXT
@@ -402,7 +411,10 @@ locateHandJointsEXT handTracker locateInfo = liftIO . evalContT $ do
   let xrLocateHandJointsEXT' = mkXrLocateHandJointsEXT xrLocateHandJointsEXTPtr
   locateInfo' <- ContT $ withCStruct (locateInfo)
   pLocations <- ContT (withZeroCStruct @(HandJointLocationsEXT _))
-  r <- lift $ traceAroundEvent "xrLocateHandJointsEXT" (xrLocateHandJointsEXT' (handTrackerEXTHandle (handTracker)) locateInfo' (forgetExtensions (pLocations)))
+  r <- lift $ traceAroundEvent "xrLocateHandJointsEXT" (xrLocateHandJointsEXT'
+                                                          (handTrackerEXTHandle (handTracker))
+                                                          locateInfo'
+                                                          (forgetExtensions (pLocations)))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   locations <- lift $ peekCStruct @(HandJointLocationsEXT _) pLocations
   pure $ (r, locations)
@@ -529,7 +541,8 @@ instance Extensible HandTrackerCreateInfoEXT where
     | Just Refl <- eqT @e @HandPoseTypeInfoMSFT = Just f
     | otherwise = Nothing
 
-instance (Extendss HandTrackerCreateInfoEXT es, PokeChain es) => ToCStruct (HandTrackerCreateInfoEXT es) where
+instance ( Extendss HandTrackerCreateInfoEXT es
+         , PokeChain es ) => ToCStruct (HandTrackerCreateInfoEXT es) where
   withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HandTrackerCreateInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_HAND_TRACKER_CREATE_INFO_EXT)
@@ -548,7 +561,8 @@ instance (Extendss HandTrackerCreateInfoEXT es, PokeChain es) => ToCStruct (Hand
     lift $ poke ((p `plusPtr` 20 :: Ptr HandJointSetEXT)) (zero)
     lift $ f
 
-instance (Extendss HandTrackerCreateInfoEXT es, PeekChain es) => FromCStruct (HandTrackerCreateInfoEXT es) where
+instance ( Extendss HandTrackerCreateInfoEXT es
+         , PeekChain es ) => FromCStruct (HandTrackerCreateInfoEXT es) where
   peekCStruct p = do
     next <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next' <- peekChain (castPtr next)
@@ -915,7 +929,8 @@ instance Extensible HandJointLocationsEXT where
     | Just Refl <- eqT @e @HandJointVelocitiesEXT = Just f
     | otherwise = Nothing
 
-instance (Extendss HandJointLocationsEXT es, PokeChain es) => ToCStruct (HandJointLocationsEXT es) where
+instance ( Extendss HandJointLocationsEXT es
+         , PokeChain es ) => ToCStruct (HandJointLocationsEXT es) where
   withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p HandJointLocationsEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_HAND_JOINT_LOCATIONS_EXT)
@@ -936,7 +951,8 @@ instance (Extendss HandJointLocationsEXT es, PokeChain es) => ToCStruct (HandJoi
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr HandJointLocationEXT))) (zero)
     lift $ f
 
-instance (Extendss HandJointLocationsEXT es, PeekChain es) => FromCStruct (HandJointLocationsEXT es) where
+instance ( Extendss HandJointLocationsEXT es
+         , PeekChain es ) => FromCStruct (HandJointLocationsEXT es) where
   peekCStruct p = do
     next <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next' <- peekChain (castPtr next)
@@ -1086,16 +1102,22 @@ instance Zero HandJointVelocitiesEXT where
 -- 'HandTrackerCreateInfoEXT'
 newtype HandEXT = HandEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
+
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
 -- | 'HAND_LEFT_EXT' specifies the hand tracker will be tracking the user’s
 -- left hand.
-pattern HAND_LEFT_EXT  = HandEXT 1
+pattern HAND_LEFT_EXT = HandEXT 1
+
 -- | 'HAND_RIGHT_EXT' specifies the hand tracker will be tracking the user’s
 -- right hand.
 pattern HAND_RIGHT_EXT = HandEXT 2
-{-# complete HAND_LEFT_EXT,
-             HAND_RIGHT_EXT :: HandEXT #-}
+
+{-# COMPLETE
+  HAND_LEFT_EXT
+  , HAND_RIGHT_EXT ::
+    HandEXT
+  #-}
 
 conNameHandEXT :: String
 conNameHandEXT = "HandEXT"
@@ -1107,11 +1129,21 @@ showTableHandEXT :: [(HandEXT, String)]
 showTableHandEXT = [(HAND_LEFT_EXT, "LEFT_EXT"), (HAND_RIGHT_EXT, "RIGHT_EXT")]
 
 instance Show HandEXT where
-  showsPrec = enumShowsPrec enumPrefixHandEXT showTableHandEXT conNameHandEXT (\(HandEXT x) -> x) (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixHandEXT
+      showTableHandEXT
+      conNameHandEXT
+      (\(HandEXT x) -> x)
+      (showsPrec 11)
 
 instance Read HandEXT where
-  readPrec = enumReadPrec enumPrefixHandEXT showTableHandEXT conNameHandEXT HandEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixHandEXT
+      showTableHandEXT
+      conNameHandEXT
+      HandEXT
 
 -- | XrHandJointEXT - The name of hand joints that can be tracked
 --
@@ -1122,83 +1154,112 @@ newtype HandJointEXT = HandJointEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_PALM_EXT"
-pattern HAND_JOINT_PALM_EXT                = HandJointEXT 0
+pattern HAND_JOINT_PALM_EXT = HandJointEXT 0
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_WRIST_EXT"
-pattern HAND_JOINT_WRIST_EXT               = HandJointEXT 1
+pattern HAND_JOINT_WRIST_EXT = HandJointEXT 1
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_THUMB_METACARPAL_EXT"
-pattern HAND_JOINT_THUMB_METACARPAL_EXT    = HandJointEXT 2
+pattern HAND_JOINT_THUMB_METACARPAL_EXT = HandJointEXT 2
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_THUMB_PROXIMAL_EXT"
-pattern HAND_JOINT_THUMB_PROXIMAL_EXT      = HandJointEXT 3
+pattern HAND_JOINT_THUMB_PROXIMAL_EXT = HandJointEXT 3
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_THUMB_DISTAL_EXT"
-pattern HAND_JOINT_THUMB_DISTAL_EXT        = HandJointEXT 4
+pattern HAND_JOINT_THUMB_DISTAL_EXT = HandJointEXT 4
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_THUMB_TIP_EXT"
-pattern HAND_JOINT_THUMB_TIP_EXT           = HandJointEXT 5
+pattern HAND_JOINT_THUMB_TIP_EXT = HandJointEXT 5
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_INDEX_METACARPAL_EXT"
-pattern HAND_JOINT_INDEX_METACARPAL_EXT    = HandJointEXT 6
+pattern HAND_JOINT_INDEX_METACARPAL_EXT = HandJointEXT 6
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_INDEX_PROXIMAL_EXT"
-pattern HAND_JOINT_INDEX_PROXIMAL_EXT      = HandJointEXT 7
+pattern HAND_JOINT_INDEX_PROXIMAL_EXT = HandJointEXT 7
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_INDEX_INTERMEDIATE_EXT"
-pattern HAND_JOINT_INDEX_INTERMEDIATE_EXT  = HandJointEXT 8
+pattern HAND_JOINT_INDEX_INTERMEDIATE_EXT = HandJointEXT 8
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_INDEX_DISTAL_EXT"
-pattern HAND_JOINT_INDEX_DISTAL_EXT        = HandJointEXT 9
+pattern HAND_JOINT_INDEX_DISTAL_EXT = HandJointEXT 9
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_INDEX_TIP_EXT"
-pattern HAND_JOINT_INDEX_TIP_EXT           = HandJointEXT 10
+pattern HAND_JOINT_INDEX_TIP_EXT = HandJointEXT 10
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_MIDDLE_METACARPAL_EXT"
-pattern HAND_JOINT_MIDDLE_METACARPAL_EXT   = HandJointEXT 11
+pattern HAND_JOINT_MIDDLE_METACARPAL_EXT = HandJointEXT 11
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_MIDDLE_PROXIMAL_EXT"
-pattern HAND_JOINT_MIDDLE_PROXIMAL_EXT     = HandJointEXT 12
+pattern HAND_JOINT_MIDDLE_PROXIMAL_EXT = HandJointEXT 12
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_MIDDLE_INTERMEDIATE_EXT"
 pattern HAND_JOINT_MIDDLE_INTERMEDIATE_EXT = HandJointEXT 13
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_MIDDLE_DISTAL_EXT"
-pattern HAND_JOINT_MIDDLE_DISTAL_EXT       = HandJointEXT 14
+pattern HAND_JOINT_MIDDLE_DISTAL_EXT = HandJointEXT 14
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_MIDDLE_TIP_EXT"
-pattern HAND_JOINT_MIDDLE_TIP_EXT          = HandJointEXT 15
+pattern HAND_JOINT_MIDDLE_TIP_EXT = HandJointEXT 15
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_RING_METACARPAL_EXT"
-pattern HAND_JOINT_RING_METACARPAL_EXT     = HandJointEXT 16
+pattern HAND_JOINT_RING_METACARPAL_EXT = HandJointEXT 16
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_RING_PROXIMAL_EXT"
-pattern HAND_JOINT_RING_PROXIMAL_EXT       = HandJointEXT 17
+pattern HAND_JOINT_RING_PROXIMAL_EXT = HandJointEXT 17
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_RING_INTERMEDIATE_EXT"
-pattern HAND_JOINT_RING_INTERMEDIATE_EXT   = HandJointEXT 18
+pattern HAND_JOINT_RING_INTERMEDIATE_EXT = HandJointEXT 18
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_RING_DISTAL_EXT"
-pattern HAND_JOINT_RING_DISTAL_EXT         = HandJointEXT 19
+pattern HAND_JOINT_RING_DISTAL_EXT = HandJointEXT 19
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_RING_TIP_EXT"
-pattern HAND_JOINT_RING_TIP_EXT            = HandJointEXT 20
+pattern HAND_JOINT_RING_TIP_EXT = HandJointEXT 20
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_LITTLE_METACARPAL_EXT"
-pattern HAND_JOINT_LITTLE_METACARPAL_EXT   = HandJointEXT 21
+pattern HAND_JOINT_LITTLE_METACARPAL_EXT = HandJointEXT 21
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_LITTLE_PROXIMAL_EXT"
-pattern HAND_JOINT_LITTLE_PROXIMAL_EXT     = HandJointEXT 22
+pattern HAND_JOINT_LITTLE_PROXIMAL_EXT = HandJointEXT 22
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_LITTLE_INTERMEDIATE_EXT"
 pattern HAND_JOINT_LITTLE_INTERMEDIATE_EXT = HandJointEXT 23
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_LITTLE_DISTAL_EXT"
-pattern HAND_JOINT_LITTLE_DISTAL_EXT       = HandJointEXT 24
+pattern HAND_JOINT_LITTLE_DISTAL_EXT = HandJointEXT 24
+
 -- No documentation found for Nested "XrHandJointEXT" "XR_HAND_JOINT_LITTLE_TIP_EXT"
-pattern HAND_JOINT_LITTLE_TIP_EXT          = HandJointEXT 25
-{-# complete HAND_JOINT_PALM_EXT,
-             HAND_JOINT_WRIST_EXT,
-             HAND_JOINT_THUMB_METACARPAL_EXT,
-             HAND_JOINT_THUMB_PROXIMAL_EXT,
-             HAND_JOINT_THUMB_DISTAL_EXT,
-             HAND_JOINT_THUMB_TIP_EXT,
-             HAND_JOINT_INDEX_METACARPAL_EXT,
-             HAND_JOINT_INDEX_PROXIMAL_EXT,
-             HAND_JOINT_INDEX_INTERMEDIATE_EXT,
-             HAND_JOINT_INDEX_DISTAL_EXT,
-             HAND_JOINT_INDEX_TIP_EXT,
-             HAND_JOINT_MIDDLE_METACARPAL_EXT,
-             HAND_JOINT_MIDDLE_PROXIMAL_EXT,
-             HAND_JOINT_MIDDLE_INTERMEDIATE_EXT,
-             HAND_JOINT_MIDDLE_DISTAL_EXT,
-             HAND_JOINT_MIDDLE_TIP_EXT,
-             HAND_JOINT_RING_METACARPAL_EXT,
-             HAND_JOINT_RING_PROXIMAL_EXT,
-             HAND_JOINT_RING_INTERMEDIATE_EXT,
-             HAND_JOINT_RING_DISTAL_EXT,
-             HAND_JOINT_RING_TIP_EXT,
-             HAND_JOINT_LITTLE_METACARPAL_EXT,
-             HAND_JOINT_LITTLE_PROXIMAL_EXT,
-             HAND_JOINT_LITTLE_INTERMEDIATE_EXT,
-             HAND_JOINT_LITTLE_DISTAL_EXT,
-             HAND_JOINT_LITTLE_TIP_EXT :: HandJointEXT #-}
+pattern HAND_JOINT_LITTLE_TIP_EXT = HandJointEXT 25
+
+{-# COMPLETE
+  HAND_JOINT_PALM_EXT
+  , HAND_JOINT_WRIST_EXT
+  , HAND_JOINT_THUMB_METACARPAL_EXT
+  , HAND_JOINT_THUMB_PROXIMAL_EXT
+  , HAND_JOINT_THUMB_DISTAL_EXT
+  , HAND_JOINT_THUMB_TIP_EXT
+  , HAND_JOINT_INDEX_METACARPAL_EXT
+  , HAND_JOINT_INDEX_PROXIMAL_EXT
+  , HAND_JOINT_INDEX_INTERMEDIATE_EXT
+  , HAND_JOINT_INDEX_DISTAL_EXT
+  , HAND_JOINT_INDEX_TIP_EXT
+  , HAND_JOINT_MIDDLE_METACARPAL_EXT
+  , HAND_JOINT_MIDDLE_PROXIMAL_EXT
+  , HAND_JOINT_MIDDLE_INTERMEDIATE_EXT
+  , HAND_JOINT_MIDDLE_DISTAL_EXT
+  , HAND_JOINT_MIDDLE_TIP_EXT
+  , HAND_JOINT_RING_METACARPAL_EXT
+  , HAND_JOINT_RING_PROXIMAL_EXT
+  , HAND_JOINT_RING_INTERMEDIATE_EXT
+  , HAND_JOINT_RING_DISTAL_EXT
+  , HAND_JOINT_RING_TIP_EXT
+  , HAND_JOINT_LITTLE_METACARPAL_EXT
+  , HAND_JOINT_LITTLE_PROXIMAL_EXT
+  , HAND_JOINT_LITTLE_INTERMEDIATE_EXT
+  , HAND_JOINT_LITTLE_DISTAL_EXT
+  , HAND_JOINT_LITTLE_TIP_EXT ::
+    HandJointEXT
+  #-}
 
 conNameHandJointEXT :: String
 conNameHandJointEXT = "HandJointEXT"
@@ -1208,44 +1269,83 @@ enumPrefixHandJointEXT = "HAND_JOINT_"
 
 showTableHandJointEXT :: [(HandJointEXT, String)]
 showTableHandJointEXT =
-  [ (HAND_JOINT_PALM_EXT               , "PALM_EXT")
-  , (HAND_JOINT_WRIST_EXT              , "WRIST_EXT")
-  , (HAND_JOINT_THUMB_METACARPAL_EXT   , "THUMB_METACARPAL_EXT")
-  , (HAND_JOINT_THUMB_PROXIMAL_EXT     , "THUMB_PROXIMAL_EXT")
-  , (HAND_JOINT_THUMB_DISTAL_EXT       , "THUMB_DISTAL_EXT")
-  , (HAND_JOINT_THUMB_TIP_EXT          , "THUMB_TIP_EXT")
-  , (HAND_JOINT_INDEX_METACARPAL_EXT   , "INDEX_METACARPAL_EXT")
-  , (HAND_JOINT_INDEX_PROXIMAL_EXT     , "INDEX_PROXIMAL_EXT")
-  , (HAND_JOINT_INDEX_INTERMEDIATE_EXT , "INDEX_INTERMEDIATE_EXT")
-  , (HAND_JOINT_INDEX_DISTAL_EXT       , "INDEX_DISTAL_EXT")
-  , (HAND_JOINT_INDEX_TIP_EXT          , "INDEX_TIP_EXT")
-  , (HAND_JOINT_MIDDLE_METACARPAL_EXT  , "MIDDLE_METACARPAL_EXT")
-  , (HAND_JOINT_MIDDLE_PROXIMAL_EXT    , "MIDDLE_PROXIMAL_EXT")
-  , (HAND_JOINT_MIDDLE_INTERMEDIATE_EXT, "MIDDLE_INTERMEDIATE_EXT")
-  , (HAND_JOINT_MIDDLE_DISTAL_EXT      , "MIDDLE_DISTAL_EXT")
-  , (HAND_JOINT_MIDDLE_TIP_EXT         , "MIDDLE_TIP_EXT")
-  , (HAND_JOINT_RING_METACARPAL_EXT    , "RING_METACARPAL_EXT")
-  , (HAND_JOINT_RING_PROXIMAL_EXT      , "RING_PROXIMAL_EXT")
-  , (HAND_JOINT_RING_INTERMEDIATE_EXT  , "RING_INTERMEDIATE_EXT")
-  , (HAND_JOINT_RING_DISTAL_EXT        , "RING_DISTAL_EXT")
-  , (HAND_JOINT_RING_TIP_EXT           , "RING_TIP_EXT")
-  , (HAND_JOINT_LITTLE_METACARPAL_EXT  , "LITTLE_METACARPAL_EXT")
-  , (HAND_JOINT_LITTLE_PROXIMAL_EXT    , "LITTLE_PROXIMAL_EXT")
-  , (HAND_JOINT_LITTLE_INTERMEDIATE_EXT, "LITTLE_INTERMEDIATE_EXT")
-  , (HAND_JOINT_LITTLE_DISTAL_EXT      , "LITTLE_DISTAL_EXT")
-  , (HAND_JOINT_LITTLE_TIP_EXT         , "LITTLE_TIP_EXT")
+  [ (HAND_JOINT_PALM_EXT, "PALM_EXT")
+  , (HAND_JOINT_WRIST_EXT, "WRIST_EXT")
+  ,
+    ( HAND_JOINT_THUMB_METACARPAL_EXT
+    , "THUMB_METACARPAL_EXT"
+    )
+  , (HAND_JOINT_THUMB_PROXIMAL_EXT, "THUMB_PROXIMAL_EXT")
+  , (HAND_JOINT_THUMB_DISTAL_EXT, "THUMB_DISTAL_EXT")
+  , (HAND_JOINT_THUMB_TIP_EXT, "THUMB_TIP_EXT")
+  ,
+    ( HAND_JOINT_INDEX_METACARPAL_EXT
+    , "INDEX_METACARPAL_EXT"
+    )
+  , (HAND_JOINT_INDEX_PROXIMAL_EXT, "INDEX_PROXIMAL_EXT")
+  ,
+    ( HAND_JOINT_INDEX_INTERMEDIATE_EXT
+    , "INDEX_INTERMEDIATE_EXT"
+    )
+  , (HAND_JOINT_INDEX_DISTAL_EXT, "INDEX_DISTAL_EXT")
+  , (HAND_JOINT_INDEX_TIP_EXT, "INDEX_TIP_EXT")
+  ,
+    ( HAND_JOINT_MIDDLE_METACARPAL_EXT
+    , "MIDDLE_METACARPAL_EXT"
+    )
+  ,
+    ( HAND_JOINT_MIDDLE_PROXIMAL_EXT
+    , "MIDDLE_PROXIMAL_EXT"
+    )
+  ,
+    ( HAND_JOINT_MIDDLE_INTERMEDIATE_EXT
+    , "MIDDLE_INTERMEDIATE_EXT"
+    )
+  , (HAND_JOINT_MIDDLE_DISTAL_EXT, "MIDDLE_DISTAL_EXT")
+  , (HAND_JOINT_MIDDLE_TIP_EXT, "MIDDLE_TIP_EXT")
+  ,
+    ( HAND_JOINT_RING_METACARPAL_EXT
+    , "RING_METACARPAL_EXT"
+    )
+  , (HAND_JOINT_RING_PROXIMAL_EXT, "RING_PROXIMAL_EXT")
+  ,
+    ( HAND_JOINT_RING_INTERMEDIATE_EXT
+    , "RING_INTERMEDIATE_EXT"
+    )
+  , (HAND_JOINT_RING_DISTAL_EXT, "RING_DISTAL_EXT")
+  , (HAND_JOINT_RING_TIP_EXT, "RING_TIP_EXT")
+  ,
+    ( HAND_JOINT_LITTLE_METACARPAL_EXT
+    , "LITTLE_METACARPAL_EXT"
+    )
+  ,
+    ( HAND_JOINT_LITTLE_PROXIMAL_EXT
+    , "LITTLE_PROXIMAL_EXT"
+    )
+  ,
+    ( HAND_JOINT_LITTLE_INTERMEDIATE_EXT
+    , "LITTLE_INTERMEDIATE_EXT"
+    )
+  , (HAND_JOINT_LITTLE_DISTAL_EXT, "LITTLE_DISTAL_EXT")
+  , (HAND_JOINT_LITTLE_TIP_EXT, "LITTLE_TIP_EXT")
   ]
 
 instance Show HandJointEXT where
-  showsPrec = enumShowsPrec enumPrefixHandJointEXT
-                            showTableHandJointEXT
-                            conNameHandJointEXT
-                            (\(HandJointEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixHandJointEXT
+      showTableHandJointEXT
+      conNameHandJointEXT
+      (\(HandJointEXT x) -> x)
+      (showsPrec 11)
 
 instance Read HandJointEXT where
-  readPrec = enumReadPrec enumPrefixHandJointEXT showTableHandJointEXT conNameHandJointEXT HandJointEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixHandJointEXT
+      showTableHandJointEXT
+      conNameHandJointEXT
+      HandJointEXT
 
 -- | XrHandJointSetEXT - The set of hand joints to track.
 --
@@ -1264,7 +1364,8 @@ newtype HandJointSetEXT = HandJointSetEXT Int32
 -- 'OpenXR.Core10.APIConstants.HAND_JOINT_COUNT_EXT' and can be indexed
 -- using 'HandJointEXT'.
 pattern HAND_JOINT_SET_DEFAULT_EXT = HandJointSetEXT 0
-{-# complete HAND_JOINT_SET_DEFAULT_EXT :: HandJointSetEXT #-}
+
+{-# COMPLETE HAND_JOINT_SET_DEFAULT_EXT :: HandJointSetEXT #-}
 
 conNameHandJointSetEXT :: String
 conNameHandJointSetEXT = "HandJointSetEXT"
@@ -1276,15 +1377,21 @@ showTableHandJointSetEXT :: [(HandJointSetEXT, String)]
 showTableHandJointSetEXT = [(HAND_JOINT_SET_DEFAULT_EXT, "")]
 
 instance Show HandJointSetEXT where
-  showsPrec = enumShowsPrec enumPrefixHandJointSetEXT
-                            showTableHandJointSetEXT
-                            conNameHandJointSetEXT
-                            (\(HandJointSetEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixHandJointSetEXT
+      showTableHandJointSetEXT
+      conNameHandJointSetEXT
+      (\(HandJointSetEXT x) -> x)
+      (showsPrec 11)
 
 instance Read HandJointSetEXT where
-  readPrec = enumReadPrec enumPrefixHandJointSetEXT showTableHandJointSetEXT conNameHandJointSetEXT HandJointSetEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixHandJointSetEXT
+      showTableHandJointSetEXT
+      conNameHandJointSetEXT
+      HandJointSetEXT
 
 type EXT_hand_tracking_SPEC_VERSION = 2
 

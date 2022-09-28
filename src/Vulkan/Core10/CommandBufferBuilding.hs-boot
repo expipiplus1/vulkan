@@ -92,7 +92,8 @@ instance FromCStruct ImageSubresourceLayers
 type role RenderPassBeginInfo nominal
 data RenderPassBeginInfo (es :: [Type])
 
-instance (Extendss RenderPassBeginInfo es, PokeChain es) => ToCStruct (RenderPassBeginInfo es)
+instance ( Extendss RenderPassBeginInfo es
+         , PokeChain es ) => ToCStruct (RenderPassBeginInfo es)
 instance Show (Chain es) => Show (RenderPassBeginInfo es)
 
 

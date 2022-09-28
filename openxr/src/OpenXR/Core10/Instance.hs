@@ -272,7 +272,10 @@ getInstanceProcAddr instance' name = liftIO . evalContT $ do
   let xrGetInstanceProcAddr' = mkXrGetInstanceProcAddr xrGetInstanceProcAddrPtr
   name' <- ContT $ useAsCString (name)
   pFunction <- ContT $ bracket (callocBytes @PFN_xrVoidFunction 8) free
-  r <- lift $ traceAroundEvent "xrGetInstanceProcAddr" (xrGetInstanceProcAddr' (instanceHandle (instance')) name' (pFunction))
+  r <- lift $ traceAroundEvent "xrGetInstanceProcAddr" (xrGetInstanceProcAddr'
+                                                          (instanceHandle (instance'))
+                                                          name'
+                                                          (pFunction))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   function <- lift $ peek @PFN_xrVoidFunction pFunction
   pure $ (function)
@@ -355,12 +358,18 @@ enumerateApiLayerProperties  = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEnumerateApiLayerProperties is null" Nothing Nothing
   let xrEnumerateApiLayerProperties' = mkXrEnumerateApiLayerProperties xrEnumerateApiLayerPropertiesPtr
   pPropertyCountOutput <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "xrEnumerateApiLayerProperties" (xrEnumerateApiLayerProperties' (0) (pPropertyCountOutput) (nullPtr))
+  r <- lift $ traceAroundEvent "xrEnumerateApiLayerProperties" (xrEnumerateApiLayerProperties'
+                                                                  (0)
+                                                                  (pPropertyCountOutput)
+                                                                  (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   propertyCountOutput <- lift $ peek @Word32 pPropertyCountOutput
   pProperties <- ContT $ bracket (callocBytes @ApiLayerProperties ((fromIntegral (propertyCountOutput)) * 544)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pProperties `advancePtrBytes` (i * 544) :: Ptr ApiLayerProperties) . ($ ())) [0..(fromIntegral (propertyCountOutput)) - 1]
-  r' <- lift $ traceAroundEvent "xrEnumerateApiLayerProperties" (xrEnumerateApiLayerProperties' ((propertyCountOutput)) (pPropertyCountOutput) ((pProperties)))
+  r' <- lift $ traceAroundEvent "xrEnumerateApiLayerProperties" (xrEnumerateApiLayerProperties'
+                                                                   ((propertyCountOutput))
+                                                                   (pPropertyCountOutput)
+                                                                   ((pProperties)))
   lift $ when (r' < SUCCESS) (throwIO (OpenXrException r'))
   propertyCountOutput' <- lift $ peek @Word32 pPropertyCountOutput
   properties' <- lift $ generateM (fromIntegral (propertyCountOutput')) (\i -> peekCStruct @ApiLayerProperties (((pProperties) `advancePtrBytes` (544 * (i)) :: Ptr ApiLayerProperties)))
@@ -466,12 +475,20 @@ enumerateInstanceExtensionProperties layerName = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ useAsCString (j)
   pPropertyCountOutput <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "xrEnumerateInstanceExtensionProperties" (xrEnumerateInstanceExtensionProperties' layerName' (0) (pPropertyCountOutput) (nullPtr))
+  r <- lift $ traceAroundEvent "xrEnumerateInstanceExtensionProperties" (xrEnumerateInstanceExtensionProperties'
+                                                                           layerName'
+                                                                           (0)
+                                                                           (pPropertyCountOutput)
+                                                                           (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   propertyCountOutput <- lift $ peek @Word32 pPropertyCountOutput
   pProperties <- ContT $ bracket (callocBytes @ExtensionProperties ((fromIntegral (propertyCountOutput)) * 152)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pProperties `advancePtrBytes` (i * 152) :: Ptr ExtensionProperties) . ($ ())) [0..(fromIntegral (propertyCountOutput)) - 1]
-  r' <- lift $ traceAroundEvent "xrEnumerateInstanceExtensionProperties" (xrEnumerateInstanceExtensionProperties' layerName' ((propertyCountOutput)) (pPropertyCountOutput) ((pProperties)))
+  r' <- lift $ traceAroundEvent "xrEnumerateInstanceExtensionProperties" (xrEnumerateInstanceExtensionProperties'
+                                                                            layerName'
+                                                                            ((propertyCountOutput))
+                                                                            (pPropertyCountOutput)
+                                                                            ((pProperties)))
   lift $ when (r' < SUCCESS) (throwIO (OpenXrException r'))
   propertyCountOutput' <- lift $ peek @Word32 pPropertyCountOutput
   properties' <- lift $ generateM (fromIntegral (propertyCountOutput')) (\i -> peekCStruct @ExtensionProperties (((pProperties) `advancePtrBytes` (152 * (i)) :: Ptr ExtensionProperties)))
@@ -564,7 +581,9 @@ createInstance createInfo = liftIO . evalContT $ do
   let xrCreateInstance' = mkXrCreateInstance xrCreateInstancePtr
   createInfo' <- ContT $ withCStruct (createInfo)
   pInstance <- ContT $ bracket (callocBytes @(Ptr Instance_T) 8) free
-  r <- lift $ traceAroundEvent "xrCreateInstance" (xrCreateInstance' (forgetExtensions createInfo') (pInstance))
+  r <- lift $ traceAroundEvent "xrCreateInstance" (xrCreateInstance'
+                                                     (forgetExtensions createInfo')
+                                                     (pInstance))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   instance' <- lift $ peek @(Ptr Instance_T) pInstance
   instance'' <- lift $ (\h -> Instance h <$> initInstanceCmds h) instance'
@@ -640,7 +659,8 @@ destroyInstance instance' = liftIO $ do
   unless (xrDestroyInstancePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrDestroyInstance is null" Nothing Nothing
   let xrDestroyInstance' = mkXrDestroyInstance xrDestroyInstancePtr
-  r <- traceAroundEvent "xrDestroyInstance" (xrDestroyInstance' (instanceHandle (instance')))
+  r <- traceAroundEvent "xrDestroyInstance" (xrDestroyInstance'
+                                               (instanceHandle (instance')))
   when (r < SUCCESS) (throwIO (OpenXrException r))
 
 
@@ -720,7 +740,10 @@ resultToString instance' value = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrResultToString is null" Nothing Nothing
   let xrResultToString' = mkXrResultToString xrResultToStringPtr
   buffer <- ContT $ bracket (callocFixedArray @MAX_RESULT_STRING_SIZE @CChar) free
-  r <- lift $ traceAroundEvent "xrResultToString" (xrResultToString' (instanceHandle (instance')) (value) (buffer))
+  r <- lift $ traceAroundEvent "xrResultToString" (xrResultToString'
+                                                     (instanceHandle (instance'))
+                                                     (value)
+                                                     (buffer))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   buffer' <- lift $ packCString . lowerArrayPtr @CChar @MAX_RESULT_STRING_SIZE $ buffer
   pure $ (buffer')
@@ -802,7 +825,10 @@ structureTypeToString instance' value = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrStructureTypeToString is null" Nothing Nothing
   let xrStructureTypeToString' = mkXrStructureTypeToString xrStructureTypeToStringPtr
   buffer <- ContT $ bracket (callocFixedArray @MAX_STRUCTURE_NAME_SIZE @CChar) free
-  r <- lift $ traceAroundEvent "xrStructureTypeToString" (xrStructureTypeToString' (instanceHandle (instance')) (value) (buffer))
+  r <- lift $ traceAroundEvent "xrStructureTypeToString" (xrStructureTypeToString'
+                                                            (instanceHandle (instance'))
+                                                            (value)
+                                                            (buffer))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   buffer' <- lift $ packCString . lowerArrayPtr @CChar @MAX_STRUCTURE_NAME_SIZE $ buffer
   pure $ (buffer')
@@ -859,7 +885,9 @@ getInstanceProperties instance' = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetInstanceProperties is null" Nothing Nothing
   let xrGetInstanceProperties' = mkXrGetInstanceProperties xrGetInstancePropertiesPtr
   pInstanceProperties <- ContT (withZeroCStruct @InstanceProperties)
-  r <- lift $ traceAroundEvent "xrGetInstanceProperties" (xrGetInstanceProperties' (instanceHandle (instance')) (pInstanceProperties))
+  r <- lift $ traceAroundEvent "xrGetInstanceProperties" (xrGetInstanceProperties'
+                                                            (instanceHandle (instance'))
+                                                            (pInstanceProperties))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   instanceProperties <- lift $ peekCStruct @InstanceProperties pInstanceProperties
   pure $ (instanceProperties)
@@ -946,7 +974,9 @@ pollEvent instance' = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrPollEvent is null" Nothing Nothing
   let xrPollEvent' = mkXrPollEvent xrPollEventPtr
   pEventData <- ContT (withZeroCStruct @EventDataBuffer)
-  r <- lift $ traceAroundEvent "xrPollEvent" (xrPollEvent' (instanceHandle (instance')) (pEventData))
+  r <- lift $ traceAroundEvent "xrPollEvent" (xrPollEvent'
+                                                (instanceHandle (instance'))
+                                                (pEventData))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   eventData <- lift $ peekCStruct @EventDataBuffer pEventData
   pure $ (r, eventData)
@@ -1178,7 +1208,11 @@ instance FromCStruct ApplicationInfo where
     engineVersion <- peek @Word32 ((p `plusPtr` 260 :: Ptr Word32))
     apiVersion <- peek @Version ((p `plusPtr` 264 :: Ptr Version))
     pure $ ApplicationInfo
-             applicationName applicationVersion engineName engineVersion apiVersion
+             applicationName
+             applicationVersion
+             engineName
+             engineVersion
+             apiVersion
 
 instance Storable ApplicationInfo where
   sizeOf ~_ = 272
@@ -1270,7 +1304,8 @@ instance Extensible InstanceCreateInfo where
     | Just Refl <- eqT @e @InstanceCreateInfoAndroidKHR = Just f
     | otherwise = Nothing
 
-instance (Extendss InstanceCreateInfo es, PokeChain es) => ToCStruct (InstanceCreateInfo es) where
+instance ( Extendss InstanceCreateInfo es
+         , PokeChain es ) => ToCStruct (InstanceCreateInfo es) where
   withCStruct x f = allocaBytes 328 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p InstanceCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_INSTANCE_CREATE_INFO)
@@ -1300,7 +1335,8 @@ instance (Extendss InstanceCreateInfo es, PokeChain es) => ToCStruct (InstanceCr
     lift $ poke ((p `plusPtr` 24 :: Ptr ApplicationInfo)) (zero)
     lift $ f
 
-instance (Extendss InstanceCreateInfo es, PeekChain es) => FromCStruct (InstanceCreateInfo es) where
+instance ( Extendss InstanceCreateInfo es
+         , PeekChain es ) => FromCStruct (InstanceCreateInfo es) where
   peekCStruct p = do
     next <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next' <- peekChain (castPtr next)
@@ -1313,7 +1349,11 @@ instance (Extendss InstanceCreateInfo es, PeekChain es) => FromCStruct (Instance
     enabledExtensionNames <- peek @(Ptr (Ptr CChar)) ((p `plusPtr` 320 :: Ptr (Ptr (Ptr CChar))))
     enabledExtensionNames' <- generateM (fromIntegral enabledExtensionCount) (\i -> packCString =<< peek ((enabledExtensionNames `advancePtrBytes` (8 * (i)) :: Ptr (Ptr CChar))))
     pure $ InstanceCreateInfo
-             next' createFlags applicationInfo enabledApiLayerNames' enabledExtensionNames'
+             next'
+             createFlags
+             applicationInfo
+             enabledApiLayerNames'
+             enabledExtensionNames'
 
 instance es ~ '[] => Zero (InstanceCreateInfo es) where
   zero = InstanceCreateInfo

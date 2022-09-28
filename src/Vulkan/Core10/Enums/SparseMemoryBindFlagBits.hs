@@ -43,15 +43,18 @@ showTableSparseMemoryBindFlagBits :: [(SparseMemoryBindFlagBits, String)]
 showTableSparseMemoryBindFlagBits = [(SPARSE_MEMORY_BIND_METADATA_BIT, "")]
 
 instance Show SparseMemoryBindFlagBits where
-  showsPrec = enumShowsPrec enumPrefixSparseMemoryBindFlagBits
-                            showTableSparseMemoryBindFlagBits
-                            conNameSparseMemoryBindFlagBits
-                            (\(SparseMemoryBindFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixSparseMemoryBindFlagBits
+      showTableSparseMemoryBindFlagBits
+      conNameSparseMemoryBindFlagBits
+      (\(SparseMemoryBindFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read SparseMemoryBindFlagBits where
-  readPrec = enumReadPrec enumPrefixSparseMemoryBindFlagBits
-                          showTableSparseMemoryBindFlagBits
-                          conNameSparseMemoryBindFlagBits
-                          SparseMemoryBindFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixSparseMemoryBindFlagBits
+      showTableSparseMemoryBindFlagBits
+      conNameSparseMemoryBindFlagBits
+      SparseMemoryBindFlagBits

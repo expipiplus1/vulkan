@@ -87,14 +87,16 @@ newtype ExternalSemaphoreHandleTypeFlagBits = ExternalSemaphoreHandleTypeFlagBit
 -- Additionally, it /must/ be transportable over a socket using an
 -- @SCM_RIGHTS@ control message. It owns a reference to the underlying
 -- synchronization primitive represented by its Vulkan semaphore object.
-pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT            = ExternalSemaphoreHandleTypeFlagBits 0x00000001
+pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT = ExternalSemaphoreHandleTypeFlagBits 0x00000001
+
 -- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT' specifies an NT handle
 -- that has only limited valid usage outside of Vulkan and other compatible
 -- APIs. It /must/ be compatible with the functions @DuplicateHandle@,
 -- @CloseHandle@, @CompareObjectHandles@, @GetHandleInformation@, and
 -- @SetHandleInformation@. It owns a reference to the underlying
 -- synchronization primitive represented by its Vulkan semaphore object.
-pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT         = ExternalSemaphoreHandleTypeFlagBits 0x00000002
+pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT = ExternalSemaphoreHandleTypeFlagBits 0x00000002
+
 -- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT' specifies a global
 -- share handle that has only limited valid usage outside of Vulkan and
 -- other compatible APIs. It is not compatible with any native APIs. It
@@ -102,13 +104,15 @@ pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT         = ExternalSemaph
 -- represented by its Vulkan semaphore object, and will therefore become
 -- invalid when all Vulkan semaphore objects associated with it are
 -- destroyed.
-pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT     = ExternalSemaphoreHandleTypeFlagBits 0x00000004
+pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = ExternalSemaphoreHandleTypeFlagBits 0x00000004
+
 -- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT' specifies an NT handle
 -- returned by @ID3D12Device@::@CreateSharedHandle@ referring to a Direct3D
 -- 12 fence, or @ID3D11Device5@::'Vulkan.Core10.Fence.createFence'
 -- referring to a Direct3D 11 fence. It owns a reference to the underlying
 -- synchronization primitive associated with the Direct3D fence.
-pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT          = ExternalSemaphoreHandleTypeFlagBits 0x00000008
+pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT = ExternalSemaphoreHandleTypeFlagBits 0x00000008
+
 -- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT' specifies a POSIX file
 -- descriptor handle to a Linux Sync File or Android Fence object. It can
 -- be used with any native API accepting a valid sync file or fence as
@@ -116,7 +120,8 @@ pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT          = ExternalSemaph
 -- associated with the file descriptor. Implementations which support
 -- importing this handle type /must/ accept any type of sync or fence FD
 -- supported by the native system they are running on.
-pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT              = ExternalSemaphoreHandleTypeFlagBits 0x00000010
+pattern EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT = ExternalSemaphoreHandleTypeFlagBits 0x00000010
+
 -- | 'EXTERNAL_SEMAPHORE_HANDLE_TYPE_ZIRCON_EVENT_BIT_FUCHSIA' specifies a
 -- handle to a Zircon event object. It can be used with any native API that
 -- accepts a Zircon event handle. Zircon event handles are created with
@@ -132,24 +137,45 @@ enumPrefixExternalSemaphoreHandleTypeFlagBits = "EXTERNAL_SEMAPHORE_HANDLE_TYPE_
 
 showTableExternalSemaphoreHandleTypeFlagBits :: [(ExternalSemaphoreHandleTypeFlagBits, String)]
 showTableExternalSemaphoreHandleTypeFlagBits =
-  [ (EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT           , "OPAQUE_FD_BIT")
-  , (EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT        , "OPAQUE_WIN32_BIT")
-  , (EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT    , "OPAQUE_WIN32_KMT_BIT")
-  , (EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT         , "D3D12_FENCE_BIT")
-  , (EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT             , "SYNC_FD_BIT")
-  , (EXTERNAL_SEMAPHORE_HANDLE_TYPE_ZIRCON_EVENT_BIT_FUCHSIA, "ZIRCON_EVENT_BIT_FUCHSIA")
+  [
+    ( EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT
+    , "OPAQUE_FD_BIT"
+    )
+  ,
+    ( EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT
+    , "OPAQUE_WIN32_BIT"
+    )
+  ,
+    ( EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
+    , "OPAQUE_WIN32_KMT_BIT"
+    )
+  ,
+    ( EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT
+    , "D3D12_FENCE_BIT"
+    )
+  ,
+    ( EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT
+    , "SYNC_FD_BIT"
+    )
+  ,
+    ( EXTERNAL_SEMAPHORE_HANDLE_TYPE_ZIRCON_EVENT_BIT_FUCHSIA
+    , "ZIRCON_EVENT_BIT_FUCHSIA"
+    )
   ]
 
 instance Show ExternalSemaphoreHandleTypeFlagBits where
-  showsPrec = enumShowsPrec enumPrefixExternalSemaphoreHandleTypeFlagBits
-                            showTableExternalSemaphoreHandleTypeFlagBits
-                            conNameExternalSemaphoreHandleTypeFlagBits
-                            (\(ExternalSemaphoreHandleTypeFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixExternalSemaphoreHandleTypeFlagBits
+      showTableExternalSemaphoreHandleTypeFlagBits
+      conNameExternalSemaphoreHandleTypeFlagBits
+      (\(ExternalSemaphoreHandleTypeFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read ExternalSemaphoreHandleTypeFlagBits where
-  readPrec = enumReadPrec enumPrefixExternalSemaphoreHandleTypeFlagBits
-                          showTableExternalSemaphoreHandleTypeFlagBits
-                          conNameExternalSemaphoreHandleTypeFlagBits
-                          ExternalSemaphoreHandleTypeFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixExternalSemaphoreHandleTypeFlagBits
+      showTableExternalSemaphoreHandleTypeFlagBits
+      conNameExternalSemaphoreHandleTypeFlagBits
+      ExternalSemaphoreHandleTypeFlagBits

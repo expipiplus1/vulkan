@@ -196,7 +196,10 @@ getSystem instance' getInfo = liftIO . evalContT $ do
   let xrGetSystem' = mkXrGetSystem xrGetSystemPtr
   getInfo' <- ContT $ withCStruct (getInfo)
   pSystemId <- ContT $ bracket (callocBytes @SystemId 8) free
-  r <- lift $ traceAroundEvent "xrGetSystem" (xrGetSystem' (instanceHandle (instance')) getInfo' (pSystemId))
+  r <- lift $ traceAroundEvent "xrGetSystem" (xrGetSystem'
+                                                (instanceHandle (instance'))
+                                                getInfo'
+                                                (pSystemId))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   systemId <- lift $ peek @SystemId pSystemId
   pure $ (systemId)
@@ -245,7 +248,10 @@ foreign import ccall
 -- <https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSystemId >,
 -- 'SystemProperties'
 getSystemProperties :: forall a io
-                     . (Extendss SystemProperties a, PokeChain a, PeekChain a, MonadIO io)
+                     . ( Extendss SystemProperties a
+                       , PokeChain a
+                       , PeekChain a
+                       , MonadIO io )
                     => -- | @instance@ is the instance from which @systemId@ was retrieved.
                        --
                        -- #VUID-xrGetSystemProperties-instance-parameter# @instance@ /must/ be a
@@ -262,7 +268,10 @@ getSystemProperties instance' systemId = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetSystemProperties is null" Nothing Nothing
   let xrGetSystemProperties' = mkXrGetSystemProperties xrGetSystemPropertiesPtr
   pProperties <- ContT (withZeroCStruct @(SystemProperties _))
-  r <- lift $ traceAroundEvent "xrGetSystemProperties" (xrGetSystemProperties' (instanceHandle (instance')) (systemId) (forgetExtensions (pProperties)))
+  r <- lift $ traceAroundEvent "xrGetSystemProperties" (xrGetSystemProperties'
+                                                          (instanceHandle (instance'))
+                                                          (systemId)
+                                                          (forgetExtensions (pProperties)))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   properties <- lift $ peekCStruct @(SystemProperties _) pProperties
   pure $ (properties)
@@ -345,7 +354,10 @@ createSession instance' createInfo = liftIO . evalContT $ do
   let xrCreateSession' = mkXrCreateSession xrCreateSessionPtr
   createInfo' <- ContT $ withCStruct (createInfo)
   pSession <- ContT $ bracket (callocBytes @(Ptr Session_T) 8) free
-  r <- lift $ traceAroundEvent "xrCreateSession" (xrCreateSession' (instanceHandle (instance')) (forgetExtensions createInfo') (pSession))
+  r <- lift $ traceAroundEvent "xrCreateSession" (xrCreateSession'
+                                                    (instanceHandle (instance'))
+                                                    (forgetExtensions createInfo')
+                                                    (pSession))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   session <- lift $ peek @(Ptr Session_T) pSession
   pure $ (((\h -> Session h cmds ) session))
@@ -421,7 +433,8 @@ destroySession session = liftIO $ do
   unless (xrDestroySessionPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrDestroySession is null" Nothing Nothing
   let xrDestroySession' = mkXrDestroySession xrDestroySessionPtr
-  r <- traceAroundEvent "xrDestroySession" (xrDestroySession' (sessionHandle (session)))
+  r <- traceAroundEvent "xrDestroySession" (xrDestroySession'
+                                              (sessionHandle (session)))
   when (r < SUCCESS) (throwIO (OpenXrException r))
 
 
@@ -532,18 +545,32 @@ enumerateEnvironmentBlendModes :: forall io
                                -> -- No documentation found for Nested "xrEnumerateEnvironmentBlendModes" "viewConfigurationType"
                                   ViewConfigurationType
                                -> io (("environmentBlendModes" ::: Vector EnvironmentBlendMode))
-enumerateEnvironmentBlendModes instance' systemId viewConfigurationType = liftIO . evalContT $ do
+enumerateEnvironmentBlendModes instance'
+                                 systemId
+                                 viewConfigurationType = liftIO . evalContT $ do
   let xrEnumerateEnvironmentBlendModesPtr = pXrEnumerateEnvironmentBlendModes (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrEnumerateEnvironmentBlendModesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEnumerateEnvironmentBlendModes is null" Nothing Nothing
   let xrEnumerateEnvironmentBlendModes' = mkXrEnumerateEnvironmentBlendModes xrEnumerateEnvironmentBlendModesPtr
   let instance'' = instanceHandle (instance')
   pEnvironmentBlendModeCountOutput <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "xrEnumerateEnvironmentBlendModes" (xrEnumerateEnvironmentBlendModes' instance'' (systemId) (viewConfigurationType) (0) (pEnvironmentBlendModeCountOutput) (nullPtr))
+  r <- lift $ traceAroundEvent "xrEnumerateEnvironmentBlendModes" (xrEnumerateEnvironmentBlendModes'
+                                                                     instance''
+                                                                     (systemId)
+                                                                     (viewConfigurationType)
+                                                                     (0)
+                                                                     (pEnvironmentBlendModeCountOutput)
+                                                                     (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   environmentBlendModeCountOutput <- lift $ peek @Word32 pEnvironmentBlendModeCountOutput
   pEnvironmentBlendModes <- ContT $ bracket (callocBytes @EnvironmentBlendMode ((fromIntegral (environmentBlendModeCountOutput)) * 4)) free
-  r' <- lift $ traceAroundEvent "xrEnumerateEnvironmentBlendModes" (xrEnumerateEnvironmentBlendModes' instance'' (systemId) (viewConfigurationType) ((environmentBlendModeCountOutput)) (pEnvironmentBlendModeCountOutput) (pEnvironmentBlendModes))
+  r' <- lift $ traceAroundEvent "xrEnumerateEnvironmentBlendModes" (xrEnumerateEnvironmentBlendModes'
+                                                                      instance''
+                                                                      (systemId)
+                                                                      (viewConfigurationType)
+                                                                      ((environmentBlendModeCountOutput))
+                                                                      (pEnvironmentBlendModeCountOutput)
+                                                                      (pEnvironmentBlendModes))
   lift $ when (r' < SUCCESS) (throwIO (OpenXrException r'))
   environmentBlendModeCountOutput' <- lift $ peek @Word32 pEnvironmentBlendModeCountOutput
   environmentBlendModes' <- lift $ generateM (fromIntegral (environmentBlendModeCountOutput')) (\i -> peek @EnvironmentBlendMode ((pEnvironmentBlendModes `advancePtrBytes` (4 * (i)) :: Ptr EnvironmentBlendMode)))
@@ -701,7 +728,8 @@ instance Extensible SystemProperties where
     | Just Refl <- eqT @e @SystemEyeGazeInteractionPropertiesEXT = Just f
     | otherwise = Nothing
 
-instance (Extendss SystemProperties es, PokeChain es) => ToCStruct (SystemProperties es) where
+instance ( Extendss SystemProperties es
+         , PokeChain es ) => ToCStruct (SystemProperties es) where
   withCStruct x f = allocaBytes 304 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SystemProperties{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SYSTEM_PROPERTIES)
@@ -726,7 +754,8 @@ instance (Extendss SystemProperties es, PokeChain es) => ToCStruct (SystemProper
     lift $ poke ((p `plusPtr` 296 :: Ptr SystemTrackingProperties)) (zero)
     lift $ f
 
-instance (Extendss SystemProperties es, PeekChain es) => FromCStruct (SystemProperties es) where
+instance ( Extendss SystemProperties es
+         , PeekChain es ) => FromCStruct (SystemProperties es) where
   peekCStruct p = do
     next <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next' <- peekChain (castPtr next)
@@ -736,7 +765,12 @@ instance (Extendss SystemProperties es, PeekChain es) => FromCStruct (SystemProp
     graphicsProperties <- peekCStruct @SystemGraphicsProperties ((p `plusPtr` 284 :: Ptr SystemGraphicsProperties))
     trackingProperties <- peekCStruct @SystemTrackingProperties ((p `plusPtr` 296 :: Ptr SystemTrackingProperties))
     pure $ SystemProperties
-             next' systemId vendorId systemName graphicsProperties trackingProperties
+             next'
+             systemId
+             vendorId
+             systemName
+             graphicsProperties
+             trackingProperties
 
 instance es ~ '[] => Zero (SystemProperties es) where
   zero = SystemProperties
@@ -950,7 +984,8 @@ instance Extensible SessionCreateInfo where
     | Just Refl <- eqT @e @GraphicsBindingOpenGLWin32KHR = Just f
     | otherwise = Nothing
 
-instance (Extendss SessionCreateInfo es, PokeChain es) => ToCStruct (SessionCreateInfo es) where
+instance ( Extendss SessionCreateInfo es
+         , PokeChain es ) => ToCStruct (SessionCreateInfo es) where
   withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SessionCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SESSION_CREATE_INFO)
@@ -968,7 +1003,8 @@ instance (Extendss SessionCreateInfo es, PokeChain es) => ToCStruct (SessionCrea
     lift $ poke ((p `plusPtr` 24 :: Ptr SystemId)) (zero)
     lift $ f
 
-instance (Extendss SessionCreateInfo es, PeekChain es) => FromCStruct (SessionCreateInfo es) where
+instance ( Extendss SessionCreateInfo es
+         , PeekChain es ) => FromCStruct (SessionCreateInfo es) where
   peekCStruct p = do
     next <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next' <- peekChain (castPtr next)

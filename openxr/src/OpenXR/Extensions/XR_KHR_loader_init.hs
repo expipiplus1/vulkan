@@ -115,7 +115,8 @@ initializeLoaderKHR loaderInitInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrInitializeLoaderKHR is null" Nothing Nothing
   let xrInitializeLoaderKHR' = mkXrInitializeLoaderKHR xrInitializeLoaderKHRPtr
   loaderInitInfo' <- fmap castPtr $ ContT $ withCStruct (loaderInitInfo)
-  r <- lift $ traceAroundEvent "xrInitializeLoaderKHR" (xrInitializeLoaderKHR' loaderInitInfo')
+  r <- lift $ traceAroundEvent "xrInitializeLoaderKHR" (xrInitializeLoaderKHR'
+                                                          loaderInitInfo')
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
 
 

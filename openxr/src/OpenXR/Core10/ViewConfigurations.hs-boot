@@ -22,8 +22,10 @@ instance FromCStruct ViewConfigurationProperties
 type role ViewConfigurationView nominal
 data ViewConfigurationView (es :: [Type])
 
-instance (Extendss ViewConfigurationView es, PokeChain es) => ToCStruct (ViewConfigurationView es)
+instance ( Extendss ViewConfigurationView es
+         , PokeChain es ) => ToCStruct (ViewConfigurationView es)
 instance Show (Chain es) => Show (ViewConfigurationView es)
 
-instance (Extendss ViewConfigurationView es, PeekChain es) => FromCStruct (ViewConfigurationView es)
+instance ( Extendss ViewConfigurationView es
+         , PeekChain es ) => FromCStruct (ViewConfigurationView es)
 

@@ -158,7 +158,11 @@ createEvent device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPEvent <- ContT $ bracket (callocBytes @Event 8) free
-  r <- lift $ traceAroundEvent "vkCreateEvent" (vkCreateEvent' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPEvent))
+  r <- lift $ traceAroundEvent "vkCreateEvent" (vkCreateEvent'
+                                                  (deviceHandle (device))
+                                                  (forgetExtensions pCreateInfo)
+                                                  pAllocator
+                                                  (pPEvent))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pEvent <- lift $ peek @Event pPEvent
   pure $ (pEvent)
@@ -244,7 +248,10 @@ destroyEvent device event allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyEvent" (vkDestroyEvent' (deviceHandle (device)) (event) pAllocator)
+  lift $ traceAroundEvent "vkDestroyEvent" (vkDestroyEvent'
+                                              (deviceHandle (device))
+                                              (event)
+                                              pAllocator)
   pure $ ()
 
 
@@ -331,7 +338,9 @@ getEventStatus device event = liftIO $ do
   unless (vkGetEventStatusPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetEventStatus is null" Nothing Nothing
   let vkGetEventStatus' = mkVkGetEventStatus vkGetEventStatusPtr
-  r <- traceAroundEvent "vkGetEventStatus" (vkGetEventStatus' (deviceHandle (device)) (event))
+  r <- traceAroundEvent "vkGetEventStatus" (vkGetEventStatus'
+                                              (deviceHandle (device))
+                                              (event))
   when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 
@@ -402,7 +411,9 @@ setEvent device event = liftIO $ do
   unless (vkSetEventPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetEvent is null" Nothing Nothing
   let vkSetEvent' = mkVkSetEvent vkSetEventPtr
-  r <- traceAroundEvent "vkSetEvent" (vkSetEvent' (deviceHandle (device)) (event))
+  r <- traceAroundEvent "vkSetEvent" (vkSetEvent'
+                                        (deviceHandle (device))
+                                        (event))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -481,7 +492,9 @@ resetEvent device event = liftIO $ do
   unless (vkResetEventPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkResetEvent is null" Nothing Nothing
   let vkResetEvent' = mkVkResetEvent vkResetEventPtr
-  r <- traceAroundEvent "vkResetEvent" (vkResetEvent' (deviceHandle (device)) (event))
+  r <- traceAroundEvent "vkResetEvent" (vkResetEvent'
+                                          (deviceHandle (device))
+                                          (event))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -545,7 +558,8 @@ instance Extensible EventCreateInfo where
     | Just Refl <- eqT @e @ExportMetalObjectCreateInfoEXT = Just f
     | otherwise = Nothing
 
-instance (Extendss EventCreateInfo es, PokeChain es) => ToCStruct (EventCreateInfo es) where
+instance ( Extendss EventCreateInfo es
+         , PokeChain es ) => ToCStruct (EventCreateInfo es) where
   withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p EventCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EVENT_CREATE_INFO)
@@ -561,7 +575,8 @@ instance (Extendss EventCreateInfo es, PokeChain es) => ToCStruct (EventCreateIn
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ f
 
-instance (Extendss EventCreateInfo es, PeekChain es) => FromCStruct (EventCreateInfo es) where
+instance ( Extendss EventCreateInfo es
+         , PeekChain es ) => FromCStruct (EventCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

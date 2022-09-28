@@ -303,12 +303,21 @@ cmdWriteBufferMarkerAMD :: forall io
                         -> -- | @marker@ is the 32-bit value of the marker.
                            ("marker" ::: Word32)
                         -> io ()
-cmdWriteBufferMarkerAMD commandBuffer pipelineStage dstBuffer dstOffset marker = liftIO $ do
+cmdWriteBufferMarkerAMD commandBuffer
+                          pipelineStage
+                          dstBuffer
+                          dstOffset
+                          marker = liftIO $ do
   let vkCmdWriteBufferMarkerAMDPtr = pVkCmdWriteBufferMarkerAMD (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdWriteBufferMarkerAMDPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWriteBufferMarkerAMD is null" Nothing Nothing
   let vkCmdWriteBufferMarkerAMD' = mkVkCmdWriteBufferMarkerAMD vkCmdWriteBufferMarkerAMDPtr
-  traceAroundEvent "vkCmdWriteBufferMarkerAMD" (vkCmdWriteBufferMarkerAMD' (commandBufferHandle (commandBuffer)) (pipelineStage) (dstBuffer) (dstOffset) (marker))
+  traceAroundEvent "vkCmdWriteBufferMarkerAMD" (vkCmdWriteBufferMarkerAMD'
+                                                  (commandBufferHandle (commandBuffer))
+                                                  (pipelineStage)
+                                                  (dstBuffer)
+                                                  (dstOffset)
+                                                  (marker))
   pure $ ()
 
 

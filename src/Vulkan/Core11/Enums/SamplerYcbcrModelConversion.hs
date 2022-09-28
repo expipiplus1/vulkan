@@ -90,20 +90,28 @@ newtype SamplerYcbcrModelConversion = SamplerYcbcrModelConversion Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- No documentation found for Nested "VkSamplerYcbcrModelConversion" "VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY"
-pattern SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY   = SamplerYcbcrModelConversion 0
+pattern SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY = SamplerYcbcrModelConversion 0
+
 -- No documentation found for Nested "VkSamplerYcbcrModelConversion" "VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY"
 pattern SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY = SamplerYcbcrModelConversion 1
+
 -- No documentation found for Nested "VkSamplerYcbcrModelConversion" "VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709"
-pattern SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709      = SamplerYcbcrModelConversion 2
+pattern SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709 = SamplerYcbcrModelConversion 2
+
 -- No documentation found for Nested "VkSamplerYcbcrModelConversion" "VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601"
-pattern SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601      = SamplerYcbcrModelConversion 3
+pattern SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601 = SamplerYcbcrModelConversion 3
+
 -- No documentation found for Nested "VkSamplerYcbcrModelConversion" "VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020"
-pattern SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020     = SamplerYcbcrModelConversion 4
-{-# complete SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY,
-             SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY,
-             SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709,
-             SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601,
-             SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020 :: SamplerYcbcrModelConversion #-}
+pattern SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020 = SamplerYcbcrModelConversion 4
+
+{-# COMPLETE
+  SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY
+  , SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY
+  , SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709
+  , SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601
+  , SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020 ::
+    SamplerYcbcrModelConversion
+  #-}
 
 conNameSamplerYcbcrModelConversion :: String
 conNameSamplerYcbcrModelConversion = "SamplerYcbcrModelConversion"
@@ -113,23 +121,41 @@ enumPrefixSamplerYcbcrModelConversion = "SAMPLER_YCBCR_MODEL_CONVERSION_"
 
 showTableSamplerYcbcrModelConversion :: [(SamplerYcbcrModelConversion, String)]
 showTableSamplerYcbcrModelConversion =
-  [ (SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY  , "RGB_IDENTITY")
-  , (SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY, "YCBCR_IDENTITY")
-  , (SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709     , "YCBCR_709")
-  , (SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601     , "YCBCR_601")
-  , (SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020    , "YCBCR_2020")
+  [
+    ( SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY
+    , "RGB_IDENTITY"
+    )
+  ,
+    ( SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY
+    , "YCBCR_IDENTITY"
+    )
+  ,
+    ( SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709
+    , "YCBCR_709"
+    )
+  ,
+    ( SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601
+    , "YCBCR_601"
+    )
+  ,
+    ( SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020
+    , "YCBCR_2020"
+    )
   ]
 
 instance Show SamplerYcbcrModelConversion where
-  showsPrec = enumShowsPrec enumPrefixSamplerYcbcrModelConversion
-                            showTableSamplerYcbcrModelConversion
-                            conNameSamplerYcbcrModelConversion
-                            (\(SamplerYcbcrModelConversion x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixSamplerYcbcrModelConversion
+      showTableSamplerYcbcrModelConversion
+      conNameSamplerYcbcrModelConversion
+      (\(SamplerYcbcrModelConversion x) -> x)
+      (showsPrec 11)
 
 instance Read SamplerYcbcrModelConversion where
-  readPrec = enumReadPrec enumPrefixSamplerYcbcrModelConversion
-                          showTableSamplerYcbcrModelConversion
-                          conNameSamplerYcbcrModelConversion
-                          SamplerYcbcrModelConversion
-
+  readPrec =
+    enumReadPrec
+      enumPrefixSamplerYcbcrModelConversion
+      showTableSamplerYcbcrModelConversion
+      conNameSamplerYcbcrModelConversion
+      SamplerYcbcrModelConversion

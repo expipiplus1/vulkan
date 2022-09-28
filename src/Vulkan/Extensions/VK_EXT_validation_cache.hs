@@ -315,7 +315,11 @@ createValidationCacheEXT device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPValidationCache <- ContT $ bracket (callocBytes @ValidationCacheEXT 8) free
-  r <- lift $ traceAroundEvent "vkCreateValidationCacheEXT" (vkCreateValidationCacheEXT' (deviceHandle (device)) pCreateInfo pAllocator (pPValidationCache))
+  r <- lift $ traceAroundEvent "vkCreateValidationCacheEXT" (vkCreateValidationCacheEXT'
+                                                               (deviceHandle (device))
+                                                               pCreateInfo
+                                                               pAllocator
+                                                               (pPValidationCache))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pValidationCache <- lift $ peek @ValidationCacheEXT pPValidationCache
   pure $ (pValidationCache)
@@ -396,7 +400,9 @@ destroyValidationCacheEXT :: forall io
                              -- chapter.
                              ("allocator" ::: Maybe AllocationCallbacks)
                           -> io ()
-destroyValidationCacheEXT device validationCache allocator = liftIO . evalContT $ do
+destroyValidationCacheEXT device
+                            validationCache
+                            allocator = liftIO . evalContT $ do
   let vkDestroyValidationCacheEXTPtr = pVkDestroyValidationCacheEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyValidationCacheEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyValidationCacheEXT is null" Nothing Nothing
@@ -404,7 +410,10 @@ destroyValidationCacheEXT device validationCache allocator = liftIO . evalContT 
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyValidationCacheEXT" (vkDestroyValidationCacheEXT' (deviceHandle (device)) (validationCache) pAllocator)
+  lift $ traceAroundEvent "vkDestroyValidationCacheEXT" (vkDestroyValidationCacheEXT'
+                                                           (deviceHandle (device))
+                                                           (validationCache)
+                                                           pAllocator)
   pure $ ()
 
 
@@ -535,14 +544,23 @@ getValidationCacheDataEXT device validationCache = liftIO . evalContT $ do
   let vkGetValidationCacheDataEXT' = mkVkGetValidationCacheDataEXT vkGetValidationCacheDataEXTPtr
   let device' = deviceHandle (device)
   pPDataSize <- ContT $ bracket (callocBytes @CSize 8) free
-  r <- lift $ traceAroundEvent "vkGetValidationCacheDataEXT" (vkGetValidationCacheDataEXT' device' (validationCache) (pPDataSize) (nullPtr))
+  r <- lift $ traceAroundEvent "vkGetValidationCacheDataEXT" (vkGetValidationCacheDataEXT'
+                                                                device'
+                                                                (validationCache)
+                                                                (pPDataSize)
+                                                                (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pDataSize <- lift $ peek @CSize pPDataSize
   pPData <- ContT $ bracket (callocBytes @(()) (fromIntegral ((coerce @CSize @Word64 pDataSize)))) free
-  r' <- lift $ traceAroundEvent "vkGetValidationCacheDataEXT" (vkGetValidationCacheDataEXT' device' (validationCache) (pPDataSize) (pPData))
+  r' <- lift $ traceAroundEvent "vkGetValidationCacheDataEXT" (vkGetValidationCacheDataEXT'
+                                                                 device'
+                                                                 (validationCache)
+                                                                 (pPDataSize)
+                                                                 (pPData))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pDataSize'' <- lift $ peek @CSize pPDataSize
-  pData' <- lift $ packCStringLen  (castPtr @() @CChar pPData, (fromIntegral ((coerce @CSize @Word64 pDataSize''))))
+  pData' <- lift $ packCStringLen  ( castPtr @() @CChar pPData
+                                   , (fromIntegral ((coerce @CSize @Word64 pDataSize''))) )
   pure $ ((r'), pData')
 
 
@@ -631,7 +649,11 @@ mergeValidationCachesEXT device dstCache srcCaches = liftIO . evalContT $ do
   let vkMergeValidationCachesEXT' = mkVkMergeValidationCachesEXT vkMergeValidationCachesEXTPtr
   pPSrcCaches <- ContT $ allocaBytes @ValidationCacheEXT ((Data.Vector.length (srcCaches)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPSrcCaches `plusPtr` (8 * (i)) :: Ptr ValidationCacheEXT) (e)) (srcCaches)
-  r <- lift $ traceAroundEvent "vkMergeValidationCachesEXT" (vkMergeValidationCachesEXT' (deviceHandle (device)) (dstCache) ((fromIntegral (Data.Vector.length $ (srcCaches)) :: Word32)) (pPSrcCaches))
+  r <- lift $ traceAroundEvent "vkMergeValidationCachesEXT" (vkMergeValidationCachesEXT'
+                                                               (deviceHandle (device))
+                                                               (dstCache)
+                                                               ((fromIntegral (Data.Vector.length $ (srcCaches)) :: Word32))
+                                                               (pPSrcCaches))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -797,8 +819,6 @@ instance Zero ShaderModuleValidationCacheCreateInfoEXT where
 newtype ValidationCacheCreateFlagsEXT = ValidationCacheCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameValidationCacheCreateFlagsEXT :: String
 conNameValidationCacheCreateFlagsEXT = "ValidationCacheCreateFlagsEXT"
 
@@ -809,18 +829,21 @@ showTableValidationCacheCreateFlagsEXT :: [(ValidationCacheCreateFlagsEXT, Strin
 showTableValidationCacheCreateFlagsEXT = []
 
 instance Show ValidationCacheCreateFlagsEXT where
-  showsPrec = enumShowsPrec enumPrefixValidationCacheCreateFlagsEXT
-                            showTableValidationCacheCreateFlagsEXT
-                            conNameValidationCacheCreateFlagsEXT
-                            (\(ValidationCacheCreateFlagsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixValidationCacheCreateFlagsEXT
+      showTableValidationCacheCreateFlagsEXT
+      conNameValidationCacheCreateFlagsEXT
+      (\(ValidationCacheCreateFlagsEXT x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read ValidationCacheCreateFlagsEXT where
-  readPrec = enumReadPrec enumPrefixValidationCacheCreateFlagsEXT
-                          showTableValidationCacheCreateFlagsEXT
-                          conNameValidationCacheCreateFlagsEXT
-                          ValidationCacheCreateFlagsEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixValidationCacheCreateFlagsEXT
+      showTableValidationCacheCreateFlagsEXT
+      conNameValidationCacheCreateFlagsEXT
+      ValidationCacheCreateFlagsEXT
 
 -- | VkValidationCacheHeaderVersionEXT - Encode validation cache version
 --
@@ -830,12 +853,14 @@ instance Read ValidationCacheCreateFlagsEXT where
 -- 'createValidationCacheEXT', 'getValidationCacheDataEXT'
 newtype ValidationCacheHeaderVersionEXT = ValidationCacheHeaderVersionEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
+
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
 -- | 'VALIDATION_CACHE_HEADER_VERSION_ONE_EXT' specifies version one of the
 -- validation cache.
 pattern VALIDATION_CACHE_HEADER_VERSION_ONE_EXT = ValidationCacheHeaderVersionEXT 1
-{-# complete VALIDATION_CACHE_HEADER_VERSION_ONE_EXT :: ValidationCacheHeaderVersionEXT #-}
+
+{-# COMPLETE VALIDATION_CACHE_HEADER_VERSION_ONE_EXT :: ValidationCacheHeaderVersionEXT #-}
 
 conNameValidationCacheHeaderVersionEXT :: String
 conNameValidationCacheHeaderVersionEXT = "ValidationCacheHeaderVersionEXT"
@@ -844,21 +869,29 @@ enumPrefixValidationCacheHeaderVersionEXT :: String
 enumPrefixValidationCacheHeaderVersionEXT = "VALIDATION_CACHE_HEADER_VERSION_ONE_EXT"
 
 showTableValidationCacheHeaderVersionEXT :: [(ValidationCacheHeaderVersionEXT, String)]
-showTableValidationCacheHeaderVersionEXT = [(VALIDATION_CACHE_HEADER_VERSION_ONE_EXT, "")]
+showTableValidationCacheHeaderVersionEXT =
+  [
+    ( VALIDATION_CACHE_HEADER_VERSION_ONE_EXT
+    , ""
+    )
+  ]
 
 instance Show ValidationCacheHeaderVersionEXT where
-  showsPrec = enumShowsPrec enumPrefixValidationCacheHeaderVersionEXT
-                            showTableValidationCacheHeaderVersionEXT
-                            conNameValidationCacheHeaderVersionEXT
-                            (\(ValidationCacheHeaderVersionEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixValidationCacheHeaderVersionEXT
+      showTableValidationCacheHeaderVersionEXT
+      conNameValidationCacheHeaderVersionEXT
+      (\(ValidationCacheHeaderVersionEXT x) -> x)
+      (showsPrec 11)
 
 instance Read ValidationCacheHeaderVersionEXT where
-  readPrec = enumReadPrec enumPrefixValidationCacheHeaderVersionEXT
-                          showTableValidationCacheHeaderVersionEXT
-                          conNameValidationCacheHeaderVersionEXT
-                          ValidationCacheHeaderVersionEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixValidationCacheHeaderVersionEXT
+      showTableValidationCacheHeaderVersionEXT
+      conNameValidationCacheHeaderVersionEXT
+      ValidationCacheHeaderVersionEXT
 
 type EXT_VALIDATION_CACHE_SPEC_VERSION = 1
 

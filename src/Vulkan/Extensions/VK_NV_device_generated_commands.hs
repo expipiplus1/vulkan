@@ -1792,13 +1792,18 @@ cmdExecuteGeneratedCommandsNV :: forall io
                                  -- structure containing parameters affecting the generation of commands.
                                  GeneratedCommandsInfoNV
                               -> io ()
-cmdExecuteGeneratedCommandsNV commandBuffer isPreprocessed generatedCommandsInfo = liftIO . evalContT $ do
+cmdExecuteGeneratedCommandsNV commandBuffer
+                                isPreprocessed
+                                generatedCommandsInfo = liftIO . evalContT $ do
   let vkCmdExecuteGeneratedCommandsNVPtr = pVkCmdExecuteGeneratedCommandsNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdExecuteGeneratedCommandsNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdExecuteGeneratedCommandsNV is null" Nothing Nothing
   let vkCmdExecuteGeneratedCommandsNV' = mkVkCmdExecuteGeneratedCommandsNV vkCmdExecuteGeneratedCommandsNVPtr
   pGeneratedCommandsInfo <- ContT $ withCStruct (generatedCommandsInfo)
-  lift $ traceAroundEvent "vkCmdExecuteGeneratedCommandsNV" (vkCmdExecuteGeneratedCommandsNV' (commandBufferHandle (commandBuffer)) (boolToBool32 (isPreprocessed)) pGeneratedCommandsInfo)
+  lift $ traceAroundEvent "vkCmdExecuteGeneratedCommandsNV" (vkCmdExecuteGeneratedCommandsNV'
+                                                               (commandBufferHandle (commandBuffer))
+                                                               (boolToBool32 (isPreprocessed))
+                                                               pGeneratedCommandsInfo)
   pure $ ()
 
 
@@ -1881,13 +1886,16 @@ cmdPreprocessGeneratedCommandsNV :: forall io
                                     -- structure containing parameters affecting the preprocessing step.
                                     GeneratedCommandsInfoNV
                                  -> io ()
-cmdPreprocessGeneratedCommandsNV commandBuffer generatedCommandsInfo = liftIO . evalContT $ do
+cmdPreprocessGeneratedCommandsNV commandBuffer
+                                   generatedCommandsInfo = liftIO . evalContT $ do
   let vkCmdPreprocessGeneratedCommandsNVPtr = pVkCmdPreprocessGeneratedCommandsNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdPreprocessGeneratedCommandsNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPreprocessGeneratedCommandsNV is null" Nothing Nothing
   let vkCmdPreprocessGeneratedCommandsNV' = mkVkCmdPreprocessGeneratedCommandsNV vkCmdPreprocessGeneratedCommandsNVPtr
   pGeneratedCommandsInfo <- ContT $ withCStruct (generatedCommandsInfo)
-  lift $ traceAroundEvent "vkCmdPreprocessGeneratedCommandsNV" (vkCmdPreprocessGeneratedCommandsNV' (commandBufferHandle (commandBuffer)) pGeneratedCommandsInfo)
+  lift $ traceAroundEvent "vkCmdPreprocessGeneratedCommandsNV" (vkCmdPreprocessGeneratedCommandsNV'
+                                                                  (commandBufferHandle (commandBuffer))
+                                                                  pGeneratedCommandsInfo)
   pure $ ()
 
 
@@ -1987,12 +1995,19 @@ cmdBindPipelineShaderGroupNV :: forall io
                              -> -- | @groupIndex@ is the shader group to be bound.
                                 ("groupIndex" ::: Word32)
                              -> io ()
-cmdBindPipelineShaderGroupNV commandBuffer pipelineBindPoint pipeline groupIndex = liftIO $ do
+cmdBindPipelineShaderGroupNV commandBuffer
+                               pipelineBindPoint
+                               pipeline
+                               groupIndex = liftIO $ do
   let vkCmdBindPipelineShaderGroupNVPtr = pVkCmdBindPipelineShaderGroupNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdBindPipelineShaderGroupNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindPipelineShaderGroupNV is null" Nothing Nothing
   let vkCmdBindPipelineShaderGroupNV' = mkVkCmdBindPipelineShaderGroupNV vkCmdBindPipelineShaderGroupNVPtr
-  traceAroundEvent "vkCmdBindPipelineShaderGroupNV" (vkCmdBindPipelineShaderGroupNV' (commandBufferHandle (commandBuffer)) (pipelineBindPoint) (pipeline) (groupIndex))
+  traceAroundEvent "vkCmdBindPipelineShaderGroupNV" (vkCmdBindPipelineShaderGroupNV'
+                                                       (commandBufferHandle (commandBuffer))
+                                                       (pipelineBindPoint)
+                                                       (pipeline)
+                                                       (groupIndex))
   pure $ ()
 
 
@@ -2034,7 +2049,10 @@ foreign import ccall
 -- 'GeneratedCommandsMemoryRequirementsInfoNV',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.MemoryRequirements2'
 getGeneratedCommandsMemoryRequirementsNV :: forall a io
-                                          . (Extendss MemoryRequirements2 a, PokeChain a, PeekChain a, MonadIO io)
+                                          . ( Extendss MemoryRequirements2 a
+                                            , PokeChain a
+                                            , PeekChain a
+                                            , MonadIO io )
                                          => -- | @device@ is the logical device that owns the buffer.
                                             Device
                                          -> -- | @pInfo@ is a pointer to a 'GeneratedCommandsMemoryRequirementsInfoNV'
@@ -2049,7 +2067,10 @@ getGeneratedCommandsMemoryRequirementsNV device info = liftIO . evalContT $ do
   let vkGetGeneratedCommandsMemoryRequirementsNV' = mkVkGetGeneratedCommandsMemoryRequirementsNV vkGetGeneratedCommandsMemoryRequirementsNVPtr
   pInfo <- ContT $ withCStruct (info)
   pPMemoryRequirements <- ContT (withZeroCStruct @(MemoryRequirements2 _))
-  lift $ traceAroundEvent "vkGetGeneratedCommandsMemoryRequirementsNV" (vkGetGeneratedCommandsMemoryRequirementsNV' (deviceHandle (device)) pInfo (forgetExtensions (pPMemoryRequirements)))
+  lift $ traceAroundEvent "vkGetGeneratedCommandsMemoryRequirementsNV" (vkGetGeneratedCommandsMemoryRequirementsNV'
+                                                                          (deviceHandle (device))
+                                                                          pInfo
+                                                                          (forgetExtensions (pPMemoryRequirements)))
   pMemoryRequirements <- lift $ peekCStruct @(MemoryRequirements2 _) pPMemoryRequirements
   pure $ (pMemoryRequirements)
 
@@ -2120,7 +2141,9 @@ createIndirectCommandsLayoutNV :: forall io
                                   -- chapter.
                                   ("allocator" ::: Maybe AllocationCallbacks)
                                -> io (IndirectCommandsLayoutNV)
-createIndirectCommandsLayoutNV device createInfo allocator = liftIO . evalContT $ do
+createIndirectCommandsLayoutNV device
+                                 createInfo
+                                 allocator = liftIO . evalContT $ do
   let vkCreateIndirectCommandsLayoutNVPtr = pVkCreateIndirectCommandsLayoutNV (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateIndirectCommandsLayoutNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateIndirectCommandsLayoutNV is null" Nothing Nothing
@@ -2130,7 +2153,11 @@ createIndirectCommandsLayoutNV device createInfo allocator = liftIO . evalContT 
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPIndirectCommandsLayout <- ContT $ bracket (callocBytes @IndirectCommandsLayoutNV 8) free
-  r <- lift $ traceAroundEvent "vkCreateIndirectCommandsLayoutNV" (vkCreateIndirectCommandsLayoutNV' (deviceHandle (device)) pCreateInfo pAllocator (pPIndirectCommandsLayout))
+  r <- lift $ traceAroundEvent "vkCreateIndirectCommandsLayoutNV" (vkCreateIndirectCommandsLayoutNV'
+                                                                     (deviceHandle (device))
+                                                                     pCreateInfo
+                                                                     pAllocator
+                                                                     (pPIndirectCommandsLayout))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pIndirectCommandsLayout <- lift $ peek @IndirectCommandsLayoutNV pPIndirectCommandsLayout
   pure $ (pIndirectCommandsLayout)
@@ -2221,7 +2248,9 @@ destroyIndirectCommandsLayoutNV :: forall io
                                    -- chapter.
                                    ("allocator" ::: Maybe AllocationCallbacks)
                                 -> io ()
-destroyIndirectCommandsLayoutNV device indirectCommandsLayout allocator = liftIO . evalContT $ do
+destroyIndirectCommandsLayoutNV device
+                                  indirectCommandsLayout
+                                  allocator = liftIO . evalContT $ do
   let vkDestroyIndirectCommandsLayoutNVPtr = pVkDestroyIndirectCommandsLayoutNV (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyIndirectCommandsLayoutNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyIndirectCommandsLayoutNV is null" Nothing Nothing
@@ -2229,7 +2258,10 @@ destroyIndirectCommandsLayoutNV device indirectCommandsLayout allocator = liftIO
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyIndirectCommandsLayoutNV" (vkDestroyIndirectCommandsLayoutNV' (deviceHandle (device)) (indirectCommandsLayout) pAllocator)
+  lift $ traceAroundEvent "vkDestroyIndirectCommandsLayoutNV" (vkDestroyIndirectCommandsLayoutNV'
+                                                                 (deviceHandle (device))
+                                                                 (indirectCommandsLayout)
+                                                                 pAllocator)
   pure $ ()
 
 
@@ -2404,7 +2436,15 @@ instance FromCStruct PhysicalDeviceDeviceGeneratedCommandsPropertiesNV where
     minSequencesIndexBufferOffsetAlignment <- peek @Word32 ((p `plusPtr` 44 :: Ptr Word32))
     minIndirectCommandsBufferOffsetAlignment <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
     pure $ PhysicalDeviceDeviceGeneratedCommandsPropertiesNV
-             maxGraphicsShaderGroupCount maxIndirectSequenceCount maxIndirectCommandsTokenCount maxIndirectCommandsStreamCount maxIndirectCommandsTokenOffset maxIndirectCommandsStreamStride minSequencesCountBufferOffsetAlignment minSequencesIndexBufferOffsetAlignment minIndirectCommandsBufferOffsetAlignment
+             maxGraphicsShaderGroupCount
+             maxIndirectSequenceCount
+             maxIndirectCommandsTokenCount
+             maxIndirectCommandsStreamCount
+             maxIndirectCommandsTokenOffset
+             maxIndirectCommandsStreamStride
+             minSequencesCountBufferOffsetAlignment
+             minSequencesIndexBufferOffsetAlignment
+             minIndirectCommandsBufferOffsetAlignment
 
 instance Storable PhysicalDeviceDeviceGeneratedCommandsPropertiesNV where
   sizeOf ~_ = 56
@@ -3209,7 +3249,18 @@ instance FromCStruct IndirectCommandsLayoutTokenNV where
     pIndexTypeValues <- peek @(Ptr Word32) ((p `plusPtr` 80 :: Ptr (Ptr Word32)))
     pIndexTypeValues' <- generateM (fromIntegral indexTypeCount) (\i -> peek @Word32 ((pIndexTypeValues `advancePtrBytes` (4 * (i)) :: Ptr Word32)))
     pure $ IndirectCommandsLayoutTokenNV
-             tokenType stream offset vertexBindingUnit (bool32ToBool vertexDynamicStride) pushconstantPipelineLayout pushconstantShaderStageFlags pushconstantOffset pushconstantSize indirectStateFlags pIndexTypes' pIndexTypeValues'
+             tokenType
+             stream
+             offset
+             vertexBindingUnit
+             (bool32ToBool vertexDynamicStride)
+             pushconstantPipelineLayout
+             pushconstantShaderStageFlags
+             pushconstantOffset
+             pushconstantSize
+             indirectStateFlags
+             pIndexTypes'
+             pIndexTypeValues'
 
 instance Zero IndirectCommandsLayoutTokenNV where
   zero = IndirectCommandsLayoutTokenNV
@@ -3694,7 +3745,18 @@ instance FromCStruct GeneratedCommandsInfoNV where
     sequencesIndexBuffer <- peek @Buffer ((p `plusPtr` 104 :: Ptr Buffer))
     sequencesIndexOffset <- peek @DeviceSize ((p `plusPtr` 112 :: Ptr DeviceSize))
     pure $ GeneratedCommandsInfoNV
-             pipelineBindPoint pipeline indirectCommandsLayout pStreams' sequencesCount preprocessBuffer preprocessOffset preprocessSize sequencesCountBuffer sequencesCountOffset sequencesIndexBuffer sequencesIndexOffset
+             pipelineBindPoint
+             pipeline
+             indirectCommandsLayout
+             pStreams'
+             sequencesCount
+             preprocessBuffer
+             preprocessOffset
+             preprocessSize
+             sequencesCountBuffer
+             sequencesCountOffset
+             sequencesIndexBuffer
+             sequencesIndexOffset
 
 instance Zero GeneratedCommandsInfoNV where
   zero = GeneratedCommandsInfoNV
@@ -3839,11 +3901,13 @@ newtype IndirectCommandsLayoutUsageFlagBitsNV = IndirectCommandsLayoutUsageFlagB
 -- 'cmdExecuteGeneratedCommandsNV' with @isPreprocessed@ set to
 -- 'Vulkan.Core10.FundamentalTypes.TRUE'.
 pattern INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV = IndirectCommandsLayoutUsageFlagBitsNV 0x00000001
+
 -- | 'INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NV' specifies that
 -- the input data for the sequences is not implicitly indexed from
 -- 0..sequencesUsed but a user provided 'Vulkan.Core10.Handles.Buffer'
 -- encoding the index is provided.
-pattern INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NV   = IndirectCommandsLayoutUsageFlagBitsNV 0x00000002
+pattern INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NV = IndirectCommandsLayoutUsageFlagBitsNV 0x00000002
+
 -- | 'INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NV' specifies
 -- that the processing of sequences /can/ happen at an
 -- implementation-dependent order, which is not: guaranteed to be coherent
@@ -3858,24 +3922,36 @@ enumPrefixIndirectCommandsLayoutUsageFlagBitsNV = "INDIRECT_COMMANDS_LAYOUT_USAG
 
 showTableIndirectCommandsLayoutUsageFlagBitsNV :: [(IndirectCommandsLayoutUsageFlagBitsNV, String)]
 showTableIndirectCommandsLayoutUsageFlagBitsNV =
-  [ (INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV, "EXPLICIT_PREPROCESS_BIT_NV")
-  , (INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NV  , "INDEXED_SEQUENCES_BIT_NV")
-  , (INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NV, "UNORDERED_SEQUENCES_BIT_NV")
+  [
+    ( INDIRECT_COMMANDS_LAYOUT_USAGE_EXPLICIT_PREPROCESS_BIT_NV
+    , "EXPLICIT_PREPROCESS_BIT_NV"
+    )
+  ,
+    ( INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NV
+    , "INDEXED_SEQUENCES_BIT_NV"
+    )
+  ,
+    ( INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NV
+    , "UNORDERED_SEQUENCES_BIT_NV"
+    )
   ]
 
 instance Show IndirectCommandsLayoutUsageFlagBitsNV where
-  showsPrec = enumShowsPrec enumPrefixIndirectCommandsLayoutUsageFlagBitsNV
-                            showTableIndirectCommandsLayoutUsageFlagBitsNV
-                            conNameIndirectCommandsLayoutUsageFlagBitsNV
-                            (\(IndirectCommandsLayoutUsageFlagBitsNV x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixIndirectCommandsLayoutUsageFlagBitsNV
+      showTableIndirectCommandsLayoutUsageFlagBitsNV
+      conNameIndirectCommandsLayoutUsageFlagBitsNV
+      (\(IndirectCommandsLayoutUsageFlagBitsNV x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read IndirectCommandsLayoutUsageFlagBitsNV where
-  readPrec = enumReadPrec enumPrefixIndirectCommandsLayoutUsageFlagBitsNV
-                          showTableIndirectCommandsLayoutUsageFlagBitsNV
-                          conNameIndirectCommandsLayoutUsageFlagBitsNV
-                          IndirectCommandsLayoutUsageFlagBitsNV
-
+  readPrec =
+    enumReadPrec
+      enumPrefixIndirectCommandsLayoutUsageFlagBitsNV
+      showTableIndirectCommandsLayoutUsageFlagBitsNV
+      conNameIndirectCommandsLayoutUsageFlagBitsNV
+      IndirectCommandsLayoutUsageFlagBitsNV
 
 type IndirectStateFlagsNV = IndirectStateFlagBitsNV
 
@@ -3904,18 +3980,21 @@ showTableIndirectStateFlagBitsNV :: [(IndirectStateFlagBitsNV, String)]
 showTableIndirectStateFlagBitsNV = [(INDIRECT_STATE_FLAG_FRONTFACE_BIT_NV, "")]
 
 instance Show IndirectStateFlagBitsNV where
-  showsPrec = enumShowsPrec enumPrefixIndirectStateFlagBitsNV
-                            showTableIndirectStateFlagBitsNV
-                            conNameIndirectStateFlagBitsNV
-                            (\(IndirectStateFlagBitsNV x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixIndirectStateFlagBitsNV
+      showTableIndirectStateFlagBitsNV
+      conNameIndirectStateFlagBitsNV
+      (\(IndirectStateFlagBitsNV x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read IndirectStateFlagBitsNV where
-  readPrec = enumReadPrec enumPrefixIndirectStateFlagBitsNV
-                          showTableIndirectStateFlagBitsNV
-                          conNameIndirectStateFlagBitsNV
-                          IndirectStateFlagBitsNV
-
+  readPrec =
+    enumReadPrec
+      enumPrefixIndirectStateFlagBitsNV
+      showTableIndirectStateFlagBitsNV
+      conNameIndirectStateFlagBitsNV
+      IndirectStateFlagBitsNV
 
 -- | VkIndirectCommandsTokenTypeNV - Enum specifying token commands
 --
@@ -3955,32 +4034,44 @@ newtype IndirectCommandsTokenTypeNV = IndirectCommandsTokenTypeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV"
-pattern INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV    = IndirectCommandsTokenTypeNV 0
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV = IndirectCommandsTokenTypeNV 0
+
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV"
-pattern INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV     = IndirectCommandsTokenTypeNV 1
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV = IndirectCommandsTokenTypeNV 1
+
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV"
-pattern INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV    = IndirectCommandsTokenTypeNV 2
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV = IndirectCommandsTokenTypeNV 2
+
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV"
-pattern INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV   = IndirectCommandsTokenTypeNV 3
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV = IndirectCommandsTokenTypeNV 3
+
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV"
-pattern INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV   = IndirectCommandsTokenTypeNV 4
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV = IndirectCommandsTokenTypeNV 4
+
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV"
-pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV    = IndirectCommandsTokenTypeNV 5
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV = IndirectCommandsTokenTypeNV 5
+
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV"
-pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV            = IndirectCommandsTokenTypeNV 6
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV = IndirectCommandsTokenTypeNV 6
+
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV"
-pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV      = IndirectCommandsTokenTypeNV 7
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV = IndirectCommandsTokenTypeNV 7
+
 -- No documentation found for Nested "VkIndirectCommandsTokenTypeNV" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_NV"
 pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_NV = IndirectCommandsTokenTypeNV 1000328000
-{-# complete INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV,
-             INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV,
-             INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV,
-             INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV,
-             INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV,
-             INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV,
-             INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV,
-             INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV,
-             INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_NV :: IndirectCommandsTokenTypeNV #-}
+
+{-# COMPLETE
+  INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV
+  , INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV
+  , INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV
+  , INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV
+  , INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV
+  , INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV
+  , INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV
+  , INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV
+  , INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_NV ::
+    IndirectCommandsTokenTypeNV
+  #-}
 
 conNameIndirectCommandsTokenTypeNV :: String
 conNameIndirectCommandsTokenTypeNV = "IndirectCommandsTokenTypeNV"
@@ -3990,30 +4081,60 @@ enumPrefixIndirectCommandsTokenTypeNV = "INDIRECT_COMMANDS_TOKEN_TYPE_"
 
 showTableIndirectCommandsTokenTypeNV :: [(IndirectCommandsTokenTypeNV, String)]
 showTableIndirectCommandsTokenTypeNV =
-  [ (INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV   , "SHADER_GROUP_NV")
-  , (INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV    , "STATE_FLAGS_NV")
-  , (INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV   , "INDEX_BUFFER_NV")
-  , (INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV  , "VERTEX_BUFFER_NV")
-  , (INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV  , "PUSH_CONSTANT_NV")
-  , (INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV   , "DRAW_INDEXED_NV")
-  , (INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV           , "DRAW_NV")
-  , (INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV     , "DRAW_TASKS_NV")
-  , (INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_NV, "DRAW_MESH_TASKS_NV")
+  [
+    ( INDIRECT_COMMANDS_TOKEN_TYPE_SHADER_GROUP_NV
+    , "SHADER_GROUP_NV"
+    )
+  ,
+    ( INDIRECT_COMMANDS_TOKEN_TYPE_STATE_FLAGS_NV
+    , "STATE_FLAGS_NV"
+    )
+  ,
+    ( INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NV
+    , "INDEX_BUFFER_NV"
+    )
+  ,
+    ( INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NV
+    , "VERTEX_BUFFER_NV"
+    )
+  ,
+    ( INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NV
+    , "PUSH_CONSTANT_NV"
+    )
+  ,
+    ( INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV
+    , "DRAW_INDEXED_NV"
+    )
+  ,
+    ( INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV
+    , "DRAW_NV"
+    )
+  ,
+    ( INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV
+    , "DRAW_TASKS_NV"
+    )
+  ,
+    ( INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_NV
+    , "DRAW_MESH_TASKS_NV"
+    )
   ]
 
 instance Show IndirectCommandsTokenTypeNV where
-  showsPrec = enumShowsPrec enumPrefixIndirectCommandsTokenTypeNV
-                            showTableIndirectCommandsTokenTypeNV
-                            conNameIndirectCommandsTokenTypeNV
-                            (\(IndirectCommandsTokenTypeNV x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixIndirectCommandsTokenTypeNV
+      showTableIndirectCommandsTokenTypeNV
+      conNameIndirectCommandsTokenTypeNV
+      (\(IndirectCommandsTokenTypeNV x) -> x)
+      (showsPrec 11)
 
 instance Read IndirectCommandsTokenTypeNV where
-  readPrec = enumReadPrec enumPrefixIndirectCommandsTokenTypeNV
-                          showTableIndirectCommandsTokenTypeNV
-                          conNameIndirectCommandsTokenTypeNV
-                          IndirectCommandsTokenTypeNV
-
+  readPrec =
+    enumReadPrec
+      enumPrefixIndirectCommandsTokenTypeNV
+      showTableIndirectCommandsTokenTypeNV
+      conNameIndirectCommandsTokenTypeNV
+      IndirectCommandsTokenTypeNV
 
 type NV_DEVICE_GENERATED_COMMANDS_SPEC_VERSION = 3
 

@@ -483,17 +483,94 @@ deriving instance Eq InstanceCmds
 deriving instance Show InstanceCmds
 instance Zero InstanceCmds where
   zero = InstanceCmds
-    nullPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
 
 -- | A version of 'getInstanceProcAddr' which can be called
 -- with a null pointer for the instance.
@@ -557,23 +634,34 @@ initInstanceCmds handle = do
   vkDestroyDebugReportCallbackEXT <- getInstanceProcAddr' handle (Ptr "vkDestroyDebugReportCallbackEXT"#)
   vkDebugReportMessageEXT <- getInstanceProcAddr' handle (Ptr "vkDebugReportMessageEXT"#)
   vkGetPhysicalDeviceExternalImageFormatPropertiesNV <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceExternalImageFormatPropertiesNV"#)
-  vkGetPhysicalDeviceFeatures2 <- getFirstInstanceProcAddr [(Ptr "vkGetPhysicalDeviceFeatures2KHR"#), (Ptr "vkGetPhysicalDeviceFeatures2"#)]
-  vkGetPhysicalDeviceProperties2 <- getFirstInstanceProcAddr [(Ptr "vkGetPhysicalDeviceProperties2KHR"#), (Ptr "vkGetPhysicalDeviceProperties2"#)]
-  vkGetPhysicalDeviceFormatProperties2 <- getFirstInstanceProcAddr [(Ptr "vkGetPhysicalDeviceFormatProperties2KHR"#), (Ptr "vkGetPhysicalDeviceFormatProperties2"#)]
-  vkGetPhysicalDeviceImageFormatProperties2 <- getFirstInstanceProcAddr [(Ptr "vkGetPhysicalDeviceImageFormatProperties2KHR"#), (Ptr "vkGetPhysicalDeviceImageFormatProperties2"#)]
-  vkGetPhysicalDeviceQueueFamilyProperties2 <- getFirstInstanceProcAddr [(Ptr "vkGetPhysicalDeviceQueueFamilyProperties2KHR"#), (Ptr "vkGetPhysicalDeviceQueueFamilyProperties2"#)]
-  vkGetPhysicalDeviceMemoryProperties2 <- getFirstInstanceProcAddr [(Ptr "vkGetPhysicalDeviceMemoryProperties2KHR"#), (Ptr "vkGetPhysicalDeviceMemoryProperties2"#)]
-  vkGetPhysicalDeviceSparseImageFormatProperties2 <- getFirstInstanceProcAddr [(Ptr "vkGetPhysicalDeviceSparseImageFormatProperties2KHR"#), (Ptr "vkGetPhysicalDeviceSparseImageFormatProperties2"#)]
-  vkGetPhysicalDeviceExternalBufferProperties <- getFirstInstanceProcAddr [(Ptr "vkGetPhysicalDeviceExternalBufferPropertiesKHR"#), (Ptr "vkGetPhysicalDeviceExternalBufferProperties"#)]
-  vkGetPhysicalDeviceExternalSemaphoreProperties <- getFirstInstanceProcAddr [(Ptr "vkGetPhysicalDeviceExternalSemaphorePropertiesKHR"#), (Ptr "vkGetPhysicalDeviceExternalSemaphoreProperties"#)]
-  vkGetPhysicalDeviceExternalFenceProperties <- getFirstInstanceProcAddr [(Ptr "vkGetPhysicalDeviceExternalFencePropertiesKHR"#), (Ptr "vkGetPhysicalDeviceExternalFenceProperties"#)]
+  vkGetPhysicalDeviceFeatures2 <- getFirstInstanceProcAddr [ (Ptr "vkGetPhysicalDeviceFeatures2KHR"#)
+                                                           , (Ptr "vkGetPhysicalDeviceFeatures2"#) ]
+  vkGetPhysicalDeviceProperties2 <- getFirstInstanceProcAddr [ (Ptr "vkGetPhysicalDeviceProperties2KHR"#)
+                                                             , (Ptr "vkGetPhysicalDeviceProperties2"#) ]
+  vkGetPhysicalDeviceFormatProperties2 <- getFirstInstanceProcAddr [ (Ptr "vkGetPhysicalDeviceFormatProperties2KHR"#)
+                                                                   , (Ptr "vkGetPhysicalDeviceFormatProperties2"#) ]
+  vkGetPhysicalDeviceImageFormatProperties2 <- getFirstInstanceProcAddr [ (Ptr "vkGetPhysicalDeviceImageFormatProperties2KHR"#)
+                                                                        , (Ptr "vkGetPhysicalDeviceImageFormatProperties2"#) ]
+  vkGetPhysicalDeviceQueueFamilyProperties2 <- getFirstInstanceProcAddr [ (Ptr "vkGetPhysicalDeviceQueueFamilyProperties2KHR"#)
+                                                                        , (Ptr "vkGetPhysicalDeviceQueueFamilyProperties2"#) ]
+  vkGetPhysicalDeviceMemoryProperties2 <- getFirstInstanceProcAddr [ (Ptr "vkGetPhysicalDeviceMemoryProperties2KHR"#)
+                                                                   , (Ptr "vkGetPhysicalDeviceMemoryProperties2"#) ]
+  vkGetPhysicalDeviceSparseImageFormatProperties2 <- getFirstInstanceProcAddr [ (Ptr "vkGetPhysicalDeviceSparseImageFormatProperties2KHR"#)
+                                                                              , (Ptr "vkGetPhysicalDeviceSparseImageFormatProperties2"#) ]
+  vkGetPhysicalDeviceExternalBufferProperties <- getFirstInstanceProcAddr [ (Ptr "vkGetPhysicalDeviceExternalBufferPropertiesKHR"#)
+                                                                          , (Ptr "vkGetPhysicalDeviceExternalBufferProperties"#) ]
+  vkGetPhysicalDeviceExternalSemaphoreProperties <- getFirstInstanceProcAddr [ (Ptr "vkGetPhysicalDeviceExternalSemaphorePropertiesKHR"#)
+                                                                             , (Ptr "vkGetPhysicalDeviceExternalSemaphoreProperties"#) ]
+  vkGetPhysicalDeviceExternalFenceProperties <- getFirstInstanceProcAddr [ (Ptr "vkGetPhysicalDeviceExternalFencePropertiesKHR"#)
+                                                                         , (Ptr "vkGetPhysicalDeviceExternalFenceProperties"#) ]
   vkReleaseDisplayEXT <- getInstanceProcAddr' handle (Ptr "vkReleaseDisplayEXT"#)
   vkAcquireXlibDisplayEXT <- getInstanceProcAddr' handle (Ptr "vkAcquireXlibDisplayEXT"#)
   vkGetRandROutputDisplayEXT <- getInstanceProcAddr' handle (Ptr "vkGetRandROutputDisplayEXT"#)
   vkAcquireWinrtDisplayNV <- getInstanceProcAddr' handle (Ptr "vkAcquireWinrtDisplayNV"#)
   vkGetWinrtDisplayNV <- getInstanceProcAddr' handle (Ptr "vkGetWinrtDisplayNV"#)
   vkGetPhysicalDeviceSurfaceCapabilities2EXT <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceSurfaceCapabilities2EXT"#)
-  vkEnumeratePhysicalDeviceGroups <- getFirstInstanceProcAddr [(Ptr "vkEnumeratePhysicalDeviceGroupsKHR"#), (Ptr "vkEnumeratePhysicalDeviceGroups"#)]
+  vkEnumeratePhysicalDeviceGroups <- getFirstInstanceProcAddr [ (Ptr "vkEnumeratePhysicalDeviceGroupsKHR"#)
+                                                              , (Ptr "vkEnumeratePhysicalDeviceGroups"#) ]
   vkGetPhysicalDevicePresentRectanglesKHR <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDevicePresentRectanglesKHR"#)
   vkCreateIOSSurfaceMVK <- getInstanceProcAddr' handle (Ptr "vkCreateIOSSurfaceMVK"#)
   vkCreateMacOSSurfaceMVK <- getInstanceProcAddr' handle (Ptr "vkCreateMacOSSurfaceMVK"#)
@@ -595,7 +683,8 @@ initInstanceCmds handle = do
   vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR"#)
   vkCreateHeadlessSurfaceEXT <- getInstanceProcAddr' handle (Ptr "vkCreateHeadlessSurfaceEXT"#)
   vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV"#)
-  vkGetPhysicalDeviceToolProperties <- getFirstInstanceProcAddr [(Ptr "vkGetPhysicalDeviceToolPropertiesEXT"#), (Ptr "vkGetPhysicalDeviceToolProperties"#)]
+  vkGetPhysicalDeviceToolProperties <- getFirstInstanceProcAddr [ (Ptr "vkGetPhysicalDeviceToolPropertiesEXT"#)
+                                                                , (Ptr "vkGetPhysicalDeviceToolProperties"#) ]
   vkGetPhysicalDeviceFragmentShadingRatesKHR <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceFragmentShadingRatesKHR"#)
   vkAcquireDrmDisplayEXT <- getInstanceProcAddr' handle (Ptr "vkAcquireDrmDisplayEXT"#)
   vkGetDrmDisplayEXT <- getInstanceProcAddr' handle (Ptr "vkGetDrmDisplayEXT"#)
@@ -1067,52 +1156,374 @@ deriving instance Eq DeviceCmds
 deriving instance Show DeviceCmds
 instance Zero DeviceCmds where
   zero = DeviceCmds
-    nullPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr
 
 foreign import ccall
@@ -1168,7 +1579,8 @@ initDeviceCmds instanceCmds handle = do
   vkCreateQueryPool <- getDeviceProcAddr' handle (Ptr "vkCreateQueryPool"#)
   vkDestroyQueryPool <- getDeviceProcAddr' handle (Ptr "vkDestroyQueryPool"#)
   vkGetQueryPoolResults <- getDeviceProcAddr' handle (Ptr "vkGetQueryPoolResults"#)
-  vkResetQueryPool <- getFirstDeviceProcAddr [(Ptr "vkResetQueryPoolEXT"#), (Ptr "vkResetQueryPool"#)]
+  vkResetQueryPool <- getFirstDeviceProcAddr [ (Ptr "vkResetQueryPoolEXT"#)
+                                             , (Ptr "vkResetQueryPool"#) ]
   vkCreateBuffer <- getDeviceProcAddr' handle (Ptr "vkCreateBuffer"#)
   vkDestroyBuffer <- getDeviceProcAddr' handle (Ptr "vkDestroyBuffer"#)
   vkCreateBufferView <- getDeviceProcAddr' handle (Ptr "vkCreateBufferView"#)
@@ -1281,7 +1693,8 @@ initDeviceCmds instanceCmds handle = do
   vkCreateIndirectCommandsLayoutNV <- getDeviceProcAddr' handle (Ptr "vkCreateIndirectCommandsLayoutNV"#)
   vkDestroyIndirectCommandsLayoutNV <- getDeviceProcAddr' handle (Ptr "vkDestroyIndirectCommandsLayoutNV"#)
   vkCmdPushDescriptorSetKHR <- getDeviceProcAddr' handle (Ptr "vkCmdPushDescriptorSetKHR"#)
-  vkTrimCommandPool <- getFirstDeviceProcAddr [(Ptr "vkTrimCommandPoolKHR"#), (Ptr "vkTrimCommandPool"#)]
+  vkTrimCommandPool <- getFirstDeviceProcAddr [ (Ptr "vkTrimCommandPoolKHR"#)
+                                              , (Ptr "vkTrimCommandPool"#) ]
   vkGetMemoryWin32HandleKHR <- getDeviceProcAddr' handle (Ptr "vkGetMemoryWin32HandleKHR"#)
   vkGetMemoryWin32HandlePropertiesKHR <- getDeviceProcAddr' handle (Ptr "vkGetMemoryWin32HandlePropertiesKHR"#)
   vkGetMemoryFdKHR <- getDeviceProcAddr' handle (Ptr "vkGetMemoryFdKHR"#)
@@ -1303,17 +1716,25 @@ initDeviceCmds instanceCmds handle = do
   vkRegisterDeviceEventEXT <- getDeviceProcAddr' handle (Ptr "vkRegisterDeviceEventEXT"#)
   vkRegisterDisplayEventEXT <- getDeviceProcAddr' handle (Ptr "vkRegisterDisplayEventEXT"#)
   vkGetSwapchainCounterEXT <- getDeviceProcAddr' handle (Ptr "vkGetSwapchainCounterEXT"#)
-  vkGetDeviceGroupPeerMemoryFeatures <- getFirstDeviceProcAddr [(Ptr "vkGetDeviceGroupPeerMemoryFeaturesKHR"#), (Ptr "vkGetDeviceGroupPeerMemoryFeatures"#)]
-  vkBindBufferMemory2 <- getFirstDeviceProcAddr [(Ptr "vkBindBufferMemory2KHR"#), (Ptr "vkBindBufferMemory2"#)]
-  vkBindImageMemory2 <- getFirstDeviceProcAddr [(Ptr "vkBindImageMemory2KHR"#), (Ptr "vkBindImageMemory2"#)]
-  vkCmdSetDeviceMask <- getFirstDeviceProcAddr [(Ptr "vkCmdSetDeviceMaskKHR"#), (Ptr "vkCmdSetDeviceMask"#)]
+  vkGetDeviceGroupPeerMemoryFeatures <- getFirstDeviceProcAddr [ (Ptr "vkGetDeviceGroupPeerMemoryFeaturesKHR"#)
+                                                               , (Ptr "vkGetDeviceGroupPeerMemoryFeatures"#) ]
+  vkBindBufferMemory2 <- getFirstDeviceProcAddr [ (Ptr "vkBindBufferMemory2KHR"#)
+                                                , (Ptr "vkBindBufferMemory2"#) ]
+  vkBindImageMemory2 <- getFirstDeviceProcAddr [ (Ptr "vkBindImageMemory2KHR"#)
+                                               , (Ptr "vkBindImageMemory2"#) ]
+  vkCmdSetDeviceMask <- getFirstDeviceProcAddr [ (Ptr "vkCmdSetDeviceMaskKHR"#)
+                                               , (Ptr "vkCmdSetDeviceMask"#) ]
   vkGetDeviceGroupPresentCapabilitiesKHR <- getDeviceProcAddr' handle (Ptr "vkGetDeviceGroupPresentCapabilitiesKHR"#)
   vkGetDeviceGroupSurfacePresentModesKHR <- getDeviceProcAddr' handle (Ptr "vkGetDeviceGroupSurfacePresentModesKHR"#)
   vkAcquireNextImage2KHR <- getDeviceProcAddr' handle (Ptr "vkAcquireNextImage2KHR"#)
-  vkCmdDispatchBase <- getFirstDeviceProcAddr [(Ptr "vkCmdDispatchBaseKHR"#), (Ptr "vkCmdDispatchBase"#)]
-  vkCreateDescriptorUpdateTemplate <- getFirstDeviceProcAddr [(Ptr "vkCreateDescriptorUpdateTemplateKHR"#), (Ptr "vkCreateDescriptorUpdateTemplate"#)]
-  vkDestroyDescriptorUpdateTemplate <- getFirstDeviceProcAddr [(Ptr "vkDestroyDescriptorUpdateTemplateKHR"#), (Ptr "vkDestroyDescriptorUpdateTemplate"#)]
-  vkUpdateDescriptorSetWithTemplate <- getFirstDeviceProcAddr [(Ptr "vkUpdateDescriptorSetWithTemplateKHR"#), (Ptr "vkUpdateDescriptorSetWithTemplate"#)]
+  vkCmdDispatchBase <- getFirstDeviceProcAddr [ (Ptr "vkCmdDispatchBaseKHR"#)
+                                              , (Ptr "vkCmdDispatchBase"#) ]
+  vkCreateDescriptorUpdateTemplate <- getFirstDeviceProcAddr [ (Ptr "vkCreateDescriptorUpdateTemplateKHR"#)
+                                                             , (Ptr "vkCreateDescriptorUpdateTemplate"#) ]
+  vkDestroyDescriptorUpdateTemplate <- getFirstDeviceProcAddr [ (Ptr "vkDestroyDescriptorUpdateTemplateKHR"#)
+                                                              , (Ptr "vkDestroyDescriptorUpdateTemplate"#) ]
+  vkUpdateDescriptorSetWithTemplate <- getFirstDeviceProcAddr [ (Ptr "vkUpdateDescriptorSetWithTemplateKHR"#)
+                                                              , (Ptr "vkUpdateDescriptorSetWithTemplate"#) ]
   vkCmdPushDescriptorSetWithTemplateKHR <- getDeviceProcAddr' handle (Ptr "vkCmdPushDescriptorSetWithTemplateKHR"#)
   vkSetHdrMetadataEXT <- getDeviceProcAddr' handle (Ptr "vkSetHdrMetadataEXT"#)
   vkGetSwapchainStatusKHR <- getDeviceProcAddr' handle (Ptr "vkGetSwapchainStatusKHR"#)
@@ -1322,20 +1743,29 @@ initDeviceCmds instanceCmds handle = do
   vkCmdSetViewportWScalingNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetViewportWScalingNV"#)
   vkCmdSetDiscardRectangleEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetDiscardRectangleEXT"#)
   vkCmdSetSampleLocationsEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetSampleLocationsEXT"#)
-  vkGetBufferMemoryRequirements2 <- getFirstDeviceProcAddr [(Ptr "vkGetBufferMemoryRequirements2KHR"#), (Ptr "vkGetBufferMemoryRequirements2"#)]
-  vkGetImageMemoryRequirements2 <- getFirstDeviceProcAddr [(Ptr "vkGetImageMemoryRequirements2KHR"#), (Ptr "vkGetImageMemoryRequirements2"#)]
-  vkGetImageSparseMemoryRequirements2 <- getFirstDeviceProcAddr [(Ptr "vkGetImageSparseMemoryRequirements2KHR"#), (Ptr "vkGetImageSparseMemoryRequirements2"#)]
-  vkGetDeviceBufferMemoryRequirements <- getFirstDeviceProcAddr [(Ptr "vkGetDeviceBufferMemoryRequirementsKHR"#), (Ptr "vkGetDeviceBufferMemoryRequirements"#)]
-  vkGetDeviceImageMemoryRequirements <- getFirstDeviceProcAddr [(Ptr "vkGetDeviceImageMemoryRequirementsKHR"#), (Ptr "vkGetDeviceImageMemoryRequirements"#)]
-  vkGetDeviceImageSparseMemoryRequirements <- getFirstDeviceProcAddr [(Ptr "vkGetDeviceImageSparseMemoryRequirementsKHR"#), (Ptr "vkGetDeviceImageSparseMemoryRequirements"#)]
-  vkCreateSamplerYcbcrConversion <- getFirstDeviceProcAddr [(Ptr "vkCreateSamplerYcbcrConversionKHR"#), (Ptr "vkCreateSamplerYcbcrConversion"#)]
-  vkDestroySamplerYcbcrConversion <- getFirstDeviceProcAddr [(Ptr "vkDestroySamplerYcbcrConversionKHR"#), (Ptr "vkDestroySamplerYcbcrConversion"#)]
+  vkGetBufferMemoryRequirements2 <- getFirstDeviceProcAddr [ (Ptr "vkGetBufferMemoryRequirements2KHR"#)
+                                                           , (Ptr "vkGetBufferMemoryRequirements2"#) ]
+  vkGetImageMemoryRequirements2 <- getFirstDeviceProcAddr [ (Ptr "vkGetImageMemoryRequirements2KHR"#)
+                                                          , (Ptr "vkGetImageMemoryRequirements2"#) ]
+  vkGetImageSparseMemoryRequirements2 <- getFirstDeviceProcAddr [ (Ptr "vkGetImageSparseMemoryRequirements2KHR"#)
+                                                                , (Ptr "vkGetImageSparseMemoryRequirements2"#) ]
+  vkGetDeviceBufferMemoryRequirements <- getFirstDeviceProcAddr [ (Ptr "vkGetDeviceBufferMemoryRequirementsKHR"#)
+                                                                , (Ptr "vkGetDeviceBufferMemoryRequirements"#) ]
+  vkGetDeviceImageMemoryRequirements <- getFirstDeviceProcAddr [ (Ptr "vkGetDeviceImageMemoryRequirementsKHR"#)
+                                                               , (Ptr "vkGetDeviceImageMemoryRequirements"#) ]
+  vkGetDeviceImageSparseMemoryRequirements <- getFirstDeviceProcAddr [ (Ptr "vkGetDeviceImageSparseMemoryRequirementsKHR"#)
+                                                                     , (Ptr "vkGetDeviceImageSparseMemoryRequirements"#) ]
+  vkCreateSamplerYcbcrConversion <- getFirstDeviceProcAddr [ (Ptr "vkCreateSamplerYcbcrConversionKHR"#)
+                                                           , (Ptr "vkCreateSamplerYcbcrConversion"#) ]
+  vkDestroySamplerYcbcrConversion <- getFirstDeviceProcAddr [ (Ptr "vkDestroySamplerYcbcrConversionKHR"#)
+                                                            , (Ptr "vkDestroySamplerYcbcrConversion"#) ]
   vkGetDeviceQueue2 <- getDeviceProcAddr' handle (Ptr "vkGetDeviceQueue2"#)
   vkCreateValidationCacheEXT <- getDeviceProcAddr' handle (Ptr "vkCreateValidationCacheEXT"#)
   vkDestroyValidationCacheEXT <- getDeviceProcAddr' handle (Ptr "vkDestroyValidationCacheEXT"#)
   vkGetValidationCacheDataEXT <- getDeviceProcAddr' handle (Ptr "vkGetValidationCacheDataEXT"#)
   vkMergeValidationCachesEXT <- getDeviceProcAddr' handle (Ptr "vkMergeValidationCachesEXT"#)
-  vkGetDescriptorSetLayoutSupport <- getFirstDeviceProcAddr [(Ptr "vkGetDescriptorSetLayoutSupportKHR"#), (Ptr "vkGetDescriptorSetLayoutSupport"#)]
+  vkGetDescriptorSetLayoutSupport <- getFirstDeviceProcAddr [ (Ptr "vkGetDescriptorSetLayoutSupportKHR"#)
+                                                            , (Ptr "vkGetDescriptorSetLayoutSupport"#) ]
   vkGetShaderInfoAMD <- getDeviceProcAddr' handle (Ptr "vkGetShaderInfoAMD"#)
   vkSetLocalDimmingAMD <- getDeviceProcAddr' handle (Ptr "vkSetLocalDimmingAMD"#)
   vkGetCalibratedTimestampsEXT <- getDeviceProcAddr' handle (Ptr "vkGetCalibratedTimestampsEXT"#)
@@ -1349,17 +1779,28 @@ initDeviceCmds instanceCmds handle = do
   vkCmdInsertDebugUtilsLabelEXT <- getDeviceProcAddr' handle (Ptr "vkCmdInsertDebugUtilsLabelEXT"#)
   vkGetMemoryHostPointerPropertiesEXT <- getDeviceProcAddr' handle (Ptr "vkGetMemoryHostPointerPropertiesEXT"#)
   vkCmdWriteBufferMarkerAMD <- getDeviceProcAddr' handle (Ptr "vkCmdWriteBufferMarkerAMD"#)
-  vkCreateRenderPass2 <- getFirstDeviceProcAddr [(Ptr "vkCreateRenderPass2KHR"#), (Ptr "vkCreateRenderPass2"#)]
-  vkCmdBeginRenderPass2 <- getFirstDeviceProcAddr [(Ptr "vkCmdBeginRenderPass2KHR"#), (Ptr "vkCmdBeginRenderPass2"#)]
-  vkCmdNextSubpass2 <- getFirstDeviceProcAddr [(Ptr "vkCmdNextSubpass2KHR"#), (Ptr "vkCmdNextSubpass2"#)]
-  vkCmdEndRenderPass2 <- getFirstDeviceProcAddr [(Ptr "vkCmdEndRenderPass2KHR"#), (Ptr "vkCmdEndRenderPass2"#)]
-  vkGetSemaphoreCounterValue <- getFirstDeviceProcAddr [(Ptr "vkGetSemaphoreCounterValueKHR"#), (Ptr "vkGetSemaphoreCounterValue"#)]
-  vkWaitSemaphores <- getFirstDeviceProcAddr [(Ptr "vkWaitSemaphoresKHR"#), (Ptr "vkWaitSemaphores"#)]
-  vkSignalSemaphore <- getFirstDeviceProcAddr [(Ptr "vkSignalSemaphoreKHR"#), (Ptr "vkSignalSemaphore"#)]
+  vkCreateRenderPass2 <- getFirstDeviceProcAddr [ (Ptr "vkCreateRenderPass2KHR"#)
+                                                , (Ptr "vkCreateRenderPass2"#) ]
+  vkCmdBeginRenderPass2 <- getFirstDeviceProcAddr [ (Ptr "vkCmdBeginRenderPass2KHR"#)
+                                                  , (Ptr "vkCmdBeginRenderPass2"#) ]
+  vkCmdNextSubpass2 <- getFirstDeviceProcAddr [ (Ptr "vkCmdNextSubpass2KHR"#)
+                                              , (Ptr "vkCmdNextSubpass2"#) ]
+  vkCmdEndRenderPass2 <- getFirstDeviceProcAddr [ (Ptr "vkCmdEndRenderPass2KHR"#)
+                                                , (Ptr "vkCmdEndRenderPass2"#) ]
+  vkGetSemaphoreCounterValue <- getFirstDeviceProcAddr [ (Ptr "vkGetSemaphoreCounterValueKHR"#)
+                                                       , (Ptr "vkGetSemaphoreCounterValue"#) ]
+  vkWaitSemaphores <- getFirstDeviceProcAddr [ (Ptr "vkWaitSemaphoresKHR"#)
+                                             , (Ptr "vkWaitSemaphores"#) ]
+  vkSignalSemaphore <- getFirstDeviceProcAddr [ (Ptr "vkSignalSemaphoreKHR"#)
+                                              , (Ptr "vkSignalSemaphore"#) ]
   vkGetAndroidHardwareBufferPropertiesANDROID <- getDeviceProcAddr' handle (Ptr "vkGetAndroidHardwareBufferPropertiesANDROID"#)
   vkGetMemoryAndroidHardwareBufferANDROID <- getDeviceProcAddr' handle (Ptr "vkGetMemoryAndroidHardwareBufferANDROID"#)
-  vkCmdDrawIndirectCount <- getFirstDeviceProcAddr [(Ptr "vkCmdDrawIndirectCountAMD"#), (Ptr "vkCmdDrawIndirectCountKHR"#), (Ptr "vkCmdDrawIndirectCount"#)]
-  vkCmdDrawIndexedIndirectCount <- getFirstDeviceProcAddr [(Ptr "vkCmdDrawIndexedIndirectCountAMD"#), (Ptr "vkCmdDrawIndexedIndirectCountKHR"#), (Ptr "vkCmdDrawIndexedIndirectCount"#)]
+  vkCmdDrawIndirectCount <- getFirstDeviceProcAddr [ (Ptr "vkCmdDrawIndirectCountAMD"#)
+                                                   , (Ptr "vkCmdDrawIndirectCountKHR"#)
+                                                   , (Ptr "vkCmdDrawIndirectCount"#) ]
+  vkCmdDrawIndexedIndirectCount <- getFirstDeviceProcAddr [ (Ptr "vkCmdDrawIndexedIndirectCountAMD"#)
+                                                          , (Ptr "vkCmdDrawIndexedIndirectCountKHR"#)
+                                                          , (Ptr "vkCmdDrawIndexedIndirectCount"#) ]
   vkCmdSetCheckpointNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetCheckpointNV"#)
   vkGetQueueCheckpointDataNV <- getDeviceProcAddr' handle (Ptr "vkGetQueueCheckpointDataNV"#)
   vkCmdBindTransformFeedbackBuffersEXT <- getDeviceProcAddr' handle (Ptr "vkCmdBindTransformFeedbackBuffersEXT"#)
@@ -1398,7 +1839,8 @@ initDeviceCmds instanceCmds handle = do
   vkWriteAccelerationStructuresPropertiesKHR <- getDeviceProcAddr' handle (Ptr "vkWriteAccelerationStructuresPropertiesKHR"#)
   vkCmdTraceRaysKHR <- getDeviceProcAddr' handle (Ptr "vkCmdTraceRaysKHR"#)
   vkCmdTraceRaysNV <- getDeviceProcAddr' handle (Ptr "vkCmdTraceRaysNV"#)
-  vkGetRayTracingShaderGroupHandlesKHR <- getFirstDeviceProcAddr [(Ptr "vkGetRayTracingShaderGroupHandlesNV"#), (Ptr "vkGetRayTracingShaderGroupHandlesKHR"#)]
+  vkGetRayTracingShaderGroupHandlesKHR <- getFirstDeviceProcAddr [ (Ptr "vkGetRayTracingShaderGroupHandlesNV"#)
+                                                                 , (Ptr "vkGetRayTracingShaderGroupHandlesKHR"#) ]
   vkGetRayTracingCaptureReplayShaderGroupHandlesKHR <- getDeviceProcAddr' handle (Ptr "vkGetRayTracingCaptureReplayShaderGroupHandlesKHR"#)
   vkGetAccelerationStructureHandleNV <- getDeviceProcAddr' handle (Ptr "vkGetAccelerationStructureHandleNV"#)
   vkCreateRayTracingPipelinesNV <- getDeviceProcAddr' handle (Ptr "vkCreateRayTracingPipelinesNV"#)
@@ -1416,8 +1858,11 @@ initDeviceCmds instanceCmds handle = do
   vkAcquireProfilingLockKHR <- getDeviceProcAddr' handle (Ptr "vkAcquireProfilingLockKHR"#)
   vkReleaseProfilingLockKHR <- getDeviceProcAddr' handle (Ptr "vkReleaseProfilingLockKHR"#)
   vkGetImageDrmFormatModifierPropertiesEXT <- getDeviceProcAddr' handle (Ptr "vkGetImageDrmFormatModifierPropertiesEXT"#)
-  vkGetBufferOpaqueCaptureAddress <- getFirstDeviceProcAddr [(Ptr "vkGetBufferOpaqueCaptureAddressKHR"#), (Ptr "vkGetBufferOpaqueCaptureAddress"#)]
-  vkGetBufferDeviceAddress <- getFirstDeviceProcAddr [(Ptr "vkGetBufferDeviceAddressEXT"#), (Ptr "vkGetBufferDeviceAddressKHR"#), (Ptr "vkGetBufferDeviceAddress"#)]
+  vkGetBufferOpaqueCaptureAddress <- getFirstDeviceProcAddr [ (Ptr "vkGetBufferOpaqueCaptureAddressKHR"#)
+                                                            , (Ptr "vkGetBufferOpaqueCaptureAddress"#) ]
+  vkGetBufferDeviceAddress <- getFirstDeviceProcAddr [ (Ptr "vkGetBufferDeviceAddressEXT"#)
+                                                     , (Ptr "vkGetBufferDeviceAddressKHR"#)
+                                                     , (Ptr "vkGetBufferDeviceAddress"#) ]
   vkInitializePerformanceApiINTEL <- getDeviceProcAddr' handle (Ptr "vkInitializePerformanceApiINTEL"#)
   vkUninitializePerformanceApiINTEL <- getDeviceProcAddr' handle (Ptr "vkUninitializePerformanceApiINTEL"#)
   vkCmdSetPerformanceMarkerINTEL <- getDeviceProcAddr' handle (Ptr "vkCmdSetPerformanceMarkerINTEL"#)
@@ -1427,7 +1872,8 @@ initDeviceCmds instanceCmds handle = do
   vkReleasePerformanceConfigurationINTEL <- getDeviceProcAddr' handle (Ptr "vkReleasePerformanceConfigurationINTEL"#)
   vkQueueSetPerformanceConfigurationINTEL <- getDeviceProcAddr' handle (Ptr "vkQueueSetPerformanceConfigurationINTEL"#)
   vkGetPerformanceParameterINTEL <- getDeviceProcAddr' handle (Ptr "vkGetPerformanceParameterINTEL"#)
-  vkGetDeviceMemoryOpaqueCaptureAddress <- getFirstDeviceProcAddr [(Ptr "vkGetDeviceMemoryOpaqueCaptureAddressKHR"#), (Ptr "vkGetDeviceMemoryOpaqueCaptureAddress"#)]
+  vkGetDeviceMemoryOpaqueCaptureAddress <- getFirstDeviceProcAddr [ (Ptr "vkGetDeviceMemoryOpaqueCaptureAddressKHR"#)
+                                                                  , (Ptr "vkGetDeviceMemoryOpaqueCaptureAddress"#) ]
   vkGetPipelineExecutablePropertiesKHR <- getDeviceProcAddr' handle (Ptr "vkGetPipelineExecutablePropertiesKHR"#)
   vkGetPipelineExecutableStatisticsKHR <- getDeviceProcAddr' handle (Ptr "vkGetPipelineExecutableStatisticsKHR"#)
   vkGetPipelineExecutableInternalRepresentationsKHR <- getDeviceProcAddr' handle (Ptr "vkGetPipelineExecutableInternalRepresentationsKHR"#)
@@ -1442,44 +1888,75 @@ initDeviceCmds instanceCmds handle = do
   vkGetDeferredOperationMaxConcurrencyKHR <- getDeviceProcAddr' handle (Ptr "vkGetDeferredOperationMaxConcurrencyKHR"#)
   vkGetDeferredOperationResultKHR <- getDeviceProcAddr' handle (Ptr "vkGetDeferredOperationResultKHR"#)
   vkDeferredOperationJoinKHR <- getDeviceProcAddr' handle (Ptr "vkDeferredOperationJoinKHR"#)
-  vkCmdSetCullMode <- getFirstDeviceProcAddr [(Ptr "vkCmdSetCullModeEXT"#), (Ptr "vkCmdSetCullMode"#)]
-  vkCmdSetFrontFace <- getFirstDeviceProcAddr [(Ptr "vkCmdSetFrontFaceEXT"#), (Ptr "vkCmdSetFrontFace"#)]
-  vkCmdSetPrimitiveTopology <- getFirstDeviceProcAddr [(Ptr "vkCmdSetPrimitiveTopologyEXT"#), (Ptr "vkCmdSetPrimitiveTopology"#)]
-  vkCmdSetViewportWithCount <- getFirstDeviceProcAddr [(Ptr "vkCmdSetViewportWithCountEXT"#), (Ptr "vkCmdSetViewportWithCount"#)]
-  vkCmdSetScissorWithCount <- getFirstDeviceProcAddr [(Ptr "vkCmdSetScissorWithCountEXT"#), (Ptr "vkCmdSetScissorWithCount"#)]
-  vkCmdBindVertexBuffers2 <- getFirstDeviceProcAddr [(Ptr "vkCmdBindVertexBuffers2EXT"#), (Ptr "vkCmdBindVertexBuffers2"#)]
-  vkCmdSetDepthTestEnable <- getFirstDeviceProcAddr [(Ptr "vkCmdSetDepthTestEnableEXT"#), (Ptr "vkCmdSetDepthTestEnable"#)]
-  vkCmdSetDepthWriteEnable <- getFirstDeviceProcAddr [(Ptr "vkCmdSetDepthWriteEnableEXT"#), (Ptr "vkCmdSetDepthWriteEnable"#)]
-  vkCmdSetDepthCompareOp <- getFirstDeviceProcAddr [(Ptr "vkCmdSetDepthCompareOpEXT"#), (Ptr "vkCmdSetDepthCompareOp"#)]
-  vkCmdSetDepthBoundsTestEnable <- getFirstDeviceProcAddr [(Ptr "vkCmdSetDepthBoundsTestEnableEXT"#), (Ptr "vkCmdSetDepthBoundsTestEnable"#)]
-  vkCmdSetStencilTestEnable <- getFirstDeviceProcAddr [(Ptr "vkCmdSetStencilTestEnableEXT"#), (Ptr "vkCmdSetStencilTestEnable"#)]
-  vkCmdSetStencilOp <- getFirstDeviceProcAddr [(Ptr "vkCmdSetStencilOpEXT"#), (Ptr "vkCmdSetStencilOp"#)]
+  vkCmdSetCullMode <- getFirstDeviceProcAddr [ (Ptr "vkCmdSetCullModeEXT"#)
+                                             , (Ptr "vkCmdSetCullMode"#) ]
+  vkCmdSetFrontFace <- getFirstDeviceProcAddr [ (Ptr "vkCmdSetFrontFaceEXT"#)
+                                              , (Ptr "vkCmdSetFrontFace"#) ]
+  vkCmdSetPrimitiveTopology <- getFirstDeviceProcAddr [ (Ptr "vkCmdSetPrimitiveTopologyEXT"#)
+                                                      , (Ptr "vkCmdSetPrimitiveTopology"#) ]
+  vkCmdSetViewportWithCount <- getFirstDeviceProcAddr [ (Ptr "vkCmdSetViewportWithCountEXT"#)
+                                                      , (Ptr "vkCmdSetViewportWithCount"#) ]
+  vkCmdSetScissorWithCount <- getFirstDeviceProcAddr [ (Ptr "vkCmdSetScissorWithCountEXT"#)
+                                                     , (Ptr "vkCmdSetScissorWithCount"#) ]
+  vkCmdBindVertexBuffers2 <- getFirstDeviceProcAddr [ (Ptr "vkCmdBindVertexBuffers2EXT"#)
+                                                    , (Ptr "vkCmdBindVertexBuffers2"#) ]
+  vkCmdSetDepthTestEnable <- getFirstDeviceProcAddr [ (Ptr "vkCmdSetDepthTestEnableEXT"#)
+                                                    , (Ptr "vkCmdSetDepthTestEnable"#) ]
+  vkCmdSetDepthWriteEnable <- getFirstDeviceProcAddr [ (Ptr "vkCmdSetDepthWriteEnableEXT"#)
+                                                     , (Ptr "vkCmdSetDepthWriteEnable"#) ]
+  vkCmdSetDepthCompareOp <- getFirstDeviceProcAddr [ (Ptr "vkCmdSetDepthCompareOpEXT"#)
+                                                   , (Ptr "vkCmdSetDepthCompareOp"#) ]
+  vkCmdSetDepthBoundsTestEnable <- getFirstDeviceProcAddr [ (Ptr "vkCmdSetDepthBoundsTestEnableEXT"#)
+                                                          , (Ptr "vkCmdSetDepthBoundsTestEnable"#) ]
+  vkCmdSetStencilTestEnable <- getFirstDeviceProcAddr [ (Ptr "vkCmdSetStencilTestEnableEXT"#)
+                                                      , (Ptr "vkCmdSetStencilTestEnable"#) ]
+  vkCmdSetStencilOp <- getFirstDeviceProcAddr [ (Ptr "vkCmdSetStencilOpEXT"#)
+                                              , (Ptr "vkCmdSetStencilOp"#) ]
   vkCmdSetPatchControlPointsEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetPatchControlPointsEXT"#)
-  vkCmdSetRasterizerDiscardEnable <- getFirstDeviceProcAddr [(Ptr "vkCmdSetRasterizerDiscardEnableEXT"#), (Ptr "vkCmdSetRasterizerDiscardEnable"#)]
-  vkCmdSetDepthBiasEnable <- getFirstDeviceProcAddr [(Ptr "vkCmdSetDepthBiasEnableEXT"#), (Ptr "vkCmdSetDepthBiasEnable"#)]
+  vkCmdSetRasterizerDiscardEnable <- getFirstDeviceProcAddr [ (Ptr "vkCmdSetRasterizerDiscardEnableEXT"#)
+                                                            , (Ptr "vkCmdSetRasterizerDiscardEnable"#) ]
+  vkCmdSetDepthBiasEnable <- getFirstDeviceProcAddr [ (Ptr "vkCmdSetDepthBiasEnableEXT"#)
+                                                    , (Ptr "vkCmdSetDepthBiasEnable"#) ]
   vkCmdSetLogicOpEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetLogicOpEXT"#)
-  vkCmdSetPrimitiveRestartEnable <- getFirstDeviceProcAddr [(Ptr "vkCmdSetPrimitiveRestartEnableEXT"#), (Ptr "vkCmdSetPrimitiveRestartEnable"#)]
-  vkCreatePrivateDataSlot <- getFirstDeviceProcAddr [(Ptr "vkCreatePrivateDataSlotEXT"#), (Ptr "vkCreatePrivateDataSlot"#)]
-  vkDestroyPrivateDataSlot <- getFirstDeviceProcAddr [(Ptr "vkDestroyPrivateDataSlotEXT"#), (Ptr "vkDestroyPrivateDataSlot"#)]
-  vkSetPrivateData <- getFirstDeviceProcAddr [(Ptr "vkSetPrivateDataEXT"#), (Ptr "vkSetPrivateData"#)]
-  vkGetPrivateData <- getFirstDeviceProcAddr [(Ptr "vkGetPrivateDataEXT"#), (Ptr "vkGetPrivateData"#)]
-  vkCmdCopyBuffer2 <- getFirstDeviceProcAddr [(Ptr "vkCmdCopyBuffer2KHR"#), (Ptr "vkCmdCopyBuffer2"#)]
-  vkCmdCopyImage2 <- getFirstDeviceProcAddr [(Ptr "vkCmdCopyImage2KHR"#), (Ptr "vkCmdCopyImage2"#)]
-  vkCmdBlitImage2 <- getFirstDeviceProcAddr [(Ptr "vkCmdBlitImage2KHR"#), (Ptr "vkCmdBlitImage2"#)]
-  vkCmdCopyBufferToImage2 <- getFirstDeviceProcAddr [(Ptr "vkCmdCopyBufferToImage2KHR"#), (Ptr "vkCmdCopyBufferToImage2"#)]
-  vkCmdCopyImageToBuffer2 <- getFirstDeviceProcAddr [(Ptr "vkCmdCopyImageToBuffer2KHR"#), (Ptr "vkCmdCopyImageToBuffer2"#)]
-  vkCmdResolveImage2 <- getFirstDeviceProcAddr [(Ptr "vkCmdResolveImage2KHR"#), (Ptr "vkCmdResolveImage2"#)]
+  vkCmdSetPrimitiveRestartEnable <- getFirstDeviceProcAddr [ (Ptr "vkCmdSetPrimitiveRestartEnableEXT"#)
+                                                           , (Ptr "vkCmdSetPrimitiveRestartEnable"#) ]
+  vkCreatePrivateDataSlot <- getFirstDeviceProcAddr [ (Ptr "vkCreatePrivateDataSlotEXT"#)
+                                                    , (Ptr "vkCreatePrivateDataSlot"#) ]
+  vkDestroyPrivateDataSlot <- getFirstDeviceProcAddr [ (Ptr "vkDestroyPrivateDataSlotEXT"#)
+                                                     , (Ptr "vkDestroyPrivateDataSlot"#) ]
+  vkSetPrivateData <- getFirstDeviceProcAddr [ (Ptr "vkSetPrivateDataEXT"#)
+                                             , (Ptr "vkSetPrivateData"#) ]
+  vkGetPrivateData <- getFirstDeviceProcAddr [ (Ptr "vkGetPrivateDataEXT"#)
+                                             , (Ptr "vkGetPrivateData"#) ]
+  vkCmdCopyBuffer2 <- getFirstDeviceProcAddr [ (Ptr "vkCmdCopyBuffer2KHR"#)
+                                             , (Ptr "vkCmdCopyBuffer2"#) ]
+  vkCmdCopyImage2 <- getFirstDeviceProcAddr [ (Ptr "vkCmdCopyImage2KHR"#)
+                                            , (Ptr "vkCmdCopyImage2"#) ]
+  vkCmdBlitImage2 <- getFirstDeviceProcAddr [ (Ptr "vkCmdBlitImage2KHR"#)
+                                            , (Ptr "vkCmdBlitImage2"#) ]
+  vkCmdCopyBufferToImage2 <- getFirstDeviceProcAddr [ (Ptr "vkCmdCopyBufferToImage2KHR"#)
+                                                    , (Ptr "vkCmdCopyBufferToImage2"#) ]
+  vkCmdCopyImageToBuffer2 <- getFirstDeviceProcAddr [ (Ptr "vkCmdCopyImageToBuffer2KHR"#)
+                                                    , (Ptr "vkCmdCopyImageToBuffer2"#) ]
+  vkCmdResolveImage2 <- getFirstDeviceProcAddr [ (Ptr "vkCmdResolveImage2KHR"#)
+                                               , (Ptr "vkCmdResolveImage2"#) ]
   vkCmdSetFragmentShadingRateKHR <- getDeviceProcAddr' handle (Ptr "vkCmdSetFragmentShadingRateKHR"#)
   vkCmdSetFragmentShadingRateEnumNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetFragmentShadingRateEnumNV"#)
   vkGetAccelerationStructureBuildSizesKHR <- getDeviceProcAddr' handle (Ptr "vkGetAccelerationStructureBuildSizesKHR"#)
   vkCmdSetVertexInputEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetVertexInputEXT"#)
   vkCmdSetColorWriteEnableEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetColorWriteEnableEXT"#)
-  vkCmdSetEvent2 <- getFirstDeviceProcAddr [(Ptr "vkCmdSetEvent2KHR"#), (Ptr "vkCmdSetEvent2"#)]
-  vkCmdResetEvent2 <- getFirstDeviceProcAddr [(Ptr "vkCmdResetEvent2KHR"#), (Ptr "vkCmdResetEvent2"#)]
-  vkCmdWaitEvents2 <- getFirstDeviceProcAddr [(Ptr "vkCmdWaitEvents2KHR"#), (Ptr "vkCmdWaitEvents2"#)]
-  vkCmdPipelineBarrier2 <- getFirstDeviceProcAddr [(Ptr "vkCmdPipelineBarrier2KHR"#), (Ptr "vkCmdPipelineBarrier2"#)]
-  vkQueueSubmit2 <- getFirstDeviceProcAddr [(Ptr "vkQueueSubmit2KHR"#), (Ptr "vkQueueSubmit2"#)]
-  vkCmdWriteTimestamp2 <- getFirstDeviceProcAddr [(Ptr "vkCmdWriteTimestamp2KHR"#), (Ptr "vkCmdWriteTimestamp2"#)]
+  vkCmdSetEvent2 <- getFirstDeviceProcAddr [ (Ptr "vkCmdSetEvent2KHR"#)
+                                           , (Ptr "vkCmdSetEvent2"#) ]
+  vkCmdResetEvent2 <- getFirstDeviceProcAddr [ (Ptr "vkCmdResetEvent2KHR"#)
+                                             , (Ptr "vkCmdResetEvent2"#) ]
+  vkCmdWaitEvents2 <- getFirstDeviceProcAddr [ (Ptr "vkCmdWaitEvents2KHR"#)
+                                             , (Ptr "vkCmdWaitEvents2"#) ]
+  vkCmdPipelineBarrier2 <- getFirstDeviceProcAddr [ (Ptr "vkCmdPipelineBarrier2KHR"#)
+                                                  , (Ptr "vkCmdPipelineBarrier2"#) ]
+  vkQueueSubmit2 <- getFirstDeviceProcAddr [ (Ptr "vkQueueSubmit2KHR"#)
+                                           , (Ptr "vkQueueSubmit2"#) ]
+  vkCmdWriteTimestamp2 <- getFirstDeviceProcAddr [ (Ptr "vkCmdWriteTimestamp2KHR"#)
+                                                 , (Ptr "vkCmdWriteTimestamp2"#) ]
   vkCmdWriteBufferMarker2AMD <- getDeviceProcAddr' handle (Ptr "vkCmdWriteBufferMarker2AMD"#)
   vkGetQueueCheckpointData2NV <- getDeviceProcAddr' handle (Ptr "vkGetQueueCheckpointData2NV"#)
   vkCreateCuModuleNVX <- getDeviceProcAddr' handle (Ptr "vkCreateCuModuleNVX"#)
@@ -1494,8 +1971,10 @@ initDeviceCmds instanceCmds handle = do
   vkSetBufferCollectionImageConstraintsFUCHSIA <- getDeviceProcAddr' handle (Ptr "vkSetBufferCollectionImageConstraintsFUCHSIA"#)
   vkDestroyBufferCollectionFUCHSIA <- getDeviceProcAddr' handle (Ptr "vkDestroyBufferCollectionFUCHSIA"#)
   vkGetBufferCollectionPropertiesFUCHSIA <- getDeviceProcAddr' handle (Ptr "vkGetBufferCollectionPropertiesFUCHSIA"#)
-  vkCmdBeginRendering <- getFirstDeviceProcAddr [(Ptr "vkCmdBeginRenderingKHR"#), (Ptr "vkCmdBeginRendering"#)]
-  vkCmdEndRendering <- getFirstDeviceProcAddr [(Ptr "vkCmdEndRenderingKHR"#), (Ptr "vkCmdEndRendering"#)]
+  vkCmdBeginRendering <- getFirstDeviceProcAddr [ (Ptr "vkCmdBeginRenderingKHR"#)
+                                                , (Ptr "vkCmdBeginRendering"#) ]
+  vkCmdEndRendering <- getFirstDeviceProcAddr [ (Ptr "vkCmdEndRenderingKHR"#)
+                                              , (Ptr "vkCmdEndRendering"#) ]
   vkGetDescriptorSetLayoutHostMappingInfoVALVE <- getDeviceProcAddr' handle (Ptr "vkGetDescriptorSetLayoutHostMappingInfoVALVE"#)
   vkGetDescriptorSetHostMappingVALVE <- getDeviceProcAddr' handle (Ptr "vkGetDescriptorSetHostMappingVALVE"#)
   vkGetShaderModuleIdentifierEXT <- getDeviceProcAddr' handle (Ptr "vkGetShaderModuleIdentifierEXT"#)

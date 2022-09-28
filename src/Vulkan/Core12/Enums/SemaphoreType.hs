@@ -27,7 +27,8 @@ newtype SemaphoreType = SemaphoreType Int32
 -- | 'SEMAPHORE_TYPE_BINARY' specifies a /binary semaphore/ type that has a
 -- boolean payload indicating whether the semaphore is currently signaled
 -- or unsignaled. When created, the semaphore is in the unsignaled state.
-pattern SEMAPHORE_TYPE_BINARY   = SemaphoreType 0
+pattern SEMAPHORE_TYPE_BINARY = SemaphoreType 0
+
 -- | 'SEMAPHORE_TYPE_TIMELINE' specifies a /timeline semaphore/ type that has
 -- a strictly increasing 64-bit unsigned integer payload indicating whether
 -- the semaphore is signaled with respect to a particular reference value.
@@ -35,8 +36,12 @@ pattern SEMAPHORE_TYPE_BINARY   = SemaphoreType 0
 -- @initialValue@ field of
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'.
 pattern SEMAPHORE_TYPE_TIMELINE = SemaphoreType 1
-{-# complete SEMAPHORE_TYPE_BINARY,
-             SEMAPHORE_TYPE_TIMELINE :: SemaphoreType #-}
+
+{-# COMPLETE
+  SEMAPHORE_TYPE_BINARY
+  , SEMAPHORE_TYPE_TIMELINE ::
+    SemaphoreType
+  #-}
 
 conNameSemaphoreType :: String
 conNameSemaphoreType = "SemaphoreType"
@@ -45,15 +50,24 @@ enumPrefixSemaphoreType :: String
 enumPrefixSemaphoreType = "SEMAPHORE_TYPE_"
 
 showTableSemaphoreType :: [(SemaphoreType, String)]
-showTableSemaphoreType = [(SEMAPHORE_TYPE_BINARY, "BINARY"), (SEMAPHORE_TYPE_TIMELINE, "TIMELINE")]
+showTableSemaphoreType =
+  [ (SEMAPHORE_TYPE_BINARY, "BINARY")
+  , (SEMAPHORE_TYPE_TIMELINE, "TIMELINE")
+  ]
 
 instance Show SemaphoreType where
-  showsPrec = enumShowsPrec enumPrefixSemaphoreType
-                            showTableSemaphoreType
-                            conNameSemaphoreType
-                            (\(SemaphoreType x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixSemaphoreType
+      showTableSemaphoreType
+      conNameSemaphoreType
+      (\(SemaphoreType x) -> x)
+      (showsPrec 11)
 
 instance Read SemaphoreType where
-  readPrec = enumReadPrec enumPrefixSemaphoreType showTableSemaphoreType conNameSemaphoreType SemaphoreType
-
+  readPrec =
+    enumReadPrec
+      enumPrefixSemaphoreType
+      showTableSemaphoreType
+      conNameSemaphoreType
+      SemaphoreType

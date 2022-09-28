@@ -326,7 +326,10 @@ cmdBindInvocationMaskHUAWEI commandBuffer imageView imageLayout = liftIO $ do
   unless (vkCmdBindInvocationMaskHUAWEIPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindInvocationMaskHUAWEI is null" Nothing Nothing
   let vkCmdBindInvocationMaskHUAWEI' = mkVkCmdBindInvocationMaskHUAWEI vkCmdBindInvocationMaskHUAWEIPtr
-  traceAroundEvent "vkCmdBindInvocationMaskHUAWEI" (vkCmdBindInvocationMaskHUAWEI' (commandBufferHandle (commandBuffer)) (imageView) (imageLayout))
+  traceAroundEvent "vkCmdBindInvocationMaskHUAWEI" (vkCmdBindInvocationMaskHUAWEI'
+                                                      (commandBufferHandle (commandBuffer))
+                                                      (imageView)
+                                                      (imageLayout))
   pure $ ()
 
 

@@ -299,31 +299,31 @@ instance Zero PipelineRasterizationDepthClipStateCreateInfoEXT where
 newtype PipelineRasterizationDepthClipStateCreateFlagsEXT = PipelineRasterizationDepthClipStateCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNamePipelineRasterizationDepthClipStateCreateFlagsEXT :: String
 conNamePipelineRasterizationDepthClipStateCreateFlagsEXT = "PipelineRasterizationDepthClipStateCreateFlagsEXT"
 
 enumPrefixPipelineRasterizationDepthClipStateCreateFlagsEXT :: String
 enumPrefixPipelineRasterizationDepthClipStateCreateFlagsEXT = ""
 
-showTablePipelineRasterizationDepthClipStateCreateFlagsEXT
-  :: [(PipelineRasterizationDepthClipStateCreateFlagsEXT, String)]
+showTablePipelineRasterizationDepthClipStateCreateFlagsEXT :: [(PipelineRasterizationDepthClipStateCreateFlagsEXT, String)]
 showTablePipelineRasterizationDepthClipStateCreateFlagsEXT = []
 
 instance Show PipelineRasterizationDepthClipStateCreateFlagsEXT where
-  showsPrec = enumShowsPrec enumPrefixPipelineRasterizationDepthClipStateCreateFlagsEXT
-                            showTablePipelineRasterizationDepthClipStateCreateFlagsEXT
-                            conNamePipelineRasterizationDepthClipStateCreateFlagsEXT
-                            (\(PipelineRasterizationDepthClipStateCreateFlagsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineRasterizationDepthClipStateCreateFlagsEXT
+      showTablePipelineRasterizationDepthClipStateCreateFlagsEXT
+      conNamePipelineRasterizationDepthClipStateCreateFlagsEXT
+      (\(PipelineRasterizationDepthClipStateCreateFlagsEXT x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read PipelineRasterizationDepthClipStateCreateFlagsEXT where
-  readPrec = enumReadPrec enumPrefixPipelineRasterizationDepthClipStateCreateFlagsEXT
-                          showTablePipelineRasterizationDepthClipStateCreateFlagsEXT
-                          conNamePipelineRasterizationDepthClipStateCreateFlagsEXT
-                          PipelineRasterizationDepthClipStateCreateFlagsEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineRasterizationDepthClipStateCreateFlagsEXT
+      showTablePipelineRasterizationDepthClipStateCreateFlagsEXT
+      conNamePipelineRasterizationDepthClipStateCreateFlagsEXT
+      PipelineRasterizationDepthClipStateCreateFlagsEXT
 
 type EXT_DEPTH_CLIP_ENABLE_SPEC_VERSION = 1
 
