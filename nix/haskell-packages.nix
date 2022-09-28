@@ -91,14 +91,6 @@ let
       # Overrides for examples
       #
       # profiling
-      eventlog2html = markUnbroken (overrideSrc {
-        src = pkgs.fetchFromGitHub {
-          owner = "expipiplus1";
-          repo = "eventlog2html";
-          rev = "3612e7000cfbb1498349c331b5adaa2d17f02206"; # ellie-size
-          sha256 = "0s2wxqwmaldqyz9yz52wxy0dla9pahqlpq6cx4pm4c744ggmpswd";
-        };
-      } super.eventlog2html);
       hs-speedscope = markUnbroken (addBuildDepend self.machines (overrideSrc {
         src = pkgs.fetchFromGitHub {
           owner = "mpickering";
