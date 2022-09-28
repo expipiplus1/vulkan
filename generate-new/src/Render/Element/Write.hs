@@ -255,8 +255,9 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
         let lastComponent = Prelude.last (T.splitOn "." m)
         in  Chapter lastComponent
       moduleDocumentation = getDocumentation (moduleChapter modName)
-      layoutDoc           = renderStrict
-        . layoutPretty defaultLayoutOptions { layoutPageWidth = Unbounded }
+      layoutDoc           = renderStrict . layoutPretty defaultLayoutOptions
+        { layoutPageWidth = AvailablePerLine 80 1
+        }
       headerContents = vsep
         [ vsep languageExtensions
         , moduleDocumentation

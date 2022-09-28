@@ -164,7 +164,7 @@ renderReadShowInstances e@Enum {..} = do
     , prefixStringName <+> "=" <+> viaShow enumPrefix
     , emptyDoc
     , showTableName <+> ":: [(" <> pretty n <> ", String)]"
-    , showTableName <+> "=" <+> list tableElems
+    , showTableName <+> "=" <+> align (list tableElems)
     ]
   renderShowInstance prefixStringName showTableName conNameName e
   renderReadInstance prefixStringName showTableName conNameName e
