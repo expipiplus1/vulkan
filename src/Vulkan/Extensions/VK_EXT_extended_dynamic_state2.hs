@@ -280,7 +280,9 @@ cmdSetPatchControlPointsEXT commandBuffer patchControlPoints = liftIO $ do
   unless (vkCmdSetPatchControlPointsEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetPatchControlPointsEXT is null" Nothing Nothing
   let vkCmdSetPatchControlPointsEXT' = mkVkCmdSetPatchControlPointsEXT vkCmdSetPatchControlPointsEXTPtr
-  traceAroundEvent "vkCmdSetPatchControlPointsEXT" (vkCmdSetPatchControlPointsEXT' (commandBufferHandle (commandBuffer)) (patchControlPoints))
+  traceAroundEvent "vkCmdSetPatchControlPointsEXT" (vkCmdSetPatchControlPointsEXT'
+                                                      (commandBufferHandle (commandBuffer))
+                                                      (patchControlPoints))
   pure $ ()
 
 
@@ -365,7 +367,9 @@ cmdSetLogicOpEXT commandBuffer logicOp = liftIO $ do
   unless (vkCmdSetLogicOpEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetLogicOpEXT is null" Nothing Nothing
   let vkCmdSetLogicOpEXT' = mkVkCmdSetLogicOpEXT vkCmdSetLogicOpEXTPtr
-  traceAroundEvent "vkCmdSetLogicOpEXT" (vkCmdSetLogicOpEXT' (commandBufferHandle (commandBuffer)) (logicOp))
+  traceAroundEvent "vkCmdSetLogicOpEXT" (vkCmdSetLogicOpEXT'
+                                           (commandBufferHandle (commandBuffer))
+                                           (logicOp))
   pure $ ()
 
 
@@ -472,7 +476,9 @@ instance FromCStruct PhysicalDeviceExtendedDynamicState2FeaturesEXT where
     extendedDynamicState2LogicOp <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     extendedDynamicState2PatchControlPoints <- peek @Bool32 ((p `plusPtr` 24 :: Ptr Bool32))
     pure $ PhysicalDeviceExtendedDynamicState2FeaturesEXT
-             (bool32ToBool extendedDynamicState2) (bool32ToBool extendedDynamicState2LogicOp) (bool32ToBool extendedDynamicState2PatchControlPoints)
+             (bool32ToBool extendedDynamicState2)
+             (bool32ToBool extendedDynamicState2LogicOp)
+             (bool32ToBool extendedDynamicState2PatchControlPoints)
 
 instance Storable PhysicalDeviceExtendedDynamicState2FeaturesEXT where
   sizeOf ~_ = 32

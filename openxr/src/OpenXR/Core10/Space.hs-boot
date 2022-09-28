@@ -51,10 +51,12 @@ instance FromCStruct ReferenceSpaceCreateInfo
 type role SpaceLocation nominal
 data SpaceLocation (es :: [Type])
 
-instance (Extendss SpaceLocation es, PokeChain es) => ToCStruct (SpaceLocation es)
+instance ( Extendss SpaceLocation es
+         , PokeChain es ) => ToCStruct (SpaceLocation es)
 instance Show (Chain es) => Show (SpaceLocation es)
 
-instance (Extendss SpaceLocation es, PeekChain es) => FromCStruct (SpaceLocation es)
+instance ( Extendss SpaceLocation es
+         , PeekChain es ) => FromCStruct (SpaceLocation es)
 
 
 data SpaceVelocity

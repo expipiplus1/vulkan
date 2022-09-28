@@ -30,10 +30,15 @@ newtype SamplerMipmapMode = SamplerMipmapMode Int32
 
 -- | 'SAMPLER_MIPMAP_MODE_NEAREST' specifies nearest filtering.
 pattern SAMPLER_MIPMAP_MODE_NEAREST = SamplerMipmapMode 0
+
 -- | 'SAMPLER_MIPMAP_MODE_LINEAR' specifies linear filtering.
-pattern SAMPLER_MIPMAP_MODE_LINEAR  = SamplerMipmapMode 1
-{-# complete SAMPLER_MIPMAP_MODE_NEAREST,
-             SAMPLER_MIPMAP_MODE_LINEAR :: SamplerMipmapMode #-}
+pattern SAMPLER_MIPMAP_MODE_LINEAR = SamplerMipmapMode 1
+
+{-# COMPLETE
+  SAMPLER_MIPMAP_MODE_NEAREST
+  , SAMPLER_MIPMAP_MODE_LINEAR ::
+    SamplerMipmapMode
+  #-}
 
 conNameSamplerMipmapMode :: String
 conNameSamplerMipmapMode = "SamplerMipmapMode"
@@ -42,16 +47,24 @@ enumPrefixSamplerMipmapMode :: String
 enumPrefixSamplerMipmapMode = "SAMPLER_MIPMAP_MODE_"
 
 showTableSamplerMipmapMode :: [(SamplerMipmapMode, String)]
-showTableSamplerMipmapMode = [(SAMPLER_MIPMAP_MODE_NEAREST, "NEAREST"), (SAMPLER_MIPMAP_MODE_LINEAR, "LINEAR")]
+showTableSamplerMipmapMode =
+  [ (SAMPLER_MIPMAP_MODE_NEAREST, "NEAREST")
+  , (SAMPLER_MIPMAP_MODE_LINEAR, "LINEAR")
+  ]
 
 instance Show SamplerMipmapMode where
-  showsPrec = enumShowsPrec enumPrefixSamplerMipmapMode
-                            showTableSamplerMipmapMode
-                            conNameSamplerMipmapMode
-                            (\(SamplerMipmapMode x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixSamplerMipmapMode
+      showTableSamplerMipmapMode
+      conNameSamplerMipmapMode
+      (\(SamplerMipmapMode x) -> x)
+      (showsPrec 11)
 
 instance Read SamplerMipmapMode where
   readPrec =
-    enumReadPrec enumPrefixSamplerMipmapMode showTableSamplerMipmapMode conNameSamplerMipmapMode SamplerMipmapMode
-
+    enumReadPrec
+      enumPrefixSamplerMipmapMode
+      showTableSamplerMipmapMode
+      conNameSamplerMipmapMode
+      SamplerMipmapMode

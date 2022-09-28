@@ -26,7 +26,8 @@ newtype InternalAllocationType = InternalAllocationType Int32
 -- | 'INTERNAL_ALLOCATION_TYPE_EXECUTABLE' specifies that the allocation is
 -- intended for execution by the host.
 pattern INTERNAL_ALLOCATION_TYPE_EXECUTABLE = InternalAllocationType 0
-{-# complete INTERNAL_ALLOCATION_TYPE_EXECUTABLE :: InternalAllocationType #-}
+
+{-# COMPLETE INTERNAL_ALLOCATION_TYPE_EXECUTABLE :: InternalAllocationType #-}
 
 conNameInternalAllocationType :: String
 conNameInternalAllocationType = "InternalAllocationType"
@@ -38,15 +39,18 @@ showTableInternalAllocationType :: [(InternalAllocationType, String)]
 showTableInternalAllocationType = [(INTERNAL_ALLOCATION_TYPE_EXECUTABLE, "")]
 
 instance Show InternalAllocationType where
-  showsPrec = enumShowsPrec enumPrefixInternalAllocationType
-                            showTableInternalAllocationType
-                            conNameInternalAllocationType
-                            (\(InternalAllocationType x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixInternalAllocationType
+      showTableInternalAllocationType
+      conNameInternalAllocationType
+      (\(InternalAllocationType x) -> x)
+      (showsPrec 11)
 
 instance Read InternalAllocationType where
-  readPrec = enumReadPrec enumPrefixInternalAllocationType
-                          showTableInternalAllocationType
-                          conNameInternalAllocationType
-                          InternalAllocationType
-
+  readPrec =
+    enumReadPrec
+      enumPrefixInternalAllocationType
+      showTableInternalAllocationType
+      conNameInternalAllocationType
+      InternalAllocationType

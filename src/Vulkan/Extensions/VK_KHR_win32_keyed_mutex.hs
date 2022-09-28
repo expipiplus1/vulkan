@@ -260,7 +260,11 @@ instance FromCStruct Win32KeyedMutexAcquireReleaseInfoKHR where
     pReleaseKeys <- peek @(Ptr Word64) ((p `plusPtr` 64 :: Ptr (Ptr Word64)))
     pReleaseKeys' <- generateM (fromIntegral releaseCount) (\i -> peek @Word64 ((pReleaseKeys `advancePtrBytes` (8 * (i)) :: Ptr Word64)))
     pure $ Win32KeyedMutexAcquireReleaseInfoKHR
-             pAcquireSyncs' pAcquireKeys' pAcquireTimeouts' pReleaseSyncs' pReleaseKeys'
+             pAcquireSyncs'
+             pAcquireKeys'
+             pAcquireTimeouts'
+             pReleaseSyncs'
+             pReleaseKeys'
 
 instance Zero Win32KeyedMutexAcquireReleaseInfoKHR where
   zero = Win32KeyedMutexAcquireReleaseInfoKHR

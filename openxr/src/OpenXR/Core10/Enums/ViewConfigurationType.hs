@@ -49,6 +49,7 @@ import GHC.Show (Show(showsPrec))
 -- 'OpenXR.Extensions.XR_KHR_visibility_mask.getVisibilityMaskKHR'
 newtype ViewConfigurationType = ViewConfigurationType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
+
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
 -- | 'VIEW_CONFIGURATION_TYPE_PRIMARY_MONO'. One view representing the form
@@ -57,7 +58,8 @@ newtype ViewConfigurationType = ViewConfigurationType Int32
 -- 'OpenXR.Core10.ViewConfigurations.ViewConfigurationProperties' and one
 -- projection in each 'OpenXR.Core10.OtherTypes.CompositionLayerProjection'
 -- layer.
-pattern VIEW_CONFIGURATION_TYPE_PRIMARY_MONO                              = ViewConfigurationType 1
+pattern VIEW_CONFIGURATION_TYPE_PRIMARY_MONO = ViewConfigurationType 1
+
 -- | 'VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO'. Two views representing the
 -- form factor’s two primary displays, which map to a left-eye and
 -- right-eye view. This configuration requires two views in
@@ -65,15 +67,21 @@ pattern VIEW_CONFIGURATION_TYPE_PRIMARY_MONO                              = View
 -- views in each 'OpenXR.Core10.OtherTypes.CompositionLayerProjection'
 -- layer. View index 0 /must/ represent the left eye and view index 1
 -- /must/ represent the right eye.
-pattern VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO                            = ViewConfigurationType 2
+pattern VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO = ViewConfigurationType 2
+
 -- No documentation found for Nested "XrViewConfigurationType" "XR_VIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT"
 pattern VIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT = ViewConfigurationType 1000054000
+
 -- No documentation found for Nested "XrViewConfigurationType" "XR_VIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO"
-pattern VIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO                        = ViewConfigurationType 1000037000
-{-# complete VIEW_CONFIGURATION_TYPE_PRIMARY_MONO,
-             VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO,
-             VIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT,
-             VIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO :: ViewConfigurationType #-}
+pattern VIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO = ViewConfigurationType 1000037000
+
+{-# COMPLETE
+  VIEW_CONFIGURATION_TYPE_PRIMARY_MONO
+  , VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO
+  , VIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT
+  , VIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO ::
+    ViewConfigurationType
+  #-}
 
 conNameViewConfigurationType :: String
 conNameViewConfigurationType = "ViewConfigurationType"
@@ -83,22 +91,37 @@ enumPrefixViewConfigurationType = "VIEW_CONFIGURATION_TYPE_"
 
 showTableViewConfigurationType :: [(ViewConfigurationType, String)]
 showTableViewConfigurationType =
-  [ (VIEW_CONFIGURATION_TYPE_PRIMARY_MONO                             , "PRIMARY_MONO")
-  , (VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO                           , "PRIMARY_STEREO")
-  , (VIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT, "SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT")
-  , (VIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO                       , "PRIMARY_QUAD_VARJO")
+  [
+    ( VIEW_CONFIGURATION_TYPE_PRIMARY_MONO
+    , "PRIMARY_MONO"
+    )
+  ,
+    ( VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO
+    , "PRIMARY_STEREO"
+    )
+  ,
+    ( VIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT
+    , "SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT"
+    )
+  ,
+    ( VIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO
+    , "PRIMARY_QUAD_VARJO"
+    )
   ]
 
 instance Show ViewConfigurationType where
-  showsPrec = enumShowsPrec enumPrefixViewConfigurationType
-                            showTableViewConfigurationType
-                            conNameViewConfigurationType
-                            (\(ViewConfigurationType x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixViewConfigurationType
+      showTableViewConfigurationType
+      conNameViewConfigurationType
+      (\(ViewConfigurationType x) -> x)
+      (showsPrec 11)
 
 instance Read ViewConfigurationType where
-  readPrec = enumReadPrec enumPrefixViewConfigurationType
-                          showTableViewConfigurationType
-                          conNameViewConfigurationType
-                          ViewConfigurationType
-
+  readPrec =
+    enumReadPrec
+      enumPrefixViewConfigurationType
+      showTableViewConfigurationType
+      conNameViewConfigurationType
+      ViewConfigurationType

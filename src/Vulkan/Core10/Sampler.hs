@@ -168,7 +168,11 @@ createSampler device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSampler <- ContT $ bracket (callocBytes @Sampler 8) free
-  r <- lift $ traceAroundEvent "vkCreateSampler" (vkCreateSampler' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPSampler))
+  r <- lift $ traceAroundEvent "vkCreateSampler" (vkCreateSampler'
+                                                    (deviceHandle (device))
+                                                    (forgetExtensions pCreateInfo)
+                                                    pAllocator
+                                                    (pPSampler))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSampler <- lift $ peek @Sampler pPSampler
   pure $ (pSampler)
@@ -255,7 +259,10 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroySampler" (vkDestroySampler' (deviceHandle (device)) (sampler) pAllocator)
+  lift $ traceAroundEvent "vkDestroySampler" (vkDestroySampler'
+                                                (deviceHandle (device))
+                                                (sampler)
+                                                pAllocator)
   pure $ ()
 
 
@@ -704,7 +711,8 @@ instance Extensible SamplerCreateInfo where
     | Just Refl <- eqT @e @SamplerYcbcrConversionInfo = Just f
     | otherwise = Nothing
 
-instance (Extendss SamplerCreateInfo es, PokeChain es) => ToCStruct (SamplerCreateInfo es) where
+instance ( Extendss SamplerCreateInfo es
+         , PokeChain es ) => ToCStruct (SamplerCreateInfo es) where
   withCStruct x f = allocaBytes 80 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SamplerCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SAMPLER_CREATE_INFO)
@@ -750,7 +758,8 @@ instance (Extendss SamplerCreateInfo es, PokeChain es) => ToCStruct (SamplerCrea
     lift $ poke ((p `plusPtr` 76 :: Ptr Bool32)) (boolToBool32 (zero))
     lift $ f
 
-instance (Extendss SamplerCreateInfo es, PeekChain es) => FromCStruct (SamplerCreateInfo es) where
+instance ( Extendss SamplerCreateInfo es
+         , PeekChain es ) => FromCStruct (SamplerCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -771,7 +780,23 @@ instance (Extendss SamplerCreateInfo es, PeekChain es) => FromCStruct (SamplerCr
     borderColor <- peek @BorderColor ((p `plusPtr` 72 :: Ptr BorderColor))
     unnormalizedCoordinates <- peek @Bool32 ((p `plusPtr` 76 :: Ptr Bool32))
     pure $ SamplerCreateInfo
-             next flags magFilter minFilter mipmapMode addressModeU addressModeV addressModeW (coerce @CFloat @Float mipLodBias) (bool32ToBool anisotropyEnable) (coerce @CFloat @Float maxAnisotropy) (bool32ToBool compareEnable) compareOp (coerce @CFloat @Float minLod) (coerce @CFloat @Float maxLod) borderColor (bool32ToBool unnormalizedCoordinates)
+             next
+             flags
+             magFilter
+             minFilter
+             mipmapMode
+             addressModeU
+             addressModeV
+             addressModeW
+             (coerce @CFloat @Float mipLodBias)
+             (bool32ToBool anisotropyEnable)
+             (coerce @CFloat @Float maxAnisotropy)
+             (bool32ToBool compareEnable)
+             compareOp
+             (coerce @CFloat @Float minLod)
+             (coerce @CFloat @Float maxLod)
+             borderColor
+             (bool32ToBool unnormalizedCoordinates)
 
 instance es ~ '[] => Zero (SamplerCreateInfo es) where
   zero = SamplerCreateInfo

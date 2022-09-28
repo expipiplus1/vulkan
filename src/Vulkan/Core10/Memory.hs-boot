@@ -22,8 +22,10 @@ instance FromCStruct MappedMemoryRange
 type role MemoryAllocateInfo nominal
 data MemoryAllocateInfo (es :: [Type])
 
-instance (Extendss MemoryAllocateInfo es, PokeChain es) => ToCStruct (MemoryAllocateInfo es)
+instance ( Extendss MemoryAllocateInfo es
+         , PokeChain es ) => ToCStruct (MemoryAllocateInfo es)
 instance Show (Chain es) => Show (MemoryAllocateInfo es)
 
-instance (Extendss MemoryAllocateInfo es, PeekChain es) => FromCStruct (MemoryAllocateInfo es)
+instance ( Extendss MemoryAllocateInfo es
+         , PeekChain es ) => FromCStruct (MemoryAllocateInfo es)
 

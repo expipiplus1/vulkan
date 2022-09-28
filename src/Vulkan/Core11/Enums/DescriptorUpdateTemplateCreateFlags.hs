@@ -27,8 +27,6 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 newtype DescriptorUpdateTemplateCreateFlags = DescriptorUpdateTemplateCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameDescriptorUpdateTemplateCreateFlags :: String
 conNameDescriptorUpdateTemplateCreateFlags = "DescriptorUpdateTemplateCreateFlags"
 
@@ -39,15 +37,18 @@ showTableDescriptorUpdateTemplateCreateFlags :: [(DescriptorUpdateTemplateCreate
 showTableDescriptorUpdateTemplateCreateFlags = []
 
 instance Show DescriptorUpdateTemplateCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixDescriptorUpdateTemplateCreateFlags
-                            showTableDescriptorUpdateTemplateCreateFlags
-                            conNameDescriptorUpdateTemplateCreateFlags
-                            (\(DescriptorUpdateTemplateCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDescriptorUpdateTemplateCreateFlags
+      showTableDescriptorUpdateTemplateCreateFlags
+      conNameDescriptorUpdateTemplateCreateFlags
+      (\(DescriptorUpdateTemplateCreateFlags x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read DescriptorUpdateTemplateCreateFlags where
-  readPrec = enumReadPrec enumPrefixDescriptorUpdateTemplateCreateFlags
-                          showTableDescriptorUpdateTemplateCreateFlags
-                          conNameDescriptorUpdateTemplateCreateFlags
-                          DescriptorUpdateTemplateCreateFlags
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDescriptorUpdateTemplateCreateFlags
+      showTableDescriptorUpdateTemplateCreateFlags
+      conNameDescriptorUpdateTemplateCreateFlags
+      DescriptorUpdateTemplateCreateFlags

@@ -1353,12 +1353,19 @@ cmdDrawMeshTasksEXT :: forall io
                        -- dimension.
                        ("groupCountZ" ::: Word32)
                     -> io ()
-cmdDrawMeshTasksEXT commandBuffer groupCountX groupCountY groupCountZ = liftIO $ do
+cmdDrawMeshTasksEXT commandBuffer
+                      groupCountX
+                      groupCountY
+                      groupCountZ = liftIO $ do
   let vkCmdDrawMeshTasksEXTPtr = pVkCmdDrawMeshTasksEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDrawMeshTasksEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawMeshTasksEXT is null" Nothing Nothing
   let vkCmdDrawMeshTasksEXT' = mkVkCmdDrawMeshTasksEXT vkCmdDrawMeshTasksEXTPtr
-  traceAroundEvent "vkCmdDrawMeshTasksEXT" (vkCmdDrawMeshTasksEXT' (commandBufferHandle (commandBuffer)) (groupCountX) (groupCountY) (groupCountZ))
+  traceAroundEvent "vkCmdDrawMeshTasksEXT" (vkCmdDrawMeshTasksEXT'
+                                              (commandBufferHandle (commandBuffer))
+                                              (groupCountX)
+                                              (groupCountY)
+                                              (groupCountZ))
   pure $ ()
 
 
@@ -2395,12 +2402,21 @@ cmdDrawMeshTasksIndirectEXT :: forall io
                             -> -- | @stride@ is the byte stride between successive sets of draw parameters.
                                ("stride" ::: Word32)
                             -> io ()
-cmdDrawMeshTasksIndirectEXT commandBuffer buffer offset drawCount stride = liftIO $ do
+cmdDrawMeshTasksIndirectEXT commandBuffer
+                              buffer
+                              offset
+                              drawCount
+                              stride = liftIO $ do
   let vkCmdDrawMeshTasksIndirectEXTPtr = pVkCmdDrawMeshTasksIndirectEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDrawMeshTasksIndirectEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawMeshTasksIndirectEXT is null" Nothing Nothing
   let vkCmdDrawMeshTasksIndirectEXT' = mkVkCmdDrawMeshTasksIndirectEXT vkCmdDrawMeshTasksIndirectEXTPtr
-  traceAroundEvent "vkCmdDrawMeshTasksIndirectEXT" (vkCmdDrawMeshTasksIndirectEXT' (commandBufferHandle (commandBuffer)) (buffer) (offset) (drawCount) (stride))
+  traceAroundEvent "vkCmdDrawMeshTasksIndirectEXT" (vkCmdDrawMeshTasksIndirectEXT'
+                                                      (commandBufferHandle (commandBuffer))
+                                                      (buffer)
+                                                      (offset)
+                                                      (drawCount)
+                                                      (stride))
   pure $ ()
 
 
@@ -3470,12 +3486,25 @@ cmdDrawMeshTasksIndirectCountEXT :: forall io
                                  -> -- | @stride@ is the byte stride between successive sets of draw parameters.
                                     ("stride" ::: Word32)
                                  -> io ()
-cmdDrawMeshTasksIndirectCountEXT commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride = liftIO $ do
+cmdDrawMeshTasksIndirectCountEXT commandBuffer
+                                   buffer
+                                   offset
+                                   countBuffer
+                                   countBufferOffset
+                                   maxDrawCount
+                                   stride = liftIO $ do
   let vkCmdDrawMeshTasksIndirectCountEXTPtr = pVkCmdDrawMeshTasksIndirectCountEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDrawMeshTasksIndirectCountEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawMeshTasksIndirectCountEXT is null" Nothing Nothing
   let vkCmdDrawMeshTasksIndirectCountEXT' = mkVkCmdDrawMeshTasksIndirectCountEXT vkCmdDrawMeshTasksIndirectCountEXTPtr
-  traceAroundEvent "vkCmdDrawMeshTasksIndirectCountEXT" (vkCmdDrawMeshTasksIndirectCountEXT' (commandBufferHandle (commandBuffer)) (buffer) (offset) (countBuffer) (countBufferOffset) (maxDrawCount) (stride))
+  traceAroundEvent "vkCmdDrawMeshTasksIndirectCountEXT" (vkCmdDrawMeshTasksIndirectCountEXT'
+                                                           (commandBufferHandle (commandBuffer))
+                                                           (buffer)
+                                                           (offset)
+                                                           (countBuffer)
+                                                           (countBufferOffset)
+                                                           (maxDrawCount)
+                                                           (stride))
   pure $ ()
 
 
@@ -3594,7 +3623,11 @@ instance FromCStruct PhysicalDeviceMeshShaderFeaturesEXT where
     primitiveFragmentShadingRateMeshShader <- peek @Bool32 ((p `plusPtr` 28 :: Ptr Bool32))
     meshShaderQueries <- peek @Bool32 ((p `plusPtr` 32 :: Ptr Bool32))
     pure $ PhysicalDeviceMeshShaderFeaturesEXT
-             (bool32ToBool taskShader) (bool32ToBool meshShader) (bool32ToBool multiviewMeshShader) (bool32ToBool primitiveFragmentShadingRateMeshShader) (bool32ToBool meshShaderQueries)
+             (bool32ToBool taskShader)
+             (bool32ToBool meshShader)
+             (bool32ToBool multiviewMeshShader)
+             (bool32ToBool primitiveFragmentShadingRateMeshShader)
+             (bool32ToBool meshShaderQueries)
 
 instance Storable PhysicalDeviceMeshShaderFeaturesEXT where
   sizeOf ~_ = 40
@@ -3953,7 +3986,42 @@ instance FromCStruct PhysicalDeviceMeshShaderPropertiesEXT where
     prefersCompactVertexOutput <- peek @Bool32 ((p `plusPtr` 152 :: Ptr Bool32))
     prefersCompactPrimitiveOutput <- peek @Bool32 ((p `plusPtr` 156 :: Ptr Bool32))
     pure $ PhysicalDeviceMeshShaderPropertiesEXT
-             maxTaskWorkGroupTotalCount ((maxTaskWorkGroupCount0, maxTaskWorkGroupCount1, maxTaskWorkGroupCount2)) maxTaskWorkGroupInvocations ((maxTaskWorkGroupSize0, maxTaskWorkGroupSize1, maxTaskWorkGroupSize2)) maxTaskPayloadSize maxTaskSharedMemorySize maxTaskPayloadAndSharedMemorySize maxMeshWorkGroupTotalCount ((maxMeshWorkGroupCount0, maxMeshWorkGroupCount1, maxMeshWorkGroupCount2)) maxMeshWorkGroupInvocations ((maxMeshWorkGroupSize0, maxMeshWorkGroupSize1, maxMeshWorkGroupSize2)) maxMeshSharedMemorySize maxMeshPayloadAndSharedMemorySize maxMeshOutputMemorySize maxMeshPayloadAndOutputMemorySize maxMeshOutputComponents maxMeshOutputVertices maxMeshOutputPrimitives maxMeshOutputLayers maxMeshMultiviewViewCount meshOutputPerVertexGranularity meshOutputPerPrimitiveGranularity maxPreferredTaskWorkGroupInvocations maxPreferredMeshWorkGroupInvocations (bool32ToBool prefersLocalInvocationVertexOutput) (bool32ToBool prefersLocalInvocationPrimitiveOutput) (bool32ToBool prefersCompactVertexOutput) (bool32ToBool prefersCompactPrimitiveOutput)
+             maxTaskWorkGroupTotalCount
+             (( maxTaskWorkGroupCount0
+              , maxTaskWorkGroupCount1
+              , maxTaskWorkGroupCount2 ))
+             maxTaskWorkGroupInvocations
+             (( maxTaskWorkGroupSize0
+              , maxTaskWorkGroupSize1
+              , maxTaskWorkGroupSize2 ))
+             maxTaskPayloadSize
+             maxTaskSharedMemorySize
+             maxTaskPayloadAndSharedMemorySize
+             maxMeshWorkGroupTotalCount
+             (( maxMeshWorkGroupCount0
+              , maxMeshWorkGroupCount1
+              , maxMeshWorkGroupCount2 ))
+             maxMeshWorkGroupInvocations
+             (( maxMeshWorkGroupSize0
+              , maxMeshWorkGroupSize1
+              , maxMeshWorkGroupSize2 ))
+             maxMeshSharedMemorySize
+             maxMeshPayloadAndSharedMemorySize
+             maxMeshOutputMemorySize
+             maxMeshPayloadAndOutputMemorySize
+             maxMeshOutputComponents
+             maxMeshOutputVertices
+             maxMeshOutputPrimitives
+             maxMeshOutputLayers
+             maxMeshMultiviewViewCount
+             meshOutputPerVertexGranularity
+             meshOutputPerPrimitiveGranularity
+             maxPreferredTaskWorkGroupInvocations
+             maxPreferredMeshWorkGroupInvocations
+             (bool32ToBool prefersLocalInvocationVertexOutput)
+             (bool32ToBool prefersLocalInvocationPrimitiveOutput)
+             (bool32ToBool prefersCompactVertexOutput)
+             (bool32ToBool prefersCompactPrimitiveOutput)
 
 instance Storable PhysicalDeviceMeshShaderPropertiesEXT where
   sizeOf ~_ = 160

@@ -89,14 +89,18 @@ getPhysicalDeviceExternalFenceProperties :: forall io
                                             -- 'PhysicalDeviceExternalFenceInfo' structure
                                             PhysicalDeviceExternalFenceInfo
                                          -> io (ExternalFenceProperties)
-getPhysicalDeviceExternalFenceProperties physicalDevice externalFenceInfo = liftIO . evalContT $ do
+getPhysicalDeviceExternalFenceProperties physicalDevice
+                                           externalFenceInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceExternalFencePropertiesPtr = pVkGetPhysicalDeviceExternalFenceProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceExternalFencePropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceExternalFenceProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceExternalFenceProperties' = mkVkGetPhysicalDeviceExternalFenceProperties vkGetPhysicalDeviceExternalFencePropertiesPtr
   pExternalFenceInfo <- ContT $ withCStruct (externalFenceInfo)
   pPExternalFenceProperties <- ContT (withZeroCStruct @ExternalFenceProperties)
-  lift $ traceAroundEvent "vkGetPhysicalDeviceExternalFenceProperties" (vkGetPhysicalDeviceExternalFenceProperties' (physicalDeviceHandle (physicalDevice)) pExternalFenceInfo (pPExternalFenceProperties))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceExternalFenceProperties" (vkGetPhysicalDeviceExternalFenceProperties'
+                                                                          (physicalDeviceHandle (physicalDevice))
+                                                                          pExternalFenceInfo
+                                                                          (pPExternalFenceProperties))
   pExternalFenceProperties <- lift $ peekCStruct @ExternalFenceProperties pPExternalFenceProperties
   pure $ (pExternalFenceProperties)
 
@@ -239,7 +243,9 @@ instance FromCStruct ExternalFenceProperties where
     compatibleHandleTypes <- peek @ExternalFenceHandleTypeFlags ((p `plusPtr` 20 :: Ptr ExternalFenceHandleTypeFlags))
     externalFenceFeatures <- peek @ExternalFenceFeatureFlags ((p `plusPtr` 24 :: Ptr ExternalFenceFeatureFlags))
     pure $ ExternalFenceProperties
-             exportFromImportedHandleTypes compatibleHandleTypes externalFenceFeatures
+             exportFromImportedHandleTypes
+             compatibleHandleTypes
+             externalFenceFeatures
 
 instance Storable ExternalFenceProperties where
   sizeOf ~_ = 32

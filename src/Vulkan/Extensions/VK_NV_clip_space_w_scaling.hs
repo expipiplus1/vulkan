@@ -353,14 +353,20 @@ cmdSetViewportWScalingNV :: forall io
                             -- structures specifying viewport parameters.
                             ("viewportWScalings" ::: Vector ViewportWScalingNV)
                          -> io ()
-cmdSetViewportWScalingNV commandBuffer firstViewport viewportWScalings = liftIO . evalContT $ do
+cmdSetViewportWScalingNV commandBuffer
+                           firstViewport
+                           viewportWScalings = liftIO . evalContT $ do
   let vkCmdSetViewportWScalingNVPtr = pVkCmdSetViewportWScalingNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetViewportWScalingNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetViewportWScalingNV is null" Nothing Nothing
   let vkCmdSetViewportWScalingNV' = mkVkCmdSetViewportWScalingNV vkCmdSetViewportWScalingNVPtr
   pPViewportWScalings <- ContT $ allocaBytes @ViewportWScalingNV ((Data.Vector.length (viewportWScalings)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPViewportWScalings `plusPtr` (8 * (i)) :: Ptr ViewportWScalingNV) (e)) (viewportWScalings)
-  lift $ traceAroundEvent "vkCmdSetViewportWScalingNV" (vkCmdSetViewportWScalingNV' (commandBufferHandle (commandBuffer)) (firstViewport) ((fromIntegral (Data.Vector.length $ (viewportWScalings)) :: Word32)) (pPViewportWScalings))
+  lift $ traceAroundEvent "vkCmdSetViewportWScalingNV" (vkCmdSetViewportWScalingNV'
+                                                          (commandBufferHandle (commandBuffer))
+                                                          (firstViewport)
+                                                          ((fromIntegral (Data.Vector.length $ (viewportWScalings)) :: Word32))
+                                                          (pPViewportWScalings))
   pure $ ()
 
 
@@ -486,7 +492,9 @@ instance FromCStruct PipelineViewportWScalingStateCreateInfoNV where
     let pViewportWScalingsLength = if pViewportWScalings == nullPtr then 0 else (fromIntegral viewportCount)
     pViewportWScalings' <- generateM pViewportWScalingsLength (\i -> peekCStruct @ViewportWScalingNV ((pViewportWScalings `advancePtrBytes` (8 * (i)) :: Ptr ViewportWScalingNV)))
     pure $ PipelineViewportWScalingStateCreateInfoNV
-             (bool32ToBool viewportWScalingEnable) viewportCount pViewportWScalings'
+             (bool32ToBool viewportWScalingEnable)
+             viewportCount
+             pViewportWScalings'
 
 instance Zero PipelineViewportWScalingStateCreateInfoNV where
   zero = PipelineViewportWScalingStateCreateInfoNV

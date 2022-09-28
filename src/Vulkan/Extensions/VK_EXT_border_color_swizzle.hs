@@ -316,7 +316,8 @@ instance FromCStruct PhysicalDeviceBorderColorSwizzleFeaturesEXT where
     borderColorSwizzle <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     borderColorSwizzleFromImage <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ PhysicalDeviceBorderColorSwizzleFeaturesEXT
-             (bool32ToBool borderColorSwizzle) (bool32ToBool borderColorSwizzleFromImage)
+             (bool32ToBool borderColorSwizzle)
+             (bool32ToBool borderColorSwizzleFromImage)
 
 instance Storable PhysicalDeviceBorderColorSwizzleFeaturesEXT where
   sizeOf ~_ = 24

@@ -51,7 +51,8 @@ newtype PipelineCreationFeedbackFlagBits = PipelineCreationFeedbackFlagBits Flag
 
 -- | 'PIPELINE_CREATION_FEEDBACK_VALID_BIT' indicates that the feedback
 -- information is valid.
-pattern PIPELINE_CREATION_FEEDBACK_VALID_BIT                          = PipelineCreationFeedbackFlagBits 0x00000001
+pattern PIPELINE_CREATION_FEEDBACK_VALID_BIT = PipelineCreationFeedbackFlagBits 0x00000001
+
 -- | 'PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT'
 -- indicates that a readily usable pipeline or pipeline stage was found in
 -- the @pipelineCache@ specified by the application in the pipeline
@@ -77,6 +78,7 @@ pattern PIPELINE_CREATION_FEEDBACK_VALID_BIT                          = Pipeline
 -- implementation uses an internal cache, it is discouraged from setting
 -- this bit as the feedback would be unactionable.
 pattern PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT = PipelineCreationFeedbackFlagBits 0x00000002
+
 -- | 'PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT' indicates
 -- that the base pipeline specified by the @basePipelineHandle@ or
 -- @basePipelineIndex@ member of the @Vk*PipelineCreateInfo@ structure was
@@ -93,7 +95,7 @@ pattern PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT = Pipeline
 -- encouraged to provide a meaningful signal to applications using this
 -- bit. For example, a 1% reduction in duration may not warrant setting
 -- this bit, while a 50% reduction would.
-pattern PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT     = PipelineCreationFeedbackFlagBits 0x00000004
+pattern PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT = PipelineCreationFeedbackFlagBits 0x00000004
 
 conNamePipelineCreationFeedbackFlagBits :: String
 conNamePipelineCreationFeedbackFlagBits = "PipelineCreationFeedbackFlagBits"
@@ -103,21 +105,33 @@ enumPrefixPipelineCreationFeedbackFlagBits = "PIPELINE_CREATION_FEEDBACK_"
 
 showTablePipelineCreationFeedbackFlagBits :: [(PipelineCreationFeedbackFlagBits, String)]
 showTablePipelineCreationFeedbackFlagBits =
-  [ (PIPELINE_CREATION_FEEDBACK_VALID_BIT                         , "VALID_BIT")
-  , (PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT, "APPLICATION_PIPELINE_CACHE_HIT_BIT")
-  , (PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT    , "BASE_PIPELINE_ACCELERATION_BIT")
+  [
+    ( PIPELINE_CREATION_FEEDBACK_VALID_BIT
+    , "VALID_BIT"
+    )
+  ,
+    ( PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT
+    , "APPLICATION_PIPELINE_CACHE_HIT_BIT"
+    )
+  ,
+    ( PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT
+    , "BASE_PIPELINE_ACCELERATION_BIT"
+    )
   ]
 
 instance Show PipelineCreationFeedbackFlagBits where
-  showsPrec = enumShowsPrec enumPrefixPipelineCreationFeedbackFlagBits
-                            showTablePipelineCreationFeedbackFlagBits
-                            conNamePipelineCreationFeedbackFlagBits
-                            (\(PipelineCreationFeedbackFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineCreationFeedbackFlagBits
+      showTablePipelineCreationFeedbackFlagBits
+      conNamePipelineCreationFeedbackFlagBits
+      (\(PipelineCreationFeedbackFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read PipelineCreationFeedbackFlagBits where
-  readPrec = enumReadPrec enumPrefixPipelineCreationFeedbackFlagBits
-                          showTablePipelineCreationFeedbackFlagBits
-                          conNamePipelineCreationFeedbackFlagBits
-                          PipelineCreationFeedbackFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineCreationFeedbackFlagBits
+      showTablePipelineCreationFeedbackFlagBits
+      conNamePipelineCreationFeedbackFlagBits
+      PipelineCreationFeedbackFlagBits

@@ -27,8 +27,6 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 newtype PipelineDynamicStateCreateFlags = PipelineDynamicStateCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNamePipelineDynamicStateCreateFlags :: String
 conNamePipelineDynamicStateCreateFlags = "PipelineDynamicStateCreateFlags"
 
@@ -39,15 +37,18 @@ showTablePipelineDynamicStateCreateFlags :: [(PipelineDynamicStateCreateFlags, S
 showTablePipelineDynamicStateCreateFlags = []
 
 instance Show PipelineDynamicStateCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixPipelineDynamicStateCreateFlags
-                            showTablePipelineDynamicStateCreateFlags
-                            conNamePipelineDynamicStateCreateFlags
-                            (\(PipelineDynamicStateCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineDynamicStateCreateFlags
+      showTablePipelineDynamicStateCreateFlags
+      conNamePipelineDynamicStateCreateFlags
+      (\(PipelineDynamicStateCreateFlags x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read PipelineDynamicStateCreateFlags where
-  readPrec = enumReadPrec enumPrefixPipelineDynamicStateCreateFlags
-                          showTablePipelineDynamicStateCreateFlags
-                          conNamePipelineDynamicStateCreateFlags
-                          PipelineDynamicStateCreateFlags
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineDynamicStateCreateFlags
+      showTablePipelineDynamicStateCreateFlags
+      conNamePipelineDynamicStateCreateFlags
+      PipelineDynamicStateCreateFlags

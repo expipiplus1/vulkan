@@ -302,7 +302,8 @@ instance FromCStruct PhysicalDeviceProvokingVertexFeaturesEXT where
     provokingVertexLast <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     transformFeedbackPreservesProvokingVertex <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ PhysicalDeviceProvokingVertexFeaturesEXT
-             (bool32ToBool provokingVertexLast) (bool32ToBool transformFeedbackPreservesProvokingVertex)
+             (bool32ToBool provokingVertexLast)
+             (bool32ToBool transformFeedbackPreservesProvokingVertex)
 
 instance Storable PhysicalDeviceProvokingVertexFeaturesEXT where
   sizeOf ~_ = 24
@@ -375,7 +376,8 @@ instance FromCStruct PhysicalDeviceProvokingVertexPropertiesEXT where
     provokingVertexModePerPipeline <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     transformFeedbackPreservesTriangleFanProvokingVertex <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ PhysicalDeviceProvokingVertexPropertiesEXT
-             (bool32ToBool provokingVertexModePerPipeline) (bool32ToBool transformFeedbackPreservesTriangleFanProvokingVertex)
+             (bool32ToBool provokingVertexModePerPipeline)
+             (bool32ToBool transformFeedbackPreservesTriangleFanProvokingVertex)
 
 instance Storable PhysicalDeviceProvokingVertexPropertiesEXT where
   sizeOf ~_ = 24
@@ -487,12 +489,17 @@ newtype ProvokingVertexModeEXT = ProvokingVertexModeEXT Int32
 -- vertex is the first non-adjacency vertex in the list of vertices used by
 -- a primitive.
 pattern PROVOKING_VERTEX_MODE_FIRST_VERTEX_EXT = ProvokingVertexModeEXT 0
+
 -- | 'PROVOKING_VERTEX_MODE_LAST_VERTEX_EXT' specifies that the provoking
 -- vertex is the last non-adjacency vertex in the list of vertices used by
 -- a primitive.
-pattern PROVOKING_VERTEX_MODE_LAST_VERTEX_EXT  = ProvokingVertexModeEXT 1
-{-# complete PROVOKING_VERTEX_MODE_FIRST_VERTEX_EXT,
-             PROVOKING_VERTEX_MODE_LAST_VERTEX_EXT :: ProvokingVertexModeEXT #-}
+pattern PROVOKING_VERTEX_MODE_LAST_VERTEX_EXT = ProvokingVertexModeEXT 1
+
+{-# COMPLETE
+  PROVOKING_VERTEX_MODE_FIRST_VERTEX_EXT
+  , PROVOKING_VERTEX_MODE_LAST_VERTEX_EXT ::
+    ProvokingVertexModeEXT
+  #-}
 
 conNameProvokingVertexModeEXT :: String
 conNameProvokingVertexModeEXT = "ProvokingVertexModeEXT"
@@ -502,23 +509,32 @@ enumPrefixProvokingVertexModeEXT = "PROVOKING_VERTEX_MODE_"
 
 showTableProvokingVertexModeEXT :: [(ProvokingVertexModeEXT, String)]
 showTableProvokingVertexModeEXT =
-  [ (PROVOKING_VERTEX_MODE_FIRST_VERTEX_EXT, "FIRST_VERTEX_EXT")
-  , (PROVOKING_VERTEX_MODE_LAST_VERTEX_EXT , "LAST_VERTEX_EXT")
+  [
+    ( PROVOKING_VERTEX_MODE_FIRST_VERTEX_EXT
+    , "FIRST_VERTEX_EXT"
+    )
+  ,
+    ( PROVOKING_VERTEX_MODE_LAST_VERTEX_EXT
+    , "LAST_VERTEX_EXT"
+    )
   ]
 
 instance Show ProvokingVertexModeEXT where
-  showsPrec = enumShowsPrec enumPrefixProvokingVertexModeEXT
-                            showTableProvokingVertexModeEXT
-                            conNameProvokingVertexModeEXT
-                            (\(ProvokingVertexModeEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixProvokingVertexModeEXT
+      showTableProvokingVertexModeEXT
+      conNameProvokingVertexModeEXT
+      (\(ProvokingVertexModeEXT x) -> x)
+      (showsPrec 11)
 
 instance Read ProvokingVertexModeEXT where
-  readPrec = enumReadPrec enumPrefixProvokingVertexModeEXT
-                          showTableProvokingVertexModeEXT
-                          conNameProvokingVertexModeEXT
-                          ProvokingVertexModeEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixProvokingVertexModeEXT
+      showTableProvokingVertexModeEXT
+      conNameProvokingVertexModeEXT
+      ProvokingVertexModeEXT
 
 type EXT_PROVOKING_VERTEX_SPEC_VERSION = 1
 

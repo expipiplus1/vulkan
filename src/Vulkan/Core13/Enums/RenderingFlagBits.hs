@@ -62,16 +62,19 @@ newtype RenderingFlagBits = RenderingFlagBits Flags
 -- calls for the render pass instance will be recorded in secondary command
 -- buffers.
 pattern RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT = RenderingFlagBits 0x00000001
+
 -- | 'RENDERING_SUSPENDING_BIT' specifies that the render pass instance will
 -- be suspended.
-pattern RENDERING_SUSPENDING_BIT                         = RenderingFlagBits 0x00000002
+pattern RENDERING_SUSPENDING_BIT = RenderingFlagBits 0x00000002
+
 -- | 'RENDERING_RESUMING_BIT' specifies that the render pass instance is
 -- resuming an earlier suspended render pass instance.
-pattern RENDERING_RESUMING_BIT                           = RenderingFlagBits 0x00000004
+pattern RENDERING_RESUMING_BIT = RenderingFlagBits 0x00000004
+
 -- | 'RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT' specifies that
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-legacy-dithering Legacy Dithering>
 -- is enabled for the render pass instance.
-pattern RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT        = RenderingFlagBits 0x00000008
+pattern RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT = RenderingFlagBits 0x00000008
 
 conNameRenderingFlagBits :: String
 conNameRenderingFlagBits = "RenderingFlagBits"
@@ -81,20 +84,31 @@ enumPrefixRenderingFlagBits = "RENDERING_"
 
 showTableRenderingFlagBits :: [(RenderingFlagBits, String)]
 showTableRenderingFlagBits =
-  [ (RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT, "CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT")
-  , (RENDERING_SUSPENDING_BIT                        , "SUSPENDING_BIT")
-  , (RENDERING_RESUMING_BIT                          , "RESUMING_BIT")
-  , (RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT       , "ENABLE_LEGACY_DITHERING_BIT_EXT")
+  [
+    ( RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT
+    , "CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT"
+    )
+  , (RENDERING_SUSPENDING_BIT, "SUSPENDING_BIT")
+  , (RENDERING_RESUMING_BIT, "RESUMING_BIT")
+  ,
+    ( RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT
+    , "ENABLE_LEGACY_DITHERING_BIT_EXT"
+    )
   ]
 
 instance Show RenderingFlagBits where
-  showsPrec = enumShowsPrec enumPrefixRenderingFlagBits
-                            showTableRenderingFlagBits
-                            conNameRenderingFlagBits
-                            (\(RenderingFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixRenderingFlagBits
+      showTableRenderingFlagBits
+      conNameRenderingFlagBits
+      (\(RenderingFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read RenderingFlagBits where
   readPrec =
-    enumReadPrec enumPrefixRenderingFlagBits showTableRenderingFlagBits conNameRenderingFlagBits RenderingFlagBits
-
+    enumReadPrec
+      enumPrefixRenderingFlagBits
+      showTableRenderingFlagBits
+      conNameRenderingFlagBits
+      RenderingFlagBits

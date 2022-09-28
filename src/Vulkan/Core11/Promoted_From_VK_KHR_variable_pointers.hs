@@ -120,7 +120,8 @@ instance FromCStruct PhysicalDeviceVariablePointersFeatures where
     variablePointersStorageBuffer <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     variablePointers <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ PhysicalDeviceVariablePointersFeatures
-             (bool32ToBool variablePointersStorageBuffer) (bool32ToBool variablePointers)
+             (bool32ToBool variablePointersStorageBuffer)
+             (bool32ToBool variablePointers)
 
 instance Storable PhysicalDeviceVariablePointersFeatures where
   sizeOf ~_ = 24

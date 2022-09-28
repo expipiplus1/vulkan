@@ -236,7 +236,10 @@ setDeviceMemoryPriorityEXT device memory priority = liftIO $ do
   unless (vkSetDeviceMemoryPriorityEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetDeviceMemoryPriorityEXT is null" Nothing Nothing
   let vkSetDeviceMemoryPriorityEXT' = mkVkSetDeviceMemoryPriorityEXT vkSetDeviceMemoryPriorityEXTPtr
-  traceAroundEvent "vkSetDeviceMemoryPriorityEXT" (vkSetDeviceMemoryPriorityEXT' (deviceHandle (device)) (memory) (CFloat (priority)))
+  traceAroundEvent "vkSetDeviceMemoryPriorityEXT" (vkSetDeviceMemoryPriorityEXT'
+                                                     (deviceHandle (device))
+                                                     (memory)
+                                                     (CFloat (priority)))
   pure $ ()
 
 

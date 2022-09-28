@@ -192,13 +192,21 @@ getVisibilityMaskKHR :: forall io
                      -> -- | @visibilityMaskType@ is the type of visibility mask requested.
                         VisibilityMaskTypeKHR
                      -> io (Result, VisibilityMaskKHR)
-getVisibilityMaskKHR session viewConfigurationType viewIndex visibilityMaskType = liftIO . evalContT $ do
+getVisibilityMaskKHR session
+                       viewConfigurationType
+                       viewIndex
+                       visibilityMaskType = liftIO . evalContT $ do
   let xrGetVisibilityMaskKHRPtr = pXrGetVisibilityMaskKHR (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrGetVisibilityMaskKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetVisibilityMaskKHR is null" Nothing Nothing
   let xrGetVisibilityMaskKHR' = mkXrGetVisibilityMaskKHR xrGetVisibilityMaskKHRPtr
   pVisibilityMask <- ContT (withZeroCStruct @VisibilityMaskKHR)
-  r <- lift $ traceAroundEvent "xrGetVisibilityMaskKHR" (xrGetVisibilityMaskKHR' (sessionHandle (session)) (viewConfigurationType) (viewIndex) (visibilityMaskType) (pVisibilityMask))
+  r <- lift $ traceAroundEvent "xrGetVisibilityMaskKHR" (xrGetVisibilityMaskKHR'
+                                                           (sessionHandle (session))
+                                                           (viewConfigurationType)
+                                                           (viewIndex)
+                                                           (visibilityMaskType)
+                                                           (pVisibilityMask))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   visibilityMask <- lift $ peekCStruct @VisibilityMaskKHR pVisibilityMask
   pure $ (r, visibilityMask)
@@ -404,7 +412,12 @@ instance FromCStruct VisibilityMaskKHR where
     indexCountOutput <- peek @Word32 ((p `plusPtr` 36 :: Ptr Word32))
     indices <- peek @(Ptr Word32) ((p `plusPtr` 40 :: Ptr (Ptr Word32)))
     pure $ VisibilityMaskKHR
-             vertexCapacityInput vertexCountOutput vertices indexCapacityInput indexCountOutput indices
+             vertexCapacityInput
+             vertexCountOutput
+             vertices
+             indexCapacityInput
+             indexCountOutput
+             indices
 
 instance Storable VisibilityMaskKHR where
   sizeOf ~_ = 48
@@ -431,6 +444,7 @@ instance Zero VisibilityMaskKHR where
 -- 'getVisibilityMaskKHR'
 newtype VisibilityMaskTypeKHR = VisibilityMaskTypeKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
+
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
 -- | 'VISIBILITY_MASK_TYPE_HIDDEN_TRIANGLE_MESH_KHR' refers to a two
@@ -439,7 +453,8 @@ newtype VisibilityMaskTypeKHR = VisibilityMaskTypeKHR Int32
 -- triangles identified by vertices and vertex indices. The index count
 -- will thus be a multiple of three. The triangle vertices will be returned
 -- in counter-clockwise order as viewed from the user perspective.
-pattern VISIBILITY_MASK_TYPE_HIDDEN_TRIANGLE_MESH_KHR  = VisibilityMaskTypeKHR 1
+pattern VISIBILITY_MASK_TYPE_HIDDEN_TRIANGLE_MESH_KHR = VisibilityMaskTypeKHR 1
+
 -- | 'VISIBILITY_MASK_TYPE_VISIBLE_TRIANGLE_MESH_KHR' refers to a two
 -- dimensional triangle mesh on the view surface which /should/ be drawn to
 -- by the application. 'VisibilityMaskKHR' refers to a set of triangles
@@ -447,6 +462,7 @@ pattern VISIBILITY_MASK_TYPE_HIDDEN_TRIANGLE_MESH_KHR  = VisibilityMaskTypeKHR 1
 -- a multiple of three. The triangle vertices will be returned in
 -- counter-clockwise order as viewed from the user perspective.
 pattern VISIBILITY_MASK_TYPE_VISIBLE_TRIANGLE_MESH_KHR = VisibilityMaskTypeKHR 2
+
 -- | 'VISIBILITY_MASK_TYPE_LINE_LOOP_KHR' refers to a single multi-segmented
 -- line loop on the view surface which encompasses the view area which
 -- /should/ be drawn by the application. It is the border that exists
@@ -457,10 +473,14 @@ pattern VISIBILITY_MASK_TYPE_VISIBLE_TRIANGLE_MESH_KHR = VisibilityMaskTypeKHR 2
 -- point implicitly connecting to the first point. There is one vertex per
 -- point, the index count will equal the vertex count, and the indices will
 -- refer to the vertices.
-pattern VISIBILITY_MASK_TYPE_LINE_LOOP_KHR             = VisibilityMaskTypeKHR 3
-{-# complete VISIBILITY_MASK_TYPE_HIDDEN_TRIANGLE_MESH_KHR,
-             VISIBILITY_MASK_TYPE_VISIBLE_TRIANGLE_MESH_KHR,
-             VISIBILITY_MASK_TYPE_LINE_LOOP_KHR :: VisibilityMaskTypeKHR #-}
+pattern VISIBILITY_MASK_TYPE_LINE_LOOP_KHR = VisibilityMaskTypeKHR 3
+
+{-# COMPLETE
+  VISIBILITY_MASK_TYPE_HIDDEN_TRIANGLE_MESH_KHR
+  , VISIBILITY_MASK_TYPE_VISIBLE_TRIANGLE_MESH_KHR
+  , VISIBILITY_MASK_TYPE_LINE_LOOP_KHR ::
+    VisibilityMaskTypeKHR
+  #-}
 
 conNameVisibilityMaskTypeKHR :: String
 conNameVisibilityMaskTypeKHR = "VisibilityMaskTypeKHR"
@@ -470,24 +490,36 @@ enumPrefixVisibilityMaskTypeKHR = "VISIBILITY_MASK_TYPE_"
 
 showTableVisibilityMaskTypeKHR :: [(VisibilityMaskTypeKHR, String)]
 showTableVisibilityMaskTypeKHR =
-  [ (VISIBILITY_MASK_TYPE_HIDDEN_TRIANGLE_MESH_KHR , "HIDDEN_TRIANGLE_MESH_KHR")
-  , (VISIBILITY_MASK_TYPE_VISIBLE_TRIANGLE_MESH_KHR, "VISIBLE_TRIANGLE_MESH_KHR")
-  , (VISIBILITY_MASK_TYPE_LINE_LOOP_KHR            , "LINE_LOOP_KHR")
+  [
+    ( VISIBILITY_MASK_TYPE_HIDDEN_TRIANGLE_MESH_KHR
+    , "HIDDEN_TRIANGLE_MESH_KHR"
+    )
+  ,
+    ( VISIBILITY_MASK_TYPE_VISIBLE_TRIANGLE_MESH_KHR
+    , "VISIBLE_TRIANGLE_MESH_KHR"
+    )
+  ,
+    ( VISIBILITY_MASK_TYPE_LINE_LOOP_KHR
+    , "LINE_LOOP_KHR"
+    )
   ]
 
 instance Show VisibilityMaskTypeKHR where
-  showsPrec = enumShowsPrec enumPrefixVisibilityMaskTypeKHR
-                            showTableVisibilityMaskTypeKHR
-                            conNameVisibilityMaskTypeKHR
-                            (\(VisibilityMaskTypeKHR x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixVisibilityMaskTypeKHR
+      showTableVisibilityMaskTypeKHR
+      conNameVisibilityMaskTypeKHR
+      (\(VisibilityMaskTypeKHR x) -> x)
+      (showsPrec 11)
 
 instance Read VisibilityMaskTypeKHR where
-  readPrec = enumReadPrec enumPrefixVisibilityMaskTypeKHR
-                          showTableVisibilityMaskTypeKHR
-                          conNameVisibilityMaskTypeKHR
-                          VisibilityMaskTypeKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixVisibilityMaskTypeKHR
+      showTableVisibilityMaskTypeKHR
+      conNameVisibilityMaskTypeKHR
+      VisibilityMaskTypeKHR
 
 type KHR_visibility_mask_SPEC_VERSION = 2
 

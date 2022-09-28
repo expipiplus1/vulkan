@@ -480,8 +480,6 @@ instance Zero PipelineViewportSwizzleStateCreateInfoNV where
 newtype PipelineViewportSwizzleStateCreateFlagsNV = PipelineViewportSwizzleStateCreateFlagsNV Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNamePipelineViewportSwizzleStateCreateFlagsNV :: String
 conNamePipelineViewportSwizzleStateCreateFlagsNV = "PipelineViewportSwizzleStateCreateFlagsNV"
 
@@ -492,18 +490,21 @@ showTablePipelineViewportSwizzleStateCreateFlagsNV :: [(PipelineViewportSwizzleS
 showTablePipelineViewportSwizzleStateCreateFlagsNV = []
 
 instance Show PipelineViewportSwizzleStateCreateFlagsNV where
-  showsPrec = enumShowsPrec enumPrefixPipelineViewportSwizzleStateCreateFlagsNV
-                            showTablePipelineViewportSwizzleStateCreateFlagsNV
-                            conNamePipelineViewportSwizzleStateCreateFlagsNV
-                            (\(PipelineViewportSwizzleStateCreateFlagsNV x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineViewportSwizzleStateCreateFlagsNV
+      showTablePipelineViewportSwizzleStateCreateFlagsNV
+      conNamePipelineViewportSwizzleStateCreateFlagsNV
+      (\(PipelineViewportSwizzleStateCreateFlagsNV x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read PipelineViewportSwizzleStateCreateFlagsNV where
-  readPrec = enumReadPrec enumPrefixPipelineViewportSwizzleStateCreateFlagsNV
-                          showTablePipelineViewportSwizzleStateCreateFlagsNV
-                          conNamePipelineViewportSwizzleStateCreateFlagsNV
-                          PipelineViewportSwizzleStateCreateFlagsNV
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineViewportSwizzleStateCreateFlagsNV
+      showTablePipelineViewportSwizzleStateCreateFlagsNV
+      conNamePipelineViewportSwizzleStateCreateFlagsNV
+      PipelineViewportSwizzleStateCreateFlagsNV
 
 -- | VkViewportCoordinateSwizzleNV - Specify how a viewport coordinate is
 -- swizzled
@@ -522,28 +523,39 @@ newtype ViewportCoordinateSwizzleNV = ViewportCoordinateSwizzleNV Int32
 
 -- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV"
 pattern VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV = ViewportCoordinateSwizzleNV 0
+
 -- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV"
 pattern VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV = ViewportCoordinateSwizzleNV 1
+
 -- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV"
 pattern VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV = ViewportCoordinateSwizzleNV 2
+
 -- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV"
 pattern VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV = ViewportCoordinateSwizzleNV 3
+
 -- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV"
 pattern VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV = ViewportCoordinateSwizzleNV 4
+
 -- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV"
 pattern VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV = ViewportCoordinateSwizzleNV 5
+
 -- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV"
 pattern VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV = ViewportCoordinateSwizzleNV 6
+
 -- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV"
 pattern VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV = ViewportCoordinateSwizzleNV 7
-{-# complete VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV,
-             VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV,
-             VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV,
-             VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV,
-             VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV,
-             VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV,
-             VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV,
-             VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV :: ViewportCoordinateSwizzleNV #-}
+
+{-# COMPLETE
+  VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV
+  , VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV
+  , VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV
+  , VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV
+  , VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV
+  , VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV
+  , VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV
+  , VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV ::
+    ViewportCoordinateSwizzleNV
+  #-}
 
 conNameViewportCoordinateSwizzleNV :: String
 conNameViewportCoordinateSwizzleNV = "ViewportCoordinateSwizzleNV"
@@ -553,29 +565,56 @@ enumPrefixViewportCoordinateSwizzleNV = "VIEWPORT_COORDINATE_SWIZZLE_"
 
 showTableViewportCoordinateSwizzleNV :: [(ViewportCoordinateSwizzleNV, String)]
 showTableViewportCoordinateSwizzleNV =
-  [ (VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV, "POSITIVE_X_NV")
-  , (VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV, "NEGATIVE_X_NV")
-  , (VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV, "POSITIVE_Y_NV")
-  , (VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV, "NEGATIVE_Y_NV")
-  , (VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV, "POSITIVE_Z_NV")
-  , (VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV, "NEGATIVE_Z_NV")
-  , (VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV, "POSITIVE_W_NV")
-  , (VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV, "NEGATIVE_W_NV")
+  [
+    ( VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV
+    , "POSITIVE_X_NV"
+    )
+  ,
+    ( VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV
+    , "NEGATIVE_X_NV"
+    )
+  ,
+    ( VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV
+    , "POSITIVE_Y_NV"
+    )
+  ,
+    ( VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV
+    , "NEGATIVE_Y_NV"
+    )
+  ,
+    ( VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV
+    , "POSITIVE_Z_NV"
+    )
+  ,
+    ( VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV
+    , "NEGATIVE_Z_NV"
+    )
+  ,
+    ( VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV
+    , "POSITIVE_W_NV"
+    )
+  ,
+    ( VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV
+    , "NEGATIVE_W_NV"
+    )
   ]
 
 instance Show ViewportCoordinateSwizzleNV where
-  showsPrec = enumShowsPrec enumPrefixViewportCoordinateSwizzleNV
-                            showTableViewportCoordinateSwizzleNV
-                            conNameViewportCoordinateSwizzleNV
-                            (\(ViewportCoordinateSwizzleNV x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixViewportCoordinateSwizzleNV
+      showTableViewportCoordinateSwizzleNV
+      conNameViewportCoordinateSwizzleNV
+      (\(ViewportCoordinateSwizzleNV x) -> x)
+      (showsPrec 11)
 
 instance Read ViewportCoordinateSwizzleNV where
-  readPrec = enumReadPrec enumPrefixViewportCoordinateSwizzleNV
-                          showTableViewportCoordinateSwizzleNV
-                          conNameViewportCoordinateSwizzleNV
-                          ViewportCoordinateSwizzleNV
-
+  readPrec =
+    enumReadPrec
+      enumPrefixViewportCoordinateSwizzleNV
+      showTableViewportCoordinateSwizzleNV
+      conNameViewportCoordinateSwizzleNV
+      ViewportCoordinateSwizzleNV
 
 type NV_VIEWPORT_SWIZZLE_SPEC_VERSION = 1
 

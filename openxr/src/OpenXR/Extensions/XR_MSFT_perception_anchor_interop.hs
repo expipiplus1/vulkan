@@ -166,14 +166,18 @@ createSpatialAnchorFromPerceptionAnchorMSFT :: forall io
                                                -- object.
                                                ("perceptionAnchor" ::: Ptr IUnknown)
                                             -> io (SpatialAnchorMSFT)
-createSpatialAnchorFromPerceptionAnchorMSFT session perceptionAnchor = liftIO . evalContT $ do
+createSpatialAnchorFromPerceptionAnchorMSFT session
+                                              perceptionAnchor = liftIO . evalContT $ do
   let cmds = case session of Session{instanceCmds} -> instanceCmds
   let xrCreateSpatialAnchorFromPerceptionAnchorMSFTPtr = pXrCreateSpatialAnchorFromPerceptionAnchorMSFT cmds
   lift $ unless (xrCreateSpatialAnchorFromPerceptionAnchorMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrCreateSpatialAnchorFromPerceptionAnchorMSFT is null" Nothing Nothing
   let xrCreateSpatialAnchorFromPerceptionAnchorMSFT' = mkXrCreateSpatialAnchorFromPerceptionAnchorMSFT xrCreateSpatialAnchorFromPerceptionAnchorMSFTPtr
   pAnchor <- ContT $ bracket (callocBytes @(Ptr SpatialAnchorMSFT_T) 8) free
-  r <- lift $ traceAroundEvent "xrCreateSpatialAnchorFromPerceptionAnchorMSFT" (xrCreateSpatialAnchorFromPerceptionAnchorMSFT' (sessionHandle (session)) (perceptionAnchor) (pAnchor))
+  r <- lift $ traceAroundEvent "xrCreateSpatialAnchorFromPerceptionAnchorMSFT" (xrCreateSpatialAnchorFromPerceptionAnchorMSFT'
+                                                                                  (sessionHandle (session))
+                                                                                  (perceptionAnchor)
+                                                                                  (pAnchor))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   anchor <- lift $ peek @(Ptr SpatialAnchorMSFT_T) pAnchor
   pure $ (((\h -> SpatialAnchorMSFT h cmds ) anchor))
@@ -280,13 +284,17 @@ tryGetPerceptionAnchorFromSpatialAnchorMSFT :: forall io
                                                -- handle.
                                                SpatialAnchorMSFT
                                             -> io (("perceptionAnchor" ::: Ptr IUnknown))
-tryGetPerceptionAnchorFromSpatialAnchorMSFT session anchor = liftIO . evalContT $ do
+tryGetPerceptionAnchorFromSpatialAnchorMSFT session
+                                              anchor = liftIO . evalContT $ do
   let xrTryGetPerceptionAnchorFromSpatialAnchorMSFTPtr = pXrTryGetPerceptionAnchorFromSpatialAnchorMSFT (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrTryGetPerceptionAnchorFromSpatialAnchorMSFTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrTryGetPerceptionAnchorFromSpatialAnchorMSFT is null" Nothing Nothing
   let xrTryGetPerceptionAnchorFromSpatialAnchorMSFT' = mkXrTryGetPerceptionAnchorFromSpatialAnchorMSFT xrTryGetPerceptionAnchorFromSpatialAnchorMSFTPtr
   pPerceptionAnchor <- ContT $ bracket (callocBytes @(Ptr IUnknown) 8) free
-  r <- lift $ traceAroundEvent "xrTryGetPerceptionAnchorFromSpatialAnchorMSFT" (xrTryGetPerceptionAnchorFromSpatialAnchorMSFT' (sessionHandle (session)) (spatialAnchorMSFTHandle (anchor)) (pPerceptionAnchor))
+  r <- lift $ traceAroundEvent "xrTryGetPerceptionAnchorFromSpatialAnchorMSFT" (xrTryGetPerceptionAnchorFromSpatialAnchorMSFT'
+                                                                                  (sessionHandle (session))
+                                                                                  (spatialAnchorMSFTHandle (anchor))
+                                                                                  (pPerceptionAnchor))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   perceptionAnchor <- lift $ peek @(Ptr IUnknown) pPerceptionAnchor
   pure $ (perceptionAnchor)

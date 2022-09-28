@@ -156,7 +156,11 @@ createImageView device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPView <- ContT $ bracket (callocBytes @ImageView 8) free
-  r <- lift $ traceAroundEvent "vkCreateImageView" (vkCreateImageView' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPView))
+  r <- lift $ traceAroundEvent "vkCreateImageView" (vkCreateImageView'
+                                                      (deviceHandle (device))
+                                                      (forgetExtensions pCreateInfo)
+                                                      pAllocator
+                                                      (pPView))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pView <- lift $ peek @ImageView pPView
   pure $ (pView)
@@ -243,7 +247,10 @@ destroyImageView device imageView allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyImageView" (vkDestroyImageView' (deviceHandle (device)) (imageView) pAllocator)
+  lift $ traceAroundEvent "vkDestroyImageView" (vkDestroyImageView'
+                                                  (deviceHandle (device))
+                                                  (imageView)
+                                                  pAllocator)
   pure $ ()
 
 
@@ -1404,7 +1411,8 @@ instance Extensible ImageViewCreateInfo where
     | Just Refl <- eqT @e @ImageViewUsageCreateInfo = Just f
     | otherwise = Nothing
 
-instance (Extendss ImageViewCreateInfo es, PokeChain es) => ToCStruct (ImageViewCreateInfo es) where
+instance ( Extendss ImageViewCreateInfo es
+         , PokeChain es ) => ToCStruct (ImageViewCreateInfo es) where
   withCStruct x f = allocaBytes 80 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageViewCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO)
@@ -1430,7 +1438,8 @@ instance (Extendss ImageViewCreateInfo es, PokeChain es) => ToCStruct (ImageView
     lift $ poke ((p `plusPtr` 56 :: Ptr ImageSubresourceRange)) (zero)
     lift $ f
 
-instance (Extendss ImageViewCreateInfo es, PeekChain es) => FromCStruct (ImageViewCreateInfo es) where
+instance ( Extendss ImageViewCreateInfo es
+         , PeekChain es ) => FromCStruct (ImageViewCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

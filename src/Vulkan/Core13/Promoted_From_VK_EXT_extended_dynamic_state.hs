@@ -151,7 +151,9 @@ cmdSetCullMode commandBuffer cullMode = liftIO $ do
   unless (vkCmdSetCullModePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetCullMode is null" Nothing Nothing
   let vkCmdSetCullMode' = mkVkCmdSetCullMode vkCmdSetCullModePtr
-  traceAroundEvent "vkCmdSetCullMode" (vkCmdSetCullMode' (commandBufferHandle (commandBuffer)) (cullMode))
+  traceAroundEvent "vkCmdSetCullMode" (vkCmdSetCullMode'
+                                         (commandBufferHandle (commandBuffer))
+                                         (cullMode))
   pure $ ()
 
 
@@ -232,7 +234,9 @@ cmdSetFrontFace commandBuffer frontFace = liftIO $ do
   unless (vkCmdSetFrontFacePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetFrontFace is null" Nothing Nothing
   let vkCmdSetFrontFace' = mkVkCmdSetFrontFace vkCmdSetFrontFacePtr
-  traceAroundEvent "vkCmdSetFrontFace" (vkCmdSetFrontFace' (commandBufferHandle (commandBuffer)) (frontFace))
+  traceAroundEvent "vkCmdSetFrontFace" (vkCmdSetFrontFace'
+                                          (commandBufferHandle (commandBuffer))
+                                          (frontFace))
   pure $ ()
 
 
@@ -315,7 +319,9 @@ cmdSetPrimitiveTopology commandBuffer primitiveTopology = liftIO $ do
   unless (vkCmdSetPrimitiveTopologyPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetPrimitiveTopology is null" Nothing Nothing
   let vkCmdSetPrimitiveTopology' = mkVkCmdSetPrimitiveTopology vkCmdSetPrimitiveTopologyPtr
-  traceAroundEvent "vkCmdSetPrimitiveTopology" (vkCmdSetPrimitiveTopology' (commandBufferHandle (commandBuffer)) (primitiveTopology))
+  traceAroundEvent "vkCmdSetPrimitiveTopology" (vkCmdSetPrimitiveTopology'
+                                                  (commandBufferHandle (commandBuffer))
+                                                  (primitiveTopology))
   pure $ ()
 
 
@@ -418,7 +424,10 @@ cmdSetViewportWithCount commandBuffer viewports = liftIO . evalContT $ do
   let vkCmdSetViewportWithCount' = mkVkCmdSetViewportWithCount vkCmdSetViewportWithCountPtr
   pPViewports <- ContT $ allocaBytes @Viewport ((Data.Vector.length (viewports)) * 24)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPViewports `plusPtr` (24 * (i)) :: Ptr Viewport) (e)) (viewports)
-  lift $ traceAroundEvent "vkCmdSetViewportWithCount" (vkCmdSetViewportWithCount' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (viewports)) :: Word32)) (pPViewports))
+  lift $ traceAroundEvent "vkCmdSetViewportWithCount" (vkCmdSetViewportWithCount'
+                                                         (commandBufferHandle (commandBuffer))
+                                                         ((fromIntegral (Data.Vector.length $ (viewports)) :: Word32))
+                                                         (pPViewports))
   pure $ ()
 
 
@@ -534,7 +543,10 @@ cmdSetScissorWithCount commandBuffer scissors = liftIO . evalContT $ do
   let vkCmdSetScissorWithCount' = mkVkCmdSetScissorWithCount vkCmdSetScissorWithCountPtr
   pPScissors <- ContT $ allocaBytes @Rect2D ((Data.Vector.length (scissors)) * 16)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPScissors `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (scissors)
-  lift $ traceAroundEvent "vkCmdSetScissorWithCount" (vkCmdSetScissorWithCount' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (scissors)) :: Word32)) (pPScissors))
+  lift $ traceAroundEvent "vkCmdSetScissorWithCount" (vkCmdSetScissorWithCount'
+                                                        (commandBufferHandle (commandBuffer))
+                                                        ((fromIntegral (Data.Vector.length $ (scissors)) :: Word32))
+                                                        (pPScissors))
   pure $ ()
 
 
@@ -721,7 +733,12 @@ cmdBindVertexBuffers2 :: forall io
                       -> -- | @pStrides@ is @NULL@ or a pointer to an array of buffer strides.
                          ("strides" ::: Vector DeviceSize)
                       -> io ()
-cmdBindVertexBuffers2 commandBuffer firstBinding buffers offsets sizes strides = liftIO . evalContT $ do
+cmdBindVertexBuffers2 commandBuffer
+                        firstBinding
+                        buffers
+                        offsets
+                        sizes
+                        strides = liftIO . evalContT $ do
   let vkCmdBindVertexBuffers2Ptr = pVkCmdBindVertexBuffers2 (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBindVertexBuffers2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBindVertexBuffers2 is null" Nothing Nothing
@@ -751,7 +768,14 @@ cmdBindVertexBuffers2 commandBuffer firstBinding buffers offsets sizes strides =
       pPStrides <- ContT $ allocaBytes @DeviceSize (((Data.Vector.length (strides))) * 8)
       lift $ Data.Vector.imapM_ (\i e -> poke (pPStrides `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((strides))
       pure $ pPStrides
-  lift $ traceAroundEvent "vkCmdBindVertexBuffers2" (vkCmdBindVertexBuffers2' (commandBufferHandle (commandBuffer)) (firstBinding) ((fromIntegral pBuffersLength :: Word32)) (pPBuffers) (pPOffsets) pSizes pStrides)
+  lift $ traceAroundEvent "vkCmdBindVertexBuffers2" (vkCmdBindVertexBuffers2'
+                                                       (commandBufferHandle (commandBuffer))
+                                                       (firstBinding)
+                                                       ((fromIntegral pBuffersLength :: Word32))
+                                                       (pPBuffers)
+                                                       (pPOffsets)
+                                                       pSizes
+                                                       pStrides)
   pure $ ()
 
 
@@ -830,7 +854,9 @@ cmdSetDepthTestEnable commandBuffer depthTestEnable = liftIO $ do
   unless (vkCmdSetDepthTestEnablePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDepthTestEnable is null" Nothing Nothing
   let vkCmdSetDepthTestEnable' = mkVkCmdSetDepthTestEnable vkCmdSetDepthTestEnablePtr
-  traceAroundEvent "vkCmdSetDepthTestEnable" (vkCmdSetDepthTestEnable' (commandBufferHandle (commandBuffer)) (boolToBool32 (depthTestEnable)))
+  traceAroundEvent "vkCmdSetDepthTestEnable" (vkCmdSetDepthTestEnable'
+                                                (commandBufferHandle (commandBuffer))
+                                                (boolToBool32 (depthTestEnable)))
   pure $ ()
 
 
@@ -909,7 +935,9 @@ cmdSetDepthWriteEnable commandBuffer depthWriteEnable = liftIO $ do
   unless (vkCmdSetDepthWriteEnablePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDepthWriteEnable is null" Nothing Nothing
   let vkCmdSetDepthWriteEnable' = mkVkCmdSetDepthWriteEnable vkCmdSetDepthWriteEnablePtr
-  traceAroundEvent "vkCmdSetDepthWriteEnable" (vkCmdSetDepthWriteEnable' (commandBufferHandle (commandBuffer)) (boolToBool32 (depthWriteEnable)))
+  traceAroundEvent "vkCmdSetDepthWriteEnable" (vkCmdSetDepthWriteEnable'
+                                                 (commandBufferHandle (commandBuffer))
+                                                 (boolToBool32 (depthWriteEnable)))
   pure $ ()
 
 
@@ -995,7 +1023,9 @@ cmdSetDepthCompareOp commandBuffer depthCompareOp = liftIO $ do
   unless (vkCmdSetDepthCompareOpPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDepthCompareOp is null" Nothing Nothing
   let vkCmdSetDepthCompareOp' = mkVkCmdSetDepthCompareOp vkCmdSetDepthCompareOpPtr
-  traceAroundEvent "vkCmdSetDepthCompareOp" (vkCmdSetDepthCompareOp' (commandBufferHandle (commandBuffer)) (depthCompareOp))
+  traceAroundEvent "vkCmdSetDepthCompareOp" (vkCmdSetDepthCompareOp'
+                                               (commandBufferHandle (commandBuffer))
+                                               (depthCompareOp))
   pure $ ()
 
 
@@ -1074,7 +1104,9 @@ cmdSetDepthBoundsTestEnable commandBuffer depthBoundsTestEnable = liftIO $ do
   unless (vkCmdSetDepthBoundsTestEnablePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDepthBoundsTestEnable is null" Nothing Nothing
   let vkCmdSetDepthBoundsTestEnable' = mkVkCmdSetDepthBoundsTestEnable vkCmdSetDepthBoundsTestEnablePtr
-  traceAroundEvent "vkCmdSetDepthBoundsTestEnable" (vkCmdSetDepthBoundsTestEnable' (commandBufferHandle (commandBuffer)) (boolToBool32 (depthBoundsTestEnable)))
+  traceAroundEvent "vkCmdSetDepthBoundsTestEnable" (vkCmdSetDepthBoundsTestEnable'
+                                                      (commandBufferHandle (commandBuffer))
+                                                      (boolToBool32 (depthBoundsTestEnable)))
   pure $ ()
 
 
@@ -1153,7 +1185,9 @@ cmdSetStencilTestEnable commandBuffer stencilTestEnable = liftIO $ do
   unless (vkCmdSetStencilTestEnablePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetStencilTestEnable is null" Nothing Nothing
   let vkCmdSetStencilTestEnable' = mkVkCmdSetStencilTestEnable vkCmdSetStencilTestEnablePtr
-  traceAroundEvent "vkCmdSetStencilTestEnable" (vkCmdSetStencilTestEnable' (commandBufferHandle (commandBuffer)) (boolToBool32 (stencilTestEnable)))
+  traceAroundEvent "vkCmdSetStencilTestEnable" (vkCmdSetStencilTestEnable'
+                                                  (commandBufferHandle (commandBuffer))
+                                                  (boolToBool32 (stencilTestEnable)))
   pure $ ()
 
 
@@ -1263,11 +1297,22 @@ cmdSetStencilOp :: forall io
                    -- specifying the comparison operator used in the stencil test.
                    CompareOp
                 -> io ()
-cmdSetStencilOp commandBuffer faceMask failOp passOp depthFailOp compareOp = liftIO $ do
+cmdSetStencilOp commandBuffer
+                  faceMask
+                  failOp
+                  passOp
+                  depthFailOp
+                  compareOp = liftIO $ do
   let vkCmdSetStencilOpPtr = pVkCmdSetStencilOp (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetStencilOpPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetStencilOp is null" Nothing Nothing
   let vkCmdSetStencilOp' = mkVkCmdSetStencilOp vkCmdSetStencilOpPtr
-  traceAroundEvent "vkCmdSetStencilOp" (vkCmdSetStencilOp' (commandBufferHandle (commandBuffer)) (faceMask) (failOp) (passOp) (depthFailOp) (compareOp))
+  traceAroundEvent "vkCmdSetStencilOp" (vkCmdSetStencilOp'
+                                          (commandBufferHandle (commandBuffer))
+                                          (faceMask)
+                                          (failOp)
+                                          (passOp)
+                                          (depthFailOp)
+                                          (compareOp))
   pure $ ()
 

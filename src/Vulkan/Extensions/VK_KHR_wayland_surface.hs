@@ -335,7 +335,11 @@ createWaylandSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSurface <- ContT $ bracket (callocBytes @SurfaceKHR 8) free
-  r <- lift $ traceAroundEvent "vkCreateWaylandSurfaceKHR" (vkCreateWaylandSurfaceKHR' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface))
+  r <- lift $ traceAroundEvent "vkCreateWaylandSurfaceKHR" (vkCreateWaylandSurfaceKHR'
+                                                              (instanceHandle (instance'))
+                                                              pCreateInfo
+                                                              pAllocator
+                                                              (pPSurface))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurface <- lift $ peek @SurfaceKHR pPSurface
   pure $ (pSurface)
@@ -385,12 +389,17 @@ getPhysicalDeviceWaylandPresentationSupportKHR :: forall io
                                                   -- @display@ /must/ be a valid pointer to a @wl_display@ value
                                                   (Ptr Wl_display)
                                                -> io (Bool)
-getPhysicalDeviceWaylandPresentationSupportKHR physicalDevice queueFamilyIndex display = liftIO $ do
+getPhysicalDeviceWaylandPresentationSupportKHR physicalDevice
+                                                 queueFamilyIndex
+                                                 display = liftIO $ do
   let vkGetPhysicalDeviceWaylandPresentationSupportKHRPtr = pVkGetPhysicalDeviceWaylandPresentationSupportKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   unless (vkGetPhysicalDeviceWaylandPresentationSupportKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceWaylandPresentationSupportKHR is null" Nothing Nothing
   let vkGetPhysicalDeviceWaylandPresentationSupportKHR' = mkVkGetPhysicalDeviceWaylandPresentationSupportKHR vkGetPhysicalDeviceWaylandPresentationSupportKHRPtr
-  r <- traceAroundEvent "vkGetPhysicalDeviceWaylandPresentationSupportKHR" (vkGetPhysicalDeviceWaylandPresentationSupportKHR' (physicalDeviceHandle (physicalDevice)) (queueFamilyIndex) (display))
+  r <- traceAroundEvent "vkGetPhysicalDeviceWaylandPresentationSupportKHR" (vkGetPhysicalDeviceWaylandPresentationSupportKHR'
+                                                                              (physicalDeviceHandle (physicalDevice))
+                                                                              (queueFamilyIndex)
+                                                                              (display))
   pure $ ((bool32ToBool r))
 
 
@@ -479,8 +488,6 @@ instance Zero WaylandSurfaceCreateInfoKHR where
 newtype WaylandSurfaceCreateFlagsKHR = WaylandSurfaceCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameWaylandSurfaceCreateFlagsKHR :: String
 conNameWaylandSurfaceCreateFlagsKHR = "WaylandSurfaceCreateFlagsKHR"
 
@@ -491,18 +498,21 @@ showTableWaylandSurfaceCreateFlagsKHR :: [(WaylandSurfaceCreateFlagsKHR, String)
 showTableWaylandSurfaceCreateFlagsKHR = []
 
 instance Show WaylandSurfaceCreateFlagsKHR where
-  showsPrec = enumShowsPrec enumPrefixWaylandSurfaceCreateFlagsKHR
-                            showTableWaylandSurfaceCreateFlagsKHR
-                            conNameWaylandSurfaceCreateFlagsKHR
-                            (\(WaylandSurfaceCreateFlagsKHR x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixWaylandSurfaceCreateFlagsKHR
+      showTableWaylandSurfaceCreateFlagsKHR
+      conNameWaylandSurfaceCreateFlagsKHR
+      (\(WaylandSurfaceCreateFlagsKHR x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read WaylandSurfaceCreateFlagsKHR where
-  readPrec = enumReadPrec enumPrefixWaylandSurfaceCreateFlagsKHR
-                          showTableWaylandSurfaceCreateFlagsKHR
-                          conNameWaylandSurfaceCreateFlagsKHR
-                          WaylandSurfaceCreateFlagsKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixWaylandSurfaceCreateFlagsKHR
+      showTableWaylandSurfaceCreateFlagsKHR
+      conNameWaylandSurfaceCreateFlagsKHR
+      WaylandSurfaceCreateFlagsKHR
 
 type KHR_WAYLAND_SURFACE_SPEC_VERSION = 6
 

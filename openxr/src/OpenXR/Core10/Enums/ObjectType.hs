@@ -59,35 +59,48 @@ newtype ObjectType = ObjectType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- No documentation found for Nested "XrObjectType" "XR_OBJECT_TYPE_UNKNOWN"
-pattern OBJECT_TYPE_UNKNOWN                   = ObjectType 0
+pattern OBJECT_TYPE_UNKNOWN = ObjectType 0
+
 -- No documentation found for Nested "XrObjectType" "XR_OBJECT_TYPE_INSTANCE"
-pattern OBJECT_TYPE_INSTANCE                  = ObjectType 1
+pattern OBJECT_TYPE_INSTANCE = ObjectType 1
+
 -- No documentation found for Nested "XrObjectType" "XR_OBJECT_TYPE_SESSION"
-pattern OBJECT_TYPE_SESSION                   = ObjectType 2
+pattern OBJECT_TYPE_SESSION = ObjectType 2
+
 -- No documentation found for Nested "XrObjectType" "XR_OBJECT_TYPE_SWAPCHAIN"
-pattern OBJECT_TYPE_SWAPCHAIN                 = ObjectType 3
+pattern OBJECT_TYPE_SWAPCHAIN = ObjectType 3
+
 -- No documentation found for Nested "XrObjectType" "XR_OBJECT_TYPE_SPACE"
-pattern OBJECT_TYPE_SPACE                     = ObjectType 4
+pattern OBJECT_TYPE_SPACE = ObjectType 4
+
 -- No documentation found for Nested "XrObjectType" "XR_OBJECT_TYPE_ACTION_SET"
-pattern OBJECT_TYPE_ACTION_SET                = ObjectType 5
+pattern OBJECT_TYPE_ACTION_SET = ObjectType 5
+
 -- No documentation found for Nested "XrObjectType" "XR_OBJECT_TYPE_ACTION"
-pattern OBJECT_TYPE_ACTION                    = ObjectType 6
+pattern OBJECT_TYPE_ACTION = ObjectType 6
+
 -- No documentation found for Nested "XrObjectType" "XR_OBJECT_TYPE_HAND_TRACKER_EXT"
-pattern OBJECT_TYPE_HAND_TRACKER_EXT          = ObjectType 1000051000
+pattern OBJECT_TYPE_HAND_TRACKER_EXT = ObjectType 1000051000
+
 -- No documentation found for Nested "XrObjectType" "XR_OBJECT_TYPE_SPATIAL_ANCHOR_MSFT"
-pattern OBJECT_TYPE_SPATIAL_ANCHOR_MSFT       = ObjectType 1000039000
+pattern OBJECT_TYPE_SPATIAL_ANCHOR_MSFT = ObjectType 1000039000
+
 -- No documentation found for Nested "XrObjectType" "XR_OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT"
 pattern OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT = ObjectType 1000019000
-{-# complete OBJECT_TYPE_UNKNOWN,
-             OBJECT_TYPE_INSTANCE,
-             OBJECT_TYPE_SESSION,
-             OBJECT_TYPE_SWAPCHAIN,
-             OBJECT_TYPE_SPACE,
-             OBJECT_TYPE_ACTION_SET,
-             OBJECT_TYPE_ACTION,
-             OBJECT_TYPE_HAND_TRACKER_EXT,
-             OBJECT_TYPE_SPATIAL_ANCHOR_MSFT,
-             OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT :: ObjectType #-}
+
+{-# COMPLETE
+  OBJECT_TYPE_UNKNOWN
+  , OBJECT_TYPE_INSTANCE
+  , OBJECT_TYPE_SESSION
+  , OBJECT_TYPE_SWAPCHAIN
+  , OBJECT_TYPE_SPACE
+  , OBJECT_TYPE_ACTION_SET
+  , OBJECT_TYPE_ACTION
+  , OBJECT_TYPE_HAND_TRACKER_EXT
+  , OBJECT_TYPE_SPATIAL_ANCHOR_MSFT
+  , OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT ::
+    ObjectType
+  #-}
 
 conNameObjectType :: String
 conNameObjectType = "ObjectType"
@@ -97,22 +110,34 @@ enumPrefixObjectType = "OBJECT_TYPE_"
 
 showTableObjectType :: [(ObjectType, String)]
 showTableObjectType =
-  [ (OBJECT_TYPE_UNKNOWN                  , "UNKNOWN")
-  , (OBJECT_TYPE_INSTANCE                 , "INSTANCE")
-  , (OBJECT_TYPE_SESSION                  , "SESSION")
-  , (OBJECT_TYPE_SWAPCHAIN                , "SWAPCHAIN")
-  , (OBJECT_TYPE_SPACE                    , "SPACE")
-  , (OBJECT_TYPE_ACTION_SET               , "ACTION_SET")
-  , (OBJECT_TYPE_ACTION                   , "ACTION")
-  , (OBJECT_TYPE_HAND_TRACKER_EXT         , "HAND_TRACKER_EXT")
-  , (OBJECT_TYPE_SPATIAL_ANCHOR_MSFT      , "SPATIAL_ANCHOR_MSFT")
-  , (OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT, "DEBUG_UTILS_MESSENGER_EXT")
+  [ (OBJECT_TYPE_UNKNOWN, "UNKNOWN")
+  , (OBJECT_TYPE_INSTANCE, "INSTANCE")
+  , (OBJECT_TYPE_SESSION, "SESSION")
+  , (OBJECT_TYPE_SWAPCHAIN, "SWAPCHAIN")
+  , (OBJECT_TYPE_SPACE, "SPACE")
+  , (OBJECT_TYPE_ACTION_SET, "ACTION_SET")
+  , (OBJECT_TYPE_ACTION, "ACTION")
+  , (OBJECT_TYPE_HAND_TRACKER_EXT, "HAND_TRACKER_EXT")
+  , (OBJECT_TYPE_SPATIAL_ANCHOR_MSFT, "SPATIAL_ANCHOR_MSFT")
+  ,
+    ( OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT
+    , "DEBUG_UTILS_MESSENGER_EXT"
+    )
   ]
 
 instance Show ObjectType where
   showsPrec =
-    enumShowsPrec enumPrefixObjectType showTableObjectType conNameObjectType (\(ObjectType x) -> x) (showsPrec 11)
+    enumShowsPrec
+      enumPrefixObjectType
+      showTableObjectType
+      conNameObjectType
+      (\(ObjectType x) -> x)
+      (showsPrec 11)
 
 instance Read ObjectType where
-  readPrec = enumReadPrec enumPrefixObjectType showTableObjectType conNameObjectType ObjectType
-
+  readPrec =
+    enumReadPrec
+      enumPrefixObjectType
+      showTableObjectType
+      conNameObjectType
+      ObjectType

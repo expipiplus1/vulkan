@@ -201,7 +201,10 @@ getControllerModelKeyMSFT session topLevelUserPath = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetControllerModelKeyMSFT is null" Nothing Nothing
   let xrGetControllerModelKeyMSFT' = mkXrGetControllerModelKeyMSFT xrGetControllerModelKeyMSFTPtr
   pControllerModelKeyState <- ContT (withZeroCStruct @ControllerModelKeyStateMSFT)
-  r <- lift $ traceAroundEvent "xrGetControllerModelKeyMSFT" (xrGetControllerModelKeyMSFT' (sessionHandle (session)) (topLevelUserPath) (pControllerModelKeyState))
+  r <- lift $ traceAroundEvent "xrGetControllerModelKeyMSFT" (xrGetControllerModelKeyMSFT'
+                                                                (sessionHandle (session))
+                                                                (topLevelUserPath)
+                                                                (pControllerModelKeyState))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   controllerModelKeyState <- lift $ peekCStruct @ControllerModelKeyStateMSFT pControllerModelKeyState
   pure $ (controllerModelKeyState)
@@ -309,11 +312,21 @@ loadControllerModelMSFT session modelKey = liftIO . evalContT $ do
   let xrLoadControllerModelMSFT' = mkXrLoadControllerModelMSFT xrLoadControllerModelMSFTPtr
   let session' = sessionHandle (session)
   pBufferCountOutput <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "xrLoadControllerModelMSFT" (xrLoadControllerModelMSFT' session' (modelKey) (0) (pBufferCountOutput) (nullPtr))
+  r <- lift $ traceAroundEvent "xrLoadControllerModelMSFT" (xrLoadControllerModelMSFT'
+                                                              session'
+                                                              (modelKey)
+                                                              (0)
+                                                              (pBufferCountOutput)
+                                                              (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   bufferCountOutput <- lift $ peek @Word32 pBufferCountOutput
   pBuffer <- ContT $ bracket (callocBytes @Word8 (fromIntegral (bufferCountOutput))) free
-  r' <- lift $ traceAroundEvent "xrLoadControllerModelMSFT" (xrLoadControllerModelMSFT' session' (modelKey) ((bufferCountOutput)) (pBufferCountOutput) (pBuffer))
+  r' <- lift $ traceAroundEvent "xrLoadControllerModelMSFT" (xrLoadControllerModelMSFT'
+                                                               session'
+                                                               (modelKey)
+                                                               ((bufferCountOutput))
+                                                               (pBufferCountOutput)
+                                                               (pBuffer))
   lift $ when (r' < SUCCESS) (throwIO (OpenXrException r'))
   bufferCountOutput' <- lift $ peek @Word32 pBufferCountOutput
   buffer' <- lift $ generateM (fromIntegral (bufferCountOutput')) (\i -> peek @Word8 ((pBuffer `advancePtrBytes` (1 * (i)) :: Ptr Word8)))
@@ -398,7 +411,10 @@ getControllerModelPropertiesMSFT session modelKey = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetControllerModelPropertiesMSFT is null" Nothing Nothing
   let xrGetControllerModelPropertiesMSFT' = mkXrGetControllerModelPropertiesMSFT xrGetControllerModelPropertiesMSFTPtr
   pProperties <- ContT (withZeroCStruct @ControllerModelPropertiesMSFT)
-  r <- lift $ traceAroundEvent "xrGetControllerModelPropertiesMSFT" (xrGetControllerModelPropertiesMSFT' (sessionHandle (session)) (modelKey) (pProperties))
+  r <- lift $ traceAroundEvent "xrGetControllerModelPropertiesMSFT" (xrGetControllerModelPropertiesMSFT'
+                                                                       (sessionHandle (session))
+                                                                       (modelKey)
+                                                                       (pProperties))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   properties <- lift $ peekCStruct @ControllerModelPropertiesMSFT pProperties
   pure $ (properties)
@@ -480,7 +496,10 @@ getControllerModelStateMSFT session modelKey = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetControllerModelStateMSFT is null" Nothing Nothing
   let xrGetControllerModelStateMSFT' = mkXrGetControllerModelStateMSFT xrGetControllerModelStateMSFTPtr
   pState <- ContT (withZeroCStruct @ControllerModelStateMSFT)
-  r <- lift $ traceAroundEvent "xrGetControllerModelStateMSFT" (xrGetControllerModelStateMSFT' (sessionHandle (session)) (modelKey) (pState))
+  r <- lift $ traceAroundEvent "xrGetControllerModelStateMSFT" (xrGetControllerModelStateMSFT'
+                                                                  (sessionHandle (session))
+                                                                  (modelKey)
+                                                                  (pState))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   state <- lift $ peekCStruct @ControllerModelStateMSFT pState
   pure $ (state)

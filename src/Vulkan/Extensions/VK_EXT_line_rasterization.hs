@@ -273,12 +273,17 @@ cmdSetLineStippleEXT :: forall io
                         -- rasterization.
                         ("lineStipplePattern" ::: Word16)
                      -> io ()
-cmdSetLineStippleEXT commandBuffer lineStippleFactor lineStipplePattern = liftIO $ do
+cmdSetLineStippleEXT commandBuffer
+                       lineStippleFactor
+                       lineStipplePattern = liftIO $ do
   let vkCmdSetLineStippleEXTPtr = pVkCmdSetLineStippleEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetLineStippleEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetLineStippleEXT is null" Nothing Nothing
   let vkCmdSetLineStippleEXT' = mkVkCmdSetLineStippleEXT vkCmdSetLineStippleEXTPtr
-  traceAroundEvent "vkCmdSetLineStippleEXT" (vkCmdSetLineStippleEXT' (commandBufferHandle (commandBuffer)) (lineStippleFactor) (lineStipplePattern))
+  traceAroundEvent "vkCmdSetLineStippleEXT" (vkCmdSetLineStippleEXT'
+                                               (commandBufferHandle (commandBuffer))
+                                               (lineStippleFactor)
+                                               (lineStipplePattern))
   pure $ ()
 
 
@@ -377,7 +382,12 @@ instance FromCStruct PhysicalDeviceLineRasterizationFeaturesEXT where
     stippledBresenhamLines <- peek @Bool32 ((p `plusPtr` 32 :: Ptr Bool32))
     stippledSmoothLines <- peek @Bool32 ((p `plusPtr` 36 :: Ptr Bool32))
     pure $ PhysicalDeviceLineRasterizationFeaturesEXT
-             (bool32ToBool rectangularLines) (bool32ToBool bresenhamLines) (bool32ToBool smoothLines) (bool32ToBool stippledRectangularLines) (bool32ToBool stippledBresenhamLines) (bool32ToBool stippledSmoothLines)
+             (bool32ToBool rectangularLines)
+             (bool32ToBool bresenhamLines)
+             (bool32ToBool smoothLines)
+             (bool32ToBool stippledRectangularLines)
+             (bool32ToBool stippledBresenhamLines)
+             (bool32ToBool stippledSmoothLines)
 
 instance Storable PhysicalDeviceLineRasterizationFeaturesEXT where
   sizeOf ~_ = 40
@@ -579,7 +589,10 @@ instance FromCStruct PipelineRasterizationLineStateCreateInfoEXT where
     lineStippleFactor <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
     lineStipplePattern <- peek @Word16 ((p `plusPtr` 28 :: Ptr Word16))
     pure $ PipelineRasterizationLineStateCreateInfoEXT
-             lineRasterizationMode (bool32ToBool stippledLineEnable) lineStippleFactor lineStipplePattern
+             lineRasterizationMode
+             (bool32ToBool stippledLineEnable)
+             lineStippleFactor
+             lineStipplePattern
 
 instance Storable PipelineRasterizationLineStateCreateInfoEXT where
   sizeOf ~_ = 32
@@ -610,24 +623,31 @@ newtype LineRasterizationModeEXT = LineRasterizationModeEXT Int32
 -- is 'Vulkan.Core10.FundamentalTypes.TRUE', otherwise lines are drawn as
 -- non-@strictLines@ parallelograms. Both of these modes are defined in
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-lines-basic Basic Line Segment Rasterization>.
-pattern LINE_RASTERIZATION_MODE_DEFAULT_EXT            = LineRasterizationModeEXT 0
+pattern LINE_RASTERIZATION_MODE_DEFAULT_EXT = LineRasterizationModeEXT 0
+
 -- | 'LINE_RASTERIZATION_MODE_RECTANGULAR_EXT' specifies lines drawn as if
 -- they were rectangles extruded from the line
-pattern LINE_RASTERIZATION_MODE_RECTANGULAR_EXT        = LineRasterizationModeEXT 1
+pattern LINE_RASTERIZATION_MODE_RECTANGULAR_EXT = LineRasterizationModeEXT 1
+
 -- | 'LINE_RASTERIZATION_MODE_BRESENHAM_EXT' specifies lines drawn by
 -- determining which pixel diamonds the line intersects and exits, as
 -- defined in
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-lines-bresenham Bresenham Line Segment Rasterization>.
-pattern LINE_RASTERIZATION_MODE_BRESENHAM_EXT          = LineRasterizationModeEXT 2
+pattern LINE_RASTERIZATION_MODE_BRESENHAM_EXT = LineRasterizationModeEXT 2
+
 -- | 'LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT' specifies lines drawn
 -- if they were rectangles extruded from the line, with alpha falloff, as
 -- defined in
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-lines-smooth Smooth Lines>.
 pattern LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT = LineRasterizationModeEXT 3
-{-# complete LINE_RASTERIZATION_MODE_DEFAULT_EXT,
-             LINE_RASTERIZATION_MODE_RECTANGULAR_EXT,
-             LINE_RASTERIZATION_MODE_BRESENHAM_EXT,
-             LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT :: LineRasterizationModeEXT #-}
+
+{-# COMPLETE
+  LINE_RASTERIZATION_MODE_DEFAULT_EXT
+  , LINE_RASTERIZATION_MODE_RECTANGULAR_EXT
+  , LINE_RASTERIZATION_MODE_BRESENHAM_EXT
+  , LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT ::
+    LineRasterizationModeEXT
+  #-}
 
 conNameLineRasterizationModeEXT :: String
 conNameLineRasterizationModeEXT = "LineRasterizationModeEXT"
@@ -637,25 +657,40 @@ enumPrefixLineRasterizationModeEXT = "LINE_RASTERIZATION_MODE_"
 
 showTableLineRasterizationModeEXT :: [(LineRasterizationModeEXT, String)]
 showTableLineRasterizationModeEXT =
-  [ (LINE_RASTERIZATION_MODE_DEFAULT_EXT           , "DEFAULT_EXT")
-  , (LINE_RASTERIZATION_MODE_RECTANGULAR_EXT       , "RECTANGULAR_EXT")
-  , (LINE_RASTERIZATION_MODE_BRESENHAM_EXT         , "BRESENHAM_EXT")
-  , (LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT, "RECTANGULAR_SMOOTH_EXT")
+  [
+    ( LINE_RASTERIZATION_MODE_DEFAULT_EXT
+    , "DEFAULT_EXT"
+    )
+  ,
+    ( LINE_RASTERIZATION_MODE_RECTANGULAR_EXT
+    , "RECTANGULAR_EXT"
+    )
+  ,
+    ( LINE_RASTERIZATION_MODE_BRESENHAM_EXT
+    , "BRESENHAM_EXT"
+    )
+  ,
+    ( LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT
+    , "RECTANGULAR_SMOOTH_EXT"
+    )
   ]
 
 instance Show LineRasterizationModeEXT where
-  showsPrec = enumShowsPrec enumPrefixLineRasterizationModeEXT
-                            showTableLineRasterizationModeEXT
-                            conNameLineRasterizationModeEXT
-                            (\(LineRasterizationModeEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixLineRasterizationModeEXT
+      showTableLineRasterizationModeEXT
+      conNameLineRasterizationModeEXT
+      (\(LineRasterizationModeEXT x) -> x)
+      (showsPrec 11)
 
 instance Read LineRasterizationModeEXT where
-  readPrec = enumReadPrec enumPrefixLineRasterizationModeEXT
-                          showTableLineRasterizationModeEXT
-                          conNameLineRasterizationModeEXT
-                          LineRasterizationModeEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixLineRasterizationModeEXT
+      showTableLineRasterizationModeEXT
+      conNameLineRasterizationModeEXT
+      LineRasterizationModeEXT
 
 type EXT_LINE_RASTERIZATION_SPEC_VERSION = 1
 

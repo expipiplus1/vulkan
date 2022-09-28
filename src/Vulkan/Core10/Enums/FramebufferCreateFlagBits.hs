@@ -45,15 +45,18 @@ showTableFramebufferCreateFlagBits :: [(FramebufferCreateFlagBits, String)]
 showTableFramebufferCreateFlagBits = [(FRAMEBUFFER_CREATE_IMAGELESS_BIT, "")]
 
 instance Show FramebufferCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixFramebufferCreateFlagBits
-                            showTableFramebufferCreateFlagBits
-                            conNameFramebufferCreateFlagBits
-                            (\(FramebufferCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixFramebufferCreateFlagBits
+      showTableFramebufferCreateFlagBits
+      conNameFramebufferCreateFlagBits
+      (\(FramebufferCreateFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read FramebufferCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixFramebufferCreateFlagBits
-                          showTableFramebufferCreateFlagBits
-                          conNameFramebufferCreateFlagBits
-                          FramebufferCreateFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixFramebufferCreateFlagBits
+      showTableFramebufferCreateFlagBits
+      conNameFramebufferCreateFlagBits
+      FramebufferCreateFlagBits

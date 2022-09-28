@@ -198,11 +198,19 @@ enumerateDisplayRefreshRatesFB session = liftIO . evalContT $ do
   let xrEnumerateDisplayRefreshRatesFB' = mkXrEnumerateDisplayRefreshRatesFB xrEnumerateDisplayRefreshRatesFBPtr
   let session' = sessionHandle (session)
   pDisplayRefreshRateCountOutput <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "xrEnumerateDisplayRefreshRatesFB" (xrEnumerateDisplayRefreshRatesFB' session' (0) (pDisplayRefreshRateCountOutput) (nullPtr))
+  r <- lift $ traceAroundEvent "xrEnumerateDisplayRefreshRatesFB" (xrEnumerateDisplayRefreshRatesFB'
+                                                                     session'
+                                                                     (0)
+                                                                     (pDisplayRefreshRateCountOutput)
+                                                                     (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   displayRefreshRateCountOutput <- lift $ peek @Word32 pDisplayRefreshRateCountOutput
   pDisplayRefreshRates <- ContT $ bracket (callocBytes @CFloat ((fromIntegral (displayRefreshRateCountOutput)) * 4)) free
-  r' <- lift $ traceAroundEvent "xrEnumerateDisplayRefreshRatesFB" (xrEnumerateDisplayRefreshRatesFB' session' ((displayRefreshRateCountOutput)) (pDisplayRefreshRateCountOutput) (pDisplayRefreshRates))
+  r' <- lift $ traceAroundEvent "xrEnumerateDisplayRefreshRatesFB" (xrEnumerateDisplayRefreshRatesFB'
+                                                                      session'
+                                                                      ((displayRefreshRateCountOutput))
+                                                                      (pDisplayRefreshRateCountOutput)
+                                                                      (pDisplayRefreshRates))
   lift $ when (r' < SUCCESS) (throwIO (OpenXrException r'))
   displayRefreshRateCountOutput' <- lift $ peek @Word32 pDisplayRefreshRateCountOutput
   displayRefreshRates' <- lift $ generateM (fromIntegral (displayRefreshRateCountOutput')) (\i -> do
@@ -275,7 +283,9 @@ getDisplayRefreshRateFB session = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetDisplayRefreshRateFB is null" Nothing Nothing
   let xrGetDisplayRefreshRateFB' = mkXrGetDisplayRefreshRateFB xrGetDisplayRefreshRateFBPtr
   pDisplayRefreshRate <- ContT $ bracket (callocBytes @CFloat 4) free
-  r <- lift $ traceAroundEvent "xrGetDisplayRefreshRateFB" (xrGetDisplayRefreshRateFB' (sessionHandle (session)) (pDisplayRefreshRate))
+  r <- lift $ traceAroundEvent "xrGetDisplayRefreshRateFB" (xrGetDisplayRefreshRateFB'
+                                                              (sessionHandle (session))
+                                                              (pDisplayRefreshRate))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   displayRefreshRate <- lift $ peek @CFloat pDisplayRefreshRate
   pure $ (r, (coerce @CFloat @Float displayRefreshRate))
@@ -358,7 +368,9 @@ requestDisplayRefreshRateFB session displayRefreshRate = liftIO $ do
   unless (xrRequestDisplayRefreshRateFBPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrRequestDisplayRefreshRateFB is null" Nothing Nothing
   let xrRequestDisplayRefreshRateFB' = mkXrRequestDisplayRefreshRateFB xrRequestDisplayRefreshRateFBPtr
-  r <- traceAroundEvent "xrRequestDisplayRefreshRateFB" (xrRequestDisplayRefreshRateFB' (sessionHandle (session)) (CFloat (displayRefreshRate)))
+  r <- traceAroundEvent "xrRequestDisplayRefreshRateFB" (xrRequestDisplayRefreshRateFB'
+                                                           (sessionHandle (session))
+                                                           (CFloat (displayRefreshRate)))
   when (r < SUCCESS) (throwIO (OpenXrException r))
   pure $ (r)
 
@@ -421,7 +433,8 @@ instance FromCStruct EventDataDisplayRefreshRateChangedFB where
     fromDisplayRefreshRate <- peek @CFloat ((p `plusPtr` 16 :: Ptr CFloat))
     toDisplayRefreshRate <- peek @CFloat ((p `plusPtr` 20 :: Ptr CFloat))
     pure $ EventDataDisplayRefreshRateChangedFB
-             (coerce @CFloat @Float fromDisplayRefreshRate) (coerce @CFloat @Float toDisplayRefreshRate)
+             (coerce @CFloat @Float fromDisplayRefreshRate)
+             (coerce @CFloat @Float toDisplayRefreshRate)
 
 instance Storable EventDataDisplayRefreshRateChangedFB where
   sizeOf ~_ = 24

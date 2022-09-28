@@ -63,21 +63,26 @@ newtype ToolPurposeFlagBits = ToolPurposeFlagBits Flags
 
 -- | 'TOOL_PURPOSE_VALIDATION_BIT' specifies that the tool provides
 -- validation of API usage.
-pattern TOOL_PURPOSE_VALIDATION_BIT          = ToolPurposeFlagBits 0x00000001
+pattern TOOL_PURPOSE_VALIDATION_BIT = ToolPurposeFlagBits 0x00000001
+
 -- | 'TOOL_PURPOSE_PROFILING_BIT' specifies that the tool provides profiling
 -- of API usage.
-pattern TOOL_PURPOSE_PROFILING_BIT           = ToolPurposeFlagBits 0x00000002
+pattern TOOL_PURPOSE_PROFILING_BIT = ToolPurposeFlagBits 0x00000002
+
 -- | 'TOOL_PURPOSE_TRACING_BIT' specifies that the tool is capturing data
 -- about the application’s API usage, including anything from simple
 -- logging to capturing data for later replay.
-pattern TOOL_PURPOSE_TRACING_BIT             = ToolPurposeFlagBits 0x00000004
+pattern TOOL_PURPOSE_TRACING_BIT = ToolPurposeFlagBits 0x00000004
+
 -- | 'TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT' specifies that the tool provides
 -- additional API features\/extensions on top of the underlying
 -- implementation.
 pattern TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT = ToolPurposeFlagBits 0x00000008
+
 -- | 'TOOL_PURPOSE_MODIFYING_FEATURES_BIT' specifies that the tool modifies
 -- the API features\/limits\/extensions presented to the application.
-pattern TOOL_PURPOSE_MODIFYING_FEATURES_BIT  = ToolPurposeFlagBits 0x00000010
+pattern TOOL_PURPOSE_MODIFYING_FEATURES_BIT = ToolPurposeFlagBits 0x00000010
+
 -- | 'TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT' specifies that the tool consumes
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#debugging-debug-markers debug markers>
 -- or
@@ -85,7 +90,8 @@ pattern TOOL_PURPOSE_MODIFYING_FEATURES_BIT  = ToolPurposeFlagBits 0x00000010
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#debugging-queue-labels queue labels>,
 -- or
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#debugging-command-buffer-labels command buffer labels>
-pattern TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT   = ToolPurposeFlagBits 0x00000040
+pattern TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT = ToolPurposeFlagBits 0x00000040
+
 -- | 'TOOL_PURPOSE_DEBUG_REPORTING_BIT_EXT' specifies that the tool reports
 -- additional information to the application via callbacks specified by
 -- 'Vulkan.Extensions.VK_EXT_debug_report.createDebugReportCallbackEXT' or
@@ -100,25 +106,40 @@ enumPrefixToolPurposeFlagBits = "TOOL_PURPOSE_"
 
 showTableToolPurposeFlagBits :: [(ToolPurposeFlagBits, String)]
 showTableToolPurposeFlagBits =
-  [ (TOOL_PURPOSE_VALIDATION_BIT         , "VALIDATION_BIT")
-  , (TOOL_PURPOSE_PROFILING_BIT          , "PROFILING_BIT")
-  , (TOOL_PURPOSE_TRACING_BIT            , "TRACING_BIT")
-  , (TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT, "ADDITIONAL_FEATURES_BIT")
-  , (TOOL_PURPOSE_MODIFYING_FEATURES_BIT , "MODIFYING_FEATURES_BIT")
-  , (TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT  , "DEBUG_MARKERS_BIT_EXT")
-  , (TOOL_PURPOSE_DEBUG_REPORTING_BIT_EXT, "DEBUG_REPORTING_BIT_EXT")
+  [ (TOOL_PURPOSE_VALIDATION_BIT, "VALIDATION_BIT")
+  , (TOOL_PURPOSE_PROFILING_BIT, "PROFILING_BIT")
+  , (TOOL_PURPOSE_TRACING_BIT, "TRACING_BIT")
+  ,
+    ( TOOL_PURPOSE_ADDITIONAL_FEATURES_BIT
+    , "ADDITIONAL_FEATURES_BIT"
+    )
+  ,
+    ( TOOL_PURPOSE_MODIFYING_FEATURES_BIT
+    , "MODIFYING_FEATURES_BIT"
+    )
+  ,
+    ( TOOL_PURPOSE_DEBUG_MARKERS_BIT_EXT
+    , "DEBUG_MARKERS_BIT_EXT"
+    )
+  ,
+    ( TOOL_PURPOSE_DEBUG_REPORTING_BIT_EXT
+    , "DEBUG_REPORTING_BIT_EXT"
+    )
   ]
 
 instance Show ToolPurposeFlagBits where
-  showsPrec = enumShowsPrec enumPrefixToolPurposeFlagBits
-                            showTableToolPurposeFlagBits
-                            conNameToolPurposeFlagBits
-                            (\(ToolPurposeFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixToolPurposeFlagBits
+      showTableToolPurposeFlagBits
+      conNameToolPurposeFlagBits
+      (\(ToolPurposeFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read ToolPurposeFlagBits where
-  readPrec = enumReadPrec enumPrefixToolPurposeFlagBits
-                          showTableToolPurposeFlagBits
-                          conNameToolPurposeFlagBits
-                          ToolPurposeFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixToolPurposeFlagBits
+      showTableToolPurposeFlagBits
+      conNameToolPurposeFlagBits
+      ToolPurposeFlagBits

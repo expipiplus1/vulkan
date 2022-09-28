@@ -219,8 +219,6 @@ type ShaderCorePropertiesFlagsAMD = ShaderCorePropertiesFlagBitsAMD
 newtype ShaderCorePropertiesFlagBitsAMD = ShaderCorePropertiesFlagBitsAMD Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameShaderCorePropertiesFlagBitsAMD :: String
 conNameShaderCorePropertiesFlagBitsAMD = "ShaderCorePropertiesFlagBitsAMD"
 
@@ -231,18 +229,21 @@ showTableShaderCorePropertiesFlagBitsAMD :: [(ShaderCorePropertiesFlagBitsAMD, S
 showTableShaderCorePropertiesFlagBitsAMD = []
 
 instance Show ShaderCorePropertiesFlagBitsAMD where
-  showsPrec = enumShowsPrec enumPrefixShaderCorePropertiesFlagBitsAMD
-                            showTableShaderCorePropertiesFlagBitsAMD
-                            conNameShaderCorePropertiesFlagBitsAMD
-                            (\(ShaderCorePropertiesFlagBitsAMD x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixShaderCorePropertiesFlagBitsAMD
+      showTableShaderCorePropertiesFlagBitsAMD
+      conNameShaderCorePropertiesFlagBitsAMD
+      (\(ShaderCorePropertiesFlagBitsAMD x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read ShaderCorePropertiesFlagBitsAMD where
-  readPrec = enumReadPrec enumPrefixShaderCorePropertiesFlagBitsAMD
-                          showTableShaderCorePropertiesFlagBitsAMD
-                          conNameShaderCorePropertiesFlagBitsAMD
-                          ShaderCorePropertiesFlagBitsAMD
-
+  readPrec =
+    enumReadPrec
+      enumPrefixShaderCorePropertiesFlagBitsAMD
+      showTableShaderCorePropertiesFlagBitsAMD
+      conNameShaderCorePropertiesFlagBitsAMD
+      ShaderCorePropertiesFlagBitsAMD
 
 type AMD_SHADER_CORE_PROPERTIES_2_SPEC_VERSION = 1
 

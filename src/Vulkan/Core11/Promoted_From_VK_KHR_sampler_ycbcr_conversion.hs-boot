@@ -42,10 +42,12 @@ instance FromCStruct PhysicalDeviceSamplerYcbcrConversionFeatures
 type role SamplerYcbcrConversionCreateInfo nominal
 data SamplerYcbcrConversionCreateInfo (es :: [Type])
 
-instance (Extendss SamplerYcbcrConversionCreateInfo es, PokeChain es) => ToCStruct (SamplerYcbcrConversionCreateInfo es)
+instance ( Extendss SamplerYcbcrConversionCreateInfo es
+         , PokeChain es ) => ToCStruct (SamplerYcbcrConversionCreateInfo es)
 instance Show (Chain es) => Show (SamplerYcbcrConversionCreateInfo es)
 
-instance (Extendss SamplerYcbcrConversionCreateInfo es, PeekChain es) => FromCStruct (SamplerYcbcrConversionCreateInfo es)
+instance ( Extendss SamplerYcbcrConversionCreateInfo es
+         , PeekChain es ) => FromCStruct (SamplerYcbcrConversionCreateInfo es)
 
 
 data SamplerYcbcrConversionImageFormatProperties

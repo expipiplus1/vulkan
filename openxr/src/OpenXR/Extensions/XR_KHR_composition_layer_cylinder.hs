@@ -196,7 +196,14 @@ instance FromCStruct CompositionLayerCylinderKHR where
     centralAngle <- peek @CFloat ((p `plusPtr` 104 :: Ptr CFloat))
     aspectRatio <- peek @CFloat ((p `plusPtr` 108 :: Ptr CFloat))
     pure $ CompositionLayerCylinderKHR
-             layerFlags space eyeVisibility subImage pose (coerce @CFloat @Float radius) (coerce @CFloat @Float centralAngle) (coerce @CFloat @Float aspectRatio)
+             layerFlags
+             space
+             eyeVisibility
+             subImage
+             pose
+             (coerce @CFloat @Float radius)
+             (coerce @CFloat @Float centralAngle)
+             (coerce @CFloat @Float aspectRatio)
 
 instance Storable CompositionLayerCylinderKHR where
   sizeOf ~_ = 112

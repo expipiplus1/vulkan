@@ -385,7 +385,10 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.Image',
 -- 'ImageSubresource2EXT', 'SubresourceLayout2EXT'
 getImageSubresourceLayout2EXT :: forall a io
-                               . (Extendss SubresourceLayout2EXT a, PokeChain a, PeekChain a, MonadIO io)
+                               . ( Extendss SubresourceLayout2EXT a
+                                 , PokeChain a
+                                 , PeekChain a
+                                 , MonadIO io )
                               => -- | @device@ is the logical device that owns the image.
                                  Device
                               -> -- | @image@ is the image whose layout is being queried.
@@ -401,7 +404,11 @@ getImageSubresourceLayout2EXT device image subresource = liftIO . evalContT $ do
   let vkGetImageSubresourceLayout2EXT' = mkVkGetImageSubresourceLayout2EXT vkGetImageSubresourceLayout2EXTPtr
   pSubresource <- ContT $ withCStruct (subresource)
   pPLayout <- ContT (withZeroCStruct @(SubresourceLayout2EXT _))
-  lift $ traceAroundEvent "vkGetImageSubresourceLayout2EXT" (vkGetImageSubresourceLayout2EXT' (deviceHandle (device)) (image) pSubresource (forgetExtensions (pPLayout)))
+  lift $ traceAroundEvent "vkGetImageSubresourceLayout2EXT" (vkGetImageSubresourceLayout2EXT'
+                                                               (deviceHandle (device))
+                                                               (image)
+                                                               pSubresource
+                                                               (forgetExtensions (pPLayout)))
   pLayout <- lift $ peekCStruct @(SubresourceLayout2EXT _) pPLayout
   pure $ (pLayout)
 
@@ -735,7 +742,8 @@ instance Extensible SubresourceLayout2EXT where
     | Just Refl <- eqT @e @ImageCompressionPropertiesEXT = Just f
     | otherwise = Nothing
 
-instance (Extendss SubresourceLayout2EXT es, PokeChain es) => ToCStruct (SubresourceLayout2EXT es) where
+instance ( Extendss SubresourceLayout2EXT es
+         , PokeChain es ) => ToCStruct (SubresourceLayout2EXT es) where
   withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SubresourceLayout2EXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_EXT)
@@ -752,7 +760,8 @@ instance (Extendss SubresourceLayout2EXT es, PokeChain es) => ToCStruct (Subreso
     lift $ poke ((p `plusPtr` 16 :: Ptr SubresourceLayout)) (zero)
     lift $ f
 
-instance (Extendss SubresourceLayout2EXT es, PeekChain es) => FromCStruct (SubresourceLayout2EXT es) where
+instance ( Extendss SubresourceLayout2EXT es
+         , PeekChain es ) => FromCStruct (SubresourceLayout2EXT es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -795,19 +804,22 @@ newtype ImageCompressionFlagBitsEXT = ImageCompressionFlagBitsEXT Flags
 -- | 'IMAGE_COMPRESSION_DEFAULT_EXT' specifies that the default image
 -- compression setting is used. Implementations /must/ not apply fixed-rate
 -- compression.
-pattern IMAGE_COMPRESSION_DEFAULT_EXT             = ImageCompressionFlagBitsEXT 0x00000000
+pattern IMAGE_COMPRESSION_DEFAULT_EXT = ImageCompressionFlagBitsEXT 0x00000000
+
 -- | 'IMAGE_COMPRESSION_FIXED_RATE_DEFAULT_EXT' specifies that the
 -- implementation /may/ choose any supported fixed-rate compression setting
 -- in an implementation-defined manner based on the properties of the
 -- image.
-pattern IMAGE_COMPRESSION_FIXED_RATE_DEFAULT_EXT  = ImageCompressionFlagBitsEXT 0x00000001
+pattern IMAGE_COMPRESSION_FIXED_RATE_DEFAULT_EXT = ImageCompressionFlagBitsEXT 0x00000001
+
 -- | 'IMAGE_COMPRESSION_FIXED_RATE_EXPLICIT_EXT' specifies that fixed-rate
 -- compression /may/ be used and that the allowed compression rates are
 -- specified by 'ImageCompressionControlEXT'::@pFixedRateFlags@.
 pattern IMAGE_COMPRESSION_FIXED_RATE_EXPLICIT_EXT = ImageCompressionFlagBitsEXT 0x00000002
+
 -- | 'IMAGE_COMPRESSION_DISABLED_EXT' specifies that all lossless and
 -- fixed-rate compression /should/ be disabled.
-pattern IMAGE_COMPRESSION_DISABLED_EXT            = ImageCompressionFlagBitsEXT 0x00000004
+pattern IMAGE_COMPRESSION_DISABLED_EXT = ImageCompressionFlagBitsEXT 0x00000004
 
 conNameImageCompressionFlagBitsEXT :: String
 conNameImageCompressionFlagBitsEXT = "ImageCompressionFlagBitsEXT"
@@ -817,25 +829,40 @@ enumPrefixImageCompressionFlagBitsEXT = "IMAGE_COMPRESSION_"
 
 showTableImageCompressionFlagBitsEXT :: [(ImageCompressionFlagBitsEXT, String)]
 showTableImageCompressionFlagBitsEXT =
-  [ (IMAGE_COMPRESSION_DEFAULT_EXT            , "DEFAULT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_DEFAULT_EXT , "FIXED_RATE_DEFAULT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_EXPLICIT_EXT, "FIXED_RATE_EXPLICIT_EXT")
-  , (IMAGE_COMPRESSION_DISABLED_EXT           , "DISABLED_EXT")
+  [
+    ( IMAGE_COMPRESSION_DEFAULT_EXT
+    , "DEFAULT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_DEFAULT_EXT
+    , "FIXED_RATE_DEFAULT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_EXPLICIT_EXT
+    , "FIXED_RATE_EXPLICIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_DISABLED_EXT
+    , "DISABLED_EXT"
+    )
   ]
 
 instance Show ImageCompressionFlagBitsEXT where
-  showsPrec = enumShowsPrec enumPrefixImageCompressionFlagBitsEXT
-                            showTableImageCompressionFlagBitsEXT
-                            conNameImageCompressionFlagBitsEXT
-                            (\(ImageCompressionFlagBitsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixImageCompressionFlagBitsEXT
+      showTableImageCompressionFlagBitsEXT
+      conNameImageCompressionFlagBitsEXT
+      (\(ImageCompressionFlagBitsEXT x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read ImageCompressionFlagBitsEXT where
-  readPrec = enumReadPrec enumPrefixImageCompressionFlagBitsEXT
-                          showTableImageCompressionFlagBitsEXT
-                          conNameImageCompressionFlagBitsEXT
-                          ImageCompressionFlagBitsEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixImageCompressionFlagBitsEXT
+      showTableImageCompressionFlagBitsEXT
+      conNameImageCompressionFlagBitsEXT
+      ImageCompressionFlagBitsEXT
 
 type ImageCompressionFixedRateFlagsEXT = ImageCompressionFixedRateFlagBitsEXT
 
@@ -879,66 +906,90 @@ newtype ImageCompressionFixedRateFlagBitsEXT = ImageCompressionFixedRateFlagBits
 
 -- | 'IMAGE_COMPRESSION_FIXED_RATE_NONE_EXT' specifies that fixed-rate
 -- compression /must/ not be used.
-pattern IMAGE_COMPRESSION_FIXED_RATE_NONE_EXT      = ImageCompressionFixedRateFlagBitsEXT 0x00000000
+pattern IMAGE_COMPRESSION_FIXED_RATE_NONE_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000000
+
 -- | 'IMAGE_COMPRESSION_FIXED_RATE_1BPC_BIT_EXT' specifies that fixed-rate
 -- compression with a bitrate of [1,2) bits per component /may/ be used.
-pattern IMAGE_COMPRESSION_FIXED_RATE_1BPC_BIT_EXT  = ImageCompressionFixedRateFlagBitsEXT 0x00000001
+pattern IMAGE_COMPRESSION_FIXED_RATE_1BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000001
+
 -- | 'IMAGE_COMPRESSION_FIXED_RATE_2BPC_BIT_EXT' specifies that fixed-rate
 -- compression with a bitrate of [2,3) bits per component /may/ be used.
-pattern IMAGE_COMPRESSION_FIXED_RATE_2BPC_BIT_EXT  = ImageCompressionFixedRateFlagBitsEXT 0x00000002
+pattern IMAGE_COMPRESSION_FIXED_RATE_2BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000002
+
 -- | 'IMAGE_COMPRESSION_FIXED_RATE_3BPC_BIT_EXT' specifies that fixed-rate
 -- compression with a bitrate of [3,4) bits per component /may/ be used.
-pattern IMAGE_COMPRESSION_FIXED_RATE_3BPC_BIT_EXT  = ImageCompressionFixedRateFlagBitsEXT 0x00000004
+pattern IMAGE_COMPRESSION_FIXED_RATE_3BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000004
+
 -- | 'IMAGE_COMPRESSION_FIXED_RATE_4BPC_BIT_EXT' specifies that fixed-rate
 -- compression with a bitrate of [4,5) bits per component /may/ be used.
-pattern IMAGE_COMPRESSION_FIXED_RATE_4BPC_BIT_EXT  = ImageCompressionFixedRateFlagBitsEXT 0x00000008
+pattern IMAGE_COMPRESSION_FIXED_RATE_4BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000008
+
 -- | 'IMAGE_COMPRESSION_FIXED_RATE_5BPC_BIT_EXT' specifies that fixed-rate
 -- compression with a bitrate of [5,6) bits per component /may/ be used.
-pattern IMAGE_COMPRESSION_FIXED_RATE_5BPC_BIT_EXT  = ImageCompressionFixedRateFlagBitsEXT 0x00000010
+pattern IMAGE_COMPRESSION_FIXED_RATE_5BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000010
+
 -- | 'IMAGE_COMPRESSION_FIXED_RATE_6BPC_BIT_EXT' specifies that fixed-rate
 -- compression with a bitrate of [6,7) bits per component /may/ be used.
-pattern IMAGE_COMPRESSION_FIXED_RATE_6BPC_BIT_EXT  = ImageCompressionFixedRateFlagBitsEXT 0x00000020
+pattern IMAGE_COMPRESSION_FIXED_RATE_6BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000020
+
 -- | 'IMAGE_COMPRESSION_FIXED_RATE_7BPC_BIT_EXT' specifies that fixed-rate
 -- compression with a bitrate of [7,8) bits per component /may/ be used.
-pattern IMAGE_COMPRESSION_FIXED_RATE_7BPC_BIT_EXT  = ImageCompressionFixedRateFlagBitsEXT 0x00000040
+pattern IMAGE_COMPRESSION_FIXED_RATE_7BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000040
+
 -- | 'IMAGE_COMPRESSION_FIXED_RATE_8BPC_BIT_EXT' specifies that fixed-rate
 -- compression with a bitrate of [8,9) bits per component /may/ be used.
-pattern IMAGE_COMPRESSION_FIXED_RATE_8BPC_BIT_EXT  = ImageCompressionFixedRateFlagBitsEXT 0x00000080
+pattern IMAGE_COMPRESSION_FIXED_RATE_8BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000080
+
 -- | 'IMAGE_COMPRESSION_FIXED_RATE_9BPC_BIT_EXT' specifies that fixed-rate
 -- compression with a bitrate of [9,10) bits per component /may/ be used.
-pattern IMAGE_COMPRESSION_FIXED_RATE_9BPC_BIT_EXT  = ImageCompressionFixedRateFlagBitsEXT 0x00000100
+pattern IMAGE_COMPRESSION_FIXED_RATE_9BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000100
+
 -- | 'IMAGE_COMPRESSION_FIXED_RATE_10BPC_BIT_EXT' specifies that fixed-rate
 -- compression with a bitrate of [10,11) bits per component /may/ be used.
 pattern IMAGE_COMPRESSION_FIXED_RATE_10BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000200
+
 -- | 'IMAGE_COMPRESSION_FIXED_RATE_11BPC_BIT_EXT' specifies that fixed-rate
 -- compression with a bitrate of [11,12) bits per component /may/ be used.
 pattern IMAGE_COMPRESSION_FIXED_RATE_11BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000400
+
 -- | 'IMAGE_COMPRESSION_FIXED_RATE_12BPC_BIT_EXT' specifies that fixed-rate
 -- compression with a bitrate of at least 12 bits per component /may/ be
 -- used.
 pattern IMAGE_COMPRESSION_FIXED_RATE_12BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00000800
+
 -- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_13BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_13BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00001000
+
 -- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_14BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_14BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00002000
+
 -- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_15BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_15BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00004000
+
 -- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_16BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_16BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00008000
+
 -- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_17BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_17BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00010000
+
 -- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_18BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_18BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00020000
+
 -- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_19BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_19BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00040000
+
 -- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_20BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_20BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00080000
+
 -- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_21BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_21BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00100000
+
 -- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_22BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_22BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00200000
+
 -- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_23BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_23BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00400000
+
 -- No documentation found for Nested "VkImageCompressionFixedRateFlagBitsEXT" "VK_IMAGE_COMPRESSION_FIXED_RATE_24BPC_BIT_EXT"
 pattern IMAGE_COMPRESSION_FIXED_RATE_24BPC_BIT_EXT = ImageCompressionFixedRateFlagBitsEXT 0x00800000
 
@@ -950,46 +1001,124 @@ enumPrefixImageCompressionFixedRateFlagBitsEXT = "IMAGE_COMPRESSION_FIXED_RATE_"
 
 showTableImageCompressionFixedRateFlagBitsEXT :: [(ImageCompressionFixedRateFlagBitsEXT, String)]
 showTableImageCompressionFixedRateFlagBitsEXT =
-  [ (IMAGE_COMPRESSION_FIXED_RATE_NONE_EXT     , "NONE_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_1BPC_BIT_EXT , "1BPC_BIT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_2BPC_BIT_EXT , "2BPC_BIT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_3BPC_BIT_EXT , "3BPC_BIT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_4BPC_BIT_EXT , "4BPC_BIT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_5BPC_BIT_EXT , "5BPC_BIT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_6BPC_BIT_EXT , "6BPC_BIT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_7BPC_BIT_EXT , "7BPC_BIT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_8BPC_BIT_EXT , "8BPC_BIT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_9BPC_BIT_EXT , "9BPC_BIT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_10BPC_BIT_EXT, "10BPC_BIT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_11BPC_BIT_EXT, "11BPC_BIT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_12BPC_BIT_EXT, "12BPC_BIT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_13BPC_BIT_EXT, "13BPC_BIT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_14BPC_BIT_EXT, "14BPC_BIT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_15BPC_BIT_EXT, "15BPC_BIT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_16BPC_BIT_EXT, "16BPC_BIT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_17BPC_BIT_EXT, "17BPC_BIT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_18BPC_BIT_EXT, "18BPC_BIT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_19BPC_BIT_EXT, "19BPC_BIT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_20BPC_BIT_EXT, "20BPC_BIT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_21BPC_BIT_EXT, "21BPC_BIT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_22BPC_BIT_EXT, "22BPC_BIT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_23BPC_BIT_EXT, "23BPC_BIT_EXT")
-  , (IMAGE_COMPRESSION_FIXED_RATE_24BPC_BIT_EXT, "24BPC_BIT_EXT")
+  [
+    ( IMAGE_COMPRESSION_FIXED_RATE_NONE_EXT
+    , "NONE_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_1BPC_BIT_EXT
+    , "1BPC_BIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_2BPC_BIT_EXT
+    , "2BPC_BIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_3BPC_BIT_EXT
+    , "3BPC_BIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_4BPC_BIT_EXT
+    , "4BPC_BIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_5BPC_BIT_EXT
+    , "5BPC_BIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_6BPC_BIT_EXT
+    , "6BPC_BIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_7BPC_BIT_EXT
+    , "7BPC_BIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_8BPC_BIT_EXT
+    , "8BPC_BIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_9BPC_BIT_EXT
+    , "9BPC_BIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_10BPC_BIT_EXT
+    , "10BPC_BIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_11BPC_BIT_EXT
+    , "11BPC_BIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_12BPC_BIT_EXT
+    , "12BPC_BIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_13BPC_BIT_EXT
+    , "13BPC_BIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_14BPC_BIT_EXT
+    , "14BPC_BIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_15BPC_BIT_EXT
+    , "15BPC_BIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_16BPC_BIT_EXT
+    , "16BPC_BIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_17BPC_BIT_EXT
+    , "17BPC_BIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_18BPC_BIT_EXT
+    , "18BPC_BIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_19BPC_BIT_EXT
+    , "19BPC_BIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_20BPC_BIT_EXT
+    , "20BPC_BIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_21BPC_BIT_EXT
+    , "21BPC_BIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_22BPC_BIT_EXT
+    , "22BPC_BIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_23BPC_BIT_EXT
+    , "23BPC_BIT_EXT"
+    )
+  ,
+    ( IMAGE_COMPRESSION_FIXED_RATE_24BPC_BIT_EXT
+    , "24BPC_BIT_EXT"
+    )
   ]
 
 instance Show ImageCompressionFixedRateFlagBitsEXT where
-  showsPrec = enumShowsPrec enumPrefixImageCompressionFixedRateFlagBitsEXT
-                            showTableImageCompressionFixedRateFlagBitsEXT
-                            conNameImageCompressionFixedRateFlagBitsEXT
-                            (\(ImageCompressionFixedRateFlagBitsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixImageCompressionFixedRateFlagBitsEXT
+      showTableImageCompressionFixedRateFlagBitsEXT
+      conNameImageCompressionFixedRateFlagBitsEXT
+      (\(ImageCompressionFixedRateFlagBitsEXT x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read ImageCompressionFixedRateFlagBitsEXT where
-  readPrec = enumReadPrec enumPrefixImageCompressionFixedRateFlagBitsEXT
-                          showTableImageCompressionFixedRateFlagBitsEXT
-                          conNameImageCompressionFixedRateFlagBitsEXT
-                          ImageCompressionFixedRateFlagBitsEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixImageCompressionFixedRateFlagBitsEXT
+      showTableImageCompressionFixedRateFlagBitsEXT
+      conNameImageCompressionFixedRateFlagBitsEXT
+      ImageCompressionFixedRateFlagBitsEXT
 
 type EXT_IMAGE_COMPRESSION_CONTROL_SPEC_VERSION = 1
 

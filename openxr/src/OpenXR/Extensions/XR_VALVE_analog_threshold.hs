@@ -207,7 +207,12 @@ instance FromCStruct InteractionProfileAnalogThresholdVALVE where
     offHaptic <- peek @(Ptr _) ((p `plusPtr` 48 :: Ptr (Ptr _)))
     offHaptic' <- maybePeek (\j -> peekSomeCChild (j)) offHaptic
     pure $ InteractionProfileAnalogThresholdVALVE
-             action binding (coerce @CFloat @Float onThreshold) (coerce @CFloat @Float offThreshold) onHaptic' offHaptic'
+             action
+             binding
+             (coerce @CFloat @Float onThreshold)
+             (coerce @CFloat @Float offThreshold)
+             onHaptic'
+             offHaptic'
 
 instance Zero InteractionProfileAnalogThresholdVALVE where
   zero = InteractionProfileAnalogThresholdVALVE

@@ -1165,12 +1165,25 @@ cmdDrawIndirectCount :: forall io
                      -> -- | @stride@ is the byte stride between successive sets of draw parameters.
                         ("stride" ::: Word32)
                      -> io ()
-cmdDrawIndirectCount commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride = liftIO $ do
+cmdDrawIndirectCount commandBuffer
+                       buffer
+                       offset
+                       countBuffer
+                       countBufferOffset
+                       maxDrawCount
+                       stride = liftIO $ do
   let vkCmdDrawIndirectCountPtr = pVkCmdDrawIndirectCount (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDrawIndirectCountPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawIndirectCount is null" Nothing Nothing
   let vkCmdDrawIndirectCount' = mkVkCmdDrawIndirectCount vkCmdDrawIndirectCountPtr
-  traceAroundEvent "vkCmdDrawIndirectCount" (vkCmdDrawIndirectCount' (commandBufferHandle (commandBuffer)) (buffer) (offset) (countBuffer) (countBufferOffset) (maxDrawCount) (stride))
+  traceAroundEvent "vkCmdDrawIndirectCount" (vkCmdDrawIndirectCount'
+                                               (commandBufferHandle (commandBuffer))
+                                               (buffer)
+                                               (offset)
+                                               (countBuffer)
+                                               (countBufferOffset)
+                                               (maxDrawCount)
+                                               (stride))
   pure $ ()
 
 
@@ -2324,11 +2337,24 @@ cmdDrawIndexedIndirectCount :: forall io
                             -> -- | @stride@ is the byte stride between successive sets of draw parameters.
                                ("stride" ::: Word32)
                             -> io ()
-cmdDrawIndexedIndirectCount commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride = liftIO $ do
+cmdDrawIndexedIndirectCount commandBuffer
+                              buffer
+                              offset
+                              countBuffer
+                              countBufferOffset
+                              maxDrawCount
+                              stride = liftIO $ do
   let vkCmdDrawIndexedIndirectCountPtr = pVkCmdDrawIndexedIndirectCount (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDrawIndexedIndirectCountPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawIndexedIndirectCount is null" Nothing Nothing
   let vkCmdDrawIndexedIndirectCount' = mkVkCmdDrawIndexedIndirectCount vkCmdDrawIndexedIndirectCountPtr
-  traceAroundEvent "vkCmdDrawIndexedIndirectCount" (vkCmdDrawIndexedIndirectCount' (commandBufferHandle (commandBuffer)) (buffer) (offset) (countBuffer) (countBufferOffset) (maxDrawCount) (stride))
+  traceAroundEvent "vkCmdDrawIndexedIndirectCount" (vkCmdDrawIndexedIndirectCount'
+                                                      (commandBufferHandle (commandBuffer))
+                                                      (buffer)
+                                                      (offset)
+                                                      (countBuffer)
+                                                      (countBufferOffset)
+                                                      (maxDrawCount)
+                                                      (stride))
   pure $ ()
 

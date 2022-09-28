@@ -136,12 +136,18 @@ getPhysicalDeviceToolProperties physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceToolProperties' = mkVkGetPhysicalDeviceToolProperties vkGetPhysicalDeviceToolPropertiesPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPToolCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceToolProperties" (vkGetPhysicalDeviceToolProperties' physicalDevice' (pPToolCount) (nullPtr))
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceToolProperties" (vkGetPhysicalDeviceToolProperties'
+                                                                      physicalDevice'
+                                                                      (pPToolCount)
+                                                                      (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pToolCount <- lift $ peek @Word32 pPToolCount
   pPToolProperties <- ContT $ bracket (callocBytes @PhysicalDeviceToolProperties ((fromIntegral (pToolCount)) * 1048)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPToolProperties `advancePtrBytes` (i * 1048) :: Ptr PhysicalDeviceToolProperties) . ($ ())) [0..(fromIntegral (pToolCount)) - 1]
-  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceToolProperties" (vkGetPhysicalDeviceToolProperties' physicalDevice' (pPToolCount) ((pPToolProperties)))
+  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceToolProperties" (vkGetPhysicalDeviceToolProperties'
+                                                                       physicalDevice'
+                                                                       (pPToolCount)
+                                                                       ((pPToolProperties)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pToolCount' <- lift $ peek @Word32 pPToolCount
   pToolProperties' <- lift $ generateM (fromIntegral (pToolCount')) (\i -> peekCStruct @PhysicalDeviceToolProperties (((pPToolProperties) `advancePtrBytes` (1048 * (i)) :: Ptr PhysicalDeviceToolProperties)))

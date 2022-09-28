@@ -37,33 +37,44 @@ newtype StencilOp = StencilOp Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- | 'STENCIL_OP_KEEP' keeps the current value.
-pattern STENCIL_OP_KEEP                = StencilOp 0
+pattern STENCIL_OP_KEEP = StencilOp 0
+
 -- | 'STENCIL_OP_ZERO' sets the value to 0.
-pattern STENCIL_OP_ZERO                = StencilOp 1
+pattern STENCIL_OP_ZERO = StencilOp 1
+
 -- | 'STENCIL_OP_REPLACE' sets the value to @reference@.
-pattern STENCIL_OP_REPLACE             = StencilOp 2
+pattern STENCIL_OP_REPLACE = StencilOp 2
+
 -- | 'STENCIL_OP_INCREMENT_AND_CLAMP' increments the current value and clamps
 -- to the maximum representable unsigned value.
 pattern STENCIL_OP_INCREMENT_AND_CLAMP = StencilOp 3
+
 -- | 'STENCIL_OP_DECREMENT_AND_CLAMP' decrements the current value and clamps
 -- to 0.
 pattern STENCIL_OP_DECREMENT_AND_CLAMP = StencilOp 4
+
 -- | 'STENCIL_OP_INVERT' bitwise-inverts the current value.
-pattern STENCIL_OP_INVERT              = StencilOp 5
+pattern STENCIL_OP_INVERT = StencilOp 5
+
 -- | 'STENCIL_OP_INCREMENT_AND_WRAP' increments the current value and wraps
 -- to 0 when the maximum value would have been exceeded.
-pattern STENCIL_OP_INCREMENT_AND_WRAP  = StencilOp 6
+pattern STENCIL_OP_INCREMENT_AND_WRAP = StencilOp 6
+
 -- | 'STENCIL_OP_DECREMENT_AND_WRAP' decrements the current value and wraps
 -- to the maximum possible value when the value would go below 0.
-pattern STENCIL_OP_DECREMENT_AND_WRAP  = StencilOp 7
-{-# complete STENCIL_OP_KEEP,
-             STENCIL_OP_ZERO,
-             STENCIL_OP_REPLACE,
-             STENCIL_OP_INCREMENT_AND_CLAMP,
-             STENCIL_OP_DECREMENT_AND_CLAMP,
-             STENCIL_OP_INVERT,
-             STENCIL_OP_INCREMENT_AND_WRAP,
-             STENCIL_OP_DECREMENT_AND_WRAP :: StencilOp #-}
+pattern STENCIL_OP_DECREMENT_AND_WRAP = StencilOp 7
+
+{-# COMPLETE
+  STENCIL_OP_KEEP
+  , STENCIL_OP_ZERO
+  , STENCIL_OP_REPLACE
+  , STENCIL_OP_INCREMENT_AND_CLAMP
+  , STENCIL_OP_DECREMENT_AND_CLAMP
+  , STENCIL_OP_INVERT
+  , STENCIL_OP_INCREMENT_AND_WRAP
+  , STENCIL_OP_DECREMENT_AND_WRAP ::
+    StencilOp
+  #-}
 
 conNameStencilOp :: String
 conNameStencilOp = "StencilOp"
@@ -73,20 +84,29 @@ enumPrefixStencilOp = "STENCIL_OP_"
 
 showTableStencilOp :: [(StencilOp, String)]
 showTableStencilOp =
-  [ (STENCIL_OP_KEEP               , "KEEP")
-  , (STENCIL_OP_ZERO               , "ZERO")
-  , (STENCIL_OP_REPLACE            , "REPLACE")
+  [ (STENCIL_OP_KEEP, "KEEP")
+  , (STENCIL_OP_ZERO, "ZERO")
+  , (STENCIL_OP_REPLACE, "REPLACE")
   , (STENCIL_OP_INCREMENT_AND_CLAMP, "INCREMENT_AND_CLAMP")
   , (STENCIL_OP_DECREMENT_AND_CLAMP, "DECREMENT_AND_CLAMP")
-  , (STENCIL_OP_INVERT             , "INVERT")
-  , (STENCIL_OP_INCREMENT_AND_WRAP , "INCREMENT_AND_WRAP")
-  , (STENCIL_OP_DECREMENT_AND_WRAP , "DECREMENT_AND_WRAP")
+  , (STENCIL_OP_INVERT, "INVERT")
+  , (STENCIL_OP_INCREMENT_AND_WRAP, "INCREMENT_AND_WRAP")
+  , (STENCIL_OP_DECREMENT_AND_WRAP, "DECREMENT_AND_WRAP")
   ]
 
 instance Show StencilOp where
   showsPrec =
-    enumShowsPrec enumPrefixStencilOp showTableStencilOp conNameStencilOp (\(StencilOp x) -> x) (showsPrec 11)
+    enumShowsPrec
+      enumPrefixStencilOp
+      showTableStencilOp
+      conNameStencilOp
+      (\(StencilOp x) -> x)
+      (showsPrec 11)
 
 instance Read StencilOp where
-  readPrec = enumReadPrec enumPrefixStencilOp showTableStencilOp conNameStencilOp StencilOp
-
+  readPrec =
+    enumReadPrec
+      enumPrefixStencilOp
+      showTableStencilOp
+      conNameStencilOp
+      StencilOp

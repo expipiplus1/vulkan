@@ -180,7 +180,11 @@ createPipelineCache device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPPipelineCache <- ContT $ bracket (callocBytes @PipelineCache 8) free
-  r <- lift $ traceAroundEvent "vkCreatePipelineCache" (vkCreatePipelineCache' (deviceHandle (device)) pCreateInfo pAllocator (pPPipelineCache))
+  r <- lift $ traceAroundEvent "vkCreatePipelineCache" (vkCreatePipelineCache'
+                                                          (deviceHandle (device))
+                                                          pCreateInfo
+                                                          pAllocator
+                                                          (pPPipelineCache))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPipelineCache <- lift $ peek @PipelineCache pPPipelineCache
   pure $ (pPipelineCache)
@@ -266,7 +270,10 @@ destroyPipelineCache device pipelineCache allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyPipelineCache" (vkDestroyPipelineCache' (deviceHandle (device)) (pipelineCache) pAllocator)
+  lift $ traceAroundEvent "vkDestroyPipelineCache" (vkDestroyPipelineCache'
+                                                      (deviceHandle (device))
+                                                      (pipelineCache)
+                                                      pAllocator)
   pure $ ()
 
 
@@ -360,14 +367,23 @@ getPipelineCacheData device pipelineCache = liftIO . evalContT $ do
   let vkGetPipelineCacheData' = mkVkGetPipelineCacheData vkGetPipelineCacheDataPtr
   let device' = deviceHandle (device)
   pPDataSize <- ContT $ bracket (callocBytes @CSize 8) free
-  r <- lift $ traceAroundEvent "vkGetPipelineCacheData" (vkGetPipelineCacheData' device' (pipelineCache) (pPDataSize) (nullPtr))
+  r <- lift $ traceAroundEvent "vkGetPipelineCacheData" (vkGetPipelineCacheData'
+                                                           device'
+                                                           (pipelineCache)
+                                                           (pPDataSize)
+                                                           (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pDataSize <- lift $ peek @CSize pPDataSize
   pPData <- ContT $ bracket (callocBytes @(()) (fromIntegral ((coerce @CSize @Word64 pDataSize)))) free
-  r' <- lift $ traceAroundEvent "vkGetPipelineCacheData" (vkGetPipelineCacheData' device' (pipelineCache) (pPDataSize) (pPData))
+  r' <- lift $ traceAroundEvent "vkGetPipelineCacheData" (vkGetPipelineCacheData'
+                                                            device'
+                                                            (pipelineCache)
+                                                            (pPDataSize)
+                                                            (pPData))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pDataSize'' <- lift $ peek @CSize pPDataSize
-  pData' <- lift $ packCStringLen  (castPtr @() @CChar pPData, (fromIntegral ((coerce @CSize @Word64 pDataSize''))))
+  pData' <- lift $ packCStringLen  ( castPtr @() @CChar pPData
+                                   , (fromIntegral ((coerce @CSize @Word64 pDataSize''))) )
   pure $ ((r'), pData')
 
 
@@ -453,7 +469,11 @@ mergePipelineCaches device dstCache srcCaches = liftIO . evalContT $ do
   let vkMergePipelineCaches' = mkVkMergePipelineCaches vkMergePipelineCachesPtr
   pPSrcCaches <- ContT $ allocaBytes @PipelineCache ((Data.Vector.length (srcCaches)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPSrcCaches `plusPtr` (8 * (i)) :: Ptr PipelineCache) (e)) (srcCaches)
-  r <- lift $ traceAroundEvent "vkMergePipelineCaches" (vkMergePipelineCaches' (deviceHandle (device)) (dstCache) ((fromIntegral (Data.Vector.length $ (srcCaches)) :: Word32)) (pPSrcCaches))
+  r <- lift $ traceAroundEvent "vkMergePipelineCaches" (vkMergePipelineCaches'
+                                                          (deviceHandle (device))
+                                                          (dstCache)
+                                                          ((fromIntegral (Data.Vector.length $ (srcCaches)) :: Word32))
+                                                          (pPSrcCaches))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 

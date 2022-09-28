@@ -301,7 +301,11 @@ allocateMemory device allocateInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPMemory <- ContT $ bracket (callocBytes @DeviceMemory 8) free
-  r <- lift $ traceAroundEvent "vkAllocateMemory" (vkAllocateMemory' (deviceHandle (device)) (forgetExtensions pAllocateInfo) pAllocator (pPMemory))
+  r <- lift $ traceAroundEvent "vkAllocateMemory" (vkAllocateMemory'
+                                                     (deviceHandle (device))
+                                                     (forgetExtensions pAllocateInfo)
+                                                     pAllocator
+                                                     (pPMemory))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pMemory <- lift $ peek @DeviceMemory pPMemory
   pure $ (pMemory)
@@ -407,7 +411,10 @@ freeMemory device memory allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkFreeMemory" (vkFreeMemory' (deviceHandle (device)) (memory) pAllocator)
+  lift $ traceAroundEvent "vkFreeMemory" (vkFreeMemory'
+                                            (deviceHandle (device))
+                                            (memory)
+                                            pAllocator)
   pure $ ()
 
 
@@ -554,7 +561,13 @@ mapMemory device memory offset size flags = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkMapMemory is null" Nothing Nothing
   let vkMapMemory' = mkVkMapMemory vkMapMemoryPtr
   pPpData <- ContT $ bracket (callocBytes @(Ptr ()) 8) free
-  r <- lift $ traceAroundEvent "vkMapMemory" (vkMapMemory' (deviceHandle (device)) (memory) (offset) (size) (flags) (pPpData))
+  r <- lift $ traceAroundEvent "vkMapMemory" (vkMapMemory'
+                                                (deviceHandle (device))
+                                                (memory)
+                                                (offset)
+                                                (size)
+                                                (flags)
+                                                (pPpData))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   ppData <- lift $ peek @(Ptr ()) pPpData
   pure $ (ppData)
@@ -618,7 +631,9 @@ unmapMemory device memory = liftIO $ do
   unless (vkUnmapMemoryPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkUnmapMemory is null" Nothing Nothing
   let vkUnmapMemory' = mkVkUnmapMemory vkUnmapMemoryPtr
-  traceAroundEvent "vkUnmapMemory" (vkUnmapMemory' (deviceHandle (device)) (memory))
+  traceAroundEvent "vkUnmapMemory" (vkUnmapMemory'
+                                      (deviceHandle (device))
+                                      (memory))
   pure $ ()
 
 
@@ -699,7 +714,10 @@ flushMappedMemoryRanges device memoryRanges = liftIO . evalContT $ do
   let vkFlushMappedMemoryRanges' = mkVkFlushMappedMemoryRanges vkFlushMappedMemoryRangesPtr
   pPMemoryRanges <- ContT $ allocaBytes @MappedMemoryRange ((Data.Vector.length (memoryRanges)) * 40)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPMemoryRanges `plusPtr` (40 * (i)) :: Ptr MappedMemoryRange) (e)) (memoryRanges)
-  r <- lift $ traceAroundEvent "vkFlushMappedMemoryRanges" (vkFlushMappedMemoryRanges' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (memoryRanges)) :: Word32)) (pPMemoryRanges))
+  r <- lift $ traceAroundEvent "vkFlushMappedMemoryRanges" (vkFlushMappedMemoryRanges'
+                                                              (deviceHandle (device))
+                                                              ((fromIntegral (Data.Vector.length $ (memoryRanges)) :: Word32))
+                                                              (pPMemoryRanges))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -772,7 +790,10 @@ invalidateMappedMemoryRanges device memoryRanges = liftIO . evalContT $ do
   let vkInvalidateMappedMemoryRanges' = mkVkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRangesPtr
   pPMemoryRanges <- ContT $ allocaBytes @MappedMemoryRange ((Data.Vector.length (memoryRanges)) * 40)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPMemoryRanges `plusPtr` (40 * (i)) :: Ptr MappedMemoryRange) (e)) (memoryRanges)
-  r <- lift $ traceAroundEvent "vkInvalidateMappedMemoryRanges" (vkInvalidateMappedMemoryRanges' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (memoryRanges)) :: Word32)) (pPMemoryRanges))
+  r <- lift $ traceAroundEvent "vkInvalidateMappedMemoryRanges" (vkInvalidateMappedMemoryRanges'
+                                                                   (deviceHandle (device))
+                                                                   ((fromIntegral (Data.Vector.length $ (memoryRanges)) :: Word32))
+                                                                   (pPMemoryRanges))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -828,7 +849,10 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceMemoryCommitment is null" Nothing Nothing
   let vkGetDeviceMemoryCommitment' = mkVkGetDeviceMemoryCommitment vkGetDeviceMemoryCommitmentPtr
   pPCommittedMemoryInBytes <- ContT $ bracket (callocBytes @DeviceSize 8) free
-  lift $ traceAroundEvent "vkGetDeviceMemoryCommitment" (vkGetDeviceMemoryCommitment' (deviceHandle (device)) (memory) (pPCommittedMemoryInBytes))
+  lift $ traceAroundEvent "vkGetDeviceMemoryCommitment" (vkGetDeviceMemoryCommitment'
+                                                           (deviceHandle (device))
+                                                           (memory)
+                                                           (pPCommittedMemoryInBytes))
   pCommittedMemoryInBytes <- lift $ peek @DeviceSize pPCommittedMemoryInBytes
   pure $ (pCommittedMemoryInBytes)
 
@@ -1363,7 +1387,8 @@ instance Extensible MemoryAllocateInfo where
     | Just Refl <- eqT @e @DedicatedAllocationMemoryAllocateInfoNV = Just f
     | otherwise = Nothing
 
-instance (Extendss MemoryAllocateInfo es, PokeChain es) => ToCStruct (MemoryAllocateInfo es) where
+instance ( Extendss MemoryAllocateInfo es
+         , PokeChain es ) => ToCStruct (MemoryAllocateInfo es) where
   withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p MemoryAllocateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO)
@@ -1382,7 +1407,8 @@ instance (Extendss MemoryAllocateInfo es, PokeChain es) => ToCStruct (MemoryAllo
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
     lift $ f
 
-instance (Extendss MemoryAllocateInfo es, PeekChain es) => FromCStruct (MemoryAllocateInfo es) where
+instance ( Extendss MemoryAllocateInfo es
+         , PeekChain es ) => FromCStruct (MemoryAllocateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

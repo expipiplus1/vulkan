@@ -409,7 +409,12 @@ createSharedSwapchainsKHR device createInfos allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSwapchains <- ContT $ bracket (callocBytes @SwapchainKHR ((fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) * 8)) free
-  r <- lift $ traceAroundEvent "vkCreateSharedSwapchainsKHR" (vkCreateSharedSwapchainsKHR' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32)) (forgetExtensions (pPCreateInfos)) pAllocator (pPSwapchains))
+  r <- lift $ traceAroundEvent "vkCreateSharedSwapchainsKHR" (vkCreateSharedSwapchainsKHR'
+                                                                (deviceHandle (device))
+                                                                ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))
+                                                                (forgetExtensions (pPCreateInfos))
+                                                                pAllocator
+                                                                (pPSwapchains))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSwapchains <- lift $ generateM (fromIntegral ((fromIntegral (Data.Vector.length $ (createInfos)) :: Word32))) (\i -> peek @SwapchainKHR ((pPSwapchains `advancePtrBytes` (8 * (i)) :: Ptr SwapchainKHR)))
   pure $ (pSwapchains)

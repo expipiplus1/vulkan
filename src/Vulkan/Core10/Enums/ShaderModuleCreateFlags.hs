@@ -27,8 +27,6 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 newtype ShaderModuleCreateFlags = ShaderModuleCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameShaderModuleCreateFlags :: String
 conNameShaderModuleCreateFlags = "ShaderModuleCreateFlags"
 
@@ -39,15 +37,18 @@ showTableShaderModuleCreateFlags :: [(ShaderModuleCreateFlags, String)]
 showTableShaderModuleCreateFlags = []
 
 instance Show ShaderModuleCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixShaderModuleCreateFlags
-                            showTableShaderModuleCreateFlags
-                            conNameShaderModuleCreateFlags
-                            (\(ShaderModuleCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixShaderModuleCreateFlags
+      showTableShaderModuleCreateFlags
+      conNameShaderModuleCreateFlags
+      (\(ShaderModuleCreateFlags x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read ShaderModuleCreateFlags where
-  readPrec = enumReadPrec enumPrefixShaderModuleCreateFlags
-                          showTableShaderModuleCreateFlags
-                          conNameShaderModuleCreateFlags
-                          ShaderModuleCreateFlags
-
+  readPrec =
+    enumReadPrec
+      enumPrefixShaderModuleCreateFlags
+      showTableShaderModuleCreateFlags
+      conNameShaderModuleCreateFlags
+      ShaderModuleCreateFlags

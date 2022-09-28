@@ -236,7 +236,10 @@ instance FromCStruct PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR wher
     workgroupMemoryExplicitLayout8BitAccess <- peek @Bool32 ((p `plusPtr` 24 :: Ptr Bool32))
     workgroupMemoryExplicitLayout16BitAccess <- peek @Bool32 ((p `plusPtr` 28 :: Ptr Bool32))
     pure $ PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR
-             (bool32ToBool workgroupMemoryExplicitLayout) (bool32ToBool workgroupMemoryExplicitLayoutScalarBlockLayout) (bool32ToBool workgroupMemoryExplicitLayout8BitAccess) (bool32ToBool workgroupMemoryExplicitLayout16BitAccess)
+             (bool32ToBool workgroupMemoryExplicitLayout)
+             (bool32ToBool workgroupMemoryExplicitLayoutScalarBlockLayout)
+             (bool32ToBool workgroupMemoryExplicitLayout8BitAccess)
+             (bool32ToBool workgroupMemoryExplicitLayout16BitAccess)
 
 instance Storable PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR where
   sizeOf ~_ = 32

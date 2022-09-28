@@ -38,10 +38,12 @@ newtype StencilFaceFlagBits = StencilFaceFlagBits Flags
 
 -- | 'STENCIL_FACE_FRONT_BIT' specifies that only the front set of stencil
 -- state is updated.
-pattern STENCIL_FACE_FRONT_BIT      = StencilFaceFlagBits 0x00000001
+pattern STENCIL_FACE_FRONT_BIT = StencilFaceFlagBits 0x00000001
+
 -- | 'STENCIL_FACE_BACK_BIT' specifies that only the back set of stencil
 -- state is updated.
-pattern STENCIL_FACE_BACK_BIT       = StencilFaceFlagBits 0x00000002
+pattern STENCIL_FACE_BACK_BIT = StencilFaceFlagBits 0x00000002
+
 -- | 'STENCIL_FACE_FRONT_AND_BACK' is the combination of
 -- 'STENCIL_FACE_FRONT_BIT' and 'STENCIL_FACE_BACK_BIT', and specifies that
 -- both sets of stencil state are updated.
@@ -55,21 +57,27 @@ enumPrefixStencilFaceFlagBits = "STENCIL_FACE_"
 
 showTableStencilFaceFlagBits :: [(StencilFaceFlagBits, String)]
 showTableStencilFaceFlagBits =
-  [ (STENCIL_FACE_FRONT_BIT     , "FRONT_BIT")
-  , (STENCIL_FACE_BACK_BIT      , "BACK_BIT")
-  , (STENCIL_FACE_FRONT_AND_BACK, "FRONT_AND_BACK")
+  [ (STENCIL_FACE_FRONT_BIT, "FRONT_BIT")
+  , (STENCIL_FACE_BACK_BIT, "BACK_BIT")
+  ,
+    ( STENCIL_FACE_FRONT_AND_BACK
+    , "FRONT_AND_BACK"
+    )
   ]
 
 instance Show StencilFaceFlagBits where
-  showsPrec = enumShowsPrec enumPrefixStencilFaceFlagBits
-                            showTableStencilFaceFlagBits
-                            conNameStencilFaceFlagBits
-                            (\(StencilFaceFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixStencilFaceFlagBits
+      showTableStencilFaceFlagBits
+      conNameStencilFaceFlagBits
+      (\(StencilFaceFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read StencilFaceFlagBits where
-  readPrec = enumReadPrec enumPrefixStencilFaceFlagBits
-                          showTableStencilFaceFlagBits
-                          conNameStencilFaceFlagBits
-                          StencilFaceFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixStencilFaceFlagBits
+      showTableStencilFaceFlagBits
+      conNameStencilFaceFlagBits
+      StencilFaceFlagBits

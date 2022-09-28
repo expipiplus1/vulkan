@@ -121,6 +121,9 @@ trimCommandPool device commandPool flags = liftIO $ do
   unless (vkTrimCommandPoolPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkTrimCommandPool is null" Nothing Nothing
   let vkTrimCommandPool' = mkVkTrimCommandPool vkTrimCommandPoolPtr
-  traceAroundEvent "vkTrimCommandPool" (vkTrimCommandPool' (deviceHandle (device)) (commandPool) (flags))
+  traceAroundEvent "vkTrimCommandPool" (vkTrimCommandPool'
+                                          (deviceHandle (device))
+                                          (commandPool)
+                                          (flags))
   pure $ ()
 

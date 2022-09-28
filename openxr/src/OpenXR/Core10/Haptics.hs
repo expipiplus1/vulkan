@@ -136,14 +136,19 @@ applyHapticFeedback :: forall a io
                        -- also: 'OpenXR.Core10.OtherTypes.HapticVibration'
                        ("hapticFeedback" ::: a)
                     -> io (Result)
-applyHapticFeedback session hapticActionInfo hapticFeedback = liftIO . evalContT $ do
+applyHapticFeedback session
+                      hapticActionInfo
+                      hapticFeedback = liftIO . evalContT $ do
   let xrApplyHapticFeedbackPtr = pXrApplyHapticFeedback (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrApplyHapticFeedbackPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrApplyHapticFeedback is null" Nothing Nothing
   let xrApplyHapticFeedback' = mkXrApplyHapticFeedback xrApplyHapticFeedbackPtr
   hapticActionInfo' <- ContT $ withCStruct (hapticActionInfo)
   hapticFeedback' <- fmap castPtr $ ContT $ withCStruct (hapticFeedback)
-  r <- lift $ traceAroundEvent "xrApplyHapticFeedback" (xrApplyHapticFeedback' (sessionHandle (session)) hapticActionInfo' hapticFeedback')
+  r <- lift $ traceAroundEvent "xrApplyHapticFeedback" (xrApplyHapticFeedback'
+                                                          (sessionHandle (session))
+                                                          hapticActionInfo'
+                                                          hapticFeedback')
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   pure $ (r)
 
@@ -218,7 +223,9 @@ stopHapticFeedback session hapticActionInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrStopHapticFeedback is null" Nothing Nothing
   let xrStopHapticFeedback' = mkXrStopHapticFeedback xrStopHapticFeedbackPtr
   hapticActionInfo' <- ContT $ withCStruct (hapticActionInfo)
-  r <- lift $ traceAroundEvent "xrStopHapticFeedback" (xrStopHapticFeedback' (sessionHandle (session)) hapticActionInfo')
+  r <- lift $ traceAroundEvent "xrStopHapticFeedback" (xrStopHapticFeedback'
+                                                         (sessionHandle (session))
+                                                         hapticActionInfo')
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   pure $ (r)
 

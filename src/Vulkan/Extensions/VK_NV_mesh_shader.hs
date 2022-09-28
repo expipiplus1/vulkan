@@ -1346,7 +1346,10 @@ cmdDrawMeshTasksNV commandBuffer taskCount firstTask = liftIO $ do
   unless (vkCmdDrawMeshTasksNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawMeshTasksNV is null" Nothing Nothing
   let vkCmdDrawMeshTasksNV' = mkVkCmdDrawMeshTasksNV vkCmdDrawMeshTasksNVPtr
-  traceAroundEvent "vkCmdDrawMeshTasksNV" (vkCmdDrawMeshTasksNV' (commandBufferHandle (commandBuffer)) (taskCount) (firstTask))
+  traceAroundEvent "vkCmdDrawMeshTasksNV" (vkCmdDrawMeshTasksNV'
+                                             (commandBufferHandle (commandBuffer))
+                                             (taskCount)
+                                             (firstTask))
   pure $ ()
 
 
@@ -2418,12 +2421,21 @@ cmdDrawMeshTasksIndirectNV :: forall io
                            -> -- | @stride@ is the byte stride between successive sets of draw parameters.
                               ("stride" ::: Word32)
                            -> io ()
-cmdDrawMeshTasksIndirectNV commandBuffer buffer offset drawCount stride = liftIO $ do
+cmdDrawMeshTasksIndirectNV commandBuffer
+                             buffer
+                             offset
+                             drawCount
+                             stride = liftIO $ do
   let vkCmdDrawMeshTasksIndirectNVPtr = pVkCmdDrawMeshTasksIndirectNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDrawMeshTasksIndirectNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawMeshTasksIndirectNV is null" Nothing Nothing
   let vkCmdDrawMeshTasksIndirectNV' = mkVkCmdDrawMeshTasksIndirectNV vkCmdDrawMeshTasksIndirectNVPtr
-  traceAroundEvent "vkCmdDrawMeshTasksIndirectNV" (vkCmdDrawMeshTasksIndirectNV' (commandBufferHandle (commandBuffer)) (buffer) (offset) (drawCount) (stride))
+  traceAroundEvent "vkCmdDrawMeshTasksIndirectNV" (vkCmdDrawMeshTasksIndirectNV'
+                                                     (commandBufferHandle (commandBuffer))
+                                                     (buffer)
+                                                     (offset)
+                                                     (drawCount)
+                                                     (stride))
   pure $ ()
 
 
@@ -3527,12 +3539,25 @@ cmdDrawMeshTasksIndirectCountNV :: forall io
                                 -> -- | @stride@ is the byte stride between successive sets of draw parameters.
                                    ("stride" ::: Word32)
                                 -> io ()
-cmdDrawMeshTasksIndirectCountNV commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride = liftIO $ do
+cmdDrawMeshTasksIndirectCountNV commandBuffer
+                                  buffer
+                                  offset
+                                  countBuffer
+                                  countBufferOffset
+                                  maxDrawCount
+                                  stride = liftIO $ do
   let vkCmdDrawMeshTasksIndirectCountNVPtr = pVkCmdDrawMeshTasksIndirectCountNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdDrawMeshTasksIndirectCountNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawMeshTasksIndirectCountNV is null" Nothing Nothing
   let vkCmdDrawMeshTasksIndirectCountNV' = mkVkCmdDrawMeshTasksIndirectCountNV vkCmdDrawMeshTasksIndirectCountNVPtr
-  traceAroundEvent "vkCmdDrawMeshTasksIndirectCountNV" (vkCmdDrawMeshTasksIndirectCountNV' (commandBufferHandle (commandBuffer)) (buffer) (offset) (countBuffer) (countBufferOffset) (maxDrawCount) (stride))
+  traceAroundEvent "vkCmdDrawMeshTasksIndirectCountNV" (vkCmdDrawMeshTasksIndirectCountNV'
+                                                          (commandBufferHandle (commandBuffer))
+                                                          (buffer)
+                                                          (offset)
+                                                          (countBuffer)
+                                                          (countBufferOffset)
+                                                          (maxDrawCount)
+                                                          (stride))
   pure $ ()
 
 
@@ -3796,7 +3821,23 @@ instance FromCStruct PhysicalDeviceMeshShaderPropertiesNV where
     meshOutputPerVertexGranularity <- peek @Word32 ((p `plusPtr` 76 :: Ptr Word32))
     meshOutputPerPrimitiveGranularity <- peek @Word32 ((p `plusPtr` 80 :: Ptr Word32))
     pure $ PhysicalDeviceMeshShaderPropertiesNV
-             maxDrawMeshTasksCount maxTaskWorkGroupInvocations ((maxTaskWorkGroupSize0, maxTaskWorkGroupSize1, maxTaskWorkGroupSize2)) maxTaskTotalMemorySize maxTaskOutputCount maxMeshWorkGroupInvocations ((maxMeshWorkGroupSize0, maxMeshWorkGroupSize1, maxMeshWorkGroupSize2)) maxMeshTotalMemorySize maxMeshOutputVertices maxMeshOutputPrimitives maxMeshMultiviewViewCount meshOutputPerVertexGranularity meshOutputPerPrimitiveGranularity
+             maxDrawMeshTasksCount
+             maxTaskWorkGroupInvocations
+             (( maxTaskWorkGroupSize0
+              , maxTaskWorkGroupSize1
+              , maxTaskWorkGroupSize2 ))
+             maxTaskTotalMemorySize
+             maxTaskOutputCount
+             maxMeshWorkGroupInvocations
+             (( maxMeshWorkGroupSize0
+              , maxMeshWorkGroupSize1
+              , maxMeshWorkGroupSize2 ))
+             maxMeshTotalMemorySize
+             maxMeshOutputVertices
+             maxMeshOutputPrimitives
+             maxMeshMultiviewViewCount
+             meshOutputPerVertexGranularity
+             meshOutputPerPrimitiveGranularity
 
 instance Storable PhysicalDeviceMeshShaderPropertiesNV where
   sizeOf ~_ = 88

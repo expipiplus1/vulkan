@@ -148,7 +148,9 @@ createDescriptorUpdateTemplate :: forall io
                                   -- chapter.
                                   ("allocator" ::: Maybe AllocationCallbacks)
                                -> io (DescriptorUpdateTemplate)
-createDescriptorUpdateTemplate device createInfo allocator = liftIO . evalContT $ do
+createDescriptorUpdateTemplate device
+                                 createInfo
+                                 allocator = liftIO . evalContT $ do
   let vkCreateDescriptorUpdateTemplatePtr = pVkCreateDescriptorUpdateTemplate (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateDescriptorUpdateTemplatePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDescriptorUpdateTemplate is null" Nothing Nothing
@@ -158,7 +160,11 @@ createDescriptorUpdateTemplate device createInfo allocator = liftIO . evalContT 
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPDescriptorUpdateTemplate <- ContT $ bracket (callocBytes @DescriptorUpdateTemplate 8) free
-  r <- lift $ traceAroundEvent "vkCreateDescriptorUpdateTemplate" (vkCreateDescriptorUpdateTemplate' (deviceHandle (device)) pCreateInfo pAllocator (pPDescriptorUpdateTemplate))
+  r <- lift $ traceAroundEvent "vkCreateDescriptorUpdateTemplate" (vkCreateDescriptorUpdateTemplate'
+                                                                     (deviceHandle (device))
+                                                                     pCreateInfo
+                                                                     pAllocator
+                                                                     (pPDescriptorUpdateTemplate))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pDescriptorUpdateTemplate <- lift $ peek @DescriptorUpdateTemplate pPDescriptorUpdateTemplate
   pure $ (pDescriptorUpdateTemplate)
@@ -242,7 +248,9 @@ destroyDescriptorUpdateTemplate :: forall io
                                    -- chapter.
                                    ("allocator" ::: Maybe AllocationCallbacks)
                                 -> io ()
-destroyDescriptorUpdateTemplate device descriptorUpdateTemplate allocator = liftIO . evalContT $ do
+destroyDescriptorUpdateTemplate device
+                                  descriptorUpdateTemplate
+                                  allocator = liftIO . evalContT $ do
   let vkDestroyDescriptorUpdateTemplatePtr = pVkDestroyDescriptorUpdateTemplate (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyDescriptorUpdateTemplatePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyDescriptorUpdateTemplate is null" Nothing Nothing
@@ -250,7 +258,10 @@ destroyDescriptorUpdateTemplate device descriptorUpdateTemplate allocator = lift
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyDescriptorUpdateTemplate" (vkDestroyDescriptorUpdateTemplate' (deviceHandle (device)) (descriptorUpdateTemplate) pAllocator)
+  lift $ traceAroundEvent "vkDestroyDescriptorUpdateTemplate" (vkDestroyDescriptorUpdateTemplate'
+                                                                 (deviceHandle (device))
+                                                                 (descriptorUpdateTemplate)
+                                                                 pAllocator)
   pure $ ()
 
 
@@ -397,12 +408,19 @@ updateDescriptorSetWithTemplate :: forall io
                                    -- write the descriptors.
                                    ("data" ::: Ptr ())
                                 -> io ()
-updateDescriptorSetWithTemplate device descriptorSet descriptorUpdateTemplate data' = liftIO $ do
+updateDescriptorSetWithTemplate device
+                                  descriptorSet
+                                  descriptorUpdateTemplate
+                                  data' = liftIO $ do
   let vkUpdateDescriptorSetWithTemplatePtr = pVkUpdateDescriptorSetWithTemplate (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkUpdateDescriptorSetWithTemplatePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkUpdateDescriptorSetWithTemplate is null" Nothing Nothing
   let vkUpdateDescriptorSetWithTemplate' = mkVkUpdateDescriptorSetWithTemplate vkUpdateDescriptorSetWithTemplatePtr
-  traceAroundEvent "vkUpdateDescriptorSetWithTemplate" (vkUpdateDescriptorSetWithTemplate' (deviceHandle (device)) (descriptorSet) (descriptorUpdateTemplate) (data'))
+  traceAroundEvent "vkUpdateDescriptorSetWithTemplate" (vkUpdateDescriptorSetWithTemplate'
+                                                          (deviceHandle (device))
+                                                          (descriptorSet)
+                                                          (descriptorUpdateTemplate)
+                                                          (data'))
   pure $ ()
 
 
@@ -524,7 +542,12 @@ instance FromCStruct DescriptorUpdateTemplateEntry where
     offset <- peek @CSize ((p `plusPtr` 16 :: Ptr CSize))
     stride <- peek @CSize ((p `plusPtr` 24 :: Ptr CSize))
     pure $ DescriptorUpdateTemplateEntry
-             dstBinding dstArrayElement descriptorCount descriptorType (coerce @CSize @Word64 offset) (coerce @CSize @Word64 stride)
+             dstBinding
+             dstArrayElement
+             descriptorCount
+             descriptorType
+             (coerce @CSize @Word64 offset)
+             (coerce @CSize @Word64 stride)
 
 instance Storable DescriptorUpdateTemplateEntry where
   sizeOf ~_ = 32
@@ -706,7 +729,13 @@ instance FromCStruct DescriptorUpdateTemplateCreateInfo where
     pipelineLayout <- peek @PipelineLayout ((p `plusPtr` 56 :: Ptr PipelineLayout))
     set <- peek @Word32 ((p `plusPtr` 64 :: Ptr Word32))
     pure $ DescriptorUpdateTemplateCreateInfo
-             flags pDescriptorUpdateEntries' templateType descriptorSetLayout pipelineBindPoint pipelineLayout set
+             flags
+             pDescriptorUpdateEntries'
+             templateType
+             descriptorSetLayout
+             pipelineBindPoint
+             pipelineLayout
+             set
 
 instance Zero DescriptorUpdateTemplateCreateInfo where
   zero = DescriptorUpdateTemplateCreateInfo

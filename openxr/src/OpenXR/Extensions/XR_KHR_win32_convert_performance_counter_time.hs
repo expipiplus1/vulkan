@@ -150,7 +150,10 @@ convertTimeToWin32PerformanceCounterKHR instance' time = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrConvertTimeToWin32PerformanceCounterKHR is null" Nothing Nothing
   let xrConvertTimeToWin32PerformanceCounterKHR' = mkXrConvertTimeToWin32PerformanceCounterKHR xrConvertTimeToWin32PerformanceCounterKHRPtr
   pPerformanceCounter <- ContT $ bracket (callocBytes @LARGE_INTEGER 8) free
-  r <- lift $ traceAroundEvent "xrConvertTimeToWin32PerformanceCounterKHR" (xrConvertTimeToWin32PerformanceCounterKHR' (instanceHandle (instance')) (time) (pPerformanceCounter))
+  r <- lift $ traceAroundEvent "xrConvertTimeToWin32PerformanceCounterKHR" (xrConvertTimeToWin32PerformanceCounterKHR'
+                                                                              (instanceHandle (instance'))
+                                                                              (time)
+                                                                              (pPerformanceCounter))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   performanceCounter <- lift $ peek @LARGE_INTEGER pPerformanceCounter
   pure $ (performanceCounter)
@@ -230,14 +233,18 @@ convertWin32PerformanceCounterToTimeKHR :: forall io
                                         -> -- | @performanceCounter@ is a time returned by @QueryPerformanceCounter@.
                                            ("performanceCounter" ::: LARGE_INTEGER)
                                         -> io (Time)
-convertWin32PerformanceCounterToTimeKHR instance' performanceCounter = liftIO . evalContT $ do
+convertWin32PerformanceCounterToTimeKHR instance'
+                                          performanceCounter = liftIO . evalContT $ do
   let xrConvertWin32PerformanceCounterToTimeKHRPtr = pXrConvertWin32PerformanceCounterToTimeKHR (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrConvertWin32PerformanceCounterToTimeKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrConvertWin32PerformanceCounterToTimeKHR is null" Nothing Nothing
   let xrConvertWin32PerformanceCounterToTimeKHR' = mkXrConvertWin32PerformanceCounterToTimeKHR xrConvertWin32PerformanceCounterToTimeKHRPtr
   performanceCounter' <- ContT $ with (performanceCounter)
   pTime <- ContT $ bracket (callocBytes @Time 8) free
-  r <- lift $ traceAroundEvent "xrConvertWin32PerformanceCounterToTimeKHR" (xrConvertWin32PerformanceCounterToTimeKHR' (instanceHandle (instance')) performanceCounter' (pTime))
+  r <- lift $ traceAroundEvent "xrConvertWin32PerformanceCounterToTimeKHR" (xrConvertWin32PerformanceCounterToTimeKHR'
+                                                                              (instanceHandle (instance'))
+                                                                              performanceCounter'
+                                                                              (pTime))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   time <- lift $ peek @Time pTime
   pure $ (time)

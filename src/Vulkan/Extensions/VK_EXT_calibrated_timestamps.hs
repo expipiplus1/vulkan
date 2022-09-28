@@ -325,11 +325,17 @@ getPhysicalDeviceCalibrateableTimeDomainsEXT physicalDevice = liftIO . evalContT
   let vkGetPhysicalDeviceCalibrateableTimeDomainsEXT' = mkVkGetPhysicalDeviceCalibrateableTimeDomainsEXT vkGetPhysicalDeviceCalibrateableTimeDomainsEXTPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPTimeDomainCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceCalibrateableTimeDomainsEXT" (vkGetPhysicalDeviceCalibrateableTimeDomainsEXT' physicalDevice' (pPTimeDomainCount) (nullPtr))
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceCalibrateableTimeDomainsEXT" (vkGetPhysicalDeviceCalibrateableTimeDomainsEXT'
+                                                                                   physicalDevice'
+                                                                                   (pPTimeDomainCount)
+                                                                                   (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pTimeDomainCount <- lift $ peek @Word32 pPTimeDomainCount
   pPTimeDomains <- ContT $ bracket (callocBytes @TimeDomainEXT ((fromIntegral (pTimeDomainCount)) * 4)) free
-  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceCalibrateableTimeDomainsEXT" (vkGetPhysicalDeviceCalibrateableTimeDomainsEXT' physicalDevice' (pPTimeDomainCount) (pPTimeDomains))
+  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceCalibrateableTimeDomainsEXT" (vkGetPhysicalDeviceCalibrateableTimeDomainsEXT'
+                                                                                    physicalDevice'
+                                                                                    (pPTimeDomainCount)
+                                                                                    (pPTimeDomains))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pTimeDomainCount' <- lift $ peek @Word32 pPTimeDomainCount
   pTimeDomains' <- lift $ generateM (fromIntegral (pTimeDomainCount')) (\i -> peek @TimeDomainEXT ((pPTimeDomains `advancePtrBytes` (4 * (i)) :: Ptr TimeDomainEXT)))
@@ -405,7 +411,12 @@ getCalibratedTimestampsEXT device timestampInfos = liftIO . evalContT $ do
   lift $ Data.Vector.imapM_ (\i e -> poke (pPTimestampInfos `plusPtr` (24 * (i)) :: Ptr CalibratedTimestampInfoEXT) (e)) (timestampInfos)
   pPTimestamps <- ContT $ bracket (callocBytes @Word64 ((fromIntegral ((fromIntegral (Data.Vector.length $ (timestampInfos)) :: Word32))) * 8)) free
   pPMaxDeviation <- ContT $ bracket (callocBytes @Word64 8) free
-  r <- lift $ traceAroundEvent "vkGetCalibratedTimestampsEXT" (vkGetCalibratedTimestampsEXT' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (timestampInfos)) :: Word32)) (pPTimestampInfos) (pPTimestamps) (pPMaxDeviation))
+  r <- lift $ traceAroundEvent "vkGetCalibratedTimestampsEXT" (vkGetCalibratedTimestampsEXT'
+                                                                 (deviceHandle (device))
+                                                                 ((fromIntegral (Data.Vector.length $ (timestampInfos)) :: Word32))
+                                                                 (pPTimestampInfos)
+                                                                 (pPTimestamps)
+                                                                 (pPMaxDeviation))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pTimestamps <- lift $ generateM (fromIntegral ((fromIntegral (Data.Vector.length $ (timestampInfos)) :: Word32))) (\i -> peek @Word64 ((pPTimestamps `advancePtrBytes` (8 * (i)) :: Ptr Word64)))
   pMaxDeviation <- lift $ peek @Word64 pPMaxDeviation
@@ -513,29 +524,36 @@ newtype TimeDomainEXT = TimeDomainEXT Int32
 -- and are defined to be incrementing according to the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-timestampPeriod timestampPeriod>
 -- of the device.
-pattern TIME_DOMAIN_DEVICE_EXT                    = TimeDomainEXT 0
+pattern TIME_DOMAIN_DEVICE_EXT = TimeDomainEXT 0
+
 -- | 'TIME_DOMAIN_CLOCK_MONOTONIC_EXT' specifies the CLOCK_MONOTONIC time
 -- domain available on POSIX platforms. Timestamp values in this time
 -- domain are in units of nanoseconds and are comparable with platform
 -- timestamp values captured using the POSIX clock_gettime API as computed
 -- by this example:
-pattern TIME_DOMAIN_CLOCK_MONOTONIC_EXT           = TimeDomainEXT 1
+pattern TIME_DOMAIN_CLOCK_MONOTONIC_EXT = TimeDomainEXT 1
+
 -- | 'TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT' specifies the CLOCK_MONOTONIC_RAW
 -- time domain available on POSIX platforms. Timestamp values in this time
 -- domain are in units of nanoseconds and are comparable with platform
 -- timestamp values captured using the POSIX clock_gettime API as computed
 -- by this example:
-pattern TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT       = TimeDomainEXT 2
+pattern TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT = TimeDomainEXT 2
+
 -- | 'TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT' specifies the performance
 -- counter (QPC) time domain available on Windows. Timestamp values in this
 -- time domain are in the same units as those provided by the Windows
 -- QueryPerformanceCounter API and are comparable with platform timestamp
 -- values captured using that API as computed by this example:
 pattern TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT = TimeDomainEXT 3
-{-# complete TIME_DOMAIN_DEVICE_EXT,
-             TIME_DOMAIN_CLOCK_MONOTONIC_EXT,
-             TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT,
-             TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT :: TimeDomainEXT #-}
+
+{-# COMPLETE
+  TIME_DOMAIN_DEVICE_EXT
+  , TIME_DOMAIN_CLOCK_MONOTONIC_EXT
+  , TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT
+  , TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT ::
+    TimeDomainEXT
+  #-}
 
 conNameTimeDomainEXT :: String
 conNameTimeDomainEXT = "TimeDomainEXT"
@@ -545,22 +563,37 @@ enumPrefixTimeDomainEXT = "TIME_DOMAIN_"
 
 showTableTimeDomainEXT :: [(TimeDomainEXT, String)]
 showTableTimeDomainEXT =
-  [ (TIME_DOMAIN_DEVICE_EXT                   , "DEVICE_EXT")
-  , (TIME_DOMAIN_CLOCK_MONOTONIC_EXT          , "CLOCK_MONOTONIC_EXT")
-  , (TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT      , "CLOCK_MONOTONIC_RAW_EXT")
-  , (TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT, "QUERY_PERFORMANCE_COUNTER_EXT")
+  [ (TIME_DOMAIN_DEVICE_EXT, "DEVICE_EXT")
+  ,
+    ( TIME_DOMAIN_CLOCK_MONOTONIC_EXT
+    , "CLOCK_MONOTONIC_EXT"
+    )
+  ,
+    ( TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT
+    , "CLOCK_MONOTONIC_RAW_EXT"
+    )
+  ,
+    ( TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT
+    , "QUERY_PERFORMANCE_COUNTER_EXT"
+    )
   ]
 
 instance Show TimeDomainEXT where
-  showsPrec = enumShowsPrec enumPrefixTimeDomainEXT
-                            showTableTimeDomainEXT
-                            conNameTimeDomainEXT
-                            (\(TimeDomainEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixTimeDomainEXT
+      showTableTimeDomainEXT
+      conNameTimeDomainEXT
+      (\(TimeDomainEXT x) -> x)
+      (showsPrec 11)
 
 instance Read TimeDomainEXT where
-  readPrec = enumReadPrec enumPrefixTimeDomainEXT showTableTimeDomainEXT conNameTimeDomainEXT TimeDomainEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixTimeDomainEXT
+      showTableTimeDomainEXT
+      conNameTimeDomainEXT
+      TimeDomainEXT
 
 type EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION = 2
 

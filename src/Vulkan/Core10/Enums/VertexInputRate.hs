@@ -27,12 +27,17 @@ newtype VertexInputRate = VertexInputRate Int32
 
 -- | 'VERTEX_INPUT_RATE_VERTEX' specifies that vertex attribute addressing is
 -- a function of the vertex index.
-pattern VERTEX_INPUT_RATE_VERTEX   = VertexInputRate 0
+pattern VERTEX_INPUT_RATE_VERTEX = VertexInputRate 0
+
 -- | 'VERTEX_INPUT_RATE_INSTANCE' specifies that vertex attribute addressing
 -- is a function of the instance index.
 pattern VERTEX_INPUT_RATE_INSTANCE = VertexInputRate 1
-{-# complete VERTEX_INPUT_RATE_VERTEX,
-             VERTEX_INPUT_RATE_INSTANCE :: VertexInputRate #-}
+
+{-# COMPLETE
+  VERTEX_INPUT_RATE_VERTEX
+  , VERTEX_INPUT_RATE_INSTANCE ::
+    VertexInputRate
+  #-}
 
 conNameVertexInputRate :: String
 conNameVertexInputRate = "VertexInputRate"
@@ -41,15 +46,24 @@ enumPrefixVertexInputRate :: String
 enumPrefixVertexInputRate = "VERTEX_INPUT_RATE_"
 
 showTableVertexInputRate :: [(VertexInputRate, String)]
-showTableVertexInputRate = [(VERTEX_INPUT_RATE_VERTEX, "VERTEX"), (VERTEX_INPUT_RATE_INSTANCE, "INSTANCE")]
+showTableVertexInputRate =
+  [ (VERTEX_INPUT_RATE_VERTEX, "VERTEX")
+  , (VERTEX_INPUT_RATE_INSTANCE, "INSTANCE")
+  ]
 
 instance Show VertexInputRate where
-  showsPrec = enumShowsPrec enumPrefixVertexInputRate
-                            showTableVertexInputRate
-                            conNameVertexInputRate
-                            (\(VertexInputRate x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixVertexInputRate
+      showTableVertexInputRate
+      conNameVertexInputRate
+      (\(VertexInputRate x) -> x)
+      (showsPrec 11)
 
 instance Read VertexInputRate where
-  readPrec = enumReadPrec enumPrefixVertexInputRate showTableVertexInputRate conNameVertexInputRate VertexInputRate
-
+  readPrec =
+    enumReadPrec
+      enumPrefixVertexInputRate
+      showTableVertexInputRate
+      conNameVertexInputRate
+      VertexInputRate

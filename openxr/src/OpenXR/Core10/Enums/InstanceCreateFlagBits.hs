@@ -21,8 +21,6 @@ type InstanceCreateFlags = InstanceCreateFlagBits
 newtype InstanceCreateFlagBits = InstanceCreateFlagBits Flags64
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameInstanceCreateFlagBits :: String
 conNameInstanceCreateFlagBits = "InstanceCreateFlagBits"
 
@@ -33,15 +31,18 @@ showTableInstanceCreateFlagBits :: [(InstanceCreateFlagBits, String)]
 showTableInstanceCreateFlagBits = []
 
 instance Show InstanceCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixInstanceCreateFlagBits
-                            showTableInstanceCreateFlagBits
-                            conNameInstanceCreateFlagBits
-                            (\(InstanceCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixInstanceCreateFlagBits
+      showTableInstanceCreateFlagBits
+      conNameInstanceCreateFlagBits
+      (\(InstanceCreateFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read InstanceCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixInstanceCreateFlagBits
-                          showTableInstanceCreateFlagBits
-                          conNameInstanceCreateFlagBits
-                          InstanceCreateFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixInstanceCreateFlagBits
+      showTableInstanceCreateFlagBits
+      conNameInstanceCreateFlagBits
+      InstanceCreateFlagBits

@@ -563,10 +563,12 @@ instance FromCStruct PhysicalDeviceRayTracingPropertiesNV
 type role RayTracingPipelineCreateInfoNV nominal
 data RayTracingPipelineCreateInfoNV (es :: [Type])
 
-instance (Extendss RayTracingPipelineCreateInfoNV es, PokeChain es) => ToCStruct (RayTracingPipelineCreateInfoNV es)
+instance ( Extendss RayTracingPipelineCreateInfoNV es
+         , PokeChain es ) => ToCStruct (RayTracingPipelineCreateInfoNV es)
 instance Show (Chain es) => Show (RayTracingPipelineCreateInfoNV es)
 
-instance (Extendss RayTracingPipelineCreateInfoNV es, PeekChain es) => FromCStruct (RayTracingPipelineCreateInfoNV es)
+instance ( Extendss RayTracingPipelineCreateInfoNV es
+         , PeekChain es ) => FromCStruct (RayTracingPipelineCreateInfoNV es)
 
 
 data RayTracingShaderGroupCreateInfoNV

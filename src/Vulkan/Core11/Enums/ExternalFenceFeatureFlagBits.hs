@@ -33,6 +33,7 @@ newtype ExternalFenceFeatureFlagBits = ExternalFenceFeatureFlagBits Flags
 -- | 'EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT' specifies handles of this type
 -- /can/ be exported from Vulkan fence objects.
 pattern EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT = ExternalFenceFeatureFlagBits 0x00000001
+
 -- | 'EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT' specifies handles of this type
 -- /can/ be imported to Vulkan fence objects.
 pattern EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT = ExternalFenceFeatureFlagBits 0x00000002
@@ -45,18 +46,29 @@ enumPrefixExternalFenceFeatureFlagBits = "EXTERNAL_FENCE_FEATURE_"
 
 showTableExternalFenceFeatureFlagBits :: [(ExternalFenceFeatureFlagBits, String)]
 showTableExternalFenceFeatureFlagBits =
-  [(EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT, "EXPORTABLE_BIT"), (EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT, "IMPORTABLE_BIT")]
+  [
+    ( EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT
+    , "EXPORTABLE_BIT"
+    )
+  ,
+    ( EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT
+    , "IMPORTABLE_BIT"
+    )
+  ]
 
 instance Show ExternalFenceFeatureFlagBits where
-  showsPrec = enumShowsPrec enumPrefixExternalFenceFeatureFlagBits
-                            showTableExternalFenceFeatureFlagBits
-                            conNameExternalFenceFeatureFlagBits
-                            (\(ExternalFenceFeatureFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixExternalFenceFeatureFlagBits
+      showTableExternalFenceFeatureFlagBits
+      conNameExternalFenceFeatureFlagBits
+      (\(ExternalFenceFeatureFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read ExternalFenceFeatureFlagBits where
-  readPrec = enumReadPrec enumPrefixExternalFenceFeatureFlagBits
-                          showTableExternalFenceFeatureFlagBits
-                          conNameExternalFenceFeatureFlagBits
-                          ExternalFenceFeatureFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixExternalFenceFeatureFlagBits
+      showTableExternalFenceFeatureFlagBits
+      conNameExternalFenceFeatureFlagBits
+      ExternalFenceFeatureFlagBits

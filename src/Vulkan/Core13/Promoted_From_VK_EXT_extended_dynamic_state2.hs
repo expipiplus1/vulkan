@@ -100,12 +100,15 @@ cmdSetRasterizerDiscardEnable :: forall io
                                  -- immediately before the rasterization stage.
                                  ("rasterizerDiscardEnable" ::: Bool)
                               -> io ()
-cmdSetRasterizerDiscardEnable commandBuffer rasterizerDiscardEnable = liftIO $ do
+cmdSetRasterizerDiscardEnable commandBuffer
+                                rasterizerDiscardEnable = liftIO $ do
   let vkCmdSetRasterizerDiscardEnablePtr = pVkCmdSetRasterizerDiscardEnable (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   unless (vkCmdSetRasterizerDiscardEnablePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetRasterizerDiscardEnable is null" Nothing Nothing
   let vkCmdSetRasterizerDiscardEnable' = mkVkCmdSetRasterizerDiscardEnable vkCmdSetRasterizerDiscardEnablePtr
-  traceAroundEvent "vkCmdSetRasterizerDiscardEnable" (vkCmdSetRasterizerDiscardEnable' (commandBufferHandle (commandBuffer)) (boolToBool32 (rasterizerDiscardEnable)))
+  traceAroundEvent "vkCmdSetRasterizerDiscardEnable" (vkCmdSetRasterizerDiscardEnable'
+                                                        (commandBufferHandle (commandBuffer))
+                                                        (boolToBool32 (rasterizerDiscardEnable)))
   pure $ ()
 
 
@@ -184,7 +187,9 @@ cmdSetDepthBiasEnable commandBuffer depthBiasEnable = liftIO $ do
   unless (vkCmdSetDepthBiasEnablePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDepthBiasEnable is null" Nothing Nothing
   let vkCmdSetDepthBiasEnable' = mkVkCmdSetDepthBiasEnable vkCmdSetDepthBiasEnablePtr
-  traceAroundEvent "vkCmdSetDepthBiasEnable" (vkCmdSetDepthBiasEnable' (commandBufferHandle (commandBuffer)) (boolToBool32 (depthBiasEnable)))
+  traceAroundEvent "vkCmdSetDepthBiasEnable" (vkCmdSetDepthBiasEnable'
+                                                (commandBufferHandle (commandBuffer))
+                                                (boolToBool32 (depthBiasEnable)))
   pure $ ()
 
 
@@ -266,6 +271,8 @@ cmdSetPrimitiveRestartEnable commandBuffer primitiveRestartEnable = liftIO $ do
   unless (vkCmdSetPrimitiveRestartEnablePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetPrimitiveRestartEnable is null" Nothing Nothing
   let vkCmdSetPrimitiveRestartEnable' = mkVkCmdSetPrimitiveRestartEnable vkCmdSetPrimitiveRestartEnablePtr
-  traceAroundEvent "vkCmdSetPrimitiveRestartEnable" (vkCmdSetPrimitiveRestartEnable' (commandBufferHandle (commandBuffer)) (boolToBool32 (primitiveRestartEnable)))
+  traceAroundEvent "vkCmdSetPrimitiveRestartEnable" (vkCmdSetPrimitiveRestartEnable'
+                                                       (commandBufferHandle (commandBuffer))
+                                                       (boolToBool32 (primitiveRestartEnable)))
   pure $ ()
 

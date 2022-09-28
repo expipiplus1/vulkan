@@ -184,7 +184,10 @@ acquireDrmDisplayEXT physicalDevice drmFd display = liftIO $ do
   unless (vkAcquireDrmDisplayEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireDrmDisplayEXT is null" Nothing Nothing
   let vkAcquireDrmDisplayEXT' = mkVkAcquireDrmDisplayEXT vkAcquireDrmDisplayEXTPtr
-  r <- traceAroundEvent "vkAcquireDrmDisplayEXT" (vkAcquireDrmDisplayEXT' (physicalDeviceHandle (physicalDevice)) (drmFd) (display))
+  r <- traceAroundEvent "vkAcquireDrmDisplayEXT" (vkAcquireDrmDisplayEXT'
+                                                    (physicalDeviceHandle (physicalDevice))
+                                                    (drmFd)
+                                                    (display))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -248,7 +251,11 @@ getDrmDisplayEXT physicalDevice drmFd connectorId = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDrmDisplayEXT is null" Nothing Nothing
   let vkGetDrmDisplayEXT' = mkVkGetDrmDisplayEXT vkGetDrmDisplayEXTPtr
   pDisplay <- ContT $ bracket (callocBytes @DisplayKHR 8) free
-  r <- lift $ traceAroundEvent "vkGetDrmDisplayEXT" (vkGetDrmDisplayEXT' (physicalDeviceHandle (physicalDevice)) (drmFd) (connectorId) (pDisplay))
+  r <- lift $ traceAroundEvent "vkGetDrmDisplayEXT" (vkGetDrmDisplayEXT'
+                                                       (physicalDeviceHandle (physicalDevice))
+                                                       (drmFd)
+                                                       (connectorId)
+                                                       (pDisplay))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   display <- lift $ peek @DisplayKHR pDisplay
   pure $ (display)

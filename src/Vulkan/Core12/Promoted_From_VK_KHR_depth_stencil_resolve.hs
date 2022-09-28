@@ -135,7 +135,10 @@ instance FromCStruct PhysicalDeviceDepthStencilResolveProperties where
     independentResolveNone <- peek @Bool32 ((p `plusPtr` 24 :: Ptr Bool32))
     independentResolve <- peek @Bool32 ((p `plusPtr` 28 :: Ptr Bool32))
     pure $ PhysicalDeviceDepthStencilResolveProperties
-             supportedDepthResolveModes supportedStencilResolveModes (bool32ToBool independentResolveNone) (bool32ToBool independentResolve)
+             supportedDepthResolveModes
+             supportedStencilResolveModes
+             (bool32ToBool independentResolveNone)
+             (bool32ToBool independentResolve)
 
 instance Storable PhysicalDeviceDepthStencilResolveProperties where
   sizeOf ~_ = 32

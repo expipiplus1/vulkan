@@ -508,7 +508,8 @@ instance FromCStruct PhysicalDeviceCustomBorderColorFeaturesEXT where
     customBorderColors <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     customBorderColorWithoutFormat <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ PhysicalDeviceCustomBorderColorFeaturesEXT
-             (bool32ToBool customBorderColors) (bool32ToBool customBorderColorWithoutFormat)
+             (bool32ToBool customBorderColors)
+             (bool32ToBool customBorderColorWithoutFormat)
 
 instance Storable PhysicalDeviceCustomBorderColorFeaturesEXT where
   sizeOf ~_ = 24

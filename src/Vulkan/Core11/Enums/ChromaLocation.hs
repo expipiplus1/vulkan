@@ -29,12 +29,17 @@ newtype ChromaLocation = ChromaLocation Int32
 -- | 'CHROMA_LOCATION_COSITED_EVEN' specifies that downsampled chroma samples
 -- are aligned with luma samples with even coordinates.
 pattern CHROMA_LOCATION_COSITED_EVEN = ChromaLocation 0
+
 -- | 'CHROMA_LOCATION_MIDPOINT' specifies that downsampled chroma samples are
 -- located half way between each even luma sample and the nearest higher
 -- odd luma sample.
-pattern CHROMA_LOCATION_MIDPOINT     = ChromaLocation 1
-{-# complete CHROMA_LOCATION_COSITED_EVEN,
-             CHROMA_LOCATION_MIDPOINT :: ChromaLocation #-}
+pattern CHROMA_LOCATION_MIDPOINT = ChromaLocation 1
+
+{-# COMPLETE
+  CHROMA_LOCATION_COSITED_EVEN
+  , CHROMA_LOCATION_MIDPOINT ::
+    ChromaLocation
+  #-}
 
 conNameChromaLocation :: String
 conNameChromaLocation = "ChromaLocation"
@@ -43,15 +48,24 @@ enumPrefixChromaLocation :: String
 enumPrefixChromaLocation = "CHROMA_LOCATION_"
 
 showTableChromaLocation :: [(ChromaLocation, String)]
-showTableChromaLocation = [(CHROMA_LOCATION_COSITED_EVEN, "COSITED_EVEN"), (CHROMA_LOCATION_MIDPOINT, "MIDPOINT")]
+showTableChromaLocation =
+  [ (CHROMA_LOCATION_COSITED_EVEN, "COSITED_EVEN")
+  , (CHROMA_LOCATION_MIDPOINT, "MIDPOINT")
+  ]
 
 instance Show ChromaLocation where
-  showsPrec = enumShowsPrec enumPrefixChromaLocation
-                            showTableChromaLocation
-                            conNameChromaLocation
-                            (\(ChromaLocation x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixChromaLocation
+      showTableChromaLocation
+      conNameChromaLocation
+      (\(ChromaLocation x) -> x)
+      (showsPrec 11)
 
 instance Read ChromaLocation where
-  readPrec = enumReadPrec enumPrefixChromaLocation showTableChromaLocation conNameChromaLocation ChromaLocation
-
+  readPrec =
+    enumReadPrec
+      enumPrefixChromaLocation
+      showTableChromaLocation
+      conNameChromaLocation
+      ChromaLocation

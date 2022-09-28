@@ -27,8 +27,6 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 newtype PipelineViewportStateCreateFlags = PipelineViewportStateCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNamePipelineViewportStateCreateFlags :: String
 conNamePipelineViewportStateCreateFlags = "PipelineViewportStateCreateFlags"
 
@@ -39,15 +37,18 @@ showTablePipelineViewportStateCreateFlags :: [(PipelineViewportStateCreateFlags,
 showTablePipelineViewportStateCreateFlags = []
 
 instance Show PipelineViewportStateCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixPipelineViewportStateCreateFlags
-                            showTablePipelineViewportStateCreateFlags
-                            conNamePipelineViewportStateCreateFlags
-                            (\(PipelineViewportStateCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineViewportStateCreateFlags
+      showTablePipelineViewportStateCreateFlags
+      conNamePipelineViewportStateCreateFlags
+      (\(PipelineViewportStateCreateFlags x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read PipelineViewportStateCreateFlags where
-  readPrec = enumReadPrec enumPrefixPipelineViewportStateCreateFlags
-                          showTablePipelineViewportStateCreateFlags
-                          conNamePipelineViewportStateCreateFlags
-                          PipelineViewportStateCreateFlags
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineViewportStateCreateFlags
+      showTablePipelineViewportStateCreateFlags
+      conNamePipelineViewportStateCreateFlags
+      PipelineViewportStateCreateFlags

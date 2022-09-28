@@ -138,7 +138,11 @@ createBufferView device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPView <- ContT $ bracket (callocBytes @BufferView 8) free
-  r <- lift $ traceAroundEvent "vkCreateBufferView" (vkCreateBufferView' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPView))
+  r <- lift $ traceAroundEvent "vkCreateBufferView" (vkCreateBufferView'
+                                                       (deviceHandle (device))
+                                                       (forgetExtensions pCreateInfo)
+                                                       pAllocator
+                                                       (pPView))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pView <- lift $ peek @BufferView pPView
   pure $ (pView)
@@ -226,7 +230,10 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyBufferView" (vkDestroyBufferView' (deviceHandle (device)) (bufferView) pAllocator)
+  lift $ traceAroundEvent "vkDestroyBufferView" (vkDestroyBufferView'
+                                                   (deviceHandle (device))
+                                                   (bufferView)
+                                                   pAllocator)
   pure $ ()
 
 
@@ -408,7 +415,8 @@ instance Extensible BufferViewCreateInfo where
     | Just Refl <- eqT @e @ExportMetalObjectCreateInfoEXT = Just f
     | otherwise = Nothing
 
-instance (Extendss BufferViewCreateInfo es, PokeChain es) => ToCStruct (BufferViewCreateInfo es) where
+instance ( Extendss BufferViewCreateInfo es
+         , PokeChain es ) => ToCStruct (BufferViewCreateInfo es) where
   withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferViewCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO)
@@ -432,7 +440,8 @@ instance (Extendss BufferViewCreateInfo es, PokeChain es) => ToCStruct (BufferVi
     lift $ poke ((p `plusPtr` 48 :: Ptr DeviceSize)) (zero)
     lift $ f
 
-instance (Extendss BufferViewCreateInfo es, PeekChain es) => FromCStruct (BufferViewCreateInfo es) where
+instance ( Extendss BufferViewCreateInfo es
+         , PeekChain es ) => FromCStruct (BufferViewCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

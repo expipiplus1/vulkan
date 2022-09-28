@@ -171,7 +171,10 @@ getOpenGLESGraphicsRequirementsKHR instance' systemId = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetOpenGLESGraphicsRequirementsKHR is null" Nothing Nothing
   let xrGetOpenGLESGraphicsRequirementsKHR' = mkXrGetOpenGLESGraphicsRequirementsKHR xrGetOpenGLESGraphicsRequirementsKHRPtr
   pGraphicsRequirements <- ContT (withZeroCStruct @GraphicsRequirementsOpenGLESKHR)
-  r <- lift $ traceAroundEvent "xrGetOpenGLESGraphicsRequirementsKHR" (xrGetOpenGLESGraphicsRequirementsKHR' (instanceHandle (instance')) (systemId) (pGraphicsRequirements))
+  r <- lift $ traceAroundEvent "xrGetOpenGLESGraphicsRequirementsKHR" (xrGetOpenGLESGraphicsRequirementsKHR'
+                                                                         (instanceHandle (instance'))
+                                                                         (systemId)
+                                                                         (pGraphicsRequirements))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   graphicsRequirements <- lift $ peekCStruct @GraphicsRequirementsOpenGLESKHR pGraphicsRequirements
   pure $ (graphicsRequirements)

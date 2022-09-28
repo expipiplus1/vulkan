@@ -621,8 +621,6 @@ instance Zero DeviceMemoryReportCallbackDataEXT where
 newtype DeviceMemoryReportFlagsEXT = DeviceMemoryReportFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameDeviceMemoryReportFlagsEXT :: String
 conNameDeviceMemoryReportFlagsEXT = "DeviceMemoryReportFlagsEXT"
 
@@ -633,18 +631,21 @@ showTableDeviceMemoryReportFlagsEXT :: [(DeviceMemoryReportFlagsEXT, String)]
 showTableDeviceMemoryReportFlagsEXT = []
 
 instance Show DeviceMemoryReportFlagsEXT where
-  showsPrec = enumShowsPrec enumPrefixDeviceMemoryReportFlagsEXT
-                            showTableDeviceMemoryReportFlagsEXT
-                            conNameDeviceMemoryReportFlagsEXT
-                            (\(DeviceMemoryReportFlagsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDeviceMemoryReportFlagsEXT
+      showTableDeviceMemoryReportFlagsEXT
+      conNameDeviceMemoryReportFlagsEXT
+      (\(DeviceMemoryReportFlagsEXT x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read DeviceMemoryReportFlagsEXT where
-  readPrec = enumReadPrec enumPrefixDeviceMemoryReportFlagsEXT
-                          showTableDeviceMemoryReportFlagsEXT
-                          conNameDeviceMemoryReportFlagsEXT
-                          DeviceMemoryReportFlagsEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDeviceMemoryReportFlagsEXT
+      showTableDeviceMemoryReportFlagsEXT
+      conNameDeviceMemoryReportFlagsEXT
+      DeviceMemoryReportFlagsEXT
 
 -- | VkDeviceMemoryReportEventTypeEXT - Events that can occur on a device
 -- memory object
@@ -659,26 +660,34 @@ newtype DeviceMemoryReportEventTypeEXT = DeviceMemoryReportEventTypeEXT Int32
 -- | 'DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATE_EXT' specifies this event
 -- corresponds to the allocation of an internal device memory object or a
 -- 'Vulkan.Core10.Handles.DeviceMemory'.
-pattern DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATE_EXT          = DeviceMemoryReportEventTypeEXT 0
+pattern DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATE_EXT = DeviceMemoryReportEventTypeEXT 0
+
 -- | 'DEVICE_MEMORY_REPORT_EVENT_TYPE_FREE_EXT' specifies this event
 -- corresponds to the deallocation of an internally-allocated device memory
 -- object or a 'Vulkan.Core10.Handles.DeviceMemory'.
-pattern DEVICE_MEMORY_REPORT_EVENT_TYPE_FREE_EXT              = DeviceMemoryReportEventTypeEXT 1
+pattern DEVICE_MEMORY_REPORT_EVENT_TYPE_FREE_EXT = DeviceMemoryReportEventTypeEXT 1
+
 -- | 'DEVICE_MEMORY_REPORT_EVENT_TYPE_IMPORT_EXT' specifies this event
 -- corresponds to the import of an external memory object.
-pattern DEVICE_MEMORY_REPORT_EVENT_TYPE_IMPORT_EXT            = DeviceMemoryReportEventTypeEXT 2
+pattern DEVICE_MEMORY_REPORT_EVENT_TYPE_IMPORT_EXT = DeviceMemoryReportEventTypeEXT 2
+
 -- | 'DEVICE_MEMORY_REPORT_EVENT_TYPE_UNIMPORT_EXT' specifies this event is
 -- the release of an imported external memory object.
-pattern DEVICE_MEMORY_REPORT_EVENT_TYPE_UNIMPORT_EXT          = DeviceMemoryReportEventTypeEXT 3
+pattern DEVICE_MEMORY_REPORT_EVENT_TYPE_UNIMPORT_EXT = DeviceMemoryReportEventTypeEXT 3
+
 -- | 'DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATION_FAILED_EXT' specifies this
 -- event corresponds to the failed allocation of an internal device memory
 -- object or a 'Vulkan.Core10.Handles.DeviceMemory'.
 pattern DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATION_FAILED_EXT = DeviceMemoryReportEventTypeEXT 4
-{-# complete DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATE_EXT,
-             DEVICE_MEMORY_REPORT_EVENT_TYPE_FREE_EXT,
-             DEVICE_MEMORY_REPORT_EVENT_TYPE_IMPORT_EXT,
-             DEVICE_MEMORY_REPORT_EVENT_TYPE_UNIMPORT_EXT,
-             DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATION_FAILED_EXT :: DeviceMemoryReportEventTypeEXT #-}
+
+{-# COMPLETE
+  DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATE_EXT
+  , DEVICE_MEMORY_REPORT_EVENT_TYPE_FREE_EXT
+  , DEVICE_MEMORY_REPORT_EVENT_TYPE_IMPORT_EXT
+  , DEVICE_MEMORY_REPORT_EVENT_TYPE_UNIMPORT_EXT
+  , DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATION_FAILED_EXT ::
+    DeviceMemoryReportEventTypeEXT
+  #-}
 
 conNameDeviceMemoryReportEventTypeEXT :: String
 conNameDeviceMemoryReportEventTypeEXT = "DeviceMemoryReportEventTypeEXT"
@@ -688,26 +697,44 @@ enumPrefixDeviceMemoryReportEventTypeEXT = "DEVICE_MEMORY_REPORT_EVENT_TYPE_"
 
 showTableDeviceMemoryReportEventTypeEXT :: [(DeviceMemoryReportEventTypeEXT, String)]
 showTableDeviceMemoryReportEventTypeEXT =
-  [ (DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATE_EXT         , "ALLOCATE_EXT")
-  , (DEVICE_MEMORY_REPORT_EVENT_TYPE_FREE_EXT             , "FREE_EXT")
-  , (DEVICE_MEMORY_REPORT_EVENT_TYPE_IMPORT_EXT           , "IMPORT_EXT")
-  , (DEVICE_MEMORY_REPORT_EVENT_TYPE_UNIMPORT_EXT         , "UNIMPORT_EXT")
-  , (DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATION_FAILED_EXT, "ALLOCATION_FAILED_EXT")
+  [
+    ( DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATE_EXT
+    , "ALLOCATE_EXT"
+    )
+  ,
+    ( DEVICE_MEMORY_REPORT_EVENT_TYPE_FREE_EXT
+    , "FREE_EXT"
+    )
+  ,
+    ( DEVICE_MEMORY_REPORT_EVENT_TYPE_IMPORT_EXT
+    , "IMPORT_EXT"
+    )
+  ,
+    ( DEVICE_MEMORY_REPORT_EVENT_TYPE_UNIMPORT_EXT
+    , "UNIMPORT_EXT"
+    )
+  ,
+    ( DEVICE_MEMORY_REPORT_EVENT_TYPE_ALLOCATION_FAILED_EXT
+    , "ALLOCATION_FAILED_EXT"
+    )
   ]
 
 instance Show DeviceMemoryReportEventTypeEXT where
-  showsPrec = enumShowsPrec enumPrefixDeviceMemoryReportEventTypeEXT
-                            showTableDeviceMemoryReportEventTypeEXT
-                            conNameDeviceMemoryReportEventTypeEXT
-                            (\(DeviceMemoryReportEventTypeEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDeviceMemoryReportEventTypeEXT
+      showTableDeviceMemoryReportEventTypeEXT
+      conNameDeviceMemoryReportEventTypeEXT
+      (\(DeviceMemoryReportEventTypeEXT x) -> x)
+      (showsPrec 11)
 
 instance Read DeviceMemoryReportEventTypeEXT where
-  readPrec = enumReadPrec enumPrefixDeviceMemoryReportEventTypeEXT
-                          showTableDeviceMemoryReportEventTypeEXT
-                          conNameDeviceMemoryReportEventTypeEXT
-                          DeviceMemoryReportEventTypeEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDeviceMemoryReportEventTypeEXT
+      showTableDeviceMemoryReportEventTypeEXT
+      conNameDeviceMemoryReportEventTypeEXT
+      DeviceMemoryReportEventTypeEXT
 
 type FN_vkDeviceMemoryReportCallbackEXT = ("pCallbackData" ::: Ptr DeviceMemoryReportCallbackDataEXT) -> ("pUserData" ::: Ptr ()) -> IO ()
 -- | PFN_vkDeviceMemoryReportCallbackEXT - Application-defined device memory

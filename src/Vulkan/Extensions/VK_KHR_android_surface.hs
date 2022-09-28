@@ -325,7 +325,11 @@ createAndroidSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSurface <- ContT $ bracket (callocBytes @SurfaceKHR 8) free
-  r <- lift $ traceAroundEvent "vkCreateAndroidSurfaceKHR" (vkCreateAndroidSurfaceKHR' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface))
+  r <- lift $ traceAroundEvent "vkCreateAndroidSurfaceKHR" (vkCreateAndroidSurfaceKHR'
+                                                              (instanceHandle (instance'))
+                                                              pCreateInfo
+                                                              pAllocator
+                                                              (pPSurface))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurface <- lift $ peek @SurfaceKHR pPSurface
   pure $ (pSurface)
@@ -410,8 +414,6 @@ instance Zero AndroidSurfaceCreateInfoKHR where
 newtype AndroidSurfaceCreateFlagsKHR = AndroidSurfaceCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameAndroidSurfaceCreateFlagsKHR :: String
 conNameAndroidSurfaceCreateFlagsKHR = "AndroidSurfaceCreateFlagsKHR"
 
@@ -422,18 +424,21 @@ showTableAndroidSurfaceCreateFlagsKHR :: [(AndroidSurfaceCreateFlagsKHR, String)
 showTableAndroidSurfaceCreateFlagsKHR = []
 
 instance Show AndroidSurfaceCreateFlagsKHR where
-  showsPrec = enumShowsPrec enumPrefixAndroidSurfaceCreateFlagsKHR
-                            showTableAndroidSurfaceCreateFlagsKHR
-                            conNameAndroidSurfaceCreateFlagsKHR
-                            (\(AndroidSurfaceCreateFlagsKHR x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixAndroidSurfaceCreateFlagsKHR
+      showTableAndroidSurfaceCreateFlagsKHR
+      conNameAndroidSurfaceCreateFlagsKHR
+      (\(AndroidSurfaceCreateFlagsKHR x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read AndroidSurfaceCreateFlagsKHR where
-  readPrec = enumReadPrec enumPrefixAndroidSurfaceCreateFlagsKHR
-                          showTableAndroidSurfaceCreateFlagsKHR
-                          conNameAndroidSurfaceCreateFlagsKHR
-                          AndroidSurfaceCreateFlagsKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixAndroidSurfaceCreateFlagsKHR
+      showTableAndroidSurfaceCreateFlagsKHR
+      conNameAndroidSurfaceCreateFlagsKHR
+      AndroidSurfaceCreateFlagsKHR
 
 type KHR_ANDROID_SURFACE_SPEC_VERSION = 6
 

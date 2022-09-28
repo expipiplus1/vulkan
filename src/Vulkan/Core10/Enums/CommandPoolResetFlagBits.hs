@@ -41,18 +41,26 @@ enumPrefixCommandPoolResetFlagBits :: String
 enumPrefixCommandPoolResetFlagBits = "COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT"
 
 showTableCommandPoolResetFlagBits :: [(CommandPoolResetFlagBits, String)]
-showTableCommandPoolResetFlagBits = [(COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT, "")]
+showTableCommandPoolResetFlagBits =
+  [
+    ( COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT
+    , ""
+    )
+  ]
 
 instance Show CommandPoolResetFlagBits where
-  showsPrec = enumShowsPrec enumPrefixCommandPoolResetFlagBits
-                            showTableCommandPoolResetFlagBits
-                            conNameCommandPoolResetFlagBits
-                            (\(CommandPoolResetFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixCommandPoolResetFlagBits
+      showTableCommandPoolResetFlagBits
+      conNameCommandPoolResetFlagBits
+      (\(CommandPoolResetFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read CommandPoolResetFlagBits where
-  readPrec = enumReadPrec enumPrefixCommandPoolResetFlagBits
-                          showTableCommandPoolResetFlagBits
-                          conNameCommandPoolResetFlagBits
-                          CommandPoolResetFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixCommandPoolResetFlagBits
+      showTableCommandPoolResetFlagBits
+      conNameCommandPoolResetFlagBits
+      CommandPoolResetFlagBits

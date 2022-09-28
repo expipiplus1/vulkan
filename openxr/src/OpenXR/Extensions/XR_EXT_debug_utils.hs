@@ -236,7 +236,9 @@ setDebugUtilsObjectNameEXT instance' nameInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrSetDebugUtilsObjectNameEXT is null" Nothing Nothing
   let xrSetDebugUtilsObjectNameEXT' = mkXrSetDebugUtilsObjectNameEXT xrSetDebugUtilsObjectNameEXTPtr
   nameInfo' <- ContT $ withCStruct (nameInfo)
-  r <- lift $ traceAroundEvent "xrSetDebugUtilsObjectNameEXT" (xrSetDebugUtilsObjectNameEXT' (instanceHandle (instance')) nameInfo')
+  r <- lift $ traceAroundEvent "xrSetDebugUtilsObjectNameEXT" (xrSetDebugUtilsObjectNameEXT'
+                                                                 (instanceHandle (instance'))
+                                                                 nameInfo')
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
 
 
@@ -325,7 +327,10 @@ createDebugUtilsMessengerEXT instance' createInfo = liftIO . evalContT $ do
   let xrCreateDebugUtilsMessengerEXT' = mkXrCreateDebugUtilsMessengerEXT xrCreateDebugUtilsMessengerEXTPtr
   createInfo' <- ContT $ withCStruct (createInfo)
   pMessenger <- ContT $ bracket (callocBytes @(Ptr DebugUtilsMessengerEXT_T) 8) free
-  r <- lift $ traceAroundEvent "xrCreateDebugUtilsMessengerEXT" (xrCreateDebugUtilsMessengerEXT' (instanceHandle (instance')) createInfo' (pMessenger))
+  r <- lift $ traceAroundEvent "xrCreateDebugUtilsMessengerEXT" (xrCreateDebugUtilsMessengerEXT'
+                                                                   (instanceHandle (instance'))
+                                                                   createInfo'
+                                                                   (pMessenger))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   messenger <- lift $ peek @(Ptr DebugUtilsMessengerEXT_T) pMessenger
   pure $ (((\h -> DebugUtilsMessengerEXT h cmds ) messenger))
@@ -405,7 +410,8 @@ destroyDebugUtilsMessengerEXT messenger = liftIO $ do
   unless (xrDestroyDebugUtilsMessengerEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrDestroyDebugUtilsMessengerEXT is null" Nothing Nothing
   let xrDestroyDebugUtilsMessengerEXT' = mkXrDestroyDebugUtilsMessengerEXT xrDestroyDebugUtilsMessengerEXTPtr
-  r <- traceAroundEvent "xrDestroyDebugUtilsMessengerEXT" (xrDestroyDebugUtilsMessengerEXT' (debugUtilsMessengerEXTHandle (messenger)))
+  r <- traceAroundEvent "xrDestroyDebugUtilsMessengerEXT" (xrDestroyDebugUtilsMessengerEXT'
+                                                             (debugUtilsMessengerEXTHandle (messenger)))
   when (r < SUCCESS) (throwIO (OpenXrException r))
 
 
@@ -496,13 +502,20 @@ submitDebugUtilsMessageEXT :: forall io
                               -- 'DebugUtilsMessengerCallbackDataEXT' structure.
                               DebugUtilsMessengerCallbackDataEXT
                            -> io ()
-submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData = liftIO . evalContT $ do
+submitDebugUtilsMessageEXT instance'
+                             messageSeverity
+                             messageTypes
+                             callbackData = liftIO . evalContT $ do
   let xrSubmitDebugUtilsMessageEXTPtr = pXrSubmitDebugUtilsMessageEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrSubmitDebugUtilsMessageEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrSubmitDebugUtilsMessageEXT is null" Nothing Nothing
   let xrSubmitDebugUtilsMessageEXT' = mkXrSubmitDebugUtilsMessageEXT xrSubmitDebugUtilsMessageEXTPtr
   callbackData' <- ContT $ withCStruct (callbackData)
-  r <- lift $ traceAroundEvent "xrSubmitDebugUtilsMessageEXT" (xrSubmitDebugUtilsMessageEXT' (instanceHandle (instance')) (messageSeverity) (messageTypes) callbackData')
+  r <- lift $ traceAroundEvent "xrSubmitDebugUtilsMessageEXT" (xrSubmitDebugUtilsMessageEXT'
+                                                                 (instanceHandle (instance'))
+                                                                 (messageSeverity)
+                                                                 (messageTypes)
+                                                                 callbackData')
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
 
 
@@ -570,7 +583,9 @@ sessionBeginDebugUtilsLabelRegionEXT session labelInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrSessionBeginDebugUtilsLabelRegionEXT is null" Nothing Nothing
   let xrSessionBeginDebugUtilsLabelRegionEXT' = mkXrSessionBeginDebugUtilsLabelRegionEXT xrSessionBeginDebugUtilsLabelRegionEXTPtr
   labelInfo' <- ContT $ withCStruct (labelInfo)
-  r <- lift $ traceAroundEvent "xrSessionBeginDebugUtilsLabelRegionEXT" (xrSessionBeginDebugUtilsLabelRegionEXT' (sessionHandle (session)) labelInfo')
+  r <- lift $ traceAroundEvent "xrSessionBeginDebugUtilsLabelRegionEXT" (xrSessionBeginDebugUtilsLabelRegionEXT'
+                                                                           (sessionHandle (session))
+                                                                           labelInfo')
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   pure $ (r)
 
@@ -637,7 +652,8 @@ sessionEndDebugUtilsLabelRegionEXT session = liftIO $ do
   unless (xrSessionEndDebugUtilsLabelRegionEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrSessionEndDebugUtilsLabelRegionEXT is null" Nothing Nothing
   let xrSessionEndDebugUtilsLabelRegionEXT' = mkXrSessionEndDebugUtilsLabelRegionEXT xrSessionEndDebugUtilsLabelRegionEXTPtr
-  r <- traceAroundEvent "xrSessionEndDebugUtilsLabelRegionEXT" (xrSessionEndDebugUtilsLabelRegionEXT' (sessionHandle (session)))
+  r <- traceAroundEvent "xrSessionEndDebugUtilsLabelRegionEXT" (xrSessionEndDebugUtilsLabelRegionEXT'
+                                                                  (sessionHandle (session)))
   when (r < SUCCESS) (throwIO (OpenXrException r))
   pure $ (r)
 
@@ -719,7 +735,9 @@ sessionInsertDebugUtilsLabelEXT session labelInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrSessionInsertDebugUtilsLabelEXT is null" Nothing Nothing
   let xrSessionInsertDebugUtilsLabelEXT' = mkXrSessionInsertDebugUtilsLabelEXT xrSessionInsertDebugUtilsLabelEXTPtr
   labelInfo' <- ContT $ withCStruct (labelInfo)
-  r <- lift $ traceAroundEvent "xrSessionInsertDebugUtilsLabelEXT" (xrSessionInsertDebugUtilsLabelEXT' (sessionHandle (session)) labelInfo')
+  r <- lift $ traceAroundEvent "xrSessionInsertDebugUtilsLabelEXT" (xrSessionInsertDebugUtilsLabelEXT'
+                                                                      (sessionHandle (session))
+                                                                      labelInfo')
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   pure $ (r)
 
@@ -1008,7 +1026,13 @@ instance FromCStruct DebugUtilsMessengerCallbackDataEXT where
     sessionLabelCount <- peek @Word32 ((p `plusPtr` 56 :: Ptr Word32))
     sessionLabels <- peek @(Ptr DebugUtilsLabelEXT) ((p `plusPtr` 64 :: Ptr (Ptr DebugUtilsLabelEXT)))
     pure $ DebugUtilsMessengerCallbackDataEXT
-             messageId functionName message objectCount objects sessionLabelCount sessionLabels
+             messageId
+             functionName
+             message
+             objectCount
+             objects
+             sessionLabelCount
+             sessionLabels
 
 instance Zero DebugUtilsMessengerCallbackDataEXT where
   zero = DebugUtilsMessengerCallbackDataEXT
@@ -1170,12 +1194,15 @@ newtype DebugUtilsMessageSeverityFlagBitsEXT = DebugUtilsMessageSeverityFlagBits
 
 -- No documentation found for Nested "XrDebugUtilsMessageSeverityFlagBitsEXT" "XR_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT"
 pattern DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT = DebugUtilsMessageSeverityFlagBitsEXT 0x0000000000000001
+
 -- No documentation found for Nested "XrDebugUtilsMessageSeverityFlagBitsEXT" "XR_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT"
-pattern DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT    = DebugUtilsMessageSeverityFlagBitsEXT 0x0000000000000010
+pattern DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT = DebugUtilsMessageSeverityFlagBitsEXT 0x0000000000000010
+
 -- No documentation found for Nested "XrDebugUtilsMessageSeverityFlagBitsEXT" "XR_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT"
 pattern DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT = DebugUtilsMessageSeverityFlagBitsEXT 0x0000000000000100
+
 -- No documentation found for Nested "XrDebugUtilsMessageSeverityFlagBitsEXT" "XR_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT"
-pattern DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT   = DebugUtilsMessageSeverityFlagBitsEXT 0x0000000000001000
+pattern DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT = DebugUtilsMessageSeverityFlagBitsEXT 0x0000000000001000
 
 conNameDebugUtilsMessageSeverityFlagBitsEXT :: String
 conNameDebugUtilsMessageSeverityFlagBitsEXT = "DebugUtilsMessageSeverityFlagBitsEXT"
@@ -1185,25 +1212,40 @@ enumPrefixDebugUtilsMessageSeverityFlagBitsEXT = "DEBUG_UTILS_MESSAGE_SEVERITY_"
 
 showTableDebugUtilsMessageSeverityFlagBitsEXT :: [(DebugUtilsMessageSeverityFlagBitsEXT, String)]
 showTableDebugUtilsMessageSeverityFlagBitsEXT =
-  [ (DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT, "VERBOSE_BIT_EXT")
-  , (DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT   , "INFO_BIT_EXT")
-  , (DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT, "WARNING_BIT_EXT")
-  , (DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT  , "ERROR_BIT_EXT")
+  [
+    ( DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT
+    , "VERBOSE_BIT_EXT"
+    )
+  ,
+    ( DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT
+    , "INFO_BIT_EXT"
+    )
+  ,
+    ( DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
+    , "WARNING_BIT_EXT"
+    )
+  ,
+    ( DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
+    , "ERROR_BIT_EXT"
+    )
   ]
 
 instance Show DebugUtilsMessageSeverityFlagBitsEXT where
-  showsPrec = enumShowsPrec enumPrefixDebugUtilsMessageSeverityFlagBitsEXT
-                            showTableDebugUtilsMessageSeverityFlagBitsEXT
-                            conNameDebugUtilsMessageSeverityFlagBitsEXT
-                            (\(DebugUtilsMessageSeverityFlagBitsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDebugUtilsMessageSeverityFlagBitsEXT
+      showTableDebugUtilsMessageSeverityFlagBitsEXT
+      conNameDebugUtilsMessageSeverityFlagBitsEXT
+      (\(DebugUtilsMessageSeverityFlagBitsEXT x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read DebugUtilsMessageSeverityFlagBitsEXT where
-  readPrec = enumReadPrec enumPrefixDebugUtilsMessageSeverityFlagBitsEXT
-                          showTableDebugUtilsMessageSeverityFlagBitsEXT
-                          conNameDebugUtilsMessageSeverityFlagBitsEXT
-                          DebugUtilsMessageSeverityFlagBitsEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDebugUtilsMessageSeverityFlagBitsEXT
+      showTableDebugUtilsMessageSeverityFlagBitsEXT
+      conNameDebugUtilsMessageSeverityFlagBitsEXT
+      DebugUtilsMessageSeverityFlagBitsEXT
 
 type DebugUtilsMessageTypeFlagsEXT = DebugUtilsMessageTypeFlagBitsEXT
 
@@ -1216,11 +1258,14 @@ newtype DebugUtilsMessageTypeFlagBitsEXT = DebugUtilsMessageTypeFlagBitsEXT Flag
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- No documentation found for Nested "XrDebugUtilsMessageTypeFlagBitsEXT" "XR_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT"
-pattern DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT     = DebugUtilsMessageTypeFlagBitsEXT 0x0000000000000001
+pattern DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT = DebugUtilsMessageTypeFlagBitsEXT 0x0000000000000001
+
 -- No documentation found for Nested "XrDebugUtilsMessageTypeFlagBitsEXT" "XR_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT"
-pattern DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT  = DebugUtilsMessageTypeFlagBitsEXT 0x0000000000000002
+pattern DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT = DebugUtilsMessageTypeFlagBitsEXT 0x0000000000000002
+
 -- No documentation found for Nested "XrDebugUtilsMessageTypeFlagBitsEXT" "XR_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT"
 pattern DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT = DebugUtilsMessageTypeFlagBitsEXT 0x0000000000000004
+
 -- No documentation found for Nested "XrDebugUtilsMessageTypeFlagBitsEXT" "XR_DEBUG_UTILS_MESSAGE_TYPE_CONFORMANCE_BIT_EXT"
 pattern DEBUG_UTILS_MESSAGE_TYPE_CONFORMANCE_BIT_EXT = DebugUtilsMessageTypeFlagBitsEXT 0x0000000000000008
 
@@ -1232,25 +1277,40 @@ enumPrefixDebugUtilsMessageTypeFlagBitsEXT = "DEBUG_UTILS_MESSAGE_TYPE_"
 
 showTableDebugUtilsMessageTypeFlagBitsEXT :: [(DebugUtilsMessageTypeFlagBitsEXT, String)]
 showTableDebugUtilsMessageTypeFlagBitsEXT =
-  [ (DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT    , "GENERAL_BIT_EXT")
-  , (DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT , "VALIDATION_BIT_EXT")
-  , (DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT, "PERFORMANCE_BIT_EXT")
-  , (DEBUG_UTILS_MESSAGE_TYPE_CONFORMANCE_BIT_EXT, "CONFORMANCE_BIT_EXT")
+  [
+    ( DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
+    , "GENERAL_BIT_EXT"
+    )
+  ,
+    ( DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
+    , "VALIDATION_BIT_EXT"
+    )
+  ,
+    ( DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
+    , "PERFORMANCE_BIT_EXT"
+    )
+  ,
+    ( DEBUG_UTILS_MESSAGE_TYPE_CONFORMANCE_BIT_EXT
+    , "CONFORMANCE_BIT_EXT"
+    )
   ]
 
 instance Show DebugUtilsMessageTypeFlagBitsEXT where
-  showsPrec = enumShowsPrec enumPrefixDebugUtilsMessageTypeFlagBitsEXT
-                            showTableDebugUtilsMessageTypeFlagBitsEXT
-                            conNameDebugUtilsMessageTypeFlagBitsEXT
-                            (\(DebugUtilsMessageTypeFlagBitsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDebugUtilsMessageTypeFlagBitsEXT
+      showTableDebugUtilsMessageTypeFlagBitsEXT
+      conNameDebugUtilsMessageTypeFlagBitsEXT
+      (\(DebugUtilsMessageTypeFlagBitsEXT x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read DebugUtilsMessageTypeFlagBitsEXT where
-  readPrec = enumReadPrec enumPrefixDebugUtilsMessageTypeFlagBitsEXT
-                          showTableDebugUtilsMessageTypeFlagBitsEXT
-                          conNameDebugUtilsMessageTypeFlagBitsEXT
-                          DebugUtilsMessageTypeFlagBitsEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDebugUtilsMessageTypeFlagBitsEXT
+      showTableDebugUtilsMessageTypeFlagBitsEXT
+      conNameDebugUtilsMessageTypeFlagBitsEXT
+      DebugUtilsMessageTypeFlagBitsEXT
 
 type FN_xrDebugUtilsMessengerCallbackEXT = DebugUtilsMessageSeverityFlagsEXT -> ("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT) -> Ptr DebugUtilsMessengerCallbackDataEXT -> ("userData" ::: Ptr ()) -> IO Bool32
 -- | PFN_xrDebugUtilsMessengerCallbackEXT - Type of callback function invoked

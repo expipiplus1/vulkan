@@ -60,77 +60,104 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core12.PhysicalDeviceVulkan12Properties'
 newtype DriverId = DriverId Int32
   deriving newtype (Eq, Ord, Storable, Zero)
+
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_AMD_PROPRIETARY"
-pattern DRIVER_ID_AMD_PROPRIETARY           = DriverId 1
+pattern DRIVER_ID_AMD_PROPRIETARY = DriverId 1
+
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_AMD_OPEN_SOURCE"
-pattern DRIVER_ID_AMD_OPEN_SOURCE           = DriverId 2
+pattern DRIVER_ID_AMD_OPEN_SOURCE = DriverId 2
+
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_MESA_RADV"
-pattern DRIVER_ID_MESA_RADV                 = DriverId 3
+pattern DRIVER_ID_MESA_RADV = DriverId 3
+
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_NVIDIA_PROPRIETARY"
-pattern DRIVER_ID_NVIDIA_PROPRIETARY        = DriverId 4
+pattern DRIVER_ID_NVIDIA_PROPRIETARY = DriverId 4
+
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_INTEL_PROPRIETARY_WINDOWS"
 pattern DRIVER_ID_INTEL_PROPRIETARY_WINDOWS = DriverId 5
+
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_INTEL_OPEN_SOURCE_MESA"
-pattern DRIVER_ID_INTEL_OPEN_SOURCE_MESA    = DriverId 6
+pattern DRIVER_ID_INTEL_OPEN_SOURCE_MESA = DriverId 6
+
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_IMAGINATION_PROPRIETARY"
-pattern DRIVER_ID_IMAGINATION_PROPRIETARY   = DriverId 7
+pattern DRIVER_ID_IMAGINATION_PROPRIETARY = DriverId 7
+
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_QUALCOMM_PROPRIETARY"
-pattern DRIVER_ID_QUALCOMM_PROPRIETARY      = DriverId 8
+pattern DRIVER_ID_QUALCOMM_PROPRIETARY = DriverId 8
+
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_ARM_PROPRIETARY"
-pattern DRIVER_ID_ARM_PROPRIETARY           = DriverId 9
+pattern DRIVER_ID_ARM_PROPRIETARY = DriverId 9
+
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_GOOGLE_SWIFTSHADER"
-pattern DRIVER_ID_GOOGLE_SWIFTSHADER        = DriverId 10
+pattern DRIVER_ID_GOOGLE_SWIFTSHADER = DriverId 10
+
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_GGP_PROPRIETARY"
-pattern DRIVER_ID_GGP_PROPRIETARY           = DriverId 11
+pattern DRIVER_ID_GGP_PROPRIETARY = DriverId 11
+
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_BROADCOM_PROPRIETARY"
-pattern DRIVER_ID_BROADCOM_PROPRIETARY      = DriverId 12
+pattern DRIVER_ID_BROADCOM_PROPRIETARY = DriverId 12
+
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_MESA_LLVMPIPE"
-pattern DRIVER_ID_MESA_LLVMPIPE             = DriverId 13
+pattern DRIVER_ID_MESA_LLVMPIPE = DriverId 13
+
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_MOLTENVK"
-pattern DRIVER_ID_MOLTENVK                  = DriverId 14
+pattern DRIVER_ID_MOLTENVK = DriverId 14
+
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_COREAVI_PROPRIETARY"
-pattern DRIVER_ID_COREAVI_PROPRIETARY       = DriverId 15
+pattern DRIVER_ID_COREAVI_PROPRIETARY = DriverId 15
+
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_JUICE_PROPRIETARY"
-pattern DRIVER_ID_JUICE_PROPRIETARY         = DriverId 16
+pattern DRIVER_ID_JUICE_PROPRIETARY = DriverId 16
+
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_VERISILICON_PROPRIETARY"
-pattern DRIVER_ID_VERISILICON_PROPRIETARY   = DriverId 17
+pattern DRIVER_ID_VERISILICON_PROPRIETARY = DriverId 17
+
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_MESA_TURNIP"
-pattern DRIVER_ID_MESA_TURNIP               = DriverId 18
+pattern DRIVER_ID_MESA_TURNIP = DriverId 18
+
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_MESA_V3DV"
-pattern DRIVER_ID_MESA_V3DV                 = DriverId 19
+pattern DRIVER_ID_MESA_V3DV = DriverId 19
+
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_MESA_PANVK"
-pattern DRIVER_ID_MESA_PANVK                = DriverId 20
+pattern DRIVER_ID_MESA_PANVK = DriverId 20
+
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_SAMSUNG_PROPRIETARY"
-pattern DRIVER_ID_SAMSUNG_PROPRIETARY       = DriverId 21
+pattern DRIVER_ID_SAMSUNG_PROPRIETARY = DriverId 21
+
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_MESA_VENUS"
-pattern DRIVER_ID_MESA_VENUS                = DriverId 22
+pattern DRIVER_ID_MESA_VENUS = DriverId 22
+
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_MESA_DOZEN"
-pattern DRIVER_ID_MESA_DOZEN                = DriverId 23
-{-# complete DRIVER_ID_AMD_PROPRIETARY,
-             DRIVER_ID_AMD_OPEN_SOURCE,
-             DRIVER_ID_MESA_RADV,
-             DRIVER_ID_NVIDIA_PROPRIETARY,
-             DRIVER_ID_INTEL_PROPRIETARY_WINDOWS,
-             DRIVER_ID_INTEL_OPEN_SOURCE_MESA,
-             DRIVER_ID_IMAGINATION_PROPRIETARY,
-             DRIVER_ID_QUALCOMM_PROPRIETARY,
-             DRIVER_ID_ARM_PROPRIETARY,
-             DRIVER_ID_GOOGLE_SWIFTSHADER,
-             DRIVER_ID_GGP_PROPRIETARY,
-             DRIVER_ID_BROADCOM_PROPRIETARY,
-             DRIVER_ID_MESA_LLVMPIPE,
-             DRIVER_ID_MOLTENVK,
-             DRIVER_ID_COREAVI_PROPRIETARY,
-             DRIVER_ID_JUICE_PROPRIETARY,
-             DRIVER_ID_VERISILICON_PROPRIETARY,
-             DRIVER_ID_MESA_TURNIP,
-             DRIVER_ID_MESA_V3DV,
-             DRIVER_ID_MESA_PANVK,
-             DRIVER_ID_SAMSUNG_PROPRIETARY,
-             DRIVER_ID_MESA_VENUS,
-             DRIVER_ID_MESA_DOZEN :: DriverId #-}
+pattern DRIVER_ID_MESA_DOZEN = DriverId 23
+
+{-# COMPLETE
+  DRIVER_ID_AMD_PROPRIETARY
+  , DRIVER_ID_AMD_OPEN_SOURCE
+  , DRIVER_ID_MESA_RADV
+  , DRIVER_ID_NVIDIA_PROPRIETARY
+  , DRIVER_ID_INTEL_PROPRIETARY_WINDOWS
+  , DRIVER_ID_INTEL_OPEN_SOURCE_MESA
+  , DRIVER_ID_IMAGINATION_PROPRIETARY
+  , DRIVER_ID_QUALCOMM_PROPRIETARY
+  , DRIVER_ID_ARM_PROPRIETARY
+  , DRIVER_ID_GOOGLE_SWIFTSHADER
+  , DRIVER_ID_GGP_PROPRIETARY
+  , DRIVER_ID_BROADCOM_PROPRIETARY
+  , DRIVER_ID_MESA_LLVMPIPE
+  , DRIVER_ID_MOLTENVK
+  , DRIVER_ID_COREAVI_PROPRIETARY
+  , DRIVER_ID_JUICE_PROPRIETARY
+  , DRIVER_ID_VERISILICON_PROPRIETARY
+  , DRIVER_ID_MESA_TURNIP
+  , DRIVER_ID_MESA_V3DV
+  , DRIVER_ID_MESA_PANVK
+  , DRIVER_ID_SAMSUNG_PROPRIETARY
+  , DRIVER_ID_MESA_VENUS
+  , DRIVER_ID_MESA_DOZEN ::
+    DriverId
+  #-}
 
 conNameDriverId :: String
 conNameDriverId = "DriverId"
@@ -140,34 +167,56 @@ enumPrefixDriverId = "DRIVER_ID_"
 
 showTableDriverId :: [(DriverId, String)]
 showTableDriverId =
-  [ (DRIVER_ID_AMD_PROPRIETARY          , "AMD_PROPRIETARY")
-  , (DRIVER_ID_AMD_OPEN_SOURCE          , "AMD_OPEN_SOURCE")
-  , (DRIVER_ID_MESA_RADV                , "MESA_RADV")
-  , (DRIVER_ID_NVIDIA_PROPRIETARY       , "NVIDIA_PROPRIETARY")
-  , (DRIVER_ID_INTEL_PROPRIETARY_WINDOWS, "INTEL_PROPRIETARY_WINDOWS")
-  , (DRIVER_ID_INTEL_OPEN_SOURCE_MESA   , "INTEL_OPEN_SOURCE_MESA")
-  , (DRIVER_ID_IMAGINATION_PROPRIETARY  , "IMAGINATION_PROPRIETARY")
-  , (DRIVER_ID_QUALCOMM_PROPRIETARY     , "QUALCOMM_PROPRIETARY")
-  , (DRIVER_ID_ARM_PROPRIETARY          , "ARM_PROPRIETARY")
-  , (DRIVER_ID_GOOGLE_SWIFTSHADER       , "GOOGLE_SWIFTSHADER")
-  , (DRIVER_ID_GGP_PROPRIETARY          , "GGP_PROPRIETARY")
-  , (DRIVER_ID_BROADCOM_PROPRIETARY     , "BROADCOM_PROPRIETARY")
-  , (DRIVER_ID_MESA_LLVMPIPE            , "MESA_LLVMPIPE")
-  , (DRIVER_ID_MOLTENVK                 , "MOLTENVK")
-  , (DRIVER_ID_COREAVI_PROPRIETARY      , "COREAVI_PROPRIETARY")
-  , (DRIVER_ID_JUICE_PROPRIETARY        , "JUICE_PROPRIETARY")
-  , (DRIVER_ID_VERISILICON_PROPRIETARY  , "VERISILICON_PROPRIETARY")
-  , (DRIVER_ID_MESA_TURNIP              , "MESA_TURNIP")
-  , (DRIVER_ID_MESA_V3DV                , "MESA_V3DV")
-  , (DRIVER_ID_MESA_PANVK               , "MESA_PANVK")
-  , (DRIVER_ID_SAMSUNG_PROPRIETARY      , "SAMSUNG_PROPRIETARY")
-  , (DRIVER_ID_MESA_VENUS               , "MESA_VENUS")
-  , (DRIVER_ID_MESA_DOZEN               , "MESA_DOZEN")
+  [ (DRIVER_ID_AMD_PROPRIETARY, "AMD_PROPRIETARY")
+  , (DRIVER_ID_AMD_OPEN_SOURCE, "AMD_OPEN_SOURCE")
+  , (DRIVER_ID_MESA_RADV, "MESA_RADV")
+  , (DRIVER_ID_NVIDIA_PROPRIETARY, "NVIDIA_PROPRIETARY")
+  ,
+    ( DRIVER_ID_INTEL_PROPRIETARY_WINDOWS
+    , "INTEL_PROPRIETARY_WINDOWS"
+    )
+  ,
+    ( DRIVER_ID_INTEL_OPEN_SOURCE_MESA
+    , "INTEL_OPEN_SOURCE_MESA"
+    )
+  ,
+    ( DRIVER_ID_IMAGINATION_PROPRIETARY
+    , "IMAGINATION_PROPRIETARY"
+    )
+  , (DRIVER_ID_QUALCOMM_PROPRIETARY, "QUALCOMM_PROPRIETARY")
+  , (DRIVER_ID_ARM_PROPRIETARY, "ARM_PROPRIETARY")
+  , (DRIVER_ID_GOOGLE_SWIFTSHADER, "GOOGLE_SWIFTSHADER")
+  , (DRIVER_ID_GGP_PROPRIETARY, "GGP_PROPRIETARY")
+  , (DRIVER_ID_BROADCOM_PROPRIETARY, "BROADCOM_PROPRIETARY")
+  , (DRIVER_ID_MESA_LLVMPIPE, "MESA_LLVMPIPE")
+  , (DRIVER_ID_MOLTENVK, "MOLTENVK")
+  , (DRIVER_ID_COREAVI_PROPRIETARY, "COREAVI_PROPRIETARY")
+  , (DRIVER_ID_JUICE_PROPRIETARY, "JUICE_PROPRIETARY")
+  ,
+    ( DRIVER_ID_VERISILICON_PROPRIETARY
+    , "VERISILICON_PROPRIETARY"
+    )
+  , (DRIVER_ID_MESA_TURNIP, "MESA_TURNIP")
+  , (DRIVER_ID_MESA_V3DV, "MESA_V3DV")
+  , (DRIVER_ID_MESA_PANVK, "MESA_PANVK")
+  , (DRIVER_ID_SAMSUNG_PROPRIETARY, "SAMSUNG_PROPRIETARY")
+  , (DRIVER_ID_MESA_VENUS, "MESA_VENUS")
+  , (DRIVER_ID_MESA_DOZEN, "MESA_DOZEN")
   ]
 
 instance Show DriverId where
-  showsPrec = enumShowsPrec enumPrefixDriverId showTableDriverId conNameDriverId (\(DriverId x) -> x) (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDriverId
+      showTableDriverId
+      conNameDriverId
+      (\(DriverId x) -> x)
+      (showsPrec 11)
 
 instance Read DriverId where
-  readPrec = enumReadPrec enumPrefixDriverId showTableDriverId conNameDriverId DriverId
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDriverId
+      showTableDriverId
+      conNameDriverId
+      DriverId

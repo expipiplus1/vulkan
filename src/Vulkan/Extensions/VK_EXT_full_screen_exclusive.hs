@@ -444,7 +444,9 @@ foreign import ccall
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR',
 -- 'Vulkan.Extensions.VK_KHR_surface.PresentModeKHR'
 getPhysicalDeviceSurfacePresentModes2EXT :: forall a io
-                                          . (Extendss PhysicalDeviceSurfaceInfo2KHR a, PokeChain a, MonadIO io)
+                                          . ( Extendss PhysicalDeviceSurfaceInfo2KHR a
+                                            , PokeChain a
+                                            , MonadIO io )
                                          => -- | @physicalDevice@ is the physical device that will be associated with the
                                             -- swapchain to be created, as described for
                                             -- 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
@@ -455,7 +457,8 @@ getPhysicalDeviceSurfacePresentModes2EXT :: forall a io
                                             -- be consumed by 'Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
                                             (PhysicalDeviceSurfaceInfo2KHR a)
                                          -> io (Result, ("presentModes" ::: Vector PresentModeKHR))
-getPhysicalDeviceSurfacePresentModes2EXT physicalDevice surfaceInfo = liftIO . evalContT $ do
+getPhysicalDeviceSurfacePresentModes2EXT physicalDevice
+                                           surfaceInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfacePresentModes2EXTPtr = pVkGetPhysicalDeviceSurfacePresentModes2EXT (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceSurfacePresentModes2EXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSurfacePresentModes2EXT is null" Nothing Nothing
@@ -464,11 +467,19 @@ getPhysicalDeviceSurfacePresentModes2EXT physicalDevice surfaceInfo = liftIO . e
   pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
   let x9 = forgetExtensions pSurfaceInfo
   pPPresentModeCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceSurfacePresentModes2EXT" (vkGetPhysicalDeviceSurfacePresentModes2EXT' physicalDevice' x9 (pPPresentModeCount) (nullPtr))
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceSurfacePresentModes2EXT" (vkGetPhysicalDeviceSurfacePresentModes2EXT'
+                                                                               physicalDevice'
+                                                                               x9
+                                                                               (pPPresentModeCount)
+                                                                               (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPresentModeCount <- lift $ peek @Word32 pPPresentModeCount
   pPPresentModes <- ContT $ bracket (callocBytes @PresentModeKHR ((fromIntegral (pPresentModeCount)) * 4)) free
-  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceSurfacePresentModes2EXT" (vkGetPhysicalDeviceSurfacePresentModes2EXT' physicalDevice' x9 (pPPresentModeCount) (pPPresentModes))
+  r' <- lift $ traceAroundEvent "vkGetPhysicalDeviceSurfacePresentModes2EXT" (vkGetPhysicalDeviceSurfacePresentModes2EXT'
+                                                                                physicalDevice'
+                                                                                x9
+                                                                                (pPPresentModeCount)
+                                                                                (pPPresentModes))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pPresentModeCount' <- lift $ peek @Word32 pPPresentModeCount
   pPresentModes' <- lift $ generateM (fromIntegral (pPresentModeCount')) (\i -> peek @PresentModeKHR ((pPPresentModes `advancePtrBytes` (4 * (i)) :: Ptr PresentModeKHR)))
@@ -515,7 +526,9 @@ foreign import ccall
 -- 'Vulkan.Extensions.VK_KHR_swapchain.DeviceGroupPresentModeFlagsKHR',
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
 getDeviceGroupSurfacePresentModes2EXT :: forall a io
-                                       . (Extendss PhysicalDeviceSurfaceInfo2KHR a, PokeChain a, MonadIO io)
+                                       . ( Extendss PhysicalDeviceSurfaceInfo2KHR a
+                                         , PokeChain a
+                                         , MonadIO io )
                                       => -- | @device@ is the logical device.
                                          --
                                          -- #VUID-vkGetDeviceGroupSurfacePresentModes2EXT-device-parameter# @device@
@@ -532,14 +545,18 @@ getDeviceGroupSurfacePresentModes2EXT :: forall a io
                                          -- structure
                                          (PhysicalDeviceSurfaceInfo2KHR a)
                                       -> io (("modes" ::: DeviceGroupPresentModeFlagsKHR))
-getDeviceGroupSurfacePresentModes2EXT device surfaceInfo = liftIO . evalContT $ do
+getDeviceGroupSurfacePresentModes2EXT device
+                                        surfaceInfo = liftIO . evalContT $ do
   let vkGetDeviceGroupSurfacePresentModes2EXTPtr = pVkGetDeviceGroupSurfacePresentModes2EXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDeviceGroupSurfacePresentModes2EXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceGroupSurfacePresentModes2EXT is null" Nothing Nothing
   let vkGetDeviceGroupSurfacePresentModes2EXT' = mkVkGetDeviceGroupSurfacePresentModes2EXT vkGetDeviceGroupSurfacePresentModes2EXTPtr
   pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
   pPModes <- ContT $ bracket (callocBytes @DeviceGroupPresentModeFlagsKHR 4) free
-  r <- lift $ traceAroundEvent "vkGetDeviceGroupSurfacePresentModes2EXT" (vkGetDeviceGroupSurfacePresentModes2EXT' (deviceHandle (device)) (forgetExtensions pSurfaceInfo) (pPModes))
+  r <- lift $ traceAroundEvent "vkGetDeviceGroupSurfacePresentModes2EXT" (vkGetDeviceGroupSurfacePresentModes2EXT'
+                                                                            (deviceHandle (device))
+                                                                            (forgetExtensions pSurfaceInfo)
+                                                                            (pPModes))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pModes <- lift $ peek @DeviceGroupPresentModeFlagsKHR pPModes
   pure $ (pModes)
@@ -632,7 +649,9 @@ acquireFullScreenExclusiveModeEXT device swapchain = liftIO $ do
   unless (vkAcquireFullScreenExclusiveModeEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireFullScreenExclusiveModeEXT is null" Nothing Nothing
   let vkAcquireFullScreenExclusiveModeEXT' = mkVkAcquireFullScreenExclusiveModeEXT vkAcquireFullScreenExclusiveModeEXTPtr
-  r <- traceAroundEvent "vkAcquireFullScreenExclusiveModeEXT" (vkAcquireFullScreenExclusiveModeEXT' (deviceHandle (device)) (swapchain))
+  r <- traceAroundEvent "vkAcquireFullScreenExclusiveModeEXT" (vkAcquireFullScreenExclusiveModeEXT'
+                                                                 (deviceHandle (device))
+                                                                 (swapchain))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -682,7 +701,9 @@ releaseFullScreenExclusiveModeEXT device swapchain = liftIO $ do
   unless (vkReleaseFullScreenExclusiveModeEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkReleaseFullScreenExclusiveModeEXT is null" Nothing Nothing
   let vkReleaseFullScreenExclusiveModeEXT' = mkVkReleaseFullScreenExclusiveModeEXT vkReleaseFullScreenExclusiveModeEXTPtr
-  r <- traceAroundEvent "vkReleaseFullScreenExclusiveModeEXT" (vkReleaseFullScreenExclusiveModeEXT' (deviceHandle (device)) (swapchain))
+  r <- traceAroundEvent "vkReleaseFullScreenExclusiveModeEXT" (vkReleaseFullScreenExclusiveModeEXT'
+                                                                 (deviceHandle (device))
+                                                                 (swapchain))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -896,27 +917,34 @@ newtype FullScreenExclusiveEXT = FullScreenExclusiveEXT Int32
 -- | 'FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT' indicates the implementation
 -- /should/ determine the appropriate full-screen method by whatever means
 -- it deems appropriate.
-pattern FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT                = FullScreenExclusiveEXT 0
+pattern FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT = FullScreenExclusiveEXT 0
+
 -- | 'FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT' indicates the implementation /may/
 -- use full-screen exclusive mechanisms when available. Such mechanisms
 -- /may/ result in better performance and\/or the availability of different
 -- presentation capabilities, but /may/ require a more disruptive
 -- transition during swapchain initialization, first presentation and\/or
 -- destruction.
-pattern FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT                = FullScreenExclusiveEXT 1
+pattern FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT = FullScreenExclusiveEXT 1
+
 -- | 'FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT' indicates the implementation
 -- /should/ avoid using full-screen mechanisms which rely on disruptive
 -- transitions.
-pattern FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT             = FullScreenExclusiveEXT 2
+pattern FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT = FullScreenExclusiveEXT 2
+
 -- | 'FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT' indicates the
 -- application will manage full-screen exclusive mode by using the
 -- 'acquireFullScreenExclusiveModeEXT' and
 -- 'releaseFullScreenExclusiveModeEXT' commands.
 pattern FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT = FullScreenExclusiveEXT 3
-{-# complete FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT,
-             FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT,
-             FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT,
-             FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT :: FullScreenExclusiveEXT #-}
+
+{-# COMPLETE
+  FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT
+  , FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT
+  , FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT
+  , FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT ::
+    FullScreenExclusiveEXT
+  #-}
 
 conNameFullScreenExclusiveEXT :: String
 conNameFullScreenExclusiveEXT = "FullScreenExclusiveEXT"
@@ -926,25 +954,40 @@ enumPrefixFullScreenExclusiveEXT = "FULL_SCREEN_EXCLUSIVE_"
 
 showTableFullScreenExclusiveEXT :: [(FullScreenExclusiveEXT, String)]
 showTableFullScreenExclusiveEXT =
-  [ (FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT               , "DEFAULT_EXT")
-  , (FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT               , "ALLOWED_EXT")
-  , (FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT            , "DISALLOWED_EXT")
-  , (FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT, "APPLICATION_CONTROLLED_EXT")
+  [
+    ( FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT
+    , "DEFAULT_EXT"
+    )
+  ,
+    ( FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT
+    , "ALLOWED_EXT"
+    )
+  ,
+    ( FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT
+    , "DISALLOWED_EXT"
+    )
+  ,
+    ( FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT
+    , "APPLICATION_CONTROLLED_EXT"
+    )
   ]
 
 instance Show FullScreenExclusiveEXT where
-  showsPrec = enumShowsPrec enumPrefixFullScreenExclusiveEXT
-                            showTableFullScreenExclusiveEXT
-                            conNameFullScreenExclusiveEXT
-                            (\(FullScreenExclusiveEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixFullScreenExclusiveEXT
+      showTableFullScreenExclusiveEXT
+      conNameFullScreenExclusiveEXT
+      (\(FullScreenExclusiveEXT x) -> x)
+      (showsPrec 11)
 
 instance Read FullScreenExclusiveEXT where
-  readPrec = enumReadPrec enumPrefixFullScreenExclusiveEXT
-                          showTableFullScreenExclusiveEXT
-                          conNameFullScreenExclusiveEXT
-                          FullScreenExclusiveEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixFullScreenExclusiveEXT
+      showTableFullScreenExclusiveEXT
+      conNameFullScreenExclusiveEXT
+      FullScreenExclusiveEXT
 
 type EXT_FULL_SCREEN_EXCLUSIVE_SPEC_VERSION = 4
 

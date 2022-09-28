@@ -88,29 +88,40 @@ newtype CompareOp = CompareOp Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- No documentation found for Nested "VkCompareOp" "VK_COMPARE_OP_NEVER"
-pattern COMPARE_OP_NEVER            = CompareOp 0
+pattern COMPARE_OP_NEVER = CompareOp 0
+
 -- No documentation found for Nested "VkCompareOp" "VK_COMPARE_OP_LESS"
-pattern COMPARE_OP_LESS             = CompareOp 1
+pattern COMPARE_OP_LESS = CompareOp 1
+
 -- No documentation found for Nested "VkCompareOp" "VK_COMPARE_OP_EQUAL"
-pattern COMPARE_OP_EQUAL            = CompareOp 2
+pattern COMPARE_OP_EQUAL = CompareOp 2
+
 -- No documentation found for Nested "VkCompareOp" "VK_COMPARE_OP_LESS_OR_EQUAL"
-pattern COMPARE_OP_LESS_OR_EQUAL    = CompareOp 3
+pattern COMPARE_OP_LESS_OR_EQUAL = CompareOp 3
+
 -- No documentation found for Nested "VkCompareOp" "VK_COMPARE_OP_GREATER"
-pattern COMPARE_OP_GREATER          = CompareOp 4
+pattern COMPARE_OP_GREATER = CompareOp 4
+
 -- No documentation found for Nested "VkCompareOp" "VK_COMPARE_OP_NOT_EQUAL"
-pattern COMPARE_OP_NOT_EQUAL        = CompareOp 5
+pattern COMPARE_OP_NOT_EQUAL = CompareOp 5
+
 -- No documentation found for Nested "VkCompareOp" "VK_COMPARE_OP_GREATER_OR_EQUAL"
 pattern COMPARE_OP_GREATER_OR_EQUAL = CompareOp 6
+
 -- No documentation found for Nested "VkCompareOp" "VK_COMPARE_OP_ALWAYS"
-pattern COMPARE_OP_ALWAYS           = CompareOp 7
-{-# complete COMPARE_OP_NEVER,
-             COMPARE_OP_LESS,
-             COMPARE_OP_EQUAL,
-             COMPARE_OP_LESS_OR_EQUAL,
-             COMPARE_OP_GREATER,
-             COMPARE_OP_NOT_EQUAL,
-             COMPARE_OP_GREATER_OR_EQUAL,
-             COMPARE_OP_ALWAYS :: CompareOp #-}
+pattern COMPARE_OP_ALWAYS = CompareOp 7
+
+{-# COMPLETE
+  COMPARE_OP_NEVER
+  , COMPARE_OP_LESS
+  , COMPARE_OP_EQUAL
+  , COMPARE_OP_LESS_OR_EQUAL
+  , COMPARE_OP_GREATER
+  , COMPARE_OP_NOT_EQUAL
+  , COMPARE_OP_GREATER_OR_EQUAL
+  , COMPARE_OP_ALWAYS ::
+    CompareOp
+  #-}
 
 conNameCompareOp :: String
 conNameCompareOp = "CompareOp"
@@ -120,20 +131,29 @@ enumPrefixCompareOp = "COMPARE_OP_"
 
 showTableCompareOp :: [(CompareOp, String)]
 showTableCompareOp =
-  [ (COMPARE_OP_NEVER           , "NEVER")
-  , (COMPARE_OP_LESS            , "LESS")
-  , (COMPARE_OP_EQUAL           , "EQUAL")
-  , (COMPARE_OP_LESS_OR_EQUAL   , "LESS_OR_EQUAL")
-  , (COMPARE_OP_GREATER         , "GREATER")
-  , (COMPARE_OP_NOT_EQUAL       , "NOT_EQUAL")
+  [ (COMPARE_OP_NEVER, "NEVER")
+  , (COMPARE_OP_LESS, "LESS")
+  , (COMPARE_OP_EQUAL, "EQUAL")
+  , (COMPARE_OP_LESS_OR_EQUAL, "LESS_OR_EQUAL")
+  , (COMPARE_OP_GREATER, "GREATER")
+  , (COMPARE_OP_NOT_EQUAL, "NOT_EQUAL")
   , (COMPARE_OP_GREATER_OR_EQUAL, "GREATER_OR_EQUAL")
-  , (COMPARE_OP_ALWAYS          , "ALWAYS")
+  , (COMPARE_OP_ALWAYS, "ALWAYS")
   ]
 
 instance Show CompareOp where
   showsPrec =
-    enumShowsPrec enumPrefixCompareOp showTableCompareOp conNameCompareOp (\(CompareOp x) -> x) (showsPrec 11)
+    enumShowsPrec
+      enumPrefixCompareOp
+      showTableCompareOp
+      conNameCompareOp
+      (\(CompareOp x) -> x)
+      (showsPrec 11)
 
 instance Read CompareOp where
-  readPrec = enumReadPrec enumPrefixCompareOp showTableCompareOp conNameCompareOp CompareOp
-
+  readPrec =
+    enumReadPrec
+      enumPrefixCompareOp
+      showTableCompareOp
+      conNameCompareOp
+      CompareOp

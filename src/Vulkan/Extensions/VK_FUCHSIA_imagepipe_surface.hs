@@ -221,7 +221,9 @@ createImagePipeSurfaceFUCHSIA :: forall io
                                  -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
                                  ("allocator" ::: Maybe AllocationCallbacks)
                               -> io (SurfaceKHR)
-createImagePipeSurfaceFUCHSIA instance' createInfo allocator = liftIO . evalContT $ do
+createImagePipeSurfaceFUCHSIA instance'
+                                createInfo
+                                allocator = liftIO . evalContT $ do
   let vkCreateImagePipeSurfaceFUCHSIAPtr = pVkCreateImagePipeSurfaceFUCHSIA (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateImagePipeSurfaceFUCHSIAPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateImagePipeSurfaceFUCHSIA is null" Nothing Nothing
@@ -231,7 +233,11 @@ createImagePipeSurfaceFUCHSIA instance' createInfo allocator = liftIO . evalCont
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSurface <- ContT $ bracket (callocBytes @SurfaceKHR 8) free
-  r <- lift $ traceAroundEvent "vkCreateImagePipeSurfaceFUCHSIA" (vkCreateImagePipeSurfaceFUCHSIA' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface))
+  r <- lift $ traceAroundEvent "vkCreateImagePipeSurfaceFUCHSIA" (vkCreateImagePipeSurfaceFUCHSIA'
+                                                                    (instanceHandle (instance'))
+                                                                    pCreateInfo
+                                                                    pAllocator
+                                                                    (pPSurface))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurface <- lift $ peek @SurfaceKHR pPSurface
   pure $ (pSurface)
@@ -316,8 +322,6 @@ instance Zero ImagePipeSurfaceCreateInfoFUCHSIA where
 newtype ImagePipeSurfaceCreateFlagsFUCHSIA = ImagePipeSurfaceCreateFlagsFUCHSIA Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameImagePipeSurfaceCreateFlagsFUCHSIA :: String
 conNameImagePipeSurfaceCreateFlagsFUCHSIA = "ImagePipeSurfaceCreateFlagsFUCHSIA"
 
@@ -328,18 +332,21 @@ showTableImagePipeSurfaceCreateFlagsFUCHSIA :: [(ImagePipeSurfaceCreateFlagsFUCH
 showTableImagePipeSurfaceCreateFlagsFUCHSIA = []
 
 instance Show ImagePipeSurfaceCreateFlagsFUCHSIA where
-  showsPrec = enumShowsPrec enumPrefixImagePipeSurfaceCreateFlagsFUCHSIA
-                            showTableImagePipeSurfaceCreateFlagsFUCHSIA
-                            conNameImagePipeSurfaceCreateFlagsFUCHSIA
-                            (\(ImagePipeSurfaceCreateFlagsFUCHSIA x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixImagePipeSurfaceCreateFlagsFUCHSIA
+      showTableImagePipeSurfaceCreateFlagsFUCHSIA
+      conNameImagePipeSurfaceCreateFlagsFUCHSIA
+      (\(ImagePipeSurfaceCreateFlagsFUCHSIA x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read ImagePipeSurfaceCreateFlagsFUCHSIA where
-  readPrec = enumReadPrec enumPrefixImagePipeSurfaceCreateFlagsFUCHSIA
-                          showTableImagePipeSurfaceCreateFlagsFUCHSIA
-                          conNameImagePipeSurfaceCreateFlagsFUCHSIA
-                          ImagePipeSurfaceCreateFlagsFUCHSIA
-
+  readPrec =
+    enumReadPrec
+      enumPrefixImagePipeSurfaceCreateFlagsFUCHSIA
+      showTableImagePipeSurfaceCreateFlagsFUCHSIA
+      conNameImagePipeSurfaceCreateFlagsFUCHSIA
+      ImagePipeSurfaceCreateFlagsFUCHSIA
 
 type FUCHSIA_IMAGEPIPE_SURFACE_SPEC_VERSION = 1
 

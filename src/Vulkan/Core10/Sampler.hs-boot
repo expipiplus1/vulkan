@@ -12,8 +12,10 @@ import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
 type role SamplerCreateInfo nominal
 data SamplerCreateInfo (es :: [Type])
 
-instance (Extendss SamplerCreateInfo es, PokeChain es) => ToCStruct (SamplerCreateInfo es)
+instance ( Extendss SamplerCreateInfo es
+         , PokeChain es ) => ToCStruct (SamplerCreateInfo es)
 instance Show (Chain es) => Show (SamplerCreateInfo es)
 
-instance (Extendss SamplerCreateInfo es, PeekChain es) => FromCStruct (SamplerCreateInfo es)
+instance ( Extendss SamplerCreateInfo es
+         , PeekChain es ) => FromCStruct (SamplerCreateInfo es)
 

@@ -419,7 +419,8 @@ instance FromCStruct MultisampledRenderToSingleSampledInfoEXT where
     multisampledRenderToSingleSampledEnable <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     rasterizationSamples <- peek @SampleCountFlagBits ((p `plusPtr` 20 :: Ptr SampleCountFlagBits))
     pure $ MultisampledRenderToSingleSampledInfoEXT
-             (bool32ToBool multisampledRenderToSingleSampledEnable) rasterizationSamples
+             (bool32ToBool multisampledRenderToSingleSampledEnable)
+             rasterizationSamples
 
 instance Storable MultisampledRenderToSingleSampledInfoEXT where
   sizeOf ~_ = 24

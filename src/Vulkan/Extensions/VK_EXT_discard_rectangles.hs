@@ -310,14 +310,20 @@ cmdSetDiscardRectangleEXT :: forall io
                              -- rectangles.
                              ("discardRectangles" ::: Vector Rect2D)
                           -> io ()
-cmdSetDiscardRectangleEXT commandBuffer firstDiscardRectangle discardRectangles = liftIO . evalContT $ do
+cmdSetDiscardRectangleEXT commandBuffer
+                            firstDiscardRectangle
+                            discardRectangles = liftIO . evalContT $ do
   let vkCmdSetDiscardRectangleEXTPtr = pVkCmdSetDiscardRectangleEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetDiscardRectangleEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetDiscardRectangleEXT is null" Nothing Nothing
   let vkCmdSetDiscardRectangleEXT' = mkVkCmdSetDiscardRectangleEXT vkCmdSetDiscardRectangleEXTPtr
   pPDiscardRectangles <- ContT $ allocaBytes @Rect2D ((Data.Vector.length (discardRectangles)) * 16)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPDiscardRectangles `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (discardRectangles)
-  lift $ traceAroundEvent "vkCmdSetDiscardRectangleEXT" (vkCmdSetDiscardRectangleEXT' (commandBufferHandle (commandBuffer)) (firstDiscardRectangle) ((fromIntegral (Data.Vector.length $ (discardRectangles)) :: Word32)) (pPDiscardRectangles))
+  lift $ traceAroundEvent "vkCmdSetDiscardRectangleEXT" (vkCmdSetDiscardRectangleEXT'
+                                                           (commandBufferHandle (commandBuffer))
+                                                           (firstDiscardRectangle)
+                                                           ((fromIntegral (Data.Vector.length $ (discardRectangles)) :: Word32))
+                                                           (pPDiscardRectangles))
   pure $ ()
 
 
@@ -481,8 +487,6 @@ instance Zero PipelineDiscardRectangleStateCreateInfoEXT where
 newtype PipelineDiscardRectangleStateCreateFlagsEXT = PipelineDiscardRectangleStateCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNamePipelineDiscardRectangleStateCreateFlagsEXT :: String
 conNamePipelineDiscardRectangleStateCreateFlagsEXT = "PipelineDiscardRectangleStateCreateFlagsEXT"
 
@@ -493,18 +497,21 @@ showTablePipelineDiscardRectangleStateCreateFlagsEXT :: [(PipelineDiscardRectang
 showTablePipelineDiscardRectangleStateCreateFlagsEXT = []
 
 instance Show PipelineDiscardRectangleStateCreateFlagsEXT where
-  showsPrec = enumShowsPrec enumPrefixPipelineDiscardRectangleStateCreateFlagsEXT
-                            showTablePipelineDiscardRectangleStateCreateFlagsEXT
-                            conNamePipelineDiscardRectangleStateCreateFlagsEXT
-                            (\(PipelineDiscardRectangleStateCreateFlagsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineDiscardRectangleStateCreateFlagsEXT
+      showTablePipelineDiscardRectangleStateCreateFlagsEXT
+      conNamePipelineDiscardRectangleStateCreateFlagsEXT
+      (\(PipelineDiscardRectangleStateCreateFlagsEXT x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read PipelineDiscardRectangleStateCreateFlagsEXT where
-  readPrec = enumReadPrec enumPrefixPipelineDiscardRectangleStateCreateFlagsEXT
-                          showTablePipelineDiscardRectangleStateCreateFlagsEXT
-                          conNamePipelineDiscardRectangleStateCreateFlagsEXT
-                          PipelineDiscardRectangleStateCreateFlagsEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineDiscardRectangleStateCreateFlagsEXT
+      showTablePipelineDiscardRectangleStateCreateFlagsEXT
+      conNamePipelineDiscardRectangleStateCreateFlagsEXT
+      PipelineDiscardRectangleStateCreateFlagsEXT
 
 -- | VkDiscardRectangleModeEXT - Specify the discard rectangle mode
 --
@@ -518,11 +525,16 @@ newtype DiscardRectangleModeEXT = DiscardRectangleModeEXT Int32
 -- | 'DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT' specifies that the discard
 -- rectangle test is inclusive.
 pattern DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT = DiscardRectangleModeEXT 0
+
 -- | 'DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT' specifies that the discard
 -- rectangle test is exclusive.
 pattern DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT = DiscardRectangleModeEXT 1
-{-# complete DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT,
-             DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT :: DiscardRectangleModeEXT #-}
+
+{-# COMPLETE
+  DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT
+  , DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT ::
+    DiscardRectangleModeEXT
+  #-}
 
 conNameDiscardRectangleModeEXT :: String
 conNameDiscardRectangleModeEXT = "DiscardRectangleModeEXT"
@@ -532,21 +544,32 @@ enumPrefixDiscardRectangleModeEXT = "DISCARD_RECTANGLE_MODE_"
 
 showTableDiscardRectangleModeEXT :: [(DiscardRectangleModeEXT, String)]
 showTableDiscardRectangleModeEXT =
-  [(DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT, "INCLUSIVE_EXT"), (DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT, "EXCLUSIVE_EXT")]
+  [
+    ( DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT
+    , "INCLUSIVE_EXT"
+    )
+  ,
+    ( DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT
+    , "EXCLUSIVE_EXT"
+    )
+  ]
 
 instance Show DiscardRectangleModeEXT where
-  showsPrec = enumShowsPrec enumPrefixDiscardRectangleModeEXT
-                            showTableDiscardRectangleModeEXT
-                            conNameDiscardRectangleModeEXT
-                            (\(DiscardRectangleModeEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDiscardRectangleModeEXT
+      showTableDiscardRectangleModeEXT
+      conNameDiscardRectangleModeEXT
+      (\(DiscardRectangleModeEXT x) -> x)
+      (showsPrec 11)
 
 instance Read DiscardRectangleModeEXT where
-  readPrec = enumReadPrec enumPrefixDiscardRectangleModeEXT
-                          showTableDiscardRectangleModeEXT
-                          conNameDiscardRectangleModeEXT
-                          DiscardRectangleModeEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDiscardRectangleModeEXT
+      showTableDiscardRectangleModeEXT
+      conNameDiscardRectangleModeEXT
+      DiscardRectangleModeEXT
 
 type EXT_DISCARD_RECTANGLES_SPEC_VERSION = 1
 

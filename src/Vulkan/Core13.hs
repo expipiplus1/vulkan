@@ -327,7 +327,21 @@ instance FromCStruct PhysicalDeviceVulkan13Features where
     shaderIntegerDotProduct <- peek @Bool32 ((p `plusPtr` 68 :: Ptr Bool32))
     maintenance4 <- peek @Bool32 ((p `plusPtr` 72 :: Ptr Bool32))
     pure $ PhysicalDeviceVulkan13Features
-             (bool32ToBool robustImageAccess) (bool32ToBool inlineUniformBlock) (bool32ToBool descriptorBindingInlineUniformBlockUpdateAfterBind) (bool32ToBool pipelineCreationCacheControl) (bool32ToBool privateData) (bool32ToBool shaderDemoteToHelperInvocation) (bool32ToBool shaderTerminateInvocation) (bool32ToBool subgroupSizeControl) (bool32ToBool computeFullSubgroups) (bool32ToBool synchronization2) (bool32ToBool textureCompressionASTC_HDR) (bool32ToBool shaderZeroInitializeWorkgroupMemory) (bool32ToBool dynamicRendering) (bool32ToBool shaderIntegerDotProduct) (bool32ToBool maintenance4)
+             (bool32ToBool robustImageAccess)
+             (bool32ToBool inlineUniformBlock)
+             (bool32ToBool descriptorBindingInlineUniformBlockUpdateAfterBind)
+             (bool32ToBool pipelineCreationCacheControl)
+             (bool32ToBool privateData)
+             (bool32ToBool shaderDemoteToHelperInvocation)
+             (bool32ToBool shaderTerminateInvocation)
+             (bool32ToBool subgroupSizeControl)
+             (bool32ToBool computeFullSubgroups)
+             (bool32ToBool synchronization2)
+             (bool32ToBool textureCompressionASTC_HDR)
+             (bool32ToBool shaderZeroInitializeWorkgroupMemory)
+             (bool32ToBool dynamicRendering)
+             (bool32ToBool shaderIntegerDotProduct)
+             (bool32ToBool maintenance4)
 
 instance Storable PhysicalDeviceVulkan13Features where
   sizeOf ~_ = 80
@@ -817,7 +831,51 @@ instance FromCStruct PhysicalDeviceVulkan13Properties where
     uniformTexelBufferOffsetSingleTexelAlignment <- peek @Bool32 ((p `plusPtr` 200 :: Ptr Bool32))
     maxBufferSize <- peek @DeviceSize ((p `plusPtr` 208 :: Ptr DeviceSize))
     pure $ PhysicalDeviceVulkan13Properties
-             minSubgroupSize maxSubgroupSize maxComputeWorkgroupSubgroups requiredSubgroupSizeStages maxInlineUniformBlockSize maxPerStageDescriptorInlineUniformBlocks maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks maxDescriptorSetInlineUniformBlocks maxDescriptorSetUpdateAfterBindInlineUniformBlocks maxInlineUniformTotalSize (bool32ToBool integerDotProduct8BitUnsignedAccelerated) (bool32ToBool integerDotProduct8BitSignedAccelerated) (bool32ToBool integerDotProduct8BitMixedSignednessAccelerated) (bool32ToBool integerDotProduct4x8BitPackedUnsignedAccelerated) (bool32ToBool integerDotProduct4x8BitPackedSignedAccelerated) (bool32ToBool integerDotProduct4x8BitPackedMixedSignednessAccelerated) (bool32ToBool integerDotProduct16BitUnsignedAccelerated) (bool32ToBool integerDotProduct16BitSignedAccelerated) (bool32ToBool integerDotProduct16BitMixedSignednessAccelerated) (bool32ToBool integerDotProduct32BitUnsignedAccelerated) (bool32ToBool integerDotProduct32BitSignedAccelerated) (bool32ToBool integerDotProduct32BitMixedSignednessAccelerated) (bool32ToBool integerDotProduct64BitUnsignedAccelerated) (bool32ToBool integerDotProduct64BitSignedAccelerated) (bool32ToBool integerDotProduct64BitMixedSignednessAccelerated) (bool32ToBool integerDotProductAccumulatingSaturating8BitUnsignedAccelerated) (bool32ToBool integerDotProductAccumulatingSaturating8BitSignedAccelerated) (bool32ToBool integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated) (bool32ToBool integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated) (bool32ToBool integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated) (bool32ToBool integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated) (bool32ToBool integerDotProductAccumulatingSaturating16BitUnsignedAccelerated) (bool32ToBool integerDotProductAccumulatingSaturating16BitSignedAccelerated) (bool32ToBool integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated) (bool32ToBool integerDotProductAccumulatingSaturating32BitUnsignedAccelerated) (bool32ToBool integerDotProductAccumulatingSaturating32BitSignedAccelerated) (bool32ToBool integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated) (bool32ToBool integerDotProductAccumulatingSaturating64BitUnsignedAccelerated) (bool32ToBool integerDotProductAccumulatingSaturating64BitSignedAccelerated) (bool32ToBool integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated) storageTexelBufferOffsetAlignmentBytes (bool32ToBool storageTexelBufferOffsetSingleTexelAlignment) uniformTexelBufferOffsetAlignmentBytes (bool32ToBool uniformTexelBufferOffsetSingleTexelAlignment) maxBufferSize
+             minSubgroupSize
+             maxSubgroupSize
+             maxComputeWorkgroupSubgroups
+             requiredSubgroupSizeStages
+             maxInlineUniformBlockSize
+             maxPerStageDescriptorInlineUniformBlocks
+             maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks
+             maxDescriptorSetInlineUniformBlocks
+             maxDescriptorSetUpdateAfterBindInlineUniformBlocks
+             maxInlineUniformTotalSize
+             (bool32ToBool integerDotProduct8BitUnsignedAccelerated)
+             (bool32ToBool integerDotProduct8BitSignedAccelerated)
+             (bool32ToBool integerDotProduct8BitMixedSignednessAccelerated)
+             (bool32ToBool integerDotProduct4x8BitPackedUnsignedAccelerated)
+             (bool32ToBool integerDotProduct4x8BitPackedSignedAccelerated)
+             (bool32ToBool integerDotProduct4x8BitPackedMixedSignednessAccelerated)
+             (bool32ToBool integerDotProduct16BitUnsignedAccelerated)
+             (bool32ToBool integerDotProduct16BitSignedAccelerated)
+             (bool32ToBool integerDotProduct16BitMixedSignednessAccelerated)
+             (bool32ToBool integerDotProduct32BitUnsignedAccelerated)
+             (bool32ToBool integerDotProduct32BitSignedAccelerated)
+             (bool32ToBool integerDotProduct32BitMixedSignednessAccelerated)
+             (bool32ToBool integerDotProduct64BitUnsignedAccelerated)
+             (bool32ToBool integerDotProduct64BitSignedAccelerated)
+             (bool32ToBool integerDotProduct64BitMixedSignednessAccelerated)
+             (bool32ToBool integerDotProductAccumulatingSaturating8BitUnsignedAccelerated)
+             (bool32ToBool integerDotProductAccumulatingSaturating8BitSignedAccelerated)
+             (bool32ToBool integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated)
+             (bool32ToBool integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated)
+             (bool32ToBool integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated)
+             (bool32ToBool integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated)
+             (bool32ToBool integerDotProductAccumulatingSaturating16BitUnsignedAccelerated)
+             (bool32ToBool integerDotProductAccumulatingSaturating16BitSignedAccelerated)
+             (bool32ToBool integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated)
+             (bool32ToBool integerDotProductAccumulatingSaturating32BitUnsignedAccelerated)
+             (bool32ToBool integerDotProductAccumulatingSaturating32BitSignedAccelerated)
+             (bool32ToBool integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated)
+             (bool32ToBool integerDotProductAccumulatingSaturating64BitUnsignedAccelerated)
+             (bool32ToBool integerDotProductAccumulatingSaturating64BitSignedAccelerated)
+             (bool32ToBool integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated)
+             storageTexelBufferOffsetAlignmentBytes
+             (bool32ToBool storageTexelBufferOffsetSingleTexelAlignment)
+             uniformTexelBufferOffsetAlignmentBytes
+             (bool32ToBool uniformTexelBufferOffsetSingleTexelAlignment)
+             maxBufferSize
 
 instance Storable PhysicalDeviceVulkan13Properties where
   sizeOf ~_ = 216

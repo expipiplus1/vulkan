@@ -318,7 +318,9 @@ createAllocator :: forall io
 createAllocator createInfo = liftIO . evalContT $ do
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPAllocator <- ContT $ bracket (callocBytes @Allocator 8) free
-  r <- lift $ traceAroundEvent "vmaCreateAllocator" ((ffiVmaCreateAllocator) pCreateInfo (pPAllocator))
+  r <- lift $ traceAroundEvent "vmaCreateAllocator" ((ffiVmaCreateAllocator)
+                                                       pCreateInfo
+                                                       (pPAllocator))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pAllocator <- lift $ peek @Allocator pPAllocator
   pure $ (pAllocator)
@@ -375,7 +377,9 @@ getAllocatorInfo :: forall io
                  -> io (AllocatorInfo)
 getAllocatorInfo allocator = liftIO . evalContT $ do
   pPAllocatorInfo <- ContT (withZeroCStruct @AllocatorInfo)
-  lift $ traceAroundEvent "vmaGetAllocatorInfo" ((ffiVmaGetAllocatorInfo) (allocator) (pPAllocatorInfo))
+  lift $ traceAroundEvent "vmaGetAllocatorInfo" ((ffiVmaGetAllocatorInfo)
+                                                   (allocator)
+                                                   (pPAllocatorInfo))
   pAllocatorInfo <- lift $ peekCStruct @AllocatorInfo pPAllocatorInfo
   pure $ (pAllocatorInfo)
 
@@ -397,7 +401,9 @@ getPhysicalDeviceProperties :: forall io
                             -> io (Ptr PhysicalDeviceProperties)
 getPhysicalDeviceProperties allocator = liftIO . evalContT $ do
   pPpPhysicalDeviceProperties <- ContT $ bracket (callocBytes @(Ptr PhysicalDeviceProperties) 8) free
-  lift $ traceAroundEvent "vmaGetPhysicalDeviceProperties" ((ffiVmaGetPhysicalDeviceProperties) (allocator) (pPpPhysicalDeviceProperties))
+  lift $ traceAroundEvent "vmaGetPhysicalDeviceProperties" ((ffiVmaGetPhysicalDeviceProperties)
+                                                              (allocator)
+                                                              (pPpPhysicalDeviceProperties))
   ppPhysicalDeviceProperties <- lift $ peek @(Ptr PhysicalDeviceProperties) pPpPhysicalDeviceProperties
   pure $ (ppPhysicalDeviceProperties)
 
@@ -419,7 +425,9 @@ getMemoryProperties :: forall io
                     -> io (Ptr PhysicalDeviceMemoryProperties)
 getMemoryProperties allocator = liftIO . evalContT $ do
   pPpPhysicalDeviceMemoryProperties <- ContT $ bracket (callocBytes @(Ptr PhysicalDeviceMemoryProperties) 8) free
-  lift $ traceAroundEvent "vmaGetMemoryProperties" ((ffiVmaGetMemoryProperties) (allocator) (pPpPhysicalDeviceMemoryProperties))
+  lift $ traceAroundEvent "vmaGetMemoryProperties" ((ffiVmaGetMemoryProperties)
+                                                      (allocator)
+                                                      (pPpPhysicalDeviceMemoryProperties))
   ppPhysicalDeviceMemoryProperties <- lift $ peek @(Ptr PhysicalDeviceMemoryProperties) pPpPhysicalDeviceMemoryProperties
   pure $ (ppPhysicalDeviceMemoryProperties)
 
@@ -444,7 +452,10 @@ getMemoryTypeProperties :: forall io
                         -> io (MemoryPropertyFlags)
 getMemoryTypeProperties allocator memoryTypeIndex = liftIO . evalContT $ do
   pPFlags <- ContT $ bracket (callocBytes @MemoryPropertyFlags 4) free
-  lift $ traceAroundEvent "vmaGetMemoryTypeProperties" ((ffiVmaGetMemoryTypeProperties) (allocator) (memoryTypeIndex) (pPFlags))
+  lift $ traceAroundEvent "vmaGetMemoryTypeProperties" ((ffiVmaGetMemoryTypeProperties)
+                                                          (allocator)
+                                                          (memoryTypeIndex)
+                                                          (pPFlags))
   pFlags <- lift $ peek @MemoryPropertyFlags pPFlags
   pure $ (pFlags)
 
@@ -465,7 +476,9 @@ setCurrentFrameIndex :: forall io
                         ("frameIndex" ::: Word32)
                      -> io ()
 setCurrentFrameIndex allocator frameIndex = liftIO $ do
-  traceAroundEvent "vmaSetCurrentFrameIndex" ((ffiVmaSetCurrentFrameIndex) (allocator) (frameIndex))
+  traceAroundEvent "vmaSetCurrentFrameIndex" ((ffiVmaSetCurrentFrameIndex)
+                                                (allocator)
+                                                (frameIndex))
   pure $ ()
 
 
@@ -492,7 +505,9 @@ calculateStatistics :: forall io
                     -> io (("stats" ::: TotalStatistics))
 calculateStatistics allocator = liftIO . evalContT $ do
   pPStats <- ContT (withZeroCStruct @TotalStatistics)
-  lift $ traceAroundEvent "vmaCalculateStatistics" ((ffiVmaCalculateStatistics) (allocator) (pPStats))
+  lift $ traceAroundEvent "vmaCalculateStatistics" ((ffiVmaCalculateStatistics)
+                                                      (allocator)
+                                                      (pPStats))
   pStats <- lift $ peekCStruct @TotalStatistics pPStats
   pure $ (pStats)
 
@@ -531,7 +546,9 @@ getHeapBudgets :: forall io
                   ("budgets" ::: Ptr Budget)
                -> io ()
 getHeapBudgets allocator budgets = liftIO $ do
-  traceAroundEvent "vmaGetHeapBudgets" ((ffiVmaGetHeapBudgets) (allocator) (budgets))
+  traceAroundEvent "vmaGetHeapBudgets" ((ffiVmaGetHeapBudgets)
+                                          (allocator)
+                                          (budgets))
   pure $ ()
 
 
@@ -573,10 +590,16 @@ findMemoryTypeIndex :: forall io
                     -> -- No documentation found for Nested "vmaFindMemoryTypeIndex" "pAllocationCreateInfo"
                        AllocationCreateInfo
                     -> io (("memoryTypeIndex" ::: Word32))
-findMemoryTypeIndex allocator memoryTypeBits allocationCreateInfo = liftIO . evalContT $ do
+findMemoryTypeIndex allocator
+                      memoryTypeBits
+                      allocationCreateInfo = liftIO . evalContT $ do
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
   pPMemoryTypeIndex <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "vmaFindMemoryTypeIndex" ((ffiVmaFindMemoryTypeIndex) (allocator) (memoryTypeBits) pAllocationCreateInfo (pPMemoryTypeIndex))
+  r <- lift $ traceAroundEvent "vmaFindMemoryTypeIndex" ((ffiVmaFindMemoryTypeIndex)
+                                                           (allocator)
+                                                           (memoryTypeBits)
+                                                           pAllocationCreateInfo
+                                                           (pPMemoryTypeIndex))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pMemoryTypeIndex <- lift $ peek @Word32 pPMemoryTypeIndex
   pure $ (pMemoryTypeIndex)
@@ -596,7 +619,9 @@ foreign import ccall
 -- /VmaPoolCreateInfo::memoryTypeIndex/. It internally creates a temporary,
 -- dummy buffer that never has memory bound.
 findMemoryTypeIndexForBufferInfo :: forall a io
-                                  . (Extendss BufferCreateInfo a, PokeChain a, MonadIO io)
+                                  . ( Extendss BufferCreateInfo a
+                                    , PokeChain a
+                                    , MonadIO io )
                                  => -- No documentation found for Nested "vmaFindMemoryTypeIndexForBufferInfo" "allocator"
                                     Allocator
                                  -> -- No documentation found for Nested "vmaFindMemoryTypeIndexForBufferInfo" "pBufferCreateInfo"
@@ -604,11 +629,17 @@ findMemoryTypeIndexForBufferInfo :: forall a io
                                  -> -- No documentation found for Nested "vmaFindMemoryTypeIndexForBufferInfo" "pAllocationCreateInfo"
                                     AllocationCreateInfo
                                  -> io (("memoryTypeIndex" ::: Word32))
-findMemoryTypeIndexForBufferInfo allocator bufferCreateInfo allocationCreateInfo = liftIO . evalContT $ do
+findMemoryTypeIndexForBufferInfo allocator
+                                   bufferCreateInfo
+                                   allocationCreateInfo = liftIO . evalContT $ do
   pBufferCreateInfo <- ContT $ withCStruct (bufferCreateInfo)
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
   pPMemoryTypeIndex <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "vmaFindMemoryTypeIndexForBufferInfo" ((ffiVmaFindMemoryTypeIndexForBufferInfo) (allocator) (forgetExtensions pBufferCreateInfo) pAllocationCreateInfo (pPMemoryTypeIndex))
+  r <- lift $ traceAroundEvent "vmaFindMemoryTypeIndexForBufferInfo" ((ffiVmaFindMemoryTypeIndexForBufferInfo)
+                                                                        (allocator)
+                                                                        (forgetExtensions pBufferCreateInfo)
+                                                                        pAllocationCreateInfo
+                                                                        (pPMemoryTypeIndex))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pMemoryTypeIndex <- lift $ peek @Word32 pPMemoryTypeIndex
   pure $ (pMemoryTypeIndex)
@@ -628,7 +659,9 @@ foreign import ccall
 -- /VmaPoolCreateInfo::memoryTypeIndex/. It internally creates a temporary,
 -- dummy image that never has memory bound.
 findMemoryTypeIndexForImageInfo :: forall a io
-                                 . (Extendss ImageCreateInfo a, PokeChain a, MonadIO io)
+                                 . ( Extendss ImageCreateInfo a
+                                   , PokeChain a
+                                   , MonadIO io )
                                 => -- No documentation found for Nested "vmaFindMemoryTypeIndexForImageInfo" "allocator"
                                    Allocator
                                 -> -- No documentation found for Nested "vmaFindMemoryTypeIndexForImageInfo" "pImageCreateInfo"
@@ -636,11 +669,17 @@ findMemoryTypeIndexForImageInfo :: forall a io
                                 -> -- No documentation found for Nested "vmaFindMemoryTypeIndexForImageInfo" "pAllocationCreateInfo"
                                    AllocationCreateInfo
                                 -> io (("memoryTypeIndex" ::: Word32))
-findMemoryTypeIndexForImageInfo allocator imageCreateInfo allocationCreateInfo = liftIO . evalContT $ do
+findMemoryTypeIndexForImageInfo allocator
+                                  imageCreateInfo
+                                  allocationCreateInfo = liftIO . evalContT $ do
   pImageCreateInfo <- ContT $ withCStruct (imageCreateInfo)
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
   pPMemoryTypeIndex <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "vmaFindMemoryTypeIndexForImageInfo" ((ffiVmaFindMemoryTypeIndexForImageInfo) (allocator) (forgetExtensions pImageCreateInfo) pAllocationCreateInfo (pPMemoryTypeIndex))
+  r <- lift $ traceAroundEvent "vmaFindMemoryTypeIndexForImageInfo" ((ffiVmaFindMemoryTypeIndexForImageInfo)
+                                                                       (allocator)
+                                                                       (forgetExtensions pImageCreateInfo)
+                                                                       pAllocationCreateInfo
+                                                                       (pPMemoryTypeIndex))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pMemoryTypeIndex <- lift $ peek @Word32 pPMemoryTypeIndex
   pure $ (pMemoryTypeIndex)
@@ -674,7 +713,10 @@ createPool :: forall io
 createPool allocator createInfo = liftIO . evalContT $ do
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPPool <- ContT $ bracket (callocBytes @Pool 8) free
-  r <- lift $ traceAroundEvent "vmaCreatePool" ((ffiVmaCreatePool) (allocator) pCreateInfo (pPPool))
+  r <- lift $ traceAroundEvent "vmaCreatePool" ((ffiVmaCreatePool)
+                                                  (allocator)
+                                                  pCreateInfo
+                                                  (pPPool))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPool <- lift $ peek @Pool pPPool
   pure $ (pPool)
@@ -740,7 +782,10 @@ getPoolStatistics :: forall io
                   -> io (("poolStats" ::: Statistics))
 getPoolStatistics allocator pool = liftIO . evalContT $ do
   pPPoolStats <- ContT (withZeroCStruct @Statistics)
-  lift $ traceAroundEvent "vmaGetPoolStatistics" ((ffiVmaGetPoolStatistics) (allocator) (pool) (pPPoolStats))
+  lift $ traceAroundEvent "vmaGetPoolStatistics" ((ffiVmaGetPoolStatistics)
+                                                    (allocator)
+                                                    (pool)
+                                                    (pPPoolStats))
   pPoolStats <- lift $ peekCStruct @Statistics pPPoolStats
   pure $ (pPoolStats)
 
@@ -772,7 +817,10 @@ calculatePoolStatistics :: forall io
                         -> io (("poolStats" ::: DetailedStatistics))
 calculatePoolStatistics allocator pool = liftIO . evalContT $ do
   pPPoolStats <- ContT (withZeroCStruct @DetailedStatistics)
-  lift $ traceAroundEvent "vmaCalculatePoolStatistics" ((ffiVmaCalculatePoolStatistics) (allocator) (pool) (pPPoolStats))
+  lift $ traceAroundEvent "vmaCalculatePoolStatistics" ((ffiVmaCalculatePoolStatistics)
+                                                          (allocator)
+                                                          (pool)
+                                                          (pPPoolStats))
   pPoolStats <- lift $ peekCStruct @DetailedStatistics pPPoolStats
   pure $ (pPoolStats)
 
@@ -813,7 +861,9 @@ checkPoolCorruption :: forall io
                        Pool
                     -> io ()
 checkPoolCorruption allocator pool = liftIO $ do
-  r <- traceAroundEvent "vmaCheckPoolCorruption" ((ffiVmaCheckPoolCorruption) (allocator) (pool))
+  r <- traceAroundEvent "vmaCheckPoolCorruption" ((ffiVmaCheckPoolCorruption)
+                                                    (allocator)
+                                                    (pool))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -839,7 +889,10 @@ getPoolName :: forall io
             -> io (("name" ::: Ptr CChar))
 getPoolName allocator pool = liftIO . evalContT $ do
   pPpName <- ContT $ bracket (callocBytes @(Ptr CChar) 8) free
-  lift $ traceAroundEvent "vmaGetPoolName" ((ffiVmaGetPoolName) (allocator) (pool) (pPpName))
+  lift $ traceAroundEvent "vmaGetPoolName" ((ffiVmaGetPoolName)
+                                              (allocator)
+                                              (pool)
+                                              (pPpName))
   ppName <- lift $ peek @(Ptr CChar) pPpName
   pure $ (ppName)
 
@@ -869,7 +922,10 @@ setPoolName allocator pool name = liftIO . evalContT $ do
   pName <- case (name) of
     Nothing -> pure nullPtr
     Just j -> ContT $ useAsCString (j)
-  lift $ traceAroundEvent "vmaSetPoolName" ((ffiVmaSetPoolName) (allocator) (pool) pName)
+  lift $ traceAroundEvent "vmaSetPoolName" ((ffiVmaSetPoolName)
+                                              (allocator)
+                                              (pool)
+                                              pName)
   pure $ ()
 
 
@@ -912,12 +968,19 @@ allocateMemory :: forall io
                -> -- No documentation found for Nested "vmaAllocateMemory" "pCreateInfo"
                   AllocationCreateInfo
                -> io (Allocation, AllocationInfo)
-allocateMemory allocator vkMemoryRequirements createInfo = liftIO . evalContT $ do
+allocateMemory allocator
+                 vkMemoryRequirements
+                 createInfo = liftIO . evalContT $ do
   pVkMemoryRequirements <- ContT $ withCStruct (vkMemoryRequirements)
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
   pPAllocationInfo <- ContT (withZeroCStruct @AllocationInfo)
-  r <- lift $ traceAroundEvent "vmaAllocateMemory" ((ffiVmaAllocateMemory) (allocator) pVkMemoryRequirements pCreateInfo (pPAllocation) (pPAllocationInfo))
+  r <- lift $ traceAroundEvent "vmaAllocateMemory" ((ffiVmaAllocateMemory)
+                                                      (allocator)
+                                                      pVkMemoryRequirements
+                                                      pCreateInfo
+                                                      (pPAllocation)
+                                                      (pPAllocationInfo))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pAllocation <- lift $ peek @Allocation pPAllocation
   pAllocationInfo <- lift $ peekCStruct @AllocationInfo pPAllocationInfo
@@ -988,7 +1051,9 @@ allocateMemoryPages :: forall io
                     -> -- No documentation found for Nested "vmaAllocateMemoryPages" "pCreateInfo"
                        ("createInfo" ::: Vector AllocationCreateInfo)
                     -> io (("allocations" ::: Vector Allocation), ("allocationInfo" ::: Vector AllocationInfo))
-allocateMemoryPages allocator vkMemoryRequirements createInfo = liftIO . evalContT $ do
+allocateMemoryPages allocator
+                      vkMemoryRequirements
+                      createInfo = liftIO . evalContT $ do
   pPVkMemoryRequirements <- ContT $ allocaBytes @MemoryRequirements ((Data.Vector.length (vkMemoryRequirements)) * 24)
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPVkMemoryRequirements `plusPtr` (24 * (i)) :: Ptr MemoryRequirements) (e) . ($ ())) (vkMemoryRequirements)
   pPCreateInfo <- ContT $ allocaBytes @AllocationCreateInfo ((Data.Vector.length (createInfo)) * 48)
@@ -999,7 +1064,13 @@ allocateMemoryPages allocator vkMemoryRequirements createInfo = liftIO . evalCon
   pPAllocations <- ContT $ bracket (callocBytes @Allocation ((fromIntegral ((fromIntegral pVkMemoryRequirementsLength :: CSize))) * 8)) free
   pPAllocationInfo <- ContT $ bracket (callocBytes @AllocationInfo ((fromIntegral ((fromIntegral pVkMemoryRequirementsLength :: CSize))) * 56)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPAllocationInfo `advancePtrBytes` (i * 56) :: Ptr AllocationInfo) . ($ ())) [0..(fromIntegral ((fromIntegral pVkMemoryRequirementsLength :: CSize))) - 1]
-  r <- lift $ traceAroundEvent "vmaAllocateMemoryPages" ((ffiVmaAllocateMemoryPages) (allocator) (pPVkMemoryRequirements) (pPCreateInfo) ((fromIntegral pVkMemoryRequirementsLength :: CSize)) (pPAllocations) ((pPAllocationInfo)))
+  r <- lift $ traceAroundEvent "vmaAllocateMemoryPages" ((ffiVmaAllocateMemoryPages)
+                                                           (allocator)
+                                                           (pPVkMemoryRequirements)
+                                                           (pPCreateInfo)
+                                                           ((fromIntegral pVkMemoryRequirementsLength :: CSize))
+                                                           (pPAllocations)
+                                                           ((pPAllocationInfo)))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pAllocations <- lift $ generateM (fromIntegral ((fromIntegral pVkMemoryRequirementsLength :: CSize))) (\i -> peek @Allocation ((pPAllocations `advancePtrBytes` (8 * (i)) :: Ptr Allocation)))
   pAllocationInfo <- lift $ generateM (fromIntegral ((fromIntegral pVkMemoryRequirementsLength :: CSize))) (\i -> peekCStruct @AllocationInfo (((pPAllocationInfo) `advancePtrBytes` (56 * (i)) :: Ptr AllocationInfo)))
@@ -1064,7 +1135,12 @@ allocateMemoryForBuffer allocator buffer createInfo = liftIO . evalContT $ do
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
   pPAllocationInfo <- ContT (withZeroCStruct @AllocationInfo)
-  r <- lift $ traceAroundEvent "vmaAllocateMemoryForBuffer" ((ffiVmaAllocateMemoryForBuffer) (allocator) (buffer) pCreateInfo (pPAllocation) (pPAllocationInfo))
+  r <- lift $ traceAroundEvent "vmaAllocateMemoryForBuffer" ((ffiVmaAllocateMemoryForBuffer)
+                                                               (allocator)
+                                                               (buffer)
+                                                               pCreateInfo
+                                                               (pPAllocation)
+                                                               (pPAllocationInfo))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pAllocation <- lift $ peek @Allocation pPAllocation
   pAllocationInfo <- lift $ peekCStruct @AllocationInfo pPAllocationInfo
@@ -1129,7 +1205,12 @@ allocateMemoryForImage allocator image createInfo = liftIO . evalContT $ do
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
   pPAllocationInfo <- ContT (withZeroCStruct @AllocationInfo)
-  r <- lift $ traceAroundEvent "vmaAllocateMemoryForImage" ((ffiVmaAllocateMemoryForImage) (allocator) (image) pCreateInfo (pPAllocation) (pPAllocationInfo))
+  r <- lift $ traceAroundEvent "vmaAllocateMemoryForImage" ((ffiVmaAllocateMemoryForImage)
+                                                              (allocator)
+                                                              (image)
+                                                              pCreateInfo
+                                                              (pPAllocation)
+                                                              (pPAllocationInfo))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pAllocation <- lift $ peek @Allocation pPAllocation
   pAllocationInfo <- lift $ peekCStruct @AllocationInfo pPAllocationInfo
@@ -1202,7 +1283,10 @@ freeMemoryPages :: forall io
 freeMemoryPages allocator allocations = liftIO . evalContT $ do
   pPAllocations <- ContT $ allocaBytes @Allocation ((Data.Vector.length (allocations)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPAllocations `plusPtr` (8 * (i)) :: Ptr Allocation) (e)) (allocations)
-  lift $ traceAroundEvent "vmaFreeMemoryPages" ((ffiVmaFreeMemoryPages) (allocator) ((fromIntegral (Data.Vector.length $ (allocations)) :: CSize)) (pPAllocations))
+  lift $ traceAroundEvent "vmaFreeMemoryPages" ((ffiVmaFreeMemoryPages)
+                                                  (allocator)
+                                                  ((fromIntegral (Data.Vector.length $ (allocations)) :: CSize))
+                                                  (pPAllocations))
   pure $ ()
 
 
@@ -1232,7 +1316,10 @@ getAllocationInfo :: forall io
                   -> io (AllocationInfo)
 getAllocationInfo allocator allocation = liftIO . evalContT $ do
   pPAllocationInfo <- ContT (withZeroCStruct @AllocationInfo)
-  lift $ traceAroundEvent "vmaGetAllocationInfo" ((ffiVmaGetAllocationInfo) (allocator) (allocation) (pPAllocationInfo))
+  lift $ traceAroundEvent "vmaGetAllocationInfo" ((ffiVmaGetAllocationInfo)
+                                                    (allocator)
+                                                    (allocation)
+                                                    (pPAllocationInfo))
   pAllocationInfo <- lift $ peekCStruct @AllocationInfo pPAllocationInfo
   pure $ (pAllocationInfo)
 
@@ -1259,7 +1346,10 @@ setAllocationUserData :: forall io
                          ("userData" ::: Ptr ())
                       -> io ()
 setAllocationUserData allocator allocation userData = liftIO $ do
-  traceAroundEvent "vmaSetAllocationUserData" ((ffiVmaSetAllocationUserData) (allocator) (allocation) (userData))
+  traceAroundEvent "vmaSetAllocationUserData" ((ffiVmaSetAllocationUserData)
+                                                 (allocator)
+                                                 (allocation)
+                                                 (userData))
   pure $ ()
 
 
@@ -1290,7 +1380,10 @@ setAllocationName allocator allocation name = liftIO . evalContT $ do
   pName <- case (name) of
     Nothing -> pure nullPtr
     Just j -> ContT $ useAsCString (j)
-  lift $ traceAroundEvent "vmaSetAllocationName" ((ffiVmaSetAllocationName) (allocator) (allocation) pName)
+  lift $ traceAroundEvent "vmaSetAllocationName" ((ffiVmaSetAllocationName)
+                                                    (allocator)
+                                                    (allocation)
+                                                    pName)
   pure $ ()
 
 
@@ -1314,7 +1407,10 @@ getAllocationMemoryProperties :: forall io
                               -> io (MemoryPropertyFlags)
 getAllocationMemoryProperties allocator allocation = liftIO . evalContT $ do
   pPFlags <- ContT $ bracket (callocBytes @MemoryPropertyFlags 4) free
-  lift $ traceAroundEvent "vmaGetAllocationMemoryProperties" ((ffiVmaGetAllocationMemoryProperties) (allocator) (allocation) (pPFlags))
+  lift $ traceAroundEvent "vmaGetAllocationMemoryProperties" ((ffiVmaGetAllocationMemoryProperties)
+                                                                (allocator)
+                                                                (allocation)
+                                                                (pPFlags))
   pFlags <- lift $ peek @MemoryPropertyFlags pPFlags
   pure $ (pFlags)
 
@@ -1377,7 +1473,10 @@ mapMemory :: forall io
           -> io (("data" ::: Ptr ()))
 mapMemory allocator allocation = liftIO . evalContT $ do
   pPpData <- ContT $ bracket (callocBytes @(Ptr ()) 8) free
-  r <- lift $ traceAroundEvent "vmaMapMemory" ((ffiVmaMapMemory) (allocator) (allocation) (pPpData))
+  r <- lift $ traceAroundEvent "vmaMapMemory" ((ffiVmaMapMemory)
+                                                 (allocator)
+                                                 (allocation)
+                                                 (pPpData))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   ppData <- lift $ peek @(Ptr ()) pPpData
   pure $ (ppData)
@@ -1420,7 +1519,9 @@ unmapMemory :: forall io
                Allocation
             -> io ()
 unmapMemory allocator allocation = liftIO $ do
-  traceAroundEvent "vmaUnmapMemory" ((ffiVmaUnmapMemory) (allocator) (allocation))
+  traceAroundEvent "vmaUnmapMemory" ((ffiVmaUnmapMemory)
+                                       (allocator)
+                                       (allocation))
   pure $ ()
 
 
@@ -1470,7 +1571,11 @@ flushAllocation :: forall io
                    DeviceSize
                 -> io ()
 flushAllocation allocator allocation offset size = liftIO $ do
-  r <- traceAroundEvent "vmaFlushAllocation" ((ffiVmaFlushAllocation) (allocator) (allocation) (offset) (size))
+  r <- traceAroundEvent "vmaFlushAllocation" ((ffiVmaFlushAllocation)
+                                                (allocator)
+                                                (allocation)
+                                                (offset)
+                                                (size))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -1521,7 +1626,11 @@ invalidateAllocation :: forall io
                         DeviceSize
                      -> io ()
 invalidateAllocation allocator allocation offset size = liftIO $ do
-  r <- traceAroundEvent "vmaInvalidateAllocation" ((ffiVmaInvalidateAllocation) (allocator) (allocation) (offset) (size))
+  r <- traceAroundEvent "vmaInvalidateAllocation" ((ffiVmaInvalidateAllocation)
+                                                     (allocator)
+                                                     (allocation)
+                                                     (offset)
+                                                     (size))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -1592,7 +1701,12 @@ flushAllocations allocator allocations offsets sizes = liftIO . evalContT $ do
       pSizes <- ContT $ allocaBytes @DeviceSize (((Data.Vector.length (sizes))) * 8)
       lift $ Data.Vector.imapM_ (\i e -> poke (pSizes `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((sizes))
       pure $ pSizes
-  r <- lift $ traceAroundEvent "vmaFlushAllocations" ((ffiVmaFlushAllocations) (allocator) ((fromIntegral allocationsLength :: Word32)) (pAllocations) offsets' sizes')
+  r <- lift $ traceAroundEvent "vmaFlushAllocations" ((ffiVmaFlushAllocations)
+                                                        (allocator)
+                                                        ((fromIntegral allocationsLength :: Word32))
+                                                        (pAllocations)
+                                                        offsets'
+                                                        sizes')
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -1642,7 +1756,10 @@ invalidateAllocations :: forall io
                       -> -- No documentation found for Nested "vmaInvalidateAllocations" "sizes"
                          ("sizes" ::: Vector DeviceSize)
                       -> io ()
-invalidateAllocations allocator allocations offsets sizes = liftIO . evalContT $ do
+invalidateAllocations allocator
+                        allocations
+                        offsets
+                        sizes = liftIO . evalContT $ do
   let allocationsLength = Data.Vector.length $ (allocations)
   let offsetsLength = Data.Vector.length $ (offsets)
   lift $ unless (fromIntegral offsetsLength == allocationsLength || offsetsLength == 0) $
@@ -1664,7 +1781,12 @@ invalidateAllocations allocator allocations offsets sizes = liftIO . evalContT $
       pSizes <- ContT $ allocaBytes @DeviceSize (((Data.Vector.length (sizes))) * 8)
       lift $ Data.Vector.imapM_ (\i e -> poke (pSizes `plusPtr` (8 * (i)) :: Ptr DeviceSize) (e)) ((sizes))
       pure $ pSizes
-  r <- lift $ traceAroundEvent "vmaInvalidateAllocations" ((ffiVmaInvalidateAllocations) (allocator) ((fromIntegral allocationsLength :: Word32)) (pAllocations) offsets' sizes')
+  r <- lift $ traceAroundEvent "vmaInvalidateAllocations" ((ffiVmaInvalidateAllocations)
+                                                             (allocator)
+                                                             ((fromIntegral allocationsLength :: Word32))
+                                                             (pAllocations)
+                                                             offsets'
+                                                             sizes')
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -1713,7 +1835,9 @@ checkCorruption :: forall io
                    ("memoryTypeBits" ::: Word32)
                 -> io ()
 checkCorruption allocator memoryTypeBits = liftIO $ do
-  r <- traceAroundEvent "vmaCheckCorruption" ((ffiVmaCheckCorruption) (allocator) (memoryTypeBits))
+  r <- traceAroundEvent "vmaCheckCorruption" ((ffiVmaCheckCorruption)
+                                                (allocator)
+                                                (memoryTypeBits))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -1757,7 +1881,10 @@ beginDefragmentation :: forall io
 beginDefragmentation allocator info = liftIO . evalContT $ do
   pInfo <- ContT $ withCStruct (info)
   pPContext <- ContT $ bracket (callocBytes @DefragmentationContext 8) free
-  r <- lift $ traceAroundEvent "vmaBeginDefragmentation" ((ffiVmaBeginDefragmentation) (allocator) pInfo (pPContext))
+  r <- lift $ traceAroundEvent "vmaBeginDefragmentation" ((ffiVmaBeginDefragmentation)
+                                                            (allocator)
+                                                            pInfo
+                                                            (pPContext))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pContext <- lift $ peek @DefragmentationContext pPContext
   pure $ (pContext)
@@ -1808,7 +1935,10 @@ endDefragmentation :: forall io
                    -> io (DefragmentationStats)
 endDefragmentation allocator context = liftIO . evalContT $ do
   pPStats <- ContT (withZeroCStruct @DefragmentationStats)
-  lift $ traceAroundEvent "vmaEndDefragmentation" ((ffiVmaEndDefragmentation) (allocator) (context) (pPStats))
+  lift $ traceAroundEvent "vmaEndDefragmentation" ((ffiVmaEndDefragmentation)
+                                                     (allocator)
+                                                     (context)
+                                                     (pPStats))
   pStats <- lift $ peekCStruct @DefragmentationStats pPStats
   pure $ (pStats)
 
@@ -1850,7 +1980,10 @@ beginDefragmentationPass :: forall io
                          -> io (("passInfo" ::: DefragmentationPassMoveInfo))
 beginDefragmentationPass allocator context = liftIO . evalContT $ do
   pPPassInfo <- ContT (withZeroCStruct @DefragmentationPassMoveInfo)
-  r <- lift $ traceAroundEvent "vmaBeginDefragmentationPass" ((ffiVmaBeginDefragmentationPass) (allocator) (context) (pPPassInfo))
+  r <- lift $ traceAroundEvent "vmaBeginDefragmentationPass" ((ffiVmaBeginDefragmentationPass)
+                                                                (allocator)
+                                                                (context)
+                                                                (pPPassInfo))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPassInfo <- lift $ peekCStruct @DefragmentationPassMoveInfo pPPassInfo
   pure $ (pPassInfo)
@@ -1916,7 +2049,10 @@ endDefragmentationPass :: forall io
                        -> io (("passInfo" ::: DefragmentationPassMoveInfo))
 endDefragmentationPass allocator context = liftIO . evalContT $ do
   pPPassInfo <- ContT (withZeroCStruct @DefragmentationPassMoveInfo)
-  r <- lift $ traceAroundEvent "vmaEndDefragmentationPass" ((ffiVmaEndDefragmentationPass) (allocator) (context) (pPPassInfo))
+  r <- lift $ traceAroundEvent "vmaEndDefragmentationPass" ((ffiVmaEndDefragmentationPass)
+                                                              (allocator)
+                                                              (context)
+                                                              (pPPassInfo))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPassInfo <- lift $ peekCStruct @DefragmentationPassMoveInfo pPPassInfo
   pure $ (pPassInfo)
@@ -1952,7 +2088,10 @@ bindBufferMemory :: forall io
                     Buffer
                  -> io ()
 bindBufferMemory allocator allocation buffer = liftIO $ do
-  r <- traceAroundEvent "vmaBindBufferMemory" ((ffiVmaBindBufferMemory) (allocator) (allocation) (buffer))
+  r <- traceAroundEvent "vmaBindBufferMemory" ((ffiVmaBindBufferMemory)
+                                                 (allocator)
+                                                 (allocation)
+                                                 (buffer))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -2003,8 +2142,17 @@ bindBufferMemory2 :: forall io
                   -> -- No documentation found for Nested "vmaBindBufferMemory2" "pNext"
                      ("next" ::: Ptr ())
                   -> io ()
-bindBufferMemory2 allocator allocation allocationLocalOffset buffer next = liftIO $ do
-  r <- traceAroundEvent "vmaBindBufferMemory2" ((ffiVmaBindBufferMemory2) (allocator) (allocation) (allocationLocalOffset) (buffer) (next))
+bindBufferMemory2 allocator
+                    allocation
+                    allocationLocalOffset
+                    buffer
+                    next = liftIO $ do
+  r <- traceAroundEvent "vmaBindBufferMemory2" ((ffiVmaBindBufferMemory2)
+                                                  (allocator)
+                                                  (allocation)
+                                                  (allocationLocalOffset)
+                                                  (buffer)
+                                                  (next))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -2038,7 +2186,10 @@ bindImageMemory :: forall io
                    Image
                 -> io ()
 bindImageMemory allocator allocation image = liftIO $ do
-  r <- traceAroundEvent "vmaBindImageMemory" ((ffiVmaBindImageMemory) (allocator) (allocation) (image))
+  r <- traceAroundEvent "vmaBindImageMemory" ((ffiVmaBindImageMemory)
+                                                (allocator)
+                                                (allocation)
+                                                (image))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -2089,8 +2240,17 @@ bindImageMemory2 :: forall io
                  -> -- No documentation found for Nested "vmaBindImageMemory2" "pNext"
                     ("next" ::: Ptr ())
                  -> io ()
-bindImageMemory2 allocator allocation allocationLocalOffset image next = liftIO $ do
-  r <- traceAroundEvent "vmaBindImageMemory2" ((ffiVmaBindImageMemory2) (allocator) (allocation) (allocationLocalOffset) (image) (next))
+bindImageMemory2 allocator
+                   allocation
+                   allocationLocalOffset
+                   image
+                   next = liftIO $ do
+  r <- traceAroundEvent "vmaBindImageMemory2" ((ffiVmaBindImageMemory2)
+                                                 (allocator)
+                                                 (allocation)
+                                                 (allocationLocalOffset)
+                                                 (image)
+                                                 (next))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -2161,13 +2321,21 @@ createBuffer :: forall a io
              -> -- No documentation found for Nested "vmaCreateBuffer" "pAllocationCreateInfo"
                 AllocationCreateInfo
              -> io (Buffer, Allocation, AllocationInfo)
-createBuffer allocator bufferCreateInfo allocationCreateInfo = liftIO . evalContT $ do
+createBuffer allocator
+               bufferCreateInfo
+               allocationCreateInfo = liftIO . evalContT $ do
   pBufferCreateInfo <- ContT $ withCStruct (bufferCreateInfo)
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
   pPBuffer <- ContT $ bracket (callocBytes @Buffer 8) free
   pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
   pPAllocationInfo <- ContT (withZeroCStruct @AllocationInfo)
-  r <- lift $ traceAroundEvent "vmaCreateBuffer" ((ffiVmaCreateBuffer) (allocator) (forgetExtensions pBufferCreateInfo) pAllocationCreateInfo (pPBuffer) (pPAllocation) (pPAllocationInfo))
+  r <- lift $ traceAroundEvent "vmaCreateBuffer" ((ffiVmaCreateBuffer)
+                                                    (allocator)
+                                                    (forgetExtensions pBufferCreateInfo)
+                                                    pAllocationCreateInfo
+                                                    (pPBuffer)
+                                                    (pPAllocation)
+                                                    (pPAllocationInfo))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pBuffer <- lift $ peek @Buffer pPBuffer
   pAllocation <- lift $ peek @Allocation pPAllocation
@@ -2202,7 +2370,9 @@ foreign import ccall
 -- used when placing the buffer inside a larger memory block, which may be
 -- needed e.g. for interop with OpenGL.
 createBufferWithAlignment :: forall a io
-                           . (Extendss BufferCreateInfo a, PokeChain a, MonadIO io)
+                           . ( Extendss BufferCreateInfo a
+                             , PokeChain a
+                             , MonadIO io )
                           => -- No documentation found for Nested "vmaCreateBufferWithAlignment" "allocator"
                              Allocator
                           -> -- No documentation found for Nested "vmaCreateBufferWithAlignment" "pBufferCreateInfo"
@@ -2212,13 +2382,23 @@ createBufferWithAlignment :: forall a io
                           -> -- No documentation found for Nested "vmaCreateBufferWithAlignment" "minAlignment"
                              ("minAlignment" ::: DeviceSize)
                           -> io (Buffer, Allocation, AllocationInfo)
-createBufferWithAlignment allocator bufferCreateInfo allocationCreateInfo minAlignment = liftIO . evalContT $ do
+createBufferWithAlignment allocator
+                            bufferCreateInfo
+                            allocationCreateInfo
+                            minAlignment = liftIO . evalContT $ do
   pBufferCreateInfo <- ContT $ withCStruct (bufferCreateInfo)
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
   pPBuffer <- ContT $ bracket (callocBytes @Buffer 8) free
   pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
   pPAllocationInfo <- ContT (withZeroCStruct @AllocationInfo)
-  r <- lift $ traceAroundEvent "vmaCreateBufferWithAlignment" ((ffiVmaCreateBufferWithAlignment) (allocator) (forgetExtensions pBufferCreateInfo) pAllocationCreateInfo (minAlignment) (pPBuffer) (pPAllocation) (pPAllocationInfo))
+  r <- lift $ traceAroundEvent "vmaCreateBufferWithAlignment" ((ffiVmaCreateBufferWithAlignment)
+                                                                 (allocator)
+                                                                 (forgetExtensions pBufferCreateInfo)
+                                                                 pAllocationCreateInfo
+                                                                 (minAlignment)
+                                                                 (pPBuffer)
+                                                                 (pPAllocation)
+                                                                 (pPAllocationInfo))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pBuffer <- lift $ peek @Buffer pPBuffer
   pAllocation <- lift $ peek @Allocation pPAllocation
@@ -2275,10 +2455,16 @@ createAliasingBuffer :: forall a io
                      -> -- No documentation found for Nested "vmaCreateAliasingBuffer" "pBufferCreateInfo"
                         (BufferCreateInfo a)
                      -> io (Buffer)
-createAliasingBuffer allocator allocation bufferCreateInfo = liftIO . evalContT $ do
+createAliasingBuffer allocator
+                       allocation
+                       bufferCreateInfo = liftIO . evalContT $ do
   pBufferCreateInfo <- ContT $ withCStruct (bufferCreateInfo)
   pPBuffer <- ContT $ bracket (callocBytes @Buffer 8) free
-  r <- lift $ traceAroundEvent "vmaCreateAliasingBuffer" ((ffiVmaCreateAliasingBuffer) (allocator) (allocation) (forgetExtensions pBufferCreateInfo) (pPBuffer))
+  r <- lift $ traceAroundEvent "vmaCreateAliasingBuffer" ((ffiVmaCreateAliasingBuffer)
+                                                            (allocator)
+                                                            (allocation)
+                                                            (forgetExtensions pBufferCreateInfo)
+                                                            (pPBuffer))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pBuffer <- lift $ peek @Buffer pPBuffer
   pure $ (pBuffer)
@@ -2339,10 +2525,18 @@ createAliasingBuffer2 :: forall a io
                       -> -- No documentation found for Nested "vmaCreateAliasingBuffer2" "pBufferCreateInfo"
                          (BufferCreateInfo a)
                       -> io (Buffer)
-createAliasingBuffer2 allocator allocation allocationLocalOffset bufferCreateInfo = liftIO . evalContT $ do
+createAliasingBuffer2 allocator
+                        allocation
+                        allocationLocalOffset
+                        bufferCreateInfo = liftIO . evalContT $ do
   pBufferCreateInfo <- ContT $ withCStruct (bufferCreateInfo)
   pPBuffer <- ContT $ bracket (callocBytes @Buffer 8) free
-  r <- lift $ traceAroundEvent "vmaCreateAliasingBuffer2" ((ffiVmaCreateAliasingBuffer2) (allocator) (allocation) (allocationLocalOffset) (forgetExtensions pBufferCreateInfo) (pPBuffer))
+  r <- lift $ traceAroundEvent "vmaCreateAliasingBuffer2" ((ffiVmaCreateAliasingBuffer2)
+                                                             (allocator)
+                                                             (allocation)
+                                                             (allocationLocalOffset)
+                                                             (forgetExtensions pBufferCreateInfo)
+                                                             (pPBuffer))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pBuffer <- lift $ peek @Buffer pPBuffer
   pure $ (pBuffer)
@@ -2373,7 +2567,10 @@ destroyBuffer :: forall io
                  Allocation
               -> io ()
 destroyBuffer allocator buffer allocation = liftIO $ do
-  traceAroundEvent "vmaDestroyBuffer" ((ffiVmaDestroyBuffer) (allocator) (buffer) (allocation))
+  traceAroundEvent "vmaDestroyBuffer" ((ffiVmaDestroyBuffer)
+                                         (allocator)
+                                         (buffer)
+                                         (allocation))
   pure $ ()
 
 
@@ -2394,13 +2591,21 @@ createImage :: forall a io
             -> -- No documentation found for Nested "vmaCreateImage" "pAllocationCreateInfo"
                AllocationCreateInfo
             -> io (Image, Allocation, AllocationInfo)
-createImage allocator imageCreateInfo allocationCreateInfo = liftIO . evalContT $ do
+createImage allocator
+              imageCreateInfo
+              allocationCreateInfo = liftIO . evalContT $ do
   pImageCreateInfo <- ContT $ withCStruct (imageCreateInfo)
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
   pPImage <- ContT $ bracket (callocBytes @Image 8) free
   pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
   pPAllocationInfo <- ContT (withZeroCStruct @AllocationInfo)
-  r <- lift $ traceAroundEvent "vmaCreateImage" ((ffiVmaCreateImage) (allocator) (forgetExtensions pImageCreateInfo) pAllocationCreateInfo (pPImage) (pPAllocation) (pPAllocationInfo))
+  r <- lift $ traceAroundEvent "vmaCreateImage" ((ffiVmaCreateImage)
+                                                   (allocator)
+                                                   (forgetExtensions pImageCreateInfo)
+                                                   pAllocationCreateInfo
+                                                   (pPImage)
+                                                   (pPAllocation)
+                                                   (pPAllocationInfo))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pImage <- lift $ peek @Image pPImage
   pAllocation <- lift $ peek @Allocation pPAllocation
@@ -2438,10 +2643,16 @@ createAliasingImage :: forall a io
                     -> -- No documentation found for Nested "vmaCreateAliasingImage" "pImageCreateInfo"
                        (ImageCreateInfo a)
                     -> io (Image)
-createAliasingImage allocator allocation imageCreateInfo = liftIO . evalContT $ do
+createAliasingImage allocator
+                      allocation
+                      imageCreateInfo = liftIO . evalContT $ do
   pImageCreateInfo <- ContT $ withCStruct (imageCreateInfo)
   pPImage <- ContT $ bracket (callocBytes @Image 8) free
-  r <- lift $ traceAroundEvent "vmaCreateAliasingImage" ((ffiVmaCreateAliasingImage) (allocator) (allocation) (forgetExtensions pImageCreateInfo) (pPImage))
+  r <- lift $ traceAroundEvent "vmaCreateAliasingImage" ((ffiVmaCreateAliasingImage)
+                                                           (allocator)
+                                                           (allocation)
+                                                           (forgetExtensions pImageCreateInfo)
+                                                           (pPImage))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pImage <- lift $ peek @Image pPImage
   pure $ (pImage)
@@ -2466,10 +2677,18 @@ createAliasingImage2 :: forall a io
                      -> -- No documentation found for Nested "vmaCreateAliasingImage2" "pImageCreateInfo"
                         (ImageCreateInfo a)
                      -> io (Image)
-createAliasingImage2 allocator allocation allocationLocalOffset imageCreateInfo = liftIO . evalContT $ do
+createAliasingImage2 allocator
+                       allocation
+                       allocationLocalOffset
+                       imageCreateInfo = liftIO . evalContT $ do
   pImageCreateInfo <- ContT $ withCStruct (imageCreateInfo)
   pPImage <- ContT $ bracket (callocBytes @Image 8) free
-  r <- lift $ traceAroundEvent "vmaCreateAliasingImage2" ((ffiVmaCreateAliasingImage2) (allocator) (allocation) (allocationLocalOffset) (forgetExtensions pImageCreateInfo) (pPImage))
+  r <- lift $ traceAroundEvent "vmaCreateAliasingImage2" ((ffiVmaCreateAliasingImage2)
+                                                            (allocator)
+                                                            (allocation)
+                                                            (allocationLocalOffset)
+                                                            (forgetExtensions pImageCreateInfo)
+                                                            (pPImage))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pImage <- lift $ peek @Image pPImage
   pure $ (pImage)
@@ -2500,7 +2719,10 @@ destroyImage :: forall io
                 Allocation
              -> io ()
 destroyImage allocator image allocation = liftIO $ do
-  traceAroundEvent "vmaDestroyImage" ((ffiVmaDestroyImage) (allocator) (image) (allocation))
+  traceAroundEvent "vmaDestroyImage" ((ffiVmaDestroyImage)
+                                        (allocator)
+                                        (image)
+                                        (allocation))
   pure $ ()
 
 
@@ -2529,7 +2751,9 @@ createVirtualBlock :: forall io
 createVirtualBlock createInfo = liftIO . evalContT $ do
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPVirtualBlock <- ContT $ bracket (callocBytes @VirtualBlock 8) free
-  r <- lift $ traceAroundEvent "vmaCreateVirtualBlock" ((ffiVmaCreateVirtualBlock) pCreateInfo (pPVirtualBlock))
+  r <- lift $ traceAroundEvent "vmaCreateVirtualBlock" ((ffiVmaCreateVirtualBlock)
+                                                          pCreateInfo
+                                                          (pPVirtualBlock))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pVirtualBlock <- lift $ peek @VirtualBlock pPVirtualBlock
   pure $ (pVirtualBlock)
@@ -2570,7 +2794,8 @@ destroyVirtualBlock :: forall io
                        VirtualBlock
                     -> io ()
 destroyVirtualBlock virtualBlock = liftIO $ do
-  traceAroundEvent "vmaDestroyVirtualBlock" ((ffiVmaDestroyVirtualBlock) (virtualBlock))
+  traceAroundEvent "vmaDestroyVirtualBlock" ((ffiVmaDestroyVirtualBlock)
+                                               (virtualBlock))
   pure $ ()
 
 
@@ -2589,7 +2814,8 @@ isVirtualBlockEmpty :: forall io
                        VirtualBlock
                     -> io (Bool)
 isVirtualBlockEmpty virtualBlock = liftIO $ do
-  r <- traceAroundEvent "vmaIsVirtualBlockEmpty" ((ffiVmaIsVirtualBlockEmpty) (virtualBlock))
+  r <- traceAroundEvent "vmaIsVirtualBlockEmpty" ((ffiVmaIsVirtualBlockEmpty)
+                                                    (virtualBlock))
   pure $ ((bool32ToBool r))
 
 
@@ -2611,7 +2837,10 @@ getVirtualAllocationInfo :: forall io
                          -> io (("virtualAllocInfo" ::: VirtualAllocationInfo))
 getVirtualAllocationInfo virtualBlock allocation = liftIO . evalContT $ do
   pPVirtualAllocInfo <- ContT (withZeroCStruct @VirtualAllocationInfo)
-  lift $ traceAroundEvent "vmaGetVirtualAllocationInfo" ((ffiVmaGetVirtualAllocationInfo) (virtualBlock) (allocation) (pPVirtualAllocInfo))
+  lift $ traceAroundEvent "vmaGetVirtualAllocationInfo" ((ffiVmaGetVirtualAllocationInfo)
+                                                           (virtualBlock)
+                                                           (allocation)
+                                                           (pPVirtualAllocInfo))
   pVirtualAllocInfo <- lift $ peekCStruct @VirtualAllocationInfo pPVirtualAllocInfo
   pure $ (pVirtualAllocInfo)
 
@@ -2653,7 +2882,11 @@ virtualAllocate virtualBlock createInfo = liftIO . evalContT $ do
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPAllocation <- ContT $ bracket (callocBytes @VirtualAllocation 8) free
   pPOffset <- ContT $ bracket (callocBytes @DeviceSize 8) free
-  r <- lift $ traceAroundEvent "vmaVirtualAllocate" ((ffiVmaVirtualAllocate) (virtualBlock) pCreateInfo (pPAllocation) (pPOffset))
+  r <- lift $ traceAroundEvent "vmaVirtualAllocate" ((ffiVmaVirtualAllocate)
+                                                       (virtualBlock)
+                                                       pCreateInfo
+                                                       (pPAllocation)
+                                                       (pPOffset))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pAllocation <- lift $ peek @VirtualAllocation pPAllocation
   pOffset <- lift $ peek @DeviceSize pPOffset
@@ -2692,7 +2925,9 @@ virtualFree :: forall io
                VirtualAllocation
             -> io ()
 virtualFree virtualBlock allocation = liftIO $ do
-  traceAroundEvent "vmaVirtualFree" ((ffiVmaVirtualFree) (virtualBlock) (allocation))
+  traceAroundEvent "vmaVirtualFree" ((ffiVmaVirtualFree)
+                                       (virtualBlock)
+                                       (allocation))
   pure $ ()
 
 
@@ -2717,7 +2952,8 @@ clearVirtualBlock :: forall io
                      VirtualBlock
                   -> io ()
 clearVirtualBlock virtualBlock = liftIO $ do
-  traceAroundEvent "vmaClearVirtualBlock" ((ffiVmaClearVirtualBlock) (virtualBlock))
+  traceAroundEvent "vmaClearVirtualBlock" ((ffiVmaClearVirtualBlock)
+                                             (virtualBlock))
   pure $ ()
 
 
@@ -2739,7 +2975,10 @@ setVirtualAllocationUserData :: forall io
                                 ("userData" ::: Ptr ())
                              -> io ()
 setVirtualAllocationUserData virtualBlock allocation userData = liftIO $ do
-  traceAroundEvent "vmaSetVirtualAllocationUserData" ((ffiVmaSetVirtualAllocationUserData) (virtualBlock) (allocation) (userData))
+  traceAroundEvent "vmaSetVirtualAllocationUserData" ((ffiVmaSetVirtualAllocationUserData)
+                                                        (virtualBlock)
+                                                        (allocation)
+                                                        (userData))
   pure $ ()
 
 
@@ -2762,7 +3001,9 @@ getVirtualBlockStatistics :: forall io
                           -> io (("stats" ::: Statistics))
 getVirtualBlockStatistics virtualBlock = liftIO . evalContT $ do
   pPStats <- ContT (withZeroCStruct @Statistics)
-  lift $ traceAroundEvent "vmaGetVirtualBlockStatistics" ((ffiVmaGetVirtualBlockStatistics) (virtualBlock) (pPStats))
+  lift $ traceAroundEvent "vmaGetVirtualBlockStatistics" ((ffiVmaGetVirtualBlockStatistics)
+                                                            (virtualBlock)
+                                                            (pPStats))
   pStats <- lift $ peekCStruct @Statistics pPStats
   pure $ (pStats)
 
@@ -2786,7 +3027,9 @@ calculateVirtualBlockStatistics :: forall io
                                 -> io (("stats" ::: DetailedStatistics))
 calculateVirtualBlockStatistics virtualBlock = liftIO . evalContT $ do
   pPStats <- ContT (withZeroCStruct @DetailedStatistics)
-  lift $ traceAroundEvent "vmaCalculateVirtualBlockStatistics" ((ffiVmaCalculateVirtualBlockStatistics) (virtualBlock) (pPStats))
+  lift $ traceAroundEvent "vmaCalculateVirtualBlockStatistics" ((ffiVmaCalculateVirtualBlockStatistics)
+                                                                  (virtualBlock)
+                                                                  (pPStats))
   pStats <- lift $ peekCStruct @DetailedStatistics pPStats
   pure $ (pStats)
 
@@ -2825,7 +3068,10 @@ buildVirtualBlockStatsString :: forall io
                              -> io (("statsString" ::: Ptr CChar))
 buildVirtualBlockStatsString virtualBlock detailedMap = liftIO . evalContT $ do
   pPpStatsString <- ContT $ bracket (callocBytes @(Ptr CChar) 8) free
-  lift $ traceAroundEvent "vmaBuildVirtualBlockStatsString" ((ffiVmaBuildVirtualBlockStatsString) (virtualBlock) (pPpStatsString) (boolToBool32 (detailedMap)))
+  lift $ traceAroundEvent "vmaBuildVirtualBlockStatsString" ((ffiVmaBuildVirtualBlockStatsString)
+                                                               (virtualBlock)
+                                                               (pPpStatsString)
+                                                               (boolToBool32 (detailedMap)))
   ppStatsString <- lift $ peek @(Ptr CChar) pPpStatsString
   pure $ (ppStatsString)
 
@@ -2846,7 +3092,9 @@ freeVirtualBlockStatsString :: forall io
                                ("statsString" ::: Ptr CChar)
                             -> io ()
 freeVirtualBlockStatsString virtualBlock statsString = liftIO $ do
-  traceAroundEvent "vmaFreeVirtualBlockStatsString" ((ffiVmaFreeVirtualBlockStatsString) (virtualBlock) (statsString))
+  traceAroundEvent "vmaFreeVirtualBlockStatsString" ((ffiVmaFreeVirtualBlockStatsString)
+                                                       (virtualBlock)
+                                                       (statsString))
   pure $ ()
 
 
@@ -2879,7 +3127,10 @@ buildStatsString :: forall io
                  -> io (("statsString" ::: Ptr CChar))
 buildStatsString allocator detailedMap = liftIO . evalContT $ do
   pPpStatsString <- ContT $ bracket (callocBytes @(Ptr CChar) 8) free
-  lift $ traceAroundEvent "vmaBuildStatsString" ((ffiVmaBuildStatsString) (allocator) (pPpStatsString) (boolToBool32 (detailedMap)))
+  lift $ traceAroundEvent "vmaBuildStatsString" ((ffiVmaBuildStatsString)
+                                                   (allocator)
+                                                   (pPpStatsString)
+                                                   (boolToBool32 (detailedMap)))
   ppStatsString <- lift $ peek @(Ptr CChar) pPpStatsString
   pure $ (ppStatsString)
 
@@ -2900,7 +3151,9 @@ freeStatsString :: forall io
                    ("statsString" ::: Ptr CChar)
                 -> io ()
 freeStatsString allocator statsString = liftIO $ do
-  traceAroundEvent "vmaFreeStatsString" ((ffiVmaFreeStatsString) (allocator) (statsString))
+  traceAroundEvent "vmaFreeStatsString" ((ffiVmaFreeStatsString)
+                                           (allocator)
+                                           (statsString))
   pure $ ()
 
 
@@ -3051,7 +3304,8 @@ newtype AllocatorCreateFlagBits = AllocatorCreateFlagBits Flags
 --
 -- Using this flag may increase performance because internal mutexes are
 -- not used.
-pattern ALLOCATOR_CREATE_EXTERNALLY_SYNCHRONIZED_BIT    = AllocatorCreateFlagBits 0x00000001
+pattern ALLOCATOR_CREATE_EXTERNALLY_SYNCHRONIZED_BIT = AllocatorCreateFlagBits 0x00000001
+
 -- | Enables usage of VK_KHR_dedicated_allocation extension.
 --
 -- The flag works only if /VmaAllocatorCreateInfo::vulkanApiVersion/
@@ -3078,7 +3332,8 @@ pattern ALLOCATOR_CREATE_EXTERNALLY_SYNCHRONIZED_BIT    = AllocatorCreateFlagBit
 --
 -- ‍vkBindBufferMemory(): Binding memory to buffer 0x2d but
 -- vkGetBufferMemoryRequirements() has not been called on that buffer.
-pattern ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT   = AllocatorCreateFlagBits 0x00000002
+pattern ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT = AllocatorCreateFlagBits 0x00000002
+
 -- | Enables usage of VK_KHR_bind_memory2 extension.
 --
 -- The flag works only if /VmaAllocatorCreateInfo::vulkanApiVersion/
@@ -3094,7 +3349,8 @@ pattern ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT   = AllocatorCreateFlagBit
 -- @vkBindImageMemory2KHR@, which allow to pass a chain of @pNext@
 -- structures while binding. This flag is required if you use @pNext@
 -- parameter in 'bindBufferMemory2' or 'bindImageMemory2'.
-pattern ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT           = AllocatorCreateFlagBits 0x00000004
+pattern ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT = AllocatorCreateFlagBits 0x00000004
+
 -- | Enables usage of VK_EXT_memory_budget extension.
 --
 -- You may set this flag only if you found out that this device extension
@@ -3107,7 +3363,8 @@ pattern ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT           = AllocatorCreateFlagBit
 -- The extension provides query for current memory usage and budget, which
 -- will probably be more accurate than an estimation used by the library
 -- otherwise.
-pattern ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT          = AllocatorCreateFlagBits 0x00000008
+pattern ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT = AllocatorCreateFlagBits 0x00000008
+
 -- | Enables usage of VK_AMD_device_coherent_memory extension.
 --
 -- You may set this flag only if you:
@@ -3134,6 +3391,7 @@ pattern ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT          = AllocatorCreateFlagBit
 -- allocate any memory or create a custom pool in such memory type,
 -- returning @VK_ERROR_FEATURE_NOT_PRESENT@.
 pattern ALLOCATOR_CREATE_AMD_DEVICE_COHERENT_MEMORY_BIT = AllocatorCreateFlagBits 0x00000010
+
 -- | Enables usage of \"buffer device address\" feature, which allows you to
 -- use function @vkGetBufferDeviceAddress*@ to get raw GPU pointer to a
 -- buffer and pass it for usage inside a shader.
@@ -3154,7 +3412,8 @@ pattern ALLOCATOR_CREATE_AMD_DEVICE_COHERENT_MEMORY_BIT = AllocatorCreateFlagBit
 --
 -- For more information, see documentation chapter /Enabling buffer device
 -- address/.
-pattern ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT      = AllocatorCreateFlagBits 0x00000020
+pattern ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT = AllocatorCreateFlagBits 0x00000020
+
 -- | Enables usage of VK_EXT_memory_priority extension in the library.
 --
 -- You may set this flag only if you found available and enabled this
@@ -3174,7 +3433,7 @@ pattern ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT      = AllocatorCreateFlagBit
 -- @VkMemoryPriorityAllocateInfoEXT@. The value to be used for default
 -- priority is 0.5. For more details, see the documentation of the
 -- VK_EXT_memory_priority extension.
-pattern ALLOCATOR_CREATE_EXT_MEMORY_PRIORITY_BIT        = AllocatorCreateFlagBits 0x00000040
+pattern ALLOCATOR_CREATE_EXT_MEMORY_PRIORITY_BIT = AllocatorCreateFlagBits 0x00000040
 
 conNameAllocatorCreateFlagBits :: String
 conNameAllocatorCreateFlagBits = "AllocatorCreateFlagBits"
@@ -3184,28 +3443,52 @@ enumPrefixAllocatorCreateFlagBits = "ALLOCATOR_CREATE_"
 
 showTableAllocatorCreateFlagBits :: [(AllocatorCreateFlagBits, String)]
 showTableAllocatorCreateFlagBits =
-  [ (ALLOCATOR_CREATE_EXTERNALLY_SYNCHRONIZED_BIT   , "EXTERNALLY_SYNCHRONIZED_BIT")
-  , (ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT  , "KHR_DEDICATED_ALLOCATION_BIT")
-  , (ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT          , "KHR_BIND_MEMORY2_BIT")
-  , (ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT         , "EXT_MEMORY_BUDGET_BIT")
-  , (ALLOCATOR_CREATE_AMD_DEVICE_COHERENT_MEMORY_BIT, "AMD_DEVICE_COHERENT_MEMORY_BIT")
-  , (ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT     , "BUFFER_DEVICE_ADDRESS_BIT")
-  , (ALLOCATOR_CREATE_EXT_MEMORY_PRIORITY_BIT       , "EXT_MEMORY_PRIORITY_BIT")
+  [
+    ( ALLOCATOR_CREATE_EXTERNALLY_SYNCHRONIZED_BIT
+    , "EXTERNALLY_SYNCHRONIZED_BIT"
+    )
+  ,
+    ( ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT
+    , "KHR_DEDICATED_ALLOCATION_BIT"
+    )
+  ,
+    ( ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT
+    , "KHR_BIND_MEMORY2_BIT"
+    )
+  ,
+    ( ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT
+    , "EXT_MEMORY_BUDGET_BIT"
+    )
+  ,
+    ( ALLOCATOR_CREATE_AMD_DEVICE_COHERENT_MEMORY_BIT
+    , "AMD_DEVICE_COHERENT_MEMORY_BIT"
+    )
+  ,
+    ( ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT
+    , "BUFFER_DEVICE_ADDRESS_BIT"
+    )
+  ,
+    ( ALLOCATOR_CREATE_EXT_MEMORY_PRIORITY_BIT
+    , "EXT_MEMORY_PRIORITY_BIT"
+    )
   ]
 
 instance Show AllocatorCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixAllocatorCreateFlagBits
-                            showTableAllocatorCreateFlagBits
-                            conNameAllocatorCreateFlagBits
-                            (\(AllocatorCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixAllocatorCreateFlagBits
+      showTableAllocatorCreateFlagBits
+      conNameAllocatorCreateFlagBits
+      (\(AllocatorCreateFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read AllocatorCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixAllocatorCreateFlagBits
-                          showTableAllocatorCreateFlagBits
-                          conNameAllocatorCreateFlagBits
-                          AllocatorCreateFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixAllocatorCreateFlagBits
+      showTableAllocatorCreateFlagBits
+      conNameAllocatorCreateFlagBits
+      AllocatorCreateFlagBits
 
 -- | Intended usage of the allocated memory.
 newtype MemoryUsage = MemoryUsage Int32
@@ -3213,35 +3496,41 @@ newtype MemoryUsage = MemoryUsage Int32
 
 -- | No intended memory usage specified. Use other members of
 -- 'AllocationCreateInfo' to specify your requirements.
-pattern MEMORY_USAGE_UNKNOWN              = MemoryUsage 0
+pattern MEMORY_USAGE_UNKNOWN = MemoryUsage 0
+
 -- | /Deprecated/
 --
 -- Obsolete, preserved for backward compatibility. Prefers
 -- @VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT@.
-pattern MEMORY_USAGE_GPU_ONLY             = MemoryUsage 1
+pattern MEMORY_USAGE_GPU_ONLY = MemoryUsage 1
+
 -- | /Deprecated/
 --
 -- Obsolete, preserved for backward compatibility. Guarantees
 -- @VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT@ and
 -- @VK_MEMORY_PROPERTY_HOST_COHERENT_BIT@.
-pattern MEMORY_USAGE_CPU_ONLY             = MemoryUsage 2
+pattern MEMORY_USAGE_CPU_ONLY = MemoryUsage 2
+
 -- | /Deprecated/
 --
 -- Obsolete, preserved for backward compatibility. Guarantees
 -- @VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT@, prefers
 -- @VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT@.
-pattern MEMORY_USAGE_CPU_TO_GPU           = MemoryUsage 3
+pattern MEMORY_USAGE_CPU_TO_GPU = MemoryUsage 3
+
 -- | /Deprecated/
 --
 -- Obsolete, preserved for backward compatibility. Guarantees
 -- @VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT@, prefers
 -- @VK_MEMORY_PROPERTY_HOST_CACHED_BIT@.
-pattern MEMORY_USAGE_GPU_TO_CPU           = MemoryUsage 4
+pattern MEMORY_USAGE_GPU_TO_CPU = MemoryUsage 4
+
 -- | /Deprecated/
 --
 -- Obsolete, preserved for backward compatibility. Prefers not
 -- @VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT@.
-pattern MEMORY_USAGE_CPU_COPY             = MemoryUsage 5
+pattern MEMORY_USAGE_CPU_COPY = MemoryUsage 5
+
 -- | Lazily allocated GPU memory having
 -- @VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT@. Exists mostly on mobile
 -- platforms. Using it on desktop PC or other GPUs with no such memory type
@@ -3254,6 +3543,7 @@ pattern MEMORY_USAGE_CPU_COPY             = MemoryUsage 5
 -- Allocations with this usage are always created as dedicated - it implies
 -- 'ALLOCATION_CREATE_DEDICATED_MEMORY_BIT'.
 pattern MEMORY_USAGE_GPU_LAZILY_ALLOCATED = MemoryUsage 6
+
 -- | Selects best memory type automatically. This flag is recommended for
 -- most common use cases.
 --
@@ -3268,7 +3558,8 @@ pattern MEMORY_USAGE_GPU_LAZILY_ALLOCATED = MemoryUsage 6
 -- 'createImage', 'findMemoryTypeIndexForBufferInfo',
 -- 'findMemoryTypeIndexForImageInfo' and not with generic memory allocation
 -- functions.
-pattern MEMORY_USAGE_AUTO                 = MemoryUsage 7
+pattern MEMORY_USAGE_AUTO = MemoryUsage 7
+
 -- | Selects best memory type automatically with preference for GPU (device)
 -- memory.
 --
@@ -3283,7 +3574,8 @@ pattern MEMORY_USAGE_AUTO                 = MemoryUsage 7
 -- 'createImage', 'findMemoryTypeIndexForBufferInfo',
 -- 'findMemoryTypeIndexForImageInfo' and not with generic memory allocation
 -- functions.
-pattern MEMORY_USAGE_AUTO_PREFER_DEVICE   = MemoryUsage 8
+pattern MEMORY_USAGE_AUTO_PREFER_DEVICE = MemoryUsage 8
+
 -- | Selects best memory type automatically with preference for CPU (host)
 -- memory.
 --
@@ -3298,17 +3590,21 @@ pattern MEMORY_USAGE_AUTO_PREFER_DEVICE   = MemoryUsage 8
 -- 'createImage', 'findMemoryTypeIndexForBufferInfo',
 -- 'findMemoryTypeIndexForImageInfo' and not with generic memory allocation
 -- functions.
-pattern MEMORY_USAGE_AUTO_PREFER_HOST     = MemoryUsage 9
-{-# complete MEMORY_USAGE_UNKNOWN,
-             MEMORY_USAGE_GPU_ONLY,
-             MEMORY_USAGE_CPU_ONLY,
-             MEMORY_USAGE_CPU_TO_GPU,
-             MEMORY_USAGE_GPU_TO_CPU,
-             MEMORY_USAGE_CPU_COPY,
-             MEMORY_USAGE_GPU_LAZILY_ALLOCATED,
-             MEMORY_USAGE_AUTO,
-             MEMORY_USAGE_AUTO_PREFER_DEVICE,
-             MEMORY_USAGE_AUTO_PREFER_HOST :: MemoryUsage #-}
+pattern MEMORY_USAGE_AUTO_PREFER_HOST = MemoryUsage 9
+
+{-# COMPLETE
+  MEMORY_USAGE_UNKNOWN
+  , MEMORY_USAGE_GPU_ONLY
+  , MEMORY_USAGE_CPU_ONLY
+  , MEMORY_USAGE_CPU_TO_GPU
+  , MEMORY_USAGE_GPU_TO_CPU
+  , MEMORY_USAGE_CPU_COPY
+  , MEMORY_USAGE_GPU_LAZILY_ALLOCATED
+  , MEMORY_USAGE_AUTO
+  , MEMORY_USAGE_AUTO_PREFER_DEVICE
+  , MEMORY_USAGE_AUTO_PREFER_HOST ::
+    MemoryUsage
+  #-}
 
 conNameMemoryUsage :: String
 conNameMemoryUsage = "MemoryUsage"
@@ -3318,25 +3614,37 @@ enumPrefixMemoryUsage = "MEMORY_USAGE_"
 
 showTableMemoryUsage :: [(MemoryUsage, String)]
 showTableMemoryUsage =
-  [ (MEMORY_USAGE_UNKNOWN             , "UNKNOWN")
-  , (MEMORY_USAGE_GPU_ONLY            , "GPU_ONLY")
-  , (MEMORY_USAGE_CPU_ONLY            , "CPU_ONLY")
-  , (MEMORY_USAGE_CPU_TO_GPU          , "CPU_TO_GPU")
-  , (MEMORY_USAGE_GPU_TO_CPU          , "GPU_TO_CPU")
-  , (MEMORY_USAGE_CPU_COPY            , "CPU_COPY")
-  , (MEMORY_USAGE_GPU_LAZILY_ALLOCATED, "GPU_LAZILY_ALLOCATED")
-  , (MEMORY_USAGE_AUTO                , "AUTO")
-  , (MEMORY_USAGE_AUTO_PREFER_DEVICE  , "AUTO_PREFER_DEVICE")
-  , (MEMORY_USAGE_AUTO_PREFER_HOST    , "AUTO_PREFER_HOST")
+  [ (MEMORY_USAGE_UNKNOWN, "UNKNOWN")
+  , (MEMORY_USAGE_GPU_ONLY, "GPU_ONLY")
+  , (MEMORY_USAGE_CPU_ONLY, "CPU_ONLY")
+  , (MEMORY_USAGE_CPU_TO_GPU, "CPU_TO_GPU")
+  , (MEMORY_USAGE_GPU_TO_CPU, "GPU_TO_CPU")
+  , (MEMORY_USAGE_CPU_COPY, "CPU_COPY")
+  ,
+    ( MEMORY_USAGE_GPU_LAZILY_ALLOCATED
+    , "GPU_LAZILY_ALLOCATED"
+    )
+  , (MEMORY_USAGE_AUTO, "AUTO")
+  , (MEMORY_USAGE_AUTO_PREFER_DEVICE, "AUTO_PREFER_DEVICE")
+  , (MEMORY_USAGE_AUTO_PREFER_HOST, "AUTO_PREFER_HOST")
   ]
 
 instance Show MemoryUsage where
   showsPrec =
-    enumShowsPrec enumPrefixMemoryUsage showTableMemoryUsage conNameMemoryUsage (\(MemoryUsage x) -> x) (showsPrec 11)
+    enumShowsPrec
+      enumPrefixMemoryUsage
+      showTableMemoryUsage
+      conNameMemoryUsage
+      (\(MemoryUsage x) -> x)
+      (showsPrec 11)
 
 instance Read MemoryUsage where
-  readPrec = enumReadPrec enumPrefixMemoryUsage showTableMemoryUsage conNameMemoryUsage MemoryUsage
-
+  readPrec =
+    enumReadPrec
+      enumPrefixMemoryUsage
+      showTableMemoryUsage
+      conNameMemoryUsage
+      MemoryUsage
 
 type AllocationCreateFlags = AllocationCreateFlagBits
 
@@ -3348,7 +3656,8 @@ newtype AllocationCreateFlagBits = AllocationCreateFlagBits Flags
 --
 -- Use it for special, big resources, like fullscreen images used as
 -- attachments.
-pattern ALLOCATION_CREATE_DEDICATED_MEMORY_BIT                   = AllocationCreateFlagBits 0x00000001
+pattern ALLOCATION_CREATE_DEDICATED_MEMORY_BIT = AllocationCreateFlagBits 0x00000001
+
 -- | Set this flag to only try to allocate from existing @VkDeviceMemory@
 -- blocks and never create new such block.
 --
@@ -3358,7 +3667,8 @@ pattern ALLOCATION_CREATE_DEDICATED_MEMORY_BIT                   = AllocationCre
 -- You should not use 'ALLOCATION_CREATE_DEDICATED_MEMORY_BIT' and
 -- 'ALLOCATION_CREATE_NEVER_ALLOCATE_BIT' at the same time. It makes no
 -- sense.
-pattern ALLOCATION_CREATE_NEVER_ALLOCATE_BIT                     = AllocationCreateFlagBits 0x00000002
+pattern ALLOCATION_CREATE_NEVER_ALLOCATE_BIT = AllocationCreateFlagBits 0x00000002
+
 -- | Set this flag to use a memory that will be persistently mapped and
 -- retrieve pointer to it.
 --
@@ -3370,7 +3680,8 @@ pattern ALLOCATION_CREATE_NEVER_ALLOCATE_BIT                     = AllocationCre
 -- mapped. This is useful if you need an allocation that is efficient to
 -- use on GPU (@DEVICE_LOCAL@) and still want to map it directly if
 -- possible on platforms that support it (e.g. Intel GPU).
-pattern ALLOCATION_CREATE_MAPPED_BIT                             = AllocationCreateFlagBits 0x00000004
+pattern ALLOCATION_CREATE_MAPPED_BIT = AllocationCreateFlagBits 0x00000004
+
 -- | /Deprecated/
 --
 -- Preserved for backward compatibility. Consider using 'setAllocationName'
@@ -3381,12 +3692,14 @@ pattern ALLOCATION_CREATE_MAPPED_BIT                             = AllocationCre
 -- copy of the string is made and stored in allocation\'s @pName@. The
 -- string is automatically freed together with the allocation. It is also
 -- used in 'buildStatsString'.
-pattern ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT              = AllocationCreateFlagBits 0x00000020
+pattern ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT = AllocationCreateFlagBits 0x00000020
+
 -- | Allocation will be created from upper stack in a double stack pool.
 --
 -- This flag is only allowed for custom pools created with
 -- 'POOL_CREATE_LINEAR_ALGORITHM_BIT' flag.
-pattern ALLOCATION_CREATE_UPPER_ADDRESS_BIT                      = AllocationCreateFlagBits 0x00000040
+pattern ALLOCATION_CREATE_UPPER_ADDRESS_BIT = AllocationCreateFlagBits 0x00000040
+
 -- | Create both buffer\/image and allocation, but don\'t bind them together.
 -- It is useful when you want to bind yourself to do some more advanced
 -- binding, e.g. using some extensions. The flag is meaningful only with
@@ -3397,18 +3710,21 @@ pattern ALLOCATION_CREATE_UPPER_ADDRESS_BIT                      = AllocationCre
 -- memory allocation through @VkMemoryDedicatedAllocateInfoKHR@ structure
 -- in case the allocation ends up in its own memory block, use also flag
 -- 'ALLOCATION_CREATE_CAN_ALIAS_BIT'.
-pattern ALLOCATION_CREATE_DONT_BIND_BIT                          = AllocationCreateFlagBits 0x00000080
+pattern ALLOCATION_CREATE_DONT_BIND_BIT = AllocationCreateFlagBits 0x00000080
+
 -- | Create allocation only if additional device memory required for it, if
 -- any, won\'t exceed memory budget. Otherwise return
 -- @VK_ERROR_OUT_OF_DEVICE_MEMORY@.
-pattern ALLOCATION_CREATE_WITHIN_BUDGET_BIT                      = AllocationCreateFlagBits 0x00000100
+pattern ALLOCATION_CREATE_WITHIN_BUDGET_BIT = AllocationCreateFlagBits 0x00000100
+
 -- | Set this flag if the allocated memory will have aliasing resources.
 --
 -- Usage of this flag prevents supplying @VkMemoryDedicatedAllocateInfoKHR@
 -- when 'ALLOCATION_CREATE_DEDICATED_MEMORY_BIT' is specified. Otherwise
 -- created dedicated memory will not be suitable for aliasing resources,
 -- resulting in Vulkan Validation Layer errors.
-pattern ALLOCATION_CREATE_CAN_ALIAS_BIT                          = AllocationCreateFlagBits 0x00000200
+pattern ALLOCATION_CREATE_CAN_ALIAS_BIT = AllocationCreateFlagBits 0x00000200
+
 -- | Requests possibility to map the allocation (using 'mapMemory' or
 -- 'ALLOCATION_CREATE_MAPPED_BIT').
 --
@@ -3431,7 +3747,8 @@ pattern ALLOCATION_CREATE_CAN_ALIAS_BIT                          = AllocationCre
 -- slow. Watch out for implicit reads introduced by doing e.g.
 -- @pMappedData[i] += x;@ Better prepare your data in a local variable and
 -- @memcpy()@ it to the mapped pointer all at once.
-pattern ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT       = AllocationCreateFlagBits 0x00000400
+pattern ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT = AllocationCreateFlagBits 0x00000400
+
 -- | Requests possibility to map the allocation (using 'mapMemory' or
 -- 'ALLOCATION_CREATE_MAPPED_BIT').
 --
@@ -3445,7 +3762,8 @@ pattern ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT       = AllocationCre
 --
 -- Declares that mapped memory can be read, written, and accessed in random
 -- order, so a @HOST_CACHED@ memory type is required.
-pattern ALLOCATION_CREATE_HOST_ACCESS_RANDOM_BIT                 = AllocationCreateFlagBits 0x00000800
+pattern ALLOCATION_CREATE_HOST_ACCESS_RANDOM_BIT = AllocationCreateFlagBits 0x00000800
+
 -- | Together with 'ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT' or
 -- 'ALLOCATION_CREATE_HOST_ACCESS_RANDOM_BIT', it says that despite request
 -- for host access, a not-@HOST_VISIBLE@ memory type can be selected if it
@@ -3460,26 +3778,32 @@ pattern ALLOCATION_CREATE_HOST_ACCESS_RANDOM_BIT                 = AllocationCre
 -- @VK_BUFFER_USAGE_TRANSFER_SRC_BIT@ to the parameters of created buffer
 -- or image.
 pattern ALLOCATION_CREATE_HOST_ACCESS_ALLOW_TRANSFER_INSTEAD_BIT = AllocationCreateFlagBits 0x00001000
+
 -- | Allocation strategy that chooses smallest possible free range for the
 -- allocation to minimize memory usage and fragmentation, possibly at the
 -- expense of allocation time.
-pattern ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT                = AllocationCreateFlagBits 0x00010000
+pattern ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT = AllocationCreateFlagBits 0x00010000
+
 -- | Allocation strategy that chooses first suitable free range for the
 -- allocation - not necessarily in terms of the smallest offset but the one
 -- that is easiest and fastest to find to minimize allocation time,
 -- possibly at the expense of allocation quality.
-pattern ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT                  = AllocationCreateFlagBits 0x00020000
+pattern ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT = AllocationCreateFlagBits 0x00020000
+
 -- | Allocation strategy that chooses always the lowest offset in available
 -- space. This is not the most efficient strategy but achieves highly
 -- packed data. Used internally by defragmentation, not recommended in
 -- typical usage.
-pattern ALLOCATION_CREATE_STRATEGY_MIN_OFFSET_BIT                = AllocationCreateFlagBits 0x00040000
+pattern ALLOCATION_CREATE_STRATEGY_MIN_OFFSET_BIT = AllocationCreateFlagBits 0x00040000
+
 -- | Alias to 'ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT'.
-pattern ALLOCATION_CREATE_STRATEGY_BEST_FIT_BIT                  = AllocationCreateFlagBits 0x00010000
+pattern ALLOCATION_CREATE_STRATEGY_BEST_FIT_BIT = AllocationCreateFlagBits 0x00010000
+
 -- | Alias to 'ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT'.
-pattern ALLOCATION_CREATE_STRATEGY_FIRST_FIT_BIT                 = AllocationCreateFlagBits 0x00020000
+pattern ALLOCATION_CREATE_STRATEGY_FIRST_FIT_BIT = AllocationCreateFlagBits 0x00020000
+
 -- | A bit mask to extract only @STRATEGY@ bits from entire set of flags.
-pattern ALLOCATION_CREATE_STRATEGY_MASK                          = AllocationCreateFlagBits 0x00070000
+pattern ALLOCATION_CREATE_STRATEGY_MASK = AllocationCreateFlagBits 0x00070000
 
 conNameAllocationCreateFlagBits :: String
 conNameAllocationCreateFlagBits = "AllocationCreateFlagBits"
@@ -3489,38 +3813,92 @@ enumPrefixAllocationCreateFlagBits = "ALLOCATION_CREATE_"
 
 showTableAllocationCreateFlagBits :: [(AllocationCreateFlagBits, String)]
 showTableAllocationCreateFlagBits =
-  [ (ALLOCATION_CREATE_DEDICATED_MEMORY_BIT                  , "DEDICATED_MEMORY_BIT")
-  , (ALLOCATION_CREATE_NEVER_ALLOCATE_BIT                    , "NEVER_ALLOCATE_BIT")
-  , (ALLOCATION_CREATE_MAPPED_BIT                            , "MAPPED_BIT")
-  , (ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT             , "USER_DATA_COPY_STRING_BIT")
-  , (ALLOCATION_CREATE_UPPER_ADDRESS_BIT                     , "UPPER_ADDRESS_BIT")
-  , (ALLOCATION_CREATE_DONT_BIND_BIT                         , "DONT_BIND_BIT")
-  , (ALLOCATION_CREATE_WITHIN_BUDGET_BIT                     , "WITHIN_BUDGET_BIT")
-  , (ALLOCATION_CREATE_CAN_ALIAS_BIT                         , "CAN_ALIAS_BIT")
-  , (ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT      , "HOST_ACCESS_SEQUENTIAL_WRITE_BIT")
-  , (ALLOCATION_CREATE_HOST_ACCESS_RANDOM_BIT                , "HOST_ACCESS_RANDOM_BIT")
-  , (ALLOCATION_CREATE_HOST_ACCESS_ALLOW_TRANSFER_INSTEAD_BIT, "HOST_ACCESS_ALLOW_TRANSFER_INSTEAD_BIT")
-  , (ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT               , "STRATEGY_MIN_MEMORY_BIT")
-  , (ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT                 , "STRATEGY_MIN_TIME_BIT")
-  , (ALLOCATION_CREATE_STRATEGY_MIN_OFFSET_BIT               , "STRATEGY_MIN_OFFSET_BIT")
-  , (ALLOCATION_CREATE_STRATEGY_BEST_FIT_BIT                 , "STRATEGY_BEST_FIT_BIT")
-  , (ALLOCATION_CREATE_STRATEGY_FIRST_FIT_BIT                , "STRATEGY_FIRST_FIT_BIT")
-  , (ALLOCATION_CREATE_STRATEGY_MASK                         , "STRATEGY_MASK")
+  [
+    ( ALLOCATION_CREATE_DEDICATED_MEMORY_BIT
+    , "DEDICATED_MEMORY_BIT"
+    )
+  ,
+    ( ALLOCATION_CREATE_NEVER_ALLOCATE_BIT
+    , "NEVER_ALLOCATE_BIT"
+    )
+  ,
+    ( ALLOCATION_CREATE_MAPPED_BIT
+    , "MAPPED_BIT"
+    )
+  ,
+    ( ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT
+    , "USER_DATA_COPY_STRING_BIT"
+    )
+  ,
+    ( ALLOCATION_CREATE_UPPER_ADDRESS_BIT
+    , "UPPER_ADDRESS_BIT"
+    )
+  ,
+    ( ALLOCATION_CREATE_DONT_BIND_BIT
+    , "DONT_BIND_BIT"
+    )
+  ,
+    ( ALLOCATION_CREATE_WITHIN_BUDGET_BIT
+    , "WITHIN_BUDGET_BIT"
+    )
+  ,
+    ( ALLOCATION_CREATE_CAN_ALIAS_BIT
+    , "CAN_ALIAS_BIT"
+    )
+  ,
+    ( ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT
+    , "HOST_ACCESS_SEQUENTIAL_WRITE_BIT"
+    )
+  ,
+    ( ALLOCATION_CREATE_HOST_ACCESS_RANDOM_BIT
+    , "HOST_ACCESS_RANDOM_BIT"
+    )
+  ,
+    ( ALLOCATION_CREATE_HOST_ACCESS_ALLOW_TRANSFER_INSTEAD_BIT
+    , "HOST_ACCESS_ALLOW_TRANSFER_INSTEAD_BIT"
+    )
+  ,
+    ( ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT
+    , "STRATEGY_MIN_MEMORY_BIT"
+    )
+  ,
+    ( ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT
+    , "STRATEGY_MIN_TIME_BIT"
+    )
+  ,
+    ( ALLOCATION_CREATE_STRATEGY_MIN_OFFSET_BIT
+    , "STRATEGY_MIN_OFFSET_BIT"
+    )
+  ,
+    ( ALLOCATION_CREATE_STRATEGY_BEST_FIT_BIT
+    , "STRATEGY_BEST_FIT_BIT"
+    )
+  ,
+    ( ALLOCATION_CREATE_STRATEGY_FIRST_FIT_BIT
+    , "STRATEGY_FIRST_FIT_BIT"
+    )
+  ,
+    ( ALLOCATION_CREATE_STRATEGY_MASK
+    , "STRATEGY_MASK"
+    )
   ]
 
 instance Show AllocationCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixAllocationCreateFlagBits
-                            showTableAllocationCreateFlagBits
-                            conNameAllocationCreateFlagBits
-                            (\(AllocationCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixAllocationCreateFlagBits
+      showTableAllocationCreateFlagBits
+      conNameAllocationCreateFlagBits
+      (\(AllocationCreateFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read AllocationCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixAllocationCreateFlagBits
-                          showTableAllocationCreateFlagBits
-                          conNameAllocationCreateFlagBits
-                          AllocationCreateFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixAllocationCreateFlagBits
+      showTableAllocationCreateFlagBits
+      conNameAllocationCreateFlagBits
+      AllocationCreateFlagBits
 
 type PoolCreateFlags = PoolCreateFlagBits
 
@@ -3548,6 +3926,7 @@ newtype PoolCreateFlagBits = PoolCreateFlagBits Flags
 -- Buffer-Image Granularity and so make allocations faster and more
 -- optimal.
 pattern POOL_CREATE_IGNORE_BUFFER_IMAGE_GRANULARITY_BIT = PoolCreateFlagBits 0x00000002
+
 -- | Enables alternative, linear allocation algorithm in this pool.
 --
 -- Specify this flag to enable linear allocation algorithm, which always
@@ -3559,9 +3938,10 @@ pattern POOL_CREATE_IGNORE_BUFFER_IMAGE_GRANULARITY_BIT = PoolCreateFlagBits 0x0
 -- By using this flag, you can achieve behavior of free-at-once, stack,
 -- ring buffer, and double stack. For details, see documentation chapter
 -- /Linear allocation algorithm/.
-pattern POOL_CREATE_LINEAR_ALGORITHM_BIT                = PoolCreateFlagBits 0x00000004
+pattern POOL_CREATE_LINEAR_ALGORITHM_BIT = PoolCreateFlagBits 0x00000004
+
 -- | Bit mask to extract only @ALGORITHM@ bits from entire set of flags.
-pattern POOL_CREATE_ALGORITHM_MASK                      = PoolCreateFlagBits 0x00000004
+pattern POOL_CREATE_ALGORITHM_MASK = PoolCreateFlagBits 0x00000004
 
 conNamePoolCreateFlagBits :: String
 conNamePoolCreateFlagBits = "PoolCreateFlagBits"
@@ -3571,22 +3951,33 @@ enumPrefixPoolCreateFlagBits = "POOL_CREATE_"
 
 showTablePoolCreateFlagBits :: [(PoolCreateFlagBits, String)]
 showTablePoolCreateFlagBits =
-  [ (POOL_CREATE_IGNORE_BUFFER_IMAGE_GRANULARITY_BIT, "IGNORE_BUFFER_IMAGE_GRANULARITY_BIT")
-  , (POOL_CREATE_LINEAR_ALGORITHM_BIT               , "LINEAR_ALGORITHM_BIT")
-  , (POOL_CREATE_ALGORITHM_MASK                     , "ALGORITHM_MASK")
+  [
+    ( POOL_CREATE_IGNORE_BUFFER_IMAGE_GRANULARITY_BIT
+    , "IGNORE_BUFFER_IMAGE_GRANULARITY_BIT"
+    )
+  ,
+    ( POOL_CREATE_LINEAR_ALGORITHM_BIT
+    , "LINEAR_ALGORITHM_BIT"
+    )
+  , (POOL_CREATE_ALGORITHM_MASK, "ALGORITHM_MASK")
   ]
 
 instance Show PoolCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixPoolCreateFlagBits
-                            showTablePoolCreateFlagBits
-                            conNamePoolCreateFlagBits
-                            (\(PoolCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPoolCreateFlagBits
+      showTablePoolCreateFlagBits
+      conNamePoolCreateFlagBits
+      (\(PoolCreateFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read PoolCreateFlagBits where
   readPrec =
-    enumReadPrec enumPrefixPoolCreateFlagBits showTablePoolCreateFlagBits conNamePoolCreateFlagBits PoolCreateFlagBits
-
+    enumReadPrec
+      enumPrefixPoolCreateFlagBits
+      showTablePoolCreateFlagBits
+      conNamePoolCreateFlagBits
+      PoolCreateFlagBits
 
 type DefragmentationFlags = DefragmentationFlagBits
 
@@ -3594,20 +3985,21 @@ type DefragmentationFlags = DefragmentationFlagBits
 newtype DefragmentationFlagBits = DefragmentationFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
+pattern DEFRAGMENTATION_FLAG_ALGORITHM_FAST_BIT = DefragmentationFlagBits 0x00000001
 
-pattern DEFRAGMENTATION_FLAG_ALGORITHM_FAST_BIT      = DefragmentationFlagBits 0x00000001
+pattern DEFRAGMENTATION_FLAG_ALGORITHM_BALANCED_BIT = DefragmentationFlagBits 0x00000002
 
-pattern DEFRAGMENTATION_FLAG_ALGORITHM_BALANCED_BIT  = DefragmentationFlagBits 0x00000002
+pattern DEFRAGMENTATION_FLAG_ALGORITHM_FULL_BIT = DefragmentationFlagBits 0x00000004
 
-pattern DEFRAGMENTATION_FLAG_ALGORITHM_FULL_BIT      = DefragmentationFlagBits 0x00000004
 -- | Use the most roboust algorithm at the cost of time to compute and number
 -- of copies to make. Only available when bufferImageGranularity is greater
 -- than 1, since it aims to reduce alignment issues between different types
 -- of resources. Otherwise falls back to same behavior as
 -- 'DEFRAGMENTATION_FLAG_ALGORITHM_FULL_BIT'.
 pattern DEFRAGMENTATION_FLAG_ALGORITHM_EXTENSIVE_BIT = DefragmentationFlagBits 0x00000008
+
 -- | A bit mask to extract only @ALGORITHM@ bits from entire set of flags.
-pattern DEFRAGMENTATION_FLAG_ALGORITHM_MASK          = DefragmentationFlagBits 0x0000000f
+pattern DEFRAGMENTATION_FLAG_ALGORITHM_MASK = DefragmentationFlagBits 0x0000000f
 
 conNameDefragmentationFlagBits :: String
 conNameDefragmentationFlagBits = "DefragmentationFlagBits"
@@ -3617,26 +4009,44 @@ enumPrefixDefragmentationFlagBits = "DEFRAGMENTATION_FLAG_ALGORITHM_"
 
 showTableDefragmentationFlagBits :: [(DefragmentationFlagBits, String)]
 showTableDefragmentationFlagBits =
-  [ (DEFRAGMENTATION_FLAG_ALGORITHM_FAST_BIT     , "FAST_BIT")
-  , (DEFRAGMENTATION_FLAG_ALGORITHM_BALANCED_BIT , "BALANCED_BIT")
-  , (DEFRAGMENTATION_FLAG_ALGORITHM_FULL_BIT     , "FULL_BIT")
-  , (DEFRAGMENTATION_FLAG_ALGORITHM_EXTENSIVE_BIT, "EXTENSIVE_BIT")
-  , (DEFRAGMENTATION_FLAG_ALGORITHM_MASK         , "MASK")
+  [
+    ( DEFRAGMENTATION_FLAG_ALGORITHM_FAST_BIT
+    , "FAST_BIT"
+    )
+  ,
+    ( DEFRAGMENTATION_FLAG_ALGORITHM_BALANCED_BIT
+    , "BALANCED_BIT"
+    )
+  ,
+    ( DEFRAGMENTATION_FLAG_ALGORITHM_FULL_BIT
+    , "FULL_BIT"
+    )
+  ,
+    ( DEFRAGMENTATION_FLAG_ALGORITHM_EXTENSIVE_BIT
+    , "EXTENSIVE_BIT"
+    )
+  ,
+    ( DEFRAGMENTATION_FLAG_ALGORITHM_MASK
+    , "MASK"
+    )
   ]
 
 instance Show DefragmentationFlagBits where
-  showsPrec = enumShowsPrec enumPrefixDefragmentationFlagBits
-                            showTableDefragmentationFlagBits
-                            conNameDefragmentationFlagBits
-                            (\(DefragmentationFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDefragmentationFlagBits
+      showTableDefragmentationFlagBits
+      conNameDefragmentationFlagBits
+      (\(DefragmentationFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read DefragmentationFlagBits where
-  readPrec = enumReadPrec enumPrefixDefragmentationFlagBits
-                          showTableDefragmentationFlagBits
-                          conNameDefragmentationFlagBits
-                          DefragmentationFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDefragmentationFlagBits
+      showTableDefragmentationFlagBits
+      conNameDefragmentationFlagBits
+      DefragmentationFlagBits
 
 -- | Operation performed on single defragmentation move. See structure
 -- 'DefragmentationMove'.
@@ -3647,17 +4057,23 @@ newtype DefragmentationMoveOperation = DefragmentationMoveOperation Int32
 -- copied, old buffer\/image has been destroyed. @srcAllocation@ should be
 -- changed to point to the new place. This is the default value set by
 -- 'beginDefragmentationPass'.
-pattern DEFRAGMENTATION_MOVE_OPERATION_COPY    = DefragmentationMoveOperation 0
+pattern DEFRAGMENTATION_MOVE_OPERATION_COPY = DefragmentationMoveOperation 0
+
 -- | Set this value if you cannot move the allocation. New place reserved at
 -- @dstTmpAllocation@ will be freed. @srcAllocation@ will remain unchanged.
-pattern DEFRAGMENTATION_MOVE_OPERATION_IGNORE  = DefragmentationMoveOperation 1
+pattern DEFRAGMENTATION_MOVE_OPERATION_IGNORE = DefragmentationMoveOperation 1
+
 -- | Set this value if you decide to abandon the allocation and you destroyed
 -- the buffer\/image. New place reserved at @dstTmpAllocation@ will be
 -- freed, along with @srcAllocation@, which will be destroyed.
 pattern DEFRAGMENTATION_MOVE_OPERATION_DESTROY = DefragmentationMoveOperation 2
-{-# complete DEFRAGMENTATION_MOVE_OPERATION_COPY,
-             DEFRAGMENTATION_MOVE_OPERATION_IGNORE,
-             DEFRAGMENTATION_MOVE_OPERATION_DESTROY :: DefragmentationMoveOperation #-}
+
+{-# COMPLETE
+  DEFRAGMENTATION_MOVE_OPERATION_COPY
+  , DEFRAGMENTATION_MOVE_OPERATION_IGNORE
+  , DEFRAGMENTATION_MOVE_OPERATION_DESTROY ::
+    DefragmentationMoveOperation
+  #-}
 
 conNameDefragmentationMoveOperation :: String
 conNameDefragmentationMoveOperation = "DefragmentationMoveOperation"
@@ -3667,24 +4083,36 @@ enumPrefixDefragmentationMoveOperation = "DEFRAGMENTATION_MOVE_OPERATION_"
 
 showTableDefragmentationMoveOperation :: [(DefragmentationMoveOperation, String)]
 showTableDefragmentationMoveOperation =
-  [ (DEFRAGMENTATION_MOVE_OPERATION_COPY   , "COPY")
-  , (DEFRAGMENTATION_MOVE_OPERATION_IGNORE , "IGNORE")
-  , (DEFRAGMENTATION_MOVE_OPERATION_DESTROY, "DESTROY")
+  [
+    ( DEFRAGMENTATION_MOVE_OPERATION_COPY
+    , "COPY"
+    )
+  ,
+    ( DEFRAGMENTATION_MOVE_OPERATION_IGNORE
+    , "IGNORE"
+    )
+  ,
+    ( DEFRAGMENTATION_MOVE_OPERATION_DESTROY
+    , "DESTROY"
+    )
   ]
 
 instance Show DefragmentationMoveOperation where
-  showsPrec = enumShowsPrec enumPrefixDefragmentationMoveOperation
-                            showTableDefragmentationMoveOperation
-                            conNameDefragmentationMoveOperation
-                            (\(DefragmentationMoveOperation x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDefragmentationMoveOperation
+      showTableDefragmentationMoveOperation
+      conNameDefragmentationMoveOperation
+      (\(DefragmentationMoveOperation x) -> x)
+      (showsPrec 11)
 
 instance Read DefragmentationMoveOperation where
-  readPrec = enumReadPrec enumPrefixDefragmentationMoveOperation
-                          showTableDefragmentationMoveOperation
-                          conNameDefragmentationMoveOperation
-                          DefragmentationMoveOperation
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDefragmentationMoveOperation
+      showTableDefragmentationMoveOperation
+      conNameDefragmentationMoveOperation
+      DefragmentationMoveOperation
 
 type VirtualBlockCreateFlags = VirtualBlockCreateFlagBits
 
@@ -3704,8 +4132,9 @@ newtype VirtualBlockCreateFlagBits = VirtualBlockCreateFlagBits Flags
 -- ring buffer, and double stack. For details, see documentation chapter
 -- /Linear allocation algorithm/.
 pattern VIRTUAL_BLOCK_CREATE_LINEAR_ALGORITHM_BIT = VirtualBlockCreateFlagBits 0x00000001
+
 -- | Bit mask to extract only @ALGORITHM@ bits from entire set of flags.
-pattern VIRTUAL_BLOCK_CREATE_ALGORITHM_MASK       = VirtualBlockCreateFlagBits 0x00000001
+pattern VIRTUAL_BLOCK_CREATE_ALGORITHM_MASK = VirtualBlockCreateFlagBits 0x00000001
 
 conNameVirtualBlockCreateFlagBits :: String
 conNameVirtualBlockCreateFlagBits = "VirtualBlockCreateFlagBits"
@@ -3715,23 +4144,32 @@ enumPrefixVirtualBlockCreateFlagBits = "VIRTUAL_BLOCK_CREATE_"
 
 showTableVirtualBlockCreateFlagBits :: [(VirtualBlockCreateFlagBits, String)]
 showTableVirtualBlockCreateFlagBits =
-  [ (VIRTUAL_BLOCK_CREATE_LINEAR_ALGORITHM_BIT, "LINEAR_ALGORITHM_BIT")
-  , (VIRTUAL_BLOCK_CREATE_ALGORITHM_MASK      , "ALGORITHM_MASK")
+  [
+    ( VIRTUAL_BLOCK_CREATE_LINEAR_ALGORITHM_BIT
+    , "LINEAR_ALGORITHM_BIT"
+    )
+  ,
+    ( VIRTUAL_BLOCK_CREATE_ALGORITHM_MASK
+    , "ALGORITHM_MASK"
+    )
   ]
 
 instance Show VirtualBlockCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixVirtualBlockCreateFlagBits
-                            showTableVirtualBlockCreateFlagBits
-                            conNameVirtualBlockCreateFlagBits
-                            (\(VirtualBlockCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixVirtualBlockCreateFlagBits
+      showTableVirtualBlockCreateFlagBits
+      conNameVirtualBlockCreateFlagBits
+      (\(VirtualBlockCreateFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read VirtualBlockCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixVirtualBlockCreateFlagBits
-                          showTableVirtualBlockCreateFlagBits
-                          conNameVirtualBlockCreateFlagBits
-                          VirtualBlockCreateFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixVirtualBlockCreateFlagBits
+      showTableVirtualBlockCreateFlagBits
+      conNameVirtualBlockCreateFlagBits
+      VirtualBlockCreateFlagBits
 
 type VirtualAllocationCreateFlags = VirtualAllocationCreateFlagBits
 
@@ -3743,20 +4181,24 @@ newtype VirtualAllocationCreateFlagBits = VirtualAllocationCreateFlagBits Flags
 --
 -- This flag is only allowed for virtual blocks created with
 -- 'VIRTUAL_BLOCK_CREATE_LINEAR_ALGORITHM_BIT' flag.
-pattern VIRTUAL_ALLOCATION_CREATE_UPPER_ADDRESS_BIT       = VirtualAllocationCreateFlagBits 0x00000040
+pattern VIRTUAL_ALLOCATION_CREATE_UPPER_ADDRESS_BIT = VirtualAllocationCreateFlagBits 0x00000040
+
 -- | Allocation strategy that tries to minimize memory usage.
 pattern VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT = VirtualAllocationCreateFlagBits 0x00010000
+
 -- | Allocation strategy that tries to minimize allocation time.
-pattern VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT   = VirtualAllocationCreateFlagBits 0x00020000
+pattern VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT = VirtualAllocationCreateFlagBits 0x00020000
+
 -- | Allocation strategy that chooses always the lowest offset in available
 -- space. This is not the most efficient strategy but achieves highly
 -- packed data.
 pattern VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_OFFSET_BIT = VirtualAllocationCreateFlagBits 0x00040000
+
 -- | A bit mask to extract only @STRATEGY@ bits from entire set of flags.
 --
 -- These strategy flags are binary compatible with equivalent flags in
 -- 'AllocationCreateFlagBits'.
-pattern VIRTUAL_ALLOCATION_CREATE_STRATEGY_MASK           = VirtualAllocationCreateFlagBits 0x00070000
+pattern VIRTUAL_ALLOCATION_CREATE_STRATEGY_MASK = VirtualAllocationCreateFlagBits 0x00070000
 
 conNameVirtualAllocationCreateFlagBits :: String
 conNameVirtualAllocationCreateFlagBits = "VirtualAllocationCreateFlagBits"
@@ -3766,26 +4208,44 @@ enumPrefixVirtualAllocationCreateFlagBits = "VIRTUAL_ALLOCATION_CREATE_"
 
 showTableVirtualAllocationCreateFlagBits :: [(VirtualAllocationCreateFlagBits, String)]
 showTableVirtualAllocationCreateFlagBits =
-  [ (VIRTUAL_ALLOCATION_CREATE_UPPER_ADDRESS_BIT      , "UPPER_ADDRESS_BIT")
-  , (VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT, "STRATEGY_MIN_MEMORY_BIT")
-  , (VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT  , "STRATEGY_MIN_TIME_BIT")
-  , (VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_OFFSET_BIT, "STRATEGY_MIN_OFFSET_BIT")
-  , (VIRTUAL_ALLOCATION_CREATE_STRATEGY_MASK          , "STRATEGY_MASK")
+  [
+    ( VIRTUAL_ALLOCATION_CREATE_UPPER_ADDRESS_BIT
+    , "UPPER_ADDRESS_BIT"
+    )
+  ,
+    ( VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT
+    , "STRATEGY_MIN_MEMORY_BIT"
+    )
+  ,
+    ( VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT
+    , "STRATEGY_MIN_TIME_BIT"
+    )
+  ,
+    ( VIRTUAL_ALLOCATION_CREATE_STRATEGY_MIN_OFFSET_BIT
+    , "STRATEGY_MIN_OFFSET_BIT"
+    )
+  ,
+    ( VIRTUAL_ALLOCATION_CREATE_STRATEGY_MASK
+    , "STRATEGY_MASK"
+    )
   ]
 
 instance Show VirtualAllocationCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixVirtualAllocationCreateFlagBits
-                            showTableVirtualAllocationCreateFlagBits
-                            conNameVirtualAllocationCreateFlagBits
-                            (\(VirtualAllocationCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixVirtualAllocationCreateFlagBits
+      showTableVirtualAllocationCreateFlagBits
+      conNameVirtualAllocationCreateFlagBits
+      (\(VirtualAllocationCreateFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read VirtualAllocationCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixVirtualAllocationCreateFlagBits
-                          showTableVirtualAllocationCreateFlagBits
-                          conNameVirtualAllocationCreateFlagBits
-                          VirtualAllocationCreateFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixVirtualAllocationCreateFlagBits
+      showTableVirtualAllocationCreateFlagBits
+      conNameVirtualAllocationCreateFlagBits
+      VirtualAllocationCreateFlagBits
 
 -- | VmaAllocator
 --
@@ -4097,7 +4557,32 @@ instance FromCStruct VulkanFunctions where
     vkGetDeviceBufferMemoryRequirements <- peek @PFN_vkGetDeviceBufferMemoryRequirements ((p `plusPtr` 192 :: Ptr PFN_vkGetDeviceBufferMemoryRequirements))
     vkGetDeviceImageMemoryRequirements <- peek @PFN_vkGetDeviceImageMemoryRequirements ((p `plusPtr` 200 :: Ptr PFN_vkGetDeviceImageMemoryRequirements))
     pure $ VulkanFunctions
-             vkGetInstanceProcAddr vkGetDeviceProcAddr vkGetPhysicalDeviceProperties vkGetPhysicalDeviceMemoryProperties vkAllocateMemory vkFreeMemory vkMapMemory vkUnmapMemory vkFlushMappedMemoryRanges vkInvalidateMappedMemoryRanges vkBindBufferMemory vkBindImageMemory vkGetBufferMemoryRequirements vkGetImageMemoryRequirements vkCreateBuffer vkDestroyBuffer vkCreateImage vkDestroyImage vkCmdCopyBuffer vkGetBufferMemoryRequirements2KHR vkGetImageMemoryRequirements2KHR vkBindBufferMemory2KHR vkBindImageMemory2KHR vkGetPhysicalDeviceMemoryProperties2KHR vkGetDeviceBufferMemoryRequirements vkGetDeviceImageMemoryRequirements
+             vkGetInstanceProcAddr
+             vkGetDeviceProcAddr
+             vkGetPhysicalDeviceProperties
+             vkGetPhysicalDeviceMemoryProperties
+             vkAllocateMemory
+             vkFreeMemory
+             vkMapMemory
+             vkUnmapMemory
+             vkFlushMappedMemoryRanges
+             vkInvalidateMappedMemoryRanges
+             vkBindBufferMemory
+             vkBindImageMemory
+             vkGetBufferMemoryRequirements
+             vkGetImageMemoryRequirements
+             vkCreateBuffer
+             vkDestroyBuffer
+             vkCreateImage
+             vkDestroyImage
+             vkCmdCopyBuffer
+             vkGetBufferMemoryRequirements2KHR
+             vkGetImageMemoryRequirements2KHR
+             vkBindBufferMemory2KHR
+             vkBindImageMemory2KHR
+             vkGetPhysicalDeviceMemoryProperties2KHR
+             vkGetDeviceBufferMemoryRequirements
+             vkGetDeviceImageMemoryRequirements
 
 instance Storable VulkanFunctions where
   sizeOf ~_ = 208
@@ -4285,7 +4770,17 @@ instance FromCStruct AllocatorCreateInfo where
     vulkanApiVersion <- peek @Word32 ((p `plusPtr` 72 :: Ptr Word32))
     pTypeExternalMemoryHandleTypes <- peek @(Ptr ExternalMemoryHandleTypeFlagsKHR) ((p `plusPtr` 80 :: Ptr (Ptr ExternalMemoryHandleTypeFlagsKHR)))
     pure $ AllocatorCreateInfo
-             flags physicalDevice device preferredLargeHeapBlockSize pAllocationCallbacks' pDeviceMemoryCallbacks' pHeapSizeLimit pVulkanFunctions' instance' vulkanApiVersion pTypeExternalMemoryHandleTypes
+             flags
+             physicalDevice
+             device
+             preferredLargeHeapBlockSize
+             pAllocationCallbacks'
+             pDeviceMemoryCallbacks'
+             pHeapSizeLimit
+             pVulkanFunctions'
+             instance'
+             vulkanApiVersion
+             pTypeExternalMemoryHandleTypes
 
 instance Zero AllocatorCreateInfo where
   zero = AllocatorCreateInfo
@@ -4506,7 +5001,12 @@ instance FromCStruct DetailedStatistics where
     unusedRangeSizeMin <- peek @DeviceSize ((p `plusPtr` 48 :: Ptr DeviceSize))
     unusedRangeSizeMax <- peek @DeviceSize ((p `plusPtr` 56 :: Ptr DeviceSize))
     pure $ DetailedStatistics
-             statistics unusedRangeCount allocationSizeMin allocationSizeMax unusedRangeSizeMin unusedRangeSizeMax
+             statistics
+             unusedRangeCount
+             allocationSizeMin
+             allocationSizeMax
+             unusedRangeSizeMin
+             unusedRangeSizeMax
 
 instance Storable DetailedStatistics where
   sizeOf ~_ = 64
@@ -4787,7 +5287,14 @@ instance FromCStruct AllocationCreateInfo where
     pUserData <- peek @(Ptr ()) ((p `plusPtr` 32 :: Ptr (Ptr ())))
     priority <- peek @CFloat ((p `plusPtr` 40 :: Ptr CFloat))
     pure $ AllocationCreateInfo
-             flags usage requiredFlags preferredFlags memoryTypeBits pool pUserData (coerce @CFloat @Float priority)
+             flags
+             usage
+             requiredFlags
+             preferredFlags
+             memoryTypeBits
+             pool
+             pUserData
+             (coerce @CFloat @Float priority)
 
 instance Storable AllocationCreateInfo where
   sizeOf ~_ = 48
@@ -4909,7 +5416,14 @@ instance FromCStruct PoolCreateInfo where
     minAllocationAlignment <- peek @DeviceSize ((p `plusPtr` 40 :: Ptr DeviceSize))
     pMemoryAllocateNext <- peek @(Ptr ()) ((p `plusPtr` 48 :: Ptr (Ptr ())))
     pure $ PoolCreateInfo
-             memoryTypeIndex flags blockSize (coerce @CSize @Word64 minBlockCount) (coerce @CSize @Word64 maxBlockCount) (coerce @CFloat @Float priority) minAllocationAlignment pMemoryAllocateNext
+             memoryTypeIndex
+             flags
+             blockSize
+             (coerce @CSize @Word64 minBlockCount)
+             (coerce @CSize @Word64 maxBlockCount)
+             (coerce @CFloat @Float priority)
+             minAllocationAlignment
+             pMemoryAllocateNext
 
 instance Storable PoolCreateInfo where
   sizeOf ~_ = 56

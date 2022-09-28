@@ -113,14 +113,18 @@ getPhysicalDeviceExternalBufferProperties :: forall io
                                              -- 'PhysicalDeviceExternalBufferInfo' structure
                                              PhysicalDeviceExternalBufferInfo
                                           -> io (ExternalBufferProperties)
-getPhysicalDeviceExternalBufferProperties physicalDevice externalBufferInfo = liftIO . evalContT $ do
+getPhysicalDeviceExternalBufferProperties physicalDevice
+                                            externalBufferInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceExternalBufferPropertiesPtr = pVkGetPhysicalDeviceExternalBufferProperties (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceExternalBufferPropertiesPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceExternalBufferProperties is null" Nothing Nothing
   let vkGetPhysicalDeviceExternalBufferProperties' = mkVkGetPhysicalDeviceExternalBufferProperties vkGetPhysicalDeviceExternalBufferPropertiesPtr
   pExternalBufferInfo <- ContT $ withCStruct (externalBufferInfo)
   pPExternalBufferProperties <- ContT (withZeroCStruct @ExternalBufferProperties)
-  lift $ traceAroundEvent "vkGetPhysicalDeviceExternalBufferProperties" (vkGetPhysicalDeviceExternalBufferProperties' (physicalDeviceHandle (physicalDevice)) pExternalBufferInfo (pPExternalBufferProperties))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceExternalBufferProperties" (vkGetPhysicalDeviceExternalBufferProperties'
+                                                                           (physicalDeviceHandle (physicalDevice))
+                                                                           pExternalBufferInfo
+                                                                           (pPExternalBufferProperties))
   pExternalBufferProperties <- lift $ peekCStruct @ExternalBufferProperties pPExternalBufferProperties
   pure $ (pExternalBufferProperties)
 
@@ -188,7 +192,9 @@ instance FromCStruct ExternalMemoryProperties where
     exportFromImportedHandleTypes <- peek @ExternalMemoryHandleTypeFlags ((p `plusPtr` 4 :: Ptr ExternalMemoryHandleTypeFlags))
     compatibleHandleTypes <- peek @ExternalMemoryHandleTypeFlags ((p `plusPtr` 8 :: Ptr ExternalMemoryHandleTypeFlags))
     pure $ ExternalMemoryProperties
-             externalMemoryFeatures exportFromImportedHandleTypes compatibleHandleTypes
+             externalMemoryFeatures
+             exportFromImportedHandleTypes
+             compatibleHandleTypes
 
 instance Storable ExternalMemoryProperties where
   sizeOf ~_ = 12
@@ -653,7 +659,11 @@ instance FromCStruct PhysicalDeviceIDProperties where
     deviceNodeMask <- peek @Word32 ((p `plusPtr` 56 :: Ptr Word32))
     deviceLUIDValid <- peek @Bool32 ((p `plusPtr` 60 :: Ptr Bool32))
     pure $ PhysicalDeviceIDProperties
-             deviceUUID driverUUID deviceLUID deviceNodeMask (bool32ToBool deviceLUIDValid)
+             deviceUUID
+             driverUUID
+             deviceLUID
+             deviceNodeMask
+             (bool32ToBool deviceLUIDValid)
 
 instance Storable PhysicalDeviceIDProperties where
   sizeOf ~_ = 64

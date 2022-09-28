@@ -43,18 +43,26 @@ enumPrefixPipelineLayoutCreateFlagBits :: String
 enumPrefixPipelineLayoutCreateFlagBits = "PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT"
 
 showTablePipelineLayoutCreateFlagBits :: [(PipelineLayoutCreateFlagBits, String)]
-showTablePipelineLayoutCreateFlagBits = [(PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT, "")]
+showTablePipelineLayoutCreateFlagBits =
+  [
+    ( PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT
+    , ""
+    )
+  ]
 
 instance Show PipelineLayoutCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixPipelineLayoutCreateFlagBits
-                            showTablePipelineLayoutCreateFlagBits
-                            conNamePipelineLayoutCreateFlagBits
-                            (\(PipelineLayoutCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineLayoutCreateFlagBits
+      showTablePipelineLayoutCreateFlagBits
+      conNamePipelineLayoutCreateFlagBits
+      (\(PipelineLayoutCreateFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read PipelineLayoutCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixPipelineLayoutCreateFlagBits
-                          showTablePipelineLayoutCreateFlagBits
-                          conNamePipelineLayoutCreateFlagBits
-                          PipelineLayoutCreateFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineLayoutCreateFlagBits
+      showTablePipelineLayoutCreateFlagBits
+      conNamePipelineLayoutCreateFlagBits
+      PipelineLayoutCreateFlagBits

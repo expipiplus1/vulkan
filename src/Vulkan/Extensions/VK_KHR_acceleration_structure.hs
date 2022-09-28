@@ -1483,7 +1483,9 @@ destroyAccelerationStructureKHR :: forall io
                                    -- chapter.
                                    ("allocator" ::: Maybe AllocationCallbacks)
                                 -> io ()
-destroyAccelerationStructureKHR device accelerationStructure allocator = liftIO . evalContT $ do
+destroyAccelerationStructureKHR device
+                                  accelerationStructure
+                                  allocator = liftIO . evalContT $ do
   let vkDestroyAccelerationStructureKHRPtr = pVkDestroyAccelerationStructureKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkDestroyAccelerationStructureKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyAccelerationStructureKHR is null" Nothing Nothing
@@ -1491,7 +1493,10 @@ destroyAccelerationStructureKHR device accelerationStructure allocator = liftIO 
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyAccelerationStructureKHR" (vkDestroyAccelerationStructureKHR' (deviceHandle (device)) (accelerationStructure) pAllocator)
+  lift $ traceAroundEvent "vkDestroyAccelerationStructureKHR" (vkDestroyAccelerationStructureKHR'
+                                                                 (deviceHandle (device))
+                                                                 (accelerationStructure)
+                                                                 pAllocator)
   pure $ ()
 
 
@@ -1593,7 +1598,9 @@ cmdCopyAccelerationStructureKHR commandBuffer info = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyAccelerationStructureKHR is null" Nothing Nothing
   let vkCmdCopyAccelerationStructureKHR' = mkVkCmdCopyAccelerationStructureKHR vkCmdCopyAccelerationStructureKHRPtr
   pInfo <- ContT $ withCStruct (info)
-  lift $ traceAroundEvent "vkCmdCopyAccelerationStructureKHR" (vkCmdCopyAccelerationStructureKHR' (commandBufferHandle (commandBuffer)) pInfo)
+  lift $ traceAroundEvent "vkCmdCopyAccelerationStructureKHR" (vkCmdCopyAccelerationStructureKHR'
+                                                                 (commandBufferHandle (commandBuffer))
+                                                                 pInfo)
   pure $ ()
 
 
@@ -1695,13 +1702,18 @@ copyAccelerationStructureKHR :: forall io
                                 -- defining the copy operation.
                                 CopyAccelerationStructureInfoKHR
                              -> io (Result)
-copyAccelerationStructureKHR device deferredOperation info = liftIO . evalContT $ do
+copyAccelerationStructureKHR device
+                               deferredOperation
+                               info = liftIO . evalContT $ do
   let vkCopyAccelerationStructureKHRPtr = pVkCopyAccelerationStructureKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCopyAccelerationStructureKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCopyAccelerationStructureKHR is null" Nothing Nothing
   let vkCopyAccelerationStructureKHR' = mkVkCopyAccelerationStructureKHR vkCopyAccelerationStructureKHRPtr
   pInfo <- ContT $ withCStruct (info)
-  r <- lift $ traceAroundEvent "vkCopyAccelerationStructureKHR" (vkCopyAccelerationStructureKHR' (deviceHandle (device)) (deferredOperation) pInfo)
+  r <- lift $ traceAroundEvent "vkCopyAccelerationStructureKHR" (vkCopyAccelerationStructureKHR'
+                                                                   (deviceHandle (device))
+                                                                   (deferredOperation)
+                                                                   pInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 
@@ -1848,13 +1860,16 @@ cmdCopyAccelerationStructureToMemoryKHR :: forall io
                                            -- structure defining the copy operation.
                                            CopyAccelerationStructureToMemoryInfoKHR
                                         -> io ()
-cmdCopyAccelerationStructureToMemoryKHR commandBuffer info = liftIO . evalContT $ do
+cmdCopyAccelerationStructureToMemoryKHR commandBuffer
+                                          info = liftIO . evalContT $ do
   let vkCmdCopyAccelerationStructureToMemoryKHRPtr = pVkCmdCopyAccelerationStructureToMemoryKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyAccelerationStructureToMemoryKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyAccelerationStructureToMemoryKHR is null" Nothing Nothing
   let vkCmdCopyAccelerationStructureToMemoryKHR' = mkVkCmdCopyAccelerationStructureToMemoryKHR vkCmdCopyAccelerationStructureToMemoryKHRPtr
   pInfo <- ContT $ withCStruct (info)
-  lift $ traceAroundEvent "vkCmdCopyAccelerationStructureToMemoryKHR" (vkCmdCopyAccelerationStructureToMemoryKHR' (commandBufferHandle (commandBuffer)) pInfo)
+  lift $ traceAroundEvent "vkCmdCopyAccelerationStructureToMemoryKHR" (vkCmdCopyAccelerationStructureToMemoryKHR'
+                                                                         (commandBufferHandle (commandBuffer))
+                                                                         pInfo)
   pure $ ()
 
 
@@ -1964,13 +1979,18 @@ copyAccelerationStructureToMemoryKHR :: forall io
                                         -- structure defining the copy operation.
                                         CopyAccelerationStructureToMemoryInfoKHR
                                      -> io (Result)
-copyAccelerationStructureToMemoryKHR device deferredOperation info = liftIO . evalContT $ do
+copyAccelerationStructureToMemoryKHR device
+                                       deferredOperation
+                                       info = liftIO . evalContT $ do
   let vkCopyAccelerationStructureToMemoryKHRPtr = pVkCopyAccelerationStructureToMemoryKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCopyAccelerationStructureToMemoryKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCopyAccelerationStructureToMemoryKHR is null" Nothing Nothing
   let vkCopyAccelerationStructureToMemoryKHR' = mkVkCopyAccelerationStructureToMemoryKHR vkCopyAccelerationStructureToMemoryKHRPtr
   pInfo <- ContT $ withCStruct (info)
-  r <- lift $ traceAroundEvent "vkCopyAccelerationStructureToMemoryKHR" (vkCopyAccelerationStructureToMemoryKHR' (deviceHandle (device)) (deferredOperation) pInfo)
+  r <- lift $ traceAroundEvent "vkCopyAccelerationStructureToMemoryKHR" (vkCopyAccelerationStructureToMemoryKHR'
+                                                                           (deviceHandle (device))
+                                                                           (deferredOperation)
+                                                                           pInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 
@@ -2086,13 +2106,16 @@ cmdCopyMemoryToAccelerationStructureKHR :: forall io
                                            -- structure defining the copy operation.
                                            CopyMemoryToAccelerationStructureInfoKHR
                                         -> io ()
-cmdCopyMemoryToAccelerationStructureKHR commandBuffer info = liftIO . evalContT $ do
+cmdCopyMemoryToAccelerationStructureKHR commandBuffer
+                                          info = liftIO . evalContT $ do
   let vkCmdCopyMemoryToAccelerationStructureKHRPtr = pVkCmdCopyMemoryToAccelerationStructureKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdCopyMemoryToAccelerationStructureKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCopyMemoryToAccelerationStructureKHR is null" Nothing Nothing
   let vkCmdCopyMemoryToAccelerationStructureKHR' = mkVkCmdCopyMemoryToAccelerationStructureKHR vkCmdCopyMemoryToAccelerationStructureKHRPtr
   pInfo <- ContT $ withCStruct (info)
-  lift $ traceAroundEvent "vkCmdCopyMemoryToAccelerationStructureKHR" (vkCmdCopyMemoryToAccelerationStructureKHR' (commandBufferHandle (commandBuffer)) pInfo)
+  lift $ traceAroundEvent "vkCmdCopyMemoryToAccelerationStructureKHR" (vkCmdCopyMemoryToAccelerationStructureKHR'
+                                                                         (commandBufferHandle (commandBuffer))
+                                                                         pInfo)
   pure $ ()
 
 
@@ -2198,13 +2221,18 @@ copyMemoryToAccelerationStructureKHR :: forall io
                                         -- structure defining the copy operation.
                                         CopyMemoryToAccelerationStructureInfoKHR
                                      -> io (Result)
-copyMemoryToAccelerationStructureKHR device deferredOperation info = liftIO . evalContT $ do
+copyMemoryToAccelerationStructureKHR device
+                                       deferredOperation
+                                       info = liftIO . evalContT $ do
   let vkCopyMemoryToAccelerationStructureKHRPtr = pVkCopyMemoryToAccelerationStructureKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCopyMemoryToAccelerationStructureKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCopyMemoryToAccelerationStructureKHR is null" Nothing Nothing
   let vkCopyMemoryToAccelerationStructureKHR' = mkVkCopyMemoryToAccelerationStructureKHR vkCopyMemoryToAccelerationStructureKHRPtr
   pInfo <- ContT $ withCStruct (info)
-  r <- lift $ traceAroundEvent "vkCopyMemoryToAccelerationStructureKHR" (vkCopyMemoryToAccelerationStructureKHR' (deviceHandle (device)) (deferredOperation) pInfo)
+  r <- lift $ traceAroundEvent "vkCopyMemoryToAccelerationStructureKHR" (vkCopyMemoryToAccelerationStructureKHR'
+                                                                           (deviceHandle (device))
+                                                                           (deferredOperation)
+                                                                           pInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 
@@ -2362,14 +2390,24 @@ cmdWriteAccelerationStructuresPropertiesKHR :: forall io
                                                -- contain the @accelerationStructureCount@ number of results.
                                                ("firstQuery" ::: Word32)
                                             -> io ()
-cmdWriteAccelerationStructuresPropertiesKHR commandBuffer accelerationStructures queryType queryPool firstQuery = liftIO . evalContT $ do
+cmdWriteAccelerationStructuresPropertiesKHR commandBuffer
+                                              accelerationStructures
+                                              queryType
+                                              queryPool
+                                              firstQuery = liftIO . evalContT $ do
   let vkCmdWriteAccelerationStructuresPropertiesKHRPtr = pVkCmdWriteAccelerationStructuresPropertiesKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdWriteAccelerationStructuresPropertiesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWriteAccelerationStructuresPropertiesKHR is null" Nothing Nothing
   let vkCmdWriteAccelerationStructuresPropertiesKHR' = mkVkCmdWriteAccelerationStructuresPropertiesKHR vkCmdWriteAccelerationStructuresPropertiesKHRPtr
   pPAccelerationStructures <- ContT $ allocaBytes @AccelerationStructureKHR ((Data.Vector.length (accelerationStructures)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPAccelerationStructures `plusPtr` (8 * (i)) :: Ptr AccelerationStructureKHR) (e)) (accelerationStructures)
-  lift $ traceAroundEvent "vkCmdWriteAccelerationStructuresPropertiesKHR" (vkCmdWriteAccelerationStructuresPropertiesKHR' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (accelerationStructures)) :: Word32)) (pPAccelerationStructures) (queryType) (queryPool) (firstQuery))
+  lift $ traceAroundEvent "vkCmdWriteAccelerationStructuresPropertiesKHR" (vkCmdWriteAccelerationStructuresPropertiesKHR'
+                                                                             (commandBufferHandle (commandBuffer))
+                                                                             ((fromIntegral (Data.Vector.length $ (accelerationStructures)) :: Word32))
+                                                                             (pPAccelerationStructures)
+                                                                             (queryType)
+                                                                             (queryPool)
+                                                                             (firstQuery))
   pure $ ()
 
 
@@ -2542,14 +2580,26 @@ writeAccelerationStructuresPropertiesKHR :: forall io
                                             -- within @pData@.
                                             ("stride" ::: Word64)
                                          -> io ()
-writeAccelerationStructuresPropertiesKHR device accelerationStructures queryType dataSize data' stride = liftIO . evalContT $ do
+writeAccelerationStructuresPropertiesKHR device
+                                           accelerationStructures
+                                           queryType
+                                           dataSize
+                                           data'
+                                           stride = liftIO . evalContT $ do
   let vkWriteAccelerationStructuresPropertiesKHRPtr = pVkWriteAccelerationStructuresPropertiesKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkWriteAccelerationStructuresPropertiesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkWriteAccelerationStructuresPropertiesKHR is null" Nothing Nothing
   let vkWriteAccelerationStructuresPropertiesKHR' = mkVkWriteAccelerationStructuresPropertiesKHR vkWriteAccelerationStructuresPropertiesKHRPtr
   pPAccelerationStructures <- ContT $ allocaBytes @AccelerationStructureKHR ((Data.Vector.length (accelerationStructures)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPAccelerationStructures `plusPtr` (8 * (i)) :: Ptr AccelerationStructureKHR) (e)) (accelerationStructures)
-  r <- lift $ traceAroundEvent "vkWriteAccelerationStructuresPropertiesKHR" (vkWriteAccelerationStructuresPropertiesKHR' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (accelerationStructures)) :: Word32)) (pPAccelerationStructures) (queryType) (CSize (dataSize)) (data') (CSize (stride)))
+  r <- lift $ traceAroundEvent "vkWriteAccelerationStructuresPropertiesKHR" (vkWriteAccelerationStructuresPropertiesKHR'
+                                                                               (deviceHandle (device))
+                                                                               ((fromIntegral (Data.Vector.length $ (accelerationStructures)) :: Word32))
+                                                                               (pPAccelerationStructures)
+                                                                               (queryType)
+                                                                               (CSize (dataSize))
+                                                                               (data')
+                                                                               (CSize (stride)))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -2598,14 +2648,18 @@ getDeviceAccelerationStructureCompatibilityKHR :: forall io
                                                   -- structure specifying version information to check against the device.
                                                   AccelerationStructureVersionInfoKHR
                                                -> io (AccelerationStructureCompatibilityKHR)
-getDeviceAccelerationStructureCompatibilityKHR device versionInfo = liftIO . evalContT $ do
+getDeviceAccelerationStructureCompatibilityKHR device
+                                                 versionInfo = liftIO . evalContT $ do
   let vkGetDeviceAccelerationStructureCompatibilityKHRPtr = pVkGetDeviceAccelerationStructureCompatibilityKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDeviceAccelerationStructureCompatibilityKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceAccelerationStructureCompatibilityKHR is null" Nothing Nothing
   let vkGetDeviceAccelerationStructureCompatibilityKHR' = mkVkGetDeviceAccelerationStructureCompatibilityKHR vkGetDeviceAccelerationStructureCompatibilityKHRPtr
   pVersionInfo <- ContT $ withCStruct (versionInfo)
   pPCompatibility <- ContT $ bracket (callocBytes @AccelerationStructureCompatibilityKHR 4) free
-  lift $ traceAroundEvent "vkGetDeviceAccelerationStructureCompatibilityKHR" (vkGetDeviceAccelerationStructureCompatibilityKHR' (deviceHandle (device)) pVersionInfo (pPCompatibility))
+  lift $ traceAroundEvent "vkGetDeviceAccelerationStructureCompatibilityKHR" (vkGetDeviceAccelerationStructureCompatibilityKHR'
+                                                                                (deviceHandle (device))
+                                                                                pVersionInfo
+                                                                                (pPCompatibility))
   pCompatibility <- lift $ peek @AccelerationStructureCompatibilityKHR pPCompatibility
   pure $ (pCompatibility)
 
@@ -2697,7 +2751,9 @@ foreign import ccall
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device'
 createAccelerationStructureKHR :: forall a io
-                                . (Extendss AccelerationStructureCreateInfoKHR a, PokeChain a, MonadIO io)
+                                . ( Extendss AccelerationStructureCreateInfoKHR a
+                                  , PokeChain a
+                                  , MonadIO io )
                                => -- | @device@ is the logical device that creates the acceleration structure
                                   -- object.
                                   Device
@@ -2710,7 +2766,9 @@ createAccelerationStructureKHR :: forall a io
                                   -- chapter.
                                   ("allocator" ::: Maybe AllocationCallbacks)
                                -> io (AccelerationStructureKHR)
-createAccelerationStructureKHR device createInfo allocator = liftIO . evalContT $ do
+createAccelerationStructureKHR device
+                                 createInfo
+                                 allocator = liftIO . evalContT $ do
   let vkCreateAccelerationStructureKHRPtr = pVkCreateAccelerationStructureKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkCreateAccelerationStructureKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateAccelerationStructureKHR is null" Nothing Nothing
@@ -2720,7 +2778,11 @@ createAccelerationStructureKHR device createInfo allocator = liftIO . evalContT 
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPAccelerationStructure <- ContT $ bracket (callocBytes @AccelerationStructureKHR 8) free
-  r <- lift $ traceAroundEvent "vkCreateAccelerationStructureKHR" (vkCreateAccelerationStructureKHR' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPAccelerationStructure))
+  r <- lift $ traceAroundEvent "vkCreateAccelerationStructureKHR" (vkCreateAccelerationStructureKHR'
+                                                                     (deviceHandle (device))
+                                                                     (forgetExtensions pCreateInfo)
+                                                                     pAllocator
+                                                                     (pPAccelerationStructure))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pAccelerationStructure <- lift $ peek @AccelerationStructureKHR pPAccelerationStructure
   pure $ (pAccelerationStructure)
@@ -3322,7 +3384,9 @@ cmdBuildAccelerationStructuresKHR :: forall io
                                      -- is stored, as defined by @pInfos@[i].
                                      ("buildRangeInfos" ::: Vector (Vector AccelerationStructureBuildRangeInfoKHR))
                                   -> io ()
-cmdBuildAccelerationStructuresKHR commandBuffer infos buildRangeInfos = liftIO . evalContT $ do
+cmdBuildAccelerationStructuresKHR commandBuffer
+                                    infos
+                                    buildRangeInfos = liftIO . evalContT $ do
   let vkCmdBuildAccelerationStructuresKHRPtr = pVkCmdBuildAccelerationStructuresKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBuildAccelerationStructuresKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBuildAccelerationStructuresKHR is null" Nothing Nothing
@@ -3337,7 +3401,11 @@ cmdBuildAccelerationStructuresKHR commandBuffer infos buildRangeInfos = liftIO .
     pPpBuildRangeInfos' <- ContT $ allocaBytes @AccelerationStructureBuildRangeInfoKHR ((Data.Vector.length (e)) * 16)
     lift $ Data.Vector.imapM_ (\i' e' -> poke (pPpBuildRangeInfos' `plusPtr` (16 * (i')) :: Ptr AccelerationStructureBuildRangeInfoKHR) (e')) (e)
     lift $ poke (pPpBuildRangeInfos `plusPtr` (8 * (i)) :: Ptr (Ptr AccelerationStructureBuildRangeInfoKHR)) (pPpBuildRangeInfos')) (buildRangeInfos)
-  lift $ traceAroundEvent "vkCmdBuildAccelerationStructuresKHR" (vkCmdBuildAccelerationStructuresKHR' (commandBufferHandle (commandBuffer)) ((fromIntegral pInfosLength :: Word32)) (pPInfos) (pPpBuildRangeInfos))
+  lift $ traceAroundEvent "vkCmdBuildAccelerationStructuresKHR" (vkCmdBuildAccelerationStructuresKHR'
+                                                                   (commandBufferHandle (commandBuffer))
+                                                                   ((fromIntegral pInfosLength :: Word32))
+                                                                   (pPInfos)
+                                                                   (pPpBuildRangeInfos))
   pure $ ()
 
 
@@ -3961,7 +4029,11 @@ cmdBuildAccelerationStructuresIndirectKHR :: forall io
                                              -- geometry.
                                              ("maxPrimitiveCounts" ::: Vector (Vector Word32))
                                           -> io ()
-cmdBuildAccelerationStructuresIndirectKHR commandBuffer infos indirectDeviceAddresses indirectStrides maxPrimitiveCounts = liftIO . evalContT $ do
+cmdBuildAccelerationStructuresIndirectKHR commandBuffer
+                                            infos
+                                            indirectDeviceAddresses
+                                            indirectStrides
+                                            maxPrimitiveCounts = liftIO . evalContT $ do
   let vkCmdBuildAccelerationStructuresIndirectKHRPtr = pVkCmdBuildAccelerationStructuresIndirectKHR (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdBuildAccelerationStructuresIndirectKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBuildAccelerationStructuresIndirectKHR is null" Nothing Nothing
@@ -3984,7 +4056,13 @@ cmdBuildAccelerationStructuresIndirectKHR commandBuffer infos indirectDeviceAddr
     pPpMaxPrimitiveCounts' <- ContT $ allocaBytes @Word32 ((Data.Vector.length (e)) * 4)
     lift $ Data.Vector.imapM_ (\i' e' -> poke (pPpMaxPrimitiveCounts' `plusPtr` (4 * (i')) :: Ptr Word32) (e')) (e)
     lift $ poke (pPpMaxPrimitiveCounts `plusPtr` (8 * (i)) :: Ptr (Ptr Word32)) (pPpMaxPrimitiveCounts')) (maxPrimitiveCounts)
-  lift $ traceAroundEvent "vkCmdBuildAccelerationStructuresIndirectKHR" (vkCmdBuildAccelerationStructuresIndirectKHR' (commandBufferHandle (commandBuffer)) ((fromIntegral pInfosLength :: Word32)) (pPInfos) (pPIndirectDeviceAddresses) (pPIndirectStrides) (pPpMaxPrimitiveCounts))
+  lift $ traceAroundEvent "vkCmdBuildAccelerationStructuresIndirectKHR" (vkCmdBuildAccelerationStructuresIndirectKHR'
+                                                                           (commandBufferHandle (commandBuffer))
+                                                                           ((fromIntegral pInfosLength :: Word32))
+                                                                           (pPInfos)
+                                                                           (pPIndirectDeviceAddresses)
+                                                                           (pPIndirectStrides)
+                                                                           (pPpMaxPrimitiveCounts))
   pure $ ()
 
 
@@ -4456,7 +4534,10 @@ buildAccelerationStructuresKHR :: forall io
                                   -- is stored, as defined by @pInfos@[i].
                                   ("buildRangeInfos" ::: Vector (Vector AccelerationStructureBuildRangeInfoKHR))
                                -> io (Result)
-buildAccelerationStructuresKHR device deferredOperation infos buildRangeInfos = liftIO . evalContT $ do
+buildAccelerationStructuresKHR device
+                                 deferredOperation
+                                 infos
+                                 buildRangeInfos = liftIO . evalContT $ do
   let vkBuildAccelerationStructuresKHRPtr = pVkBuildAccelerationStructuresKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkBuildAccelerationStructuresKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkBuildAccelerationStructuresKHR is null" Nothing Nothing
@@ -4471,7 +4552,12 @@ buildAccelerationStructuresKHR device deferredOperation infos buildRangeInfos = 
     pPpBuildRangeInfos' <- ContT $ allocaBytes @AccelerationStructureBuildRangeInfoKHR ((Data.Vector.length (e)) * 16)
     lift $ Data.Vector.imapM_ (\i' e' -> poke (pPpBuildRangeInfos' `plusPtr` (16 * (i')) :: Ptr AccelerationStructureBuildRangeInfoKHR) (e')) (e)
     lift $ poke (pPpBuildRangeInfos `plusPtr` (8 * (i)) :: Ptr (Ptr AccelerationStructureBuildRangeInfoKHR)) (pPpBuildRangeInfos')) (buildRangeInfos)
-  r <- lift $ traceAroundEvent "vkBuildAccelerationStructuresKHR" (vkBuildAccelerationStructuresKHR' (deviceHandle (device)) (deferredOperation) ((fromIntegral pInfosLength :: Word32)) (pPInfos) (pPpBuildRangeInfos))
+  r <- lift $ traceAroundEvent "vkBuildAccelerationStructuresKHR" (vkBuildAccelerationStructuresKHR'
+                                                                     (deviceHandle (device))
+                                                                     (deferredOperation)
+                                                                     ((fromIntegral pInfosLength :: Word32))
+                                                                     (pPInfos)
+                                                                     (pPpBuildRangeInfos))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 
@@ -4551,7 +4637,9 @@ getAccelerationStructureDeviceAddressKHR device info = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetAccelerationStructureDeviceAddressKHR is null" Nothing Nothing
   let vkGetAccelerationStructureDeviceAddressKHR' = mkVkGetAccelerationStructureDeviceAddressKHR vkGetAccelerationStructureDeviceAddressKHRPtr
   pInfo <- ContT $ withCStruct (info)
-  r <- lift $ traceAroundEvent "vkGetAccelerationStructureDeviceAddressKHR" (vkGetAccelerationStructureDeviceAddressKHR' (deviceHandle (device)) pInfo)
+  r <- lift $ traceAroundEvent "vkGetAccelerationStructureDeviceAddressKHR" (vkGetAccelerationStructureDeviceAddressKHR'
+                                                                               (deviceHandle (device))
+                                                                               pInfo)
   pure $ (r)
 
 
@@ -4706,7 +4794,10 @@ getAccelerationStructureBuildSizesKHR :: forall io
                                          -- primitives built into each geometry.
                                          ("maxPrimitiveCounts" ::: Vector Word32)
                                       -> io (("sizeInfo" ::: AccelerationStructureBuildSizesInfoKHR))
-getAccelerationStructureBuildSizesKHR device buildType buildInfo maxPrimitiveCounts = liftIO . evalContT $ do
+getAccelerationStructureBuildSizesKHR device
+                                        buildType
+                                        buildInfo
+                                        maxPrimitiveCounts = liftIO . evalContT $ do
   let vkGetAccelerationStructureBuildSizesKHRPtr = pVkGetAccelerationStructureBuildSizesKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetAccelerationStructureBuildSizesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetAccelerationStructureBuildSizesKHR is null" Nothing Nothing
@@ -4719,7 +4810,12 @@ getAccelerationStructureBuildSizesKHR device buildType buildInfo maxPrimitiveCou
       lift $ Data.Vector.imapM_ (\i e -> poke (pPMaxPrimitiveCounts `plusPtr` (4 * (i)) :: Ptr Word32) (e)) ((maxPrimitiveCounts))
       pure $ pPMaxPrimitiveCounts
   pPSizeInfo <- ContT (withZeroCStruct @AccelerationStructureBuildSizesInfoKHR)
-  lift $ traceAroundEvent "vkGetAccelerationStructureBuildSizesKHR" (vkGetAccelerationStructureBuildSizesKHR' (deviceHandle (device)) (buildType) pBuildInfo pMaxPrimitiveCounts (pPSizeInfo))
+  lift $ traceAroundEvent "vkGetAccelerationStructureBuildSizesKHR" (vkGetAccelerationStructureBuildSizesKHR'
+                                                                       (deviceHandle (device))
+                                                                       (buildType)
+                                                                       pBuildInfo
+                                                                       pMaxPrimitiveCounts
+                                                                       (pPSizeInfo))
   pSizeInfo <- lift $ peekCStruct @AccelerationStructureBuildSizesInfoKHR pPSizeInfo
   pure $ (pSizeInfo)
 
@@ -4907,7 +5003,11 @@ instance FromCStruct PhysicalDeviceAccelerationStructureFeaturesKHR where
     accelerationStructureHostCommands <- peek @Bool32 ((p `plusPtr` 28 :: Ptr Bool32))
     descriptorBindingAccelerationStructureUpdateAfterBind <- peek @Bool32 ((p `plusPtr` 32 :: Ptr Bool32))
     pure $ PhysicalDeviceAccelerationStructureFeaturesKHR
-             (bool32ToBool accelerationStructure) (bool32ToBool accelerationStructureCaptureReplay) (bool32ToBool accelerationStructureIndirectBuild) (bool32ToBool accelerationStructureHostCommands) (bool32ToBool descriptorBindingAccelerationStructureUpdateAfterBind)
+             (bool32ToBool accelerationStructure)
+             (bool32ToBool accelerationStructureCaptureReplay)
+             (bool32ToBool accelerationStructureIndirectBuild)
+             (bool32ToBool accelerationStructureHostCommands)
+             (bool32ToBool descriptorBindingAccelerationStructureUpdateAfterBind)
 
 instance Storable PhysicalDeviceAccelerationStructureFeaturesKHR where
   sizeOf ~_ = 40
@@ -5055,7 +5155,14 @@ instance FromCStruct PhysicalDeviceAccelerationStructurePropertiesKHR where
     maxDescriptorSetUpdateAfterBindAccelerationStructures <- peek @Word32 ((p `plusPtr` 52 :: Ptr Word32))
     minAccelerationStructureScratchOffsetAlignment <- peek @Word32 ((p `plusPtr` 56 :: Ptr Word32))
     pure $ PhysicalDeviceAccelerationStructurePropertiesKHR
-             maxGeometryCount maxInstanceCount maxPrimitiveCount maxPerStageDescriptorAccelerationStructures maxPerStageDescriptorUpdateAfterBindAccelerationStructures maxDescriptorSetAccelerationStructures maxDescriptorSetUpdateAfterBindAccelerationStructures minAccelerationStructureScratchOffsetAlignment
+             maxGeometryCount
+             maxInstanceCount
+             maxPrimitiveCount
+             maxPerStageDescriptorAccelerationStructures
+             maxPerStageDescriptorUpdateAfterBindAccelerationStructures
+             maxDescriptorSetAccelerationStructures
+             maxDescriptorSetUpdateAfterBindAccelerationStructures
+             minAccelerationStructureScratchOffsetAlignment
 
 instance Storable PhysicalDeviceAccelerationStructurePropertiesKHR where
   sizeOf ~_ = 64
@@ -5182,7 +5289,8 @@ instance Extensible AccelerationStructureGeometryTrianglesDataKHR where
     | Just Refl <- eqT @e @AccelerationStructureGeometryMotionTrianglesDataNV = Just f
     | otherwise = Nothing
 
-instance (Extendss AccelerationStructureGeometryTrianglesDataKHR es, PokeChain es) => ToCStruct (AccelerationStructureGeometryTrianglesDataKHR es) where
+instance ( Extendss AccelerationStructureGeometryTrianglesDataKHR es
+         , PokeChain es ) => ToCStruct (AccelerationStructureGeometryTrianglesDataKHR es) where
   withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureGeometryTrianglesDataKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR)
@@ -5980,7 +6088,8 @@ instance Extensible AccelerationStructureCreateInfoKHR where
     | Just Refl <- eqT @e @AccelerationStructureMotionInfoNV = Just f
     | otherwise = Nothing
 
-instance (Extendss AccelerationStructureCreateInfoKHR es, PokeChain es) => ToCStruct (AccelerationStructureCreateInfoKHR es) where
+instance ( Extendss AccelerationStructureCreateInfoKHR es
+         , PokeChain es ) => ToCStruct (AccelerationStructureCreateInfoKHR es) where
   withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureCreateInfoKHR{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR)
@@ -6005,7 +6114,8 @@ instance (Extendss AccelerationStructureCreateInfoKHR es, PokeChain es) => ToCSt
     lift $ poke ((p `plusPtr` 48 :: Ptr AccelerationStructureTypeKHR)) (zero)
     lift $ f
 
-instance (Extendss AccelerationStructureCreateInfoKHR es, PeekChain es) => FromCStruct (AccelerationStructureCreateInfoKHR es) where
+instance ( Extendss AccelerationStructureCreateInfoKHR es
+         , PeekChain es ) => FromCStruct (AccelerationStructureCreateInfoKHR es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -6097,7 +6207,12 @@ instance FromCStruct AabbPositionsKHR where
     maxY <- peek @CFloat ((p `plusPtr` 16 :: Ptr CFloat))
     maxZ <- peek @CFloat ((p `plusPtr` 20 :: Ptr CFloat))
     pure $ AabbPositionsKHR
-             (coerce @CFloat @Float minX) (coerce @CFloat @Float minY) (coerce @CFloat @Float minZ) (coerce @CFloat @Float maxX) (coerce @CFloat @Float maxY) (coerce @CFloat @Float maxZ)
+             (coerce @CFloat @Float minX)
+             (coerce @CFloat @Float minY)
+             (coerce @CFloat @Float minZ)
+             (coerce @CFloat @Float maxX)
+             (coerce @CFloat @Float maxY)
+             (coerce @CFloat @Float maxZ)
 
 instance Storable AabbPositionsKHR where
   sizeOf ~_ = 24
@@ -6194,7 +6309,18 @@ instance FromCStruct TransformMatrixKHR where
     matrixRow22 <- peek @CFloat ((pmatrixRow2 `advancePtrBytes` 8 :: Ptr CFloat))
     matrixRow23 <- peek @CFloat ((pmatrixRow2 `advancePtrBytes` 12 :: Ptr CFloat))
     pure $ TransformMatrixKHR
-             (((coerce @CFloat @Float matrixRow00), (coerce @CFloat @Float matrixRow01), (coerce @CFloat @Float matrixRow02), (coerce @CFloat @Float matrixRow03))) (((coerce @CFloat @Float matrixRow10), (coerce @CFloat @Float matrixRow11), (coerce @CFloat @Float matrixRow12), (coerce @CFloat @Float matrixRow13))) (((coerce @CFloat @Float matrixRow20), (coerce @CFloat @Float matrixRow21), (coerce @CFloat @Float matrixRow22), (coerce @CFloat @Float matrixRow23)))
+             (( (coerce @CFloat @Float matrixRow00)
+              , (coerce @CFloat @Float matrixRow01)
+              , (coerce @CFloat @Float matrixRow02)
+              , (coerce @CFloat @Float matrixRow03) ))
+             (( (coerce @CFloat @Float matrixRow10)
+              , (coerce @CFloat @Float matrixRow11)
+              , (coerce @CFloat @Float matrixRow12)
+              , (coerce @CFloat @Float matrixRow13) ))
+             (( (coerce @CFloat @Float matrixRow20)
+              , (coerce @CFloat @Float matrixRow21)
+              , (coerce @CFloat @Float matrixRow22)
+              , (coerce @CFloat @Float matrixRow23) ))
 
 instance Storable TransformMatrixKHR where
   sizeOf ~_ = 48
@@ -6313,7 +6439,12 @@ instance FromCStruct AccelerationStructureInstanceKHR where
     let flags' = ((((flags `shiftR` 24)) .&. coerce @Word32 0xff))
     accelerationStructureReference <- peek @Word64 ((p `plusPtr` 56 :: Ptr Word64))
     pure $ AccelerationStructureInstanceKHR
-             transform instanceCustomIndex' mask' instanceShaderBindingTableRecordOffset' flags' accelerationStructureReference
+             transform
+             instanceCustomIndex'
+             mask'
+             instanceShaderBindingTableRecordOffset'
+             flags'
+             accelerationStructureReference
 
 instance Storable AccelerationStructureInstanceKHR where
   sizeOf ~_ = 64
@@ -6445,7 +6576,8 @@ instance ToCStruct AccelerationStructureVersionInfoKHR where
 instance FromCStruct AccelerationStructureVersionInfoKHR where
   peekCStruct p = do
     versionData <- peek @(Ptr Word8) ((p `plusPtr` 16 :: Ptr (Ptr Word8)))
-    versionData' <- packCStringLen (castPtr @Word8 @CChar versionData, 2 * UUID_SIZE)
+    versionData' <- packCStringLen ( castPtr @Word8 @CChar versionData
+                                   , 2 * UUID_SIZE )
     pure $ AccelerationStructureVersionInfoKHR
              versionData'
 
@@ -6890,22 +7022,25 @@ newtype GeometryInstanceFlagBitsKHR = GeometryInstanceFlagBitsKHR Flags
 -- | 'GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR' disables face
 -- culling for this instance.
 pattern GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR = GeometryInstanceFlagBitsKHR 0x00000001
+
 -- | 'GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR' indicates that the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#ray-traversal-culling-face facing determination>
 -- for geometry in this instance is inverted. Because the facing is
 -- determined in object space, an instance transform does not change the
 -- winding, but a geometry transform does.
-pattern GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR         = GeometryInstanceFlagBitsKHR 0x00000002
+pattern GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR = GeometryInstanceFlagBitsKHR 0x00000002
+
 -- | 'GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR' causes this instance to act as
 -- though 'GEOMETRY_OPAQUE_BIT_KHR' were specified on all geometries
 -- referenced by this instance. This behavior /can/ be overridden by the
 -- SPIR-V @NoOpaqueKHR@ ray flag.
-pattern GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR                 = GeometryInstanceFlagBitsKHR 0x00000004
+pattern GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR = GeometryInstanceFlagBitsKHR 0x00000004
+
 -- | 'GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR' causes this instance to act
 -- as though 'GEOMETRY_OPAQUE_BIT_KHR' were not specified on all geometries
 -- referenced by this instance. This behavior /can/ be overridden by the
 -- SPIR-V @OpaqueKHR@ ray flag.
-pattern GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR              = GeometryInstanceFlagBitsKHR 0x00000008
+pattern GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR = GeometryInstanceFlagBitsKHR 0x00000008
 
 conNameGeometryInstanceFlagBitsKHR :: String
 conNameGeometryInstanceFlagBitsKHR = "GeometryInstanceFlagBitsKHR"
@@ -6915,25 +7050,40 @@ enumPrefixGeometryInstanceFlagBitsKHR = "GEOMETRY_INSTANCE_"
 
 showTableGeometryInstanceFlagBitsKHR :: [(GeometryInstanceFlagBitsKHR, String)]
 showTableGeometryInstanceFlagBitsKHR =
-  [ (GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR, "TRIANGLE_FACING_CULL_DISABLE_BIT_KHR")
-  , (GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR        , "TRIANGLE_FLIP_FACING_BIT_KHR")
-  , (GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR                , "FORCE_OPAQUE_BIT_KHR")
-  , (GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR             , "FORCE_NO_OPAQUE_BIT_KHR")
+  [
+    ( GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR
+    , "TRIANGLE_FACING_CULL_DISABLE_BIT_KHR"
+    )
+  ,
+    ( GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR
+    , "TRIANGLE_FLIP_FACING_BIT_KHR"
+    )
+  ,
+    ( GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR
+    , "FORCE_OPAQUE_BIT_KHR"
+    )
+  ,
+    ( GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR
+    , "FORCE_NO_OPAQUE_BIT_KHR"
+    )
   ]
 
 instance Show GeometryInstanceFlagBitsKHR where
-  showsPrec = enumShowsPrec enumPrefixGeometryInstanceFlagBitsKHR
-                            showTableGeometryInstanceFlagBitsKHR
-                            conNameGeometryInstanceFlagBitsKHR
-                            (\(GeometryInstanceFlagBitsKHR x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixGeometryInstanceFlagBitsKHR
+      showTableGeometryInstanceFlagBitsKHR
+      conNameGeometryInstanceFlagBitsKHR
+      (\(GeometryInstanceFlagBitsKHR x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read GeometryInstanceFlagBitsKHR where
-  readPrec = enumReadPrec enumPrefixGeometryInstanceFlagBitsKHR
-                          showTableGeometryInstanceFlagBitsKHR
-                          conNameGeometryInstanceFlagBitsKHR
-                          GeometryInstanceFlagBitsKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixGeometryInstanceFlagBitsKHR
+      showTableGeometryInstanceFlagBitsKHR
+      conNameGeometryInstanceFlagBitsKHR
+      GeometryInstanceFlagBitsKHR
 
 type GeometryFlagsKHR = GeometryFlagBitsKHR
 
@@ -6950,7 +7100,8 @@ newtype GeometryFlagBitsKHR = GeometryFlagBitsKHR Flags
 
 -- | 'GEOMETRY_OPAQUE_BIT_KHR' indicates that this geometry does not invoke
 -- the any-hit shaders even if present in a hit group.
-pattern GEOMETRY_OPAQUE_BIT_KHR                          = GeometryFlagBitsKHR 0x00000001
+pattern GEOMETRY_OPAQUE_BIT_KHR = GeometryFlagBitsKHR 0x00000001
+
 -- | 'GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR' indicates that the
 -- implementation /must/ only call the any-hit shader a single time for
 -- each primitive in this geometry. If this bit is absent an implementation
@@ -6965,23 +7116,29 @@ enumPrefixGeometryFlagBitsKHR = "GEOMETRY_"
 
 showTableGeometryFlagBitsKHR :: [(GeometryFlagBitsKHR, String)]
 showTableGeometryFlagBitsKHR =
-  [ (GEOMETRY_OPAQUE_BIT_KHR                         , "OPAQUE_BIT_KHR")
-  , (GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR, "NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR")
+  [ (GEOMETRY_OPAQUE_BIT_KHR, "OPAQUE_BIT_KHR")
+  ,
+    ( GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR
+    , "NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_KHR"
+    )
   ]
 
 instance Show GeometryFlagBitsKHR where
-  showsPrec = enumShowsPrec enumPrefixGeometryFlagBitsKHR
-                            showTableGeometryFlagBitsKHR
-                            conNameGeometryFlagBitsKHR
-                            (\(GeometryFlagBitsKHR x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixGeometryFlagBitsKHR
+      showTableGeometryFlagBitsKHR
+      conNameGeometryFlagBitsKHR
+      (\(GeometryFlagBitsKHR x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read GeometryFlagBitsKHR where
-  readPrec = enumReadPrec enumPrefixGeometryFlagBitsKHR
-                          showTableGeometryFlagBitsKHR
-                          conNameGeometryFlagBitsKHR
-                          GeometryFlagBitsKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixGeometryFlagBitsKHR
+      showTableGeometryFlagBitsKHR
+      conNameGeometryFlagBitsKHR
+      GeometryFlagBitsKHR
 
 type BuildAccelerationStructureFlagsKHR = BuildAccelerationStructureFlagBitsKHR
 
@@ -7011,28 +7168,33 @@ newtype BuildAccelerationStructureFlagBitsKHR = BuildAccelerationStructureFlagBi
 -- 'AccelerationStructureBuildGeometryInfoKHR' or an @update@ of
 -- 'Vulkan.Core10.FundamentalTypes.TRUE' in
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdBuildAccelerationStructureNV' .
-pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR      = BuildAccelerationStructureFlagBitsKHR 0x00000001
+pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR = BuildAccelerationStructureFlagBitsKHR 0x00000001
+
 -- | 'BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR' indicates that
 -- the specified acceleration structure /can/ act as the source for a copy
 -- acceleration structure command with @mode@ of
 -- 'COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR' to produce a compacted
 -- acceleration structure.
-pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR  = BuildAccelerationStructureFlagBitsKHR 0x00000002
+pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR = BuildAccelerationStructureFlagBitsKHR 0x00000002
+
 -- | 'BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR' indicates that
 -- the given acceleration structure build /should/ prioritize trace
 -- performance over build time.
 pattern BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR = BuildAccelerationStructureFlagBitsKHR 0x00000004
+
 -- | 'BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR' indicates that
 -- the given acceleration structure build /should/ prioritize build time
 -- over trace performance.
 pattern BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR = BuildAccelerationStructureFlagBitsKHR 0x00000008
+
 -- | 'BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR' indicates that this
 -- acceleration structure /should/ minimize the size of the scratch memory
 -- and the final result acceleration structure, potentially at the expense
 -- of build time or trace performance.
-pattern BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR        = BuildAccelerationStructureFlagBitsKHR 0x00000010
+pattern BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR = BuildAccelerationStructureFlagBitsKHR 0x00000010
+
 -- No documentation found for Nested "VkBuildAccelerationStructureFlagBitsKHR" "VK_BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV"
-pattern BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV             = BuildAccelerationStructureFlagBitsKHR 0x00000020
+pattern BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV = BuildAccelerationStructureFlagBitsKHR 0x00000020
 
 conNameBuildAccelerationStructureFlagBitsKHR :: String
 conNameBuildAccelerationStructureFlagBitsKHR = "BuildAccelerationStructureFlagBitsKHR"
@@ -7042,27 +7204,48 @@ enumPrefixBuildAccelerationStructureFlagBitsKHR = "BUILD_ACCELERATION_STRUCTURE_
 
 showTableBuildAccelerationStructureFlagBitsKHR :: [(BuildAccelerationStructureFlagBitsKHR, String)]
 showTableBuildAccelerationStructureFlagBitsKHR =
-  [ (BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR     , "ALLOW_UPDATE_BIT_KHR")
-  , (BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR , "ALLOW_COMPACTION_BIT_KHR")
-  , (BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR, "PREFER_FAST_TRACE_BIT_KHR")
-  , (BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR, "PREFER_FAST_BUILD_BIT_KHR")
-  , (BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR       , "LOW_MEMORY_BIT_KHR")
-  , (BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV            , "MOTION_BIT_NV")
+  [
+    ( BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR
+    , "ALLOW_UPDATE_BIT_KHR"
+    )
+  ,
+    ( BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR
+    , "ALLOW_COMPACTION_BIT_KHR"
+    )
+  ,
+    ( BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR
+    , "PREFER_FAST_TRACE_BIT_KHR"
+    )
+  ,
+    ( BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR
+    , "PREFER_FAST_BUILD_BIT_KHR"
+    )
+  ,
+    ( BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR
+    , "LOW_MEMORY_BIT_KHR"
+    )
+  ,
+    ( BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV
+    , "MOTION_BIT_NV"
+    )
   ]
 
 instance Show BuildAccelerationStructureFlagBitsKHR where
-  showsPrec = enumShowsPrec enumPrefixBuildAccelerationStructureFlagBitsKHR
-                            showTableBuildAccelerationStructureFlagBitsKHR
-                            conNameBuildAccelerationStructureFlagBitsKHR
-                            (\(BuildAccelerationStructureFlagBitsKHR x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixBuildAccelerationStructureFlagBitsKHR
+      showTableBuildAccelerationStructureFlagBitsKHR
+      conNameBuildAccelerationStructureFlagBitsKHR
+      (\(BuildAccelerationStructureFlagBitsKHR x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read BuildAccelerationStructureFlagBitsKHR where
-  readPrec = enumReadPrec enumPrefixBuildAccelerationStructureFlagBitsKHR
-                          showTableBuildAccelerationStructureFlagBitsKHR
-                          conNameBuildAccelerationStructureFlagBitsKHR
-                          BuildAccelerationStructureFlagBitsKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixBuildAccelerationStructureFlagBitsKHR
+      showTableBuildAccelerationStructureFlagBitsKHR
+      conNameBuildAccelerationStructureFlagBitsKHR
+      BuildAccelerationStructureFlagBitsKHR
 
 type AccelerationStructureCreateFlagsKHR = AccelerationStructureCreateFlagBitsKHR
 
@@ -7079,8 +7262,8 @@ newtype AccelerationStructureCreateFlagBitsKHR = AccelerationStructureCreateFlag
 -- | 'ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR'
 -- specifies that the acceleration structure’s address /can/ be saved and
 -- reused on a subsequent run.
-pattern ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR =
-  AccelerationStructureCreateFlagBitsKHR 0x00000001
+pattern ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR = AccelerationStructureCreateFlagBitsKHR 0x00000001
+
 -- No documentation found for Nested "VkAccelerationStructureCreateFlagBitsKHR" "VK_ACCELERATION_STRUCTURE_CREATE_MOTION_BIT_NV"
 pattern ACCELERATION_STRUCTURE_CREATE_MOTION_BIT_NV = AccelerationStructureCreateFlagBitsKHR 0x00000004
 
@@ -7092,23 +7275,32 @@ enumPrefixAccelerationStructureCreateFlagBitsKHR = "ACCELERATION_STRUCTURE_CREAT
 
 showTableAccelerationStructureCreateFlagBitsKHR :: [(AccelerationStructureCreateFlagBitsKHR, String)]
 showTableAccelerationStructureCreateFlagBitsKHR =
-  [ (ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR, "DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR")
-  , (ACCELERATION_STRUCTURE_CREATE_MOTION_BIT_NV                        , "MOTION_BIT_NV")
+  [
+    ( ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR
+    , "DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR"
+    )
+  ,
+    ( ACCELERATION_STRUCTURE_CREATE_MOTION_BIT_NV
+    , "MOTION_BIT_NV"
+    )
   ]
 
 instance Show AccelerationStructureCreateFlagBitsKHR where
-  showsPrec = enumShowsPrec enumPrefixAccelerationStructureCreateFlagBitsKHR
-                            showTableAccelerationStructureCreateFlagBitsKHR
-                            conNameAccelerationStructureCreateFlagBitsKHR
-                            (\(AccelerationStructureCreateFlagBitsKHR x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixAccelerationStructureCreateFlagBitsKHR
+      showTableAccelerationStructureCreateFlagBitsKHR
+      conNameAccelerationStructureCreateFlagBitsKHR
+      (\(AccelerationStructureCreateFlagBitsKHR x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read AccelerationStructureCreateFlagBitsKHR where
-  readPrec = enumReadPrec enumPrefixAccelerationStructureCreateFlagBitsKHR
-                          showTableAccelerationStructureCreateFlagBitsKHR
-                          conNameAccelerationStructureCreateFlagBitsKHR
-                          AccelerationStructureCreateFlagBitsKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixAccelerationStructureCreateFlagBitsKHR
+      showTableAccelerationStructureCreateFlagBitsKHR
+      conNameAccelerationStructureCreateFlagBitsKHR
+      AccelerationStructureCreateFlagBitsKHR
 
 -- | VkCopyAccelerationStructureModeKHR - Acceleration structure copy mode
 --
@@ -7129,7 +7321,8 @@ newtype CopyAccelerationStructureModeKHR = CopyAccelerationStructureModeKHR Int3
 -- the same parameters as @src@. If @src@ contains references to other
 -- acceleration structures, @dst@ will reference the same acceleration
 -- structures.
-pattern COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR       = CopyAccelerationStructureModeKHR 0
+pattern COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR = CopyAccelerationStructureModeKHR 0
+
 -- | 'COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR' creates a more compact
 -- version of an acceleration structure @src@ into @dst@. The acceleration
 -- structure @dst@ /must/ have been created with a size at least as large
@@ -7138,19 +7331,25 @@ pattern COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR       = CopyAccelerationStruc
 -- acceleration structure specified by @src@. If @src@ contains references
 -- to other acceleration structures, @dst@ will reference the same
 -- acceleration structures.
-pattern COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR     = CopyAccelerationStructureModeKHR 1
+pattern COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR = CopyAccelerationStructureModeKHR 1
+
 -- | 'COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR' serializes the
 -- acceleration structure to a semi-opaque format which can be reloaded on
 -- a compatible implementation.
-pattern COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR   = CopyAccelerationStructureModeKHR 2
+pattern COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR = CopyAccelerationStructureModeKHR 2
+
 -- | 'COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR' deserializes the
 -- semi-opaque serialization format in the buffer to the acceleration
 -- structure.
 pattern COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR = CopyAccelerationStructureModeKHR 3
-{-# complete COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR,
-             COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR,
-             COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR,
-             COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR :: CopyAccelerationStructureModeKHR #-}
+
+{-# COMPLETE
+  COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR
+  , COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR
+  , COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR
+  , COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR ::
+    CopyAccelerationStructureModeKHR
+  #-}
 
 conNameCopyAccelerationStructureModeKHR :: String
 conNameCopyAccelerationStructureModeKHR = "CopyAccelerationStructureModeKHR"
@@ -7160,25 +7359,40 @@ enumPrefixCopyAccelerationStructureModeKHR = "COPY_ACCELERATION_STRUCTURE_MODE_"
 
 showTableCopyAccelerationStructureModeKHR :: [(CopyAccelerationStructureModeKHR, String)]
 showTableCopyAccelerationStructureModeKHR =
-  [ (COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR      , "CLONE_KHR")
-  , (COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR    , "COMPACT_KHR")
-  , (COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR  , "SERIALIZE_KHR")
-  , (COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR, "DESERIALIZE_KHR")
+  [
+    ( COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR
+    , "CLONE_KHR"
+    )
+  ,
+    ( COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_KHR
+    , "COMPACT_KHR"
+    )
+  ,
+    ( COPY_ACCELERATION_STRUCTURE_MODE_SERIALIZE_KHR
+    , "SERIALIZE_KHR"
+    )
+  ,
+    ( COPY_ACCELERATION_STRUCTURE_MODE_DESERIALIZE_KHR
+    , "DESERIALIZE_KHR"
+    )
   ]
 
 instance Show CopyAccelerationStructureModeKHR where
-  showsPrec = enumShowsPrec enumPrefixCopyAccelerationStructureModeKHR
-                            showTableCopyAccelerationStructureModeKHR
-                            conNameCopyAccelerationStructureModeKHR
-                            (\(CopyAccelerationStructureModeKHR x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixCopyAccelerationStructureModeKHR
+      showTableCopyAccelerationStructureModeKHR
+      conNameCopyAccelerationStructureModeKHR
+      (\(CopyAccelerationStructureModeKHR x) -> x)
+      (showsPrec 11)
 
 instance Read CopyAccelerationStructureModeKHR where
-  readPrec = enumReadPrec enumPrefixCopyAccelerationStructureModeKHR
-                          showTableCopyAccelerationStructureModeKHR
-                          conNameCopyAccelerationStructureModeKHR
-                          CopyAccelerationStructureModeKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixCopyAccelerationStructureModeKHR
+      showTableCopyAccelerationStructureModeKHR
+      conNameCopyAccelerationStructureModeKHR
+      CopyAccelerationStructureModeKHR
 
 -- | VkBuildAccelerationStructureModeKHR - Enum specifying the type of build
 -- operation to perform
@@ -7193,13 +7407,18 @@ newtype BuildAccelerationStructureModeKHR = BuildAccelerationStructureModeKHR In
 -- | 'BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR' specifies that the
 -- destination acceleration structure will be built using the specified
 -- geometries.
-pattern BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR  = BuildAccelerationStructureModeKHR 0
+pattern BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR = BuildAccelerationStructureModeKHR 0
+
 -- | 'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR' specifies that the
 -- destination acceleration structure will be built using data in a source
 -- acceleration structure, updated by the specified geometries.
 pattern BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR = BuildAccelerationStructureModeKHR 1
-{-# complete BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR,
-             BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR :: BuildAccelerationStructureModeKHR #-}
+
+{-# COMPLETE
+  BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR
+  , BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR ::
+    BuildAccelerationStructureModeKHR
+  #-}
 
 conNameBuildAccelerationStructureModeKHR :: String
 conNameBuildAccelerationStructureModeKHR = "BuildAccelerationStructureModeKHR"
@@ -7209,23 +7428,32 @@ enumPrefixBuildAccelerationStructureModeKHR = "BUILD_ACCELERATION_STRUCTURE_MODE
 
 showTableBuildAccelerationStructureModeKHR :: [(BuildAccelerationStructureModeKHR, String)]
 showTableBuildAccelerationStructureModeKHR =
-  [ (BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR , "BUILD_KHR")
-  , (BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR, "UPDATE_KHR")
+  [
+    ( BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR
+    , "BUILD_KHR"
+    )
+  ,
+    ( BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR
+    , "UPDATE_KHR"
+    )
   ]
 
 instance Show BuildAccelerationStructureModeKHR where
-  showsPrec = enumShowsPrec enumPrefixBuildAccelerationStructureModeKHR
-                            showTableBuildAccelerationStructureModeKHR
-                            conNameBuildAccelerationStructureModeKHR
-                            (\(BuildAccelerationStructureModeKHR x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixBuildAccelerationStructureModeKHR
+      showTableBuildAccelerationStructureModeKHR
+      conNameBuildAccelerationStructureModeKHR
+      (\(BuildAccelerationStructureModeKHR x) -> x)
+      (showsPrec 11)
 
 instance Read BuildAccelerationStructureModeKHR where
-  readPrec = enumReadPrec enumPrefixBuildAccelerationStructureModeKHR
-                          showTableBuildAccelerationStructureModeKHR
-                          conNameBuildAccelerationStructureModeKHR
-                          BuildAccelerationStructureModeKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixBuildAccelerationStructureModeKHR
+      showTableBuildAccelerationStructureModeKHR
+      conNameBuildAccelerationStructureModeKHR
+      BuildAccelerationStructureModeKHR
 
 -- | VkAccelerationStructureTypeKHR - Type of acceleration structure
 --
@@ -7242,19 +7470,25 @@ newtype AccelerationStructureTypeKHR = AccelerationStructureTypeKHR Int32
 -- | 'ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR' is a top-level acceleration
 -- structure containing instance data referring to bottom-level
 -- acceleration structures.
-pattern ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR    = AccelerationStructureTypeKHR 0
+pattern ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR = AccelerationStructureTypeKHR 0
+
 -- | 'ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR' is a bottom-level
 -- acceleration structure containing the AABBs or geometry to be
 -- intersected.
 pattern ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR = AccelerationStructureTypeKHR 1
+
 -- | 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR' is an acceleration structure
 -- whose type is determined at build time used for special circumstances.
 -- In these cases, the acceleration structure type is not known at creation
 -- time, but /must/ be specified at build time as either top or bottom.
-pattern ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR      = AccelerationStructureTypeKHR 2
-{-# complete ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR,
-             ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR,
-             ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR :: AccelerationStructureTypeKHR #-}
+pattern ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR = AccelerationStructureTypeKHR 2
+
+{-# COMPLETE
+  ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR
+  , ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR
+  , ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR ::
+    AccelerationStructureTypeKHR
+  #-}
 
 conNameAccelerationStructureTypeKHR :: String
 conNameAccelerationStructureTypeKHR = "AccelerationStructureTypeKHR"
@@ -7264,24 +7498,36 @@ enumPrefixAccelerationStructureTypeKHR = "ACCELERATION_STRUCTURE_TYPE_"
 
 showTableAccelerationStructureTypeKHR :: [(AccelerationStructureTypeKHR, String)]
 showTableAccelerationStructureTypeKHR =
-  [ (ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR   , "TOP_LEVEL_KHR")
-  , (ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR, "BOTTOM_LEVEL_KHR")
-  , (ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR     , "GENERIC_KHR")
+  [
+    ( ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR
+    , "TOP_LEVEL_KHR"
+    )
+  ,
+    ( ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR
+    , "BOTTOM_LEVEL_KHR"
+    )
+  ,
+    ( ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR
+    , "GENERIC_KHR"
+    )
   ]
 
 instance Show AccelerationStructureTypeKHR where
-  showsPrec = enumShowsPrec enumPrefixAccelerationStructureTypeKHR
-                            showTableAccelerationStructureTypeKHR
-                            conNameAccelerationStructureTypeKHR
-                            (\(AccelerationStructureTypeKHR x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixAccelerationStructureTypeKHR
+      showTableAccelerationStructureTypeKHR
+      conNameAccelerationStructureTypeKHR
+      (\(AccelerationStructureTypeKHR x) -> x)
+      (showsPrec 11)
 
 instance Read AccelerationStructureTypeKHR where
-  readPrec = enumReadPrec enumPrefixAccelerationStructureTypeKHR
-                          showTableAccelerationStructureTypeKHR
-                          conNameAccelerationStructureTypeKHR
-                          AccelerationStructureTypeKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixAccelerationStructureTypeKHR
+      showTableAccelerationStructureTypeKHR
+      conNameAccelerationStructureTypeKHR
+      AccelerationStructureTypeKHR
 
 -- | VkGeometryTypeKHR - Enum specifying which type of geometry is provided
 --
@@ -7297,15 +7543,21 @@ newtype GeometryTypeKHR = GeometryTypeKHR Int32
 -- | 'GEOMETRY_TYPE_TRIANGLES_KHR' specifies a geometry type consisting of
 -- triangles.
 pattern GEOMETRY_TYPE_TRIANGLES_KHR = GeometryTypeKHR 0
+
 -- | 'GEOMETRY_TYPE_AABBS_KHR' specifies a geometry type consisting of
 -- axis-aligned bounding boxes.
-pattern GEOMETRY_TYPE_AABBS_KHR     = GeometryTypeKHR 1
+pattern GEOMETRY_TYPE_AABBS_KHR = GeometryTypeKHR 1
+
 -- | 'GEOMETRY_TYPE_INSTANCES_KHR' specifies a geometry type consisting of
 -- acceleration structure instances.
 pattern GEOMETRY_TYPE_INSTANCES_KHR = GeometryTypeKHR 2
-{-# complete GEOMETRY_TYPE_TRIANGLES_KHR,
-             GEOMETRY_TYPE_AABBS_KHR,
-             GEOMETRY_TYPE_INSTANCES_KHR :: GeometryTypeKHR #-}
+
+{-# COMPLETE
+  GEOMETRY_TYPE_TRIANGLES_KHR
+  , GEOMETRY_TYPE_AABBS_KHR
+  , GEOMETRY_TYPE_INSTANCES_KHR ::
+    GeometryTypeKHR
+  #-}
 
 conNameGeometryTypeKHR :: String
 conNameGeometryTypeKHR = "GeometryTypeKHR"
@@ -7316,20 +7568,26 @@ enumPrefixGeometryTypeKHR = "GEOMETRY_TYPE_"
 showTableGeometryTypeKHR :: [(GeometryTypeKHR, String)]
 showTableGeometryTypeKHR =
   [ (GEOMETRY_TYPE_TRIANGLES_KHR, "TRIANGLES_KHR")
-  , (GEOMETRY_TYPE_AABBS_KHR    , "AABBS_KHR")
+  , (GEOMETRY_TYPE_AABBS_KHR, "AABBS_KHR")
   , (GEOMETRY_TYPE_INSTANCES_KHR, "INSTANCES_KHR")
   ]
 
 instance Show GeometryTypeKHR where
-  showsPrec = enumShowsPrec enumPrefixGeometryTypeKHR
-                            showTableGeometryTypeKHR
-                            conNameGeometryTypeKHR
-                            (\(GeometryTypeKHR x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixGeometryTypeKHR
+      showTableGeometryTypeKHR
+      conNameGeometryTypeKHR
+      (\(GeometryTypeKHR x) -> x)
+      (showsPrec 11)
 
 instance Read GeometryTypeKHR where
-  readPrec = enumReadPrec enumPrefixGeometryTypeKHR showTableGeometryTypeKHR conNameGeometryTypeKHR GeometryTypeKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixGeometryTypeKHR
+      showTableGeometryTypeKHR
+      conNameGeometryTypeKHR
+      GeometryTypeKHR
 
 -- | VkAccelerationStructureBuildTypeKHR - Acceleration structure build type
 --
@@ -7342,17 +7600,23 @@ newtype AccelerationStructureBuildTypeKHR = AccelerationStructureBuildTypeKHR In
 
 -- | 'ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_KHR' requests the memory
 -- requirement for operations performed by the host.
-pattern ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_KHR           = AccelerationStructureBuildTypeKHR 0
+pattern ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_KHR = AccelerationStructureBuildTypeKHR 0
+
 -- | 'ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR' requests the memory
 -- requirement for operations performed by the device.
-pattern ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR         = AccelerationStructureBuildTypeKHR 1
+pattern ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR = AccelerationStructureBuildTypeKHR 1
+
 -- | 'ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_OR_DEVICE_KHR' requests the
 -- memory requirement for operations performed by either the host, or the
 -- device.
 pattern ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_OR_DEVICE_KHR = AccelerationStructureBuildTypeKHR 2
-{-# complete ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_KHR,
-             ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR,
-             ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_OR_DEVICE_KHR :: AccelerationStructureBuildTypeKHR #-}
+
+{-# COMPLETE
+  ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_KHR
+  , ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR
+  , ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_OR_DEVICE_KHR ::
+    AccelerationStructureBuildTypeKHR
+  #-}
 
 conNameAccelerationStructureBuildTypeKHR :: String
 conNameAccelerationStructureBuildTypeKHR = "AccelerationStructureBuildTypeKHR"
@@ -7362,24 +7626,36 @@ enumPrefixAccelerationStructureBuildTypeKHR = "ACCELERATION_STRUCTURE_BUILD_TYPE
 
 showTableAccelerationStructureBuildTypeKHR :: [(AccelerationStructureBuildTypeKHR, String)]
 showTableAccelerationStructureBuildTypeKHR =
-  [ (ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_KHR          , "HOST_KHR")
-  , (ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR        , "DEVICE_KHR")
-  , (ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_OR_DEVICE_KHR, "HOST_OR_DEVICE_KHR")
+  [
+    ( ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_KHR
+    , "HOST_KHR"
+    )
+  ,
+    ( ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR
+    , "DEVICE_KHR"
+    )
+  ,
+    ( ACCELERATION_STRUCTURE_BUILD_TYPE_HOST_OR_DEVICE_KHR
+    , "HOST_OR_DEVICE_KHR"
+    )
   ]
 
 instance Show AccelerationStructureBuildTypeKHR where
-  showsPrec = enumShowsPrec enumPrefixAccelerationStructureBuildTypeKHR
-                            showTableAccelerationStructureBuildTypeKHR
-                            conNameAccelerationStructureBuildTypeKHR
-                            (\(AccelerationStructureBuildTypeKHR x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixAccelerationStructureBuildTypeKHR
+      showTableAccelerationStructureBuildTypeKHR
+      conNameAccelerationStructureBuildTypeKHR
+      (\(AccelerationStructureBuildTypeKHR x) -> x)
+      (showsPrec 11)
 
 instance Read AccelerationStructureBuildTypeKHR where
-  readPrec = enumReadPrec enumPrefixAccelerationStructureBuildTypeKHR
-                          showTableAccelerationStructureBuildTypeKHR
-                          conNameAccelerationStructureBuildTypeKHR
-                          AccelerationStructureBuildTypeKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixAccelerationStructureBuildTypeKHR
+      showTableAccelerationStructureBuildTypeKHR
+      conNameAccelerationStructureBuildTypeKHR
+      AccelerationStructureBuildTypeKHR
 
 -- | VkAccelerationStructureCompatibilityKHR - Acceleration structure
 -- compatibility
@@ -7394,13 +7670,18 @@ newtype AccelerationStructureCompatibilityKHR = AccelerationStructureCompatibili
 -- | 'ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR' if the
 -- @pVersionData@ version acceleration structure is compatible with
 -- @device@.
-pattern ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR   = AccelerationStructureCompatibilityKHR 0
+pattern ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR = AccelerationStructureCompatibilityKHR 0
+
 -- | 'ACCELERATION_STRUCTURE_COMPATIBILITY_INCOMPATIBLE_KHR' if the
 -- @pVersionData@ version acceleration structure is not compatible with
 -- @device@.
 pattern ACCELERATION_STRUCTURE_COMPATIBILITY_INCOMPATIBLE_KHR = AccelerationStructureCompatibilityKHR 1
-{-# complete ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR,
-             ACCELERATION_STRUCTURE_COMPATIBILITY_INCOMPATIBLE_KHR :: AccelerationStructureCompatibilityKHR #-}
+
+{-# COMPLETE
+  ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR
+  , ACCELERATION_STRUCTURE_COMPATIBILITY_INCOMPATIBLE_KHR ::
+    AccelerationStructureCompatibilityKHR
+  #-}
 
 conNameAccelerationStructureCompatibilityKHR :: String
 conNameAccelerationStructureCompatibilityKHR = "AccelerationStructureCompatibilityKHR"
@@ -7410,23 +7691,32 @@ enumPrefixAccelerationStructureCompatibilityKHR = "ACCELERATION_STRUCTURE_COMPAT
 
 showTableAccelerationStructureCompatibilityKHR :: [(AccelerationStructureCompatibilityKHR, String)]
 showTableAccelerationStructureCompatibilityKHR =
-  [ (ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR  , "COMPATIBLE_KHR")
-  , (ACCELERATION_STRUCTURE_COMPATIBILITY_INCOMPATIBLE_KHR, "INCOMPATIBLE_KHR")
+  [
+    ( ACCELERATION_STRUCTURE_COMPATIBILITY_COMPATIBLE_KHR
+    , "COMPATIBLE_KHR"
+    )
+  ,
+    ( ACCELERATION_STRUCTURE_COMPATIBILITY_INCOMPATIBLE_KHR
+    , "INCOMPATIBLE_KHR"
+    )
   ]
 
 instance Show AccelerationStructureCompatibilityKHR where
-  showsPrec = enumShowsPrec enumPrefixAccelerationStructureCompatibilityKHR
-                            showTableAccelerationStructureCompatibilityKHR
-                            conNameAccelerationStructureCompatibilityKHR
-                            (\(AccelerationStructureCompatibilityKHR x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixAccelerationStructureCompatibilityKHR
+      showTableAccelerationStructureCompatibilityKHR
+      conNameAccelerationStructureCompatibilityKHR
+      (\(AccelerationStructureCompatibilityKHR x) -> x)
+      (showsPrec 11)
 
 instance Read AccelerationStructureCompatibilityKHR where
-  readPrec = enumReadPrec enumPrefixAccelerationStructureCompatibilityKHR
-                          showTableAccelerationStructureCompatibilityKHR
-                          conNameAccelerationStructureCompatibilityKHR
-                          AccelerationStructureCompatibilityKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixAccelerationStructureCompatibilityKHR
+      showTableAccelerationStructureCompatibilityKHR
+      conNameAccelerationStructureCompatibilityKHR
+      AccelerationStructureCompatibilityKHR
 
 type KHR_ACCELERATION_STRUCTURE_SPEC_VERSION = 13
 

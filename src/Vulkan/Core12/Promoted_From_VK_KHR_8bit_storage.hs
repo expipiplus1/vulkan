@@ -108,7 +108,9 @@ instance FromCStruct PhysicalDevice8BitStorageFeatures where
     uniformAndStorageBuffer8BitAccess <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     storagePushConstant8 <- peek @Bool32 ((p `plusPtr` 24 :: Ptr Bool32))
     pure $ PhysicalDevice8BitStorageFeatures
-             (bool32ToBool storageBuffer8BitAccess) (bool32ToBool uniformAndStorageBuffer8BitAccess) (bool32ToBool storagePushConstant8)
+             (bool32ToBool storageBuffer8BitAccess)
+             (bool32ToBool uniformAndStorageBuffer8BitAccess)
+             (bool32ToBool storagePushConstant8)
 
 instance Storable PhysicalDevice8BitStorageFeatures where
   sizeOf ~_ = 32

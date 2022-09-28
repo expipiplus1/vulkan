@@ -67,13 +67,18 @@ newtype SharingMode = SharingMode Int32
 -- | 'SHARING_MODE_EXCLUSIVE' specifies that access to any range or image
 -- subresource of the object will be exclusive to a single queue family at
 -- a time.
-pattern SHARING_MODE_EXCLUSIVE  = SharingMode 0
+pattern SHARING_MODE_EXCLUSIVE = SharingMode 0
+
 -- | 'SHARING_MODE_CONCURRENT' specifies that concurrent access to any range
 -- or image subresource of the object from multiple queue families is
 -- supported.
 pattern SHARING_MODE_CONCURRENT = SharingMode 1
-{-# complete SHARING_MODE_EXCLUSIVE,
-             SHARING_MODE_CONCURRENT :: SharingMode #-}
+
+{-# COMPLETE
+  SHARING_MODE_EXCLUSIVE
+  , SHARING_MODE_CONCURRENT ::
+    SharingMode
+  #-}
 
 conNameSharingMode :: String
 conNameSharingMode = "SharingMode"
@@ -82,12 +87,24 @@ enumPrefixSharingMode :: String
 enumPrefixSharingMode = "SHARING_MODE_"
 
 showTableSharingMode :: [(SharingMode, String)]
-showTableSharingMode = [(SHARING_MODE_EXCLUSIVE, "EXCLUSIVE"), (SHARING_MODE_CONCURRENT, "CONCURRENT")]
+showTableSharingMode =
+  [ (SHARING_MODE_EXCLUSIVE, "EXCLUSIVE")
+  , (SHARING_MODE_CONCURRENT, "CONCURRENT")
+  ]
 
 instance Show SharingMode where
   showsPrec =
-    enumShowsPrec enumPrefixSharingMode showTableSharingMode conNameSharingMode (\(SharingMode x) -> x) (showsPrec 11)
+    enumShowsPrec
+      enumPrefixSharingMode
+      showTableSharingMode
+      conNameSharingMode
+      (\(SharingMode x) -> x)
+      (showsPrec 11)
 
 instance Read SharingMode where
-  readPrec = enumReadPrec enumPrefixSharingMode showTableSharingMode conNameSharingMode SharingMode
-
+  readPrec =
+    enumReadPrec
+      enumPrefixSharingMode
+      showTableSharingMode
+      conNameSharingMode
+      SharingMode

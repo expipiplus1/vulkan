@@ -197,8 +197,10 @@ instance FromCStruct PhysicalDeviceImageCompressionControlFeaturesEXT
 type role SubresourceLayout2EXT nominal
 data SubresourceLayout2EXT (es :: [Type])
 
-instance (Extendss SubresourceLayout2EXT es, PokeChain es) => ToCStruct (SubresourceLayout2EXT es)
+instance ( Extendss SubresourceLayout2EXT es
+         , PokeChain es ) => ToCStruct (SubresourceLayout2EXT es)
 instance Show (Chain es) => Show (SubresourceLayout2EXT es)
 
-instance (Extendss SubresourceLayout2EXT es, PeekChain es) => FromCStruct (SubresourceLayout2EXT es)
+instance ( Extendss SubresourceLayout2EXT es
+         , PeekChain es ) => FromCStruct (SubresourceLayout2EXT es)
 

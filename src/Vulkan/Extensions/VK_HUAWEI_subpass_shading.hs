@@ -462,13 +462,17 @@ getDeviceSubpassShadingMaxWorkgroupSizeHUAWEI :: forall io
                                                  -- @device@
                                                  RenderPass
                                               -> io (Result, ("maxWorkgroupSize" ::: Extent2D))
-getDeviceSubpassShadingMaxWorkgroupSizeHUAWEI device renderpass = liftIO . evalContT $ do
+getDeviceSubpassShadingMaxWorkgroupSizeHUAWEI device
+                                                renderpass = liftIO . evalContT $ do
   let vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEIPtr = pVkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEIPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI is null" Nothing Nothing
   let vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI' = mkVkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEIPtr
   pPMaxWorkgroupSize <- ContT (withZeroCStruct @Extent2D)
-  r <- lift $ traceAroundEvent "vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI" (vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI' (deviceHandle (device)) (renderpass) (pPMaxWorkgroupSize))
+  r <- lift $ traceAroundEvent "vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI" (vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI'
+                                                                                    (deviceHandle (device))
+                                                                                    (renderpass)
+                                                                                    (pPMaxWorkgroupSize))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pMaxWorkgroupSize <- lift $ peekCStruct @Extent2D pPMaxWorkgroupSize
   pure $ (r, pMaxWorkgroupSize)
@@ -907,7 +911,8 @@ cmdSubpassShadingHUAWEI commandBuffer = liftIO $ do
   unless (vkCmdSubpassShadingHUAWEIPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSubpassShadingHUAWEI is null" Nothing Nothing
   let vkCmdSubpassShadingHUAWEI' = mkVkCmdSubpassShadingHUAWEI vkCmdSubpassShadingHUAWEIPtr
-  traceAroundEvent "vkCmdSubpassShadingHUAWEI" (vkCmdSubpassShadingHUAWEI' (commandBufferHandle (commandBuffer)))
+  traceAroundEvent "vkCmdSubpassShadingHUAWEI" (vkCmdSubpassShadingHUAWEI'
+                                                  (commandBufferHandle (commandBuffer)))
   pure $ ()
 
 

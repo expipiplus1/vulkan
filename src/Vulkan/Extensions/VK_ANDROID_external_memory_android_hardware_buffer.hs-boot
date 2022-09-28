@@ -319,10 +319,12 @@ instance FromCStruct AndroidHardwareBufferFormatPropertiesANDROID
 type role AndroidHardwareBufferPropertiesANDROID nominal
 data AndroidHardwareBufferPropertiesANDROID (es :: [Type])
 
-instance (Extendss AndroidHardwareBufferPropertiesANDROID es, PokeChain es) => ToCStruct (AndroidHardwareBufferPropertiesANDROID es)
+instance ( Extendss AndroidHardwareBufferPropertiesANDROID es
+         , PokeChain es ) => ToCStruct (AndroidHardwareBufferPropertiesANDROID es)
 instance Show (Chain es) => Show (AndroidHardwareBufferPropertiesANDROID es)
 
-instance (Extendss AndroidHardwareBufferPropertiesANDROID es, PeekChain es) => FromCStruct (AndroidHardwareBufferPropertiesANDROID es)
+instance ( Extendss AndroidHardwareBufferPropertiesANDROID es
+         , PeekChain es ) => FromCStruct (AndroidHardwareBufferPropertiesANDROID es)
 
 
 data AndroidHardwareBufferUsageANDROID

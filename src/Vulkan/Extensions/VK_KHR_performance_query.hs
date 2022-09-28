@@ -706,21 +706,32 @@ enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR :: forall io
                                                                  -- device we want to get properties for.
                                                                  ("queueFamilyIndex" ::: Word32)
                                                               -> io (Result, ("counters" ::: Vector PerformanceCounterKHR), ("counterDescriptions" ::: Vector PerformanceCounterDescriptionKHR))
-enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR physicalDevice queueFamilyIndex = liftIO . evalContT $ do
+enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR physicalDevice
+                                                                queueFamilyIndex = liftIO . evalContT $ do
   let vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHRPtr = pVkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR is null" Nothing Nothing
   let vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR' = mkVkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHRPtr
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPCounterCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR" (vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR' physicalDevice' (queueFamilyIndex) (pPCounterCount) (nullPtr) (nullPtr))
+  r <- lift $ traceAroundEvent "vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR" (vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR'
+                                                                                                    physicalDevice'
+                                                                                                    (queueFamilyIndex)
+                                                                                                    (pPCounterCount)
+                                                                                                    (nullPtr)
+                                                                                                    (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pCounterCount <- lift $ peek @Word32 pPCounterCount
   pPCounters <- ContT $ bracket (callocBytes @PerformanceCounterKHR ((fromIntegral (pCounterCount)) * 48)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPCounters `advancePtrBytes` (i * 48) :: Ptr PerformanceCounterKHR) . ($ ())) [0..(fromIntegral (pCounterCount)) - 1]
   pPCounterDescriptions <- ContT $ bracket (callocBytes @PerformanceCounterDescriptionKHR ((fromIntegral (pCounterCount)) * 792)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPCounterDescriptions `advancePtrBytes` (i * 792) :: Ptr PerformanceCounterDescriptionKHR) . ($ ())) [0..(fromIntegral (pCounterCount)) - 1]
-  r' <- lift $ traceAroundEvent "vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR" (vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR' physicalDevice' (queueFamilyIndex) (pPCounterCount) ((pPCounters)) ((pPCounterDescriptions)))
+  r' <- lift $ traceAroundEvent "vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR" (vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR'
+                                                                                                     physicalDevice'
+                                                                                                     (queueFamilyIndex)
+                                                                                                     (pPCounterCount)
+                                                                                                     ((pPCounters))
+                                                                                                     ((pPCounterDescriptions)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pCounterCount' <- lift $ peek @Word32 pPCounterCount
   let x33 = pCounterCount'
@@ -773,14 +784,18 @@ getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR :: forall io
                                                          -- 'QueryPoolPerformanceCreateInfoKHR' structure
                                                          ("performanceQueryCreateInfo" ::: QueryPoolPerformanceCreateInfoKHR)
                                                       -> io (("numPasses" ::: Word32))
-getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR physicalDevice performanceQueryCreateInfo = liftIO . evalContT $ do
+getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR physicalDevice
+                                                        performanceQueryCreateInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHRPtr = pVkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR is null" Nothing Nothing
   let vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR' = mkVkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHRPtr
   pPerformanceQueryCreateInfo <- ContT $ withCStruct (performanceQueryCreateInfo)
   pPNumPasses <- ContT $ bracket (callocBytes @Word32 4) free
-  lift $ traceAroundEvent "vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR" (vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR' (physicalDeviceHandle (physicalDevice)) pPerformanceQueryCreateInfo (pPNumPasses))
+  lift $ traceAroundEvent "vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR" (vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR'
+                                                                                       (physicalDeviceHandle (physicalDevice))
+                                                                                       pPerformanceQueryCreateInfo
+                                                                                       (pPNumPasses))
   pNumPasses <- lift $ peek @Word32 pPNumPasses
   pure $ (pNumPasses)
 
@@ -835,7 +850,9 @@ acquireProfilingLockKHR device info = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquireProfilingLockKHR is null" Nothing Nothing
   let vkAcquireProfilingLockKHR' = mkVkAcquireProfilingLockKHR vkAcquireProfilingLockKHRPtr
   pInfo <- ContT $ withCStruct (info)
-  r <- lift $ traceAroundEvent "vkAcquireProfilingLockKHR" (vkAcquireProfilingLockKHR' (deviceHandle (device)) pInfo)
+  r <- lift $ traceAroundEvent "vkAcquireProfilingLockKHR" (vkAcquireProfilingLockKHR'
+                                                              (deviceHandle (device))
+                                                              pInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -873,7 +890,8 @@ releaseProfilingLockKHR device = liftIO $ do
   unless (vkReleaseProfilingLockKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkReleaseProfilingLockKHR is null" Nothing Nothing
   let vkReleaseProfilingLockKHR' = mkVkReleaseProfilingLockKHR vkReleaseProfilingLockKHRPtr
-  traceAroundEvent "vkReleaseProfilingLockKHR" (vkReleaseProfilingLockKHR' (deviceHandle (device)))
+  traceAroundEvent "vkReleaseProfilingLockKHR" (vkReleaseProfilingLockKHR'
+                                                  (deviceHandle (device)))
   pure $ ()
 
 
@@ -962,7 +980,8 @@ instance FromCStruct PhysicalDevicePerformanceQueryFeaturesKHR where
     performanceCounterQueryPools <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     performanceCounterMultipleQueryPools <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ PhysicalDevicePerformanceQueryFeaturesKHR
-             (bool32ToBool performanceCounterQueryPools) (bool32ToBool performanceCounterMultipleQueryPools)
+             (bool32ToBool performanceCounterQueryPools)
+             (bool32ToBool performanceCounterMultipleQueryPools)
 
 instance Storable PhysicalDevicePerformanceQueryFeaturesKHR where
   sizeOf ~_ = 24
@@ -1447,17 +1466,23 @@ newtype PerformanceCounterScopeKHR = PerformanceCounterScopeKHR Int32
 -- | 'PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR' - the performance counter
 -- scope is a single complete command buffer.
 pattern PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR = PerformanceCounterScopeKHR 0
+
 -- | 'PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR' - the performance counter
 -- scope is zero or more complete render passes. The performance query
 -- containing the performance counter /must/ begin and end outside a render
 -- pass instance.
-pattern PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR    = PerformanceCounterScopeKHR 1
+pattern PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR = PerformanceCounterScopeKHR 1
+
 -- | 'PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR' - the performance counter scope
 -- is zero or more commands.
-pattern PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR        = PerformanceCounterScopeKHR 2
-{-# complete PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR,
-             PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR,
-             PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR :: PerformanceCounterScopeKHR #-}
+pattern PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR = PerformanceCounterScopeKHR 2
+
+{-# COMPLETE
+  PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR
+  , PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR
+  , PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR ::
+    PerformanceCounterScopeKHR
+  #-}
 
 conNamePerformanceCounterScopeKHR :: String
 conNamePerformanceCounterScopeKHR = "PerformanceCounterScopeKHR"
@@ -1467,24 +1492,36 @@ enumPrefixPerformanceCounterScopeKHR = "PERFORMANCE_COUNTER_SCOPE_"
 
 showTablePerformanceCounterScopeKHR :: [(PerformanceCounterScopeKHR, String)]
 showTablePerformanceCounterScopeKHR =
-  [ (PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR, "COMMAND_BUFFER_KHR")
-  , (PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR   , "RENDER_PASS_KHR")
-  , (PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR       , "COMMAND_KHR")
+  [
+    ( PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR
+    , "COMMAND_BUFFER_KHR"
+    )
+  ,
+    ( PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR
+    , "RENDER_PASS_KHR"
+    )
+  ,
+    ( PERFORMANCE_COUNTER_SCOPE_COMMAND_KHR
+    , "COMMAND_KHR"
+    )
   ]
 
 instance Show PerformanceCounterScopeKHR where
-  showsPrec = enumShowsPrec enumPrefixPerformanceCounterScopeKHR
-                            showTablePerformanceCounterScopeKHR
-                            conNamePerformanceCounterScopeKHR
-                            (\(PerformanceCounterScopeKHR x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPerformanceCounterScopeKHR
+      showTablePerformanceCounterScopeKHR
+      conNamePerformanceCounterScopeKHR
+      (\(PerformanceCounterScopeKHR x) -> x)
+      (showsPrec 11)
 
 instance Read PerformanceCounterScopeKHR where
-  readPrec = enumReadPrec enumPrefixPerformanceCounterScopeKHR
-                          showTablePerformanceCounterScopeKHR
-                          conNamePerformanceCounterScopeKHR
-                          PerformanceCounterScopeKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPerformanceCounterScopeKHR
+      showTablePerformanceCounterScopeKHR
+      conNamePerformanceCounterScopeKHR
+      PerformanceCounterScopeKHR
 
 -- | VkPerformanceCounterUnitKHR - Supported counter unit types
 --
@@ -1497,48 +1534,62 @@ newtype PerformanceCounterUnitKHR = PerformanceCounterUnitKHR Int32
 
 -- | 'PERFORMANCE_COUNTER_UNIT_GENERIC_KHR' - the performance counter unit is
 -- a generic data point.
-pattern PERFORMANCE_COUNTER_UNIT_GENERIC_KHR          = PerformanceCounterUnitKHR 0
+pattern PERFORMANCE_COUNTER_UNIT_GENERIC_KHR = PerformanceCounterUnitKHR 0
+
 -- | 'PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR' - the performance counter unit
 -- is a percentage (%).
-pattern PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR       = PerformanceCounterUnitKHR 1
+pattern PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR = PerformanceCounterUnitKHR 1
+
 -- | 'PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR' - the performance counter
 -- unit is a value of nanoseconds (ns).
-pattern PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR      = PerformanceCounterUnitKHR 2
+pattern PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR = PerformanceCounterUnitKHR 2
+
 -- | 'PERFORMANCE_COUNTER_UNIT_BYTES_KHR' - the performance counter unit is a
 -- value of bytes.
-pattern PERFORMANCE_COUNTER_UNIT_BYTES_KHR            = PerformanceCounterUnitKHR 3
+pattern PERFORMANCE_COUNTER_UNIT_BYTES_KHR = PerformanceCounterUnitKHR 3
+
 -- | 'PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR' - the performance
 -- counter unit is a value of bytes\/s.
 pattern PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR = PerformanceCounterUnitKHR 4
+
 -- | 'PERFORMANCE_COUNTER_UNIT_KELVIN_KHR' - the performance counter unit is
 -- a temperature reported in Kelvin.
-pattern PERFORMANCE_COUNTER_UNIT_KELVIN_KHR           = PerformanceCounterUnitKHR 5
+pattern PERFORMANCE_COUNTER_UNIT_KELVIN_KHR = PerformanceCounterUnitKHR 5
+
 -- | 'PERFORMANCE_COUNTER_UNIT_WATTS_KHR' - the performance counter unit is a
 -- value of watts (W).
-pattern PERFORMANCE_COUNTER_UNIT_WATTS_KHR            = PerformanceCounterUnitKHR 6
+pattern PERFORMANCE_COUNTER_UNIT_WATTS_KHR = PerformanceCounterUnitKHR 6
+
 -- | 'PERFORMANCE_COUNTER_UNIT_VOLTS_KHR' - the performance counter unit is a
 -- value of volts (V).
-pattern PERFORMANCE_COUNTER_UNIT_VOLTS_KHR            = PerformanceCounterUnitKHR 7
+pattern PERFORMANCE_COUNTER_UNIT_VOLTS_KHR = PerformanceCounterUnitKHR 7
+
 -- | 'PERFORMANCE_COUNTER_UNIT_AMPS_KHR' - the performance counter unit is a
 -- value of amps (A).
-pattern PERFORMANCE_COUNTER_UNIT_AMPS_KHR             = PerformanceCounterUnitKHR 8
+pattern PERFORMANCE_COUNTER_UNIT_AMPS_KHR = PerformanceCounterUnitKHR 8
+
 -- | 'PERFORMANCE_COUNTER_UNIT_HERTZ_KHR' - the performance counter unit is a
 -- value of hertz (Hz).
-pattern PERFORMANCE_COUNTER_UNIT_HERTZ_KHR            = PerformanceCounterUnitKHR 9
+pattern PERFORMANCE_COUNTER_UNIT_HERTZ_KHR = PerformanceCounterUnitKHR 9
+
 -- | 'PERFORMANCE_COUNTER_UNIT_CYCLES_KHR' - the performance counter unit is
 -- a value of cycles.
-pattern PERFORMANCE_COUNTER_UNIT_CYCLES_KHR           = PerformanceCounterUnitKHR 10
-{-# complete PERFORMANCE_COUNTER_UNIT_GENERIC_KHR,
-             PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR,
-             PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR,
-             PERFORMANCE_COUNTER_UNIT_BYTES_KHR,
-             PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR,
-             PERFORMANCE_COUNTER_UNIT_KELVIN_KHR,
-             PERFORMANCE_COUNTER_UNIT_WATTS_KHR,
-             PERFORMANCE_COUNTER_UNIT_VOLTS_KHR,
-             PERFORMANCE_COUNTER_UNIT_AMPS_KHR,
-             PERFORMANCE_COUNTER_UNIT_HERTZ_KHR,
-             PERFORMANCE_COUNTER_UNIT_CYCLES_KHR :: PerformanceCounterUnitKHR #-}
+pattern PERFORMANCE_COUNTER_UNIT_CYCLES_KHR = PerformanceCounterUnitKHR 10
+
+{-# COMPLETE
+  PERFORMANCE_COUNTER_UNIT_GENERIC_KHR
+  , PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR
+  , PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR
+  , PERFORMANCE_COUNTER_UNIT_BYTES_KHR
+  , PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR
+  , PERFORMANCE_COUNTER_UNIT_KELVIN_KHR
+  , PERFORMANCE_COUNTER_UNIT_WATTS_KHR
+  , PERFORMANCE_COUNTER_UNIT_VOLTS_KHR
+  , PERFORMANCE_COUNTER_UNIT_AMPS_KHR
+  , PERFORMANCE_COUNTER_UNIT_HERTZ_KHR
+  , PERFORMANCE_COUNTER_UNIT_CYCLES_KHR ::
+    PerformanceCounterUnitKHR
+  #-}
 
 conNamePerformanceCounterUnitKHR :: String
 conNamePerformanceCounterUnitKHR = "PerformanceCounterUnitKHR"
@@ -1548,32 +1599,68 @@ enumPrefixPerformanceCounterUnitKHR = "PERFORMANCE_COUNTER_UNIT_"
 
 showTablePerformanceCounterUnitKHR :: [(PerformanceCounterUnitKHR, String)]
 showTablePerformanceCounterUnitKHR =
-  [ (PERFORMANCE_COUNTER_UNIT_GENERIC_KHR         , "GENERIC_KHR")
-  , (PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR      , "PERCENTAGE_KHR")
-  , (PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR     , "NANOSECONDS_KHR")
-  , (PERFORMANCE_COUNTER_UNIT_BYTES_KHR           , "BYTES_KHR")
-  , (PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR, "BYTES_PER_SECOND_KHR")
-  , (PERFORMANCE_COUNTER_UNIT_KELVIN_KHR          , "KELVIN_KHR")
-  , (PERFORMANCE_COUNTER_UNIT_WATTS_KHR           , "WATTS_KHR")
-  , (PERFORMANCE_COUNTER_UNIT_VOLTS_KHR           , "VOLTS_KHR")
-  , (PERFORMANCE_COUNTER_UNIT_AMPS_KHR            , "AMPS_KHR")
-  , (PERFORMANCE_COUNTER_UNIT_HERTZ_KHR           , "HERTZ_KHR")
-  , (PERFORMANCE_COUNTER_UNIT_CYCLES_KHR          , "CYCLES_KHR")
+  [
+    ( PERFORMANCE_COUNTER_UNIT_GENERIC_KHR
+    , "GENERIC_KHR"
+    )
+  ,
+    ( PERFORMANCE_COUNTER_UNIT_PERCENTAGE_KHR
+    , "PERCENTAGE_KHR"
+    )
+  ,
+    ( PERFORMANCE_COUNTER_UNIT_NANOSECONDS_KHR
+    , "NANOSECONDS_KHR"
+    )
+  ,
+    ( PERFORMANCE_COUNTER_UNIT_BYTES_KHR
+    , "BYTES_KHR"
+    )
+  ,
+    ( PERFORMANCE_COUNTER_UNIT_BYTES_PER_SECOND_KHR
+    , "BYTES_PER_SECOND_KHR"
+    )
+  ,
+    ( PERFORMANCE_COUNTER_UNIT_KELVIN_KHR
+    , "KELVIN_KHR"
+    )
+  ,
+    ( PERFORMANCE_COUNTER_UNIT_WATTS_KHR
+    , "WATTS_KHR"
+    )
+  ,
+    ( PERFORMANCE_COUNTER_UNIT_VOLTS_KHR
+    , "VOLTS_KHR"
+    )
+  ,
+    ( PERFORMANCE_COUNTER_UNIT_AMPS_KHR
+    , "AMPS_KHR"
+    )
+  ,
+    ( PERFORMANCE_COUNTER_UNIT_HERTZ_KHR
+    , "HERTZ_KHR"
+    )
+  ,
+    ( PERFORMANCE_COUNTER_UNIT_CYCLES_KHR
+    , "CYCLES_KHR"
+    )
   ]
 
 instance Show PerformanceCounterUnitKHR where
-  showsPrec = enumShowsPrec enumPrefixPerformanceCounterUnitKHR
-                            showTablePerformanceCounterUnitKHR
-                            conNamePerformanceCounterUnitKHR
-                            (\(PerformanceCounterUnitKHR x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPerformanceCounterUnitKHR
+      showTablePerformanceCounterUnitKHR
+      conNamePerformanceCounterUnitKHR
+      (\(PerformanceCounterUnitKHR x) -> x)
+      (showsPrec 11)
 
 instance Read PerformanceCounterUnitKHR where
-  readPrec = enumReadPrec enumPrefixPerformanceCounterUnitKHR
-                          showTablePerformanceCounterUnitKHR
-                          conNamePerformanceCounterUnitKHR
-                          PerformanceCounterUnitKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPerformanceCounterUnitKHR
+      showTablePerformanceCounterUnitKHR
+      conNamePerformanceCounterUnitKHR
+      PerformanceCounterUnitKHR
 
 -- | VkPerformanceCounterStorageKHR - Supported counter storage types
 --
@@ -1586,28 +1673,37 @@ newtype PerformanceCounterStorageKHR = PerformanceCounterStorageKHR Int32
 
 -- | 'PERFORMANCE_COUNTER_STORAGE_INT32_KHR' - the performance counter
 -- storage is a 32-bit signed integer.
-pattern PERFORMANCE_COUNTER_STORAGE_INT32_KHR   = PerformanceCounterStorageKHR 0
+pattern PERFORMANCE_COUNTER_STORAGE_INT32_KHR = PerformanceCounterStorageKHR 0
+
 -- | 'PERFORMANCE_COUNTER_STORAGE_INT64_KHR' - the performance counter
 -- storage is a 64-bit signed integer.
-pattern PERFORMANCE_COUNTER_STORAGE_INT64_KHR   = PerformanceCounterStorageKHR 1
+pattern PERFORMANCE_COUNTER_STORAGE_INT64_KHR = PerformanceCounterStorageKHR 1
+
 -- | 'PERFORMANCE_COUNTER_STORAGE_UINT32_KHR' - the performance counter
 -- storage is a 32-bit unsigned integer.
-pattern PERFORMANCE_COUNTER_STORAGE_UINT32_KHR  = PerformanceCounterStorageKHR 2
+pattern PERFORMANCE_COUNTER_STORAGE_UINT32_KHR = PerformanceCounterStorageKHR 2
+
 -- | 'PERFORMANCE_COUNTER_STORAGE_UINT64_KHR' - the performance counter
 -- storage is a 64-bit unsigned integer.
-pattern PERFORMANCE_COUNTER_STORAGE_UINT64_KHR  = PerformanceCounterStorageKHR 3
+pattern PERFORMANCE_COUNTER_STORAGE_UINT64_KHR = PerformanceCounterStorageKHR 3
+
 -- | 'PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR' - the performance counter
 -- storage is a 32-bit floating-point.
 pattern PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR = PerformanceCounterStorageKHR 4
+
 -- | 'PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR' - the performance counter
 -- storage is a 64-bit floating-point.
 pattern PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR = PerformanceCounterStorageKHR 5
-{-# complete PERFORMANCE_COUNTER_STORAGE_INT32_KHR,
-             PERFORMANCE_COUNTER_STORAGE_INT64_KHR,
-             PERFORMANCE_COUNTER_STORAGE_UINT32_KHR,
-             PERFORMANCE_COUNTER_STORAGE_UINT64_KHR,
-             PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR,
-             PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR :: PerformanceCounterStorageKHR #-}
+
+{-# COMPLETE
+  PERFORMANCE_COUNTER_STORAGE_INT32_KHR
+  , PERFORMANCE_COUNTER_STORAGE_INT64_KHR
+  , PERFORMANCE_COUNTER_STORAGE_UINT32_KHR
+  , PERFORMANCE_COUNTER_STORAGE_UINT64_KHR
+  , PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR
+  , PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR ::
+    PerformanceCounterStorageKHR
+  #-}
 
 conNamePerformanceCounterStorageKHR :: String
 conNamePerformanceCounterStorageKHR = "PerformanceCounterStorageKHR"
@@ -1617,27 +1713,48 @@ enumPrefixPerformanceCounterStorageKHR = "PERFORMANCE_COUNTER_STORAGE_"
 
 showTablePerformanceCounterStorageKHR :: [(PerformanceCounterStorageKHR, String)]
 showTablePerformanceCounterStorageKHR =
-  [ (PERFORMANCE_COUNTER_STORAGE_INT32_KHR  , "INT32_KHR")
-  , (PERFORMANCE_COUNTER_STORAGE_INT64_KHR  , "INT64_KHR")
-  , (PERFORMANCE_COUNTER_STORAGE_UINT32_KHR , "UINT32_KHR")
-  , (PERFORMANCE_COUNTER_STORAGE_UINT64_KHR , "UINT64_KHR")
-  , (PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR, "FLOAT32_KHR")
-  , (PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR, "FLOAT64_KHR")
+  [
+    ( PERFORMANCE_COUNTER_STORAGE_INT32_KHR
+    , "INT32_KHR"
+    )
+  ,
+    ( PERFORMANCE_COUNTER_STORAGE_INT64_KHR
+    , "INT64_KHR"
+    )
+  ,
+    ( PERFORMANCE_COUNTER_STORAGE_UINT32_KHR
+    , "UINT32_KHR"
+    )
+  ,
+    ( PERFORMANCE_COUNTER_STORAGE_UINT64_KHR
+    , "UINT64_KHR"
+    )
+  ,
+    ( PERFORMANCE_COUNTER_STORAGE_FLOAT32_KHR
+    , "FLOAT32_KHR"
+    )
+  ,
+    ( PERFORMANCE_COUNTER_STORAGE_FLOAT64_KHR
+    , "FLOAT64_KHR"
+    )
   ]
 
 instance Show PerformanceCounterStorageKHR where
-  showsPrec = enumShowsPrec enumPrefixPerformanceCounterStorageKHR
-                            showTablePerformanceCounterStorageKHR
-                            conNamePerformanceCounterStorageKHR
-                            (\(PerformanceCounterStorageKHR x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPerformanceCounterStorageKHR
+      showTablePerformanceCounterStorageKHR
+      conNamePerformanceCounterStorageKHR
+      (\(PerformanceCounterStorageKHR x) -> x)
+      (showsPrec 11)
 
 instance Read PerformanceCounterStorageKHR where
-  readPrec = enumReadPrec enumPrefixPerformanceCounterStorageKHR
-                          showTablePerformanceCounterStorageKHR
-                          conNamePerformanceCounterStorageKHR
-                          PerformanceCounterStorageKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPerformanceCounterStorageKHR
+      showTablePerformanceCounterStorageKHR
+      conNamePerformanceCounterStorageKHR
+      PerformanceCounterStorageKHR
 
 type PerformanceCounterDescriptionFlagsKHR = PerformanceCounterDescriptionFlagBitsKHR
 
@@ -1654,13 +1771,12 @@ newtype PerformanceCounterDescriptionFlagBitsKHR = PerformanceCounterDescription
 -- | 'PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR'
 -- specifies that recording the counter /may/ have a noticeable performance
 -- impact.
-pattern PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR =
-  PerformanceCounterDescriptionFlagBitsKHR 0x00000001
+pattern PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR = PerformanceCounterDescriptionFlagBitsKHR 0x00000001
+
 -- | 'PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR'
 -- specifies that concurrently recording the counter while other submitted
 -- command buffers are running /may/ impact the accuracy of the recording.
-pattern PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR =
-  PerformanceCounterDescriptionFlagBitsKHR 0x00000002
+pattern PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR = PerformanceCounterDescriptionFlagBitsKHR 0x00000002
 
 conNamePerformanceCounterDescriptionFlagBitsKHR :: String
 conNamePerformanceCounterDescriptionFlagBitsKHR = "PerformanceCounterDescriptionFlagBitsKHR"
@@ -1670,23 +1786,32 @@ enumPrefixPerformanceCounterDescriptionFlagBitsKHR = "PERFORMANCE_COUNTER_DESCRI
 
 showTablePerformanceCounterDescriptionFlagBitsKHR :: [(PerformanceCounterDescriptionFlagBitsKHR, String)]
 showTablePerformanceCounterDescriptionFlagBitsKHR =
-  [ (PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR, "PERFORMANCE_IMPACTING_BIT_KHR")
-  , (PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR, "CONCURRENTLY_IMPACTED_BIT_KHR")
+  [
+    ( PERFORMANCE_COUNTER_DESCRIPTION_PERFORMANCE_IMPACTING_BIT_KHR
+    , "PERFORMANCE_IMPACTING_BIT_KHR"
+    )
+  ,
+    ( PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR
+    , "CONCURRENTLY_IMPACTED_BIT_KHR"
+    )
   ]
 
 instance Show PerformanceCounterDescriptionFlagBitsKHR where
-  showsPrec = enumShowsPrec enumPrefixPerformanceCounterDescriptionFlagBitsKHR
-                            showTablePerformanceCounterDescriptionFlagBitsKHR
-                            conNamePerformanceCounterDescriptionFlagBitsKHR
-                            (\(PerformanceCounterDescriptionFlagBitsKHR x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPerformanceCounterDescriptionFlagBitsKHR
+      showTablePerformanceCounterDescriptionFlagBitsKHR
+      conNamePerformanceCounterDescriptionFlagBitsKHR
+      (\(PerformanceCounterDescriptionFlagBitsKHR x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read PerformanceCounterDescriptionFlagBitsKHR where
-  readPrec = enumReadPrec enumPrefixPerformanceCounterDescriptionFlagBitsKHR
-                          showTablePerformanceCounterDescriptionFlagBitsKHR
-                          conNamePerformanceCounterDescriptionFlagBitsKHR
-                          PerformanceCounterDescriptionFlagBitsKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPerformanceCounterDescriptionFlagBitsKHR
+      showTablePerformanceCounterDescriptionFlagBitsKHR
+      conNamePerformanceCounterDescriptionFlagBitsKHR
+      PerformanceCounterDescriptionFlagBitsKHR
 
 type AcquireProfilingLockFlagsKHR = AcquireProfilingLockFlagBitsKHR
 
@@ -1699,8 +1824,6 @@ type AcquireProfilingLockFlagsKHR = AcquireProfilingLockFlagBitsKHR
 newtype AcquireProfilingLockFlagBitsKHR = AcquireProfilingLockFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameAcquireProfilingLockFlagBitsKHR :: String
 conNameAcquireProfilingLockFlagBitsKHR = "AcquireProfilingLockFlagBitsKHR"
 
@@ -1711,18 +1834,21 @@ showTableAcquireProfilingLockFlagBitsKHR :: [(AcquireProfilingLockFlagBitsKHR, S
 showTableAcquireProfilingLockFlagBitsKHR = []
 
 instance Show AcquireProfilingLockFlagBitsKHR where
-  showsPrec = enumShowsPrec enumPrefixAcquireProfilingLockFlagBitsKHR
-                            showTableAcquireProfilingLockFlagBitsKHR
-                            conNameAcquireProfilingLockFlagBitsKHR
-                            (\(AcquireProfilingLockFlagBitsKHR x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixAcquireProfilingLockFlagBitsKHR
+      showTableAcquireProfilingLockFlagBitsKHR
+      conNameAcquireProfilingLockFlagBitsKHR
+      (\(AcquireProfilingLockFlagBitsKHR x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read AcquireProfilingLockFlagBitsKHR where
-  readPrec = enumReadPrec enumPrefixAcquireProfilingLockFlagBitsKHR
-                          showTableAcquireProfilingLockFlagBitsKHR
-                          conNameAcquireProfilingLockFlagBitsKHR
-                          AcquireProfilingLockFlagBitsKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixAcquireProfilingLockFlagBitsKHR
+      showTableAcquireProfilingLockFlagBitsKHR
+      conNameAcquireProfilingLockFlagBitsKHR
+      AcquireProfilingLockFlagBitsKHR
 
 type KHR_PERFORMANCE_QUERY_SPEC_VERSION = 1
 

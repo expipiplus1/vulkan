@@ -351,7 +351,26 @@ instance FromCStruct PhysicalDeviceDescriptorIndexingFeatures where
     descriptorBindingVariableDescriptorCount <- peek @Bool32 ((p `plusPtr` 88 :: Ptr Bool32))
     runtimeDescriptorArray <- peek @Bool32 ((p `plusPtr` 92 :: Ptr Bool32))
     pure $ PhysicalDeviceDescriptorIndexingFeatures
-             (bool32ToBool shaderInputAttachmentArrayDynamicIndexing) (bool32ToBool shaderUniformTexelBufferArrayDynamicIndexing) (bool32ToBool shaderStorageTexelBufferArrayDynamicIndexing) (bool32ToBool shaderUniformBufferArrayNonUniformIndexing) (bool32ToBool shaderSampledImageArrayNonUniformIndexing) (bool32ToBool shaderStorageBufferArrayNonUniformIndexing) (bool32ToBool shaderStorageImageArrayNonUniformIndexing) (bool32ToBool shaderInputAttachmentArrayNonUniformIndexing) (bool32ToBool shaderUniformTexelBufferArrayNonUniformIndexing) (bool32ToBool shaderStorageTexelBufferArrayNonUniformIndexing) (bool32ToBool descriptorBindingUniformBufferUpdateAfterBind) (bool32ToBool descriptorBindingSampledImageUpdateAfterBind) (bool32ToBool descriptorBindingStorageImageUpdateAfterBind) (bool32ToBool descriptorBindingStorageBufferUpdateAfterBind) (bool32ToBool descriptorBindingUniformTexelBufferUpdateAfterBind) (bool32ToBool descriptorBindingStorageTexelBufferUpdateAfterBind) (bool32ToBool descriptorBindingUpdateUnusedWhilePending) (bool32ToBool descriptorBindingPartiallyBound) (bool32ToBool descriptorBindingVariableDescriptorCount) (bool32ToBool runtimeDescriptorArray)
+             (bool32ToBool shaderInputAttachmentArrayDynamicIndexing)
+             (bool32ToBool shaderUniformTexelBufferArrayDynamicIndexing)
+             (bool32ToBool shaderStorageTexelBufferArrayDynamicIndexing)
+             (bool32ToBool shaderUniformBufferArrayNonUniformIndexing)
+             (bool32ToBool shaderSampledImageArrayNonUniformIndexing)
+             (bool32ToBool shaderStorageBufferArrayNonUniformIndexing)
+             (bool32ToBool shaderStorageImageArrayNonUniformIndexing)
+             (bool32ToBool shaderInputAttachmentArrayNonUniformIndexing)
+             (bool32ToBool shaderUniformTexelBufferArrayNonUniformIndexing)
+             (bool32ToBool shaderStorageTexelBufferArrayNonUniformIndexing)
+             (bool32ToBool descriptorBindingUniformBufferUpdateAfterBind)
+             (bool32ToBool descriptorBindingSampledImageUpdateAfterBind)
+             (bool32ToBool descriptorBindingStorageImageUpdateAfterBind)
+             (bool32ToBool descriptorBindingStorageBufferUpdateAfterBind)
+             (bool32ToBool descriptorBindingUniformTexelBufferUpdateAfterBind)
+             (bool32ToBool descriptorBindingStorageTexelBufferUpdateAfterBind)
+             (bool32ToBool descriptorBindingUpdateUnusedWhilePending)
+             (bool32ToBool descriptorBindingPartiallyBound)
+             (bool32ToBool descriptorBindingVariableDescriptorCount)
+             (bool32ToBool runtimeDescriptorArray)
 
 instance Storable PhysicalDeviceDescriptorIndexingFeatures where
   sizeOf ~_ = 96
@@ -682,7 +701,29 @@ instance FromCStruct PhysicalDeviceDescriptorIndexingProperties where
     maxDescriptorSetUpdateAfterBindStorageImages <- peek @Word32 ((p `plusPtr` 100 :: Ptr Word32))
     maxDescriptorSetUpdateAfterBindInputAttachments <- peek @Word32 ((p `plusPtr` 104 :: Ptr Word32))
     pure $ PhysicalDeviceDescriptorIndexingProperties
-             maxUpdateAfterBindDescriptorsInAllPools (bool32ToBool shaderUniformBufferArrayNonUniformIndexingNative) (bool32ToBool shaderSampledImageArrayNonUniformIndexingNative) (bool32ToBool shaderStorageBufferArrayNonUniformIndexingNative) (bool32ToBool shaderStorageImageArrayNonUniformIndexingNative) (bool32ToBool shaderInputAttachmentArrayNonUniformIndexingNative) (bool32ToBool robustBufferAccessUpdateAfterBind) (bool32ToBool quadDivergentImplicitLod) maxPerStageDescriptorUpdateAfterBindSamplers maxPerStageDescriptorUpdateAfterBindUniformBuffers maxPerStageDescriptorUpdateAfterBindStorageBuffers maxPerStageDescriptorUpdateAfterBindSampledImages maxPerStageDescriptorUpdateAfterBindStorageImages maxPerStageDescriptorUpdateAfterBindInputAttachments maxPerStageUpdateAfterBindResources maxDescriptorSetUpdateAfterBindSamplers maxDescriptorSetUpdateAfterBindUniformBuffers maxDescriptorSetUpdateAfterBindUniformBuffersDynamic maxDescriptorSetUpdateAfterBindStorageBuffers maxDescriptorSetUpdateAfterBindStorageBuffersDynamic maxDescriptorSetUpdateAfterBindSampledImages maxDescriptorSetUpdateAfterBindStorageImages maxDescriptorSetUpdateAfterBindInputAttachments
+             maxUpdateAfterBindDescriptorsInAllPools
+             (bool32ToBool shaderUniformBufferArrayNonUniformIndexingNative)
+             (bool32ToBool shaderSampledImageArrayNonUniformIndexingNative)
+             (bool32ToBool shaderStorageBufferArrayNonUniformIndexingNative)
+             (bool32ToBool shaderStorageImageArrayNonUniformIndexingNative)
+             (bool32ToBool shaderInputAttachmentArrayNonUniformIndexingNative)
+             (bool32ToBool robustBufferAccessUpdateAfterBind)
+             (bool32ToBool quadDivergentImplicitLod)
+             maxPerStageDescriptorUpdateAfterBindSamplers
+             maxPerStageDescriptorUpdateAfterBindUniformBuffers
+             maxPerStageDescriptorUpdateAfterBindStorageBuffers
+             maxPerStageDescriptorUpdateAfterBindSampledImages
+             maxPerStageDescriptorUpdateAfterBindStorageImages
+             maxPerStageDescriptorUpdateAfterBindInputAttachments
+             maxPerStageUpdateAfterBindResources
+             maxDescriptorSetUpdateAfterBindSamplers
+             maxDescriptorSetUpdateAfterBindUniformBuffers
+             maxDescriptorSetUpdateAfterBindUniformBuffersDynamic
+             maxDescriptorSetUpdateAfterBindStorageBuffers
+             maxDescriptorSetUpdateAfterBindStorageBuffersDynamic
+             maxDescriptorSetUpdateAfterBindSampledImages
+             maxDescriptorSetUpdateAfterBindStorageImages
+             maxDescriptorSetUpdateAfterBindInputAttachments
 
 instance Storable PhysicalDeviceDescriptorIndexingProperties where
   sizeOf ~_ = 112

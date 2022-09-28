@@ -34,7 +34,8 @@ newtype AttachmentLoadOp = AttachmentLoadOp Int32
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT'.
 -- For attachments with a color format, this uses the access type
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_READ_BIT'.
-pattern ATTACHMENT_LOAD_OP_LOAD      = AttachmentLoadOp 0
+pattern ATTACHMENT_LOAD_OP_LOAD = AttachmentLoadOp 0
+
 -- | 'ATTACHMENT_LOAD_OP_CLEAR' specifies that the contents within the render
 -- area will be cleared to a uniform value, which is specified when a
 -- render pass instance is begun. For attachments with a depth\/stencil
@@ -42,7 +43,8 @@ pattern ATTACHMENT_LOAD_OP_LOAD      = AttachmentLoadOp 0
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT'.
 -- For attachments with a color format, this uses the access type
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_WRITE_BIT'.
-pattern ATTACHMENT_LOAD_OP_CLEAR     = AttachmentLoadOp 1
+pattern ATTACHMENT_LOAD_OP_CLEAR = AttachmentLoadOp 1
+
 -- | 'ATTACHMENT_LOAD_OP_DONT_CARE' specifies that the previous contents
 -- within the area need not be preserved; the contents of the attachment
 -- will be undefined inside the render area. For attachments with a
@@ -51,15 +53,20 @@ pattern ATTACHMENT_LOAD_OP_CLEAR     = AttachmentLoadOp 1
 -- For attachments with a color format, this uses the access type
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_COLOR_ATTACHMENT_WRITE_BIT'.
 pattern ATTACHMENT_LOAD_OP_DONT_CARE = AttachmentLoadOp 2
+
 -- | 'ATTACHMENT_LOAD_OP_NONE_EXT' specifies that the previous contents of
 -- the image within the render area will be preserved, but the contents of
 -- the attachment will be undefined inside the render pass. No access type
 -- is used as the image is not accessed.
-pattern ATTACHMENT_LOAD_OP_NONE_EXT  = AttachmentLoadOp 1000400000
-{-# complete ATTACHMENT_LOAD_OP_LOAD,
-             ATTACHMENT_LOAD_OP_CLEAR,
-             ATTACHMENT_LOAD_OP_DONT_CARE,
-             ATTACHMENT_LOAD_OP_NONE_EXT :: AttachmentLoadOp #-}
+pattern ATTACHMENT_LOAD_OP_NONE_EXT = AttachmentLoadOp 1000400000
+
+{-# COMPLETE
+  ATTACHMENT_LOAD_OP_LOAD
+  , ATTACHMENT_LOAD_OP_CLEAR
+  , ATTACHMENT_LOAD_OP_DONT_CARE
+  , ATTACHMENT_LOAD_OP_NONE_EXT ::
+    AttachmentLoadOp
+  #-}
 
 conNameAttachmentLoadOp :: String
 conNameAttachmentLoadOp = "AttachmentLoadOp"
@@ -69,19 +76,25 @@ enumPrefixAttachmentLoadOp = "ATTACHMENT_LOAD_OP_"
 
 showTableAttachmentLoadOp :: [(AttachmentLoadOp, String)]
 showTableAttachmentLoadOp =
-  [ (ATTACHMENT_LOAD_OP_LOAD     , "LOAD")
-  , (ATTACHMENT_LOAD_OP_CLEAR    , "CLEAR")
+  [ (ATTACHMENT_LOAD_OP_LOAD, "LOAD")
+  , (ATTACHMENT_LOAD_OP_CLEAR, "CLEAR")
   , (ATTACHMENT_LOAD_OP_DONT_CARE, "DONT_CARE")
-  , (ATTACHMENT_LOAD_OP_NONE_EXT , "NONE_EXT")
+  , (ATTACHMENT_LOAD_OP_NONE_EXT, "NONE_EXT")
   ]
 
 instance Show AttachmentLoadOp where
-  showsPrec = enumShowsPrec enumPrefixAttachmentLoadOp
-                            showTableAttachmentLoadOp
-                            conNameAttachmentLoadOp
-                            (\(AttachmentLoadOp x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixAttachmentLoadOp
+      showTableAttachmentLoadOp
+      conNameAttachmentLoadOp
+      (\(AttachmentLoadOp x) -> x)
+      (showsPrec 11)
 
 instance Read AttachmentLoadOp where
-  readPrec = enumReadPrec enumPrefixAttachmentLoadOp showTableAttachmentLoadOp conNameAttachmentLoadOp AttachmentLoadOp
-
+  readPrec =
+    enumReadPrec
+      enumPrefixAttachmentLoadOp
+      showTableAttachmentLoadOp
+      conNameAttachmentLoadOp
+      AttachmentLoadOp

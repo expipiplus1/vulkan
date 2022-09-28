@@ -280,13 +280,18 @@ getPipelinePropertiesEXT :: forall io
                             -- pipeline properties will be written.
                             ("pipelineProperties" ::: Ptr BaseOutStructure)
                          -> io ()
-getPipelinePropertiesEXT device pipelineInfo pipelineProperties = liftIO . evalContT $ do
+getPipelinePropertiesEXT device
+                           pipelineInfo
+                           pipelineProperties = liftIO . evalContT $ do
   let vkGetPipelinePropertiesEXTPtr = pVkGetPipelinePropertiesEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetPipelinePropertiesEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPipelinePropertiesEXT is null" Nothing Nothing
   let vkGetPipelinePropertiesEXT' = mkVkGetPipelinePropertiesEXT vkGetPipelinePropertiesEXTPtr
   pPipelineInfo <- ContT $ withCStruct (pipelineInfo)
-  r <- lift $ traceAroundEvent "vkGetPipelinePropertiesEXT" (vkGetPipelinePropertiesEXT' (deviceHandle (device)) pPipelineInfo (pipelineProperties))
+  r <- lift $ traceAroundEvent "vkGetPipelinePropertiesEXT" (vkGetPipelinePropertiesEXT'
+                                                               (deviceHandle (device))
+                                                               pPipelineInfo
+                                                               (pipelineProperties))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 

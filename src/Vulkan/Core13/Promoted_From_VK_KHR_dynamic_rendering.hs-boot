@@ -46,6 +46,7 @@ instance Show RenderingAttachmentInfo
 type role RenderingInfo nominal
 data RenderingInfo (es :: [Type])
 
-instance (Extendss RenderingInfo es, PokeChain es) => ToCStruct (RenderingInfo es)
+instance ( Extendss RenderingInfo es
+         , PokeChain es ) => ToCStruct (RenderingInfo es)
 instance Show (Chain es) => Show (RenderingInfo es)
 

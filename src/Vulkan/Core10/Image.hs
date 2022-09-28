@@ -188,7 +188,11 @@ createImage device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPImage <- ContT $ bracket (callocBytes @Image 8) free
-  r <- lift $ traceAroundEvent "vkCreateImage" (vkCreateImage' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPImage))
+  r <- lift $ traceAroundEvent "vkCreateImage" (vkCreateImage'
+                                                  (deviceHandle (device))
+                                                  (forgetExtensions pCreateInfo)
+                                                  pAllocator
+                                                  (pPImage))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pImage <- lift $ peek @Image pPImage
   pure $ (pImage)
@@ -279,7 +283,10 @@ destroyImage device image allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyImage" (vkDestroyImage' (deviceHandle (device)) (image) pAllocator)
+  lift $ traceAroundEvent "vkDestroyImage" (vkDestroyImage'
+                                              (deviceHandle (device))
+                                              (image)
+                                              pAllocator)
   pure $ ()
 
 
@@ -440,7 +447,11 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
   let vkGetImageSubresourceLayout' = mkVkGetImageSubresourceLayout vkGetImageSubresourceLayoutPtr
   pSubresource <- ContT $ withCStruct (subresource)
   pPLayout <- ContT (withZeroCStruct @SubresourceLayout)
-  lift $ traceAroundEvent "vkGetImageSubresourceLayout" (vkGetImageSubresourceLayout' (deviceHandle (device)) (image) pSubresource (pPLayout))
+  lift $ traceAroundEvent "vkGetImageSubresourceLayout" (vkGetImageSubresourceLayout'
+                                                           (deviceHandle (device))
+                                                           (image)
+                                                           pSubresource
+                                                           (pPLayout))
   pLayout <- lift $ peekCStruct @SubresourceLayout pPLayout
   pure $ (pLayout)
 
@@ -1683,7 +1694,8 @@ instance Extensible ImageCreateInfo where
     | Just Refl <- eqT @e @DedicatedAllocationImageCreateInfoNV = Just f
     | otherwise = Nothing
 
-instance (Extendss ImageCreateInfo es, PokeChain es) => ToCStruct (ImageCreateInfo es) where
+instance ( Extendss ImageCreateInfo es
+         , PokeChain es ) => ToCStruct (ImageCreateInfo es) where
   withCStruct x f = allocaBytes 88 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_CREATE_INFO)
@@ -1723,7 +1735,8 @@ instance (Extendss ImageCreateInfo es, PokeChain es) => ToCStruct (ImageCreateIn
     lift $ poke ((p `plusPtr` 80 :: Ptr ImageLayout)) (zero)
     lift $ f
 
-instance (Extendss ImageCreateInfo es, PeekChain es) => FromCStruct (ImageCreateInfo es) where
+instance ( Extendss ImageCreateInfo es
+         , PeekChain es ) => FromCStruct (ImageCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -1742,7 +1755,19 @@ instance (Extendss ImageCreateInfo es, PeekChain es) => FromCStruct (ImageCreate
     pQueueFamilyIndices' <- generateM (fromIntegral queueFamilyIndexCount) (\i -> peek @Word32 ((pQueueFamilyIndices `advancePtrBytes` (4 * (i)) :: Ptr Word32)))
     initialLayout <- peek @ImageLayout ((p `plusPtr` 80 :: Ptr ImageLayout))
     pure $ ImageCreateInfo
-             next flags imageType format extent mipLevels arrayLayers samples tiling usage sharingMode pQueueFamilyIndices' initialLayout
+             next
+             flags
+             imageType
+             format
+             extent
+             mipLevels
+             arrayLayers
+             samples
+             tiling
+             usage
+             sharingMode
+             pQueueFamilyIndices'
+             initialLayout
 
 instance es ~ '[] => Zero (ImageCreateInfo es) where
   zero = ImageCreateInfo

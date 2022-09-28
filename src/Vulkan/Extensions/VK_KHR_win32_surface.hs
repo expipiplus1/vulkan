@@ -360,7 +360,11 @@ createWin32SurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSurface <- ContT $ bracket (callocBytes @SurfaceKHR 8) free
-  r <- lift $ traceAroundEvent "vkCreateWin32SurfaceKHR" (vkCreateWin32SurfaceKHR' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface))
+  r <- lift $ traceAroundEvent "vkCreateWin32SurfaceKHR" (vkCreateWin32SurfaceKHR'
+                                                            (instanceHandle (instance'))
+                                                            pCreateInfo
+                                                            pAllocator
+                                                            (pPSurface))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurface <- lift $ peek @SurfaceKHR pPSurface
   pure $ (pSurface)
@@ -404,12 +408,15 @@ getPhysicalDeviceWin32PresentationSupportKHR :: forall io
                                                 -- for the given @physicalDevice@
                                                 ("queueFamilyIndex" ::: Word32)
                                              -> io (Bool)
-getPhysicalDeviceWin32PresentationSupportKHR physicalDevice queueFamilyIndex = liftIO $ do
+getPhysicalDeviceWin32PresentationSupportKHR physicalDevice
+                                               queueFamilyIndex = liftIO $ do
   let vkGetPhysicalDeviceWin32PresentationSupportKHRPtr = pVkGetPhysicalDeviceWin32PresentationSupportKHR (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   unless (vkGetPhysicalDeviceWin32PresentationSupportKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceWin32PresentationSupportKHR is null" Nothing Nothing
   let vkGetPhysicalDeviceWin32PresentationSupportKHR' = mkVkGetPhysicalDeviceWin32PresentationSupportKHR vkGetPhysicalDeviceWin32PresentationSupportKHRPtr
-  r <- traceAroundEvent "vkGetPhysicalDeviceWin32PresentationSupportKHR" (vkGetPhysicalDeviceWin32PresentationSupportKHR' (physicalDeviceHandle (physicalDevice)) (queueFamilyIndex))
+  r <- traceAroundEvent "vkGetPhysicalDeviceWin32PresentationSupportKHR" (vkGetPhysicalDeviceWin32PresentationSupportKHR'
+                                                                            (physicalDeviceHandle (physicalDevice))
+                                                                            (queueFamilyIndex))
   pure $ ((bool32ToBool r))
 
 
@@ -500,8 +507,6 @@ instance Zero Win32SurfaceCreateInfoKHR where
 newtype Win32SurfaceCreateFlagsKHR = Win32SurfaceCreateFlagsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameWin32SurfaceCreateFlagsKHR :: String
 conNameWin32SurfaceCreateFlagsKHR = "Win32SurfaceCreateFlagsKHR"
 
@@ -512,18 +517,21 @@ showTableWin32SurfaceCreateFlagsKHR :: [(Win32SurfaceCreateFlagsKHR, String)]
 showTableWin32SurfaceCreateFlagsKHR = []
 
 instance Show Win32SurfaceCreateFlagsKHR where
-  showsPrec = enumShowsPrec enumPrefixWin32SurfaceCreateFlagsKHR
-                            showTableWin32SurfaceCreateFlagsKHR
-                            conNameWin32SurfaceCreateFlagsKHR
-                            (\(Win32SurfaceCreateFlagsKHR x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixWin32SurfaceCreateFlagsKHR
+      showTableWin32SurfaceCreateFlagsKHR
+      conNameWin32SurfaceCreateFlagsKHR
+      (\(Win32SurfaceCreateFlagsKHR x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read Win32SurfaceCreateFlagsKHR where
-  readPrec = enumReadPrec enumPrefixWin32SurfaceCreateFlagsKHR
-                          showTableWin32SurfaceCreateFlagsKHR
-                          conNameWin32SurfaceCreateFlagsKHR
-                          Win32SurfaceCreateFlagsKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixWin32SurfaceCreateFlagsKHR
+      showTableWin32SurfaceCreateFlagsKHR
+      conNameWin32SurfaceCreateFlagsKHR
+      Win32SurfaceCreateFlagsKHR
 
 type KHR_WIN32_SURFACE_SPEC_VERSION = 6
 

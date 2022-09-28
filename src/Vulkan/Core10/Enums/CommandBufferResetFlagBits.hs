@@ -44,18 +44,26 @@ enumPrefixCommandBufferResetFlagBits :: String
 enumPrefixCommandBufferResetFlagBits = "COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT"
 
 showTableCommandBufferResetFlagBits :: [(CommandBufferResetFlagBits, String)]
-showTableCommandBufferResetFlagBits = [(COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT, "")]
+showTableCommandBufferResetFlagBits =
+  [
+    ( COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT
+    , ""
+    )
+  ]
 
 instance Show CommandBufferResetFlagBits where
-  showsPrec = enumShowsPrec enumPrefixCommandBufferResetFlagBits
-                            showTableCommandBufferResetFlagBits
-                            conNameCommandBufferResetFlagBits
-                            (\(CommandBufferResetFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixCommandBufferResetFlagBits
+      showTableCommandBufferResetFlagBits
+      conNameCommandBufferResetFlagBits
+      (\(CommandBufferResetFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read CommandBufferResetFlagBits where
-  readPrec = enumReadPrec enumPrefixCommandBufferResetFlagBits
-                          showTableCommandBufferResetFlagBits
-                          conNameCommandBufferResetFlagBits
-                          CommandBufferResetFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixCommandBufferResetFlagBits
+      showTableCommandBufferResetFlagBits
+      conNameCommandBufferResetFlagBits
+      CommandBufferResetFlagBits

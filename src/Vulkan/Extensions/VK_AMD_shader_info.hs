@@ -347,14 +347,27 @@ getShaderInfoAMD device pipeline shaderStage infoType = liftIO . evalContT $ do
   let vkGetShaderInfoAMD' = mkVkGetShaderInfoAMD vkGetShaderInfoAMDPtr
   let device' = deviceHandle (device)
   pPInfoSize <- ContT $ bracket (callocBytes @CSize 8) free
-  r <- lift $ traceAroundEvent "vkGetShaderInfoAMD" (vkGetShaderInfoAMD' device' (pipeline) (shaderStage) (infoType) (pPInfoSize) (nullPtr))
+  r <- lift $ traceAroundEvent "vkGetShaderInfoAMD" (vkGetShaderInfoAMD'
+                                                       device'
+                                                       (pipeline)
+                                                       (shaderStage)
+                                                       (infoType)
+                                                       (pPInfoSize)
+                                                       (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pInfoSize <- lift $ peek @CSize pPInfoSize
   pPInfo <- ContT $ bracket (callocBytes @(()) (fromIntegral ((coerce @CSize @Word64 pInfoSize)))) free
-  r' <- lift $ traceAroundEvent "vkGetShaderInfoAMD" (vkGetShaderInfoAMD' device' (pipeline) (shaderStage) (infoType) (pPInfoSize) (pPInfo))
+  r' <- lift $ traceAroundEvent "vkGetShaderInfoAMD" (vkGetShaderInfoAMD'
+                                                        device'
+                                                        (pipeline)
+                                                        (shaderStage)
+                                                        (infoType)
+                                                        (pPInfoSize)
+                                                        (pPInfo))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pInfoSize'' <- lift $ peek @CSize pPInfoSize
-  pInfo' <- lift $ packCStringLen  (castPtr @() @CChar pPInfo, (fromIntegral ((coerce @CSize @Word64 pInfoSize''))))
+  pInfo' <- lift $ packCStringLen  ( castPtr @() @CChar pPInfo
+                                   , (fromIntegral ((coerce @CSize @Word64 pInfoSize''))) )
   pure $ ((r'), pInfo')
 
 
@@ -415,7 +428,11 @@ instance FromCStruct ShaderResourceUsageAMD where
     ldsUsageSizeInBytes <- peek @CSize ((p `plusPtr` 16 :: Ptr CSize))
     scratchMemUsageInBytes <- peek @CSize ((p `plusPtr` 24 :: Ptr CSize))
     pure $ ShaderResourceUsageAMD
-             numUsedVgprs numUsedSgprs ldsSizePerLocalWorkGroup (coerce @CSize @Word64 ldsUsageSizeInBytes) (coerce @CSize @Word64 scratchMemUsageInBytes)
+             numUsedVgprs
+             numUsedSgprs
+             ldsSizePerLocalWorkGroup
+             (coerce @CSize @Word64 ldsUsageSizeInBytes)
+             (coerce @CSize @Word64 scratchMemUsageInBytes)
 
 instance Storable ShaderResourceUsageAMD where
   sizeOf ~_ = 32
@@ -530,7 +547,15 @@ instance FromCStruct ShaderStatisticsInfoAMD where
     computeWorkGroupSize1 <- peek @Word32 ((pcomputeWorkGroupSize `advancePtrBytes` 4 :: Ptr Word32))
     computeWorkGroupSize2 <- peek @Word32 ((pcomputeWorkGroupSize `advancePtrBytes` 8 :: Ptr Word32))
     pure $ ShaderStatisticsInfoAMD
-             shaderStageMask resourceUsage numPhysicalVgprs numPhysicalSgprs numAvailableVgprs numAvailableSgprs ((computeWorkGroupSize0, computeWorkGroupSize1, computeWorkGroupSize2))
+             shaderStageMask
+             resourceUsage
+             numPhysicalVgprs
+             numPhysicalSgprs
+             numAvailableVgprs
+             numAvailableSgprs
+             (( computeWorkGroupSize0
+              , computeWorkGroupSize1
+              , computeWorkGroupSize2 ))
 
 instance Storable ShaderStatisticsInfoAMD where
   sizeOf ~_ = 72
@@ -561,16 +586,22 @@ newtype ShaderInfoTypeAMD = ShaderInfoTypeAMD Int32
 
 -- | 'SHADER_INFO_TYPE_STATISTICS_AMD' specifies that device resources used
 -- by a shader will be queried.
-pattern SHADER_INFO_TYPE_STATISTICS_AMD  = ShaderInfoTypeAMD 0
+pattern SHADER_INFO_TYPE_STATISTICS_AMD = ShaderInfoTypeAMD 0
+
 -- | 'SHADER_INFO_TYPE_BINARY_AMD' specifies that implementation-specific
 -- information will be queried.
-pattern SHADER_INFO_TYPE_BINARY_AMD      = ShaderInfoTypeAMD 1
+pattern SHADER_INFO_TYPE_BINARY_AMD = ShaderInfoTypeAMD 1
+
 -- | 'SHADER_INFO_TYPE_DISASSEMBLY_AMD' specifies that human-readable
 -- disassembly of a shader.
 pattern SHADER_INFO_TYPE_DISASSEMBLY_AMD = ShaderInfoTypeAMD 2
-{-# complete SHADER_INFO_TYPE_STATISTICS_AMD,
-             SHADER_INFO_TYPE_BINARY_AMD,
-             SHADER_INFO_TYPE_DISASSEMBLY_AMD :: ShaderInfoTypeAMD #-}
+
+{-# COMPLETE
+  SHADER_INFO_TYPE_STATISTICS_AMD
+  , SHADER_INFO_TYPE_BINARY_AMD
+  , SHADER_INFO_TYPE_DISASSEMBLY_AMD ::
+    ShaderInfoTypeAMD
+  #-}
 
 conNameShaderInfoTypeAMD :: String
 conNameShaderInfoTypeAMD = "ShaderInfoTypeAMD"
@@ -580,22 +611,33 @@ enumPrefixShaderInfoTypeAMD = "SHADER_INFO_TYPE_"
 
 showTableShaderInfoTypeAMD :: [(ShaderInfoTypeAMD, String)]
 showTableShaderInfoTypeAMD =
-  [ (SHADER_INFO_TYPE_STATISTICS_AMD , "STATISTICS_AMD")
-  , (SHADER_INFO_TYPE_BINARY_AMD     , "BINARY_AMD")
-  , (SHADER_INFO_TYPE_DISASSEMBLY_AMD, "DISASSEMBLY_AMD")
+  [
+    ( SHADER_INFO_TYPE_STATISTICS_AMD
+    , "STATISTICS_AMD"
+    )
+  , (SHADER_INFO_TYPE_BINARY_AMD, "BINARY_AMD")
+  ,
+    ( SHADER_INFO_TYPE_DISASSEMBLY_AMD
+    , "DISASSEMBLY_AMD"
+    )
   ]
 
 instance Show ShaderInfoTypeAMD where
-  showsPrec = enumShowsPrec enumPrefixShaderInfoTypeAMD
-                            showTableShaderInfoTypeAMD
-                            conNameShaderInfoTypeAMD
-                            (\(ShaderInfoTypeAMD x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixShaderInfoTypeAMD
+      showTableShaderInfoTypeAMD
+      conNameShaderInfoTypeAMD
+      (\(ShaderInfoTypeAMD x) -> x)
+      (showsPrec 11)
 
 instance Read ShaderInfoTypeAMD where
   readPrec =
-    enumReadPrec enumPrefixShaderInfoTypeAMD showTableShaderInfoTypeAMD conNameShaderInfoTypeAMD ShaderInfoTypeAMD
-
+    enumReadPrec
+      enumPrefixShaderInfoTypeAMD
+      showTableShaderInfoTypeAMD
+      conNameShaderInfoTypeAMD
+      ShaderInfoTypeAMD
 
 type AMD_SHADER_INFO_SPEC_VERSION = 1
 

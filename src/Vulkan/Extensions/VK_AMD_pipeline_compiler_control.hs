@@ -206,8 +206,6 @@ type PipelineCompilerControlFlagsAMD = PipelineCompilerControlFlagBitsAMD
 newtype PipelineCompilerControlFlagBitsAMD = PipelineCompilerControlFlagBitsAMD Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNamePipelineCompilerControlFlagBitsAMD :: String
 conNamePipelineCompilerControlFlagBitsAMD = "PipelineCompilerControlFlagBitsAMD"
 
@@ -218,18 +216,21 @@ showTablePipelineCompilerControlFlagBitsAMD :: [(PipelineCompilerControlFlagBits
 showTablePipelineCompilerControlFlagBitsAMD = []
 
 instance Show PipelineCompilerControlFlagBitsAMD where
-  showsPrec = enumShowsPrec enumPrefixPipelineCompilerControlFlagBitsAMD
-                            showTablePipelineCompilerControlFlagBitsAMD
-                            conNamePipelineCompilerControlFlagBitsAMD
-                            (\(PipelineCompilerControlFlagBitsAMD x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineCompilerControlFlagBitsAMD
+      showTablePipelineCompilerControlFlagBitsAMD
+      conNamePipelineCompilerControlFlagBitsAMD
+      (\(PipelineCompilerControlFlagBitsAMD x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read PipelineCompilerControlFlagBitsAMD where
-  readPrec = enumReadPrec enumPrefixPipelineCompilerControlFlagBitsAMD
-                          showTablePipelineCompilerControlFlagBitsAMD
-                          conNamePipelineCompilerControlFlagBitsAMD
-                          PipelineCompilerControlFlagBitsAMD
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineCompilerControlFlagBitsAMD
+      showTablePipelineCompilerControlFlagBitsAMD
+      conNamePipelineCompilerControlFlagBitsAMD
+      PipelineCompilerControlFlagBitsAMD
 
 type AMD_PIPELINE_COMPILER_CONTROL_SPEC_VERSION = 1
 

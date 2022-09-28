@@ -48,20 +48,23 @@ newtype SamplerCreateFlagBits = SamplerCreateFlagBits Flags
 -- will read from images using only @OpImageWeightedSampleQCOM@,
 -- @OpImageBoxFilterQCOM@, @OpImageBlockMatchSSDQCOM@, or
 -- @OpImageBlockMatchSADQCOM@.
-pattern SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM                = SamplerCreateFlagBits 0x00000010
+pattern SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM = SamplerCreateFlagBits 0x00000010
+
 -- | 'SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT' specifies that
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-cubemapedge cube map edge handling>
 -- is not performed.
-pattern SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT            = SamplerCreateFlagBits 0x00000004
+pattern SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT = SamplerCreateFlagBits 0x00000004
+
 -- | 'SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT' specifies that
 -- the implementation /may/ use approximations when reconstructing a full
 -- color value for texture access from a subsampled image.
 pattern SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT = SamplerCreateFlagBits 0x00000002
+
 -- | #samplers-subsamplesampler# 'SAMPLER_CREATE_SUBSAMPLED_BIT_EXT'
 -- specifies that the sampler will read from an image created with @flags@
 -- containing
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'.
-pattern SAMPLER_CREATE_SUBSAMPLED_BIT_EXT                       = SamplerCreateFlagBits 0x00000001
+pattern SAMPLER_CREATE_SUBSAMPLED_BIT_EXT = SamplerCreateFlagBits 0x00000001
 
 conNameSamplerCreateFlagBits :: String
 conNameSamplerCreateFlagBits = "SamplerCreateFlagBits"
@@ -71,22 +74,37 @@ enumPrefixSamplerCreateFlagBits = "SAMPLER_CREATE_"
 
 showTableSamplerCreateFlagBits :: [(SamplerCreateFlagBits, String)]
 showTableSamplerCreateFlagBits =
-  [ (SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM               , "IMAGE_PROCESSING_BIT_QCOM")
-  , (SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT           , "NON_SEAMLESS_CUBE_MAP_BIT_EXT")
-  , (SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT, "SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT")
-  , (SAMPLER_CREATE_SUBSAMPLED_BIT_EXT                      , "SUBSAMPLED_BIT_EXT")
+  [
+    ( SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM
+    , "IMAGE_PROCESSING_BIT_QCOM"
+    )
+  ,
+    ( SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT
+    , "NON_SEAMLESS_CUBE_MAP_BIT_EXT"
+    )
+  ,
+    ( SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT
+    , "SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT"
+    )
+  ,
+    ( SAMPLER_CREATE_SUBSAMPLED_BIT_EXT
+    , "SUBSAMPLED_BIT_EXT"
+    )
   ]
 
 instance Show SamplerCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixSamplerCreateFlagBits
-                            showTableSamplerCreateFlagBits
-                            conNameSamplerCreateFlagBits
-                            (\(SamplerCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixSamplerCreateFlagBits
+      showTableSamplerCreateFlagBits
+      conNameSamplerCreateFlagBits
+      (\(SamplerCreateFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read SamplerCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixSamplerCreateFlagBits
-                          showTableSamplerCreateFlagBits
-                          conNameSamplerCreateFlagBits
-                          SamplerCreateFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixSamplerCreateFlagBits
+      showTableSamplerCreateFlagBits
+      conNameSamplerCreateFlagBits
+      SamplerCreateFlagBits

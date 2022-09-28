@@ -21,10 +21,12 @@ import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
 type role BindSparseInfo nominal
 data BindSparseInfo (es :: [Type])
 
-instance (Extendss BindSparseInfo es, PokeChain es) => ToCStruct (BindSparseInfo es)
+instance ( Extendss BindSparseInfo es
+         , PokeChain es ) => ToCStruct (BindSparseInfo es)
 instance Show (Chain es) => Show (BindSparseInfo es)
 
-instance (Extendss BindSparseInfo es, PeekChain es) => FromCStruct (BindSparseInfo es)
+instance ( Extendss BindSparseInfo es
+         , PeekChain es ) => FromCStruct (BindSparseInfo es)
 
 
 data ImageSubresource

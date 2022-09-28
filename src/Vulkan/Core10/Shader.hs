@@ -146,7 +146,9 @@ foreign import ccall
 -- 'Vulkan.Core10.Handles.Device', 'Vulkan.Core10.Handles.ShaderModule',
 -- 'ShaderModuleCreateInfo'
 createShaderModule :: forall a io
-                    . (Extendss ShaderModuleCreateInfo a, PokeChain a, MonadIO io)
+                    . ( Extendss ShaderModuleCreateInfo a
+                      , PokeChain a
+                      , MonadIO io )
                    => -- | @device@ is the logical device that creates the shader module.
                       Device
                    -> -- | @pCreateInfo@ is a pointer to a 'ShaderModuleCreateInfo' structure.
@@ -166,7 +168,11 @@ createShaderModule device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPShaderModule <- ContT $ bracket (callocBytes @ShaderModule 8) free
-  r <- lift $ traceAroundEvent "vkCreateShaderModule" (vkCreateShaderModule' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPShaderModule))
+  r <- lift $ traceAroundEvent "vkCreateShaderModule" (vkCreateShaderModule'
+                                                         (deviceHandle (device))
+                                                         (forgetExtensions pCreateInfo)
+                                                         pAllocator
+                                                         (pPShaderModule))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pShaderModule <- lift $ peek @ShaderModule pPShaderModule
   pure $ (pShaderModule)
@@ -257,7 +263,10 @@ destroyShaderModule device shaderModule allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyShaderModule" (vkDestroyShaderModule' (deviceHandle (device)) (shaderModule) pAllocator)
+  lift $ traceAroundEvent "vkDestroyShaderModule" (vkDestroyShaderModule'
+                                                     (deviceHandle (device))
+                                                     (shaderModule)
+                                                     pAllocator)
   pure $ ()
 
 
@@ -362,7 +371,8 @@ instance Extensible ShaderModuleCreateInfo where
     | Just Refl <- eqT @e @ShaderModuleValidationCacheCreateInfoEXT = Just f
     | otherwise = Nothing
 
-instance (Extendss ShaderModuleCreateInfo es, PokeChain es) => ToCStruct (ShaderModuleCreateInfo es) where
+instance ( Extendss ShaderModuleCreateInfo es
+         , PokeChain es ) => ToCStruct (ShaderModuleCreateInfo es) where
   withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ShaderModuleCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO)
@@ -392,14 +402,16 @@ instance (Extendss ShaderModuleCreateInfo es, PokeChain es) => ToCStruct (Shader
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ f
 
-instance (Extendss ShaderModuleCreateInfo es, PeekChain es) => FromCStruct (ShaderModuleCreateInfo es) where
+instance ( Extendss ShaderModuleCreateInfo es
+         , PeekChain es ) => FromCStruct (ShaderModuleCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
     flags <- peek @ShaderModuleCreateFlags ((p `plusPtr` 16 :: Ptr ShaderModuleCreateFlags))
     codeSize <- peek @CSize ((p `plusPtr` 24 :: Ptr CSize))
     pCode <- peek @(Ptr Word32) ((p `plusPtr` 32 :: Ptr (Ptr Word32)))
-    code <- packCStringLen (castPtr @Word32 @CChar pCode, fromIntegral $ (coerce @CSize @Word64 codeSize) * 4)
+    code <- packCStringLen ( castPtr @Word32 @CChar pCode
+                           , fromIntegral $ (coerce @CSize @Word64 codeSize) * 4 )
     pure $ ShaderModuleCreateInfo
              next flags code
 

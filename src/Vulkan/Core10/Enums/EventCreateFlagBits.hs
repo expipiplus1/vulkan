@@ -42,15 +42,18 @@ showTableEventCreateFlagBits :: [(EventCreateFlagBits, String)]
 showTableEventCreateFlagBits = [(EVENT_CREATE_DEVICE_ONLY_BIT, "")]
 
 instance Show EventCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixEventCreateFlagBits
-                            showTableEventCreateFlagBits
-                            conNameEventCreateFlagBits
-                            (\(EventCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixEventCreateFlagBits
+      showTableEventCreateFlagBits
+      conNameEventCreateFlagBits
+      (\(EventCreateFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read EventCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixEventCreateFlagBits
-                          showTableEventCreateFlagBits
-                          conNameEventCreateFlagBits
-                          EventCreateFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixEventCreateFlagBits
+      showTableEventCreateFlagBits
+      conNameEventCreateFlagBits
+      EventCreateFlagBits

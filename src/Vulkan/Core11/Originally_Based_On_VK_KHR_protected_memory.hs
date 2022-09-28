@@ -120,7 +120,10 @@ getDeviceQueue2 device queueInfo = liftIO . evalContT $ do
   let vkGetDeviceQueue2' = mkVkGetDeviceQueue2 vkGetDeviceQueue2Ptr
   pQueueInfo <- ContT $ withCStruct (queueInfo)
   pPQueue <- ContT $ bracket (callocBytes @(Ptr Queue_T) 8) free
-  lift $ traceAroundEvent "vkGetDeviceQueue2" (vkGetDeviceQueue2' (deviceHandle (device)) pQueueInfo (pPQueue))
+  lift $ traceAroundEvent "vkGetDeviceQueue2" (vkGetDeviceQueue2'
+                                                 (deviceHandle (device))
+                                                 pQueueInfo
+                                                 (pPQueue))
   pQueue <- lift $ peek @(Ptr Queue_T) pPQueue
   pure $ (((\h -> Queue h cmds ) pQueue))
 

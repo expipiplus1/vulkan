@@ -23,12 +23,14 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core10.PipelineCache.getPipelineCacheData'
 newtype PipelineCacheHeaderVersion = PipelineCacheHeaderVersion Int32
   deriving newtype (Eq, Ord, Storable, Zero)
+
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
 -- | 'PIPELINE_CACHE_HEADER_VERSION_ONE' specifies version one of the
 -- pipeline cache.
 pattern PIPELINE_CACHE_HEADER_VERSION_ONE = PipelineCacheHeaderVersion 1
-{-# complete PIPELINE_CACHE_HEADER_VERSION_ONE :: PipelineCacheHeaderVersion #-}
+
+{-# COMPLETE PIPELINE_CACHE_HEADER_VERSION_ONE :: PipelineCacheHeaderVersion #-}
 
 conNamePipelineCacheHeaderVersion :: String
 conNamePipelineCacheHeaderVersion = "PipelineCacheHeaderVersion"
@@ -40,15 +42,18 @@ showTablePipelineCacheHeaderVersion :: [(PipelineCacheHeaderVersion, String)]
 showTablePipelineCacheHeaderVersion = [(PIPELINE_CACHE_HEADER_VERSION_ONE, "")]
 
 instance Show PipelineCacheHeaderVersion where
-  showsPrec = enumShowsPrec enumPrefixPipelineCacheHeaderVersion
-                            showTablePipelineCacheHeaderVersion
-                            conNamePipelineCacheHeaderVersion
-                            (\(PipelineCacheHeaderVersion x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineCacheHeaderVersion
+      showTablePipelineCacheHeaderVersion
+      conNamePipelineCacheHeaderVersion
+      (\(PipelineCacheHeaderVersion x) -> x)
+      (showsPrec 11)
 
 instance Read PipelineCacheHeaderVersion where
-  readPrec = enumReadPrec enumPrefixPipelineCacheHeaderVersion
-                          showTablePipelineCacheHeaderVersion
-                          conNamePipelineCacheHeaderVersion
-                          PipelineCacheHeaderVersion
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineCacheHeaderVersion
+      showTablePipelineCacheHeaderVersion
+      conNamePipelineCacheHeaderVersion
+      PipelineCacheHeaderVersion

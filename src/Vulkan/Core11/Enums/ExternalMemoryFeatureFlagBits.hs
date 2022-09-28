@@ -57,12 +57,14 @@ newtype ExternalMemoryFeatureFlagBits = ExternalMemoryFeatureFlagBits Flags
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 -- to create (or import) a dedicated allocation for the image or buffer.
 pattern EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT = ExternalMemoryFeatureFlagBits 0x00000001
+
 -- | 'EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT' specifies that handles of this
 -- type /can/ be exported from Vulkan memory objects.
-pattern EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT     = ExternalMemoryFeatureFlagBits 0x00000002
+pattern EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT = ExternalMemoryFeatureFlagBits 0x00000002
+
 -- | 'EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT' specifies that handles of this
 -- type /can/ be imported as Vulkan memory objects.
-pattern EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT     = ExternalMemoryFeatureFlagBits 0x00000004
+pattern EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT = ExternalMemoryFeatureFlagBits 0x00000004
 
 conNameExternalMemoryFeatureFlagBits :: String
 conNameExternalMemoryFeatureFlagBits = "ExternalMemoryFeatureFlagBits"
@@ -72,21 +74,33 @@ enumPrefixExternalMemoryFeatureFlagBits = "EXTERNAL_MEMORY_FEATURE_"
 
 showTableExternalMemoryFeatureFlagBits :: [(ExternalMemoryFeatureFlagBits, String)]
 showTableExternalMemoryFeatureFlagBits =
-  [ (EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT, "DEDICATED_ONLY_BIT")
-  , (EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT    , "EXPORTABLE_BIT")
-  , (EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT    , "IMPORTABLE_BIT")
+  [
+    ( EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT
+    , "DEDICATED_ONLY_BIT"
+    )
+  ,
+    ( EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT
+    , "EXPORTABLE_BIT"
+    )
+  ,
+    ( EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT
+    , "IMPORTABLE_BIT"
+    )
   ]
 
 instance Show ExternalMemoryFeatureFlagBits where
-  showsPrec = enumShowsPrec enumPrefixExternalMemoryFeatureFlagBits
-                            showTableExternalMemoryFeatureFlagBits
-                            conNameExternalMemoryFeatureFlagBits
-                            (\(ExternalMemoryFeatureFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixExternalMemoryFeatureFlagBits
+      showTableExternalMemoryFeatureFlagBits
+      conNameExternalMemoryFeatureFlagBits
+      (\(ExternalMemoryFeatureFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read ExternalMemoryFeatureFlagBits where
-  readPrec = enumReadPrec enumPrefixExternalMemoryFeatureFlagBits
-                          showTableExternalMemoryFeatureFlagBits
-                          conNameExternalMemoryFeatureFlagBits
-                          ExternalMemoryFeatureFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixExternalMemoryFeatureFlagBits
+      showTableExternalMemoryFeatureFlagBits
+      conNameExternalMemoryFeatureFlagBits
+      ExternalMemoryFeatureFlagBits

@@ -33,7 +33,8 @@ newtype MemoryHeapFlagBits = MemoryHeapFlagBits Flags
 -- device-local memory. Device-local memory /may/ have different
 -- performance characteristics than host-local memory, and /may/ support
 -- different memory property flags.
-pattern MEMORY_HEAP_DEVICE_LOCAL_BIT   = MemoryHeapFlagBits 0x00000001
+pattern MEMORY_HEAP_DEVICE_LOCAL_BIT = MemoryHeapFlagBits 0x00000001
+
 -- | 'MEMORY_HEAP_MULTI_INSTANCE_BIT' specifies that in a logical device
 -- representing more than one physical device, there is a per-physical
 -- device instance of the heap memory. By default, an allocation from such
@@ -49,16 +50,29 @@ enumPrefixMemoryHeapFlagBits = "MEMORY_HEAP_"
 
 showTableMemoryHeapFlagBits :: [(MemoryHeapFlagBits, String)]
 showTableMemoryHeapFlagBits =
-  [(MEMORY_HEAP_DEVICE_LOCAL_BIT, "DEVICE_LOCAL_BIT"), (MEMORY_HEAP_MULTI_INSTANCE_BIT, "MULTI_INSTANCE_BIT")]
+  [
+    ( MEMORY_HEAP_DEVICE_LOCAL_BIT
+    , "DEVICE_LOCAL_BIT"
+    )
+  ,
+    ( MEMORY_HEAP_MULTI_INSTANCE_BIT
+    , "MULTI_INSTANCE_BIT"
+    )
+  ]
 
 instance Show MemoryHeapFlagBits where
-  showsPrec = enumShowsPrec enumPrefixMemoryHeapFlagBits
-                            showTableMemoryHeapFlagBits
-                            conNameMemoryHeapFlagBits
-                            (\(MemoryHeapFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixMemoryHeapFlagBits
+      showTableMemoryHeapFlagBits
+      conNameMemoryHeapFlagBits
+      (\(MemoryHeapFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read MemoryHeapFlagBits where
   readPrec =
-    enumReadPrec enumPrefixMemoryHeapFlagBits showTableMemoryHeapFlagBits conNameMemoryHeapFlagBits MemoryHeapFlagBits
-
+    enumReadPrec
+      enumPrefixMemoryHeapFlagBits
+      showTableMemoryHeapFlagBits
+      conNameMemoryHeapFlagBits
+      MemoryHeapFlagBits

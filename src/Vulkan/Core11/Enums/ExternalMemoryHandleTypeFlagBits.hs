@@ -121,61 +121,72 @@ newtype ExternalMemoryHandleTypeFlagBits = ExternalMemoryHandleTypeFlagBits Flag
 -- Additionally, it /must/ be transportable over a socket using an
 -- @SCM_RIGHTS@ control message. It owns a reference to the underlying
 -- memory resource represented by its Vulkan memory object.
-pattern EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT                       = ExternalMemoryHandleTypeFlagBits 0x00000001
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT = ExternalMemoryHandleTypeFlagBits 0x00000001
+
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT' specifies an NT handle
 -- that has only limited valid usage outside of Vulkan and other compatible
 -- APIs. It /must/ be compatible with the functions @DuplicateHandle@,
 -- @CloseHandle@, @CompareObjectHandles@, @GetHandleInformation@, and
 -- @SetHandleInformation@. It owns a reference to the underlying memory
 -- resource represented by its Vulkan memory object.
-pattern EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT                    = ExternalMemoryHandleTypeFlagBits 0x00000002
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT = ExternalMemoryHandleTypeFlagBits 0x00000002
+
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT' specifies a global
 -- share handle that has only limited valid usage outside of Vulkan and
 -- other compatible APIs. It is not compatible with any native APIs. It
 -- does not own a reference to the underlying memory resource represented
 -- by its Vulkan memory object, and will therefore become invalid when all
 -- Vulkan memory objects associated with it are destroyed.
-pattern EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT                = ExternalMemoryHandleTypeFlagBits 0x00000004
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = ExternalMemoryHandleTypeFlagBits 0x00000004
+
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT' specifies an NT handle
 -- returned by @IDXGIResource1@::@CreateSharedHandle@ referring to a
 -- Direct3D 10 or 11 texture resource. It owns a reference to the memory
 -- used by the Direct3D resource.
-pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT                   = ExternalMemoryHandleTypeFlagBits 0x00000008
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT = ExternalMemoryHandleTypeFlagBits 0x00000008
+
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT' specifies a global
 -- share handle returned by @IDXGIResource@::@GetSharedHandle@ referring to
 -- a Direct3D 10 or 11 texture resource. It does not own a reference to the
 -- underlying Direct3D resource, and will therefore become invalid when all
 -- Vulkan memory objects and Direct3D resources associated with it are
 -- destroyed.
-pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT               = ExternalMemoryHandleTypeFlagBits 0x00000010
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT = ExternalMemoryHandleTypeFlagBits 0x00000010
+
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT' specifies an NT handle
 -- returned by @ID3D12Device@::@CreateSharedHandle@ referring to a Direct3D
 -- 12 heap resource. It owns a reference to the resources used by the
 -- Direct3D heap.
-pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT                      = ExternalMemoryHandleTypeFlagBits 0x00000020
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT = ExternalMemoryHandleTypeFlagBits 0x00000020
+
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT' specifies an NT handle
 -- returned by @ID3D12Device@::@CreateSharedHandle@ referring to a Direct3D
 -- 12 committed resource. It owns a reference to the memory used by the
 -- Direct3D resource.
-pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT                  = ExternalMemoryHandleTypeFlagBits 0x00000040
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT = ExternalMemoryHandleTypeFlagBits 0x00000040
+
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV' is a handle to an
 -- allocation accessible by remote devices. It owns a reference to the
 -- underlying memory resource represented by its Vulkan memory object.
-pattern EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV                 = ExternalMemoryHandleTypeFlagBits 0x00001000
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV = ExternalMemoryHandleTypeFlagBits 0x00001000
+
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA' is a Zircon handle
 -- to a virtual memory object.
-pattern EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA              = ExternalMemoryHandleTypeFlagBits 0x00000800
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA = ExternalMemoryHandleTypeFlagBits 0x00000800
+
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT'
 -- specifies a host pointer to /host mapped foreign memory/. It does not
 -- own a reference to the underlying memory resource, and will therefore
 -- become invalid if the foreign memory is unmapped or otherwise becomes no
 -- longer available.
-pattern EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT  = ExternalMemoryHandleTypeFlagBits 0x00000100
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT = ExternalMemoryHandleTypeFlagBits 0x00000100
+
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT' specifies a host
 -- pointer returned by a host memory allocation command. It does not own a
 -- reference to the underlying memory resource, and will therefore become
 -- invalid if the host memory is freed.
-pattern EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT             = ExternalMemoryHandleTypeFlagBits 0x00000080
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT = ExternalMemoryHandleTypeFlagBits 0x00000080
+
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
 -- specifies an
 -- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AHardwareBuffer'
@@ -183,10 +194,11 @@ pattern EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT             = Extern
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-external-android-hardware-buffer Android Hardware Buffers>
 -- for more details of this handle type.
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID = ExternalMemoryHandleTypeFlagBits 0x00000400
+
 -- | 'EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT' is a file descriptor for a
 -- Linux dma_buf. It owns a reference to the underlying memory resource
 -- represented by its Vulkan memory object.
-pattern EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT                     = ExternalMemoryHandleTypeFlagBits 0x00000200
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT = ExternalMemoryHandleTypeFlagBits 0x00000200
 
 conNameExternalMemoryHandleTypeFlagBits :: String
 conNameExternalMemoryHandleTypeFlagBits = "ExternalMemoryHandleTypeFlagBits"
@@ -196,31 +208,73 @@ enumPrefixExternalMemoryHandleTypeFlagBits = "EXTERNAL_MEMORY_HANDLE_TYPE_"
 
 showTableExternalMemoryHandleTypeFlagBits :: [(ExternalMemoryHandleTypeFlagBits, String)]
 showTableExternalMemoryHandleTypeFlagBits =
-  [ (EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT                      , "OPAQUE_FD_BIT")
-  , (EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT                   , "OPAQUE_WIN32_BIT")
-  , (EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT               , "OPAQUE_WIN32_KMT_BIT")
-  , (EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT                  , "D3D11_TEXTURE_BIT")
-  , (EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT              , "D3D11_TEXTURE_KMT_BIT")
-  , (EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT                     , "D3D12_HEAP_BIT")
-  , (EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT                 , "D3D12_RESOURCE_BIT")
-  , (EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV                , "RDMA_ADDRESS_BIT_NV")
-  , (EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA             , "ZIRCON_VMO_BIT_FUCHSIA")
-  , (EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT , "HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT")
-  , (EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT            , "HOST_ALLOCATION_BIT_EXT")
-  , (EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID, "ANDROID_HARDWARE_BUFFER_BIT_ANDROID")
-  , (EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT                    , "DMA_BUF_BIT_EXT")
+  [
+    ( EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT
+    , "OPAQUE_FD_BIT"
+    )
+  ,
+    ( EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT
+    , "OPAQUE_WIN32_BIT"
+    )
+  ,
+    ( EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
+    , "OPAQUE_WIN32_KMT_BIT"
+    )
+  ,
+    ( EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT
+    , "D3D11_TEXTURE_BIT"
+    )
+  ,
+    ( EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT
+    , "D3D11_TEXTURE_KMT_BIT"
+    )
+  ,
+    ( EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT
+    , "D3D12_HEAP_BIT"
+    )
+  ,
+    ( EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT
+    , "D3D12_RESOURCE_BIT"
+    )
+  ,
+    ( EXTERNAL_MEMORY_HANDLE_TYPE_RDMA_ADDRESS_BIT_NV
+    , "RDMA_ADDRESS_BIT_NV"
+    )
+  ,
+    ( EXTERNAL_MEMORY_HANDLE_TYPE_ZIRCON_VMO_BIT_FUCHSIA
+    , "ZIRCON_VMO_BIT_FUCHSIA"
+    )
+  ,
+    ( EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT
+    , "HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT"
+    )
+  ,
+    ( EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT
+    , "HOST_ALLOCATION_BIT_EXT"
+    )
+  ,
+    ( EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID
+    , "ANDROID_HARDWARE_BUFFER_BIT_ANDROID"
+    )
+  ,
+    ( EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT
+    , "DMA_BUF_BIT_EXT"
+    )
   ]
 
 instance Show ExternalMemoryHandleTypeFlagBits where
-  showsPrec = enumShowsPrec enumPrefixExternalMemoryHandleTypeFlagBits
-                            showTableExternalMemoryHandleTypeFlagBits
-                            conNameExternalMemoryHandleTypeFlagBits
-                            (\(ExternalMemoryHandleTypeFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixExternalMemoryHandleTypeFlagBits
+      showTableExternalMemoryHandleTypeFlagBits
+      conNameExternalMemoryHandleTypeFlagBits
+      (\(ExternalMemoryHandleTypeFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read ExternalMemoryHandleTypeFlagBits where
-  readPrec = enumReadPrec enumPrefixExternalMemoryHandleTypeFlagBits
-                          showTableExternalMemoryHandleTypeFlagBits
-                          conNameExternalMemoryHandleTypeFlagBits
-                          ExternalMemoryHandleTypeFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixExternalMemoryHandleTypeFlagBits
+      showTableExternalMemoryHandleTypeFlagBits
+      conNameExternalMemoryHandleTypeFlagBits
+      ExternalMemoryHandleTypeFlagBits

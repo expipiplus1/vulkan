@@ -229,7 +229,9 @@ cmdSetCheckpointNV commandBuffer checkpointMarker = liftIO $ do
   unless (vkCmdSetCheckpointNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetCheckpointNV is null" Nothing Nothing
   let vkCmdSetCheckpointNV' = mkVkCmdSetCheckpointNV vkCmdSetCheckpointNVPtr
-  traceAroundEvent "vkCmdSetCheckpointNV" (vkCmdSetCheckpointNV' (commandBufferHandle (commandBuffer)) (checkpointMarker))
+  traceAroundEvent "vkCmdSetCheckpointNV" (vkCmdSetCheckpointNV'
+                                             (commandBufferHandle (commandBuffer))
+                                             (checkpointMarker))
   pure $ ()
 
 
@@ -292,11 +294,17 @@ getQueueCheckpointDataNV queue = liftIO . evalContT $ do
   let vkGetQueueCheckpointDataNV' = mkVkGetQueueCheckpointDataNV vkGetQueueCheckpointDataNVPtr
   let queue' = queueHandle (queue)
   pPCheckpointDataCount <- ContT $ bracket (callocBytes @Word32 4) free
-  lift $ traceAroundEvent "vkGetQueueCheckpointDataNV" (vkGetQueueCheckpointDataNV' queue' (pPCheckpointDataCount) (nullPtr))
+  lift $ traceAroundEvent "vkGetQueueCheckpointDataNV" (vkGetQueueCheckpointDataNV'
+                                                          queue'
+                                                          (pPCheckpointDataCount)
+                                                          (nullPtr))
   pCheckpointDataCount <- lift $ peek @Word32 pPCheckpointDataCount
   pPCheckpointData <- ContT $ bracket (callocBytes @CheckpointDataNV ((fromIntegral (pCheckpointDataCount)) * 32)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPCheckpointData `advancePtrBytes` (i * 32) :: Ptr CheckpointDataNV) . ($ ())) [0..(fromIntegral (pCheckpointDataCount)) - 1]
-  lift $ traceAroundEvent "vkGetQueueCheckpointDataNV" (vkGetQueueCheckpointDataNV' queue' (pPCheckpointDataCount) ((pPCheckpointData)))
+  lift $ traceAroundEvent "vkGetQueueCheckpointDataNV" (vkGetQueueCheckpointDataNV'
+                                                          queue'
+                                                          (pPCheckpointDataCount)
+                                                          ((pPCheckpointData)))
   pCheckpointDataCount' <- lift $ peek @Word32 pPCheckpointDataCount
   pCheckpointData' <- lift $ generateM (fromIntegral (pCheckpointDataCount')) (\i -> peekCStruct @CheckpointDataNV (((pPCheckpointData) `advancePtrBytes` (32 * (i)) :: Ptr CheckpointDataNV)))
   pure $ (pCheckpointData')

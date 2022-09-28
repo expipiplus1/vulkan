@@ -165,7 +165,11 @@ instance FromCStruct CompositionLayerDepthInfoKHR where
     nearZ <- peek @CFloat ((p `plusPtr` 56 :: Ptr CFloat))
     farZ <- peek @CFloat ((p `plusPtr` 60 :: Ptr CFloat))
     pure $ CompositionLayerDepthInfoKHR
-             subImage (coerce @CFloat @Float minDepth) (coerce @CFloat @Float maxDepth) (coerce @CFloat @Float nearZ) (coerce @CFloat @Float farZ)
+             subImage
+             (coerce @CFloat @Float minDepth)
+             (coerce @CFloat @Float maxDepth)
+             (coerce @CFloat @Float nearZ)
+             (coerce @CFloat @Float farZ)
 
 instance Storable CompositionLayerDepthInfoKHR where
   sizeOf ~_ = 64

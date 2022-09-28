@@ -699,7 +699,9 @@ setDebugUtilsObjectNameEXT device nameInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetDebugUtilsObjectNameEXT is null" Nothing Nothing
   let vkSetDebugUtilsObjectNameEXT' = mkVkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXTPtr
   pNameInfo <- ContT $ withCStruct (nameInfo)
-  r <- lift $ traceAroundEvent "vkSetDebugUtilsObjectNameEXT" (vkSetDebugUtilsObjectNameEXT' (deviceHandle (device)) pNameInfo)
+  r <- lift $ traceAroundEvent "vkSetDebugUtilsObjectNameEXT" (vkSetDebugUtilsObjectNameEXT'
+                                                                 (deviceHandle (device))
+                                                                 pNameInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -756,7 +758,9 @@ setDebugUtilsObjectTagEXT device tagInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSetDebugUtilsObjectTagEXT is null" Nothing Nothing
   let vkSetDebugUtilsObjectTagEXT' = mkVkSetDebugUtilsObjectTagEXT vkSetDebugUtilsObjectTagEXTPtr
   pTagInfo <- ContT $ withCStruct (tagInfo)
-  r <- lift $ traceAroundEvent "vkSetDebugUtilsObjectTagEXT" (vkSetDebugUtilsObjectTagEXT' (deviceHandle (device)) pTagInfo)
+  r <- lift $ traceAroundEvent "vkSetDebugUtilsObjectTagEXT" (vkSetDebugUtilsObjectTagEXT'
+                                                                (deviceHandle (device))
+                                                                pTagInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -802,7 +806,9 @@ queueBeginDebugUtilsLabelEXT queue labelInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueBeginDebugUtilsLabelEXT is null" Nothing Nothing
   let vkQueueBeginDebugUtilsLabelEXT' = mkVkQueueBeginDebugUtilsLabelEXT vkQueueBeginDebugUtilsLabelEXTPtr
   pLabelInfo <- ContT $ withCStruct (labelInfo)
-  lift $ traceAroundEvent "vkQueueBeginDebugUtilsLabelEXT" (vkQueueBeginDebugUtilsLabelEXT' (queueHandle (queue)) pLabelInfo)
+  lift $ traceAroundEvent "vkQueueBeginDebugUtilsLabelEXT" (vkQueueBeginDebugUtilsLabelEXT'
+                                                              (queueHandle (queue))
+                                                              pLabelInfo)
   pure $ ()
 
 
@@ -854,7 +860,8 @@ queueEndDebugUtilsLabelEXT queue = liftIO $ do
   unless (vkQueueEndDebugUtilsLabelEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueEndDebugUtilsLabelEXT is null" Nothing Nothing
   let vkQueueEndDebugUtilsLabelEXT' = mkVkQueueEndDebugUtilsLabelEXT vkQueueEndDebugUtilsLabelEXTPtr
-  traceAroundEvent "vkQueueEndDebugUtilsLabelEXT" (vkQueueEndDebugUtilsLabelEXT' (queueHandle (queue)))
+  traceAroundEvent "vkQueueEndDebugUtilsLabelEXT" (vkQueueEndDebugUtilsLabelEXT'
+                                                     (queueHandle (queue)))
   pure $ ()
 
 
@@ -900,7 +907,9 @@ queueInsertDebugUtilsLabelEXT queue labelInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueInsertDebugUtilsLabelEXT is null" Nothing Nothing
   let vkQueueInsertDebugUtilsLabelEXT' = mkVkQueueInsertDebugUtilsLabelEXT vkQueueInsertDebugUtilsLabelEXTPtr
   pLabelInfo <- ContT $ withCStruct (labelInfo)
-  lift $ traceAroundEvent "vkQueueInsertDebugUtilsLabelEXT" (vkQueueInsertDebugUtilsLabelEXT' (queueHandle (queue)) pLabelInfo)
+  lift $ traceAroundEvent "vkQueueInsertDebugUtilsLabelEXT" (vkQueueInsertDebugUtilsLabelEXT'
+                                                               (queueHandle (queue))
+                                                               pLabelInfo)
   pure $ ()
 
 
@@ -971,7 +980,9 @@ cmdBeginDebugUtilsLabelEXT commandBuffer labelInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdBeginDebugUtilsLabelEXT is null" Nothing Nothing
   let vkCmdBeginDebugUtilsLabelEXT' = mkVkCmdBeginDebugUtilsLabelEXT vkCmdBeginDebugUtilsLabelEXTPtr
   pLabelInfo <- ContT $ withCStruct (labelInfo)
-  lift $ traceAroundEvent "vkCmdBeginDebugUtilsLabelEXT" (vkCmdBeginDebugUtilsLabelEXT' (commandBufferHandle (commandBuffer)) pLabelInfo)
+  lift $ traceAroundEvent "vkCmdBeginDebugUtilsLabelEXT" (vkCmdBeginDebugUtilsLabelEXT'
+                                                            (commandBufferHandle (commandBuffer))
+                                                            pLabelInfo)
   pure $ ()
 
 -- | This function will call the supplied action between calls to
@@ -981,7 +992,8 @@ cmdBeginDebugUtilsLabelEXT commandBuffer labelInfo = liftIO . evalContT $ do
 -- thrown by the inner action.
 cmdUseDebugUtilsLabelEXT :: forall io r . MonadIO io => CommandBuffer -> DebugUtilsLabelEXT -> io r -> io r
 cmdUseDebugUtilsLabelEXT commandBuffer pLabelInfo a =
-  (cmdBeginDebugUtilsLabelEXT commandBuffer pLabelInfo) *> a <* (cmdEndDebugUtilsLabelEXT commandBuffer)
+  (cmdBeginDebugUtilsLabelEXT commandBuffer
+                                pLabelInfo) *> a <* (cmdEndDebugUtilsLabelEXT commandBuffer)
 
 
 foreign import ccall
@@ -1076,7 +1088,8 @@ cmdEndDebugUtilsLabelEXT commandBuffer = liftIO $ do
   unless (vkCmdEndDebugUtilsLabelEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdEndDebugUtilsLabelEXT is null" Nothing Nothing
   let vkCmdEndDebugUtilsLabelEXT' = mkVkCmdEndDebugUtilsLabelEXT vkCmdEndDebugUtilsLabelEXTPtr
-  traceAroundEvent "vkCmdEndDebugUtilsLabelEXT" (vkCmdEndDebugUtilsLabelEXT' (commandBufferHandle (commandBuffer)))
+  traceAroundEvent "vkCmdEndDebugUtilsLabelEXT" (vkCmdEndDebugUtilsLabelEXT'
+                                                   (commandBufferHandle (commandBuffer)))
   pure $ ()
 
 
@@ -1146,7 +1159,9 @@ cmdInsertDebugUtilsLabelEXT commandBuffer labelInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdInsertDebugUtilsLabelEXT is null" Nothing Nothing
   let vkCmdInsertDebugUtilsLabelEXT' = mkVkCmdInsertDebugUtilsLabelEXT vkCmdInsertDebugUtilsLabelEXTPtr
   pLabelInfo <- ContT $ withCStruct (labelInfo)
-  lift $ traceAroundEvent "vkCmdInsertDebugUtilsLabelEXT" (vkCmdInsertDebugUtilsLabelEXT' (commandBufferHandle (commandBuffer)) pLabelInfo)
+  lift $ traceAroundEvent "vkCmdInsertDebugUtilsLabelEXT" (vkCmdInsertDebugUtilsLabelEXT'
+                                                             (commandBufferHandle (commandBuffer))
+                                                             pLabelInfo)
   pure $ ()
 
 
@@ -1211,7 +1226,9 @@ createDebugUtilsMessengerEXT :: forall io
                                 -- chapter.
                                 ("allocator" ::: Maybe AllocationCallbacks)
                              -> io (DebugUtilsMessengerEXT)
-createDebugUtilsMessengerEXT instance' createInfo allocator = liftIO . evalContT $ do
+createDebugUtilsMessengerEXT instance'
+                               createInfo
+                               allocator = liftIO . evalContT $ do
   let vkCreateDebugUtilsMessengerEXTPtr = pVkCreateDebugUtilsMessengerEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkCreateDebugUtilsMessengerEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCreateDebugUtilsMessengerEXT is null" Nothing Nothing
@@ -1221,7 +1238,11 @@ createDebugUtilsMessengerEXT instance' createInfo allocator = liftIO . evalContT
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPMessenger <- ContT $ bracket (callocBytes @DebugUtilsMessengerEXT 8) free
-  r <- lift $ traceAroundEvent "vkCreateDebugUtilsMessengerEXT" (vkCreateDebugUtilsMessengerEXT' (instanceHandle (instance')) pCreateInfo pAllocator (pPMessenger))
+  r <- lift $ traceAroundEvent "vkCreateDebugUtilsMessengerEXT" (vkCreateDebugUtilsMessengerEXT'
+                                                                   (instanceHandle (instance'))
+                                                                   pCreateInfo
+                                                                   pAllocator
+                                                                   (pPMessenger))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pMessenger <- lift $ peek @DebugUtilsMessengerEXT pPMessenger
   pure $ (pMessenger)
@@ -1308,7 +1329,9 @@ destroyDebugUtilsMessengerEXT :: forall io
                                  -- chapter.
                                  ("allocator" ::: Maybe AllocationCallbacks)
                               -> io ()
-destroyDebugUtilsMessengerEXT instance' messenger allocator = liftIO . evalContT $ do
+destroyDebugUtilsMessengerEXT instance'
+                                messenger
+                                allocator = liftIO . evalContT $ do
   let vkDestroyDebugUtilsMessengerEXTPtr = pVkDestroyDebugUtilsMessengerEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkDestroyDebugUtilsMessengerEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDestroyDebugUtilsMessengerEXT is null" Nothing Nothing
@@ -1316,7 +1339,10 @@ destroyDebugUtilsMessengerEXT instance' messenger allocator = liftIO . evalContT
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyDebugUtilsMessengerEXT" (vkDestroyDebugUtilsMessengerEXT' (instanceHandle (instance')) (messenger) pAllocator)
+  lift $ traceAroundEvent "vkDestroyDebugUtilsMessengerEXT" (vkDestroyDebugUtilsMessengerEXT'
+                                                               (instanceHandle (instance'))
+                                                               (messenger)
+                                                               pAllocator)
   pure $ ()
 
 
@@ -1381,13 +1407,20 @@ submitDebugUtilsMessageEXT :: forall io
                               -- 'DebugUtilsMessengerCallbackDataEXT' structure.
                               DebugUtilsMessengerCallbackDataEXT
                            -> io ()
-submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData = liftIO . evalContT $ do
+submitDebugUtilsMessageEXT instance'
+                             messageSeverity
+                             messageTypes
+                             callbackData = liftIO . evalContT $ do
   let vkSubmitDebugUtilsMessageEXTPtr = pVkSubmitDebugUtilsMessageEXT (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (vkSubmitDebugUtilsMessageEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkSubmitDebugUtilsMessageEXT is null" Nothing Nothing
   let vkSubmitDebugUtilsMessageEXT' = mkVkSubmitDebugUtilsMessageEXT vkSubmitDebugUtilsMessageEXTPtr
   pCallbackData <- ContT $ withCStruct (callbackData)
-  lift $ traceAroundEvent "vkSubmitDebugUtilsMessageEXT" (vkSubmitDebugUtilsMessageEXT' (instanceHandle (instance')) (messageSeverity) (messageTypes) pCallbackData)
+  lift $ traceAroundEvent "vkSubmitDebugUtilsMessageEXT" (vkSubmitDebugUtilsMessageEXT'
+                                                            (instanceHandle (instance'))
+                                                            (messageSeverity)
+                                                            (messageTypes)
+                                                            pCallbackData)
   pure $ ()
 
 
@@ -1584,7 +1617,11 @@ instance FromCStruct DebugUtilsObjectTagInfoEXT where
     tagSize <- peek @CSize ((p `plusPtr` 40 :: Ptr CSize))
     pTag <- peek @(Ptr ()) ((p `plusPtr` 48 :: Ptr (Ptr ())))
     pure $ DebugUtilsObjectTagInfoEXT
-             objectType objectHandle tagName (coerce @CSize @Word64 tagSize) pTag
+             objectType
+             objectHandle
+             tagName
+             (coerce @CSize @Word64 tagSize)
+             pTag
 
 instance Storable DebugUtilsObjectTagInfoEXT where
   sizeOf ~_ = 56
@@ -1671,7 +1708,11 @@ instance FromCStruct DebugUtilsLabelEXT where
     color2 <- peek @CFloat ((pcolor `advancePtrBytes` 8 :: Ptr CFloat))
     color3 <- peek @CFloat ((pcolor `advancePtrBytes` 12 :: Ptr CFloat))
     pure $ DebugUtilsLabelEXT
-             pLabelName (((coerce @CFloat @Float color0), (coerce @CFloat @Float color1), (coerce @CFloat @Float color2), (coerce @CFloat @Float color3)))
+             pLabelName
+             (( (coerce @CFloat @Float color0)
+              , (coerce @CFloat @Float color1)
+              , (coerce @CFloat @Float color2)
+              , (coerce @CFloat @Float color3) ))
 
 instance Zero DebugUtilsLabelEXT where
   zero = DebugUtilsLabelEXT
@@ -1991,7 +2032,13 @@ instance FromCStruct DebugUtilsMessengerCallbackDataEXT where
     pObjects <- peek @(Ptr DebugUtilsObjectNameInfoEXT) ((p `plusPtr` 88 :: Ptr (Ptr DebugUtilsObjectNameInfoEXT)))
     pObjects' <- generateM (fromIntegral objectCount) (\i -> peekCStruct @DebugUtilsObjectNameInfoEXT ((pObjects `advancePtrBytes` (40 * (i)) :: Ptr DebugUtilsObjectNameInfoEXT)))
     pure $ DebugUtilsMessengerCallbackDataEXT
-             flags pMessageIdName' messageIdNumber pMessage pQueueLabels' pCmdBufLabels' pObjects'
+             flags
+             pMessageIdName'
+             messageIdNumber
+             pMessage
+             pQueueLabels'
+             pCmdBufLabels'
+             pObjects'
 
 instance Zero DebugUtilsMessengerCallbackDataEXT where
   zero = DebugUtilsMessengerCallbackDataEXT
@@ -2018,8 +2065,6 @@ instance Zero DebugUtilsMessengerCallbackDataEXT where
 newtype DebugUtilsMessengerCreateFlagsEXT = DebugUtilsMessengerCreateFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameDebugUtilsMessengerCreateFlagsEXT :: String
 conNameDebugUtilsMessengerCreateFlagsEXT = "DebugUtilsMessengerCreateFlagsEXT"
 
@@ -2030,18 +2075,21 @@ showTableDebugUtilsMessengerCreateFlagsEXT :: [(DebugUtilsMessengerCreateFlagsEX
 showTableDebugUtilsMessengerCreateFlagsEXT = []
 
 instance Show DebugUtilsMessengerCreateFlagsEXT where
-  showsPrec = enumShowsPrec enumPrefixDebugUtilsMessengerCreateFlagsEXT
-                            showTableDebugUtilsMessengerCreateFlagsEXT
-                            conNameDebugUtilsMessengerCreateFlagsEXT
-                            (\(DebugUtilsMessengerCreateFlagsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDebugUtilsMessengerCreateFlagsEXT
+      showTableDebugUtilsMessengerCreateFlagsEXT
+      conNameDebugUtilsMessengerCreateFlagsEXT
+      (\(DebugUtilsMessengerCreateFlagsEXT x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read DebugUtilsMessengerCreateFlagsEXT where
-  readPrec = enumReadPrec enumPrefixDebugUtilsMessengerCreateFlagsEXT
-                          showTableDebugUtilsMessengerCreateFlagsEXT
-                          conNameDebugUtilsMessengerCreateFlagsEXT
-                          DebugUtilsMessengerCreateFlagsEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDebugUtilsMessengerCreateFlagsEXT
+      showTableDebugUtilsMessengerCreateFlagsEXT
+      conNameDebugUtilsMessengerCreateFlagsEXT
+      DebugUtilsMessengerCreateFlagsEXT
 
 -- | VkDebugUtilsMessengerCallbackDataFlagsEXT - Reserved for future use
 --
@@ -2057,8 +2105,6 @@ instance Read DebugUtilsMessengerCreateFlagsEXT where
 newtype DebugUtilsMessengerCallbackDataFlagsEXT = DebugUtilsMessengerCallbackDataFlagsEXT Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameDebugUtilsMessengerCallbackDataFlagsEXT :: String
 conNameDebugUtilsMessengerCallbackDataFlagsEXT = "DebugUtilsMessengerCallbackDataFlagsEXT"
 
@@ -2069,18 +2115,21 @@ showTableDebugUtilsMessengerCallbackDataFlagsEXT :: [(DebugUtilsMessengerCallbac
 showTableDebugUtilsMessengerCallbackDataFlagsEXT = []
 
 instance Show DebugUtilsMessengerCallbackDataFlagsEXT where
-  showsPrec = enumShowsPrec enumPrefixDebugUtilsMessengerCallbackDataFlagsEXT
-                            showTableDebugUtilsMessengerCallbackDataFlagsEXT
-                            conNameDebugUtilsMessengerCallbackDataFlagsEXT
-                            (\(DebugUtilsMessengerCallbackDataFlagsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDebugUtilsMessengerCallbackDataFlagsEXT
+      showTableDebugUtilsMessengerCallbackDataFlagsEXT
+      conNameDebugUtilsMessengerCallbackDataFlagsEXT
+      (\(DebugUtilsMessengerCallbackDataFlagsEXT x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read DebugUtilsMessengerCallbackDataFlagsEXT where
-  readPrec = enumReadPrec enumPrefixDebugUtilsMessengerCallbackDataFlagsEXT
-                          showTableDebugUtilsMessengerCallbackDataFlagsEXT
-                          conNameDebugUtilsMessengerCallbackDataFlagsEXT
-                          DebugUtilsMessengerCallbackDataFlagsEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDebugUtilsMessengerCallbackDataFlagsEXT
+      showTableDebugUtilsMessengerCallbackDataFlagsEXT
+      conNameDebugUtilsMessengerCallbackDataFlagsEXT
+      DebugUtilsMessengerCallbackDataFlagsEXT
 
 type DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagBitsEXT
 
@@ -2116,10 +2165,12 @@ newtype DebugUtilsMessageSeverityFlagBitsEXT = DebugUtilsMessageSeverityFlagBits
 -- verbose output indicating all diagnostic messages from the Vulkan
 -- loader, layers, and drivers should be captured.
 pattern DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT = DebugUtilsMessageSeverityFlagBitsEXT 0x00000001
+
 -- | 'DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT' specifies an informational
 -- message such as resource details that may be handy when debugging an
 -- application.
-pattern DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT    = DebugUtilsMessageSeverityFlagBitsEXT 0x00000010
+pattern DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT = DebugUtilsMessageSeverityFlagBitsEXT 0x00000010
+
 -- | 'DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT' specifies use of Vulkan
 -- that /may/ expose an app bug. Such cases may not be immediately harmful,
 -- such as a fragment shader outputting to a location with no attachment.
@@ -2128,9 +2179,10 @@ pattern DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT    = DebugUtilsMessageSeverity
 -- general if you see a warning but you know that the behavior is
 -- intended\/desired, then simply ignore the warning.
 pattern DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT = DebugUtilsMessageSeverityFlagBitsEXT 0x00000100
+
 -- | 'DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT' specifies that the
 -- application has violated a valid usage condition of the specification.
-pattern DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT   = DebugUtilsMessageSeverityFlagBitsEXT 0x00001000
+pattern DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT = DebugUtilsMessageSeverityFlagBitsEXT 0x00001000
 
 conNameDebugUtilsMessageSeverityFlagBitsEXT :: String
 conNameDebugUtilsMessageSeverityFlagBitsEXT = "DebugUtilsMessageSeverityFlagBitsEXT"
@@ -2140,25 +2192,40 @@ enumPrefixDebugUtilsMessageSeverityFlagBitsEXT = "DEBUG_UTILS_MESSAGE_SEVERITY_"
 
 showTableDebugUtilsMessageSeverityFlagBitsEXT :: [(DebugUtilsMessageSeverityFlagBitsEXT, String)]
 showTableDebugUtilsMessageSeverityFlagBitsEXT =
-  [ (DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT, "VERBOSE_BIT_EXT")
-  , (DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT   , "INFO_BIT_EXT")
-  , (DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT, "WARNING_BIT_EXT")
-  , (DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT  , "ERROR_BIT_EXT")
+  [
+    ( DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT
+    , "VERBOSE_BIT_EXT"
+    )
+  ,
+    ( DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT
+    , "INFO_BIT_EXT"
+    )
+  ,
+    ( DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
+    , "WARNING_BIT_EXT"
+    )
+  ,
+    ( DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
+    , "ERROR_BIT_EXT"
+    )
   ]
 
 instance Show DebugUtilsMessageSeverityFlagBitsEXT where
-  showsPrec = enumShowsPrec enumPrefixDebugUtilsMessageSeverityFlagBitsEXT
-                            showTableDebugUtilsMessageSeverityFlagBitsEXT
-                            conNameDebugUtilsMessageSeverityFlagBitsEXT
-                            (\(DebugUtilsMessageSeverityFlagBitsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDebugUtilsMessageSeverityFlagBitsEXT
+      showTableDebugUtilsMessageSeverityFlagBitsEXT
+      conNameDebugUtilsMessageSeverityFlagBitsEXT
+      (\(DebugUtilsMessageSeverityFlagBitsEXT x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read DebugUtilsMessageSeverityFlagBitsEXT where
-  readPrec = enumReadPrec enumPrefixDebugUtilsMessageSeverityFlagBitsEXT
-                          showTableDebugUtilsMessageSeverityFlagBitsEXT
-                          conNameDebugUtilsMessageSeverityFlagBitsEXT
-                          DebugUtilsMessageSeverityFlagBitsEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDebugUtilsMessageSeverityFlagBitsEXT
+      showTableDebugUtilsMessageSeverityFlagBitsEXT
+      conNameDebugUtilsMessageSeverityFlagBitsEXT
+      DebugUtilsMessageSeverityFlagBitsEXT
 
 type DebugUtilsMessageTypeFlagsEXT = DebugUtilsMessageTypeFlagBitsEXT
 
@@ -2175,11 +2242,13 @@ newtype DebugUtilsMessageTypeFlagBitsEXT = DebugUtilsMessageTypeFlagBitsEXT Flag
 -- | 'DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT' specifies that some general
 -- event has occurred. This is typically a non-specification,
 -- non-performance event.
-pattern DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT     = DebugUtilsMessageTypeFlagBitsEXT 0x00000001
+pattern DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT = DebugUtilsMessageTypeFlagBitsEXT 0x00000001
+
 -- | 'DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT' specifies that something
 -- has occurred during validation against the Vulkan specification that may
 -- indicate invalid behavior.
-pattern DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT  = DebugUtilsMessageTypeFlagBitsEXT 0x00000002
+pattern DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT = DebugUtilsMessageTypeFlagBitsEXT 0x00000002
+
 -- | 'DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT' specifies a potentially
 -- non-optimal use of Vulkan, e.g. using
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdClearColorImage' when setting
@@ -2196,24 +2265,36 @@ enumPrefixDebugUtilsMessageTypeFlagBitsEXT = "DEBUG_UTILS_MESSAGE_TYPE_"
 
 showTableDebugUtilsMessageTypeFlagBitsEXT :: [(DebugUtilsMessageTypeFlagBitsEXT, String)]
 showTableDebugUtilsMessageTypeFlagBitsEXT =
-  [ (DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT    , "GENERAL_BIT_EXT")
-  , (DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT , "VALIDATION_BIT_EXT")
-  , (DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT, "PERFORMANCE_BIT_EXT")
+  [
+    ( DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
+    , "GENERAL_BIT_EXT"
+    )
+  ,
+    ( DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
+    , "VALIDATION_BIT_EXT"
+    )
+  ,
+    ( DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
+    , "PERFORMANCE_BIT_EXT"
+    )
   ]
 
 instance Show DebugUtilsMessageTypeFlagBitsEXT where
-  showsPrec = enumShowsPrec enumPrefixDebugUtilsMessageTypeFlagBitsEXT
-                            showTableDebugUtilsMessageTypeFlagBitsEXT
-                            conNameDebugUtilsMessageTypeFlagBitsEXT
-                            (\(DebugUtilsMessageTypeFlagBitsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDebugUtilsMessageTypeFlagBitsEXT
+      showTableDebugUtilsMessageTypeFlagBitsEXT
+      conNameDebugUtilsMessageTypeFlagBitsEXT
+      (\(DebugUtilsMessageTypeFlagBitsEXT x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read DebugUtilsMessageTypeFlagBitsEXT where
-  readPrec = enumReadPrec enumPrefixDebugUtilsMessageTypeFlagBitsEXT
-                          showTableDebugUtilsMessageTypeFlagBitsEXT
-                          conNameDebugUtilsMessageTypeFlagBitsEXT
-                          DebugUtilsMessageTypeFlagBitsEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDebugUtilsMessageTypeFlagBitsEXT
+      showTableDebugUtilsMessageTypeFlagBitsEXT
+      conNameDebugUtilsMessageTypeFlagBitsEXT
+      DebugUtilsMessageTypeFlagBitsEXT
 
 type FN_vkDebugUtilsMessengerCallbackEXT = DebugUtilsMessageSeverityFlagBitsEXT -> ("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT) -> ("pCallbackData" ::: Ptr DebugUtilsMessengerCallbackDataEXT) -> ("pUserData" ::: Ptr ()) -> IO Bool32
 -- | PFN_vkDebugUtilsMessengerCallbackEXT - Application-defined debug

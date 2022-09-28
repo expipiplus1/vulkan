@@ -26,11 +26,13 @@ newtype InputSourceLocalizedNameFlagBits = InputSourceLocalizedNameFlagBits Flag
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- No documentation found for Nested "XrInputSourceLocalizedNameFlagBits" "XR_INPUT_SOURCE_LOCALIZED_NAME_USER_PATH_BIT"
-pattern INPUT_SOURCE_LOCALIZED_NAME_USER_PATH_BIT           = InputSourceLocalizedNameFlagBits 0x0000000000000001
+pattern INPUT_SOURCE_LOCALIZED_NAME_USER_PATH_BIT = InputSourceLocalizedNameFlagBits 0x0000000000000001
+
 -- No documentation found for Nested "XrInputSourceLocalizedNameFlagBits" "XR_INPUT_SOURCE_LOCALIZED_NAME_INTERACTION_PROFILE_BIT"
 pattern INPUT_SOURCE_LOCALIZED_NAME_INTERACTION_PROFILE_BIT = InputSourceLocalizedNameFlagBits 0x0000000000000002
+
 -- No documentation found for Nested "XrInputSourceLocalizedNameFlagBits" "XR_INPUT_SOURCE_LOCALIZED_NAME_COMPONENT_BIT"
-pattern INPUT_SOURCE_LOCALIZED_NAME_COMPONENT_BIT           = InputSourceLocalizedNameFlagBits 0x0000000000000004
+pattern INPUT_SOURCE_LOCALIZED_NAME_COMPONENT_BIT = InputSourceLocalizedNameFlagBits 0x0000000000000004
 
 conNameInputSourceLocalizedNameFlagBits :: String
 conNameInputSourceLocalizedNameFlagBits = "InputSourceLocalizedNameFlagBits"
@@ -40,21 +42,33 @@ enumPrefixInputSourceLocalizedNameFlagBits = "INPUT_SOURCE_LOCALIZED_NAME_"
 
 showTableInputSourceLocalizedNameFlagBits :: [(InputSourceLocalizedNameFlagBits, String)]
 showTableInputSourceLocalizedNameFlagBits =
-  [ (INPUT_SOURCE_LOCALIZED_NAME_USER_PATH_BIT          , "USER_PATH_BIT")
-  , (INPUT_SOURCE_LOCALIZED_NAME_INTERACTION_PROFILE_BIT, "INTERACTION_PROFILE_BIT")
-  , (INPUT_SOURCE_LOCALIZED_NAME_COMPONENT_BIT          , "COMPONENT_BIT")
+  [
+    ( INPUT_SOURCE_LOCALIZED_NAME_USER_PATH_BIT
+    , "USER_PATH_BIT"
+    )
+  ,
+    ( INPUT_SOURCE_LOCALIZED_NAME_INTERACTION_PROFILE_BIT
+    , "INTERACTION_PROFILE_BIT"
+    )
+  ,
+    ( INPUT_SOURCE_LOCALIZED_NAME_COMPONENT_BIT
+    , "COMPONENT_BIT"
+    )
   ]
 
 instance Show InputSourceLocalizedNameFlagBits where
-  showsPrec = enumShowsPrec enumPrefixInputSourceLocalizedNameFlagBits
-                            showTableInputSourceLocalizedNameFlagBits
-                            conNameInputSourceLocalizedNameFlagBits
-                            (\(InputSourceLocalizedNameFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixInputSourceLocalizedNameFlagBits
+      showTableInputSourceLocalizedNameFlagBits
+      conNameInputSourceLocalizedNameFlagBits
+      (\(InputSourceLocalizedNameFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read InputSourceLocalizedNameFlagBits where
-  readPrec = enumReadPrec enumPrefixInputSourceLocalizedNameFlagBits
-                          showTableInputSourceLocalizedNameFlagBits
-                          conNameInputSourceLocalizedNameFlagBits
-                          InputSourceLocalizedNameFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixInputSourceLocalizedNameFlagBits
+      showTableInputSourceLocalizedNameFlagBits
+      conNameInputSourceLocalizedNameFlagBits
+      InputSourceLocalizedNameFlagBits

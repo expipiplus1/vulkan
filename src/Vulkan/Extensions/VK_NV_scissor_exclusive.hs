@@ -299,14 +299,20 @@ cmdSetExclusiveScissorNV :: forall io
                             -- scissor rectangles.
                             ("exclusiveScissors" ::: Vector Rect2D)
                          -> io ()
-cmdSetExclusiveScissorNV commandBuffer firstExclusiveScissor exclusiveScissors = liftIO . evalContT $ do
+cmdSetExclusiveScissorNV commandBuffer
+                           firstExclusiveScissor
+                           exclusiveScissors = liftIO . evalContT $ do
   let vkCmdSetExclusiveScissorNVPtr = pVkCmdSetExclusiveScissorNV (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetExclusiveScissorNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetExclusiveScissorNV is null" Nothing Nothing
   let vkCmdSetExclusiveScissorNV' = mkVkCmdSetExclusiveScissorNV vkCmdSetExclusiveScissorNVPtr
   pPExclusiveScissors <- ContT $ allocaBytes @Rect2D ((Data.Vector.length (exclusiveScissors)) * 16)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPExclusiveScissors `plusPtr` (16 * (i)) :: Ptr Rect2D) (e)) (exclusiveScissors)
-  lift $ traceAroundEvent "vkCmdSetExclusiveScissorNV" (vkCmdSetExclusiveScissorNV' (commandBufferHandle (commandBuffer)) (firstExclusiveScissor) ((fromIntegral (Data.Vector.length $ (exclusiveScissors)) :: Word32)) (pPExclusiveScissors))
+  lift $ traceAroundEvent "vkCmdSetExclusiveScissorNV" (vkCmdSetExclusiveScissorNV'
+                                                          (commandBufferHandle (commandBuffer))
+                                                          (firstExclusiveScissor)
+                                                          ((fromIntegral (Data.Vector.length $ (exclusiveScissors)) :: Word32))
+                                                          (pPExclusiveScissors))
   pure $ ()
 
 

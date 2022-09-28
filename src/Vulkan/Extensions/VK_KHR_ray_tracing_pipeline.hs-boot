@@ -760,10 +760,12 @@ instance FromCStruct PhysicalDeviceRayTracingPipelinePropertiesKHR
 type role RayTracingPipelineCreateInfoKHR nominal
 data RayTracingPipelineCreateInfoKHR (es :: [Type])
 
-instance (Extendss RayTracingPipelineCreateInfoKHR es, PokeChain es) => ToCStruct (RayTracingPipelineCreateInfoKHR es)
+instance ( Extendss RayTracingPipelineCreateInfoKHR es
+         , PokeChain es ) => ToCStruct (RayTracingPipelineCreateInfoKHR es)
 instance Show (Chain es) => Show (RayTracingPipelineCreateInfoKHR es)
 
-instance (Extendss RayTracingPipelineCreateInfoKHR es, PeekChain es) => FromCStruct (RayTracingPipelineCreateInfoKHR es)
+instance ( Extendss RayTracingPipelineCreateInfoKHR es
+         , PeekChain es ) => FromCStruct (RayTracingPipelineCreateInfoKHR es)
 
 
 data RayTracingPipelineInterfaceCreateInfoKHR

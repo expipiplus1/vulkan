@@ -46,14 +46,17 @@ newtype ColorComponentFlagBits = ColorComponentFlagBits Flags
 -- color attachment for the appropriate sample. Otherwise, the value in
 -- memory is unmodified.
 pattern COLOR_COMPONENT_R_BIT = ColorComponentFlagBits 0x00000001
+
 -- | 'COLOR_COMPONENT_G_BIT' specifies that the G value is written to the
 -- color attachment for the appropriate sample. Otherwise, the value in
 -- memory is unmodified.
 pattern COLOR_COMPONENT_G_BIT = ColorComponentFlagBits 0x00000002
+
 -- | 'COLOR_COMPONENT_B_BIT' specifies that the B value is written to the
 -- color attachment for the appropriate sample. Otherwise, the value in
 -- memory is unmodified.
 pattern COLOR_COMPONENT_B_BIT = ColorComponentFlagBits 0x00000004
+
 -- | 'COLOR_COMPONENT_A_BIT' specifies that the A value is written to the
 -- color attachment for the appropriate sample. Otherwise, the value in
 -- memory is unmodified.
@@ -74,15 +77,18 @@ showTableColorComponentFlagBits =
   ]
 
 instance Show ColorComponentFlagBits where
-  showsPrec = enumShowsPrec enumPrefixColorComponentFlagBits
-                            showTableColorComponentFlagBits
-                            conNameColorComponentFlagBits
-                            (\(ColorComponentFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixColorComponentFlagBits
+      showTableColorComponentFlagBits
+      conNameColorComponentFlagBits
+      (\(ColorComponentFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read ColorComponentFlagBits where
-  readPrec = enumReadPrec enumPrefixColorComponentFlagBits
-                          showTableColorComponentFlagBits
-                          conNameColorComponentFlagBits
-                          ColorComponentFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixColorComponentFlagBits
+      showTableColorComponentFlagBits
+      conNameColorComponentFlagBits
+      ColorComponentFlagBits

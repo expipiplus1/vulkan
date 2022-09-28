@@ -482,7 +482,8 @@ instance FromCStruct PhysicalDeviceVertexAttributeDivisorFeaturesEXT where
     vertexAttributeInstanceRateDivisor <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     vertexAttributeInstanceRateZeroDivisor <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ PhysicalDeviceVertexAttributeDivisorFeaturesEXT
-             (bool32ToBool vertexAttributeInstanceRateDivisor) (bool32ToBool vertexAttributeInstanceRateZeroDivisor)
+             (bool32ToBool vertexAttributeInstanceRateDivisor)
+             (bool32ToBool vertexAttributeInstanceRateZeroDivisor)
 
 instance Storable PhysicalDeviceVertexAttributeDivisorFeaturesEXT where
   sizeOf ~_ = 24

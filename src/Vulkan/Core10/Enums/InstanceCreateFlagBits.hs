@@ -41,18 +41,26 @@ enumPrefixInstanceCreateFlagBits :: String
 enumPrefixInstanceCreateFlagBits = "INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR"
 
 showTableInstanceCreateFlagBits :: [(InstanceCreateFlagBits, String)]
-showTableInstanceCreateFlagBits = [(INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR, "")]
+showTableInstanceCreateFlagBits =
+  [
+    ( INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR
+    , ""
+    )
+  ]
 
 instance Show InstanceCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixInstanceCreateFlagBits
-                            showTableInstanceCreateFlagBits
-                            conNameInstanceCreateFlagBits
-                            (\(InstanceCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixInstanceCreateFlagBits
+      showTableInstanceCreateFlagBits
+      conNameInstanceCreateFlagBits
+      (\(InstanceCreateFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read InstanceCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixInstanceCreateFlagBits
-                          showTableInstanceCreateFlagBits
-                          conNameInstanceCreateFlagBits
-                          InstanceCreateFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixInstanceCreateFlagBits
+      showTableInstanceCreateFlagBits
+      conNameInstanceCreateFlagBits
+      InstanceCreateFlagBits

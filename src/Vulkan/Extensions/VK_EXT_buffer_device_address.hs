@@ -328,7 +328,9 @@ instance FromCStruct PhysicalDeviceBufferDeviceAddressFeaturesEXT where
     bufferDeviceAddressCaptureReplay <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     bufferDeviceAddressMultiDevice <- peek @Bool32 ((p `plusPtr` 24 :: Ptr Bool32))
     pure $ PhysicalDeviceBufferDeviceAddressFeaturesEXT
-             (bool32ToBool bufferDeviceAddress) (bool32ToBool bufferDeviceAddressCaptureReplay) (bool32ToBool bufferDeviceAddressMultiDevice)
+             (bool32ToBool bufferDeviceAddress)
+             (bool32ToBool bufferDeviceAddressCaptureReplay)
+             (bool32ToBool bufferDeviceAddressMultiDevice)
 
 instance Storable PhysicalDeviceBufferDeviceAddressFeaturesEXT where
   sizeOf ~_ = 32

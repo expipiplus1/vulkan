@@ -191,7 +191,9 @@ foreign import ccall
 -- 'OpenXR.Core10.Image.SwapchainCreateInfo',
 -- 'OpenXR.Core10.Image.destroySwapchain'
 createSwapchainAndroidSurfaceKHR :: forall a io
-                                  . (Extendss SwapchainCreateInfo a, PokeChain a, MonadIO io)
+                                  . ( Extendss SwapchainCreateInfo a
+                                    , PokeChain a
+                                    , MonadIO io )
                                  => -- | @session@ is an 'OpenXR.Core10.Handles.Session' handle previously
                                     -- created with 'OpenXR.Core10.Device.createSession'.
                                     Session
@@ -210,7 +212,11 @@ createSwapchainAndroidSurfaceKHR session info surface = liftIO . evalContT $ do
   let xrCreateSwapchainAndroidSurfaceKHR' = mkXrCreateSwapchainAndroidSurfaceKHR xrCreateSwapchainAndroidSurfaceKHRPtr
   info' <- ContT $ withCStruct (info)
   pSwapchain <- ContT $ bracket (callocBytes @(Ptr Swapchain_T) 8) free
-  r <- lift $ traceAroundEvent "xrCreateSwapchainAndroidSurfaceKHR" (xrCreateSwapchainAndroidSurfaceKHR' (sessionHandle (session)) (forgetExtensions info') (pSwapchain) (surface))
+  r <- lift $ traceAroundEvent "xrCreateSwapchainAndroidSurfaceKHR" (xrCreateSwapchainAndroidSurfaceKHR'
+                                                                       (sessionHandle (session))
+                                                                       (forgetExtensions info')
+                                                                       (pSwapchain)
+                                                                       (surface))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   swapchain <- lift $ peek @(Ptr Swapchain_T) pSwapchain
   pure $ (r, ((\h -> Swapchain h cmds ) swapchain))

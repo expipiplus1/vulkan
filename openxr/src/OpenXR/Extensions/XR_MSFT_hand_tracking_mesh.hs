@@ -245,7 +245,10 @@ createHandMeshSpaceMSFT handTracker createInfo = liftIO . evalContT $ do
   let xrCreateHandMeshSpaceMSFT' = mkXrCreateHandMeshSpaceMSFT xrCreateHandMeshSpaceMSFTPtr
   createInfo' <- ContT $ withCStruct (createInfo)
   pSpace <- ContT $ bracket (callocBytes @(Ptr Space_T) 8) free
-  r <- lift $ traceAroundEvent "xrCreateHandMeshSpaceMSFT" (xrCreateHandMeshSpaceMSFT' (handTrackerEXTHandle (handTracker)) createInfo' (pSpace))
+  r <- lift $ traceAroundEvent "xrCreateHandMeshSpaceMSFT" (xrCreateHandMeshSpaceMSFT'
+                                                              (handTrackerEXTHandle (handTracker))
+                                                              createInfo'
+                                                              (pSpace))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   space <- lift $ peek @(Ptr Space_T) pSpace
   pure $ (r, ((\h -> Space h cmds ) space))
@@ -353,7 +356,10 @@ updateHandMeshMSFT handTracker updateInfo = liftIO . evalContT $ do
   let xrUpdateHandMeshMSFT' = mkXrUpdateHandMeshMSFT xrUpdateHandMeshMSFTPtr
   updateInfo' <- ContT $ withCStruct (updateInfo)
   pHandMesh <- ContT (withZeroCStruct @HandMeshMSFT)
-  r <- lift $ traceAroundEvent "xrUpdateHandMeshMSFT" (xrUpdateHandMeshMSFT' (handTrackerEXTHandle (handTracker)) updateInfo' (pHandMesh))
+  r <- lift $ traceAroundEvent "xrUpdateHandMeshMSFT" (xrUpdateHandMeshMSFT'
+                                                         (handTrackerEXTHandle (handTracker))
+                                                         updateInfo'
+                                                         (pHandMesh))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   handMesh <- lift $ peekCStruct @HandMeshMSFT pHandMesh
   pure $ (r, handMesh)
@@ -643,7 +649,11 @@ instance FromCStruct HandMeshMSFT where
     indexBuffer <- peekCStruct @HandMeshIndexBufferMSFT ((p `plusPtr` 32 :: Ptr HandMeshIndexBufferMSFT))
     vertexBuffer <- peekCStruct @HandMeshVertexBufferMSFT ((p `plusPtr` 56 :: Ptr HandMeshVertexBufferMSFT))
     pure $ HandMeshMSFT
-             (bool32ToBool isActive) (bool32ToBool indexBufferChanged) (bool32ToBool vertexBufferChanged) indexBuffer vertexBuffer
+             (bool32ToBool isActive)
+             (bool32ToBool indexBufferChanged)
+             (bool32ToBool vertexBufferChanged)
+             indexBuffer
+             vertexBuffer
 
 instance Storable HandMeshMSFT where
   sizeOf ~_ = 80
@@ -1065,7 +1075,9 @@ instance FromCStruct SystemHandTrackingMeshPropertiesMSFT where
     maxHandMeshIndexCount <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
     maxHandMeshVertexCount <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
     pure $ SystemHandTrackingMeshPropertiesMSFT
-             (bool32ToBool supportsHandTrackingMesh) maxHandMeshIndexCount maxHandMeshVertexCount
+             (bool32ToBool supportsHandTrackingMesh)
+             maxHandMeshIndexCount
+             maxHandMeshVertexCount
 
 instance Storable SystemHandTrackingMeshPropertiesMSFT where
   sizeOf ~_ = 32
@@ -1182,12 +1194,17 @@ newtype HandPoseTypeMSFT = HandPoseTypeMSFT Int32
 
 -- | 'HAND_POSE_TYPE_TRACKED_MSFT' represents a hand pose provided by actual
 -- tracking of the user’s hand.
-pattern HAND_POSE_TYPE_TRACKED_MSFT             = HandPoseTypeMSFT 0
+pattern HAND_POSE_TYPE_TRACKED_MSFT = HandPoseTypeMSFT 0
+
 -- | 'HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT' represents a stable reference
 -- hand pose in a relaxed open hand shape.
 pattern HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT = HandPoseTypeMSFT 1
-{-# complete HAND_POSE_TYPE_TRACKED_MSFT,
-             HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT :: HandPoseTypeMSFT #-}
+
+{-# COMPLETE
+  HAND_POSE_TYPE_TRACKED_MSFT
+  , HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT ::
+    HandPoseTypeMSFT
+  #-}
 
 conNameHandPoseTypeMSFT :: String
 conNameHandPoseTypeMSFT = "HandPoseTypeMSFT"
@@ -1197,18 +1214,29 @@ enumPrefixHandPoseTypeMSFT = "HAND_POSE_TYPE_"
 
 showTableHandPoseTypeMSFT :: [(HandPoseTypeMSFT, String)]
 showTableHandPoseTypeMSFT =
-  [(HAND_POSE_TYPE_TRACKED_MSFT, "TRACKED_MSFT"), (HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT, "REFERENCE_OPEN_PALM_MSFT")]
+  [ (HAND_POSE_TYPE_TRACKED_MSFT, "TRACKED_MSFT")
+  ,
+    ( HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT
+    , "REFERENCE_OPEN_PALM_MSFT"
+    )
+  ]
 
 instance Show HandPoseTypeMSFT where
-  showsPrec = enumShowsPrec enumPrefixHandPoseTypeMSFT
-                            showTableHandPoseTypeMSFT
-                            conNameHandPoseTypeMSFT
-                            (\(HandPoseTypeMSFT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixHandPoseTypeMSFT
+      showTableHandPoseTypeMSFT
+      conNameHandPoseTypeMSFT
+      (\(HandPoseTypeMSFT x) -> x)
+      (showsPrec 11)
 
 instance Read HandPoseTypeMSFT where
-  readPrec = enumReadPrec enumPrefixHandPoseTypeMSFT showTableHandPoseTypeMSFT conNameHandPoseTypeMSFT HandPoseTypeMSFT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixHandPoseTypeMSFT
+      showTableHandPoseTypeMSFT
+      conNameHandPoseTypeMSFT
+      HandPoseTypeMSFT
 
 type MSFT_hand_tracking_mesh_SPEC_VERSION = 2
 

@@ -160,7 +160,11 @@ getDeviceQueue device queueFamilyIndex queueIndex = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeviceQueue is null" Nothing Nothing
   let vkGetDeviceQueue' = mkVkGetDeviceQueue vkGetDeviceQueuePtr
   pPQueue <- ContT $ bracket (callocBytes @(Ptr Queue_T) 8) free
-  lift $ traceAroundEvent "vkGetDeviceQueue" (vkGetDeviceQueue' (deviceHandle (device)) (queueFamilyIndex) (queueIndex) (pPQueue))
+  lift $ traceAroundEvent "vkGetDeviceQueue" (vkGetDeviceQueue'
+                                                (deviceHandle (device))
+                                                (queueFamilyIndex)
+                                                (queueIndex)
+                                                (pPQueue))
   pQueue <- lift $ peek @(Ptr Queue_T) pPQueue
   pure $ (((\h -> Queue h cmds ) pQueue))
 
@@ -422,7 +426,11 @@ queueSubmit queue submits fence = liftIO . evalContT $ do
   let vkQueueSubmit' = mkVkQueueSubmit vkQueueSubmitPtr
   pPSubmits <- ContT $ allocaBytes @(SubmitInfo _) ((Data.Vector.length (submits)) * 72)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPSubmits `plusPtr` (72 * (i)) :: Ptr (SubmitInfo _))) (e) . ($ ())) (submits)
-  r <- lift $ traceAroundEvent "vkQueueSubmit" (vkQueueSubmit' (queueHandle (queue)) ((fromIntegral (Data.Vector.length $ (submits)) :: Word32)) (forgetExtensions (pPSubmits)) (fence))
+  r <- lift $ traceAroundEvent "vkQueueSubmit" (vkQueueSubmit'
+                                                  (queueHandle (queue))
+                                                  ((fromIntegral (Data.Vector.length $ (submits)) :: Word32))
+                                                  (forgetExtensions (pPSubmits))
+                                                  (fence))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -449,7 +457,8 @@ queueWaitIdleSafeOrUnsafe mkVkQueueWaitIdle queue = liftIO $ do
   unless (vkQueueWaitIdlePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueWaitIdle is null" Nothing Nothing
   let vkQueueWaitIdle' = mkVkQueueWaitIdle vkQueueWaitIdlePtr
-  r <- traceAroundEvent "vkQueueWaitIdle" (vkQueueWaitIdle' (queueHandle (queue)))
+  r <- traceAroundEvent "vkQueueWaitIdle" (vkQueueWaitIdle'
+                                             (queueHandle (queue)))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 -- | vkQueueWaitIdle - Wait for a queue to become idle
@@ -538,7 +547,8 @@ deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdle device = liftIO $ do
   unless (vkDeviceWaitIdlePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDeviceWaitIdle is null" Nothing Nothing
   let vkDeviceWaitIdle' = mkVkDeviceWaitIdle vkDeviceWaitIdlePtr
-  r <- traceAroundEvent "vkDeviceWaitIdle" (vkDeviceWaitIdle' (deviceHandle (device)))
+  r <- traceAroundEvent "vkDeviceWaitIdle" (vkDeviceWaitIdle'
+                                              (deviceHandle (device)))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 -- | vkDeviceWaitIdle - Wait for a device to become idle
@@ -875,7 +885,8 @@ instance Extensible SubmitInfo where
     | Just Refl <- eqT @e @Win32KeyedMutexAcquireReleaseInfoNV = Just f
     | otherwise = Nothing
 
-instance (Extendss SubmitInfo es, PokeChain es) => ToCStruct (SubmitInfo es) where
+instance ( Extendss SubmitInfo es
+         , PokeChain es ) => ToCStruct (SubmitInfo es) where
   withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SubmitInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBMIT_INFO)
@@ -908,7 +919,8 @@ instance (Extendss SubmitInfo es, PokeChain es) => ToCStruct (SubmitInfo es) whe
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ f
 
-instance (Extendss SubmitInfo es, PeekChain es) => FromCStruct (SubmitInfo es) where
+instance ( Extendss SubmitInfo es
+         , PeekChain es ) => FromCStruct (SubmitInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -924,7 +936,11 @@ instance (Extendss SubmitInfo es, PeekChain es) => FromCStruct (SubmitInfo es) w
     pSignalSemaphores <- peek @(Ptr Semaphore) ((p `plusPtr` 64 :: Ptr (Ptr Semaphore)))
     pSignalSemaphores' <- generateM (fromIntegral signalSemaphoreCount) (\i -> peek @Semaphore ((pSignalSemaphores `advancePtrBytes` (8 * (i)) :: Ptr Semaphore)))
     pure $ SubmitInfo
-             next pWaitSemaphores' pWaitDstStageMask' pCommandBuffers' pSignalSemaphores'
+             next
+             pWaitSemaphores'
+             pWaitDstStageMask'
+             pCommandBuffers'
+             pSignalSemaphores'
 
 instance es ~ '[] => Zero (SubmitInfo es) where
   zero = SubmitInfo

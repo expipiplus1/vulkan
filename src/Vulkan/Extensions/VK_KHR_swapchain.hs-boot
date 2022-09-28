@@ -1144,19 +1144,23 @@ instance FromCStruct ImageSwapchainCreateInfoKHR
 type role PresentInfoKHR nominal
 data PresentInfoKHR (es :: [Type])
 
-instance (Extendss PresentInfoKHR es, PokeChain es) => ToCStruct (PresentInfoKHR es)
+instance ( Extendss PresentInfoKHR es
+         , PokeChain es ) => ToCStruct (PresentInfoKHR es)
 instance Show (Chain es) => Show (PresentInfoKHR es)
 
-instance (Extendss PresentInfoKHR es, PeekChain es) => FromCStruct (PresentInfoKHR es)
+instance ( Extendss PresentInfoKHR es
+         , PeekChain es ) => FromCStruct (PresentInfoKHR es)
 
 
 type role SwapchainCreateInfoKHR nominal
 data SwapchainCreateInfoKHR (es :: [Type])
 
-instance (Extendss SwapchainCreateInfoKHR es, PokeChain es) => ToCStruct (SwapchainCreateInfoKHR es)
+instance ( Extendss SwapchainCreateInfoKHR es
+         , PokeChain es ) => ToCStruct (SwapchainCreateInfoKHR es)
 instance Show (Chain es) => Show (SwapchainCreateInfoKHR es)
 
-instance (Extendss SwapchainCreateInfoKHR es, PeekChain es) => FromCStruct (SwapchainCreateInfoKHR es)
+instance ( Extendss SwapchainCreateInfoKHR es
+         , PeekChain es ) => FromCStruct (SwapchainCreateInfoKHR es)
 
 
 type DeviceGroupPresentModeFlagsKHR = DeviceGroupPresentModeFlagBitsKHR

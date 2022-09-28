@@ -319,7 +319,20 @@ instance FromCStruct PhysicalDeviceShaderCorePropertiesAMD where
     maxVgprAllocation <- peek @Word32 ((p `plusPtr` 64 :: Ptr Word32))
     vgprAllocationGranularity <- peek @Word32 ((p `plusPtr` 68 :: Ptr Word32))
     pure $ PhysicalDeviceShaderCorePropertiesAMD
-             shaderEngineCount shaderArraysPerEngineCount computeUnitsPerShaderArray simdPerComputeUnit wavefrontsPerSimd wavefrontSize sgprsPerSimd minSgprAllocation maxSgprAllocation sgprAllocationGranularity vgprsPerSimd minVgprAllocation maxVgprAllocation vgprAllocationGranularity
+             shaderEngineCount
+             shaderArraysPerEngineCount
+             computeUnitsPerShaderArray
+             simdPerComputeUnit
+             wavefrontsPerSimd
+             wavefrontSize
+             sgprsPerSimd
+             minSgprAllocation
+             maxSgprAllocation
+             sgprAllocationGranularity
+             vgprsPerSimd
+             minVgprAllocation
+             maxVgprAllocation
+             vgprAllocationGranularity
 
 instance Storable PhysicalDeviceShaderCorePropertiesAMD where
   sizeOf ~_ = 72

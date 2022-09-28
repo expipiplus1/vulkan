@@ -295,7 +295,10 @@ getShaderModuleIdentifierEXT device shaderModule = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetShaderModuleIdentifierEXT is null" Nothing Nothing
   let vkGetShaderModuleIdentifierEXT' = mkVkGetShaderModuleIdentifierEXT vkGetShaderModuleIdentifierEXTPtr
   pPIdentifier <- ContT (withZeroCStruct @ShaderModuleIdentifierEXT)
-  lift $ traceAroundEvent "vkGetShaderModuleIdentifierEXT" (vkGetShaderModuleIdentifierEXT' (deviceHandle (device)) (shaderModule) (pPIdentifier))
+  lift $ traceAroundEvent "vkGetShaderModuleIdentifierEXT" (vkGetShaderModuleIdentifierEXT'
+                                                              (deviceHandle (device))
+                                                              (shaderModule)
+                                                              (pPIdentifier))
   pIdentifier <- lift $ peekCStruct @ShaderModuleIdentifierEXT pPIdentifier
   pure $ (pIdentifier)
 
@@ -355,7 +358,9 @@ foreign import ccall
 -- 'Vulkan.Core10.Shader.ShaderModuleCreateInfo',
 -- 'ShaderModuleIdentifierEXT'
 getShaderModuleCreateInfoIdentifierEXT :: forall a io
-                                        . (Extendss ShaderModuleCreateInfo a, PokeChain a, MonadIO io)
+                                        . ( Extendss ShaderModuleCreateInfo a
+                                          , PokeChain a
+                                          , MonadIO io )
                                        => -- | @device@ is the logical device that /can/ create a
                                           -- 'Vulkan.Core10.Handles.ShaderModule' from @pCreateInfo@.
                                           Device
@@ -363,14 +368,18 @@ getShaderModuleCreateInfoIdentifierEXT :: forall a io
                                           -- 'Vulkan.Core10.Shader.ShaderModuleCreateInfo' structure.
                                           (ShaderModuleCreateInfo a)
                                        -> io (ShaderModuleIdentifierEXT)
-getShaderModuleCreateInfoIdentifierEXT device createInfo = liftIO . evalContT $ do
+getShaderModuleCreateInfoIdentifierEXT device
+                                         createInfo = liftIO . evalContT $ do
   let vkGetShaderModuleCreateInfoIdentifierEXTPtr = pVkGetShaderModuleCreateInfoIdentifierEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetShaderModuleCreateInfoIdentifierEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetShaderModuleCreateInfoIdentifierEXT is null" Nothing Nothing
   let vkGetShaderModuleCreateInfoIdentifierEXT' = mkVkGetShaderModuleCreateInfoIdentifierEXT vkGetShaderModuleCreateInfoIdentifierEXTPtr
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pPIdentifier <- ContT (withZeroCStruct @ShaderModuleIdentifierEXT)
-  lift $ traceAroundEvent "vkGetShaderModuleCreateInfoIdentifierEXT" (vkGetShaderModuleCreateInfoIdentifierEXT' (deviceHandle (device)) (forgetExtensions pCreateInfo) (pPIdentifier))
+  lift $ traceAroundEvent "vkGetShaderModuleCreateInfoIdentifierEXT" (vkGetShaderModuleCreateInfoIdentifierEXT'
+                                                                        (deviceHandle (device))
+                                                                        (forgetExtensions pCreateInfo)
+                                                                        (pPIdentifier))
   pIdentifier <- lift $ peekCStruct @ShaderModuleIdentifierEXT pPIdentifier
   pure $ (pIdentifier)
 

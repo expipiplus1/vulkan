@@ -12,8 +12,10 @@ import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
 type role FenceCreateInfo nominal
 data FenceCreateInfo (es :: [Type])
 
-instance (Extendss FenceCreateInfo es, PokeChain es) => ToCStruct (FenceCreateInfo es)
+instance ( Extendss FenceCreateInfo es
+         , PokeChain es ) => ToCStruct (FenceCreateInfo es)
 instance Show (Chain es) => Show (FenceCreateInfo es)
 
-instance (Extendss FenceCreateInfo es, PeekChain es) => FromCStruct (FenceCreateInfo es)
+instance ( Extendss FenceCreateInfo es
+         , PeekChain es ) => FromCStruct (FenceCreateInfo es)
 

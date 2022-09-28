@@ -251,11 +251,19 @@ enumerateReferenceSpaces session = liftIO . evalContT $ do
   let xrEnumerateReferenceSpaces' = mkXrEnumerateReferenceSpaces xrEnumerateReferenceSpacesPtr
   let session' = sessionHandle (session)
   pSpaceCountOutput <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "xrEnumerateReferenceSpaces" (xrEnumerateReferenceSpaces' session' (0) (pSpaceCountOutput) (nullPtr))
+  r <- lift $ traceAroundEvent "xrEnumerateReferenceSpaces" (xrEnumerateReferenceSpaces'
+                                                               session'
+                                                               (0)
+                                                               (pSpaceCountOutput)
+                                                               (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   spaceCountOutput <- lift $ peek @Word32 pSpaceCountOutput
   pSpaces <- ContT $ bracket (callocBytes @ReferenceSpaceType ((fromIntegral (spaceCountOutput)) * 4)) free
-  r' <- lift $ traceAroundEvent "xrEnumerateReferenceSpaces" (xrEnumerateReferenceSpaces' session' ((spaceCountOutput)) (pSpaceCountOutput) (pSpaces))
+  r' <- lift $ traceAroundEvent "xrEnumerateReferenceSpaces" (xrEnumerateReferenceSpaces'
+                                                                session'
+                                                                ((spaceCountOutput))
+                                                                (pSpaceCountOutput)
+                                                                (pSpaces))
   lift $ when (r' < SUCCESS) (throwIO (OpenXrException r'))
   spaceCountOutput' <- lift $ peek @Word32 pSpaceCountOutput
   spaces' <- lift $ generateM (fromIntegral (spaceCountOutput')) (\i -> peek @ReferenceSpaceType ((pSpaces `advancePtrBytes` (4 * (i)) :: Ptr ReferenceSpaceType)))
@@ -344,7 +352,10 @@ createReferenceSpace session createInfo = liftIO . evalContT $ do
   let xrCreateReferenceSpace' = mkXrCreateReferenceSpace xrCreateReferenceSpacePtr
   createInfo' <- ContT $ withCStruct (createInfo)
   pSpace <- ContT $ bracket (callocBytes @(Ptr Space_T) 8) free
-  r <- lift $ traceAroundEvent "xrCreateReferenceSpace" (xrCreateReferenceSpace' (sessionHandle (session)) createInfo' (pSpace))
+  r <- lift $ traceAroundEvent "xrCreateReferenceSpace" (xrCreateReferenceSpace'
+                                                           (sessionHandle (session))
+                                                           createInfo'
+                                                           (pSpace))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   space <- lift $ peek @(Ptr Space_T) pSpace
   pure $ (r, ((\h -> Space h cmds ) space))
@@ -450,7 +461,10 @@ createActionSpace session createInfo = liftIO . evalContT $ do
   let xrCreateActionSpace' = mkXrCreateActionSpace xrCreateActionSpacePtr
   createInfo' <- ContT $ withCStruct (createInfo)
   pSpace <- ContT $ bracket (callocBytes @(Ptr Space_T) 8) free
-  r <- lift $ traceAroundEvent "xrCreateActionSpace" (xrCreateActionSpace' (sessionHandle (session)) createInfo' (pSpace))
+  r <- lift $ traceAroundEvent "xrCreateActionSpace" (xrCreateActionSpace'
+                                                        (sessionHandle (session))
+                                                        createInfo'
+                                                        (pSpace))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   space <- lift $ peek @(Ptr Space_T) pSpace
   pure $ (r, ((\h -> Space h cmds ) space))
@@ -622,7 +636,11 @@ locateSpace space baseSpace time = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrLocateSpace is null" Nothing Nothing
   let xrLocateSpace' = mkXrLocateSpace xrLocateSpacePtr
   pLocation <- ContT (withZeroCStruct @(SpaceLocation _))
-  r <- lift $ traceAroundEvent "xrLocateSpace" (xrLocateSpace' (spaceHandle (space)) (spaceHandle (baseSpace)) (time) (forgetExtensions (pLocation)))
+  r <- lift $ traceAroundEvent "xrLocateSpace" (xrLocateSpace'
+                                                  (spaceHandle (space))
+                                                  (spaceHandle (baseSpace))
+                                                  (time)
+                                                  (forgetExtensions (pLocation)))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   location <- lift $ peekCStruct @(SpaceLocation _) pLocation
   pure $ (r, location)
@@ -691,7 +709,10 @@ getReferenceSpaceBoundsRect session referenceSpaceType = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetReferenceSpaceBoundsRect is null" Nothing Nothing
   let xrGetReferenceSpaceBoundsRect' = mkXrGetReferenceSpaceBoundsRect xrGetReferenceSpaceBoundsRectPtr
   pBounds <- ContT (withZeroCStruct @Extent2Df)
-  r <- lift $ traceAroundEvent "xrGetReferenceSpaceBoundsRect" (xrGetReferenceSpaceBoundsRect' (sessionHandle (session)) (referenceSpaceType) (pBounds))
+  r <- lift $ traceAroundEvent "xrGetReferenceSpaceBoundsRect" (xrGetReferenceSpaceBoundsRect'
+                                                                  (sessionHandle (session))
+                                                                  (referenceSpaceType)
+                                                                  (pBounds))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   bounds <- lift $ peekCStruct @Extent2Df pBounds
   pure $ (r, bounds)
@@ -748,7 +769,9 @@ instance FromCStruct Vector3f where
     y <- peek @CFloat ((p `plusPtr` 4 :: Ptr CFloat))
     z <- peek @CFloat ((p `plusPtr` 8 :: Ptr CFloat))
     pure $ Vector3f
-             (coerce @CFloat @Float x) (coerce @CFloat @Float y) (coerce @CFloat @Float z)
+             (coerce @CFloat @Float x)
+             (coerce @CFloat @Float y)
+             (coerce @CFloat @Float z)
 
 instance Storable Vector3f where
   sizeOf ~_ = 12
@@ -812,7 +835,10 @@ instance FromCStruct Quaternionf where
     z <- peek @CFloat ((p `plusPtr` 8 :: Ptr CFloat))
     w <- peek @CFloat ((p `plusPtr` 12 :: Ptr CFloat))
     pure $ Quaternionf
-             (coerce @CFloat @Float x) (coerce @CFloat @Float y) (coerce @CFloat @Float z) (coerce @CFloat @Float w)
+             (coerce @CFloat @Float x)
+             (coerce @CFloat @Float y)
+             (coerce @CFloat @Float z)
+             (coerce @CFloat @Float w)
 
 instance Storable Quaternionf where
   sizeOf ~_ = 16
@@ -1098,7 +1124,8 @@ instance Extensible SpaceLocation where
     | Just Refl <- eqT @e @SpaceVelocity = Just f
     | otherwise = Nothing
 
-instance (Extendss SpaceLocation es, PokeChain es) => ToCStruct (SpaceLocation es) where
+instance ( Extendss SpaceLocation es
+         , PokeChain es ) => ToCStruct (SpaceLocation es) where
   withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SpaceLocation{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SPACE_LOCATION)
@@ -1116,7 +1143,8 @@ instance (Extendss SpaceLocation es, PokeChain es) => ToCStruct (SpaceLocation e
     lift $ poke ((p `plusPtr` 24 :: Ptr Posef)) (zero)
     lift $ f
 
-instance (Extendss SpaceLocation es, PeekChain es) => FromCStruct (SpaceLocation es) where
+instance ( Extendss SpaceLocation es
+         , PeekChain es ) => FromCStruct (SpaceLocation es) where
   peekCStruct p = do
     next <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next' <- peekChain (castPtr next)

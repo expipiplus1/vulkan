@@ -310,7 +310,10 @@ displayPowerControlEXT device display displayPowerInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDisplayPowerControlEXT is null" Nothing Nothing
   let vkDisplayPowerControlEXT' = mkVkDisplayPowerControlEXT vkDisplayPowerControlEXTPtr
   pDisplayPowerInfo <- ContT $ withCStruct (displayPowerInfo)
-  r <- lift $ traceAroundEvent "vkDisplayPowerControlEXT" (vkDisplayPowerControlEXT' (deviceHandle (device)) (display) pDisplayPowerInfo)
+  r <- lift $ traceAroundEvent "vkDisplayPowerControlEXT" (vkDisplayPowerControlEXT'
+                                                             (deviceHandle (device))
+                                                             (display)
+                                                             pDisplayPowerInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -367,7 +370,9 @@ registerDeviceEventEXT :: forall io
                           -- chapter.
                           ("allocator" ::: Maybe AllocationCallbacks)
                        -> io (Fence)
-registerDeviceEventEXT device deviceEventInfo allocator = liftIO . evalContT $ do
+registerDeviceEventEXT device
+                         deviceEventInfo
+                         allocator = liftIO . evalContT $ do
   let vkRegisterDeviceEventEXTPtr = pVkRegisterDeviceEventEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkRegisterDeviceEventEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkRegisterDeviceEventEXT is null" Nothing Nothing
@@ -377,7 +382,11 @@ registerDeviceEventEXT device deviceEventInfo allocator = liftIO . evalContT $ d
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPFence <- ContT $ bracket (callocBytes @Fence 8) free
-  r <- lift $ traceAroundEvent "vkRegisterDeviceEventEXT" (vkRegisterDeviceEventEXT' (deviceHandle (device)) pDeviceEventInfo pAllocator (pPFence))
+  r <- lift $ traceAroundEvent "vkRegisterDeviceEventEXT" (vkRegisterDeviceEventEXT'
+                                                             (deviceHandle (device))
+                                                             pDeviceEventInfo
+                                                             pAllocator
+                                                             (pPFence))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pFence <- lift $ peek @Fence pPFence
   pure $ (pFence)
@@ -446,7 +455,10 @@ registerDisplayEventEXT :: forall io
                            -- chapter.
                            ("allocator" ::: Maybe AllocationCallbacks)
                         -> io (Fence)
-registerDisplayEventEXT device display displayEventInfo allocator = liftIO . evalContT $ do
+registerDisplayEventEXT device
+                          display
+                          displayEventInfo
+                          allocator = liftIO . evalContT $ do
   let vkRegisterDisplayEventEXTPtr = pVkRegisterDisplayEventEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkRegisterDisplayEventEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkRegisterDisplayEventEXT is null" Nothing Nothing
@@ -456,7 +468,12 @@ registerDisplayEventEXT device display displayEventInfo allocator = liftIO . eva
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPFence <- ContT $ bracket (callocBytes @Fence 8) free
-  r <- lift $ traceAroundEvent "vkRegisterDisplayEventEXT" (vkRegisterDisplayEventEXT' (deviceHandle (device)) (display) pDisplayEventInfo pAllocator (pPFence))
+  r <- lift $ traceAroundEvent "vkRegisterDisplayEventEXT" (vkRegisterDisplayEventEXT'
+                                                              (deviceHandle (device))
+                                                              (display)
+                                                              pDisplayEventInfo
+                                                              pAllocator
+                                                              (pPFence))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pFence <- lift $ peek @Fence pPFence
   pure $ (pFence)
@@ -541,7 +558,11 @@ getSwapchainCounterEXT device swapchain counter = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetSwapchainCounterEXT is null" Nothing Nothing
   let vkGetSwapchainCounterEXT' = mkVkGetSwapchainCounterEXT vkGetSwapchainCounterEXTPtr
   pPCounterValue <- ContT $ bracket (callocBytes @Word64 8) free
-  r <- lift $ traceAroundEvent "vkGetSwapchainCounterEXT" (vkGetSwapchainCounterEXT' (deviceHandle (device)) (swapchain) (counter) (pPCounterValue))
+  r <- lift $ traceAroundEvent "vkGetSwapchainCounterEXT" (vkGetSwapchainCounterEXT'
+                                                             (deviceHandle (device))
+                                                             (swapchain)
+                                                             (counter)
+                                                             (pPCounterValue))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pCounterValue <- lift $ peek @Word64 pPCounterValue
   pure $ (pCounterValue)
@@ -786,18 +807,24 @@ newtype DisplayPowerStateEXT = DisplayPowerStateEXT Int32
 
 -- | 'DISPLAY_POWER_STATE_OFF_EXT' specifies that the display is powered
 -- down.
-pattern DISPLAY_POWER_STATE_OFF_EXT     = DisplayPowerStateEXT 0
+pattern DISPLAY_POWER_STATE_OFF_EXT = DisplayPowerStateEXT 0
+
 -- | 'DISPLAY_POWER_STATE_SUSPEND_EXT' specifies that the display is put into
 -- a low power mode, from which it /may/ be able to transition back to
 -- 'DISPLAY_POWER_STATE_ON_EXT' more quickly than if it were in
 -- 'DISPLAY_POWER_STATE_OFF_EXT'. This state /may/ be the same as
 -- 'DISPLAY_POWER_STATE_OFF_EXT'.
 pattern DISPLAY_POWER_STATE_SUSPEND_EXT = DisplayPowerStateEXT 1
+
 -- | 'DISPLAY_POWER_STATE_ON_EXT' specifies that the display is powered on.
-pattern DISPLAY_POWER_STATE_ON_EXT      = DisplayPowerStateEXT 2
-{-# complete DISPLAY_POWER_STATE_OFF_EXT,
-             DISPLAY_POWER_STATE_SUSPEND_EXT,
-             DISPLAY_POWER_STATE_ON_EXT :: DisplayPowerStateEXT #-}
+pattern DISPLAY_POWER_STATE_ON_EXT = DisplayPowerStateEXT 2
+
+{-# COMPLETE
+  DISPLAY_POWER_STATE_OFF_EXT
+  , DISPLAY_POWER_STATE_SUSPEND_EXT
+  , DISPLAY_POWER_STATE_ON_EXT ::
+    DisplayPowerStateEXT
+  #-}
 
 conNameDisplayPowerStateEXT :: String
 conNameDisplayPowerStateEXT = "DisplayPowerStateEXT"
@@ -807,24 +834,30 @@ enumPrefixDisplayPowerStateEXT = "DISPLAY_POWER_STATE_"
 
 showTableDisplayPowerStateEXT :: [(DisplayPowerStateEXT, String)]
 showTableDisplayPowerStateEXT =
-  [ (DISPLAY_POWER_STATE_OFF_EXT    , "OFF_EXT")
-  , (DISPLAY_POWER_STATE_SUSPEND_EXT, "SUSPEND_EXT")
-  , (DISPLAY_POWER_STATE_ON_EXT     , "ON_EXT")
+  [ (DISPLAY_POWER_STATE_OFF_EXT, "OFF_EXT")
+  ,
+    ( DISPLAY_POWER_STATE_SUSPEND_EXT
+    , "SUSPEND_EXT"
+    )
+  , (DISPLAY_POWER_STATE_ON_EXT, "ON_EXT")
   ]
 
 instance Show DisplayPowerStateEXT where
-  showsPrec = enumShowsPrec enumPrefixDisplayPowerStateEXT
-                            showTableDisplayPowerStateEXT
-                            conNameDisplayPowerStateEXT
-                            (\(DisplayPowerStateEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDisplayPowerStateEXT
+      showTableDisplayPowerStateEXT
+      conNameDisplayPowerStateEXT
+      (\(DisplayPowerStateEXT x) -> x)
+      (showsPrec 11)
 
 instance Read DisplayPowerStateEXT where
-  readPrec = enumReadPrec enumPrefixDisplayPowerStateEXT
-                          showTableDisplayPowerStateEXT
-                          conNameDisplayPowerStateEXT
-                          DisplayPowerStateEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDisplayPowerStateEXT
+      showTableDisplayPowerStateEXT
+      conNameDisplayPowerStateEXT
+      DisplayPowerStateEXT
 
 -- | VkDeviceEventTypeEXT - Events that can occur on a device object
 --
@@ -840,7 +873,8 @@ newtype DeviceEventTypeEXT = DeviceEventTypeEXT Int32
 -- device. Applications /can/ use this notification to determine when they
 -- need to re-enumerate the available displays on a device.
 pattern DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT = DeviceEventTypeEXT 0
-{-# complete DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT :: DeviceEventTypeEXT #-}
+
+{-# COMPLETE DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT :: DeviceEventTypeEXT #-}
 
 conNameDeviceEventTypeEXT :: String
 conNameDeviceEventTypeEXT = "DeviceEventTypeEXT"
@@ -852,16 +886,21 @@ showTableDeviceEventTypeEXT :: [(DeviceEventTypeEXT, String)]
 showTableDeviceEventTypeEXT = [(DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT, "")]
 
 instance Show DeviceEventTypeEXT where
-  showsPrec = enumShowsPrec enumPrefixDeviceEventTypeEXT
-                            showTableDeviceEventTypeEXT
-                            conNameDeviceEventTypeEXT
-                            (\(DeviceEventTypeEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDeviceEventTypeEXT
+      showTableDeviceEventTypeEXT
+      conNameDeviceEventTypeEXT
+      (\(DeviceEventTypeEXT x) -> x)
+      (showsPrec 11)
 
 instance Read DeviceEventTypeEXT where
   readPrec =
-    enumReadPrec enumPrefixDeviceEventTypeEXT showTableDeviceEventTypeEXT conNameDeviceEventTypeEXT DeviceEventTypeEXT
-
+    enumReadPrec
+      enumPrefixDeviceEventTypeEXT
+      showTableDeviceEventTypeEXT
+      conNameDeviceEventTypeEXT
+      DeviceEventTypeEXT
 
 -- | VkDisplayEventTypeEXT - Events that can occur on a display object
 --
@@ -876,7 +915,8 @@ newtype DisplayEventTypeEXT = DisplayEventTypeEXT Int32
 -- signaled when the first pixel of the next display refresh cycle leaves
 -- the display engine for the display.
 pattern DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT = DisplayEventTypeEXT 0
-{-# complete DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT :: DisplayEventTypeEXT #-}
+
+{-# COMPLETE DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT :: DisplayEventTypeEXT #-}
 
 conNameDisplayEventTypeEXT :: String
 conNameDisplayEventTypeEXT = "DisplayEventTypeEXT"
@@ -888,18 +928,21 @@ showTableDisplayEventTypeEXT :: [(DisplayEventTypeEXT, String)]
 showTableDisplayEventTypeEXT = [(DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT, "")]
 
 instance Show DisplayEventTypeEXT where
-  showsPrec = enumShowsPrec enumPrefixDisplayEventTypeEXT
-                            showTableDisplayEventTypeEXT
-                            conNameDisplayEventTypeEXT
-                            (\(DisplayEventTypeEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDisplayEventTypeEXT
+      showTableDisplayEventTypeEXT
+      conNameDisplayEventTypeEXT
+      (\(DisplayEventTypeEXT x) -> x)
+      (showsPrec 11)
 
 instance Read DisplayEventTypeEXT where
-  readPrec = enumReadPrec enumPrefixDisplayEventTypeEXT
-                          showTableDisplayEventTypeEXT
-                          conNameDisplayEventTypeEXT
-                          DisplayEventTypeEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDisplayEventTypeEXT
+      showTableDisplayEventTypeEXT
+      conNameDisplayEventTypeEXT
+      DisplayEventTypeEXT
 
 type EXT_DISPLAY_CONTROL_SPEC_VERSION = 1
 

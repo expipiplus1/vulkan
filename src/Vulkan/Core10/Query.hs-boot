@@ -12,8 +12,10 @@ import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
 type role QueryPoolCreateInfo nominal
 data QueryPoolCreateInfo (es :: [Type])
 
-instance (Extendss QueryPoolCreateInfo es, PokeChain es) => ToCStruct (QueryPoolCreateInfo es)
+instance ( Extendss QueryPoolCreateInfo es
+         , PokeChain es ) => ToCStruct (QueryPoolCreateInfo es)
 instance Show (Chain es) => Show (QueryPoolCreateInfo es)
 
-instance (Extendss QueryPoolCreateInfo es, PeekChain es) => FromCStruct (QueryPoolCreateInfo es)
+instance ( Extendss QueryPoolCreateInfo es
+         , PeekChain es ) => FromCStruct (QueryPoolCreateInfo es)
 

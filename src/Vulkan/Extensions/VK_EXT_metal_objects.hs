@@ -329,7 +329,10 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_metal_objects VK_EXT_metal_objects>,
 -- 'Vulkan.Core10.Handles.Device', 'ExportMetalObjectsInfoEXT'
 exportMetalObjectsEXT :: forall a io
-                       . (Extendss ExportMetalObjectsInfoEXT a, PokeChain a, PeekChain a, MonadIO io)
+                       . ( Extendss ExportMetalObjectsInfoEXT a
+                         , PokeChain a
+                         , PeekChain a
+                         , MonadIO io )
                       => -- | @device@ is the device that created the Vulkan objects.
                          --
                          -- #VUID-vkExportMetalObjectsEXT-device-parameter# @device@ /must/ be a
@@ -342,7 +345,9 @@ exportMetalObjectsEXT device = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkExportMetalObjectsEXT is null" Nothing Nothing
   let vkExportMetalObjectsEXT' = mkVkExportMetalObjectsEXT vkExportMetalObjectsEXTPtr
   pPMetalObjectsInfo <- ContT (withZeroCStruct @(ExportMetalObjectsInfoEXT _))
-  lift $ traceAroundEvent "vkExportMetalObjectsEXT" (vkExportMetalObjectsEXT' (deviceHandle (device)) (forgetExtensions (pPMetalObjectsInfo)))
+  lift $ traceAroundEvent "vkExportMetalObjectsEXT" (vkExportMetalObjectsEXT'
+                                                       (deviceHandle (device))
+                                                       (forgetExtensions (pPMetalObjectsInfo)))
   pMetalObjectsInfo <- lift $ peekCStruct @(ExportMetalObjectsInfoEXT _) pPMetalObjectsInfo
   pure $ (pMetalObjectsInfo)
 
@@ -593,7 +598,8 @@ instance Extensible ExportMetalObjectsInfoEXT where
     | Just Refl <- eqT @e @ExportMetalDeviceInfoEXT = Just f
     | otherwise = Nothing
 
-instance (Extendss ExportMetalObjectsInfoEXT es, PokeChain es) => ToCStruct (ExportMetalObjectsInfoEXT es) where
+instance ( Extendss ExportMetalObjectsInfoEXT es
+         , PokeChain es ) => ToCStruct (ExportMetalObjectsInfoEXT es) where
   withCStruct x f = allocaBytes 16 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ExportMetalObjectsInfoEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXPORT_METAL_OBJECTS_INFO_EXT)
@@ -608,7 +614,8 @@ instance (Extendss ExportMetalObjectsInfoEXT es, PokeChain es) => ToCStruct (Exp
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ f
 
-instance (Extendss ExportMetalObjectsInfoEXT es, PeekChain es) => FromCStruct (ExportMetalObjectsInfoEXT es) where
+instance ( Extendss ExportMetalObjectsInfoEXT es
+         , PeekChain es ) => FromCStruct (ExportMetalObjectsInfoEXT es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -1343,22 +1350,27 @@ newtype ExportMetalObjectTypeFlagBitsEXT = ExportMetalObjectTypeFlagBitsEXT Flag
 
 -- | 'EXPORT_METAL_OBJECT_TYPE_METAL_DEVICE_BIT_EXT' indicates a Metal
 -- @MTLDevice@ may be exported.
-pattern EXPORT_METAL_OBJECT_TYPE_METAL_DEVICE_BIT_EXT        = ExportMetalObjectTypeFlagBitsEXT 0x00000001
+pattern EXPORT_METAL_OBJECT_TYPE_METAL_DEVICE_BIT_EXT = ExportMetalObjectTypeFlagBitsEXT 0x00000001
+
 -- | 'EXPORT_METAL_OBJECT_TYPE_METAL_COMMAND_QUEUE_BIT_EXT' indicates a Metal
 -- @MTLCommandQueue@ may be exported.
 pattern EXPORT_METAL_OBJECT_TYPE_METAL_COMMAND_QUEUE_BIT_EXT = ExportMetalObjectTypeFlagBitsEXT 0x00000002
+
 -- | 'EXPORT_METAL_OBJECT_TYPE_METAL_BUFFER_BIT_EXT' indicates a Metal
 -- @MTLBuffer@ may be exported.
-pattern EXPORT_METAL_OBJECT_TYPE_METAL_BUFFER_BIT_EXT        = ExportMetalObjectTypeFlagBitsEXT 0x00000004
+pattern EXPORT_METAL_OBJECT_TYPE_METAL_BUFFER_BIT_EXT = ExportMetalObjectTypeFlagBitsEXT 0x00000004
+
 -- | 'EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT' indicates a Metal
 -- @MTLTexture@ may be exported.
-pattern EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT       = ExportMetalObjectTypeFlagBitsEXT 0x00000008
+pattern EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT = ExportMetalObjectTypeFlagBitsEXT 0x00000008
+
 -- | 'EXPORT_METAL_OBJECT_TYPE_METAL_IOSURFACE_BIT_EXT' indicates a Metal
 -- @IOSurface@ may be exported.
-pattern EXPORT_METAL_OBJECT_TYPE_METAL_IOSURFACE_BIT_EXT     = ExportMetalObjectTypeFlagBitsEXT 0x00000010
+pattern EXPORT_METAL_OBJECT_TYPE_METAL_IOSURFACE_BIT_EXT = ExportMetalObjectTypeFlagBitsEXT 0x00000010
+
 -- | 'EXPORT_METAL_OBJECT_TYPE_METAL_SHARED_EVENT_BIT_EXT' indicates a Metal
 -- @MTLSharedEvent@ may be exported.
-pattern EXPORT_METAL_OBJECT_TYPE_METAL_SHARED_EVENT_BIT_EXT  = ExportMetalObjectTypeFlagBitsEXT 0x00000020
+pattern EXPORT_METAL_OBJECT_TYPE_METAL_SHARED_EVENT_BIT_EXT = ExportMetalObjectTypeFlagBitsEXT 0x00000020
 
 conNameExportMetalObjectTypeFlagBitsEXT :: String
 conNameExportMetalObjectTypeFlagBitsEXT = "ExportMetalObjectTypeFlagBitsEXT"
@@ -1368,27 +1380,48 @@ enumPrefixExportMetalObjectTypeFlagBitsEXT = "EXPORT_METAL_OBJECT_TYPE_METAL_"
 
 showTableExportMetalObjectTypeFlagBitsEXT :: [(ExportMetalObjectTypeFlagBitsEXT, String)]
 showTableExportMetalObjectTypeFlagBitsEXT =
-  [ (EXPORT_METAL_OBJECT_TYPE_METAL_DEVICE_BIT_EXT       , "DEVICE_BIT_EXT")
-  , (EXPORT_METAL_OBJECT_TYPE_METAL_COMMAND_QUEUE_BIT_EXT, "COMMAND_QUEUE_BIT_EXT")
-  , (EXPORT_METAL_OBJECT_TYPE_METAL_BUFFER_BIT_EXT       , "BUFFER_BIT_EXT")
-  , (EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT      , "TEXTURE_BIT_EXT")
-  , (EXPORT_METAL_OBJECT_TYPE_METAL_IOSURFACE_BIT_EXT    , "IOSURFACE_BIT_EXT")
-  , (EXPORT_METAL_OBJECT_TYPE_METAL_SHARED_EVENT_BIT_EXT , "SHARED_EVENT_BIT_EXT")
+  [
+    ( EXPORT_METAL_OBJECT_TYPE_METAL_DEVICE_BIT_EXT
+    , "DEVICE_BIT_EXT"
+    )
+  ,
+    ( EXPORT_METAL_OBJECT_TYPE_METAL_COMMAND_QUEUE_BIT_EXT
+    , "COMMAND_QUEUE_BIT_EXT"
+    )
+  ,
+    ( EXPORT_METAL_OBJECT_TYPE_METAL_BUFFER_BIT_EXT
+    , "BUFFER_BIT_EXT"
+    )
+  ,
+    ( EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT
+    , "TEXTURE_BIT_EXT"
+    )
+  ,
+    ( EXPORT_METAL_OBJECT_TYPE_METAL_IOSURFACE_BIT_EXT
+    , "IOSURFACE_BIT_EXT"
+    )
+  ,
+    ( EXPORT_METAL_OBJECT_TYPE_METAL_SHARED_EVENT_BIT_EXT
+    , "SHARED_EVENT_BIT_EXT"
+    )
   ]
 
 instance Show ExportMetalObjectTypeFlagBitsEXT where
-  showsPrec = enumShowsPrec enumPrefixExportMetalObjectTypeFlagBitsEXT
-                            showTableExportMetalObjectTypeFlagBitsEXT
-                            conNameExportMetalObjectTypeFlagBitsEXT
-                            (\(ExportMetalObjectTypeFlagBitsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixExportMetalObjectTypeFlagBitsEXT
+      showTableExportMetalObjectTypeFlagBitsEXT
+      conNameExportMetalObjectTypeFlagBitsEXT
+      (\(ExportMetalObjectTypeFlagBitsEXT x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read ExportMetalObjectTypeFlagBitsEXT where
-  readPrec = enumReadPrec enumPrefixExportMetalObjectTypeFlagBitsEXT
-                          showTableExportMetalObjectTypeFlagBitsEXT
-                          conNameExportMetalObjectTypeFlagBitsEXT
-                          ExportMetalObjectTypeFlagBitsEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixExportMetalObjectTypeFlagBitsEXT
+      showTableExportMetalObjectTypeFlagBitsEXT
+      conNameExportMetalObjectTypeFlagBitsEXT
+      ExportMetalObjectTypeFlagBitsEXT
 
 type EXT_METAL_OBJECTS_SPEC_VERSION = 1
 

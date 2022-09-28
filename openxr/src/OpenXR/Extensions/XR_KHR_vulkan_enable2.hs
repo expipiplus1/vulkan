@@ -213,7 +213,11 @@ createVulkanInstanceKHR instance' createInfo = liftIO . evalContT $ do
   createInfo' <- ContT $ withCStruct (createInfo)
   pVulkanInstance <- ContT $ bracket (callocBytes @(Ptr OpenXR.VulkanTypes.Instance_T) 8) free
   pVulkanResult <- ContT $ bracket (callocBytes @OpenXR.VulkanTypes.Result 4) free
-  r <- lift $ traceAroundEvent "xrCreateVulkanInstanceKHR" (xrCreateVulkanInstanceKHR' (instanceHandle (instance')) createInfo' (pVulkanInstance) (pVulkanResult))
+  r <- lift $ traceAroundEvent "xrCreateVulkanInstanceKHR" (xrCreateVulkanInstanceKHR'
+                                                              (instanceHandle (instance'))
+                                                              createInfo'
+                                                              (pVulkanInstance)
+                                                              (pVulkanResult))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   vulkanInstance <- lift $ peek @(Ptr OpenXR.VulkanTypes.Instance_T) pVulkanInstance
   vulkanResult <- lift $ peek @OpenXR.VulkanTypes.Result pVulkanResult
@@ -288,7 +292,11 @@ createVulkanDeviceKHR instance' createInfo = liftIO . evalContT $ do
   createInfo' <- ContT $ withCStruct (createInfo)
   pVulkanDevice <- ContT $ bracket (callocBytes @(Ptr OpenXR.VulkanTypes.Device_T) 8) free
   pVulkanResult <- ContT $ bracket (callocBytes @OpenXR.VulkanTypes.Result 4) free
-  r <- lift $ traceAroundEvent "xrCreateVulkanDeviceKHR" (xrCreateVulkanDeviceKHR' (instanceHandle (instance')) createInfo' (pVulkanDevice) (pVulkanResult))
+  r <- lift $ traceAroundEvent "xrCreateVulkanDeviceKHR" (xrCreateVulkanDeviceKHR'
+                                                            (instanceHandle (instance'))
+                                                            createInfo'
+                                                            (pVulkanDevice)
+                                                            (pVulkanResult))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   vulkanDevice <- lift $ peek @(Ptr OpenXR.VulkanTypes.Device_T) pVulkanDevice
   vulkanResult <- lift $ peek @OpenXR.VulkanTypes.Result pVulkanResult
@@ -361,7 +369,10 @@ getVulkanGraphicsDevice2KHR instance' getInfo = liftIO . evalContT $ do
   let xrGetVulkanGraphicsDevice2KHR' = mkXrGetVulkanGraphicsDevice2KHR xrGetVulkanGraphicsDevice2KHRPtr
   getInfo' <- ContT $ withCStruct (getInfo)
   pVulkanPhysicalDevice <- ContT $ bracket (callocBytes @(Ptr OpenXR.VulkanTypes.PhysicalDevice_T) 8) free
-  r <- lift $ traceAroundEvent "xrGetVulkanGraphicsDevice2KHR" (xrGetVulkanGraphicsDevice2KHR' (instanceHandle (instance')) getInfo' (pVulkanPhysicalDevice))
+  r <- lift $ traceAroundEvent "xrGetVulkanGraphicsDevice2KHR" (xrGetVulkanGraphicsDevice2KHR'
+                                                                  (instanceHandle (instance'))
+                                                                  getInfo'
+                                                                  (pVulkanPhysicalDevice))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   vulkanPhysicalDevice <- lift $ peek @(Ptr OpenXR.VulkanTypes.PhysicalDevice_T) pVulkanPhysicalDevice
   pure $ (vulkanPhysicalDevice)
@@ -540,7 +551,11 @@ instance FromCStruct VulkanInstanceCreateInfoKHR where
     vulkanCreateInfo <- peek @(Ptr (OpenXR.VulkanTypes.SomeStruct OpenXR.VulkanTypes.InstanceCreateInfo)) ((p `plusPtr` 40 :: Ptr (Ptr (OpenXR.VulkanTypes.SomeStruct OpenXR.VulkanTypes.InstanceCreateInfo))))
     vulkanAllocator <- peek @(Ptr OpenXR.VulkanTypes.AllocationCallbacks) ((p `plusPtr` 48 :: Ptr (Ptr OpenXR.VulkanTypes.AllocationCallbacks)))
     pure $ VulkanInstanceCreateInfoKHR
-             systemId createFlags pfnGetInstanceProcAddr vulkanCreateInfo vulkanAllocator
+             systemId
+             createFlags
+             pfnGetInstanceProcAddr
+             vulkanCreateInfo
+             vulkanAllocator
 
 instance Storable VulkanInstanceCreateInfoKHR where
   sizeOf ~_ = 56
@@ -655,7 +670,12 @@ instance FromCStruct VulkanDeviceCreateInfoKHR where
     vulkanCreateInfo <- peek @(Ptr (OpenXR.VulkanTypes.SomeStruct OpenXR.VulkanTypes.DeviceCreateInfo)) ((p `plusPtr` 48 :: Ptr (Ptr (OpenXR.VulkanTypes.SomeStruct OpenXR.VulkanTypes.DeviceCreateInfo))))
     vulkanAllocator <- peek @(Ptr OpenXR.VulkanTypes.AllocationCallbacks) ((p `plusPtr` 56 :: Ptr (Ptr OpenXR.VulkanTypes.AllocationCallbacks)))
     pure $ VulkanDeviceCreateInfoKHR
-             systemId createFlags pfnGetInstanceProcAddr vulkanPhysicalDevice vulkanCreateInfo vulkanAllocator
+             systemId
+             createFlags
+             pfnGetInstanceProcAddr
+             vulkanPhysicalDevice
+             vulkanCreateInfo
+             vulkanAllocator
 
 instance Storable VulkanDeviceCreateInfoKHR where
   sizeOf ~_ = 64
@@ -752,8 +772,6 @@ type VulkanInstanceCreateFlagsKHR = VulkanInstanceCreateFlagBitsKHR
 newtype VulkanInstanceCreateFlagBitsKHR = VulkanInstanceCreateFlagBitsKHR Flags64
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameVulkanInstanceCreateFlagBitsKHR :: String
 conNameVulkanInstanceCreateFlagBitsKHR = "VulkanInstanceCreateFlagBitsKHR"
 
@@ -764,26 +782,27 @@ showTableVulkanInstanceCreateFlagBitsKHR :: [(VulkanInstanceCreateFlagBitsKHR, S
 showTableVulkanInstanceCreateFlagBitsKHR = []
 
 instance Show VulkanInstanceCreateFlagBitsKHR where
-  showsPrec = enumShowsPrec enumPrefixVulkanInstanceCreateFlagBitsKHR
-                            showTableVulkanInstanceCreateFlagBitsKHR
-                            conNameVulkanInstanceCreateFlagBitsKHR
-                            (\(VulkanInstanceCreateFlagBitsKHR x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixVulkanInstanceCreateFlagBitsKHR
+      showTableVulkanInstanceCreateFlagBitsKHR
+      conNameVulkanInstanceCreateFlagBitsKHR
+      (\(VulkanInstanceCreateFlagBitsKHR x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read VulkanInstanceCreateFlagBitsKHR where
-  readPrec = enumReadPrec enumPrefixVulkanInstanceCreateFlagBitsKHR
-                          showTableVulkanInstanceCreateFlagBitsKHR
-                          conNameVulkanInstanceCreateFlagBitsKHR
-                          VulkanInstanceCreateFlagBitsKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixVulkanInstanceCreateFlagBitsKHR
+      showTableVulkanInstanceCreateFlagBitsKHR
+      conNameVulkanInstanceCreateFlagBitsKHR
+      VulkanInstanceCreateFlagBitsKHR
 
 type VulkanDeviceCreateFlagsKHR = VulkanDeviceCreateFlagBitsKHR
 
 -- No documentation found for TopLevel "XrVulkanDeviceCreateFlagBitsKHR"
 newtype VulkanDeviceCreateFlagBitsKHR = VulkanDeviceCreateFlagBitsKHR Flags64
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
-
-
 
 conNameVulkanDeviceCreateFlagBitsKHR :: String
 conNameVulkanDeviceCreateFlagBitsKHR = "VulkanDeviceCreateFlagBitsKHR"
@@ -795,18 +814,21 @@ showTableVulkanDeviceCreateFlagBitsKHR :: [(VulkanDeviceCreateFlagBitsKHR, Strin
 showTableVulkanDeviceCreateFlagBitsKHR = []
 
 instance Show VulkanDeviceCreateFlagBitsKHR where
-  showsPrec = enumShowsPrec enumPrefixVulkanDeviceCreateFlagBitsKHR
-                            showTableVulkanDeviceCreateFlagBitsKHR
-                            conNameVulkanDeviceCreateFlagBitsKHR
-                            (\(VulkanDeviceCreateFlagBitsKHR x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixVulkanDeviceCreateFlagBitsKHR
+      showTableVulkanDeviceCreateFlagBitsKHR
+      conNameVulkanDeviceCreateFlagBitsKHR
+      (\(VulkanDeviceCreateFlagBitsKHR x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read VulkanDeviceCreateFlagBitsKHR where
-  readPrec = enumReadPrec enumPrefixVulkanDeviceCreateFlagBitsKHR
-                          showTableVulkanDeviceCreateFlagBitsKHR
-                          conNameVulkanDeviceCreateFlagBitsKHR
-                          VulkanDeviceCreateFlagBitsKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixVulkanDeviceCreateFlagBitsKHR
+      showTableVulkanDeviceCreateFlagBitsKHR
+      conNameVulkanDeviceCreateFlagBitsKHR
+      VulkanDeviceCreateFlagBitsKHR
 
 -- | XrGraphicsBindingVulkan2KHR - The graphics binding structure to be
 -- passed at session creation to use Vulkan

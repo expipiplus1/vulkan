@@ -106,7 +106,8 @@ instance FromCStruct PhysicalDeviceInlineUniformBlockFeatures where
     inlineUniformBlock <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     descriptorBindingInlineUniformBlockUpdateAfterBind <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ PhysicalDeviceInlineUniformBlockFeatures
-             (bool32ToBool inlineUniformBlock) (bool32ToBool descriptorBindingInlineUniformBlockUpdateAfterBind)
+             (bool32ToBool inlineUniformBlock)
+             (bool32ToBool descriptorBindingInlineUniformBlockUpdateAfterBind)
 
 instance Storable PhysicalDeviceInlineUniformBlockFeatures where
   sizeOf ~_ = 24
@@ -212,7 +213,11 @@ instance FromCStruct PhysicalDeviceInlineUniformBlockProperties where
     maxDescriptorSetInlineUniformBlocks <- peek @Word32 ((p `plusPtr` 28 :: Ptr Word32))
     maxDescriptorSetUpdateAfterBindInlineUniformBlocks <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
     pure $ PhysicalDeviceInlineUniformBlockProperties
-             maxInlineUniformBlockSize maxPerStageDescriptorInlineUniformBlocks maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks maxDescriptorSetInlineUniformBlocks maxDescriptorSetUpdateAfterBindInlineUniformBlocks
+             maxInlineUniformBlockSize
+             maxPerStageDescriptorInlineUniformBlocks
+             maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks
+             maxDescriptorSetInlineUniformBlocks
+             maxDescriptorSetUpdateAfterBindInlineUniformBlocks
 
 instance Storable PhysicalDeviceInlineUniformBlockProperties where
   sizeOf ~_ = 40

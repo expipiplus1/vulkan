@@ -59,19 +59,23 @@ newtype QueueFlagBits = QueueFlagBits Flags
 
 -- | 'QUEUE_GRAPHICS_BIT' specifies that queues in this queue family support
 -- graphics operations.
-pattern QUEUE_GRAPHICS_BIT       = QueueFlagBits 0x00000001
+pattern QUEUE_GRAPHICS_BIT = QueueFlagBits 0x00000001
+
 -- | 'QUEUE_COMPUTE_BIT' specifies that queues in this queue family support
 -- compute operations.
-pattern QUEUE_COMPUTE_BIT        = QueueFlagBits 0x00000002
+pattern QUEUE_COMPUTE_BIT = QueueFlagBits 0x00000002
+
 -- | 'QUEUE_TRANSFER_BIT' specifies that queues in this queue family support
 -- transfer operations.
-pattern QUEUE_TRANSFER_BIT       = QueueFlagBits 0x00000004
+pattern QUEUE_TRANSFER_BIT = QueueFlagBits 0x00000004
+
 -- | 'QUEUE_SPARSE_BINDING_BIT' specifies that queues in this queue family
 -- support sparse memory management operations (see
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#sparsememory Sparse Resources>).
 -- If any of the sparse resource features are enabled, then at least one
 -- queue family /must/ support this bit.
 pattern QUEUE_SPARSE_BINDING_BIT = QueueFlagBits 0x00000008
+
 -- | 'QUEUE_PROTECTED_BIT' specifies that queues in this queue family support
 -- the
 -- 'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DEVICE_QUEUE_CREATE_PROTECTED_BIT'
@@ -80,7 +84,7 @@ pattern QUEUE_SPARSE_BINDING_BIT = QueueFlagBits 0x00000008
 -- If the physical device supports the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-protectedMemory protectedMemory>
 -- feature, at least one of its queue families /must/ support this bit.
-pattern QUEUE_PROTECTED_BIT      = QueueFlagBits 0x00000010
+pattern QUEUE_PROTECTED_BIT = QueueFlagBits 0x00000010
 
 conNameQueueFlagBits :: String
 conNameQueueFlagBits = "QueueFlagBits"
@@ -90,20 +94,26 @@ enumPrefixQueueFlagBits = "QUEUE_"
 
 showTableQueueFlagBits :: [(QueueFlagBits, String)]
 showTableQueueFlagBits =
-  [ (QUEUE_GRAPHICS_BIT      , "GRAPHICS_BIT")
-  , (QUEUE_COMPUTE_BIT       , "COMPUTE_BIT")
-  , (QUEUE_TRANSFER_BIT      , "TRANSFER_BIT")
+  [ (QUEUE_GRAPHICS_BIT, "GRAPHICS_BIT")
+  , (QUEUE_COMPUTE_BIT, "COMPUTE_BIT")
+  , (QUEUE_TRANSFER_BIT, "TRANSFER_BIT")
   , (QUEUE_SPARSE_BINDING_BIT, "SPARSE_BINDING_BIT")
-  , (QUEUE_PROTECTED_BIT     , "PROTECTED_BIT")
+  , (QUEUE_PROTECTED_BIT, "PROTECTED_BIT")
   ]
 
 instance Show QueueFlagBits where
-  showsPrec = enumShowsPrec enumPrefixQueueFlagBits
-                            showTableQueueFlagBits
-                            conNameQueueFlagBits
-                            (\(QueueFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixQueueFlagBits
+      showTableQueueFlagBits
+      conNameQueueFlagBits
+      (\(QueueFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read QueueFlagBits where
-  readPrec = enumReadPrec enumPrefixQueueFlagBits showTableQueueFlagBits conNameQueueFlagBits QueueFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixQueueFlagBits
+      showTableQueueFlagBits
+      conNameQueueFlagBits
+      QueueFlagBits

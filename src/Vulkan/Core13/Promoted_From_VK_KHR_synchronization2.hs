@@ -309,7 +309,10 @@ cmdSetEvent2 commandBuffer event dependencyInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetEvent2 is null" Nothing Nothing
   let vkCmdSetEvent2' = mkVkCmdSetEvent2 vkCmdSetEvent2Ptr
   pDependencyInfo <- ContT $ withCStruct (dependencyInfo)
-  lift $ traceAroundEvent "vkCmdSetEvent2" (vkCmdSetEvent2' (commandBufferHandle (commandBuffer)) (event) pDependencyInfo)
+  lift $ traceAroundEvent "vkCmdSetEvent2" (vkCmdSetEvent2'
+                                              (commandBufferHandle (commandBuffer))
+                                              (event)
+                                              pDependencyInfo)
   pure $ ()
 
 
@@ -494,7 +497,10 @@ cmdResetEvent2 commandBuffer event stageMask = liftIO $ do
   unless (vkCmdResetEvent2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdResetEvent2 is null" Nothing Nothing
   let vkCmdResetEvent2' = mkVkCmdResetEvent2 vkCmdResetEvent2Ptr
-  traceAroundEvent "vkCmdResetEvent2" (vkCmdResetEvent2' (commandBufferHandle (commandBuffer)) (event) (stageMask))
+  traceAroundEvent "vkCmdResetEvent2" (vkCmdResetEvent2'
+                                         (commandBufferHandle (commandBuffer))
+                                         (event)
+                                         (stageMask))
   pure $ ()
 
 
@@ -523,7 +529,9 @@ cmdWaitEvents2SafeOrUnsafe :: forall io
                               -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>.
                               ("dependencyInfos" ::: Vector DependencyInfo)
                            -> io ()
-cmdWaitEvents2SafeOrUnsafe mkVkCmdWaitEvents2 commandBuffer events dependencyInfos = liftIO . evalContT $ do
+cmdWaitEvents2SafeOrUnsafe mkVkCmdWaitEvents2 commandBuffer
+                                                events
+                                                dependencyInfos = liftIO . evalContT $ do
   let vkCmdWaitEvents2Ptr = pVkCmdWaitEvents2 (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdWaitEvents2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWaitEvents2 is null" Nothing Nothing
@@ -535,7 +543,11 @@ cmdWaitEvents2SafeOrUnsafe mkVkCmdWaitEvents2 commandBuffer events dependencyInf
   lift $ Data.Vector.imapM_ (\i e -> poke (pPEvents `plusPtr` (8 * (i)) :: Ptr Event) (e)) (events)
   pPDependencyInfos <- ContT $ allocaBytes @DependencyInfo ((Data.Vector.length (dependencyInfos)) * 64)
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDependencyInfos `plusPtr` (64 * (i)) :: Ptr DependencyInfo) (e) . ($ ())) (dependencyInfos)
-  lift $ traceAroundEvent "vkCmdWaitEvents2" (vkCmdWaitEvents2' (commandBufferHandle (commandBuffer)) ((fromIntegral pEventsLength :: Word32)) (pPEvents) (pPDependencyInfos))
+  lift $ traceAroundEvent "vkCmdWaitEvents2" (vkCmdWaitEvents2'
+                                                (commandBufferHandle (commandBuffer))
+                                                ((fromIntegral pEventsLength :: Word32))
+                                                (pPEvents)
+                                                (pPDependencyInfos))
   pure $ ()
 
 -- | vkCmdWaitEvents2 - Wait for one or more events
@@ -897,7 +909,9 @@ cmdPipelineBarrier2 commandBuffer dependencyInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdPipelineBarrier2 is null" Nothing Nothing
   let vkCmdPipelineBarrier2' = mkVkCmdPipelineBarrier2 vkCmdPipelineBarrier2Ptr
   pDependencyInfo <- ContT $ withCStruct (dependencyInfo)
-  lift $ traceAroundEvent "vkCmdPipelineBarrier2" (vkCmdPipelineBarrier2' (commandBufferHandle (commandBuffer)) pDependencyInfo)
+  lift $ traceAroundEvent "vkCmdPipelineBarrier2" (vkCmdPipelineBarrier2'
+                                                     (commandBufferHandle (commandBuffer))
+                                                     pDependencyInfo)
   pure $ ()
 
 
@@ -1145,7 +1159,11 @@ queueSubmit2 queue submits fence = liftIO . evalContT $ do
   let vkQueueSubmit2' = mkVkQueueSubmit2 vkQueueSubmit2Ptr
   pPSubmits <- ContT $ allocaBytes @(SubmitInfo2 _) ((Data.Vector.length (submits)) * 64)
   Data.Vector.imapM_ (\i e -> ContT $ pokeSomeCStruct (forgetExtensions (pPSubmits `plusPtr` (64 * (i)) :: Ptr (SubmitInfo2 _))) (e) . ($ ())) (submits)
-  r <- lift $ traceAroundEvent "vkQueueSubmit2" (vkQueueSubmit2' (queueHandle (queue)) ((fromIntegral (Data.Vector.length $ (submits)) :: Word32)) (forgetExtensions (pPSubmits)) (fence))
+  r <- lift $ traceAroundEvent "vkQueueSubmit2" (vkQueueSubmit2'
+                                                   (queueHandle (queue))
+                                                   ((fromIntegral (Data.Vector.length $ (submits)) :: Word32))
+                                                   (forgetExtensions (pPSubmits))
+                                                   (fence))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -1374,7 +1392,11 @@ cmdWriteTimestamp2 commandBuffer stage queryPool query = liftIO $ do
   unless (vkCmdWriteTimestamp2Ptr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdWriteTimestamp2 is null" Nothing Nothing
   let vkCmdWriteTimestamp2' = mkVkCmdWriteTimestamp2 vkCmdWriteTimestamp2Ptr
-  traceAroundEvent "vkCmdWriteTimestamp2" (vkCmdWriteTimestamp2' (commandBufferHandle (commandBuffer)) (stage) (queryPool) (query))
+  traceAroundEvent "vkCmdWriteTimestamp2" (vkCmdWriteTimestamp2'
+                                             (commandBufferHandle (commandBuffer))
+                                             (stage)
+                                             (queryPool)
+                                             (query))
   pure $ ()
 
 
@@ -3403,7 +3425,8 @@ instance Extensible ImageMemoryBarrier2 where
     | Just Refl <- eqT @e @SampleLocationsInfoEXT = Just f
     | otherwise = Nothing
 
-instance (Extendss ImageMemoryBarrier2 es, PokeChain es) => ToCStruct (ImageMemoryBarrier2 es) where
+instance ( Extendss ImageMemoryBarrier2 es
+         , PokeChain es ) => ToCStruct (ImageMemoryBarrier2 es) where
   withCStruct x f = allocaBytes 96 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p ImageMemoryBarrier2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2)
@@ -3434,7 +3457,8 @@ instance (Extendss ImageMemoryBarrier2 es, PokeChain es) => ToCStruct (ImageMemo
     lift $ poke ((p `plusPtr` 72 :: Ptr ImageSubresourceRange)) (zero)
     lift $ f
 
-instance (Extendss ImageMemoryBarrier2 es, PeekChain es) => FromCStruct (ImageMemoryBarrier2 es) where
+instance ( Extendss ImageMemoryBarrier2 es
+         , PeekChain es ) => FromCStruct (ImageMemoryBarrier2 es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -3449,7 +3473,17 @@ instance (Extendss ImageMemoryBarrier2 es, PeekChain es) => FromCStruct (ImageMe
     image <- peek @Image ((p `plusPtr` 64 :: Ptr Image))
     subresourceRange <- peekCStruct @ImageSubresourceRange ((p `plusPtr` 72 :: Ptr ImageSubresourceRange))
     pure $ ImageMemoryBarrier2
-             next srcStageMask srcAccessMask dstStageMask dstAccessMask oldLayout newLayout srcQueueFamilyIndex dstQueueFamilyIndex image subresourceRange
+             next
+             srcStageMask
+             srcAccessMask
+             dstStageMask
+             dstAccessMask
+             oldLayout
+             newLayout
+             srcQueueFamilyIndex
+             dstQueueFamilyIndex
+             image
+             subresourceRange
 
 instance es ~ '[] => Zero (ImageMemoryBarrier2 es) where
   zero = ImageMemoryBarrier2
@@ -4386,7 +4420,15 @@ instance FromCStruct BufferMemoryBarrier2 where
     offset <- peek @DeviceSize ((p `plusPtr` 64 :: Ptr DeviceSize))
     size <- peek @DeviceSize ((p `plusPtr` 72 :: Ptr DeviceSize))
     pure $ BufferMemoryBarrier2
-             srcStageMask srcAccessMask dstStageMask dstAccessMask srcQueueFamilyIndex dstQueueFamilyIndex buffer offset size
+             srcStageMask
+             srcAccessMask
+             dstStageMask
+             dstAccessMask
+             srcQueueFamilyIndex
+             dstQueueFamilyIndex
+             buffer
+             offset
+             size
 
 instance Storable BufferMemoryBarrier2 where
   sizeOf ~_ = 80
@@ -4524,7 +4566,10 @@ instance FromCStruct DependencyInfo where
     pImageMemoryBarriers <- peek @(Ptr (ImageMemoryBarrier2 _)) ((p `plusPtr` 56 :: Ptr (Ptr (ImageMemoryBarrier2 _))))
     pImageMemoryBarriers' <- generateM (fromIntegral imageMemoryBarrierCount) (\i -> peekSomeCStruct (forgetExtensions ((pImageMemoryBarriers `advancePtrBytes` (96 * (i)) :: Ptr (ImageMemoryBarrier2 _)))))
     pure $ DependencyInfo
-             dependencyFlags pMemoryBarriers' pBufferMemoryBarriers' pImageMemoryBarriers'
+             dependencyFlags
+             pMemoryBarriers'
+             pBufferMemoryBarriers'
+             pImageMemoryBarriers'
 
 instance Zero DependencyInfo where
   zero = DependencyInfo
@@ -4937,7 +4982,8 @@ instance Extensible SubmitInfo2 where
     | Just Refl <- eqT @e @Win32KeyedMutexAcquireReleaseInfoNV = Just f
     | otherwise = Nothing
 
-instance (Extendss SubmitInfo2 es, PokeChain es) => ToCStruct (SubmitInfo2 es) where
+instance ( Extendss SubmitInfo2 es
+         , PokeChain es ) => ToCStruct (SubmitInfo2 es) where
   withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SubmitInfo2{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SUBMIT_INFO_2)
@@ -4965,7 +5011,8 @@ instance (Extendss SubmitInfo2 es, PokeChain es) => ToCStruct (SubmitInfo2 es) w
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ f
 
-instance (Extendss SubmitInfo2 es, PeekChain es) => FromCStruct (SubmitInfo2 es) where
+instance ( Extendss SubmitInfo2 es
+         , PeekChain es ) => FromCStruct (SubmitInfo2 es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -4980,7 +5027,11 @@ instance (Extendss SubmitInfo2 es, PeekChain es) => FromCStruct (SubmitInfo2 es)
     pSignalSemaphoreInfos <- peek @(Ptr SemaphoreSubmitInfo) ((p `plusPtr` 56 :: Ptr (Ptr SemaphoreSubmitInfo)))
     pSignalSemaphoreInfos' <- generateM (fromIntegral signalSemaphoreInfoCount) (\i -> peekCStruct @SemaphoreSubmitInfo ((pSignalSemaphoreInfos `advancePtrBytes` (48 * (i)) :: Ptr SemaphoreSubmitInfo)))
     pure $ SubmitInfo2
-             next flags pWaitSemaphoreInfos' pCommandBufferInfos' pSignalSemaphoreInfos'
+             next
+             flags
+             pWaitSemaphoreInfos'
+             pCommandBufferInfos'
+             pSignalSemaphoreInfos'
 
 instance es ~ '[] => Zero (SubmitInfo2 es) where
   zero = SubmitInfo2

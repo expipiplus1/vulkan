@@ -27,8 +27,6 @@ import Vulkan.Core10.FundamentalTypes (Flags)
 newtype PipelineTessellationStateCreateFlags = PipelineTessellationStateCreateFlags Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNamePipelineTessellationStateCreateFlags :: String
 conNamePipelineTessellationStateCreateFlags = "PipelineTessellationStateCreateFlags"
 
@@ -39,15 +37,18 @@ showTablePipelineTessellationStateCreateFlags :: [(PipelineTessellationStateCrea
 showTablePipelineTessellationStateCreateFlags = []
 
 instance Show PipelineTessellationStateCreateFlags where
-  showsPrec = enumShowsPrec enumPrefixPipelineTessellationStateCreateFlags
-                            showTablePipelineTessellationStateCreateFlags
-                            conNamePipelineTessellationStateCreateFlags
-                            (\(PipelineTessellationStateCreateFlags x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineTessellationStateCreateFlags
+      showTablePipelineTessellationStateCreateFlags
+      conNamePipelineTessellationStateCreateFlags
+      (\(PipelineTessellationStateCreateFlags x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read PipelineTessellationStateCreateFlags where
-  readPrec = enumReadPrec enumPrefixPipelineTessellationStateCreateFlags
-                          showTablePipelineTessellationStateCreateFlags
-                          conNamePipelineTessellationStateCreateFlags
-                          PipelineTessellationStateCreateFlags
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineTessellationStateCreateFlags
+      showTablePipelineTessellationStateCreateFlags
+      conNamePipelineTessellationStateCreateFlags
+      PipelineTessellationStateCreateFlags

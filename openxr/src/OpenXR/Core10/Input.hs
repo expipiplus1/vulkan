@@ -222,7 +222,10 @@ getActionStateBoolean session getInfo = liftIO . evalContT $ do
   let xrGetActionStateBoolean' = mkXrGetActionStateBoolean xrGetActionStateBooleanPtr
   getInfo' <- ContT $ withCStruct (getInfo)
   pState <- ContT (withZeroCStruct @ActionStateBoolean)
-  r <- lift $ traceAroundEvent "xrGetActionStateBoolean" (xrGetActionStateBoolean' (sessionHandle (session)) getInfo' (pState))
+  r <- lift $ traceAroundEvent "xrGetActionStateBoolean" (xrGetActionStateBoolean'
+                                                            (sessionHandle (session))
+                                                            getInfo'
+                                                            (pState))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   state <- lift $ peekCStruct @ActionStateBoolean pState
   pure $ (r, state)
@@ -290,7 +293,10 @@ getActionStateFloat session getInfo = liftIO . evalContT $ do
   let xrGetActionStateFloat' = mkXrGetActionStateFloat xrGetActionStateFloatPtr
   getInfo' <- ContT $ withCStruct (getInfo)
   pState <- ContT (withZeroCStruct @ActionStateFloat)
-  r <- lift $ traceAroundEvent "xrGetActionStateFloat" (xrGetActionStateFloat' (sessionHandle (session)) getInfo' (pState))
+  r <- lift $ traceAroundEvent "xrGetActionStateFloat" (xrGetActionStateFloat'
+                                                          (sessionHandle (session))
+                                                          getInfo'
+                                                          (pState))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   state <- lift $ peekCStruct @ActionStateFloat pState
   pure $ (r, state)
@@ -358,7 +364,10 @@ getActionStateVector2f session getInfo = liftIO . evalContT $ do
   let xrGetActionStateVector2f' = mkXrGetActionStateVector2f xrGetActionStateVector2fPtr
   getInfo' <- ContT $ withCStruct (getInfo)
   pState <- ContT (withZeroCStruct @ActionStateVector2f)
-  r <- lift $ traceAroundEvent "xrGetActionStateVector2f" (xrGetActionStateVector2f' (sessionHandle (session)) getInfo' (pState))
+  r <- lift $ traceAroundEvent "xrGetActionStateVector2f" (xrGetActionStateVector2f'
+                                                             (sessionHandle (session))
+                                                             getInfo'
+                                                             (pState))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   state <- lift $ peekCStruct @ActionStateVector2f pState
   pure $ (r, state)
@@ -438,7 +447,10 @@ getActionStatePose session getInfo = liftIO . evalContT $ do
   let xrGetActionStatePose' = mkXrGetActionStatePose xrGetActionStatePosePtr
   getInfo' <- ContT $ withCStruct (getInfo)
   pState <- ContT (withZeroCStruct @ActionStatePose)
-  r <- lift $ traceAroundEvent "xrGetActionStatePose" (xrGetActionStatePose' (sessionHandle (session)) getInfo' (pState))
+  r <- lift $ traceAroundEvent "xrGetActionStatePose" (xrGetActionStatePose'
+                                                         (sessionHandle (session))
+                                                         getInfo'
+                                                         (pState))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   state <- lift $ peekCStruct @ActionStatePose pState
   pure $ (r, state)
@@ -516,7 +528,10 @@ createActionSet instance' createInfo = liftIO . evalContT $ do
   let xrCreateActionSet' = mkXrCreateActionSet xrCreateActionSetPtr
   createInfo' <- ContT $ withCStruct (createInfo)
   pActionSet <- ContT $ bracket (callocBytes @(Ptr ActionSet_T) 8) free
-  r <- lift $ traceAroundEvent "xrCreateActionSet" (xrCreateActionSet' (instanceHandle (instance')) createInfo' (pActionSet))
+  r <- lift $ traceAroundEvent "xrCreateActionSet" (xrCreateActionSet'
+                                                      (instanceHandle (instance'))
+                                                      createInfo'
+                                                      (pActionSet))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   actionSet <- lift $ peek @(Ptr ActionSet_T) pActionSet
   pure $ (((\h -> ActionSet h cmds ) actionSet))
@@ -596,7 +611,8 @@ destroyActionSet actionSet = liftIO $ do
   unless (xrDestroyActionSetPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrDestroyActionSet is null" Nothing Nothing
   let xrDestroyActionSet' = mkXrDestroyActionSet xrDestroyActionSetPtr
-  r <- traceAroundEvent "xrDestroyActionSet" (xrDestroyActionSet' (actionSetHandle (actionSet)))
+  r <- traceAroundEvent "xrDestroyActionSet" (xrDestroyActionSet'
+                                                (actionSetHandle (actionSet)))
   when (r < SUCCESS) (throwIO (OpenXrException r))
 
 
@@ -682,7 +698,10 @@ createAction actionSet createInfo = liftIO . evalContT $ do
   let xrCreateAction' = mkXrCreateAction xrCreateActionPtr
   createInfo' <- ContT $ withCStruct (createInfo)
   pAction <- ContT $ bracket (callocBytes @(Ptr Action_T) 8) free
-  r <- lift $ traceAroundEvent "xrCreateAction" (xrCreateAction' (actionSetHandle (actionSet)) createInfo' (pAction))
+  r <- lift $ traceAroundEvent "xrCreateAction" (xrCreateAction'
+                                                   (actionSetHandle (actionSet))
+                                                   createInfo'
+                                                   (pAction))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   action <- lift $ peek @(Ptr Action_T) pAction
   pure $ (((\h -> Action h cmds ) action))
@@ -762,7 +781,8 @@ destroyAction action = liftIO $ do
   unless (xrDestroyActionPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrDestroyAction is null" Nothing Nothing
   let xrDestroyAction' = mkXrDestroyAction xrDestroyActionPtr
-  r <- traceAroundEvent "xrDestroyAction" (xrDestroyAction' (actionHandle (action)))
+  r <- traceAroundEvent "xrDestroyAction" (xrDestroyAction'
+                                             (actionHandle (action)))
   when (r < SUCCESS) (throwIO (OpenXrException r))
 
 
@@ -838,7 +858,9 @@ foreign import ccall
 --
 -- 'OpenXR.Core10.Handles.Instance', 'InteractionProfileSuggestedBinding'
 suggestInteractionProfileBindings :: forall a io
-                                   . (Extendss InteractionProfileSuggestedBinding a, PokeChain a, MonadIO io)
+                                   . ( Extendss InteractionProfileSuggestedBinding a
+                                     , PokeChain a
+                                     , MonadIO io )
                                   => -- | @instance@ is the 'OpenXR.Core10.Handles.Instance' for which the
                                      -- application would like to set suggested bindings
                                      --
@@ -853,13 +875,16 @@ suggestInteractionProfileBindings :: forall a io
                                      -- 'InteractionProfileSuggestedBinding' structure
                                      ("suggestedBindings" ::: InteractionProfileSuggestedBinding a)
                                   -> io ()
-suggestInteractionProfileBindings instance' suggestedBindings = liftIO . evalContT $ do
+suggestInteractionProfileBindings instance'
+                                    suggestedBindings = liftIO . evalContT $ do
   let xrSuggestInteractionProfileBindingsPtr = pXrSuggestInteractionProfileBindings (case instance' of Instance{instanceCmds} -> instanceCmds)
   lift $ unless (xrSuggestInteractionProfileBindingsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrSuggestInteractionProfileBindings is null" Nothing Nothing
   let xrSuggestInteractionProfileBindings' = mkXrSuggestInteractionProfileBindings xrSuggestInteractionProfileBindingsPtr
   suggestedBindings' <- ContT $ withCStruct (suggestedBindings)
-  r <- lift $ traceAroundEvent "xrSuggestInteractionProfileBindings" (xrSuggestInteractionProfileBindings' (instanceHandle (instance')) (forgetExtensions suggestedBindings'))
+  r <- lift $ traceAroundEvent "xrSuggestInteractionProfileBindings" (xrSuggestInteractionProfileBindings'
+                                                                        (instanceHandle (instance'))
+                                                                        (forgetExtensions suggestedBindings'))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
 
 
@@ -938,7 +963,9 @@ attachSessionActionSets session attachInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrAttachSessionActionSets is null" Nothing Nothing
   let xrAttachSessionActionSets' = mkXrAttachSessionActionSets xrAttachSessionActionSetsPtr
   attachInfo' <- ContT $ withCStruct (attachInfo)
-  r <- lift $ traceAroundEvent "xrAttachSessionActionSets" (xrAttachSessionActionSets' (sessionHandle (session)) attachInfo')
+  r <- lift $ traceAroundEvent "xrAttachSessionActionSets" (xrAttachSessionActionSets'
+                                                              (sessionHandle (session))
+                                                              attachInfo')
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   pure $ (r)
 
@@ -1027,7 +1054,10 @@ getCurrentInteractionProfile session topLevelUserPath = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrGetCurrentInteractionProfile is null" Nothing Nothing
   let xrGetCurrentInteractionProfile' = mkXrGetCurrentInteractionProfile xrGetCurrentInteractionProfilePtr
   pInteractionProfile <- ContT (withZeroCStruct @InteractionProfileState)
-  r <- lift $ traceAroundEvent "xrGetCurrentInteractionProfile" (xrGetCurrentInteractionProfile' (sessionHandle (session)) (topLevelUserPath) (pInteractionProfile))
+  r <- lift $ traceAroundEvent "xrGetCurrentInteractionProfile" (xrGetCurrentInteractionProfile'
+                                                                   (sessionHandle (session))
+                                                                   (topLevelUserPath)
+                                                                   (pInteractionProfile))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   interactionProfile <- lift $ peekCStruct @InteractionProfileState pInteractionProfile
   pure $ (r, interactionProfile)
@@ -1113,7 +1143,9 @@ syncActions session syncInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrSyncActions is null" Nothing Nothing
   let xrSyncActions' = mkXrSyncActions xrSyncActionsPtr
   syncInfo' <- ContT $ withCStruct (syncInfo)
-  r <- lift $ traceAroundEvent "xrSyncActions" (xrSyncActions' (sessionHandle (session)) syncInfo')
+  r <- lift $ traceAroundEvent "xrSyncActions" (xrSyncActions'
+                                                  (sessionHandle (session))
+                                                  syncInfo')
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   pure $ (r)
 
@@ -1228,11 +1260,21 @@ enumerateBoundSourcesForAction session enumerateInfo = liftIO . evalContT $ do
   let session' = sessionHandle (session)
   enumerateInfo' <- ContT $ withCStruct (enumerateInfo)
   pSourceCountOutput <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "xrEnumerateBoundSourcesForAction" (xrEnumerateBoundSourcesForAction' session' enumerateInfo' (0) (pSourceCountOutput) (nullPtr))
+  r <- lift $ traceAroundEvent "xrEnumerateBoundSourcesForAction" (xrEnumerateBoundSourcesForAction'
+                                                                     session'
+                                                                     enumerateInfo'
+                                                                     (0)
+                                                                     (pSourceCountOutput)
+                                                                     (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   sourceCountOutput <- lift $ peek @Word32 pSourceCountOutput
   pSources <- ContT $ bracket (callocBytes @Path ((fromIntegral (sourceCountOutput)) * 8)) free
-  r' <- lift $ traceAroundEvent "xrEnumerateBoundSourcesForAction" (xrEnumerateBoundSourcesForAction' session' enumerateInfo' ((sourceCountOutput)) (pSourceCountOutput) (pSources))
+  r' <- lift $ traceAroundEvent "xrEnumerateBoundSourcesForAction" (xrEnumerateBoundSourcesForAction'
+                                                                      session'
+                                                                      enumerateInfo'
+                                                                      ((sourceCountOutput))
+                                                                      (pSourceCountOutput)
+                                                                      (pSources))
   lift $ when (r' < SUCCESS) (throwIO (OpenXrException r'))
   sourceCountOutput' <- lift $ peek @Word32 pSourceCountOutput
   sources' <- lift $ generateM (fromIntegral (sourceCountOutput')) (\i -> peek @Path ((pSources `advancePtrBytes` (8 * (i)) :: Ptr Path)))
@@ -1344,11 +1386,21 @@ getInputSourceLocalizedName session getInfo = liftIO . evalContT $ do
   let session' = sessionHandle (session)
   getInfo' <- ContT $ withCStruct (getInfo)
   pBufferCountOutput <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "xrGetInputSourceLocalizedName" (xrGetInputSourceLocalizedName' session' getInfo' (0) (pBufferCountOutput) (nullPtr))
+  r <- lift $ traceAroundEvent "xrGetInputSourceLocalizedName" (xrGetInputSourceLocalizedName'
+                                                                  session'
+                                                                  getInfo'
+                                                                  (0)
+                                                                  (pBufferCountOutput)
+                                                                  (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   bufferCountOutput <- lift $ peek @Word32 pBufferCountOutput
   pBuffer <- ContT $ bracket (callocBytes @CChar (fromIntegral (bufferCountOutput))) free
-  r' <- lift $ traceAroundEvent "xrGetInputSourceLocalizedName" (xrGetInputSourceLocalizedName' session' getInfo' ((bufferCountOutput)) (pBufferCountOutput) (pBuffer))
+  r' <- lift $ traceAroundEvent "xrGetInputSourceLocalizedName" (xrGetInputSourceLocalizedName'
+                                                                   session'
+                                                                   getInfo'
+                                                                   ((bufferCountOutput))
+                                                                   (pBufferCountOutput)
+                                                                   (pBuffer))
   lift $ when (r' < SUCCESS) (throwIO (OpenXrException r'))
   buffer' <- lift $ packCString pBuffer
   pure $ ((r'), buffer')
@@ -1488,7 +1540,10 @@ instance FromCStruct ActionStateBoolean where
     lastChangeTime <- peek @Time ((p `plusPtr` 24 :: Ptr Time))
     isActive <- peek @Bool32 ((p `plusPtr` 32 :: Ptr Bool32))
     pure $ ActionStateBoolean
-             (bool32ToBool currentState) (bool32ToBool changedSinceLastSync) lastChangeTime (bool32ToBool isActive)
+             (bool32ToBool currentState)
+             (bool32ToBool changedSinceLastSync)
+             lastChangeTime
+             (bool32ToBool isActive)
 
 instance Storable ActionStateBoolean where
   sizeOf ~_ = 40
@@ -1572,7 +1627,10 @@ instance FromCStruct ActionStateFloat where
     lastChangeTime <- peek @Time ((p `plusPtr` 24 :: Ptr Time))
     isActive <- peek @Bool32 ((p `plusPtr` 32 :: Ptr Bool32))
     pure $ ActionStateFloat
-             (coerce @CFloat @Float currentState) (bool32ToBool changedSinceLastSync) lastChangeTime (bool32ToBool isActive)
+             (coerce @CFloat @Float currentState)
+             (bool32ToBool changedSinceLastSync)
+             lastChangeTime
+             (bool32ToBool isActive)
 
 instance Storable ActionStateFloat where
   sizeOf ~_ = 40
@@ -1656,7 +1714,10 @@ instance FromCStruct ActionStateVector2f where
     lastChangeTime <- peek @Time ((p `plusPtr` 32 :: Ptr Time))
     isActive <- peek @Bool32 ((p `plusPtr` 40 :: Ptr Bool32))
     pure $ ActionStateVector2f
-             currentState (bool32ToBool changedSinceLastSync) lastChangeTime (bool32ToBool isActive)
+             currentState
+             (bool32ToBool changedSinceLastSync)
+             lastChangeTime
+             (bool32ToBool isActive)
 
 instance Storable ActionStateVector2f where
   sizeOf ~_ = 48
@@ -2047,7 +2108,8 @@ instance Extensible InteractionProfileSuggestedBinding where
     | Just Refl <- eqT @e @InteractionProfileAnalogThresholdVALVE = Just f
     | otherwise = Nothing
 
-instance (Extendss InteractionProfileSuggestedBinding es, PokeChain es) => ToCStruct (InteractionProfileSuggestedBinding es) where
+instance ( Extendss InteractionProfileSuggestedBinding es
+         , PokeChain es ) => ToCStruct (InteractionProfileSuggestedBinding es) where
   withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p InteractionProfileSuggestedBinding{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_INTERACTION_PROFILE_SUGGESTED_BINDING)
@@ -2068,7 +2130,8 @@ instance (Extendss InteractionProfileSuggestedBinding es, PokeChain es) => ToCSt
     lift $ poke ((p `plusPtr` 16 :: Ptr Path)) (zero)
     lift $ f
 
-instance (Extendss InteractionProfileSuggestedBinding es, PeekChain es) => FromCStruct (InteractionProfileSuggestedBinding es) where
+instance ( Extendss InteractionProfileSuggestedBinding es
+         , PeekChain es ) => FromCStruct (InteractionProfileSuggestedBinding es) where
   peekCStruct p = do
     next <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next' <- peekChain (castPtr next)
@@ -2671,7 +2734,11 @@ instance FromCStruct ActionCreateInfo where
     subactionPaths' <- generateM subactionPathsLength (\i -> peek @Path ((subactionPaths `advancePtrBytes` (8 * (i)) :: Ptr Path)))
     localizedActionName <- packCString (lowerArrayPtr ((p `plusPtr` 96 :: Ptr (FixedArray MAX_LOCALIZED_ACTION_NAME_SIZE CChar))))
     pure $ ActionCreateInfo
-             actionName actionType countSubactionPaths subactionPaths' localizedActionName
+             actionName
+             actionType
+             countSubactionPaths
+             subactionPaths'
+             localizedActionName
 
 instance Zero ActionCreateInfo where
   zero = ActionCreateInfo

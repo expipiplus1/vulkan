@@ -243,7 +243,10 @@ getSemaphoreFdKHR device getFdInfo = liftIO . evalContT $ do
   let vkGetSemaphoreFdKHR' = mkVkGetSemaphoreFdKHR vkGetSemaphoreFdKHRPtr
   pGetFdInfo <- ContT $ withCStruct (getFdInfo)
   pPFd <- ContT $ bracket (callocBytes @CInt 4) free
-  r <- lift $ traceAroundEvent "vkGetSemaphoreFdKHR" (vkGetSemaphoreFdKHR' (deviceHandle (device)) pGetFdInfo (pPFd))
+  r <- lift $ traceAroundEvent "vkGetSemaphoreFdKHR" (vkGetSemaphoreFdKHR'
+                                                        (deviceHandle (device))
+                                                        pGetFdInfo
+                                                        (pPFd))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pFd <- lift $ peek @CInt pPFd
   pure $ ((coerce @CInt @Int32 pFd))
@@ -306,7 +309,9 @@ importSemaphoreFdKHR device importSemaphoreFdInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkImportSemaphoreFdKHR is null" Nothing Nothing
   let vkImportSemaphoreFdKHR' = mkVkImportSemaphoreFdKHR vkImportSemaphoreFdKHRPtr
   pImportSemaphoreFdInfo <- ContT $ withCStruct (importSemaphoreFdInfo)
-  r <- lift $ traceAroundEvent "vkImportSemaphoreFdKHR" (vkImportSemaphoreFdKHR' (deviceHandle (device)) pImportSemaphoreFdInfo)
+  r <- lift $ traceAroundEvent "vkImportSemaphoreFdKHR" (vkImportSemaphoreFdKHR'
+                                                           (deviceHandle (device))
+                                                           pImportSemaphoreFdInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 

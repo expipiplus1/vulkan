@@ -17,10 +17,12 @@ import {-# SOURCE #-} OpenXR.CStruct.Extends (PokeChain)
 type role SwapchainCreateInfo nominal
 data SwapchainCreateInfo (es :: [Type])
 
-instance (Extendss SwapchainCreateInfo es, PokeChain es) => ToCStruct (SwapchainCreateInfo es)
+instance ( Extendss SwapchainCreateInfo es
+         , PokeChain es ) => ToCStruct (SwapchainCreateInfo es)
 instance Show (Chain es) => Show (SwapchainCreateInfo es)
 
-instance (Extendss SwapchainCreateInfo es, PeekChain es) => FromCStruct (SwapchainCreateInfo es)
+instance ( Extendss SwapchainCreateInfo es
+         , PeekChain es ) => FromCStruct (SwapchainCreateInfo es)
 
 
 data SwapchainImageAcquireInfo

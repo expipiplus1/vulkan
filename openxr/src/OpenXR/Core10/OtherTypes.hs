@@ -178,7 +178,10 @@ instance FromCStruct Vector4f where
     z <- peek @CFloat ((p `plusPtr` 8 :: Ptr CFloat))
     w <- peek @CFloat ((p `plusPtr` 12 :: Ptr CFloat))
     pure $ Vector4f
-             (coerce @CFloat @Float x) (coerce @CFloat @Float y) (coerce @CFloat @Float z) (coerce @CFloat @Float w)
+             (coerce @CFloat @Float x)
+             (coerce @CFloat @Float y)
+             (coerce @CFloat @Float z)
+             (coerce @CFloat @Float w)
 
 instance Storable Vector4f where
   sizeOf ~_ = 16
@@ -248,7 +251,10 @@ instance FromCStruct Color4f where
     b <- peek @CFloat ((p `plusPtr` 8 :: Ptr CFloat))
     a <- peek @CFloat ((p `plusPtr` 12 :: Ptr CFloat))
     pure $ Color4f
-             (coerce @CFloat @Float r) (coerce @CFloat @Float g) (coerce @CFloat @Float b) (coerce @CFloat @Float a)
+             (coerce @CFloat @Float r)
+             (coerce @CFloat @Float g)
+             (coerce @CFloat @Float b)
+             (coerce @CFloat @Float a)
 
 instance Storable Color4f where
   sizeOf ~_ = 16
@@ -331,7 +337,10 @@ instance FromCStruct Fovf where
     angleUp <- peek @CFloat ((p `plusPtr` 8 :: Ptr CFloat))
     angleDown <- peek @CFloat ((p `plusPtr` 12 :: Ptr CFloat))
     pure $ Fovf
-             (coerce @CFloat @Float angleLeft) (coerce @CFloat @Float angleRight) (coerce @CFloat @Float angleUp) (coerce @CFloat @Float angleDown)
+             (coerce @CFloat @Float angleLeft)
+             (coerce @CFloat @Float angleRight)
+             (coerce @CFloat @Float angleUp)
+             (coerce @CFloat @Float angleDown)
 
 instance Storable Fovf where
   sizeOf ~_ = 16
@@ -520,7 +529,8 @@ instance Inheritable (CompositionLayerBaseHeader '[]) where
           Nothing
           Nothing
 
-instance (Extendss CompositionLayerBaseHeader es, PokeChain es) => ToCStruct (CompositionLayerBaseHeader es) where
+instance ( Extendss CompositionLayerBaseHeader es
+         , PokeChain es ) => ToCStruct (CompositionLayerBaseHeader es) where
   withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CompositionLayerBaseHeader{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (type')
@@ -538,7 +548,8 @@ instance (Extendss CompositionLayerBaseHeader es, PokeChain es) => ToCStruct (Co
     lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr Space_T))) (zero)
     lift $ f
 
-instance (Extendss CompositionLayerBaseHeader es, PeekChain es) => FromCStruct (CompositionLayerBaseHeader es) where
+instance ( Extendss CompositionLayerBaseHeader es
+         , PeekChain es ) => FromCStruct (CompositionLayerBaseHeader es) where
   peekCStruct p = do
     type' <- peek @StructureType ((p `plusPtr` 0 :: Ptr StructureType))
     next <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
@@ -620,7 +631,8 @@ instance Extensible CompositionLayerProjectionView where
     | Just Refl <- eqT @e @CompositionLayerDepthInfoKHR = Just f
     | otherwise = Nothing
 
-instance (Extendss CompositionLayerProjectionView es, PokeChain es) => ToCStruct (CompositionLayerProjectionView es) where
+instance ( Extendss CompositionLayerProjectionView es
+         , PokeChain es ) => ToCStruct (CompositionLayerProjectionView es) where
   withCStruct x f = allocaBytes 96 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p CompositionLayerProjectionView{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_COMPOSITION_LAYER_PROJECTION_VIEW)
@@ -641,7 +653,8 @@ instance (Extendss CompositionLayerProjectionView es, PokeChain es) => ToCStruct
     lift $ poke ((p `plusPtr` 64 :: Ptr SwapchainSubImage)) (zero)
     lift $ f
 
-instance (Extendss CompositionLayerProjectionView es, PeekChain es) => FromCStruct (CompositionLayerProjectionView es) where
+instance ( Extendss CompositionLayerProjectionView es
+         , PeekChain es ) => FromCStruct (CompositionLayerProjectionView es) where
   peekCStruct p = do
     next <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next' <- peekChain (castPtr next)
@@ -957,7 +970,9 @@ instance FromCStruct HapticVibration where
     frequency <- peek @CFloat ((p `plusPtr` 24 :: Ptr CFloat))
     amplitude <- peek @CFloat ((p `plusPtr` 28 :: Ptr CFloat))
     pure $ HapticVibration
-             duration (coerce @CFloat @Float frequency) (coerce @CFloat @Float amplitude)
+             duration
+             (coerce @CFloat @Float frequency)
+             (coerce @CFloat @Float amplitude)
 
 instance Storable HapticVibration where
   sizeOf ~_ = 32
@@ -1379,7 +1394,11 @@ instance FromCStruct EventDataReferenceSpaceChangePending where
     poseValid <- peek @Bool32 ((p `plusPtr` 40 :: Ptr Bool32))
     poseInPreviousSpace <- peekCStruct @Posef ((p `plusPtr` 44 :: Ptr Posef))
     pure $ EventDataReferenceSpaceChangePending
-             session referenceSpaceType changeTime (bool32ToBool poseValid) poseInPreviousSpace
+             session
+             referenceSpaceType
+             changeTime
+             (bool32ToBool poseValid)
+             poseInPreviousSpace
 
 instance Storable EventDataReferenceSpaceChangePending where
   sizeOf ~_ = 72

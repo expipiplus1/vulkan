@@ -338,7 +338,8 @@ instance FromCStruct PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT where
     graphicsPipelineLibraryFastLinking <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     graphicsPipelineLibraryIndependentInterpolationDecoration <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT
-             (bool32ToBool graphicsPipelineLibraryFastLinking) (bool32ToBool graphicsPipelineLibraryIndependentInterpolationDecoration)
+             (bool32ToBool graphicsPipelineLibraryFastLinking)
+             (bool32ToBool graphicsPipelineLibraryIndependentInterpolationDecoration)
 
 instance Storable PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT where
   sizeOf ~_ = 24
@@ -445,15 +446,18 @@ newtype GraphicsPipelineLibraryFlagBitsEXT = GraphicsPipelineLibraryFlagBitsEXT 
 -- | 'GRAPHICS_PIPELINE_LIBRARY_VERTEX_INPUT_INTERFACE_BIT_EXT' specifies
 -- that a pipeline will include
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-vertex-input vertex input interface state>.
-pattern GRAPHICS_PIPELINE_LIBRARY_VERTEX_INPUT_INTERFACE_BIT_EXT    = GraphicsPipelineLibraryFlagBitsEXT 0x00000001
+pattern GRAPHICS_PIPELINE_LIBRARY_VERTEX_INPUT_INTERFACE_BIT_EXT = GraphicsPipelineLibraryFlagBitsEXT 0x00000001
+
 -- | 'GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT' specifies
 -- that a pipeline will include
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>.
 pattern GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT = GraphicsPipelineLibraryFlagBitsEXT 0x00000002
+
 -- | 'GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT' specifies that a
 -- pipeline will include
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-shader fragment shader state>.
-pattern GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT           = GraphicsPipelineLibraryFlagBitsEXT 0x00000004
+pattern GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT = GraphicsPipelineLibraryFlagBitsEXT 0x00000004
+
 -- | 'GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT' specifies
 -- that a pipeline will include
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-fragment-output fragment output interface state>.
@@ -467,25 +471,40 @@ enumPrefixGraphicsPipelineLibraryFlagBitsEXT = "GRAPHICS_PIPELINE_LIBRARY_"
 
 showTableGraphicsPipelineLibraryFlagBitsEXT :: [(GraphicsPipelineLibraryFlagBitsEXT, String)]
 showTableGraphicsPipelineLibraryFlagBitsEXT =
-  [ (GRAPHICS_PIPELINE_LIBRARY_VERTEX_INPUT_INTERFACE_BIT_EXT   , "VERTEX_INPUT_INTERFACE_BIT_EXT")
-  , (GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT, "PRE_RASTERIZATION_SHADERS_BIT_EXT")
-  , (GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT          , "FRAGMENT_SHADER_BIT_EXT")
-  , (GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT, "FRAGMENT_OUTPUT_INTERFACE_BIT_EXT")
+  [
+    ( GRAPHICS_PIPELINE_LIBRARY_VERTEX_INPUT_INTERFACE_BIT_EXT
+    , "VERTEX_INPUT_INTERFACE_BIT_EXT"
+    )
+  ,
+    ( GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT
+    , "PRE_RASTERIZATION_SHADERS_BIT_EXT"
+    )
+  ,
+    ( GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT
+    , "FRAGMENT_SHADER_BIT_EXT"
+    )
+  ,
+    ( GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT
+    , "FRAGMENT_OUTPUT_INTERFACE_BIT_EXT"
+    )
   ]
 
 instance Show GraphicsPipelineLibraryFlagBitsEXT where
-  showsPrec = enumShowsPrec enumPrefixGraphicsPipelineLibraryFlagBitsEXT
-                            showTableGraphicsPipelineLibraryFlagBitsEXT
-                            conNameGraphicsPipelineLibraryFlagBitsEXT
-                            (\(GraphicsPipelineLibraryFlagBitsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixGraphicsPipelineLibraryFlagBitsEXT
+      showTableGraphicsPipelineLibraryFlagBitsEXT
+      conNameGraphicsPipelineLibraryFlagBitsEXT
+      (\(GraphicsPipelineLibraryFlagBitsEXT x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read GraphicsPipelineLibraryFlagBitsEXT where
-  readPrec = enumReadPrec enumPrefixGraphicsPipelineLibraryFlagBitsEXT
-                          showTableGraphicsPipelineLibraryFlagBitsEXT
-                          conNameGraphicsPipelineLibraryFlagBitsEXT
-                          GraphicsPipelineLibraryFlagBitsEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixGraphicsPipelineLibraryFlagBitsEXT
+      showTableGraphicsPipelineLibraryFlagBitsEXT
+      conNameGraphicsPipelineLibraryFlagBitsEXT
+      GraphicsPipelineLibraryFlagBitsEXT
 
 type EXT_GRAPHICS_PIPELINE_LIBRARY_SPEC_VERSION = 1
 

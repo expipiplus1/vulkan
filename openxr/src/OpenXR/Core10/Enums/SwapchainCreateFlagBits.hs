@@ -26,8 +26,9 @@ newtype SwapchainCreateFlagBits = SwapchainCreateFlagBits Flags64
 
 -- No documentation found for Nested "XrSwapchainCreateFlagBits" "XR_SWAPCHAIN_CREATE_PROTECTED_CONTENT_BIT"
 pattern SWAPCHAIN_CREATE_PROTECTED_CONTENT_BIT = SwapchainCreateFlagBits 0x0000000000000001
+
 -- No documentation found for Nested "XrSwapchainCreateFlagBits" "XR_SWAPCHAIN_CREATE_STATIC_IMAGE_BIT"
-pattern SWAPCHAIN_CREATE_STATIC_IMAGE_BIT      = SwapchainCreateFlagBits 0x0000000000000002
+pattern SWAPCHAIN_CREATE_STATIC_IMAGE_BIT = SwapchainCreateFlagBits 0x0000000000000002
 
 conNameSwapchainCreateFlagBits :: String
 conNameSwapchainCreateFlagBits = "SwapchainCreateFlagBits"
@@ -37,20 +38,29 @@ enumPrefixSwapchainCreateFlagBits = "SWAPCHAIN_CREATE_"
 
 showTableSwapchainCreateFlagBits :: [(SwapchainCreateFlagBits, String)]
 showTableSwapchainCreateFlagBits =
-  [ (SWAPCHAIN_CREATE_PROTECTED_CONTENT_BIT, "PROTECTED_CONTENT_BIT")
-  , (SWAPCHAIN_CREATE_STATIC_IMAGE_BIT     , "STATIC_IMAGE_BIT")
+  [
+    ( SWAPCHAIN_CREATE_PROTECTED_CONTENT_BIT
+    , "PROTECTED_CONTENT_BIT"
+    )
+  ,
+    ( SWAPCHAIN_CREATE_STATIC_IMAGE_BIT
+    , "STATIC_IMAGE_BIT"
+    )
   ]
 
 instance Show SwapchainCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixSwapchainCreateFlagBits
-                            showTableSwapchainCreateFlagBits
-                            conNameSwapchainCreateFlagBits
-                            (\(SwapchainCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixSwapchainCreateFlagBits
+      showTableSwapchainCreateFlagBits
+      conNameSwapchainCreateFlagBits
+      (\(SwapchainCreateFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read SwapchainCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixSwapchainCreateFlagBits
-                          showTableSwapchainCreateFlagBits
-                          conNameSwapchainCreateFlagBits
-                          SwapchainCreateFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixSwapchainCreateFlagBits
+      showTableSwapchainCreateFlagBits
+      conNameSwapchainCreateFlagBits
+      SwapchainCreateFlagBits

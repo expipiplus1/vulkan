@@ -36,7 +36,8 @@ newtype CommandPoolCreateFlagBits = CommandPoolCreateFlagBits Flags
 -- reset or freed in a relatively short timeframe. This flag /may/ be used
 -- by the implementation to control memory allocation behavior within the
 -- pool.
-pattern COMMAND_POOL_CREATE_TRANSIENT_BIT            = CommandPoolCreateFlagBits 0x00000001
+pattern COMMAND_POOL_CREATE_TRANSIENT_BIT = CommandPoolCreateFlagBits 0x00000001
+
 -- | 'COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT' allows any command buffer
 -- allocated from a pool to be individually reset to the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>;
@@ -46,9 +47,10 @@ pattern COMMAND_POOL_CREATE_TRANSIENT_BIT            = CommandPoolCreateFlagBits
 -- set on a pool, then 'Vulkan.Core10.CommandBuffer.resetCommandBuffer'
 -- /must/ not be called for any command buffer allocated from that pool.
 pattern COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = CommandPoolCreateFlagBits 0x00000002
+
 -- | 'COMMAND_POOL_CREATE_PROTECTED_BIT' specifies that command buffers
 -- allocated from the pool are protected command buffers.
-pattern COMMAND_POOL_CREATE_PROTECTED_BIT            = CommandPoolCreateFlagBits 0x00000004
+pattern COMMAND_POOL_CREATE_PROTECTED_BIT = CommandPoolCreateFlagBits 0x00000004
 
 conNameCommandPoolCreateFlagBits :: String
 conNameCommandPoolCreateFlagBits = "CommandPoolCreateFlagBits"
@@ -58,21 +60,33 @@ enumPrefixCommandPoolCreateFlagBits = "COMMAND_POOL_CREATE_"
 
 showTableCommandPoolCreateFlagBits :: [(CommandPoolCreateFlagBits, String)]
 showTableCommandPoolCreateFlagBits =
-  [ (COMMAND_POOL_CREATE_TRANSIENT_BIT           , "TRANSIENT_BIT")
-  , (COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT, "RESET_COMMAND_BUFFER_BIT")
-  , (COMMAND_POOL_CREATE_PROTECTED_BIT           , "PROTECTED_BIT")
+  [
+    ( COMMAND_POOL_CREATE_TRANSIENT_BIT
+    , "TRANSIENT_BIT"
+    )
+  ,
+    ( COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT
+    , "RESET_COMMAND_BUFFER_BIT"
+    )
+  ,
+    ( COMMAND_POOL_CREATE_PROTECTED_BIT
+    , "PROTECTED_BIT"
+    )
   ]
 
 instance Show CommandPoolCreateFlagBits where
-  showsPrec = enumShowsPrec enumPrefixCommandPoolCreateFlagBits
-                            showTableCommandPoolCreateFlagBits
-                            conNameCommandPoolCreateFlagBits
-                            (\(CommandPoolCreateFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixCommandPoolCreateFlagBits
+      showTableCommandPoolCreateFlagBits
+      conNameCommandPoolCreateFlagBits
+      (\(CommandPoolCreateFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read CommandPoolCreateFlagBits where
-  readPrec = enumReadPrec enumPrefixCommandPoolCreateFlagBits
-                          showTableCommandPoolCreateFlagBits
-                          conNameCommandPoolCreateFlagBits
-                          CommandPoolCreateFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixCommandPoolCreateFlagBits
+      showTableCommandPoolCreateFlagBits
+      conNameCommandPoolCreateFlagBits
+      CommandPoolCreateFlagBits

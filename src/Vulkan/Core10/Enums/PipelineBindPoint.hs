@@ -36,19 +36,26 @@ newtype PipelineBindPoint = PipelineBindPoint Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- | 'PIPELINE_BIND_POINT_GRAPHICS' specifies binding as a graphics pipeline.
-pattern PIPELINE_BIND_POINT_GRAPHICS               = PipelineBindPoint 0
+pattern PIPELINE_BIND_POINT_GRAPHICS = PipelineBindPoint 0
+
 -- | 'PIPELINE_BIND_POINT_COMPUTE' specifies binding as a compute pipeline.
-pattern PIPELINE_BIND_POINT_COMPUTE                = PipelineBindPoint 1
+pattern PIPELINE_BIND_POINT_COMPUTE = PipelineBindPoint 1
+
 -- | 'PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI' specifies binding as a
 -- subpass shading pipeline.
 pattern PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI = PipelineBindPoint 1000369003
+
 -- | 'PIPELINE_BIND_POINT_RAY_TRACING_KHR' specifies binding as a ray tracing
 -- pipeline.
-pattern PIPELINE_BIND_POINT_RAY_TRACING_KHR        = PipelineBindPoint 1000165000
-{-# complete PIPELINE_BIND_POINT_GRAPHICS,
-             PIPELINE_BIND_POINT_COMPUTE,
-             PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI,
-             PIPELINE_BIND_POINT_RAY_TRACING_KHR :: PipelineBindPoint #-}
+pattern PIPELINE_BIND_POINT_RAY_TRACING_KHR = PipelineBindPoint 1000165000
+
+{-# COMPLETE
+  PIPELINE_BIND_POINT_GRAPHICS
+  , PIPELINE_BIND_POINT_COMPUTE
+  , PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI
+  , PIPELINE_BIND_POINT_RAY_TRACING_KHR ::
+    PipelineBindPoint
+  #-}
 
 conNamePipelineBindPoint :: String
 conNamePipelineBindPoint = "PipelineBindPoint"
@@ -58,20 +65,31 @@ enumPrefixPipelineBindPoint = "PIPELINE_BIND_POINT_"
 
 showTablePipelineBindPoint :: [(PipelineBindPoint, String)]
 showTablePipelineBindPoint =
-  [ (PIPELINE_BIND_POINT_GRAPHICS              , "GRAPHICS")
-  , (PIPELINE_BIND_POINT_COMPUTE               , "COMPUTE")
-  , (PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI, "SUBPASS_SHADING_HUAWEI")
-  , (PIPELINE_BIND_POINT_RAY_TRACING_KHR       , "RAY_TRACING_KHR")
+  [ (PIPELINE_BIND_POINT_GRAPHICS, "GRAPHICS")
+  , (PIPELINE_BIND_POINT_COMPUTE, "COMPUTE")
+  ,
+    ( PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI
+    , "SUBPASS_SHADING_HUAWEI"
+    )
+  ,
+    ( PIPELINE_BIND_POINT_RAY_TRACING_KHR
+    , "RAY_TRACING_KHR"
+    )
   ]
 
 instance Show PipelineBindPoint where
-  showsPrec = enumShowsPrec enumPrefixPipelineBindPoint
-                            showTablePipelineBindPoint
-                            conNamePipelineBindPoint
-                            (\(PipelineBindPoint x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineBindPoint
+      showTablePipelineBindPoint
+      conNamePipelineBindPoint
+      (\(PipelineBindPoint x) -> x)
+      (showsPrec 11)
 
 instance Read PipelineBindPoint where
   readPrec =
-    enumReadPrec enumPrefixPipelineBindPoint showTablePipelineBindPoint conNamePipelineBindPoint PipelineBindPoint
-
+    enumReadPrec
+      enumPrefixPipelineBindPoint
+      showTablePipelineBindPoint
+      conNamePipelineBindPoint
+      PipelineBindPoint

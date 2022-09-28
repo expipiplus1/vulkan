@@ -158,7 +158,11 @@ createQueryPool device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPQueryPool <- ContT $ bracket (callocBytes @QueryPool 8) free
-  r <- lift $ traceAroundEvent "vkCreateQueryPool" (vkCreateQueryPool' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPQueryPool))
+  r <- lift $ traceAroundEvent "vkCreateQueryPool" (vkCreateQueryPool'
+                                                      (deviceHandle (device))
+                                                      (forgetExtensions pCreateInfo)
+                                                      pAllocator
+                                                      (pPQueryPool))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pQueryPool <- lift $ peek @QueryPool pPQueryPool
   pure $ (pQueryPool)
@@ -253,7 +257,10 @@ destroyQueryPool device queryPool allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyQueryPool" (vkDestroyQueryPool' (deviceHandle (device)) (queryPool) pAllocator)
+  lift $ traceAroundEvent "vkDestroyQueryPool" (vkDestroyQueryPool'
+                                                  (deviceHandle (device))
+                                                  (queryPool)
+                                                  pAllocator)
   pure $ ()
 
 
@@ -515,12 +522,27 @@ getQueryPoolResults :: forall io
                        -- how and when results are returned.
                        QueryResultFlags
                     -> io (Result)
-getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride flags = liftIO $ do
+getQueryPoolResults device
+                      queryPool
+                      firstQuery
+                      queryCount
+                      dataSize
+                      data'
+                      stride
+                      flags = liftIO $ do
   let vkGetQueryPoolResultsPtr = pVkGetQueryPoolResults (case device of Device{deviceCmds} -> deviceCmds)
   unless (vkGetQueryPoolResultsPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetQueryPoolResults is null" Nothing Nothing
   let vkGetQueryPoolResults' = mkVkGetQueryPoolResults vkGetQueryPoolResultsPtr
-  r <- traceAroundEvent "vkGetQueryPoolResults" (vkGetQueryPoolResults' (deviceHandle (device)) (queryPool) (firstQuery) (queryCount) (CSize (dataSize)) (data') (stride) (flags))
+  r <- traceAroundEvent "vkGetQueryPoolResults" (vkGetQueryPoolResults'
+                                                   (deviceHandle (device))
+                                                   (queryPool)
+                                                   (firstQuery)
+                                                   (queryCount)
+                                                   (CSize (dataSize))
+                                                   (data')
+                                                   (stride)
+                                                   (flags))
   when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 
@@ -636,7 +658,8 @@ instance Extensible QueryPoolCreateInfo where
     | Just Refl <- eqT @e @QueryPoolPerformanceCreateInfoKHR = Just f
     | otherwise = Nothing
 
-instance (Extendss QueryPoolCreateInfo es, PokeChain es) => ToCStruct (QueryPoolCreateInfo es) where
+instance ( Extendss QueryPoolCreateInfo es
+         , PokeChain es ) => ToCStruct (QueryPoolCreateInfo es) where
   withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p QueryPoolCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO)
@@ -657,7 +680,8 @@ instance (Extendss QueryPoolCreateInfo es, PokeChain es) => ToCStruct (QueryPool
     lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
     lift $ f
 
-instance (Extendss QueryPoolCreateInfo es, PeekChain es) => FromCStruct (QueryPoolCreateInfo es) where
+instance ( Extendss QueryPoolCreateInfo es
+         , PeekChain es ) => FromCStruct (QueryPoolCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

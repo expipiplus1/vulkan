@@ -27,13 +27,18 @@ newtype PointClippingBehavior = PointClippingBehavior Int32
 -- | 'POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES' specifies that the primitive
 -- is discarded if the vertex lies outside any clip plane, including the
 -- planes bounding the view volume.
-pattern POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES       = PointClippingBehavior 0
+pattern POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES = PointClippingBehavior 0
+
 -- | 'POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY' specifies that the
 -- primitive is discarded only if the vertex lies outside any user clip
 -- plane.
 pattern POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY = PointClippingBehavior 1
-{-# complete POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES,
-             POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY :: PointClippingBehavior #-}
+
+{-# COMPLETE
+  POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES
+  , POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY ::
+    PointClippingBehavior
+  #-}
 
 conNamePointClippingBehavior :: String
 conNamePointClippingBehavior = "PointClippingBehavior"
@@ -43,20 +48,29 @@ enumPrefixPointClippingBehavior = "POINT_CLIPPING_BEHAVIOR_"
 
 showTablePointClippingBehavior :: [(PointClippingBehavior, String)]
 showTablePointClippingBehavior =
-  [ (POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES      , "ALL_CLIP_PLANES")
-  , (POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY, "USER_CLIP_PLANES_ONLY")
+  [
+    ( POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES
+    , "ALL_CLIP_PLANES"
+    )
+  ,
+    ( POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY
+    , "USER_CLIP_PLANES_ONLY"
+    )
   ]
 
 instance Show PointClippingBehavior where
-  showsPrec = enumShowsPrec enumPrefixPointClippingBehavior
-                            showTablePointClippingBehavior
-                            conNamePointClippingBehavior
-                            (\(PointClippingBehavior x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPointClippingBehavior
+      showTablePointClippingBehavior
+      conNamePointClippingBehavior
+      (\(PointClippingBehavior x) -> x)
+      (showsPrec 11)
 
 instance Read PointClippingBehavior where
-  readPrec = enumReadPrec enumPrefixPointClippingBehavior
-                          showTablePointClippingBehavior
-                          conNamePointClippingBehavior
-                          PointClippingBehavior
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPointClippingBehavior
+      showTablePointClippingBehavior
+      conNamePointClippingBehavior
+      PointClippingBehavior

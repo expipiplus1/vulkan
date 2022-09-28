@@ -33,10 +33,12 @@ newtype ImageTiling = ImageTiling Int32
 -- | 'IMAGE_TILING_OPTIMAL' specifies optimal tiling (texels are laid out in
 -- an implementation-dependent arrangement, for more efficient memory
 -- access).
-pattern IMAGE_TILING_OPTIMAL                 = ImageTiling 0
+pattern IMAGE_TILING_OPTIMAL = ImageTiling 0
+
 -- | 'IMAGE_TILING_LINEAR' specifies linear tiling (texels are laid out in
 -- memory in row-major order, possibly with some padding on each row).
-pattern IMAGE_TILING_LINEAR                  = ImageTiling 1
+pattern IMAGE_TILING_LINEAR = ImageTiling 1
+
 -- | 'IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT' indicates that the image’s tiling
 -- is defined by a
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-drm-format-modifier Linux DRM format modifier>.
@@ -47,9 +49,13 @@ pattern IMAGE_TILING_LINEAR                  = ImageTiling 1
 -- and /can/ be queried with
 -- 'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.getImageDrmFormatModifierPropertiesEXT'.
 pattern IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT = ImageTiling 1000158000
-{-# complete IMAGE_TILING_OPTIMAL,
-             IMAGE_TILING_LINEAR,
-             IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT :: ImageTiling #-}
+
+{-# COMPLETE
+  IMAGE_TILING_OPTIMAL
+  , IMAGE_TILING_LINEAR
+  , IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT ::
+    ImageTiling
+  #-}
 
 conNameImageTiling :: String
 conNameImageTiling = "ImageTiling"
@@ -59,15 +65,27 @@ enumPrefixImageTiling = "IMAGE_TILING_"
 
 showTableImageTiling :: [(ImageTiling, String)]
 showTableImageTiling =
-  [ (IMAGE_TILING_OPTIMAL                , "OPTIMAL")
-  , (IMAGE_TILING_LINEAR                 , "LINEAR")
-  , (IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT, "DRM_FORMAT_MODIFIER_EXT")
+  [ (IMAGE_TILING_OPTIMAL, "OPTIMAL")
+  , (IMAGE_TILING_LINEAR, "LINEAR")
+  ,
+    ( IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT
+    , "DRM_FORMAT_MODIFIER_EXT"
+    )
   ]
 
 instance Show ImageTiling where
   showsPrec =
-    enumShowsPrec enumPrefixImageTiling showTableImageTiling conNameImageTiling (\(ImageTiling x) -> x) (showsPrec 11)
+    enumShowsPrec
+      enumPrefixImageTiling
+      showTableImageTiling
+      conNameImageTiling
+      (\(ImageTiling x) -> x)
+      (showsPrec 11)
 
 instance Read ImageTiling where
-  readPrec = enumReadPrec enumPrefixImageTiling showTableImageTiling conNameImageTiling ImageTiling
-
+  readPrec =
+    enumReadPrec
+      enumPrefixImageTiling
+      showTableImageTiling
+      conNameImageTiling
+      ImageTiling

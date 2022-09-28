@@ -290,7 +290,10 @@ getSemaphoreWin32HandleKHR device getWin32HandleInfo = liftIO . evalContT $ do
   let vkGetSemaphoreWin32HandleKHR' = mkVkGetSemaphoreWin32HandleKHR vkGetSemaphoreWin32HandleKHRPtr
   pGetWin32HandleInfo <- ContT $ withCStruct (getWin32HandleInfo)
   pPHandle <- ContT $ bracket (callocBytes @HANDLE 8) free
-  r <- lift $ traceAroundEvent "vkGetSemaphoreWin32HandleKHR" (vkGetSemaphoreWin32HandleKHR' (deviceHandle (device)) pGetWin32HandleInfo (pPHandle))
+  r <- lift $ traceAroundEvent "vkGetSemaphoreWin32HandleKHR" (vkGetSemaphoreWin32HandleKHR'
+                                                                 (deviceHandle (device))
+                                                                 pGetWin32HandleInfo
+                                                                 (pPHandle))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pHandle <- lift $ peek @HANDLE pPHandle
   pure $ (pHandle)
@@ -349,13 +352,16 @@ importSemaphoreWin32HandleKHR :: forall io
                                  -- 'ImportSemaphoreWin32HandleInfoKHR' structure
                                  ImportSemaphoreWin32HandleInfoKHR
                               -> io ()
-importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = liftIO . evalContT $ do
+importSemaphoreWin32HandleKHR device
+                                importSemaphoreWin32HandleInfo = liftIO . evalContT $ do
   let vkImportSemaphoreWin32HandleKHRPtr = pVkImportSemaphoreWin32HandleKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkImportSemaphoreWin32HandleKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkImportSemaphoreWin32HandleKHR is null" Nothing Nothing
   let vkImportSemaphoreWin32HandleKHR' = mkVkImportSemaphoreWin32HandleKHR vkImportSemaphoreWin32HandleKHRPtr
   pImportSemaphoreWin32HandleInfo <- ContT $ withCStruct (importSemaphoreWin32HandleInfo)
-  r <- lift $ traceAroundEvent "vkImportSemaphoreWin32HandleKHR" (vkImportSemaphoreWin32HandleKHR' (deviceHandle (device)) pImportSemaphoreWin32HandleInfo)
+  r <- lift $ traceAroundEvent "vkImportSemaphoreWin32HandleKHR" (vkImportSemaphoreWin32HandleKHR'
+                                                                    (deviceHandle (device))
+                                                                    pImportSemaphoreWin32HandleInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -806,7 +812,10 @@ instance FromCStruct D3D12FenceSubmitInfoKHR where
     let pSignalSemaphoreValuesLength = if pSignalSemaphoreValues == nullPtr then 0 else (fromIntegral signalSemaphoreValuesCount)
     pSignalSemaphoreValues' <- generateM pSignalSemaphoreValuesLength (\i -> peek @Word64 ((pSignalSemaphoreValues `advancePtrBytes` (8 * (i)) :: Ptr Word64)))
     pure $ D3D12FenceSubmitInfoKHR
-             waitSemaphoreValuesCount pWaitSemaphoreValues' signalSemaphoreValuesCount pSignalSemaphoreValues'
+             waitSemaphoreValuesCount
+             pWaitSemaphoreValues'
+             signalSemaphoreValuesCount
+             pSignalSemaphoreValues'
 
 instance Zero D3D12FenceSubmitInfoKHR where
   zero = D3D12FenceSubmitInfoKHR

@@ -24,11 +24,16 @@ newtype CommandBufferLevel = CommandBufferLevel Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- | 'COMMAND_BUFFER_LEVEL_PRIMARY' specifies a primary command buffer.
-pattern COMMAND_BUFFER_LEVEL_PRIMARY   = CommandBufferLevel 0
+pattern COMMAND_BUFFER_LEVEL_PRIMARY = CommandBufferLevel 0
+
 -- | 'COMMAND_BUFFER_LEVEL_SECONDARY' specifies a secondary command buffer.
 pattern COMMAND_BUFFER_LEVEL_SECONDARY = CommandBufferLevel 1
-{-# complete COMMAND_BUFFER_LEVEL_PRIMARY,
-             COMMAND_BUFFER_LEVEL_SECONDARY :: CommandBufferLevel #-}
+
+{-# COMPLETE
+  COMMAND_BUFFER_LEVEL_PRIMARY
+  , COMMAND_BUFFER_LEVEL_SECONDARY ::
+    CommandBufferLevel
+  #-}
 
 conNameCommandBufferLevel :: String
 conNameCommandBufferLevel = "CommandBufferLevel"
@@ -38,16 +43,23 @@ enumPrefixCommandBufferLevel = "COMMAND_BUFFER_LEVEL_"
 
 showTableCommandBufferLevel :: [(CommandBufferLevel, String)]
 showTableCommandBufferLevel =
-  [(COMMAND_BUFFER_LEVEL_PRIMARY, "PRIMARY"), (COMMAND_BUFFER_LEVEL_SECONDARY, "SECONDARY")]
+  [ (COMMAND_BUFFER_LEVEL_PRIMARY, "PRIMARY")
+  , (COMMAND_BUFFER_LEVEL_SECONDARY, "SECONDARY")
+  ]
 
 instance Show CommandBufferLevel where
-  showsPrec = enumShowsPrec enumPrefixCommandBufferLevel
-                            showTableCommandBufferLevel
-                            conNameCommandBufferLevel
-                            (\(CommandBufferLevel x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixCommandBufferLevel
+      showTableCommandBufferLevel
+      conNameCommandBufferLevel
+      (\(CommandBufferLevel x) -> x)
+      (showsPrec 11)
 
 instance Read CommandBufferLevel where
   readPrec =
-    enumReadPrec enumPrefixCommandBufferLevel showTableCommandBufferLevel conNameCommandBufferLevel CommandBufferLevel
-
+    enumReadPrec
+      enumPrefixCommandBufferLevel
+      showTableCommandBufferLevel
+      conNameCommandBufferLevel
+      CommandBufferLevel

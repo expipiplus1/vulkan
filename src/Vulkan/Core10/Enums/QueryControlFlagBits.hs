@@ -42,15 +42,18 @@ showTableQueryControlFlagBits :: [(QueryControlFlagBits, String)]
 showTableQueryControlFlagBits = [(QUERY_CONTROL_PRECISE_BIT, "")]
 
 instance Show QueryControlFlagBits where
-  showsPrec = enumShowsPrec enumPrefixQueryControlFlagBits
-                            showTableQueryControlFlagBits
-                            conNameQueryControlFlagBits
-                            (\(QueryControlFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixQueryControlFlagBits
+      showTableQueryControlFlagBits
+      conNameQueryControlFlagBits
+      (\(QueryControlFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read QueryControlFlagBits where
-  readPrec = enumReadPrec enumPrefixQueryControlFlagBits
-                          showTableQueryControlFlagBits
-                          conNameQueryControlFlagBits
-                          QueryControlFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixQueryControlFlagBits
+      showTableQueryControlFlagBits
+      conNameQueryControlFlagBits
+      QueryControlFlagBits

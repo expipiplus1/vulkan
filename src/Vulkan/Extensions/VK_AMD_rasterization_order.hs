@@ -275,13 +275,18 @@ newtype RasterizationOrderAMD = RasterizationOrderAMD Int32
 -- | 'RASTERIZATION_ORDER_STRICT_AMD' specifies that operations for each
 -- primitive in a subpass /must/ occur in
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#drawing-primitive-order primitive order>.
-pattern RASTERIZATION_ORDER_STRICT_AMD  = RasterizationOrderAMD 0
+pattern RASTERIZATION_ORDER_STRICT_AMD = RasterizationOrderAMD 0
+
 -- | 'RASTERIZATION_ORDER_RELAXED_AMD' specifies that operations for each
 -- primitive in a subpass /may/ not occur in
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#drawing-primitive-order primitive order>.
 pattern RASTERIZATION_ORDER_RELAXED_AMD = RasterizationOrderAMD 1
-{-# complete RASTERIZATION_ORDER_STRICT_AMD,
-             RASTERIZATION_ORDER_RELAXED_AMD :: RasterizationOrderAMD #-}
+
+{-# COMPLETE
+  RASTERIZATION_ORDER_STRICT_AMD
+  , RASTERIZATION_ORDER_RELAXED_AMD ::
+    RasterizationOrderAMD
+  #-}
 
 conNameRasterizationOrderAMD :: String
 conNameRasterizationOrderAMD = "RasterizationOrderAMD"
@@ -291,21 +296,32 @@ enumPrefixRasterizationOrderAMD = "RASTERIZATION_ORDER_"
 
 showTableRasterizationOrderAMD :: [(RasterizationOrderAMD, String)]
 showTableRasterizationOrderAMD =
-  [(RASTERIZATION_ORDER_STRICT_AMD, "STRICT_AMD"), (RASTERIZATION_ORDER_RELAXED_AMD, "RELAXED_AMD")]
+  [
+    ( RASTERIZATION_ORDER_STRICT_AMD
+    , "STRICT_AMD"
+    )
+  ,
+    ( RASTERIZATION_ORDER_RELAXED_AMD
+    , "RELAXED_AMD"
+    )
+  ]
 
 instance Show RasterizationOrderAMD where
-  showsPrec = enumShowsPrec enumPrefixRasterizationOrderAMD
-                            showTableRasterizationOrderAMD
-                            conNameRasterizationOrderAMD
-                            (\(RasterizationOrderAMD x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixRasterizationOrderAMD
+      showTableRasterizationOrderAMD
+      conNameRasterizationOrderAMD
+      (\(RasterizationOrderAMD x) -> x)
+      (showsPrec 11)
 
 instance Read RasterizationOrderAMD where
-  readPrec = enumReadPrec enumPrefixRasterizationOrderAMD
-                          showTableRasterizationOrderAMD
-                          conNameRasterizationOrderAMD
-                          RasterizationOrderAMD
-
+  readPrec =
+    enumReadPrec
+      enumPrefixRasterizationOrderAMD
+      showTableRasterizationOrderAMD
+      conNameRasterizationOrderAMD
+      RasterizationOrderAMD
 
 type AMD_RASTERIZATION_ORDER_SPEC_VERSION = 1
 

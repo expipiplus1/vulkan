@@ -178,7 +178,10 @@ createSpatialGraphNodeSpaceMSFT session createInfo = liftIO . evalContT $ do
   let xrCreateSpatialGraphNodeSpaceMSFT' = mkXrCreateSpatialGraphNodeSpaceMSFT xrCreateSpatialGraphNodeSpaceMSFTPtr
   createInfo' <- ContT $ withCStruct (createInfo)
   pSpace <- ContT $ bracket (callocBytes @(Ptr Space_T) 8) free
-  r <- lift $ traceAroundEvent "xrCreateSpatialGraphNodeSpaceMSFT" (xrCreateSpatialGraphNodeSpaceMSFT' (sessionHandle (session)) createInfo' (pSpace))
+  r <- lift $ traceAroundEvent "xrCreateSpatialGraphNodeSpaceMSFT" (xrCreateSpatialGraphNodeSpaceMSFT'
+                                                                      (sessionHandle (session))
+                                                                      createInfo'
+                                                                      (pSpace))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   space <- lift $ peek @(Ptr Space_T) pSpace
   pure $ (((\h -> Space h cmds ) space))
@@ -309,14 +312,20 @@ instance Zero SpatialGraphNodeSpaceCreateInfoMSFT where
 -- 'SpatialGraphNodeSpaceCreateInfoMSFT'
 newtype SpatialGraphNodeTypeMSFT = SpatialGraphNodeTypeMSFT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
+
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
 -- No documentation found for Nested "XrSpatialGraphNodeTypeMSFT" "XR_SPATIAL_GRAPH_NODE_TYPE_STATIC_MSFT"
-pattern SPATIAL_GRAPH_NODE_TYPE_STATIC_MSFT  = SpatialGraphNodeTypeMSFT 1
+pattern SPATIAL_GRAPH_NODE_TYPE_STATIC_MSFT = SpatialGraphNodeTypeMSFT 1
+
 -- No documentation found for Nested "XrSpatialGraphNodeTypeMSFT" "XR_SPATIAL_GRAPH_NODE_TYPE_DYNAMIC_MSFT"
 pattern SPATIAL_GRAPH_NODE_TYPE_DYNAMIC_MSFT = SpatialGraphNodeTypeMSFT 2
-{-# complete SPATIAL_GRAPH_NODE_TYPE_STATIC_MSFT,
-             SPATIAL_GRAPH_NODE_TYPE_DYNAMIC_MSFT :: SpatialGraphNodeTypeMSFT #-}
+
+{-# COMPLETE
+  SPATIAL_GRAPH_NODE_TYPE_STATIC_MSFT
+  , SPATIAL_GRAPH_NODE_TYPE_DYNAMIC_MSFT ::
+    SpatialGraphNodeTypeMSFT
+  #-}
 
 conNameSpatialGraphNodeTypeMSFT :: String
 conNameSpatialGraphNodeTypeMSFT = "SpatialGraphNodeTypeMSFT"
@@ -326,21 +335,32 @@ enumPrefixSpatialGraphNodeTypeMSFT = "SPATIAL_GRAPH_NODE_TYPE_"
 
 showTableSpatialGraphNodeTypeMSFT :: [(SpatialGraphNodeTypeMSFT, String)]
 showTableSpatialGraphNodeTypeMSFT =
-  [(SPATIAL_GRAPH_NODE_TYPE_STATIC_MSFT, "STATIC_MSFT"), (SPATIAL_GRAPH_NODE_TYPE_DYNAMIC_MSFT, "DYNAMIC_MSFT")]
+  [
+    ( SPATIAL_GRAPH_NODE_TYPE_STATIC_MSFT
+    , "STATIC_MSFT"
+    )
+  ,
+    ( SPATIAL_GRAPH_NODE_TYPE_DYNAMIC_MSFT
+    , "DYNAMIC_MSFT"
+    )
+  ]
 
 instance Show SpatialGraphNodeTypeMSFT where
-  showsPrec = enumShowsPrec enumPrefixSpatialGraphNodeTypeMSFT
-                            showTableSpatialGraphNodeTypeMSFT
-                            conNameSpatialGraphNodeTypeMSFT
-                            (\(SpatialGraphNodeTypeMSFT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixSpatialGraphNodeTypeMSFT
+      showTableSpatialGraphNodeTypeMSFT
+      conNameSpatialGraphNodeTypeMSFT
+      (\(SpatialGraphNodeTypeMSFT x) -> x)
+      (showsPrec 11)
 
 instance Read SpatialGraphNodeTypeMSFT where
-  readPrec = enumReadPrec enumPrefixSpatialGraphNodeTypeMSFT
-                          showTableSpatialGraphNodeTypeMSFT
-                          conNameSpatialGraphNodeTypeMSFT
-                          SpatialGraphNodeTypeMSFT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixSpatialGraphNodeTypeMSFT
+      showTableSpatialGraphNodeTypeMSFT
+      conNameSpatialGraphNodeTypeMSFT
+      SpatialGraphNodeTypeMSFT
 
 type MSFT_spatial_graph_bridge_SPEC_VERSION = 1
 

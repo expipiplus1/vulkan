@@ -199,11 +199,19 @@ enumerateColorSpacesFB session = liftIO . evalContT $ do
   let xrEnumerateColorSpacesFB' = mkXrEnumerateColorSpacesFB xrEnumerateColorSpacesFBPtr
   let session' = sessionHandle (session)
   pColorSpaceCountOutput <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "xrEnumerateColorSpacesFB" (xrEnumerateColorSpacesFB' session' (0) (pColorSpaceCountOutput) (nullPtr))
+  r <- lift $ traceAroundEvent "xrEnumerateColorSpacesFB" (xrEnumerateColorSpacesFB'
+                                                             session'
+                                                             (0)
+                                                             (pColorSpaceCountOutput)
+                                                             (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   colorSpaceCountOutput <- lift $ peek @Word32 pColorSpaceCountOutput
   pColorSpaces <- ContT $ bracket (callocBytes @ColorSpaceFB ((fromIntegral (colorSpaceCountOutput)) * 4)) free
-  r' <- lift $ traceAroundEvent "xrEnumerateColorSpacesFB" (xrEnumerateColorSpacesFB' session' ((colorSpaceCountOutput)) (pColorSpaceCountOutput) (pColorSpaces))
+  r' <- lift $ traceAroundEvent "xrEnumerateColorSpacesFB" (xrEnumerateColorSpacesFB'
+                                                              session'
+                                                              ((colorSpaceCountOutput))
+                                                              (pColorSpaceCountOutput)
+                                                              (pColorSpaces))
   lift $ when (r' < SUCCESS) (throwIO (OpenXrException r'))
   colorSpaceCountOutput' <- lift $ peek @Word32 pColorSpaceCountOutput
   colorSpaces' <- lift $ generateM (fromIntegral (colorSpaceCountOutput')) (\i -> peek @ColorSpaceFB ((pColorSpaces `advancePtrBytes` (4 * (i)) :: Ptr ColorSpaceFB)))
@@ -286,7 +294,9 @@ setColorSpaceFB session colorspace = liftIO $ do
   unless (xrSetColorSpaceFBPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrSetColorSpaceFB is null" Nothing Nothing
   let xrSetColorSpaceFB' = mkXrSetColorSpaceFB xrSetColorSpaceFBPtr
-  r <- traceAroundEvent "xrSetColorSpaceFB" (xrSetColorSpaceFB' (sessionHandle (session)) (colorspace))
+  r <- traceAroundEvent "xrSetColorSpaceFB" (xrSetColorSpaceFB'
+                                               (sessionHandle (session))
+                                               (colorspace))
   when (r < SUCCESS) (throwIO (OpenXrException r))
   pure $ (r)
 
@@ -367,13 +377,16 @@ newtype ColorSpaceFB = ColorSpaceFB Int32
 -- | 'COLOR_SPACE_UNMANAGED_FB'. No color correction, not recommended for
 -- production use.
 pattern COLOR_SPACE_UNMANAGED_FB = ColorSpaceFB 0
+
 -- | 'COLOR_SPACE_REC2020_FB'. Standard Rec. 2020 chromacities. This is the
 -- preferred color space for standardized color across all Oculus HMDs with
 -- D65 white point.
-pattern COLOR_SPACE_REC2020_FB   = ColorSpaceFB 1
+pattern COLOR_SPACE_REC2020_FB = ColorSpaceFB 1
+
 -- | 'COLOR_SPACE_REC709_FB'. Standard Rec. 709 chromaticities, similar to
 -- sRGB.
-pattern COLOR_SPACE_REC709_FB    = ColorSpaceFB 2
+pattern COLOR_SPACE_REC709_FB = ColorSpaceFB 2
+
 -- | 'COLOR_SPACE_RIFT_CV1_FB'. Unique color space, between P3 and Adobe RGB
 -- using D75 white point.
 --
@@ -386,7 +399,8 @@ pattern COLOR_SPACE_REC709_FB    = ColorSpaceFB 2
 -- -   Blue: (0.139, 0.053)
 --
 -- -   White: (0.298, 0.318)
-pattern COLOR_SPACE_RIFT_CV1_FB  = ColorSpaceFB 3
+pattern COLOR_SPACE_RIFT_CV1_FB = ColorSpaceFB 3
+
 -- | 'COLOR_SPACE_RIFT_S_FB'. Unique color space. Similar to Rec 709 using
 -- D75.
 --
@@ -399,7 +413,8 @@ pattern COLOR_SPACE_RIFT_CV1_FB  = ColorSpaceFB 3
 -- -   Blue: (0.156, 0.058)
 --
 -- -   White: (0.298, 0.318)
-pattern COLOR_SPACE_RIFT_S_FB    = ColorSpaceFB 4
+pattern COLOR_SPACE_RIFT_S_FB = ColorSpaceFB 4
+
 -- | 'COLOR_SPACE_QUEST_FB'. Unique color space. Similar to Rift CV1 using
 -- D75 white point
 --
@@ -412,7 +427,8 @@ pattern COLOR_SPACE_RIFT_S_FB    = ColorSpaceFB 4
 -- -   Blue: (0.142, 0.042)
 --
 -- -   White: (0.298, 0.318)
-pattern COLOR_SPACE_QUEST_FB     = ColorSpaceFB 5
+pattern COLOR_SPACE_QUEST_FB = ColorSpaceFB 5
+
 -- | 'COLOR_SPACE_P3_FB'. Similar to DCI-P3, but uses D65 white point
 -- instead.
 --
@@ -425,17 +441,22 @@ pattern COLOR_SPACE_QUEST_FB     = ColorSpaceFB 5
 -- -   Blue: (0.150, 0.060)
 --
 -- -   White: (0.313, 0.329)
-pattern COLOR_SPACE_P3_FB        = ColorSpaceFB 6
+pattern COLOR_SPACE_P3_FB = ColorSpaceFB 6
+
 -- | 'COLOR_SPACE_ADOBE_RGB_FB'. Standard Adobe chromacities.
 pattern COLOR_SPACE_ADOBE_RGB_FB = ColorSpaceFB 7
-{-# complete COLOR_SPACE_UNMANAGED_FB,
-             COLOR_SPACE_REC2020_FB,
-             COLOR_SPACE_REC709_FB,
-             COLOR_SPACE_RIFT_CV1_FB,
-             COLOR_SPACE_RIFT_S_FB,
-             COLOR_SPACE_QUEST_FB,
-             COLOR_SPACE_P3_FB,
-             COLOR_SPACE_ADOBE_RGB_FB :: ColorSpaceFB #-}
+
+{-# COMPLETE
+  COLOR_SPACE_UNMANAGED_FB
+  , COLOR_SPACE_REC2020_FB
+  , COLOR_SPACE_REC709_FB
+  , COLOR_SPACE_RIFT_CV1_FB
+  , COLOR_SPACE_RIFT_S_FB
+  , COLOR_SPACE_QUEST_FB
+  , COLOR_SPACE_P3_FB
+  , COLOR_SPACE_ADOBE_RGB_FB ::
+    ColorSpaceFB
+  #-}
 
 conNameColorSpaceFB :: String
 conNameColorSpaceFB = "ColorSpaceFB"
@@ -446,25 +467,31 @@ enumPrefixColorSpaceFB = "COLOR_SPACE_"
 showTableColorSpaceFB :: [(ColorSpaceFB, String)]
 showTableColorSpaceFB =
   [ (COLOR_SPACE_UNMANAGED_FB, "UNMANAGED_FB")
-  , (COLOR_SPACE_REC2020_FB  , "REC2020_FB")
-  , (COLOR_SPACE_REC709_FB   , "REC709_FB")
-  , (COLOR_SPACE_RIFT_CV1_FB , "RIFT_CV1_FB")
-  , (COLOR_SPACE_RIFT_S_FB   , "RIFT_S_FB")
-  , (COLOR_SPACE_QUEST_FB    , "QUEST_FB")
-  , (COLOR_SPACE_P3_FB       , "P3_FB")
+  , (COLOR_SPACE_REC2020_FB, "REC2020_FB")
+  , (COLOR_SPACE_REC709_FB, "REC709_FB")
+  , (COLOR_SPACE_RIFT_CV1_FB, "RIFT_CV1_FB")
+  , (COLOR_SPACE_RIFT_S_FB, "RIFT_S_FB")
+  , (COLOR_SPACE_QUEST_FB, "QUEST_FB")
+  , (COLOR_SPACE_P3_FB, "P3_FB")
   , (COLOR_SPACE_ADOBE_RGB_FB, "ADOBE_RGB_FB")
   ]
 
 instance Show ColorSpaceFB where
-  showsPrec = enumShowsPrec enumPrefixColorSpaceFB
-                            showTableColorSpaceFB
-                            conNameColorSpaceFB
-                            (\(ColorSpaceFB x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixColorSpaceFB
+      showTableColorSpaceFB
+      conNameColorSpaceFB
+      (\(ColorSpaceFB x) -> x)
+      (showsPrec 11)
 
 instance Read ColorSpaceFB where
-  readPrec = enumReadPrec enumPrefixColorSpaceFB showTableColorSpaceFB conNameColorSpaceFB ColorSpaceFB
-
+  readPrec =
+    enumReadPrec
+      enumPrefixColorSpaceFB
+      showTableColorSpaceFB
+      conNameColorSpaceFB
+      ColorSpaceFB
 
 type FB_color_space_SPEC_VERSION = 1
 

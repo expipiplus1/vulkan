@@ -239,7 +239,11 @@ createScreenSurfaceQNX instance' createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSurface <- ContT $ bracket (callocBytes @SurfaceKHR 8) free
-  r <- lift $ traceAroundEvent "vkCreateScreenSurfaceQNX" (vkCreateScreenSurfaceQNX' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface))
+  r <- lift $ traceAroundEvent "vkCreateScreenSurfaceQNX" (vkCreateScreenSurfaceQNX'
+                                                             (instanceHandle (instance'))
+                                                             pCreateInfo
+                                                             pAllocator
+                                                             (pPSurface))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurface <- lift $ peek @SurfaceKHR pPSurface
   pure $ (pSurface)
@@ -288,12 +292,17 @@ getPhysicalDeviceScreenPresentationSupportQNX :: forall io
                                                  -- @window@ /must/ be a valid pointer to a 'Screen_window' value
                                                  (Ptr Screen_window)
                                               -> io (Bool)
-getPhysicalDeviceScreenPresentationSupportQNX physicalDevice queueFamilyIndex window = liftIO $ do
+getPhysicalDeviceScreenPresentationSupportQNX physicalDevice
+                                                queueFamilyIndex
+                                                window = liftIO $ do
   let vkGetPhysicalDeviceScreenPresentationSupportQNXPtr = pVkGetPhysicalDeviceScreenPresentationSupportQNX (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   unless (vkGetPhysicalDeviceScreenPresentationSupportQNXPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceScreenPresentationSupportQNX is null" Nothing Nothing
   let vkGetPhysicalDeviceScreenPresentationSupportQNX' = mkVkGetPhysicalDeviceScreenPresentationSupportQNX vkGetPhysicalDeviceScreenPresentationSupportQNXPtr
-  r <- traceAroundEvent "vkGetPhysicalDeviceScreenPresentationSupportQNX" (vkGetPhysicalDeviceScreenPresentationSupportQNX' (physicalDeviceHandle (physicalDevice)) (queueFamilyIndex) (window))
+  r <- traceAroundEvent "vkGetPhysicalDeviceScreenPresentationSupportQNX" (vkGetPhysicalDeviceScreenPresentationSupportQNX'
+                                                                             (physicalDeviceHandle (physicalDevice))
+                                                                             (queueFamilyIndex)
+                                                                             (window))
   pure $ ((bool32ToBool r))
 
 
@@ -383,8 +392,6 @@ instance Zero ScreenSurfaceCreateInfoQNX where
 newtype ScreenSurfaceCreateFlagsQNX = ScreenSurfaceCreateFlagsQNX Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameScreenSurfaceCreateFlagsQNX :: String
 conNameScreenSurfaceCreateFlagsQNX = "ScreenSurfaceCreateFlagsQNX"
 
@@ -395,18 +402,21 @@ showTableScreenSurfaceCreateFlagsQNX :: [(ScreenSurfaceCreateFlagsQNX, String)]
 showTableScreenSurfaceCreateFlagsQNX = []
 
 instance Show ScreenSurfaceCreateFlagsQNX where
-  showsPrec = enumShowsPrec enumPrefixScreenSurfaceCreateFlagsQNX
-                            showTableScreenSurfaceCreateFlagsQNX
-                            conNameScreenSurfaceCreateFlagsQNX
-                            (\(ScreenSurfaceCreateFlagsQNX x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixScreenSurfaceCreateFlagsQNX
+      showTableScreenSurfaceCreateFlagsQNX
+      conNameScreenSurfaceCreateFlagsQNX
+      (\(ScreenSurfaceCreateFlagsQNX x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read ScreenSurfaceCreateFlagsQNX where
-  readPrec = enumReadPrec enumPrefixScreenSurfaceCreateFlagsQNX
-                          showTableScreenSurfaceCreateFlagsQNX
-                          conNameScreenSurfaceCreateFlagsQNX
-                          ScreenSurfaceCreateFlagsQNX
-
+  readPrec =
+    enumReadPrec
+      enumPrefixScreenSurfaceCreateFlagsQNX
+      showTableScreenSurfaceCreateFlagsQNX
+      conNameScreenSurfaceCreateFlagsQNX
+      ScreenSurfaceCreateFlagsQNX
 
 type QNX_SCREEN_SURFACE_SPEC_VERSION = 1
 

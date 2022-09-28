@@ -12,8 +12,10 @@ import {-# SOURCE #-} OpenXR.CStruct.Extends (PokeChain)
 type role SessionBeginInfo nominal
 data SessionBeginInfo (es :: [Type])
 
-instance (Extendss SessionBeginInfo es, PokeChain es) => ToCStruct (SessionBeginInfo es)
+instance ( Extendss SessionBeginInfo es
+         , PokeChain es ) => ToCStruct (SessionBeginInfo es)
 instance Show (Chain es) => Show (SessionBeginInfo es)
 
-instance (Extendss SessionBeginInfo es, PeekChain es) => FromCStruct (SessionBeginInfo es)
+instance ( Extendss SessionBeginInfo es
+         , PeekChain es ) => FromCStruct (SessionBeginInfo es)
 

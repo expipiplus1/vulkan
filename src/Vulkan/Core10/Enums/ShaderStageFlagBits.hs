@@ -55,45 +55,61 @@ newtype ShaderStageFlagBits = ShaderStageFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- | 'SHADER_STAGE_VERTEX_BIT' specifies the vertex stage.
-pattern SHADER_STAGE_VERTEX_BIT                  = ShaderStageFlagBits 0x00000001
+pattern SHADER_STAGE_VERTEX_BIT = ShaderStageFlagBits 0x00000001
+
 -- | 'SHADER_STAGE_TESSELLATION_CONTROL_BIT' specifies the tessellation
 -- control stage.
-pattern SHADER_STAGE_TESSELLATION_CONTROL_BIT    = ShaderStageFlagBits 0x00000002
+pattern SHADER_STAGE_TESSELLATION_CONTROL_BIT = ShaderStageFlagBits 0x00000002
+
 -- | 'SHADER_STAGE_TESSELLATION_EVALUATION_BIT' specifies the tessellation
 -- evaluation stage.
 pattern SHADER_STAGE_TESSELLATION_EVALUATION_BIT = ShaderStageFlagBits 0x00000004
+
 -- | 'SHADER_STAGE_GEOMETRY_BIT' specifies the geometry stage.
-pattern SHADER_STAGE_GEOMETRY_BIT                = ShaderStageFlagBits 0x00000008
+pattern SHADER_STAGE_GEOMETRY_BIT = ShaderStageFlagBits 0x00000008
+
 -- | 'SHADER_STAGE_FRAGMENT_BIT' specifies the fragment stage.
-pattern SHADER_STAGE_FRAGMENT_BIT                = ShaderStageFlagBits 0x00000010
+pattern SHADER_STAGE_FRAGMENT_BIT = ShaderStageFlagBits 0x00000010
+
 -- | 'SHADER_STAGE_COMPUTE_BIT' specifies the compute stage.
-pattern SHADER_STAGE_COMPUTE_BIT                 = ShaderStageFlagBits 0x00000020
+pattern SHADER_STAGE_COMPUTE_BIT = ShaderStageFlagBits 0x00000020
+
 -- | 'SHADER_STAGE_ALL_GRAPHICS' is a combination of bits used as shorthand
 -- to specify all graphics stages defined above (excluding the compute
 -- stage).
-pattern SHADER_STAGE_ALL_GRAPHICS                = ShaderStageFlagBits 0x0000001f
+pattern SHADER_STAGE_ALL_GRAPHICS = ShaderStageFlagBits 0x0000001f
+
 -- | 'SHADER_STAGE_ALL' is a combination of bits used as shorthand to specify
 -- all shader stages supported by the device, including all additional
 -- stages which are introduced by extensions.
-pattern SHADER_STAGE_ALL                         = ShaderStageFlagBits 0x7fffffff
+pattern SHADER_STAGE_ALL = ShaderStageFlagBits 0x7fffffff
+
 -- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI"
-pattern SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI  = ShaderStageFlagBits 0x00004000
+pattern SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI = ShaderStageFlagBits 0x00004000
+
 -- | 'SHADER_STAGE_MESH_BIT_EXT' specifies the mesh stage.
-pattern SHADER_STAGE_MESH_BIT_EXT                = ShaderStageFlagBits 0x00000080
+pattern SHADER_STAGE_MESH_BIT_EXT = ShaderStageFlagBits 0x00000080
+
 -- | 'SHADER_STAGE_TASK_BIT_EXT' specifies the task stage.
-pattern SHADER_STAGE_TASK_BIT_EXT                = ShaderStageFlagBits 0x00000040
+pattern SHADER_STAGE_TASK_BIT_EXT = ShaderStageFlagBits 0x00000040
+
 -- | 'SHADER_STAGE_CALLABLE_BIT_KHR' specifies the callable stage.
-pattern SHADER_STAGE_CALLABLE_BIT_KHR            = ShaderStageFlagBits 0x00002000
+pattern SHADER_STAGE_CALLABLE_BIT_KHR = ShaderStageFlagBits 0x00002000
+
 -- | 'SHADER_STAGE_INTERSECTION_BIT_KHR' specifies the intersection stage.
-pattern SHADER_STAGE_INTERSECTION_BIT_KHR        = ShaderStageFlagBits 0x00001000
+pattern SHADER_STAGE_INTERSECTION_BIT_KHR = ShaderStageFlagBits 0x00001000
+
 -- | 'SHADER_STAGE_MISS_BIT_KHR' specifies the miss stage.
-pattern SHADER_STAGE_MISS_BIT_KHR                = ShaderStageFlagBits 0x00000800
+pattern SHADER_STAGE_MISS_BIT_KHR = ShaderStageFlagBits 0x00000800
+
 -- | 'SHADER_STAGE_CLOSEST_HIT_BIT_KHR' specifies the closest hit stage.
-pattern SHADER_STAGE_CLOSEST_HIT_BIT_KHR         = ShaderStageFlagBits 0x00000400
+pattern SHADER_STAGE_CLOSEST_HIT_BIT_KHR = ShaderStageFlagBits 0x00000400
+
 -- | 'SHADER_STAGE_ANY_HIT_BIT_KHR' specifies the any-hit stage.
-pattern SHADER_STAGE_ANY_HIT_BIT_KHR             = ShaderStageFlagBits 0x00000200
+pattern SHADER_STAGE_ANY_HIT_BIT_KHR = ShaderStageFlagBits 0x00000200
+
 -- | 'SHADER_STAGE_RAYGEN_BIT_KHR' specifies the ray generation stage.
-pattern SHADER_STAGE_RAYGEN_BIT_KHR              = ShaderStageFlagBits 0x00000100
+pattern SHADER_STAGE_RAYGEN_BIT_KHR = ShaderStageFlagBits 0x00000100
 
 conNameShaderStageFlagBits :: String
 conNameShaderStageFlagBits = "ShaderStageFlagBits"
@@ -103,35 +119,62 @@ enumPrefixShaderStageFlagBits = "SHADER_STAGE_"
 
 showTableShaderStageFlagBits :: [(ShaderStageFlagBits, String)]
 showTableShaderStageFlagBits =
-  [ (SHADER_STAGE_VERTEX_BIT                 , "VERTEX_BIT")
-  , (SHADER_STAGE_TESSELLATION_CONTROL_BIT   , "TESSELLATION_CONTROL_BIT")
-  , (SHADER_STAGE_TESSELLATION_EVALUATION_BIT, "TESSELLATION_EVALUATION_BIT")
-  , (SHADER_STAGE_GEOMETRY_BIT               , "GEOMETRY_BIT")
-  , (SHADER_STAGE_FRAGMENT_BIT               , "FRAGMENT_BIT")
-  , (SHADER_STAGE_COMPUTE_BIT                , "COMPUTE_BIT")
-  , (SHADER_STAGE_ALL_GRAPHICS               , "ALL_GRAPHICS")
-  , (SHADER_STAGE_ALL                        , "ALL")
-  , (SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI , "SUBPASS_SHADING_BIT_HUAWEI")
-  , (SHADER_STAGE_MESH_BIT_EXT               , "MESH_BIT_EXT")
-  , (SHADER_STAGE_TASK_BIT_EXT               , "TASK_BIT_EXT")
-  , (SHADER_STAGE_CALLABLE_BIT_KHR           , "CALLABLE_BIT_KHR")
-  , (SHADER_STAGE_INTERSECTION_BIT_KHR       , "INTERSECTION_BIT_KHR")
-  , (SHADER_STAGE_MISS_BIT_KHR               , "MISS_BIT_KHR")
-  , (SHADER_STAGE_CLOSEST_HIT_BIT_KHR        , "CLOSEST_HIT_BIT_KHR")
-  , (SHADER_STAGE_ANY_HIT_BIT_KHR            , "ANY_HIT_BIT_KHR")
-  , (SHADER_STAGE_RAYGEN_BIT_KHR             , "RAYGEN_BIT_KHR")
+  [ (SHADER_STAGE_VERTEX_BIT, "VERTEX_BIT")
+  ,
+    ( SHADER_STAGE_TESSELLATION_CONTROL_BIT
+    , "TESSELLATION_CONTROL_BIT"
+    )
+  ,
+    ( SHADER_STAGE_TESSELLATION_EVALUATION_BIT
+    , "TESSELLATION_EVALUATION_BIT"
+    )
+  , (SHADER_STAGE_GEOMETRY_BIT, "GEOMETRY_BIT")
+  , (SHADER_STAGE_FRAGMENT_BIT, "FRAGMENT_BIT")
+  , (SHADER_STAGE_COMPUTE_BIT, "COMPUTE_BIT")
+  , (SHADER_STAGE_ALL_GRAPHICS, "ALL_GRAPHICS")
+  , (SHADER_STAGE_ALL, "ALL")
+  ,
+    ( SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI
+    , "SUBPASS_SHADING_BIT_HUAWEI"
+    )
+  , (SHADER_STAGE_MESH_BIT_EXT, "MESH_BIT_EXT")
+  , (SHADER_STAGE_TASK_BIT_EXT, "TASK_BIT_EXT")
+  ,
+    ( SHADER_STAGE_CALLABLE_BIT_KHR
+    , "CALLABLE_BIT_KHR"
+    )
+  ,
+    ( SHADER_STAGE_INTERSECTION_BIT_KHR
+    , "INTERSECTION_BIT_KHR"
+    )
+  , (SHADER_STAGE_MISS_BIT_KHR, "MISS_BIT_KHR")
+  ,
+    ( SHADER_STAGE_CLOSEST_HIT_BIT_KHR
+    , "CLOSEST_HIT_BIT_KHR"
+    )
+  ,
+    ( SHADER_STAGE_ANY_HIT_BIT_KHR
+    , "ANY_HIT_BIT_KHR"
+    )
+  ,
+    ( SHADER_STAGE_RAYGEN_BIT_KHR
+    , "RAYGEN_BIT_KHR"
+    )
   ]
 
 instance Show ShaderStageFlagBits where
-  showsPrec = enumShowsPrec enumPrefixShaderStageFlagBits
-                            showTableShaderStageFlagBits
-                            conNameShaderStageFlagBits
-                            (\(ShaderStageFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixShaderStageFlagBits
+      showTableShaderStageFlagBits
+      conNameShaderStageFlagBits
+      (\(ShaderStageFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read ShaderStageFlagBits where
-  readPrec = enumReadPrec enumPrefixShaderStageFlagBits
-                          showTableShaderStageFlagBits
-                          conNameShaderStageFlagBits
-                          ShaderStageFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixShaderStageFlagBits
+      showTableShaderStageFlagBits
+      conNameShaderStageFlagBits
+      ShaderStageFlagBits

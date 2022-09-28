@@ -279,14 +279,18 @@ getMemoryRemoteAddressNV :: forall io
                             -- 'MemoryGetRemoteAddressInfoNV' structure
                             MemoryGetRemoteAddressInfoNV
                          -> io (RemoteAddressNV)
-getMemoryRemoteAddressNV device memoryGetRemoteAddressInfo = liftIO . evalContT $ do
+getMemoryRemoteAddressNV device
+                           memoryGetRemoteAddressInfo = liftIO . evalContT $ do
   let vkGetMemoryRemoteAddressNVPtr = pVkGetMemoryRemoteAddressNV (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetMemoryRemoteAddressNVPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryRemoteAddressNV is null" Nothing Nothing
   let vkGetMemoryRemoteAddressNV' = mkVkGetMemoryRemoteAddressNV vkGetMemoryRemoteAddressNVPtr
   pMemoryGetRemoteAddressInfo <- ContT $ withCStruct (memoryGetRemoteAddressInfo)
   pPAddress <- ContT $ bracket (callocBytes @RemoteAddressNV 8) free
-  r <- lift $ traceAroundEvent "vkGetMemoryRemoteAddressNV" (vkGetMemoryRemoteAddressNV' (deviceHandle (device)) pMemoryGetRemoteAddressInfo (pPAddress))
+  r <- lift $ traceAroundEvent "vkGetMemoryRemoteAddressNV" (vkGetMemoryRemoteAddressNV'
+                                                               (deviceHandle (device))
+                                                               pMemoryGetRemoteAddressInfo
+                                                               (pPAddress))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pAddress <- lift $ peek @RemoteAddressNV pPAddress
   pure $ (pAddress)

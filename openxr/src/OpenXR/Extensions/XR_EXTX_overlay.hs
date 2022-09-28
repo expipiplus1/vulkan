@@ -284,8 +284,7 @@ newtype OverlayMainSessionFlagBitsEXTX = OverlayMainSessionFlagBitsEXTX Flags64
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- No documentation found for Nested "XrOverlayMainSessionFlagBitsEXTX" "XR_OVERLAY_MAIN_SESSION_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT_EXTX"
-pattern OVERLAY_MAIN_SESSION_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT_EXTX =
-  OverlayMainSessionFlagBitsEXTX 0x0000000000000001
+pattern OVERLAY_MAIN_SESSION_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT_EXTX = OverlayMainSessionFlagBitsEXTX 0x0000000000000001
 
 conNameOverlayMainSessionFlagBitsEXTX :: String
 conNameOverlayMainSessionFlagBitsEXTX = "OverlayMainSessionFlagBitsEXTX"
@@ -294,21 +293,29 @@ enumPrefixOverlayMainSessionFlagBitsEXTX :: String
 enumPrefixOverlayMainSessionFlagBitsEXTX = "OVERLAY_MAIN_SESSION_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT_EXTX"
 
 showTableOverlayMainSessionFlagBitsEXTX :: [(OverlayMainSessionFlagBitsEXTX, String)]
-showTableOverlayMainSessionFlagBitsEXTX = [(OVERLAY_MAIN_SESSION_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT_EXTX, "")]
+showTableOverlayMainSessionFlagBitsEXTX =
+  [
+    ( OVERLAY_MAIN_SESSION_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT_EXTX
+    , ""
+    )
+  ]
 
 instance Show OverlayMainSessionFlagBitsEXTX where
-  showsPrec = enumShowsPrec enumPrefixOverlayMainSessionFlagBitsEXTX
-                            showTableOverlayMainSessionFlagBitsEXTX
-                            conNameOverlayMainSessionFlagBitsEXTX
-                            (\(OverlayMainSessionFlagBitsEXTX x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixOverlayMainSessionFlagBitsEXTX
+      showTableOverlayMainSessionFlagBitsEXTX
+      conNameOverlayMainSessionFlagBitsEXTX
+      (\(OverlayMainSessionFlagBitsEXTX x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read OverlayMainSessionFlagBitsEXTX where
-  readPrec = enumReadPrec enumPrefixOverlayMainSessionFlagBitsEXTX
-                          showTableOverlayMainSessionFlagBitsEXTX
-                          conNameOverlayMainSessionFlagBitsEXTX
-                          OverlayMainSessionFlagBitsEXTX
-
+  readPrec =
+    enumReadPrec
+      enumPrefixOverlayMainSessionFlagBitsEXTX
+      showTableOverlayMainSessionFlagBitsEXTX
+      conNameOverlayMainSessionFlagBitsEXTX
+      OverlayMainSessionFlagBitsEXTX
 
 type OverlaySessionCreateFlagsEXTX = OverlaySessionCreateFlagBitsEXTX
 
@@ -330,21 +337,29 @@ enumPrefixOverlaySessionCreateFlagBitsEXTX :: String
 enumPrefixOverlaySessionCreateFlagBitsEXTX = "OVERLAY_SESSION_CREATE_RELAXED_DISPLAY_TIME_BIT_EXTX"
 
 showTableOverlaySessionCreateFlagBitsEXTX :: [(OverlaySessionCreateFlagBitsEXTX, String)]
-showTableOverlaySessionCreateFlagBitsEXTX = [(OVERLAY_SESSION_CREATE_RELAXED_DISPLAY_TIME_BIT_EXTX, "")]
+showTableOverlaySessionCreateFlagBitsEXTX =
+  [
+    ( OVERLAY_SESSION_CREATE_RELAXED_DISPLAY_TIME_BIT_EXTX
+    , ""
+    )
+  ]
 
 instance Show OverlaySessionCreateFlagBitsEXTX where
-  showsPrec = enumShowsPrec enumPrefixOverlaySessionCreateFlagBitsEXTX
-                            showTableOverlaySessionCreateFlagBitsEXTX
-                            conNameOverlaySessionCreateFlagBitsEXTX
-                            (\(OverlaySessionCreateFlagBitsEXTX x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixOverlaySessionCreateFlagBitsEXTX
+      showTableOverlaySessionCreateFlagBitsEXTX
+      conNameOverlaySessionCreateFlagBitsEXTX
+      (\(OverlaySessionCreateFlagBitsEXTX x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read OverlaySessionCreateFlagBitsEXTX where
-  readPrec = enumReadPrec enumPrefixOverlaySessionCreateFlagBitsEXTX
-                          showTableOverlaySessionCreateFlagBitsEXTX
-                          conNameOverlaySessionCreateFlagBitsEXTX
-                          OverlaySessionCreateFlagBitsEXTX
-
+  readPrec =
+    enumReadPrec
+      enumPrefixOverlaySessionCreateFlagBitsEXTX
+      showTableOverlaySessionCreateFlagBitsEXTX
+      conNameOverlaySessionCreateFlagBitsEXTX
+      OverlaySessionCreateFlagBitsEXTX
 
 type EXTX_overlay_SPEC_VERSION = 4
 

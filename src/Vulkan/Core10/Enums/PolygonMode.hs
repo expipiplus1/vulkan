@@ -33,13 +33,16 @@ newtype PolygonMode = PolygonMode Int32
 
 -- | 'POLYGON_MODE_FILL' specifies that polygons are rendered using the
 -- polygon rasterization rules in this section.
-pattern POLYGON_MODE_FILL              = PolygonMode 0
+pattern POLYGON_MODE_FILL = PolygonMode 0
+
 -- | 'POLYGON_MODE_LINE' specifies that polygon edges are drawn as line
 -- segments.
-pattern POLYGON_MODE_LINE              = PolygonMode 1
+pattern POLYGON_MODE_LINE = PolygonMode 1
+
 -- | 'POLYGON_MODE_POINT' specifies that polygon vertices are drawn as
 -- points.
-pattern POLYGON_MODE_POINT             = PolygonMode 2
+pattern POLYGON_MODE_POINT = PolygonMode 2
+
 -- | 'POLYGON_MODE_FILL_RECTANGLE_NV' specifies that polygons are rendered
 -- using polygon rasterization rules, modified to consider a sample within
 -- the primitive if the sample location is inside the axis-aligned bounding
@@ -59,10 +62,14 @@ pattern POLYGON_MODE_POINT             = PolygonMode 2
 -- Area calculation and facingness are determined for
 -- 'POLYGON_MODE_FILL_RECTANGLE_NV' mode using the triangle’s vertices.
 pattern POLYGON_MODE_FILL_RECTANGLE_NV = PolygonMode 1000153000
-{-# complete POLYGON_MODE_FILL,
-             POLYGON_MODE_LINE,
-             POLYGON_MODE_POINT,
-             POLYGON_MODE_FILL_RECTANGLE_NV :: PolygonMode #-}
+
+{-# COMPLETE
+  POLYGON_MODE_FILL
+  , POLYGON_MODE_LINE
+  , POLYGON_MODE_POINT
+  , POLYGON_MODE_FILL_RECTANGLE_NV ::
+    PolygonMode
+  #-}
 
 conNamePolygonMode :: String
 conNamePolygonMode = "PolygonMode"
@@ -72,16 +79,25 @@ enumPrefixPolygonMode = "POLYGON_MODE_"
 
 showTablePolygonMode :: [(PolygonMode, String)]
 showTablePolygonMode =
-  [ (POLYGON_MODE_FILL             , "FILL")
-  , (POLYGON_MODE_LINE             , "LINE")
-  , (POLYGON_MODE_POINT            , "POINT")
+  [ (POLYGON_MODE_FILL, "FILL")
+  , (POLYGON_MODE_LINE, "LINE")
+  , (POLYGON_MODE_POINT, "POINT")
   , (POLYGON_MODE_FILL_RECTANGLE_NV, "FILL_RECTANGLE_NV")
   ]
 
 instance Show PolygonMode where
   showsPrec =
-    enumShowsPrec enumPrefixPolygonMode showTablePolygonMode conNamePolygonMode (\(PolygonMode x) -> x) (showsPrec 11)
+    enumShowsPrec
+      enumPrefixPolygonMode
+      showTablePolygonMode
+      conNamePolygonMode
+      (\(PolygonMode x) -> x)
+      (showsPrec 11)
 
 instance Read PolygonMode where
-  readPrec = enumReadPrec enumPrefixPolygonMode showTablePolygonMode conNamePolygonMode PolygonMode
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPolygonMode
+      showTablePolygonMode
+      conNamePolygonMode
+      PolygonMode

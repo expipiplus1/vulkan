@@ -503,7 +503,9 @@ initializePerformanceApiINTEL device initializeInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkInitializePerformanceApiINTEL is null" Nothing Nothing
   let vkInitializePerformanceApiINTEL' = mkVkInitializePerformanceApiINTEL vkInitializePerformanceApiINTELPtr
   pInitializeInfo <- ContT $ withCStruct (initializeInfo)
-  r <- lift $ traceAroundEvent "vkInitializePerformanceApiINTEL" (vkInitializePerformanceApiINTEL' (deviceHandle (device)) pInitializeInfo)
+  r <- lift $ traceAroundEvent "vkInitializePerformanceApiINTEL" (vkInitializePerformanceApiINTEL'
+                                                                    (deviceHandle (device))
+                                                                    pInitializeInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -536,7 +538,8 @@ uninitializePerformanceApiINTEL device = liftIO $ do
   unless (vkUninitializePerformanceApiINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkUninitializePerformanceApiINTEL is null" Nothing Nothing
   let vkUninitializePerformanceApiINTEL' = mkVkUninitializePerformanceApiINTEL vkUninitializePerformanceApiINTELPtr
-  traceAroundEvent "vkUninitializePerformanceApiINTEL" (vkUninitializePerformanceApiINTEL' (deviceHandle (device)))
+  traceAroundEvent "vkUninitializePerformanceApiINTEL" (vkUninitializePerformanceApiINTEL'
+                                                          (deviceHandle (device)))
   pure $ ()
 
 
@@ -624,7 +627,9 @@ cmdSetPerformanceMarkerINTEL commandBuffer markerInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetPerformanceMarkerINTEL is null" Nothing Nothing
   let vkCmdSetPerformanceMarkerINTEL' = mkVkCmdSetPerformanceMarkerINTEL vkCmdSetPerformanceMarkerINTELPtr
   pMarkerInfo <- ContT $ withCStruct (markerInfo)
-  r <- lift $ traceAroundEvent "vkCmdSetPerformanceMarkerINTEL" (vkCmdSetPerformanceMarkerINTEL' (commandBufferHandle (commandBuffer)) pMarkerInfo)
+  r <- lift $ traceAroundEvent "vkCmdSetPerformanceMarkerINTEL" (vkCmdSetPerformanceMarkerINTEL'
+                                                                   (commandBufferHandle (commandBuffer))
+                                                                   pMarkerInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -702,13 +707,16 @@ cmdSetPerformanceStreamMarkerINTEL :: forall io
                                    -> -- No documentation found for Nested "vkCmdSetPerformanceStreamMarkerINTEL" "pMarkerInfo"
                                       PerformanceStreamMarkerInfoINTEL
                                    -> io ()
-cmdSetPerformanceStreamMarkerINTEL commandBuffer markerInfo = liftIO . evalContT $ do
+cmdSetPerformanceStreamMarkerINTEL commandBuffer
+                                     markerInfo = liftIO . evalContT $ do
   let vkCmdSetPerformanceStreamMarkerINTELPtr = pVkCmdSetPerformanceStreamMarkerINTEL (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetPerformanceStreamMarkerINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetPerformanceStreamMarkerINTEL is null" Nothing Nothing
   let vkCmdSetPerformanceStreamMarkerINTEL' = mkVkCmdSetPerformanceStreamMarkerINTEL vkCmdSetPerformanceStreamMarkerINTELPtr
   pMarkerInfo <- ContT $ withCStruct (markerInfo)
-  r <- lift $ traceAroundEvent "vkCmdSetPerformanceStreamMarkerINTEL" (vkCmdSetPerformanceStreamMarkerINTEL' (commandBufferHandle (commandBuffer)) pMarkerInfo)
+  r <- lift $ traceAroundEvent "vkCmdSetPerformanceStreamMarkerINTEL" (vkCmdSetPerformanceStreamMarkerINTEL'
+                                                                         (commandBufferHandle (commandBuffer))
+                                                                         pMarkerInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -793,13 +801,16 @@ cmdSetPerformanceOverrideINTEL :: forall io
                                   -- structure selecting the parameter to override.
                                   PerformanceOverrideInfoINTEL
                                -> io ()
-cmdSetPerformanceOverrideINTEL commandBuffer overrideInfo = liftIO . evalContT $ do
+cmdSetPerformanceOverrideINTEL commandBuffer
+                                 overrideInfo = liftIO . evalContT $ do
   let vkCmdSetPerformanceOverrideINTELPtr = pVkCmdSetPerformanceOverrideINTEL (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdSetPerformanceOverrideINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdSetPerformanceOverrideINTEL is null" Nothing Nothing
   let vkCmdSetPerformanceOverrideINTEL' = mkVkCmdSetPerformanceOverrideINTEL vkCmdSetPerformanceOverrideINTELPtr
   pOverrideInfo <- ContT $ withCStruct (overrideInfo)
-  r <- lift $ traceAroundEvent "vkCmdSetPerformanceOverrideINTEL" (vkCmdSetPerformanceOverrideINTEL' (commandBufferHandle (commandBuffer)) pOverrideInfo)
+  r <- lift $ traceAroundEvent "vkCmdSetPerformanceOverrideINTEL" (vkCmdSetPerformanceOverrideINTEL'
+                                                                     (commandBufferHandle (commandBuffer))
+                                                                     pOverrideInfo)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -848,14 +859,18 @@ acquirePerformanceConfigurationINTEL :: forall io
                                         -- 'PerformanceConfigurationAcquireInfoINTEL' structure
                                         PerformanceConfigurationAcquireInfoINTEL
                                      -> io (PerformanceConfigurationINTEL)
-acquirePerformanceConfigurationINTEL device acquireInfo = liftIO . evalContT $ do
+acquirePerformanceConfigurationINTEL device
+                                       acquireInfo = liftIO . evalContT $ do
   let vkAcquirePerformanceConfigurationINTELPtr = pVkAcquirePerformanceConfigurationINTEL (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkAcquirePerformanceConfigurationINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkAcquirePerformanceConfigurationINTEL is null" Nothing Nothing
   let vkAcquirePerformanceConfigurationINTEL' = mkVkAcquirePerformanceConfigurationINTEL vkAcquirePerformanceConfigurationINTELPtr
   pAcquireInfo <- ContT $ withCStruct (acquireInfo)
   pPConfiguration <- ContT $ bracket (callocBytes @PerformanceConfigurationINTEL 8) free
-  r <- lift $ traceAroundEvent "vkAcquirePerformanceConfigurationINTEL" (vkAcquirePerformanceConfigurationINTEL' (deviceHandle (device)) pAcquireInfo (pPConfiguration))
+  r <- lift $ traceAroundEvent "vkAcquirePerformanceConfigurationINTEL" (vkAcquirePerformanceConfigurationINTEL'
+                                                                           (deviceHandle (device))
+                                                                           pAcquireInfo
+                                                                           (pPConfiguration))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pConfiguration <- lift $ peek @PerformanceConfigurationINTEL pPConfiguration
   pure $ (pConfiguration)
@@ -926,7 +941,9 @@ releasePerformanceConfigurationINTEL device configuration = liftIO $ do
   unless (vkReleasePerformanceConfigurationINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkReleasePerformanceConfigurationINTEL is null" Nothing Nothing
   let vkReleasePerformanceConfigurationINTEL' = mkVkReleasePerformanceConfigurationINTEL vkReleasePerformanceConfigurationINTELPtr
-  r <- traceAroundEvent "vkReleasePerformanceConfigurationINTEL" (vkReleasePerformanceConfigurationINTEL' (deviceHandle (device)) (configuration))
+  r <- traceAroundEvent "vkReleasePerformanceConfigurationINTEL" (vkReleasePerformanceConfigurationINTEL'
+                                                                    (deviceHandle (device))
+                                                                    (configuration))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -990,7 +1007,9 @@ queueSetPerformanceConfigurationINTEL queue configuration = liftIO $ do
   unless (vkQueueSetPerformanceConfigurationINTELPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkQueueSetPerformanceConfigurationINTEL is null" Nothing Nothing
   let vkQueueSetPerformanceConfigurationINTEL' = mkVkQueueSetPerformanceConfigurationINTEL vkQueueSetPerformanceConfigurationINTELPtr
-  r <- traceAroundEvent "vkQueueSetPerformanceConfigurationINTEL" (vkQueueSetPerformanceConfigurationINTEL' (queueHandle (queue)) (configuration))
+  r <- traceAroundEvent "vkQueueSetPerformanceConfigurationINTEL" (vkQueueSetPerformanceConfigurationINTEL'
+                                                                     (queueHandle (queue))
+                                                                     (configuration))
   when (r < SUCCESS) (throwIO (VulkanException r))
 
 
@@ -1040,7 +1059,10 @@ getPerformanceParameterINTEL device parameter = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPerformanceParameterINTEL is null" Nothing Nothing
   let vkGetPerformanceParameterINTEL' = mkVkGetPerformanceParameterINTEL vkGetPerformanceParameterINTELPtr
   pPValue <- ContT (withZeroCStruct @PerformanceValueINTEL)
-  r <- lift $ traceAroundEvent "vkGetPerformanceParameterINTEL" (vkGetPerformanceParameterINTEL' (deviceHandle (device)) (parameter) (pPValue))
+  r <- lift $ traceAroundEvent "vkGetPerformanceParameterINTEL" (vkGetPerformanceParameterINTEL'
+                                                                   (deviceHandle (device))
+                                                                   (parameter)
+                                                                   (pPValue))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pValue <- lift $ peekCStruct @PerformanceValueINTEL pPValue
   pure $ (pValue)
@@ -1512,34 +1534,40 @@ newtype PerformanceConfigurationTypeINTEL = PerformanceConfigurationTypeINTEL In
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- No documentation found for Nested "VkPerformanceConfigurationTypeINTEL" "VK_PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL"
-pattern PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL =
-  PerformanceConfigurationTypeINTEL 0
-{-# complete PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL :: PerformanceConfigurationTypeINTEL #-}
+pattern PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL = PerformanceConfigurationTypeINTEL 0
+
+{-# COMPLETE PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL :: PerformanceConfigurationTypeINTEL #-}
 
 conNamePerformanceConfigurationTypeINTEL :: String
 conNamePerformanceConfigurationTypeINTEL = "PerformanceConfigurationTypeINTEL"
 
 enumPrefixPerformanceConfigurationTypeINTEL :: String
-enumPrefixPerformanceConfigurationTypeINTEL =
-  "PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL"
+enumPrefixPerformanceConfigurationTypeINTEL = "PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL"
 
 showTablePerformanceConfigurationTypeINTEL :: [(PerformanceConfigurationTypeINTEL, String)]
 showTablePerformanceConfigurationTypeINTEL =
-  [(PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL, "")]
+  [
+    ( PERFORMANCE_CONFIGURATION_TYPE_COMMAND_QUEUE_METRICS_DISCOVERY_ACTIVATED_INTEL
+    , ""
+    )
+  ]
 
 instance Show PerformanceConfigurationTypeINTEL where
-  showsPrec = enumShowsPrec enumPrefixPerformanceConfigurationTypeINTEL
-                            showTablePerformanceConfigurationTypeINTEL
-                            conNamePerformanceConfigurationTypeINTEL
-                            (\(PerformanceConfigurationTypeINTEL x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPerformanceConfigurationTypeINTEL
+      showTablePerformanceConfigurationTypeINTEL
+      conNamePerformanceConfigurationTypeINTEL
+      (\(PerformanceConfigurationTypeINTEL x) -> x)
+      (showsPrec 11)
 
 instance Read PerformanceConfigurationTypeINTEL where
-  readPrec = enumReadPrec enumPrefixPerformanceConfigurationTypeINTEL
-                          showTablePerformanceConfigurationTypeINTEL
-                          conNamePerformanceConfigurationTypeINTEL
-                          PerformanceConfigurationTypeINTEL
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPerformanceConfigurationTypeINTEL
+      showTablePerformanceConfigurationTypeINTEL
+      conNamePerformanceConfigurationTypeINTEL
+      PerformanceConfigurationTypeINTEL
 
 -- | VkQueryPoolSamplingModeINTEL - Enum specifying how performance queries
 -- should be captured
@@ -1556,7 +1584,8 @@ newtype QueryPoolSamplingModeINTEL = QueryPoolSamplingModeINTEL Int32
 -- and 'Vulkan.Core10.CommandBufferBuilding.cmdEndQuery' to record
 -- performance data.
 pattern QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL = QueryPoolSamplingModeINTEL 0
-{-# complete QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL :: QueryPoolSamplingModeINTEL #-}
+
+{-# COMPLETE QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL :: QueryPoolSamplingModeINTEL #-}
 
 conNameQueryPoolSamplingModeINTEL :: String
 conNameQueryPoolSamplingModeINTEL = "QueryPoolSamplingModeINTEL"
@@ -1565,21 +1594,29 @@ enumPrefixQueryPoolSamplingModeINTEL :: String
 enumPrefixQueryPoolSamplingModeINTEL = "QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL"
 
 showTableQueryPoolSamplingModeINTEL :: [(QueryPoolSamplingModeINTEL, String)]
-showTableQueryPoolSamplingModeINTEL = [(QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL, "")]
+showTableQueryPoolSamplingModeINTEL =
+  [
+    ( QUERY_POOL_SAMPLING_MODE_MANUAL_INTEL
+    , ""
+    )
+  ]
 
 instance Show QueryPoolSamplingModeINTEL where
-  showsPrec = enumShowsPrec enumPrefixQueryPoolSamplingModeINTEL
-                            showTableQueryPoolSamplingModeINTEL
-                            conNameQueryPoolSamplingModeINTEL
-                            (\(QueryPoolSamplingModeINTEL x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixQueryPoolSamplingModeINTEL
+      showTableQueryPoolSamplingModeINTEL
+      conNameQueryPoolSamplingModeINTEL
+      (\(QueryPoolSamplingModeINTEL x) -> x)
+      (showsPrec 11)
 
 instance Read QueryPoolSamplingModeINTEL where
-  readPrec = enumReadPrec enumPrefixQueryPoolSamplingModeINTEL
-                          showTableQueryPoolSamplingModeINTEL
-                          conNameQueryPoolSamplingModeINTEL
-                          QueryPoolSamplingModeINTEL
-
+  readPrec =
+    enumReadPrec
+      enumPrefixQueryPoolSamplingModeINTEL
+      showTableQueryPoolSamplingModeINTEL
+      conNameQueryPoolSamplingModeINTEL
+      QueryPoolSamplingModeINTEL
 
 -- | VkPerformanceOverrideTypeINTEL - Performance override type
 --
@@ -1592,13 +1629,18 @@ newtype PerformanceOverrideTypeINTEL = PerformanceOverrideTypeINTEL Int32
 
 -- | 'PERFORMANCE_OVERRIDE_TYPE_NULL_HARDWARE_INTEL' turns all rendering
 -- operations into noop.
-pattern PERFORMANCE_OVERRIDE_TYPE_NULL_HARDWARE_INTEL    = PerformanceOverrideTypeINTEL 0
+pattern PERFORMANCE_OVERRIDE_TYPE_NULL_HARDWARE_INTEL = PerformanceOverrideTypeINTEL 0
+
 -- | 'PERFORMANCE_OVERRIDE_TYPE_FLUSH_GPU_CACHES_INTEL' stalls the stream of
 -- commands until all previously emitted commands have completed and all
 -- caches been flushed and invalidated.
 pattern PERFORMANCE_OVERRIDE_TYPE_FLUSH_GPU_CACHES_INTEL = PerformanceOverrideTypeINTEL 1
-{-# complete PERFORMANCE_OVERRIDE_TYPE_NULL_HARDWARE_INTEL,
-             PERFORMANCE_OVERRIDE_TYPE_FLUSH_GPU_CACHES_INTEL :: PerformanceOverrideTypeINTEL #-}
+
+{-# COMPLETE
+  PERFORMANCE_OVERRIDE_TYPE_NULL_HARDWARE_INTEL
+  , PERFORMANCE_OVERRIDE_TYPE_FLUSH_GPU_CACHES_INTEL ::
+    PerformanceOverrideTypeINTEL
+  #-}
 
 conNamePerformanceOverrideTypeINTEL :: String
 conNamePerformanceOverrideTypeINTEL = "PerformanceOverrideTypeINTEL"
@@ -1608,23 +1650,32 @@ enumPrefixPerformanceOverrideTypeINTEL = "PERFORMANCE_OVERRIDE_TYPE_"
 
 showTablePerformanceOverrideTypeINTEL :: [(PerformanceOverrideTypeINTEL, String)]
 showTablePerformanceOverrideTypeINTEL =
-  [ (PERFORMANCE_OVERRIDE_TYPE_NULL_HARDWARE_INTEL   , "NULL_HARDWARE_INTEL")
-  , (PERFORMANCE_OVERRIDE_TYPE_FLUSH_GPU_CACHES_INTEL, "FLUSH_GPU_CACHES_INTEL")
+  [
+    ( PERFORMANCE_OVERRIDE_TYPE_NULL_HARDWARE_INTEL
+    , "NULL_HARDWARE_INTEL"
+    )
+  ,
+    ( PERFORMANCE_OVERRIDE_TYPE_FLUSH_GPU_CACHES_INTEL
+    , "FLUSH_GPU_CACHES_INTEL"
+    )
   ]
 
 instance Show PerformanceOverrideTypeINTEL where
-  showsPrec = enumShowsPrec enumPrefixPerformanceOverrideTypeINTEL
-                            showTablePerformanceOverrideTypeINTEL
-                            conNamePerformanceOverrideTypeINTEL
-                            (\(PerformanceOverrideTypeINTEL x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPerformanceOverrideTypeINTEL
+      showTablePerformanceOverrideTypeINTEL
+      conNamePerformanceOverrideTypeINTEL
+      (\(PerformanceOverrideTypeINTEL x) -> x)
+      (showsPrec 11)
 
 instance Read PerformanceOverrideTypeINTEL where
-  readPrec = enumReadPrec enumPrefixPerformanceOverrideTypeINTEL
-                          showTablePerformanceOverrideTypeINTEL
-                          conNamePerformanceOverrideTypeINTEL
-                          PerformanceOverrideTypeINTEL
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPerformanceOverrideTypeINTEL
+      showTablePerformanceOverrideTypeINTEL
+      conNamePerformanceOverrideTypeINTEL
+      PerformanceOverrideTypeINTEL
 
 -- | VkPerformanceParameterTypeINTEL - Parameters that can be queried
 --
@@ -1637,13 +1688,18 @@ newtype PerformanceParameterTypeINTEL = PerformanceParameterTypeINTEL Int32
 
 -- | 'PERFORMANCE_PARAMETER_TYPE_HW_COUNTERS_SUPPORTED_INTEL' has a boolean
 -- result which tells whether hardware counters can be captured.
-pattern PERFORMANCE_PARAMETER_TYPE_HW_COUNTERS_SUPPORTED_INTEL    = PerformanceParameterTypeINTEL 0
+pattern PERFORMANCE_PARAMETER_TYPE_HW_COUNTERS_SUPPORTED_INTEL = PerformanceParameterTypeINTEL 0
+
 -- | 'PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL' has a 32
 -- bits integer result which tells how many bits can be written into the
 -- 'PerformanceValueINTEL' value.
 pattern PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL = PerformanceParameterTypeINTEL 1
-{-# complete PERFORMANCE_PARAMETER_TYPE_HW_COUNTERS_SUPPORTED_INTEL,
-             PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL :: PerformanceParameterTypeINTEL #-}
+
+{-# COMPLETE
+  PERFORMANCE_PARAMETER_TYPE_HW_COUNTERS_SUPPORTED_INTEL
+  , PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL ::
+    PerformanceParameterTypeINTEL
+  #-}
 
 conNamePerformanceParameterTypeINTEL :: String
 conNamePerformanceParameterTypeINTEL = "PerformanceParameterTypeINTEL"
@@ -1653,23 +1709,32 @@ enumPrefixPerformanceParameterTypeINTEL = "PERFORMANCE_PARAMETER_TYPE_"
 
 showTablePerformanceParameterTypeINTEL :: [(PerformanceParameterTypeINTEL, String)]
 showTablePerformanceParameterTypeINTEL =
-  [ (PERFORMANCE_PARAMETER_TYPE_HW_COUNTERS_SUPPORTED_INTEL   , "HW_COUNTERS_SUPPORTED_INTEL")
-  , (PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL, "STREAM_MARKER_VALID_BITS_INTEL")
+  [
+    ( PERFORMANCE_PARAMETER_TYPE_HW_COUNTERS_SUPPORTED_INTEL
+    , "HW_COUNTERS_SUPPORTED_INTEL"
+    )
+  ,
+    ( PERFORMANCE_PARAMETER_TYPE_STREAM_MARKER_VALID_BITS_INTEL
+    , "STREAM_MARKER_VALID_BITS_INTEL"
+    )
   ]
 
 instance Show PerformanceParameterTypeINTEL where
-  showsPrec = enumShowsPrec enumPrefixPerformanceParameterTypeINTEL
-                            showTablePerformanceParameterTypeINTEL
-                            conNamePerformanceParameterTypeINTEL
-                            (\(PerformanceParameterTypeINTEL x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPerformanceParameterTypeINTEL
+      showTablePerformanceParameterTypeINTEL
+      conNamePerformanceParameterTypeINTEL
+      (\(PerformanceParameterTypeINTEL x) -> x)
+      (showsPrec 11)
 
 instance Read PerformanceParameterTypeINTEL where
-  readPrec = enumReadPrec enumPrefixPerformanceParameterTypeINTEL
-                          showTablePerformanceParameterTypeINTEL
-                          conNamePerformanceParameterTypeINTEL
-                          PerformanceParameterTypeINTEL
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPerformanceParameterTypeINTEL
+      showTablePerformanceParameterTypeINTEL
+      conNamePerformanceParameterTypeINTEL
+      PerformanceParameterTypeINTEL
 
 -- | VkPerformanceValueTypeINTEL - Type of the parameters that can be queried
 --
@@ -1682,19 +1747,27 @@ newtype PerformanceValueTypeINTEL = PerformanceValueTypeINTEL Int32
 
 -- No documentation found for Nested "VkPerformanceValueTypeINTEL" "VK_PERFORMANCE_VALUE_TYPE_UINT32_INTEL"
 pattern PERFORMANCE_VALUE_TYPE_UINT32_INTEL = PerformanceValueTypeINTEL 0
+
 -- No documentation found for Nested "VkPerformanceValueTypeINTEL" "VK_PERFORMANCE_VALUE_TYPE_UINT64_INTEL"
 pattern PERFORMANCE_VALUE_TYPE_UINT64_INTEL = PerformanceValueTypeINTEL 1
+
 -- No documentation found for Nested "VkPerformanceValueTypeINTEL" "VK_PERFORMANCE_VALUE_TYPE_FLOAT_INTEL"
-pattern PERFORMANCE_VALUE_TYPE_FLOAT_INTEL  = PerformanceValueTypeINTEL 2
+pattern PERFORMANCE_VALUE_TYPE_FLOAT_INTEL = PerformanceValueTypeINTEL 2
+
 -- No documentation found for Nested "VkPerformanceValueTypeINTEL" "VK_PERFORMANCE_VALUE_TYPE_BOOL_INTEL"
-pattern PERFORMANCE_VALUE_TYPE_BOOL_INTEL   = PerformanceValueTypeINTEL 3
+pattern PERFORMANCE_VALUE_TYPE_BOOL_INTEL = PerformanceValueTypeINTEL 3
+
 -- No documentation found for Nested "VkPerformanceValueTypeINTEL" "VK_PERFORMANCE_VALUE_TYPE_STRING_INTEL"
 pattern PERFORMANCE_VALUE_TYPE_STRING_INTEL = PerformanceValueTypeINTEL 4
-{-# complete PERFORMANCE_VALUE_TYPE_UINT32_INTEL,
-             PERFORMANCE_VALUE_TYPE_UINT64_INTEL,
-             PERFORMANCE_VALUE_TYPE_FLOAT_INTEL,
-             PERFORMANCE_VALUE_TYPE_BOOL_INTEL,
-             PERFORMANCE_VALUE_TYPE_STRING_INTEL :: PerformanceValueTypeINTEL #-}
+
+{-# COMPLETE
+  PERFORMANCE_VALUE_TYPE_UINT32_INTEL
+  , PERFORMANCE_VALUE_TYPE_UINT64_INTEL
+  , PERFORMANCE_VALUE_TYPE_FLOAT_INTEL
+  , PERFORMANCE_VALUE_TYPE_BOOL_INTEL
+  , PERFORMANCE_VALUE_TYPE_STRING_INTEL ::
+    PerformanceValueTypeINTEL
+  #-}
 
 conNamePerformanceValueTypeINTEL :: String
 conNamePerformanceValueTypeINTEL = "PerformanceValueTypeINTEL"
@@ -1704,26 +1777,44 @@ enumPrefixPerformanceValueTypeINTEL = "PERFORMANCE_VALUE_TYPE_"
 
 showTablePerformanceValueTypeINTEL :: [(PerformanceValueTypeINTEL, String)]
 showTablePerformanceValueTypeINTEL =
-  [ (PERFORMANCE_VALUE_TYPE_UINT32_INTEL, "UINT32_INTEL")
-  , (PERFORMANCE_VALUE_TYPE_UINT64_INTEL, "UINT64_INTEL")
-  , (PERFORMANCE_VALUE_TYPE_FLOAT_INTEL , "FLOAT_INTEL")
-  , (PERFORMANCE_VALUE_TYPE_BOOL_INTEL  , "BOOL_INTEL")
-  , (PERFORMANCE_VALUE_TYPE_STRING_INTEL, "STRING_INTEL")
+  [
+    ( PERFORMANCE_VALUE_TYPE_UINT32_INTEL
+    , "UINT32_INTEL"
+    )
+  ,
+    ( PERFORMANCE_VALUE_TYPE_UINT64_INTEL
+    , "UINT64_INTEL"
+    )
+  ,
+    ( PERFORMANCE_VALUE_TYPE_FLOAT_INTEL
+    , "FLOAT_INTEL"
+    )
+  ,
+    ( PERFORMANCE_VALUE_TYPE_BOOL_INTEL
+    , "BOOL_INTEL"
+    )
+  ,
+    ( PERFORMANCE_VALUE_TYPE_STRING_INTEL
+    , "STRING_INTEL"
+    )
   ]
 
 instance Show PerformanceValueTypeINTEL where
-  showsPrec = enumShowsPrec enumPrefixPerformanceValueTypeINTEL
-                            showTablePerformanceValueTypeINTEL
-                            conNamePerformanceValueTypeINTEL
-                            (\(PerformanceValueTypeINTEL x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPerformanceValueTypeINTEL
+      showTablePerformanceValueTypeINTEL
+      conNamePerformanceValueTypeINTEL
+      (\(PerformanceValueTypeINTEL x) -> x)
+      (showsPrec 11)
 
 instance Read PerformanceValueTypeINTEL where
-  readPrec = enumReadPrec enumPrefixPerformanceValueTypeINTEL
-                          showTablePerformanceValueTypeINTEL
-                          conNamePerformanceValueTypeINTEL
-                          PerformanceValueTypeINTEL
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPerformanceValueTypeINTEL
+      showTablePerformanceValueTypeINTEL
+      conNamePerformanceValueTypeINTEL
+      PerformanceValueTypeINTEL
 
 -- No documentation found for TopLevel "VkQueryPoolCreateInfoINTEL"
 type QueryPoolCreateInfoINTEL = QueryPoolPerformanceQueryCreateInfoINTEL

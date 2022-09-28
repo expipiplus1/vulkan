@@ -190,7 +190,9 @@ beginFrame session frameBeginInfo = liftIO . evalContT $ do
   frameBeginInfo' <- case (frameBeginInfo) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  r <- lift $ traceAroundEvent "xrBeginFrame" (xrBeginFrame' (sessionHandle (session)) frameBeginInfo')
+  r <- lift $ traceAroundEvent "xrBeginFrame" (xrBeginFrame'
+                                                 (sessionHandle (session))
+                                                 frameBeginInfo')
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   pure $ (r)
 
@@ -325,12 +327,24 @@ locateViews session viewLocateInfo = liftIO . evalContT $ do
   viewLocateInfo' <- ContT $ withCStruct (viewLocateInfo)
   pViewState <- ContT (withZeroCStruct @ViewState)
   pViewCountOutput <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "xrLocateViews" (xrLocateViews' session' viewLocateInfo' (pViewState) (0) (pViewCountOutput) (nullPtr))
+  r <- lift $ traceAroundEvent "xrLocateViews" (xrLocateViews'
+                                                  session'
+                                                  viewLocateInfo'
+                                                  (pViewState)
+                                                  (0)
+                                                  (pViewCountOutput)
+                                                  (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   viewCountOutput <- lift $ peek @Word32 pViewCountOutput
   pViews <- ContT $ bracket (callocBytes @View ((fromIntegral (viewCountOutput)) * 64)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pViews `advancePtrBytes` (i * 64) :: Ptr View) . ($ ())) [0..(fromIntegral (viewCountOutput)) - 1]
-  r' <- lift $ traceAroundEvent "xrLocateViews" (xrLocateViews' session' viewLocateInfo' (pViewState) ((viewCountOutput)) (pViewCountOutput) ((pViews)))
+  r' <- lift $ traceAroundEvent "xrLocateViews" (xrLocateViews'
+                                                   session'
+                                                   viewLocateInfo'
+                                                   (pViewState)
+                                                   ((viewCountOutput))
+                                                   (pViewCountOutput)
+                                                   ((pViews)))
   lift $ when (r' < SUCCESS) (throwIO (OpenXrException r'))
   viewState <- lift $ peekCStruct @ViewState pViewState
   viewCountOutput' <- lift $ peek @Word32 pViewCountOutput
@@ -476,7 +490,9 @@ endFrame session frameEndInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrEndFrame is null" Nothing Nothing
   let xrEndFrame' = mkXrEndFrame xrEndFramePtr
   frameEndInfo' <- ContT $ withCStruct (frameEndInfo)
-  r <- lift $ traceAroundEvent "xrEndFrame" (xrEndFrame' (sessionHandle (session)) (forgetExtensions frameEndInfo'))
+  r <- lift $ traceAroundEvent "xrEndFrame" (xrEndFrame'
+                                               (sessionHandle (session))
+                                               (forgetExtensions frameEndInfo'))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   pure $ (r)
 
@@ -494,7 +510,10 @@ foreign import ccall
 
 -- | waitFrame with selectable safeness
 waitFrameSafeOrUnsafe :: forall a io
-                       . (Extendss FrameState a, PokeChain a, PeekChain a, MonadIO io)
+                       . ( Extendss FrameState a
+                         , PokeChain a
+                         , PeekChain a
+                         , MonadIO io )
                       => (FunPtr (Ptr Session_T -> Ptr FrameWaitInfo -> Ptr (SomeStruct FrameState) -> IO Result) -> Ptr Session_T -> Ptr FrameWaitInfo -> Ptr (SomeStruct FrameState) -> IO Result)
                       -> -- | @session@ is a valid 'OpenXR.Core10.Handles.Session' handle.
                          Session
@@ -502,7 +521,8 @@ waitFrameSafeOrUnsafe :: forall a io
                          -- pointer to a valid 'FrameWaitInfo'.
                          ("frameWaitInfo" ::: Maybe FrameWaitInfo)
                       -> io (Result, FrameState a)
-waitFrameSafeOrUnsafe mkXrWaitFrame session frameWaitInfo = liftIO . evalContT $ do
+waitFrameSafeOrUnsafe mkXrWaitFrame session
+                                      frameWaitInfo = liftIO . evalContT $ do
   let xrWaitFramePtr = pXrWaitFrame (case session of Session{instanceCmds} -> instanceCmds)
   lift $ unless (xrWaitFramePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrWaitFrame is null" Nothing Nothing
@@ -511,7 +531,10 @@ waitFrameSafeOrUnsafe mkXrWaitFrame session frameWaitInfo = liftIO . evalContT $
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pFrameState <- ContT (withZeroCStruct @(FrameState _))
-  r <- lift $ traceAroundEvent "xrWaitFrame" (xrWaitFrame' (sessionHandle (session)) frameWaitInfo' (forgetExtensions (pFrameState)))
+  r <- lift $ traceAroundEvent "xrWaitFrame" (xrWaitFrame'
+                                                (sessionHandle (session))
+                                                frameWaitInfo'
+                                                (forgetExtensions (pFrameState)))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   frameState <- lift $ peekCStruct @(FrameState _) pFrameState
   pure $ (r, frameState)
@@ -983,7 +1006,8 @@ instance Extensible FrameEndInfo where
     | Just Refl <- eqT @e @SecondaryViewConfigurationFrameEndInfoMSFT = Just f
     | otherwise = Nothing
 
-instance (Extendss FrameEndInfo es, PokeChain es) => ToCStruct (FrameEndInfo es) where
+instance ( Extendss FrameEndInfo es
+         , PokeChain es ) => ToCStruct (FrameEndInfo es) where
   withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FrameEndInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_FRAME_END_INFO)
@@ -1019,7 +1043,8 @@ instance (Extendss FrameEndInfo es, PokeChain es) => ToCStruct (FrameEndInfo es)
     lift $ poke ((p `plusPtr` 24 :: Ptr EnvironmentBlendMode)) (zero)
     lift $ f
 
-instance (Extendss FrameEndInfo es, PeekChain es) => FromCStruct (FrameEndInfo es) where
+instance ( Extendss FrameEndInfo es
+         , PeekChain es ) => FromCStruct (FrameEndInfo es) where
   peekCStruct p = do
     next <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next' <- peekChain (castPtr next)
@@ -1168,7 +1193,8 @@ instance Extensible FrameState where
     | Just Refl <- eqT @e @SecondaryViewConfigurationFrameStateMSFT = Just f
     | otherwise = Nothing
 
-instance (Extendss FrameState es, PokeChain es) => ToCStruct (FrameState es) where
+instance ( Extendss FrameState es
+         , PokeChain es ) => ToCStruct (FrameState es) where
   withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p FrameState{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_FRAME_STATE)
@@ -1189,7 +1215,8 @@ instance (Extendss FrameState es, PokeChain es) => ToCStruct (FrameState es) whe
     lift $ poke ((p `plusPtr` 32 :: Ptr Bool32)) (boolToBool32 (zero))
     lift $ f
 
-instance (Extendss FrameState es, PeekChain es) => FromCStruct (FrameState es) where
+instance ( Extendss FrameState es
+         , PeekChain es ) => FromCStruct (FrameState es) where
   peekCStruct p = do
     next <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next' <- peekChain (castPtr next)
@@ -1197,7 +1224,10 @@ instance (Extendss FrameState es, PeekChain es) => FromCStruct (FrameState es) w
     predictedDisplayPeriod <- peek @Duration ((p `plusPtr` 24 :: Ptr Duration))
     shouldRender <- peek @Bool32 ((p `plusPtr` 32 :: Ptr Bool32))
     pure $ FrameState
-             next' predictedDisplayTime predictedDisplayPeriod (bool32ToBool shouldRender)
+             next'
+             predictedDisplayTime
+             predictedDisplayPeriod
+             (bool32ToBool shouldRender)
 
 instance es ~ '[] => Zero (FrameState es) where
   zero = FrameState

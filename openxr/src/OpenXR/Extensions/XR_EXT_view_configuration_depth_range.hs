@@ -143,7 +143,10 @@ instance FromCStruct ViewConfigurationDepthRangeEXT where
     recommendedFarZ <- peek @CFloat ((p `plusPtr` 24 :: Ptr CFloat))
     maxFarZ <- peek @CFloat ((p `plusPtr` 28 :: Ptr CFloat))
     pure $ ViewConfigurationDepthRangeEXT
-             (coerce @CFloat @Float recommendedNearZ) (coerce @CFloat @Float minNearZ) (coerce @CFloat @Float recommendedFarZ) (coerce @CFloat @Float maxFarZ)
+             (coerce @CFloat @Float recommendedNearZ)
+             (coerce @CFloat @Float minNearZ)
+             (coerce @CFloat @Float recommendedFarZ)
+             (coerce @CFloat @Float maxFarZ)
 
 instance Storable ViewConfigurationDepthRangeEXT where
   sizeOf ~_ = 32

@@ -177,7 +177,11 @@ createBuffer device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPBuffer <- ContT $ bracket (callocBytes @Buffer 8) free
-  r <- lift $ traceAroundEvent "vkCreateBuffer" (vkCreateBuffer' (deviceHandle (device)) (forgetExtensions pCreateInfo) pAllocator (pPBuffer))
+  r <- lift $ traceAroundEvent "vkCreateBuffer" (vkCreateBuffer'
+                                                   (deviceHandle (device))
+                                                   (forgetExtensions pCreateInfo)
+                                                   pAllocator
+                                                   (pPBuffer))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pBuffer <- lift $ peek @Buffer pPBuffer
   pure $ (pBuffer)
@@ -264,7 +268,10 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyBuffer" (vkDestroyBuffer' (deviceHandle (device)) (buffer) pAllocator)
+  lift $ traceAroundEvent "vkDestroyBuffer" (vkDestroyBuffer'
+                                               (deviceHandle (device))
+                                               (buffer)
+                                               pAllocator)
   pure $ ()
 
 
@@ -480,7 +487,8 @@ instance Extensible BufferCreateInfo where
     | Just Refl <- eqT @e @DedicatedAllocationBufferCreateInfoNV = Just f
     | otherwise = Nothing
 
-instance (Extendss BufferCreateInfo es, PokeChain es) => ToCStruct (BufferCreateInfo es) where
+instance ( Extendss BufferCreateInfo es
+         , PokeChain es ) => ToCStruct (BufferCreateInfo es) where
   withCStruct x f = allocaBytes 56 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p BufferCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_CREATE_INFO)
@@ -506,7 +514,8 @@ instance (Extendss BufferCreateInfo es, PokeChain es) => ToCStruct (BufferCreate
     lift $ poke ((p `plusPtr` 36 :: Ptr SharingMode)) (zero)
     lift $ f
 
-instance (Extendss BufferCreateInfo es, PeekChain es) => FromCStruct (BufferCreateInfo es) where
+instance ( Extendss BufferCreateInfo es
+         , PeekChain es ) => FromCStruct (BufferCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)

@@ -27,13 +27,16 @@ newtype SpaceLocationFlagBits = SpaceLocationFlagBits Flags64
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
 -- No documentation found for Nested "XrSpaceLocationFlagBits" "XR_SPACE_LOCATION_ORIENTATION_VALID_BIT"
-pattern SPACE_LOCATION_ORIENTATION_VALID_BIT   = SpaceLocationFlagBits 0x0000000000000001
+pattern SPACE_LOCATION_ORIENTATION_VALID_BIT = SpaceLocationFlagBits 0x0000000000000001
+
 -- No documentation found for Nested "XrSpaceLocationFlagBits" "XR_SPACE_LOCATION_POSITION_VALID_BIT"
-pattern SPACE_LOCATION_POSITION_VALID_BIT      = SpaceLocationFlagBits 0x0000000000000002
+pattern SPACE_LOCATION_POSITION_VALID_BIT = SpaceLocationFlagBits 0x0000000000000002
+
 -- No documentation found for Nested "XrSpaceLocationFlagBits" "XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT"
 pattern SPACE_LOCATION_ORIENTATION_TRACKED_BIT = SpaceLocationFlagBits 0x0000000000000004
+
 -- No documentation found for Nested "XrSpaceLocationFlagBits" "XR_SPACE_LOCATION_POSITION_TRACKED_BIT"
-pattern SPACE_LOCATION_POSITION_TRACKED_BIT    = SpaceLocationFlagBits 0x0000000000000008
+pattern SPACE_LOCATION_POSITION_TRACKED_BIT = SpaceLocationFlagBits 0x0000000000000008
 
 conNameSpaceLocationFlagBits :: String
 conNameSpaceLocationFlagBits = "SpaceLocationFlagBits"
@@ -43,22 +46,37 @@ enumPrefixSpaceLocationFlagBits = "SPACE_LOCATION_"
 
 showTableSpaceLocationFlagBits :: [(SpaceLocationFlagBits, String)]
 showTableSpaceLocationFlagBits =
-  [ (SPACE_LOCATION_ORIENTATION_VALID_BIT  , "ORIENTATION_VALID_BIT")
-  , (SPACE_LOCATION_POSITION_VALID_BIT     , "POSITION_VALID_BIT")
-  , (SPACE_LOCATION_ORIENTATION_TRACKED_BIT, "ORIENTATION_TRACKED_BIT")
-  , (SPACE_LOCATION_POSITION_TRACKED_BIT   , "POSITION_TRACKED_BIT")
+  [
+    ( SPACE_LOCATION_ORIENTATION_VALID_BIT
+    , "ORIENTATION_VALID_BIT"
+    )
+  ,
+    ( SPACE_LOCATION_POSITION_VALID_BIT
+    , "POSITION_VALID_BIT"
+    )
+  ,
+    ( SPACE_LOCATION_ORIENTATION_TRACKED_BIT
+    , "ORIENTATION_TRACKED_BIT"
+    )
+  ,
+    ( SPACE_LOCATION_POSITION_TRACKED_BIT
+    , "POSITION_TRACKED_BIT"
+    )
   ]
 
 instance Show SpaceLocationFlagBits where
-  showsPrec = enumShowsPrec enumPrefixSpaceLocationFlagBits
-                            showTableSpaceLocationFlagBits
-                            conNameSpaceLocationFlagBits
-                            (\(SpaceLocationFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixSpaceLocationFlagBits
+      showTableSpaceLocationFlagBits
+      conNameSpaceLocationFlagBits
+      (\(SpaceLocationFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read SpaceLocationFlagBits where
-  readPrec = enumReadPrec enumPrefixSpaceLocationFlagBits
-                          showTableSpaceLocationFlagBits
-                          conNameSpaceLocationFlagBits
-                          SpaceLocationFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixSpaceLocationFlagBits
+      showTableSpaceLocationFlagBits
+      conNameSpaceLocationFlagBits
+      SpaceLocationFlagBits

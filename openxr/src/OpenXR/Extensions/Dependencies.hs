@@ -33,4 +33,3 @@ extensionDependencies = \case
 extensionCoreRequirement :: ("extensionName" ::: ByteString) -> Version
 extensionCoreRequirement = \case
   _ -> API_VERSION_1_0
-

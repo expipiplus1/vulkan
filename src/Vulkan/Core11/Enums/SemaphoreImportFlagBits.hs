@@ -49,15 +49,18 @@ showTableSemaphoreImportFlagBits :: [(SemaphoreImportFlagBits, String)]
 showTableSemaphoreImportFlagBits = [(SEMAPHORE_IMPORT_TEMPORARY_BIT, "")]
 
 instance Show SemaphoreImportFlagBits where
-  showsPrec = enumShowsPrec enumPrefixSemaphoreImportFlagBits
-                            showTableSemaphoreImportFlagBits
-                            conNameSemaphoreImportFlagBits
-                            (\(SemaphoreImportFlagBits x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixSemaphoreImportFlagBits
+      showTableSemaphoreImportFlagBits
+      conNameSemaphoreImportFlagBits
+      (\(SemaphoreImportFlagBits x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read SemaphoreImportFlagBits where
-  readPrec = enumReadPrec enumPrefixSemaphoreImportFlagBits
-                          showTableSemaphoreImportFlagBits
-                          conNameSemaphoreImportFlagBits
-                          SemaphoreImportFlagBits
-
+  readPrec =
+    enumReadPrec
+      enumPrefixSemaphoreImportFlagBits
+      showTableSemaphoreImportFlagBits
+      conNameSemaphoreImportFlagBits
+      SemaphoreImportFlagBits

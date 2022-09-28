@@ -91,7 +91,8 @@ instance FromCStruct PhysicalDeviceShaderAtomicInt64Features where
     shaderBufferInt64Atomics <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
     shaderSharedInt64Atomics <- peek @Bool32 ((p `plusPtr` 20 :: Ptr Bool32))
     pure $ PhysicalDeviceShaderAtomicInt64Features
-             (bool32ToBool shaderBufferInt64Atomics) (bool32ToBool shaderSharedInt64Atomics)
+             (bool32ToBool shaderBufferInt64Atomics)
+             (bool32ToBool shaderSharedInt64Atomics)
 
 instance Storable PhysicalDeviceShaderAtomicInt64Features where
   sizeOf ~_ = 24

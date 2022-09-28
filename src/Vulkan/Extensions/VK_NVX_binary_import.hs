@@ -566,7 +566,11 @@ createCuModuleNVX device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPModule <- ContT $ bracket (callocBytes @CuModuleNVX 8) free
-  r <- lift $ traceAroundEvent "vkCreateCuModuleNVX" (vkCreateCuModuleNVX' (deviceHandle (device)) pCreateInfo pAllocator (pPModule))
+  r <- lift $ traceAroundEvent "vkCreateCuModuleNVX" (vkCreateCuModuleNVX'
+                                                        (deviceHandle (device))
+                                                        pCreateInfo
+                                                        pAllocator
+                                                        (pPModule))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pModule <- lift $ peek @CuModuleNVX pPModule
   pure $ (pModule)
@@ -648,7 +652,11 @@ createCuFunctionNVX device createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPFunction <- ContT $ bracket (callocBytes @CuFunctionNVX 8) free
-  r <- lift $ traceAroundEvent "vkCreateCuFunctionNVX" (vkCreateCuFunctionNVX' (deviceHandle (device)) pCreateInfo pAllocator (pPFunction))
+  r <- lift $ traceAroundEvent "vkCreateCuFunctionNVX" (vkCreateCuFunctionNVX'
+                                                          (deviceHandle (device))
+                                                          pCreateInfo
+                                                          pAllocator
+                                                          (pPFunction))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pFunction <- lift $ peek @CuFunctionNVX pPFunction
   pure $ (pFunction)
@@ -713,7 +721,10 @@ destroyCuModuleNVX device module' allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyCuModuleNVX" (vkDestroyCuModuleNVX' (deviceHandle (device)) (module') pAllocator)
+  lift $ traceAroundEvent "vkDestroyCuModuleNVX" (vkDestroyCuModuleNVX'
+                                                    (deviceHandle (device))
+                                                    (module')
+                                                    pAllocator)
   pure $ ()
 
 
@@ -764,7 +775,10 @@ destroyCuFunctionNVX device function allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyCuFunctionNVX" (vkDestroyCuFunctionNVX' (deviceHandle (device)) (function) pAllocator)
+  lift $ traceAroundEvent "vkDestroyCuFunctionNVX" (vkDestroyCuFunctionNVX'
+                                                      (deviceHandle (device))
+                                                      (function)
+                                                      pAllocator)
   pure $ ()
 
 
@@ -830,7 +844,9 @@ cmdCuLaunchKernelNVX commandBuffer launchInfo = liftIO . evalContT $ do
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdCuLaunchKernelNVX is null" Nothing Nothing
   let vkCmdCuLaunchKernelNVX' = mkVkCmdCuLaunchKernelNVX vkCmdCuLaunchKernelNVXPtr
   pLaunchInfo <- ContT $ withCStruct (launchInfo)
-  lift $ traceAroundEvent "vkCmdCuLaunchKernelNVX" (vkCmdCuLaunchKernelNVX' (commandBufferHandle (commandBuffer)) pLaunchInfo)
+  lift $ traceAroundEvent "vkCmdCuLaunchKernelNVX" (vkCmdCuLaunchKernelNVX'
+                                                      (commandBufferHandle (commandBuffer))
+                                                      pLaunchInfo)
   pure $ ()
 
 
@@ -1056,7 +1072,16 @@ instance FromCStruct CuLaunchInfoNVX where
     pExtras <- peek @(Ptr (Ptr ())) ((p `plusPtr` 80 :: Ptr (Ptr (Ptr ()))))
     pExtras' <- generateM (fromIntegral (coerce @CSize @Word64 extraCount)) (\i -> peek @(Ptr ()) ((pExtras `advancePtrBytes` (8 * (i)) :: Ptr (Ptr ()))))
     pure $ CuLaunchInfoNVX
-             function gridDimX gridDimY gridDimZ blockDimX blockDimY blockDimZ sharedMemBytes pParams' pExtras'
+             function
+             gridDimX
+             gridDimY
+             gridDimZ
+             blockDimX
+             blockDimY
+             blockDimZ
+             sharedMemBytes
+             pParams'
+             pExtras'
 
 instance Zero CuLaunchInfoNVX where
   zero = CuLaunchInfoNVX

@@ -344,7 +344,11 @@ createDevice physicalDevice createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPDevice <- ContT $ bracket (callocBytes @(Ptr Device_T) 8) free
-  r <- lift $ traceAroundEvent "vkCreateDevice" (vkCreateDevice' (physicalDeviceHandle (physicalDevice)) (forgetExtensions pCreateInfo) pAllocator (pPDevice))
+  r <- lift $ traceAroundEvent "vkCreateDevice" (vkCreateDevice'
+                                                   (physicalDeviceHandle (physicalDevice))
+                                                   (forgetExtensions pCreateInfo)
+                                                   pAllocator
+                                                   (pPDevice))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pDevice <- lift $ peek @(Ptr Device_T) pPDevice
   pDevice' <- lift $ (\h -> Device h <$> initDeviceCmds cmds h) pDevice
@@ -441,7 +445,9 @@ destroyDevice device allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyDevice" (vkDestroyDevice' (deviceHandle (device)) pAllocator)
+  lift $ traceAroundEvent "vkDestroyDevice" (vkDestroyDevice'
+                                               (deviceHandle (device))
+                                               pAllocator)
   pure $ ()
 
 
@@ -540,7 +546,8 @@ instance Extensible DeviceQueueCreateInfo where
     | Just Refl <- eqT @e @DeviceQueueGlobalPriorityCreateInfoKHR = Just f
     | otherwise = Nothing
 
-instance (Extendss DeviceQueueCreateInfo es, PokeChain es) => ToCStruct (DeviceQueueCreateInfo es) where
+instance ( Extendss DeviceQueueCreateInfo es
+         , PokeChain es ) => ToCStruct (DeviceQueueCreateInfo es) where
   withCStruct x f = allocaBytes 40 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceQueueCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO)
@@ -562,7 +569,8 @@ instance (Extendss DeviceQueueCreateInfo es, PokeChain es) => ToCStruct (DeviceQ
     lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
     lift $ f
 
-instance (Extendss DeviceQueueCreateInfo es, PeekChain es) => FromCStruct (DeviceQueueCreateInfo es) where
+instance ( Extendss DeviceQueueCreateInfo es
+         , PeekChain es ) => FromCStruct (DeviceQueueCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -1157,7 +1165,8 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @PhysicalDeviceDeviceGeneratedCommandsFeaturesNV = Just f
     | otherwise = Nothing
 
-instance (Extendss DeviceCreateInfo es, PokeChain es) => ToCStruct (DeviceCreateInfo es) where
+instance ( Extendss DeviceCreateInfo es
+         , PokeChain es ) => ToCStruct (DeviceCreateInfo es) where
   withCStruct x f = allocaBytes 72 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DeviceCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_CREATE_INFO)
@@ -1193,7 +1202,8 @@ instance (Extendss DeviceCreateInfo es, PokeChain es) => ToCStruct (DeviceCreate
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ f
 
-instance (Extendss DeviceCreateInfo es, PeekChain es) => FromCStruct (DeviceCreateInfo es) where
+instance ( Extendss DeviceCreateInfo es
+         , PeekChain es ) => FromCStruct (DeviceCreateInfo es) where
   peekCStruct p = do
     pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next <- peekChain (castPtr pNext)
@@ -1210,7 +1220,12 @@ instance (Extendss DeviceCreateInfo es, PeekChain es) => FromCStruct (DeviceCrea
     pEnabledFeatures <- peek @(Ptr PhysicalDeviceFeatures) ((p `plusPtr` 64 :: Ptr (Ptr PhysicalDeviceFeatures)))
     pEnabledFeatures' <- maybePeek (\j -> peekCStruct @PhysicalDeviceFeatures (j)) pEnabledFeatures
     pure $ DeviceCreateInfo
-             next flags pQueueCreateInfos' ppEnabledLayerNames' ppEnabledExtensionNames' pEnabledFeatures'
+             next
+             flags
+             pQueueCreateInfos'
+             ppEnabledLayerNames'
+             ppEnabledExtensionNames'
+             pEnabledFeatures'
 
 instance es ~ '[] => Zero (DeviceCreateInfo es) where
   zero = DeviceCreateInfo

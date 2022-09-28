@@ -56,7 +56,8 @@ newtype DescriptorUpdateTemplate = DescriptorUpdateTemplate Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
 instance HasObjectType DescriptorUpdateTemplate where
-  objectTypeAndHandle (DescriptorUpdateTemplate h) = (OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE, h)
+  objectTypeAndHandle (DescriptorUpdateTemplate h) = ( OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE
+                                                     , h )
 instance Show DescriptorUpdateTemplate where
   showsPrec p (DescriptorUpdateTemplate x) = showParen (p >= 11) (showString "DescriptorUpdateTemplate 0x" . showHex x)
 
@@ -76,7 +77,8 @@ newtype SamplerYcbcrConversion = SamplerYcbcrConversion Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
 instance HasObjectType SamplerYcbcrConversion where
-  objectTypeAndHandle (SamplerYcbcrConversion h) = (OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION, h)
+  objectTypeAndHandle (SamplerYcbcrConversion h) = ( OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION
+                                                   , h )
 instance Show SamplerYcbcrConversion where
   showsPrec p (SamplerYcbcrConversion x) = showParen (p >= 11) (showString "SamplerYcbcrConversion 0x" . showHex x)
 

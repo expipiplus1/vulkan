@@ -12,8 +12,10 @@ import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
 type role EventCreateInfo nominal
 data EventCreateInfo (es :: [Type])
 
-instance (Extendss EventCreateInfo es, PokeChain es) => ToCStruct (EventCreateInfo es)
+instance ( Extendss EventCreateInfo es
+         , PokeChain es ) => ToCStruct (EventCreateInfo es)
 instance Show (Chain es) => Show (EventCreateInfo es)
 
-instance (Extendss EventCreateInfo es, PeekChain es) => FromCStruct (EventCreateInfo es)
+instance ( Extendss EventCreateInfo es
+         , PeekChain es ) => FromCStruct (EventCreateInfo es)
 

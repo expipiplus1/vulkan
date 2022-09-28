@@ -195,10 +195,12 @@ newtype MemoryOverallocationBehaviorAMD = MemoryOverallocationBehaviorAMD Int32
 
 -- | 'MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD' lets the implementation
 -- decide if overallocation is allowed.
-pattern MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD    = MemoryOverallocationBehaviorAMD 0
+pattern MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD = MemoryOverallocationBehaviorAMD 0
+
 -- | 'MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD' specifies overallocation is
 -- allowed if platform permits.
-pattern MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD    = MemoryOverallocationBehaviorAMD 1
+pattern MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD = MemoryOverallocationBehaviorAMD 1
+
 -- | 'MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD' specifies the
 -- application is not allowed to allocate device memory beyond the heap
 -- sizes reported by
@@ -206,9 +208,13 @@ pattern MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD    = MemoryOverallocationBeha
 -- Allocations that are not explicitly made by the application within the
 -- scope of the Vulkan instance are not accounted for.
 pattern MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD = MemoryOverallocationBehaviorAMD 2
-{-# complete MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD,
-             MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD,
-             MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD :: MemoryOverallocationBehaviorAMD #-}
+
+{-# COMPLETE
+  MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD
+  , MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD
+  , MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD ::
+    MemoryOverallocationBehaviorAMD
+  #-}
 
 conNameMemoryOverallocationBehaviorAMD :: String
 conNameMemoryOverallocationBehaviorAMD = "MemoryOverallocationBehaviorAMD"
@@ -218,24 +224,36 @@ enumPrefixMemoryOverallocationBehaviorAMD = "MEMORY_OVERALLOCATION_BEHAVIOR_"
 
 showTableMemoryOverallocationBehaviorAMD :: [(MemoryOverallocationBehaviorAMD, String)]
 showTableMemoryOverallocationBehaviorAMD =
-  [ (MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD   , "DEFAULT_AMD")
-  , (MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD   , "ALLOWED_AMD")
-  , (MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD, "DISALLOWED_AMD")
+  [
+    ( MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD
+    , "DEFAULT_AMD"
+    )
+  ,
+    ( MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD
+    , "ALLOWED_AMD"
+    )
+  ,
+    ( MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD
+    , "DISALLOWED_AMD"
+    )
   ]
 
 instance Show MemoryOverallocationBehaviorAMD where
-  showsPrec = enumShowsPrec enumPrefixMemoryOverallocationBehaviorAMD
-                            showTableMemoryOverallocationBehaviorAMD
-                            conNameMemoryOverallocationBehaviorAMD
-                            (\(MemoryOverallocationBehaviorAMD x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixMemoryOverallocationBehaviorAMD
+      showTableMemoryOverallocationBehaviorAMD
+      conNameMemoryOverallocationBehaviorAMD
+      (\(MemoryOverallocationBehaviorAMD x) -> x)
+      (showsPrec 11)
 
 instance Read MemoryOverallocationBehaviorAMD where
-  readPrec = enumReadPrec enumPrefixMemoryOverallocationBehaviorAMD
-                          showTableMemoryOverallocationBehaviorAMD
-                          conNameMemoryOverallocationBehaviorAMD
-                          MemoryOverallocationBehaviorAMD
-
+  readPrec =
+    enumReadPrec
+      enumPrefixMemoryOverallocationBehaviorAMD
+      showTableMemoryOverallocationBehaviorAMD
+      conNameMemoryOverallocationBehaviorAMD
+      MemoryOverallocationBehaviorAMD
 
 type AMD_MEMORY_OVERALLOCATION_BEHAVIOR_SPEC_VERSION = 1
 

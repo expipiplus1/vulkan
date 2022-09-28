@@ -12,8 +12,10 @@ import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
 type role BufferViewCreateInfo nominal
 data BufferViewCreateInfo (es :: [Type])
 
-instance (Extendss BufferViewCreateInfo es, PokeChain es) => ToCStruct (BufferViewCreateInfo es)
+instance ( Extendss BufferViewCreateInfo es
+         , PokeChain es ) => ToCStruct (BufferViewCreateInfo es)
 instance Show (Chain es) => Show (BufferViewCreateInfo es)
 
-instance (Extendss BufferViewCreateInfo es, PeekChain es) => FromCStruct (BufferViewCreateInfo es)
+instance ( Extendss BufferViewCreateInfo es
+         , PeekChain es ) => FromCStruct (BufferViewCreateInfo es)
 

@@ -30,26 +30,36 @@ newtype ImageViewType = ImageViewType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- No documentation found for Nested "VkImageViewType" "VK_IMAGE_VIEW_TYPE_1D"
-pattern IMAGE_VIEW_TYPE_1D         = ImageViewType 0
+pattern IMAGE_VIEW_TYPE_1D = ImageViewType 0
+
 -- No documentation found for Nested "VkImageViewType" "VK_IMAGE_VIEW_TYPE_2D"
-pattern IMAGE_VIEW_TYPE_2D         = ImageViewType 1
+pattern IMAGE_VIEW_TYPE_2D = ImageViewType 1
+
 -- No documentation found for Nested "VkImageViewType" "VK_IMAGE_VIEW_TYPE_3D"
-pattern IMAGE_VIEW_TYPE_3D         = ImageViewType 2
+pattern IMAGE_VIEW_TYPE_3D = ImageViewType 2
+
 -- No documentation found for Nested "VkImageViewType" "VK_IMAGE_VIEW_TYPE_CUBE"
-pattern IMAGE_VIEW_TYPE_CUBE       = ImageViewType 3
+pattern IMAGE_VIEW_TYPE_CUBE = ImageViewType 3
+
 -- No documentation found for Nested "VkImageViewType" "VK_IMAGE_VIEW_TYPE_1D_ARRAY"
-pattern IMAGE_VIEW_TYPE_1D_ARRAY   = ImageViewType 4
+pattern IMAGE_VIEW_TYPE_1D_ARRAY = ImageViewType 4
+
 -- No documentation found for Nested "VkImageViewType" "VK_IMAGE_VIEW_TYPE_2D_ARRAY"
-pattern IMAGE_VIEW_TYPE_2D_ARRAY   = ImageViewType 5
+pattern IMAGE_VIEW_TYPE_2D_ARRAY = ImageViewType 5
+
 -- No documentation found for Nested "VkImageViewType" "VK_IMAGE_VIEW_TYPE_CUBE_ARRAY"
 pattern IMAGE_VIEW_TYPE_CUBE_ARRAY = ImageViewType 6
-{-# complete IMAGE_VIEW_TYPE_1D,
-             IMAGE_VIEW_TYPE_2D,
-             IMAGE_VIEW_TYPE_3D,
-             IMAGE_VIEW_TYPE_CUBE,
-             IMAGE_VIEW_TYPE_1D_ARRAY,
-             IMAGE_VIEW_TYPE_2D_ARRAY,
-             IMAGE_VIEW_TYPE_CUBE_ARRAY :: ImageViewType #-}
+
+{-# COMPLETE
+  IMAGE_VIEW_TYPE_1D
+  , IMAGE_VIEW_TYPE_2D
+  , IMAGE_VIEW_TYPE_3D
+  , IMAGE_VIEW_TYPE_CUBE
+  , IMAGE_VIEW_TYPE_1D_ARRAY
+  , IMAGE_VIEW_TYPE_2D_ARRAY
+  , IMAGE_VIEW_TYPE_CUBE_ARRAY ::
+    ImageViewType
+  #-}
 
 conNameImageViewType :: String
 conNameImageViewType = "ImageViewType"
@@ -59,22 +69,28 @@ enumPrefixImageViewType = "IMAGE_VIEW_TYPE_"
 
 showTableImageViewType :: [(ImageViewType, String)]
 showTableImageViewType =
-  [ (IMAGE_VIEW_TYPE_1D        , "1D")
-  , (IMAGE_VIEW_TYPE_2D        , "2D")
-  , (IMAGE_VIEW_TYPE_3D        , "3D")
-  , (IMAGE_VIEW_TYPE_CUBE      , "CUBE")
-  , (IMAGE_VIEW_TYPE_1D_ARRAY  , "1D_ARRAY")
-  , (IMAGE_VIEW_TYPE_2D_ARRAY  , "2D_ARRAY")
+  [ (IMAGE_VIEW_TYPE_1D, "1D")
+  , (IMAGE_VIEW_TYPE_2D, "2D")
+  , (IMAGE_VIEW_TYPE_3D, "3D")
+  , (IMAGE_VIEW_TYPE_CUBE, "CUBE")
+  , (IMAGE_VIEW_TYPE_1D_ARRAY, "1D_ARRAY")
+  , (IMAGE_VIEW_TYPE_2D_ARRAY, "2D_ARRAY")
   , (IMAGE_VIEW_TYPE_CUBE_ARRAY, "CUBE_ARRAY")
   ]
 
 instance Show ImageViewType where
-  showsPrec = enumShowsPrec enumPrefixImageViewType
-                            showTableImageViewType
-                            conNameImageViewType
-                            (\(ImageViewType x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixImageViewType
+      showTableImageViewType
+      conNameImageViewType
+      (\(ImageViewType x) -> x)
+      (showsPrec 11)
 
 instance Read ImageViewType where
-  readPrec = enumReadPrec enumPrefixImageViewType showTableImageViewType conNameImageViewType ImageViewType
-
+  readPrec =
+    enumReadPrec
+      enumPrefixImageViewType
+      showTableImageViewType
+      conNameImageViewType
+      ImageViewType

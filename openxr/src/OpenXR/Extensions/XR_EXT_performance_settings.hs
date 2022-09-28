@@ -172,7 +172,10 @@ perfSettingsSetPerformanceLevelEXT session domain level = liftIO $ do
   unless (xrPerfSettingsSetPerformanceLevelEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrPerfSettingsSetPerformanceLevelEXT is null" Nothing Nothing
   let xrPerfSettingsSetPerformanceLevelEXT' = mkXrPerfSettingsSetPerformanceLevelEXT xrPerfSettingsSetPerformanceLevelEXTPtr
-  r <- traceAroundEvent "xrPerfSettingsSetPerformanceLevelEXT" (xrPerfSettingsSetPerformanceLevelEXT' (sessionHandle (session)) (domain) (level))
+  r <- traceAroundEvent "xrPerfSettingsSetPerformanceLevelEXT" (xrPerfSettingsSetPerformanceLevelEXT'
+                                                                  (sessionHandle (session))
+                                                                  (domain)
+                                                                  (level))
   when (r < SUCCESS) (throwIO (OpenXrException r))
   pure $ (r)
 
@@ -281,17 +284,24 @@ newtype PerfSettingsLevelEXT = PerfSettingsLevelEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- No documentation found for Nested "XrPerfSettingsLevelEXT" "XR_PERF_SETTINGS_LEVEL_POWER_SAVINGS_EXT"
-pattern PERF_SETTINGS_LEVEL_POWER_SAVINGS_EXT  = PerfSettingsLevelEXT 0
+pattern PERF_SETTINGS_LEVEL_POWER_SAVINGS_EXT = PerfSettingsLevelEXT 0
+
 -- No documentation found for Nested "XrPerfSettingsLevelEXT" "XR_PERF_SETTINGS_LEVEL_SUSTAINED_LOW_EXT"
-pattern PERF_SETTINGS_LEVEL_SUSTAINED_LOW_EXT  = PerfSettingsLevelEXT 25
+pattern PERF_SETTINGS_LEVEL_SUSTAINED_LOW_EXT = PerfSettingsLevelEXT 25
+
 -- No documentation found for Nested "XrPerfSettingsLevelEXT" "XR_PERF_SETTINGS_LEVEL_SUSTAINED_HIGH_EXT"
 pattern PERF_SETTINGS_LEVEL_SUSTAINED_HIGH_EXT = PerfSettingsLevelEXT 50
+
 -- No documentation found for Nested "XrPerfSettingsLevelEXT" "XR_PERF_SETTINGS_LEVEL_BOOST_EXT"
-pattern PERF_SETTINGS_LEVEL_BOOST_EXT          = PerfSettingsLevelEXT 75
-{-# complete PERF_SETTINGS_LEVEL_POWER_SAVINGS_EXT,
-             PERF_SETTINGS_LEVEL_SUSTAINED_LOW_EXT,
-             PERF_SETTINGS_LEVEL_SUSTAINED_HIGH_EXT,
-             PERF_SETTINGS_LEVEL_BOOST_EXT :: PerfSettingsLevelEXT #-}
+pattern PERF_SETTINGS_LEVEL_BOOST_EXT = PerfSettingsLevelEXT 75
+
+{-# COMPLETE
+  PERF_SETTINGS_LEVEL_POWER_SAVINGS_EXT
+  , PERF_SETTINGS_LEVEL_SUSTAINED_LOW_EXT
+  , PERF_SETTINGS_LEVEL_SUSTAINED_HIGH_EXT
+  , PERF_SETTINGS_LEVEL_BOOST_EXT ::
+    PerfSettingsLevelEXT
+  #-}
 
 conNamePerfSettingsLevelEXT :: String
 conNamePerfSettingsLevelEXT = "PerfSettingsLevelEXT"
@@ -301,25 +311,37 @@ enumPrefixPerfSettingsLevelEXT = "PERF_SETTINGS_LEVEL_"
 
 showTablePerfSettingsLevelEXT :: [(PerfSettingsLevelEXT, String)]
 showTablePerfSettingsLevelEXT =
-  [ (PERF_SETTINGS_LEVEL_POWER_SAVINGS_EXT , "POWER_SAVINGS_EXT")
-  , (PERF_SETTINGS_LEVEL_SUSTAINED_LOW_EXT , "SUSTAINED_LOW_EXT")
-  , (PERF_SETTINGS_LEVEL_SUSTAINED_HIGH_EXT, "SUSTAINED_HIGH_EXT")
-  , (PERF_SETTINGS_LEVEL_BOOST_EXT         , "BOOST_EXT")
+  [
+    ( PERF_SETTINGS_LEVEL_POWER_SAVINGS_EXT
+    , "POWER_SAVINGS_EXT"
+    )
+  ,
+    ( PERF_SETTINGS_LEVEL_SUSTAINED_LOW_EXT
+    , "SUSTAINED_LOW_EXT"
+    )
+  ,
+    ( PERF_SETTINGS_LEVEL_SUSTAINED_HIGH_EXT
+    , "SUSTAINED_HIGH_EXT"
+    )
+  , (PERF_SETTINGS_LEVEL_BOOST_EXT, "BOOST_EXT")
   ]
 
 instance Show PerfSettingsLevelEXT where
-  showsPrec = enumShowsPrec enumPrefixPerfSettingsLevelEXT
-                            showTablePerfSettingsLevelEXT
-                            conNamePerfSettingsLevelEXT
-                            (\(PerfSettingsLevelEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPerfSettingsLevelEXT
+      showTablePerfSettingsLevelEXT
+      conNamePerfSettingsLevelEXT
+      (\(PerfSettingsLevelEXT x) -> x)
+      (showsPrec 11)
 
 instance Read PerfSettingsLevelEXT where
-  readPrec = enumReadPrec enumPrefixPerfSettingsLevelEXT
-                          showTablePerfSettingsLevelEXT
-                          conNamePerfSettingsLevelEXT
-                          PerfSettingsLevelEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPerfSettingsLevelEXT
+      showTablePerfSettingsLevelEXT
+      conNamePerfSettingsLevelEXT
+      PerfSettingsLevelEXT
 
 -- | XrPerfSettingsDomainEXT - XrPerfSettingsDomainEXT
 --
@@ -329,14 +351,20 @@ instance Read PerfSettingsLevelEXT where
 -- 'OpenXR.Extensions.XR_EXT_thermal_query.thermalGetTemperatureTrendEXT'
 newtype PerfSettingsDomainEXT = PerfSettingsDomainEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
+
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
 -- No documentation found for Nested "XrPerfSettingsDomainEXT" "XR_PERF_SETTINGS_DOMAIN_CPU_EXT"
 pattern PERF_SETTINGS_DOMAIN_CPU_EXT = PerfSettingsDomainEXT 1
+
 -- No documentation found for Nested "XrPerfSettingsDomainEXT" "XR_PERF_SETTINGS_DOMAIN_GPU_EXT"
 pattern PERF_SETTINGS_DOMAIN_GPU_EXT = PerfSettingsDomainEXT 2
-{-# complete PERF_SETTINGS_DOMAIN_CPU_EXT,
-             PERF_SETTINGS_DOMAIN_GPU_EXT :: PerfSettingsDomainEXT #-}
+
+{-# COMPLETE
+  PERF_SETTINGS_DOMAIN_CPU_EXT
+  , PERF_SETTINGS_DOMAIN_GPU_EXT ::
+    PerfSettingsDomainEXT
+  #-}
 
 conNamePerfSettingsDomainEXT :: String
 conNamePerfSettingsDomainEXT = "PerfSettingsDomainEXT"
@@ -345,21 +373,27 @@ enumPrefixPerfSettingsDomainEXT :: String
 enumPrefixPerfSettingsDomainEXT = "PERF_SETTINGS_DOMAIN_"
 
 showTablePerfSettingsDomainEXT :: [(PerfSettingsDomainEXT, String)]
-showTablePerfSettingsDomainEXT = [(PERF_SETTINGS_DOMAIN_CPU_EXT, "CPU_EXT"), (PERF_SETTINGS_DOMAIN_GPU_EXT, "GPU_EXT")]
+showTablePerfSettingsDomainEXT =
+  [ (PERF_SETTINGS_DOMAIN_CPU_EXT, "CPU_EXT")
+  , (PERF_SETTINGS_DOMAIN_GPU_EXT, "GPU_EXT")
+  ]
 
 instance Show PerfSettingsDomainEXT where
-  showsPrec = enumShowsPrec enumPrefixPerfSettingsDomainEXT
-                            showTablePerfSettingsDomainEXT
-                            conNamePerfSettingsDomainEXT
-                            (\(PerfSettingsDomainEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPerfSettingsDomainEXT
+      showTablePerfSettingsDomainEXT
+      conNamePerfSettingsDomainEXT
+      (\(PerfSettingsDomainEXT x) -> x)
+      (showsPrec 11)
 
 instance Read PerfSettingsDomainEXT where
-  readPrec = enumReadPrec enumPrefixPerfSettingsDomainEXT
-                          showTablePerfSettingsDomainEXT
-                          conNamePerfSettingsDomainEXT
-                          PerfSettingsDomainEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPerfSettingsDomainEXT
+      showTablePerfSettingsDomainEXT
+      conNamePerfSettingsDomainEXT
+      PerfSettingsDomainEXT
 
 -- | XrPerfSettingsSubDomainEXT - XrPerfSettingsSubDomainEXT
 --
@@ -368,17 +402,24 @@ instance Read PerfSettingsDomainEXT where
 -- 'EventDataPerfSettingsEXT'
 newtype PerfSettingsSubDomainEXT = PerfSettingsSubDomainEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
+
 -- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
 -- No documentation found for Nested "XrPerfSettingsSubDomainEXT" "XR_PERF_SETTINGS_SUB_DOMAIN_COMPOSITING_EXT"
 pattern PERF_SETTINGS_SUB_DOMAIN_COMPOSITING_EXT = PerfSettingsSubDomainEXT 1
+
 -- No documentation found for Nested "XrPerfSettingsSubDomainEXT" "XR_PERF_SETTINGS_SUB_DOMAIN_RENDERING_EXT"
-pattern PERF_SETTINGS_SUB_DOMAIN_RENDERING_EXT   = PerfSettingsSubDomainEXT 2
+pattern PERF_SETTINGS_SUB_DOMAIN_RENDERING_EXT = PerfSettingsSubDomainEXT 2
+
 -- No documentation found for Nested "XrPerfSettingsSubDomainEXT" "XR_PERF_SETTINGS_SUB_DOMAIN_THERMAL_EXT"
-pattern PERF_SETTINGS_SUB_DOMAIN_THERMAL_EXT     = PerfSettingsSubDomainEXT 3
-{-# complete PERF_SETTINGS_SUB_DOMAIN_COMPOSITING_EXT,
-             PERF_SETTINGS_SUB_DOMAIN_RENDERING_EXT,
-             PERF_SETTINGS_SUB_DOMAIN_THERMAL_EXT :: PerfSettingsSubDomainEXT #-}
+pattern PERF_SETTINGS_SUB_DOMAIN_THERMAL_EXT = PerfSettingsSubDomainEXT 3
+
+{-# COMPLETE
+  PERF_SETTINGS_SUB_DOMAIN_COMPOSITING_EXT
+  , PERF_SETTINGS_SUB_DOMAIN_RENDERING_EXT
+  , PERF_SETTINGS_SUB_DOMAIN_THERMAL_EXT ::
+    PerfSettingsSubDomainEXT
+  #-}
 
 conNamePerfSettingsSubDomainEXT :: String
 conNamePerfSettingsSubDomainEXT = "PerfSettingsSubDomainEXT"
@@ -388,24 +429,36 @@ enumPrefixPerfSettingsSubDomainEXT = "PERF_SETTINGS_SUB_DOMAIN_"
 
 showTablePerfSettingsSubDomainEXT :: [(PerfSettingsSubDomainEXT, String)]
 showTablePerfSettingsSubDomainEXT =
-  [ (PERF_SETTINGS_SUB_DOMAIN_COMPOSITING_EXT, "COMPOSITING_EXT")
-  , (PERF_SETTINGS_SUB_DOMAIN_RENDERING_EXT  , "RENDERING_EXT")
-  , (PERF_SETTINGS_SUB_DOMAIN_THERMAL_EXT    , "THERMAL_EXT")
+  [
+    ( PERF_SETTINGS_SUB_DOMAIN_COMPOSITING_EXT
+    , "COMPOSITING_EXT"
+    )
+  ,
+    ( PERF_SETTINGS_SUB_DOMAIN_RENDERING_EXT
+    , "RENDERING_EXT"
+    )
+  ,
+    ( PERF_SETTINGS_SUB_DOMAIN_THERMAL_EXT
+    , "THERMAL_EXT"
+    )
   ]
 
 instance Show PerfSettingsSubDomainEXT where
-  showsPrec = enumShowsPrec enumPrefixPerfSettingsSubDomainEXT
-                            showTablePerfSettingsSubDomainEXT
-                            conNamePerfSettingsSubDomainEXT
-                            (\(PerfSettingsSubDomainEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPerfSettingsSubDomainEXT
+      showTablePerfSettingsSubDomainEXT
+      conNamePerfSettingsSubDomainEXT
+      (\(PerfSettingsSubDomainEXT x) -> x)
+      (showsPrec 11)
 
 instance Read PerfSettingsSubDomainEXT where
-  readPrec = enumReadPrec enumPrefixPerfSettingsSubDomainEXT
-                          showTablePerfSettingsSubDomainEXT
-                          conNamePerfSettingsSubDomainEXT
-                          PerfSettingsSubDomainEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPerfSettingsSubDomainEXT
+      showTablePerfSettingsSubDomainEXT
+      conNamePerfSettingsSubDomainEXT
+      PerfSettingsSubDomainEXT
 
 -- | XrPerfSettingsNotificationLevelEXT - XrPerfSettingsNotificationLevelEXT
 --
@@ -417,14 +470,20 @@ newtype PerfSettingsNotificationLevelEXT = PerfSettingsNotificationLevelEXT Int3
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- No documentation found for Nested "XrPerfSettingsNotificationLevelEXT" "XR_PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT"
-pattern PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT   = PerfSettingsNotificationLevelEXT 0
+pattern PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT = PerfSettingsNotificationLevelEXT 0
+
 -- No documentation found for Nested "XrPerfSettingsNotificationLevelEXT" "XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT"
-pattern PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT  = PerfSettingsNotificationLevelEXT 25
+pattern PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT = PerfSettingsNotificationLevelEXT 25
+
 -- No documentation found for Nested "XrPerfSettingsNotificationLevelEXT" "XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT"
 pattern PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT = PerfSettingsNotificationLevelEXT 75
-{-# complete PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT,
-             PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT,
-             PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT :: PerfSettingsNotificationLevelEXT #-}
+
+{-# COMPLETE
+  PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT
+  , PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT
+  , PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT ::
+    PerfSettingsNotificationLevelEXT
+  #-}
 
 conNamePerfSettingsNotificationLevelEXT :: String
 conNamePerfSettingsNotificationLevelEXT = "PerfSettingsNotificationLevelEXT"
@@ -434,24 +493,36 @@ enumPrefixPerfSettingsNotificationLevelEXT = "PERF_SETTINGS_NOTIF_LEVEL_"
 
 showTablePerfSettingsNotificationLevelEXT :: [(PerfSettingsNotificationLevelEXT, String)]
 showTablePerfSettingsNotificationLevelEXT =
-  [ (PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT  , "NORMAL_EXT")
-  , (PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT , "WARNING_EXT")
-  , (PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT, "IMPAIRED_EXT")
+  [
+    ( PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT
+    , "NORMAL_EXT"
+    )
+  ,
+    ( PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT
+    , "WARNING_EXT"
+    )
+  ,
+    ( PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT
+    , "IMPAIRED_EXT"
+    )
   ]
 
 instance Show PerfSettingsNotificationLevelEXT where
-  showsPrec = enumShowsPrec enumPrefixPerfSettingsNotificationLevelEXT
-                            showTablePerfSettingsNotificationLevelEXT
-                            conNamePerfSettingsNotificationLevelEXT
-                            (\(PerfSettingsNotificationLevelEXT x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPerfSettingsNotificationLevelEXT
+      showTablePerfSettingsNotificationLevelEXT
+      conNamePerfSettingsNotificationLevelEXT
+      (\(PerfSettingsNotificationLevelEXT x) -> x)
+      (showsPrec 11)
 
 instance Read PerfSettingsNotificationLevelEXT where
-  readPrec = enumReadPrec enumPrefixPerfSettingsNotificationLevelEXT
-                          showTablePerfSettingsNotificationLevelEXT
-                          conNamePerfSettingsNotificationLevelEXT
-                          PerfSettingsNotificationLevelEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPerfSettingsNotificationLevelEXT
+      showTablePerfSettingsNotificationLevelEXT
+      conNamePerfSettingsNotificationLevelEXT
+      PerfSettingsNotificationLevelEXT
 
 type EXT_performance_settings_SPEC_VERSION = 1
 

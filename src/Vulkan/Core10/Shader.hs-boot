@@ -12,8 +12,10 @@ import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
 type role ShaderModuleCreateInfo nominal
 data ShaderModuleCreateInfo (es :: [Type])
 
-instance (Extendss ShaderModuleCreateInfo es, PokeChain es) => ToCStruct (ShaderModuleCreateInfo es)
+instance ( Extendss ShaderModuleCreateInfo es
+         , PokeChain es ) => ToCStruct (ShaderModuleCreateInfo es)
 instance Show (Chain es) => Show (ShaderModuleCreateInfo es)
 
-instance (Extendss ShaderModuleCreateInfo es, PeekChain es) => FromCStruct (ShaderModuleCreateInfo es)
+instance ( Extendss ShaderModuleCreateInfo es
+         , PeekChain es ) => FromCStruct (ShaderModuleCreateInfo es)
 

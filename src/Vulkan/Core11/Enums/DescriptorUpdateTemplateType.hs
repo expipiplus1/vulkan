@@ -26,13 +26,18 @@ newtype DescriptorUpdateTemplateType = DescriptorUpdateTemplateType Int32
 
 -- | 'DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET' specifies that the
 -- descriptor update template will be used for descriptor set updates only.
-pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET       = DescriptorUpdateTemplateType 0
+pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET = DescriptorUpdateTemplateType 0
+
 -- | 'DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR' specifies that
 -- the descriptor update template will be used for push descriptor updates
 -- only.
 pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR = DescriptorUpdateTemplateType 1
-{-# complete DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET,
-             DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR :: DescriptorUpdateTemplateType #-}
+
+{-# COMPLETE
+  DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
+  , DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR ::
+    DescriptorUpdateTemplateType
+  #-}
 
 conNameDescriptorUpdateTemplateType :: String
 conNameDescriptorUpdateTemplateType = "DescriptorUpdateTemplateType"
@@ -42,20 +47,29 @@ enumPrefixDescriptorUpdateTemplateType = "DESCRIPTOR_UPDATE_TEMPLATE_TYPE_"
 
 showTableDescriptorUpdateTemplateType :: [(DescriptorUpdateTemplateType, String)]
 showTableDescriptorUpdateTemplateType =
-  [ (DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET      , "DESCRIPTOR_SET")
-  , (DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR, "PUSH_DESCRIPTORS_KHR")
+  [
+    ( DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
+    , "DESCRIPTOR_SET"
+    )
+  ,
+    ( DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR
+    , "PUSH_DESCRIPTORS_KHR"
+    )
   ]
 
 instance Show DescriptorUpdateTemplateType where
-  showsPrec = enumShowsPrec enumPrefixDescriptorUpdateTemplateType
-                            showTableDescriptorUpdateTemplateType
-                            conNameDescriptorUpdateTemplateType
-                            (\(DescriptorUpdateTemplateType x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixDescriptorUpdateTemplateType
+      showTableDescriptorUpdateTemplateType
+      conNameDescriptorUpdateTemplateType
+      (\(DescriptorUpdateTemplateType x) -> x)
+      (showsPrec 11)
 
 instance Read DescriptorUpdateTemplateType where
-  readPrec = enumReadPrec enumPrefixDescriptorUpdateTemplateType
-                          showTableDescriptorUpdateTemplateType
-                          conNameDescriptorUpdateTemplateType
-                          DescriptorUpdateTemplateType
-
+  readPrec =
+    enumReadPrec
+      enumPrefixDescriptorUpdateTemplateType
+      showTableDescriptorUpdateTemplateType
+      conNameDescriptorUpdateTemplateType
+      DescriptorUpdateTemplateType

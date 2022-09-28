@@ -1279,14 +1279,24 @@ cmdDrawMultiEXT :: forall io
                    -- @pVertexInfo@.
                    ("stride" ::: Word32)
                 -> io ()
-cmdDrawMultiEXT commandBuffer vertexInfo instanceCount firstInstance stride = liftIO . evalContT $ do
+cmdDrawMultiEXT commandBuffer
+                  vertexInfo
+                  instanceCount
+                  firstInstance
+                  stride = liftIO . evalContT $ do
   let vkCmdDrawMultiEXTPtr = pVkCmdDrawMultiEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdDrawMultiEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawMultiEXT is null" Nothing Nothing
   let vkCmdDrawMultiEXT' = mkVkCmdDrawMultiEXT vkCmdDrawMultiEXTPtr
   pPVertexInfo <- ContT $ allocaBytes @MultiDrawInfoEXT ((Data.Vector.length (vertexInfo)) * 8)
   lift $ Data.Vector.imapM_ (\i e -> poke (pPVertexInfo `plusPtr` (8 * (i)) :: Ptr MultiDrawInfoEXT) (e)) (vertexInfo)
-  lift $ traceAroundEvent "vkCmdDrawMultiEXT" (vkCmdDrawMultiEXT' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (vertexInfo)) :: Word32)) (pPVertexInfo) (instanceCount) (firstInstance) (stride))
+  lift $ traceAroundEvent "vkCmdDrawMultiEXT" (vkCmdDrawMultiEXT'
+                                                 (commandBufferHandle (commandBuffer))
+                                                 ((fromIntegral (Data.Vector.length $ (vertexInfo)) :: Word32))
+                                                 (pPVertexInfo)
+                                                 (instanceCount)
+                                                 (firstInstance)
+                                                 (stride))
   pure $ ()
 
 
@@ -2410,7 +2420,12 @@ cmdDrawMultiIndexedEXT :: forall io
                           -- 'MultiDrawIndexedInfoEXT'::@offset@ is ignored.
                           ("vertexOffset" ::: Maybe Int32)
                        -> io ()
-cmdDrawMultiIndexedEXT commandBuffer indexInfo instanceCount firstInstance stride vertexOffset = liftIO . evalContT $ do
+cmdDrawMultiIndexedEXT commandBuffer
+                         indexInfo
+                         instanceCount
+                         firstInstance
+                         stride
+                         vertexOffset = liftIO . evalContT $ do
   let vkCmdDrawMultiIndexedEXTPtr = pVkCmdDrawMultiIndexedEXT (case commandBuffer of CommandBuffer{deviceCmds} -> deviceCmds)
   lift $ unless (vkCmdDrawMultiIndexedEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkCmdDrawMultiIndexedEXT is null" Nothing Nothing
@@ -2420,7 +2435,14 @@ cmdDrawMultiIndexedEXT commandBuffer indexInfo instanceCount firstInstance strid
   pVertexOffset <- case (vertexOffset) of
     Nothing -> pure nullPtr
     Just j -> ContT $ with (j)
-  lift $ traceAroundEvent "vkCmdDrawMultiIndexedEXT" (vkCmdDrawMultiIndexedEXT' (commandBufferHandle (commandBuffer)) ((fromIntegral (Data.Vector.length $ (indexInfo)) :: Word32)) (pPIndexInfo) (instanceCount) (firstInstance) (stride) pVertexOffset)
+  lift $ traceAroundEvent "vkCmdDrawMultiIndexedEXT" (vkCmdDrawMultiIndexedEXT'
+                                                        (commandBufferHandle (commandBuffer))
+                                                        ((fromIntegral (Data.Vector.length $ (indexInfo)) :: Word32))
+                                                        (pPIndexInfo)
+                                                        (instanceCount)
+                                                        (firstInstance)
+                                                        (stride)
+                                                        pVertexOffset)
   pure $ ()
 
 

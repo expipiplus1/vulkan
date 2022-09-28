@@ -217,7 +217,12 @@ instance FromCStruct AllocationCallbacks where
     pfnInternalAllocation <- peek @PFN_vkInternalAllocationNotification ((p `plusPtr` 32 :: Ptr PFN_vkInternalAllocationNotification))
     pfnInternalFree <- peek @PFN_vkInternalFreeNotification ((p `plusPtr` 40 :: Ptr PFN_vkInternalFreeNotification))
     pure $ AllocationCallbacks
-             pUserData pfnAllocation pfnReallocation pfnFree pfnInternalAllocation pfnInternalFree
+             pUserData
+             pfnAllocation
+             pfnReallocation
+             pfnFree
+             pfnInternalAllocation
+             pfnInternalFree
 
 instance Storable AllocationCallbacks where
   sizeOf ~_ = 48

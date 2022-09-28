@@ -224,14 +224,18 @@ getMemoryZirconHandleFUCHSIA :: forall io
                                 -- 'MemoryGetZirconHandleInfoFUCHSIA' structure
                                 MemoryGetZirconHandleInfoFUCHSIA
                              -> io (("zirconHandle" ::: Zx_handle_t))
-getMemoryZirconHandleFUCHSIA device getZirconHandleInfo = liftIO . evalContT $ do
+getMemoryZirconHandleFUCHSIA device
+                               getZirconHandleInfo = liftIO . evalContT $ do
   let vkGetMemoryZirconHandleFUCHSIAPtr = pVkGetMemoryZirconHandleFUCHSIA (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetMemoryZirconHandleFUCHSIAPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryZirconHandleFUCHSIA is null" Nothing Nothing
   let vkGetMemoryZirconHandleFUCHSIA' = mkVkGetMemoryZirconHandleFUCHSIA vkGetMemoryZirconHandleFUCHSIAPtr
   pGetZirconHandleInfo <- ContT $ withCStruct (getZirconHandleInfo)
   pPZirconHandle <- ContT $ bracket (callocBytes @Zx_handle_t 4) free
-  r <- lift $ traceAroundEvent "vkGetMemoryZirconHandleFUCHSIA" (vkGetMemoryZirconHandleFUCHSIA' (deviceHandle (device)) pGetZirconHandleInfo (pPZirconHandle))
+  r <- lift $ traceAroundEvent "vkGetMemoryZirconHandleFUCHSIA" (vkGetMemoryZirconHandleFUCHSIA'
+                                                                   (deviceHandle (device))
+                                                                   pGetZirconHandleInfo
+                                                                   (pPZirconHandle))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pZirconHandle <- lift $ peek @Zx_handle_t pPZirconHandle
   pure $ (pZirconHandle)
@@ -290,13 +294,19 @@ getMemoryZirconHandlePropertiesFUCHSIA :: forall io
                                           -- @zirconHandle@ must reference a valid VMO
                                           ("zirconHandle" ::: Zx_handle_t)
                                        -> io (MemoryZirconHandlePropertiesFUCHSIA)
-getMemoryZirconHandlePropertiesFUCHSIA device handleType zirconHandle = liftIO . evalContT $ do
+getMemoryZirconHandlePropertiesFUCHSIA device
+                                         handleType
+                                         zirconHandle = liftIO . evalContT $ do
   let vkGetMemoryZirconHandlePropertiesFUCHSIAPtr = pVkGetMemoryZirconHandlePropertiesFUCHSIA (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetMemoryZirconHandlePropertiesFUCHSIAPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryZirconHandlePropertiesFUCHSIA is null" Nothing Nothing
   let vkGetMemoryZirconHandlePropertiesFUCHSIA' = mkVkGetMemoryZirconHandlePropertiesFUCHSIA vkGetMemoryZirconHandlePropertiesFUCHSIAPtr
   pPMemoryZirconHandleProperties <- ContT (withZeroCStruct @MemoryZirconHandlePropertiesFUCHSIA)
-  r <- lift $ traceAroundEvent "vkGetMemoryZirconHandlePropertiesFUCHSIA" (vkGetMemoryZirconHandlePropertiesFUCHSIA' (deviceHandle (device)) (handleType) (zirconHandle) (pPMemoryZirconHandleProperties))
+  r <- lift $ traceAroundEvent "vkGetMemoryZirconHandlePropertiesFUCHSIA" (vkGetMemoryZirconHandlePropertiesFUCHSIA'
+                                                                             (deviceHandle (device))
+                                                                             (handleType)
+                                                                             (zirconHandle)
+                                                                             (pPMemoryZirconHandleProperties))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pMemoryZirconHandleProperties <- lift $ peekCStruct @MemoryZirconHandlePropertiesFUCHSIA pPMemoryZirconHandleProperties
   pure $ (pMemoryZirconHandleProperties)

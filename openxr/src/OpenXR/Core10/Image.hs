@@ -215,11 +215,19 @@ enumerateSwapchainFormats session = liftIO . evalContT $ do
   let xrEnumerateSwapchainFormats' = mkXrEnumerateSwapchainFormats xrEnumerateSwapchainFormatsPtr
   let session' = sessionHandle (session)
   pFormatCountOutput <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "xrEnumerateSwapchainFormats" (xrEnumerateSwapchainFormats' session' (0) (pFormatCountOutput) (nullPtr))
+  r <- lift $ traceAroundEvent "xrEnumerateSwapchainFormats" (xrEnumerateSwapchainFormats'
+                                                                session'
+                                                                (0)
+                                                                (pFormatCountOutput)
+                                                                (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   formatCountOutput <- lift $ peek @Word32 pFormatCountOutput
   pFormats <- ContT $ bracket (callocBytes @Int64 ((fromIntegral (formatCountOutput)) * 8)) free
-  r' <- lift $ traceAroundEvent "xrEnumerateSwapchainFormats" (xrEnumerateSwapchainFormats' session' ((formatCountOutput)) (pFormatCountOutput) (pFormats))
+  r' <- lift $ traceAroundEvent "xrEnumerateSwapchainFormats" (xrEnumerateSwapchainFormats'
+                                                                 session'
+                                                                 ((formatCountOutput))
+                                                                 (pFormatCountOutput)
+                                                                 (pFormats))
   lift $ when (r' < SUCCESS) (throwIO (OpenXrException r'))
   formatCountOutput' <- lift $ peek @Word32 pFormatCountOutput
   formats' <- lift $ generateM (fromIntegral (formatCountOutput')) (\i -> peek @Int64 ((pFormats `advancePtrBytes` (8 * (i)) :: Ptr Int64)))
@@ -307,7 +315,10 @@ createSwapchain session createInfo = liftIO . evalContT $ do
   let xrCreateSwapchain' = mkXrCreateSwapchain xrCreateSwapchainPtr
   createInfo' <- ContT $ withCStruct (createInfo)
   pSwapchain <- ContT $ bracket (callocBytes @(Ptr Swapchain_T) 8) free
-  r <- lift $ traceAroundEvent "xrCreateSwapchain" (xrCreateSwapchain' (sessionHandle (session)) (forgetExtensions createInfo') (pSwapchain))
+  r <- lift $ traceAroundEvent "xrCreateSwapchain" (xrCreateSwapchain'
+                                                      (sessionHandle (session))
+                                                      (forgetExtensions createInfo')
+                                                      (pSwapchain))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   swapchain <- lift $ peek @(Ptr Swapchain_T) pSwapchain
   pure $ (r, ((\h -> Swapchain h cmds ) swapchain))
@@ -376,7 +387,8 @@ destroySwapchain swapchain = liftIO $ do
   unless (xrDestroySwapchainPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrDestroySwapchain is null" Nothing Nothing
   let xrDestroySwapchain' = mkXrDestroySwapchain xrDestroySwapchainPtr
-  r <- traceAroundEvent "xrDestroySwapchain" (xrDestroySwapchain' (swapchainHandle (swapchain)))
+  r <- traceAroundEvent "xrDestroySwapchain" (xrDestroySwapchain'
+                                                (swapchainHandle (swapchain)))
   when (r < SUCCESS) (throwIO (OpenXrException r))
 
 
@@ -574,7 +586,10 @@ acquireSwapchainImage swapchain acquireInfo = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pIndex <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "xrAcquireSwapchainImage" (xrAcquireSwapchainImage' (swapchainHandle (swapchain)) acquireInfo' (pIndex))
+  r <- lift $ traceAroundEvent "xrAcquireSwapchainImage" (xrAcquireSwapchainImage'
+                                                            (swapchainHandle (swapchain))
+                                                            acquireInfo'
+                                                            (pIndex))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   index <- lift $ peek @Word32 pIndex
   pure $ (r, index)
@@ -606,13 +621,16 @@ waitSwapchainImageSafeOrUnsafe :: forall io
                                   -- pointer to a valid 'SwapchainImageWaitInfo' structure
                                   SwapchainImageWaitInfo
                                -> io (Result)
-waitSwapchainImageSafeOrUnsafe mkXrWaitSwapchainImage swapchain waitInfo = liftIO . evalContT $ do
+waitSwapchainImageSafeOrUnsafe mkXrWaitSwapchainImage swapchain
+                                                        waitInfo = liftIO . evalContT $ do
   let xrWaitSwapchainImagePtr = pXrWaitSwapchainImage (case swapchain of Swapchain{instanceCmds} -> instanceCmds)
   lift $ unless (xrWaitSwapchainImagePtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for xrWaitSwapchainImage is null" Nothing Nothing
   let xrWaitSwapchainImage' = mkXrWaitSwapchainImage xrWaitSwapchainImagePtr
   waitInfo' <- ContT $ withCStruct (waitInfo)
-  r <- lift $ traceAroundEvent "xrWaitSwapchainImage" (xrWaitSwapchainImage' (swapchainHandle (swapchain)) waitInfo')
+  r <- lift $ traceAroundEvent "xrWaitSwapchainImage" (xrWaitSwapchainImage'
+                                                         (swapchainHandle (swapchain))
+                                                         waitInfo')
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   pure $ (r)
 
@@ -780,7 +798,9 @@ releaseSwapchainImage swapchain releaseInfo = liftIO . evalContT $ do
   releaseInfo' <- case (releaseInfo) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  r <- lift $ traceAroundEvent "xrReleaseSwapchainImage" (xrReleaseSwapchainImage' (swapchainHandle (swapchain)) releaseInfo')
+  r <- lift $ traceAroundEvent "xrReleaseSwapchainImage" (xrReleaseSwapchainImage'
+                                                            (swapchainHandle (swapchain))
+                                                            releaseInfo')
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   pure $ (r)
 
@@ -872,7 +892,8 @@ instance Extensible SwapchainCreateInfo where
     | Just Refl <- eqT @e @SecondaryViewConfigurationSwapchainCreateInfoMSFT = Just f
     | otherwise = Nothing
 
-instance (Extendss SwapchainCreateInfo es, PokeChain es) => ToCStruct (SwapchainCreateInfo es) where
+instance ( Extendss SwapchainCreateInfo es
+         , PokeChain es ) => ToCStruct (SwapchainCreateInfo es) where
   withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p SwapchainCreateInfo{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (TYPE_SWAPCHAIN_CREATE_INFO)
@@ -903,7 +924,8 @@ instance (Extendss SwapchainCreateInfo es, PokeChain es) => ToCStruct (Swapchain
     lift $ poke ((p `plusPtr` 60 :: Ptr Word32)) (zero)
     lift $ f
 
-instance (Extendss SwapchainCreateInfo es, PeekChain es) => FromCStruct (SwapchainCreateInfo es) where
+instance ( Extendss SwapchainCreateInfo es
+         , PeekChain es ) => FromCStruct (SwapchainCreateInfo es) where
   peekCStruct p = do
     next <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
     next' <- peekChain (castPtr next)
@@ -917,7 +939,16 @@ instance (Extendss SwapchainCreateInfo es, PeekChain es) => FromCStruct (Swapcha
     arraySize <- peek @Word32 ((p `plusPtr` 56 :: Ptr Word32))
     mipCount <- peek @Word32 ((p `plusPtr` 60 :: Ptr Word32))
     pure $ SwapchainCreateInfo
-             next' createFlags usageFlags format sampleCount width height faceCount arraySize mipCount
+             next'
+             createFlags
+             usageFlags
+             format
+             sampleCount
+             width
+             height
+             faceCount
+             arraySize
+             mipCount
 
 instance es ~ '[] => Zero (SwapchainCreateInfo es) where
   zero = SwapchainCreateInfo

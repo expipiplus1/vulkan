@@ -33,12 +33,17 @@ newtype TessellationDomainOrigin = TessellationDomainOrigin Int32
 -- domain space is in the upper left corner, as shown in figure
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#img-tessellation-topology-ul>.
 pattern TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT = TessellationDomainOrigin 0
+
 -- | 'TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT' specifies that the origin of the
 -- domain space is in the lower left corner, as shown in figure
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#img-tessellation-topology-ll>.
 pattern TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT = TessellationDomainOrigin 1
-{-# complete TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT,
-             TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT :: TessellationDomainOrigin #-}
+
+{-# COMPLETE
+  TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT
+  , TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT ::
+    TessellationDomainOrigin
+  #-}
 
 conNameTessellationDomainOrigin :: String
 conNameTessellationDomainOrigin = "TessellationDomainOrigin"
@@ -48,18 +53,29 @@ enumPrefixTessellationDomainOrigin = "TESSELLATION_DOMAIN_ORIGIN_"
 
 showTableTessellationDomainOrigin :: [(TessellationDomainOrigin, String)]
 showTableTessellationDomainOrigin =
-  [(TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT, "UPPER_LEFT"), (TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT, "LOWER_LEFT")]
+  [
+    ( TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT
+    , "UPPER_LEFT"
+    )
+  ,
+    ( TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT
+    , "LOWER_LEFT"
+    )
+  ]
 
 instance Show TessellationDomainOrigin where
-  showsPrec = enumShowsPrec enumPrefixTessellationDomainOrigin
-                            showTableTessellationDomainOrigin
-                            conNameTessellationDomainOrigin
-                            (\(TessellationDomainOrigin x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixTessellationDomainOrigin
+      showTableTessellationDomainOrigin
+      conNameTessellationDomainOrigin
+      (\(TessellationDomainOrigin x) -> x)
+      (showsPrec 11)
 
 instance Read TessellationDomainOrigin where
-  readPrec = enumReadPrec enumPrefixTessellationDomainOrigin
-                          showTableTessellationDomainOrigin
-                          conNameTessellationDomainOrigin
-                          TessellationDomainOrigin
-
+  readPrec =
+    enumReadPrec
+      enumPrefixTessellationDomainOrigin
+      showTableTessellationDomainOrigin
+      conNameTessellationDomainOrigin
+      TessellationDomainOrigin

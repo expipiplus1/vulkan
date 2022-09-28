@@ -30,17 +30,23 @@ newtype SamplerReductionMode = SamplerReductionMode Int32
 -- using weights as specified in
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-unnormalized-to-integer the image operations chapter>.
 pattern SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE = SamplerReductionMode 0
+
 -- | 'SAMPLER_REDUCTION_MODE_MIN' specifies that texel values are combined by
 -- taking the component-wise minimum of values in the footprint with
 -- non-zero weights.
-pattern SAMPLER_REDUCTION_MODE_MIN              = SamplerReductionMode 1
+pattern SAMPLER_REDUCTION_MODE_MIN = SamplerReductionMode 1
+
 -- | 'SAMPLER_REDUCTION_MODE_MAX' specifies that texel values are combined by
 -- taking the component-wise maximum of values in the footprint with
 -- non-zero weights.
-pattern SAMPLER_REDUCTION_MODE_MAX              = SamplerReductionMode 2
-{-# complete SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE,
-             SAMPLER_REDUCTION_MODE_MIN,
-             SAMPLER_REDUCTION_MODE_MAX :: SamplerReductionMode #-}
+pattern SAMPLER_REDUCTION_MODE_MAX = SamplerReductionMode 2
+
+{-# COMPLETE
+  SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE
+  , SAMPLER_REDUCTION_MODE_MIN
+  , SAMPLER_REDUCTION_MODE_MAX ::
+    SamplerReductionMode
+  #-}
 
 conNameSamplerReductionMode :: String
 conNameSamplerReductionMode = "SamplerReductionMode"
@@ -50,21 +56,27 @@ enumPrefixSamplerReductionMode = "SAMPLER_REDUCTION_MODE_"
 
 showTableSamplerReductionMode :: [(SamplerReductionMode, String)]
 showTableSamplerReductionMode =
-  [ (SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE, "WEIGHTED_AVERAGE")
-  , (SAMPLER_REDUCTION_MODE_MIN             , "MIN")
-  , (SAMPLER_REDUCTION_MODE_MAX             , "MAX")
+  [
+    ( SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE
+    , "WEIGHTED_AVERAGE"
+    )
+  , (SAMPLER_REDUCTION_MODE_MIN, "MIN")
+  , (SAMPLER_REDUCTION_MODE_MAX, "MAX")
   ]
 
 instance Show SamplerReductionMode where
-  showsPrec = enumShowsPrec enumPrefixSamplerReductionMode
-                            showTableSamplerReductionMode
-                            conNameSamplerReductionMode
-                            (\(SamplerReductionMode x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixSamplerReductionMode
+      showTableSamplerReductionMode
+      conNameSamplerReductionMode
+      (\(SamplerReductionMode x) -> x)
+      (showsPrec 11)
 
 instance Read SamplerReductionMode where
-  readPrec = enumReadPrec enumPrefixSamplerReductionMode
-                          showTableSamplerReductionMode
-                          conNameSamplerReductionMode
-                          SamplerReductionMode
-
+  readPrec =
+    enumReadPrec
+      enumPrefixSamplerReductionMode
+      showTableSamplerReductionMode
+      conNameSamplerReductionMode
+      SamplerReductionMode

@@ -270,7 +270,11 @@ createMacOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPSurface <- ContT $ bracket (callocBytes @SurfaceKHR 8) free
-  r <- lift $ traceAroundEvent "vkCreateMacOSSurfaceMVK" (vkCreateMacOSSurfaceMVK' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface))
+  r <- lift $ traceAroundEvent "vkCreateMacOSSurfaceMVK" (vkCreateMacOSSurfaceMVK'
+                                                            (instanceHandle (instance'))
+                                                            pCreateInfo
+                                                            pAllocator
+                                                            (pPSurface))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurface <- lift $ peek @SurfaceKHR pPSurface
   pure $ (pSurface)
@@ -372,8 +376,6 @@ instance Zero MacOSSurfaceCreateInfoMVK where
 newtype MacOSSurfaceCreateFlagsMVK = MacOSSurfaceCreateFlagsMVK Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
-
-
 conNameMacOSSurfaceCreateFlagsMVK :: String
 conNameMacOSSurfaceCreateFlagsMVK = "MacOSSurfaceCreateFlagsMVK"
 
@@ -384,18 +386,21 @@ showTableMacOSSurfaceCreateFlagsMVK :: [(MacOSSurfaceCreateFlagsMVK, String)]
 showTableMacOSSurfaceCreateFlagsMVK = []
 
 instance Show MacOSSurfaceCreateFlagsMVK where
-  showsPrec = enumShowsPrec enumPrefixMacOSSurfaceCreateFlagsMVK
-                            showTableMacOSSurfaceCreateFlagsMVK
-                            conNameMacOSSurfaceCreateFlagsMVK
-                            (\(MacOSSurfaceCreateFlagsMVK x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixMacOSSurfaceCreateFlagsMVK
+      showTableMacOSSurfaceCreateFlagsMVK
+      conNameMacOSSurfaceCreateFlagsMVK
+      (\(MacOSSurfaceCreateFlagsMVK x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read MacOSSurfaceCreateFlagsMVK where
-  readPrec = enumReadPrec enumPrefixMacOSSurfaceCreateFlagsMVK
-                          showTableMacOSSurfaceCreateFlagsMVK
-                          conNameMacOSSurfaceCreateFlagsMVK
-                          MacOSSurfaceCreateFlagsMVK
-
+  readPrec =
+    enumReadPrec
+      enumPrefixMacOSSurfaceCreateFlagsMVK
+      showTableMacOSSurfaceCreateFlagsMVK
+      conNameMacOSSurfaceCreateFlagsMVK
+      MacOSSurfaceCreateFlagsMVK
 
 type MVK_MACOS_SURFACE_SPEC_VERSION = 3
 

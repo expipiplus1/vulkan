@@ -237,7 +237,23 @@ instance FromCStruct PhysicalDeviceFloatControlsProperties where
     shaderRoundingModeRTZFloat32 <- peek @Bool32 ((p `plusPtr` 76 :: Ptr Bool32))
     shaderRoundingModeRTZFloat64 <- peek @Bool32 ((p `plusPtr` 80 :: Ptr Bool32))
     pure $ PhysicalDeviceFloatControlsProperties
-             denormBehaviorIndependence roundingModeIndependence (bool32ToBool shaderSignedZeroInfNanPreserveFloat16) (bool32ToBool shaderSignedZeroInfNanPreserveFloat32) (bool32ToBool shaderSignedZeroInfNanPreserveFloat64) (bool32ToBool shaderDenormPreserveFloat16) (bool32ToBool shaderDenormPreserveFloat32) (bool32ToBool shaderDenormPreserveFloat64) (bool32ToBool shaderDenormFlushToZeroFloat16) (bool32ToBool shaderDenormFlushToZeroFloat32) (bool32ToBool shaderDenormFlushToZeroFloat64) (bool32ToBool shaderRoundingModeRTEFloat16) (bool32ToBool shaderRoundingModeRTEFloat32) (bool32ToBool shaderRoundingModeRTEFloat64) (bool32ToBool shaderRoundingModeRTZFloat16) (bool32ToBool shaderRoundingModeRTZFloat32) (bool32ToBool shaderRoundingModeRTZFloat64)
+             denormBehaviorIndependence
+             roundingModeIndependence
+             (bool32ToBool shaderSignedZeroInfNanPreserveFloat16)
+             (bool32ToBool shaderSignedZeroInfNanPreserveFloat32)
+             (bool32ToBool shaderSignedZeroInfNanPreserveFloat64)
+             (bool32ToBool shaderDenormPreserveFloat16)
+             (bool32ToBool shaderDenormPreserveFloat32)
+             (bool32ToBool shaderDenormPreserveFloat64)
+             (bool32ToBool shaderDenormFlushToZeroFloat16)
+             (bool32ToBool shaderDenormFlushToZeroFloat32)
+             (bool32ToBool shaderDenormFlushToZeroFloat64)
+             (bool32ToBool shaderRoundingModeRTEFloat16)
+             (bool32ToBool shaderRoundingModeRTEFloat32)
+             (bool32ToBool shaderRoundingModeRTEFloat64)
+             (bool32ToBool shaderRoundingModeRTZFloat16)
+             (bool32ToBool shaderRoundingModeRTZFloat32)
+             (bool32ToBool shaderRoundingModeRTZFloat64)
 
 instance Storable PhysicalDeviceFloatControlsProperties where
   sizeOf ~_ = 88

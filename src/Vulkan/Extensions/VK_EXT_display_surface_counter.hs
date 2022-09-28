@@ -256,13 +256,17 @@ getPhysicalDeviceSurfaceCapabilities2EXT :: forall io
                                          -> -- | @surface@ is the surface that will be associated with the swapchain.
                                             SurfaceKHR
                                          -> io (SurfaceCapabilities2EXT)
-getPhysicalDeviceSurfaceCapabilities2EXT physicalDevice surface = liftIO . evalContT $ do
+getPhysicalDeviceSurfaceCapabilities2EXT physicalDevice
+                                           surface = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfaceCapabilities2EXTPtr = pVkGetPhysicalDeviceSurfaceCapabilities2EXT (case physicalDevice of PhysicalDevice{instanceCmds} -> instanceCmds)
   lift $ unless (vkGetPhysicalDeviceSurfaceCapabilities2EXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPhysicalDeviceSurfaceCapabilities2EXT is null" Nothing Nothing
   let vkGetPhysicalDeviceSurfaceCapabilities2EXT' = mkVkGetPhysicalDeviceSurfaceCapabilities2EXT vkGetPhysicalDeviceSurfaceCapabilities2EXTPtr
   pPSurfaceCapabilities <- ContT (withZeroCStruct @SurfaceCapabilities2EXT)
-  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceSurfaceCapabilities2EXT" (vkGetPhysicalDeviceSurfaceCapabilities2EXT' (physicalDeviceHandle (physicalDevice)) (surface) (pPSurfaceCapabilities))
+  r <- lift $ traceAroundEvent "vkGetPhysicalDeviceSurfaceCapabilities2EXT" (vkGetPhysicalDeviceSurfaceCapabilities2EXT'
+                                                                               (physicalDeviceHandle (physicalDevice))
+                                                                               (surface)
+                                                                               (pPSurfaceCapabilities))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSurfaceCapabilities <- lift $ peekCStruct @SurfaceCapabilities2EXT pPSurfaceCapabilities
   pure $ (pSurfaceCapabilities)
@@ -420,7 +424,17 @@ instance FromCStruct SurfaceCapabilities2EXT where
     supportedUsageFlags <- peek @ImageUsageFlags ((p `plusPtr` 64 :: Ptr ImageUsageFlags))
     supportedSurfaceCounters <- peek @SurfaceCounterFlagsEXT ((p `plusPtr` 68 :: Ptr SurfaceCounterFlagsEXT))
     pure $ SurfaceCapabilities2EXT
-             minImageCount maxImageCount currentExtent minImageExtent maxImageExtent maxImageArrayLayers supportedTransforms currentTransform supportedCompositeAlpha supportedUsageFlags supportedSurfaceCounters
+             minImageCount
+             maxImageCount
+             currentExtent
+             minImageExtent
+             maxImageExtent
+             maxImageArrayLayers
+             supportedTransforms
+             currentTransform
+             supportedCompositeAlpha
+             supportedUsageFlags
+             supportedSurfaceCounters
 
 instance Storable SurfaceCapabilities2EXT where
   sizeOf ~_ = 72
@@ -470,18 +484,21 @@ showTableSurfaceCounterFlagBitsEXT :: [(SurfaceCounterFlagBitsEXT, String)]
 showTableSurfaceCounterFlagBitsEXT = [(SURFACE_COUNTER_VBLANK_BIT_EXT, "")]
 
 instance Show SurfaceCounterFlagBitsEXT where
-  showsPrec = enumShowsPrec enumPrefixSurfaceCounterFlagBitsEXT
-                            showTableSurfaceCounterFlagBitsEXT
-                            conNameSurfaceCounterFlagBitsEXT
-                            (\(SurfaceCounterFlagBitsEXT x) -> x)
-                            (\x -> showString "0x" . showHex x)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixSurfaceCounterFlagBitsEXT
+      showTableSurfaceCounterFlagBitsEXT
+      conNameSurfaceCounterFlagBitsEXT
+      (\(SurfaceCounterFlagBitsEXT x) -> x)
+      (\x -> showString "0x" . showHex x)
 
 instance Read SurfaceCounterFlagBitsEXT where
-  readPrec = enumReadPrec enumPrefixSurfaceCounterFlagBitsEXT
-                          showTableSurfaceCounterFlagBitsEXT
-                          conNameSurfaceCounterFlagBitsEXT
-                          SurfaceCounterFlagBitsEXT
-
+  readPrec =
+    enumReadPrec
+      enumPrefixSurfaceCounterFlagBitsEXT
+      showTableSurfaceCounterFlagBitsEXT
+      conNameSurfaceCounterFlagBitsEXT
+      SurfaceCounterFlagBitsEXT
 
 type EXT_DISPLAY_SURFACE_COUNTER_SPEC_VERSION = 1
 

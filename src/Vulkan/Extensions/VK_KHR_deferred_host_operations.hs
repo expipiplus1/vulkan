@@ -376,7 +376,10 @@ createDeferredOperationKHR device allocator = liftIO . evalContT $ do
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
   pPDeferredOperation <- ContT $ bracket (callocBytes @DeferredOperationKHR 8) free
-  r <- lift $ traceAroundEvent "vkCreateDeferredOperationKHR" (vkCreateDeferredOperationKHR' (deviceHandle (device)) pAllocator (pPDeferredOperation))
+  r <- lift $ traceAroundEvent "vkCreateDeferredOperationKHR" (vkCreateDeferredOperationKHR'
+                                                                 (deviceHandle (device))
+                                                                 pAllocator
+                                                                 (pPDeferredOperation))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pDeferredOperation <- lift $ peek @DeferredOperationKHR pPDeferredOperation
   pure $ (pDeferredOperation)
@@ -466,7 +469,10 @@ destroyDeferredOperationKHR device operation allocator = liftIO . evalContT $ do
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
     Just j -> ContT $ withCStruct (j)
-  lift $ traceAroundEvent "vkDestroyDeferredOperationKHR" (vkDestroyDeferredOperationKHR' (deviceHandle (device)) (operation) pAllocator)
+  lift $ traceAroundEvent "vkDestroyDeferredOperationKHR" (vkDestroyDeferredOperationKHR'
+                                                             (deviceHandle (device))
+                                                             (operation)
+                                                             pAllocator)
   pure $ ()
 
 
@@ -548,7 +554,9 @@ getDeferredOperationMaxConcurrencyKHR device operation = liftIO $ do
   unless (vkGetDeferredOperationMaxConcurrencyKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeferredOperationMaxConcurrencyKHR is null" Nothing Nothing
   let vkGetDeferredOperationMaxConcurrencyKHR' = mkVkGetDeferredOperationMaxConcurrencyKHR vkGetDeferredOperationMaxConcurrencyKHRPtr
-  r <- traceAroundEvent "vkGetDeferredOperationMaxConcurrencyKHR" (vkGetDeferredOperationMaxConcurrencyKHR' (deviceHandle (device)) (operation))
+  r <- traceAroundEvent "vkGetDeferredOperationMaxConcurrencyKHR" (vkGetDeferredOperationMaxConcurrencyKHR'
+                                                                     (deviceHandle (device))
+                                                                     (operation))
   pure $ (r)
 
 
@@ -611,7 +619,9 @@ getDeferredOperationResultKHR device operation = liftIO $ do
   unless (vkGetDeferredOperationResultKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetDeferredOperationResultKHR is null" Nothing Nothing
   let vkGetDeferredOperationResultKHR' = mkVkGetDeferredOperationResultKHR vkGetDeferredOperationResultKHRPtr
-  r <- traceAroundEvent "vkGetDeferredOperationResultKHR" (vkGetDeferredOperationResultKHR' (deviceHandle (device)) (operation))
+  r <- traceAroundEvent "vkGetDeferredOperationResultKHR" (vkGetDeferredOperationResultKHR'
+                                                             (deviceHandle (device))
+                                                             (operation))
   pure $ (r)
 
 
@@ -713,7 +723,9 @@ deferredOperationJoinKHR device operation = liftIO $ do
   unless (vkDeferredOperationJoinKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkDeferredOperationJoinKHR is null" Nothing Nothing
   let vkDeferredOperationJoinKHR' = mkVkDeferredOperationJoinKHR vkDeferredOperationJoinKHRPtr
-  r <- traceAroundEvent "vkDeferredOperationJoinKHR" (vkDeferredOperationJoinKHR' (deviceHandle (device)) (operation))
+  r <- traceAroundEvent "vkDeferredOperationJoinKHR" (vkDeferredOperationJoinKHR'
+                                                        (deviceHandle (device))
+                                                        (operation))
   when (r < SUCCESS) (throwIO (VulkanException r))
   pure $ (r)
 

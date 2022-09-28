@@ -139,7 +139,10 @@ stringToPath instance' pathString = liftIO . evalContT $ do
   let xrStringToPath' = mkXrStringToPath xrStringToPathPtr
   pathString' <- ContT $ useAsCString (pathString)
   pPath <- ContT $ bracket (callocBytes @Path 8) free
-  r <- lift $ traceAroundEvent "xrStringToPath" (xrStringToPath' (instanceHandle (instance')) pathString' (pPath))
+  r <- lift $ traceAroundEvent "xrStringToPath" (xrStringToPath'
+                                                   (instanceHandle (instance'))
+                                                   pathString'
+                                                   (pPath))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   path <- lift $ peek @Path pPath
   pure $ (path)
@@ -249,11 +252,21 @@ pathToString instance' path = liftIO . evalContT $ do
   let xrPathToString' = mkXrPathToString xrPathToStringPtr
   let instance'' = instanceHandle (instance')
   pBufferCountOutput <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "xrPathToString" (xrPathToString' instance'' (path) (0) (pBufferCountOutput) (nullPtr))
+  r <- lift $ traceAroundEvent "xrPathToString" (xrPathToString'
+                                                   instance''
+                                                   (path)
+                                                   (0)
+                                                   (pBufferCountOutput)
+                                                   (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (OpenXrException r))
   bufferCountOutput <- lift $ peek @Word32 pBufferCountOutput
   pBuffer <- ContT $ bracket (callocBytes @CChar (fromIntegral (bufferCountOutput))) free
-  r' <- lift $ traceAroundEvent "xrPathToString" (xrPathToString' instance'' (path) ((bufferCountOutput)) (pBufferCountOutput) (pBuffer))
+  r' <- lift $ traceAroundEvent "xrPathToString" (xrPathToString'
+                                                    instance''
+                                                    (path)
+                                                    ((bufferCountOutput))
+                                                    (pBufferCountOutput)
+                                                    (pBuffer))
   lift $ when (r' < SUCCESS) (throwIO (OpenXrException r'))
   buffer' <- lift $ packCString pBuffer
   pure $ (buffer')

@@ -34,19 +34,23 @@ instance FromCStruct AttachmentReference
 type role FramebufferCreateInfo nominal
 data FramebufferCreateInfo (es :: [Type])
 
-instance (Extendss FramebufferCreateInfo es, PokeChain es) => ToCStruct (FramebufferCreateInfo es)
+instance ( Extendss FramebufferCreateInfo es
+         , PokeChain es ) => ToCStruct (FramebufferCreateInfo es)
 instance Show (Chain es) => Show (FramebufferCreateInfo es)
 
-instance (Extendss FramebufferCreateInfo es, PeekChain es) => FromCStruct (FramebufferCreateInfo es)
+instance ( Extendss FramebufferCreateInfo es
+         , PeekChain es ) => FromCStruct (FramebufferCreateInfo es)
 
 
 type role RenderPassCreateInfo nominal
 data RenderPassCreateInfo (es :: [Type])
 
-instance (Extendss RenderPassCreateInfo es, PokeChain es) => ToCStruct (RenderPassCreateInfo es)
+instance ( Extendss RenderPassCreateInfo es
+         , PokeChain es ) => ToCStruct (RenderPassCreateInfo es)
 instance Show (Chain es) => Show (RenderPassCreateInfo es)
 
-instance (Extendss RenderPassCreateInfo es, PeekChain es) => FromCStruct (RenderPassCreateInfo es)
+instance ( Extendss RenderPassCreateInfo es
+         , PeekChain es ) => FromCStruct (RenderPassCreateInfo es)
 
 
 data SubpassDependency

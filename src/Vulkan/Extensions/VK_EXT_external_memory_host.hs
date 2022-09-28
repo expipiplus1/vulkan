@@ -303,13 +303,19 @@ getMemoryHostPointerPropertiesEXT :: forall io
                                   -> -- | @pHostPointer@ is the host pointer to import from.
                                      ("hostPointer" ::: Ptr ())
                                   -> io (MemoryHostPointerPropertiesEXT)
-getMemoryHostPointerPropertiesEXT device handleType hostPointer = liftIO . evalContT $ do
+getMemoryHostPointerPropertiesEXT device
+                                    handleType
+                                    hostPointer = liftIO . evalContT $ do
   let vkGetMemoryHostPointerPropertiesEXTPtr = pVkGetMemoryHostPointerPropertiesEXT (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetMemoryHostPointerPropertiesEXTPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetMemoryHostPointerPropertiesEXT is null" Nothing Nothing
   let vkGetMemoryHostPointerPropertiesEXT' = mkVkGetMemoryHostPointerPropertiesEXT vkGetMemoryHostPointerPropertiesEXTPtr
   pPMemoryHostPointerProperties <- ContT (withZeroCStruct @MemoryHostPointerPropertiesEXT)
-  r <- lift $ traceAroundEvent "vkGetMemoryHostPointerPropertiesEXT" (vkGetMemoryHostPointerPropertiesEXT' (deviceHandle (device)) (handleType) (hostPointer) (pPMemoryHostPointerProperties))
+  r <- lift $ traceAroundEvent "vkGetMemoryHostPointerPropertiesEXT" (vkGetMemoryHostPointerPropertiesEXT'
+                                                                        (deviceHandle (device))
+                                                                        (handleType)
+                                                                        (hostPointer)
+                                                                        (pPMemoryHostPointerProperties))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pMemoryHostPointerProperties <- lift $ peekCStruct @MemoryHostPointerPropertiesEXT pPMemoryHostPointerProperties
   pure $ (pMemoryHostPointerProperties)

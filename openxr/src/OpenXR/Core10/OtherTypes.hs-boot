@@ -35,10 +35,12 @@ instance FromCStruct Color4f
 type role CompositionLayerBaseHeader nominal
 data CompositionLayerBaseHeader (es :: [Type])
 
-instance (Extendss CompositionLayerBaseHeader es, PokeChain es) => ToCStruct (CompositionLayerBaseHeader es)
+instance ( Extendss CompositionLayerBaseHeader es
+         , PokeChain es ) => ToCStruct (CompositionLayerBaseHeader es)
 instance Show (Chain es) => Show (CompositionLayerBaseHeader es)
 
-instance (Extendss CompositionLayerBaseHeader es, PeekChain es) => FromCStruct (CompositionLayerBaseHeader es)
+instance ( Extendss CompositionLayerBaseHeader es
+         , PeekChain es ) => FromCStruct (CompositionLayerBaseHeader es)
 
 
 data CompositionLayerProjection
@@ -52,10 +54,12 @@ instance FromCStruct CompositionLayerProjection
 type role CompositionLayerProjectionView nominal
 data CompositionLayerProjectionView (es :: [Type])
 
-instance (Extendss CompositionLayerProjectionView es, PokeChain es) => ToCStruct (CompositionLayerProjectionView es)
+instance ( Extendss CompositionLayerProjectionView es
+         , PokeChain es ) => ToCStruct (CompositionLayerProjectionView es)
 instance Show (Chain es) => Show (CompositionLayerProjectionView es)
 
-instance (Extendss CompositionLayerProjectionView es, PeekChain es) => FromCStruct (CompositionLayerProjectionView es)
+instance ( Extendss CompositionLayerProjectionView es
+         , PeekChain es ) => FromCStruct (CompositionLayerProjectionView es)
 
 
 data CompositionLayerQuad

@@ -373,12 +373,20 @@ getPipelineExecutablePropertiesKHR device pipelineInfo = liftIO . evalContT $ do
   let device' = deviceHandle (device)
   pPipelineInfo <- ContT $ withCStruct (pipelineInfo)
   pPExecutableCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "vkGetPipelineExecutablePropertiesKHR" (vkGetPipelineExecutablePropertiesKHR' device' pPipelineInfo (pPExecutableCount) (nullPtr))
+  r <- lift $ traceAroundEvent "vkGetPipelineExecutablePropertiesKHR" (vkGetPipelineExecutablePropertiesKHR'
+                                                                         device'
+                                                                         pPipelineInfo
+                                                                         (pPExecutableCount)
+                                                                         (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pExecutableCount <- lift $ peek @Word32 pPExecutableCount
   pPProperties <- ContT $ bracket (callocBytes @PipelineExecutablePropertiesKHR ((fromIntegral (pExecutableCount)) * 536)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 536) :: Ptr PipelineExecutablePropertiesKHR) . ($ ())) [0..(fromIntegral (pExecutableCount)) - 1]
-  r' <- lift $ traceAroundEvent "vkGetPipelineExecutablePropertiesKHR" (vkGetPipelineExecutablePropertiesKHR' device' pPipelineInfo (pPExecutableCount) ((pPProperties)))
+  r' <- lift $ traceAroundEvent "vkGetPipelineExecutablePropertiesKHR" (vkGetPipelineExecutablePropertiesKHR'
+                                                                          device'
+                                                                          pPipelineInfo
+                                                                          (pPExecutableCount)
+                                                                          ((pPProperties)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pExecutableCount' <- lift $ peek @Word32 pPExecutableCount
   pProperties' <- lift $ generateM (fromIntegral (pExecutableCount')) (\i -> peekCStruct @PipelineExecutablePropertiesKHR (((pPProperties) `advancePtrBytes` (536 * (i)) :: Ptr PipelineExecutablePropertiesKHR)))
@@ -468,7 +476,8 @@ getPipelineExecutableStatisticsKHR :: forall io
                                    -> -- | @pExecutableInfo@ describes the pipeline executable being queried.
                                       PipelineExecutableInfoKHR
                                    -> io (Result, ("statistics" ::: Vector PipelineExecutableStatisticKHR))
-getPipelineExecutableStatisticsKHR device executableInfo = liftIO . evalContT $ do
+getPipelineExecutableStatisticsKHR device
+                                     executableInfo = liftIO . evalContT $ do
   let vkGetPipelineExecutableStatisticsKHRPtr = pVkGetPipelineExecutableStatisticsKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetPipelineExecutableStatisticsKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPipelineExecutableStatisticsKHR is null" Nothing Nothing
@@ -476,12 +485,20 @@ getPipelineExecutableStatisticsKHR device executableInfo = liftIO . evalContT $ 
   let device' = deviceHandle (device)
   pExecutableInfo <- ContT $ withCStruct (executableInfo)
   pPStatisticCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "vkGetPipelineExecutableStatisticsKHR" (vkGetPipelineExecutableStatisticsKHR' device' pExecutableInfo (pPStatisticCount) (nullPtr))
+  r <- lift $ traceAroundEvent "vkGetPipelineExecutableStatisticsKHR" (vkGetPipelineExecutableStatisticsKHR'
+                                                                         device'
+                                                                         pExecutableInfo
+                                                                         (pPStatisticCount)
+                                                                         (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pStatisticCount <- lift $ peek @Word32 pPStatisticCount
   pPStatistics <- ContT $ bracket (callocBytes @PipelineExecutableStatisticKHR ((fromIntegral (pStatisticCount)) * 544)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPStatistics `advancePtrBytes` (i * 544) :: Ptr PipelineExecutableStatisticKHR) . ($ ())) [0..(fromIntegral (pStatisticCount)) - 1]
-  r' <- lift $ traceAroundEvent "vkGetPipelineExecutableStatisticsKHR" (vkGetPipelineExecutableStatisticsKHR' device' pExecutableInfo (pPStatisticCount) ((pPStatistics)))
+  r' <- lift $ traceAroundEvent "vkGetPipelineExecutableStatisticsKHR" (vkGetPipelineExecutableStatisticsKHR'
+                                                                          device'
+                                                                          pExecutableInfo
+                                                                          (pPStatisticCount)
+                                                                          ((pPStatistics)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pStatisticCount' <- lift $ peek @Word32 pPStatisticCount
   pStatistics' <- lift $ generateM (fromIntegral (pStatisticCount')) (\i -> peekCStruct @PipelineExecutableStatisticKHR (((pPStatistics) `advancePtrBytes` (544 * (i)) :: Ptr PipelineExecutableStatisticKHR)))
@@ -581,7 +598,8 @@ getPipelineExecutableInternalRepresentationsKHR :: forall io
                                                 -> -- | @pExecutableInfo@ describes the pipeline executable being queried.
                                                    PipelineExecutableInfoKHR
                                                 -> io (Result, ("internalRepresentations" ::: Vector PipelineExecutableInternalRepresentationKHR))
-getPipelineExecutableInternalRepresentationsKHR device executableInfo = liftIO . evalContT $ do
+getPipelineExecutableInternalRepresentationsKHR device
+                                                  executableInfo = liftIO . evalContT $ do
   let vkGetPipelineExecutableInternalRepresentationsKHRPtr = pVkGetPipelineExecutableInternalRepresentationsKHR (case device of Device{deviceCmds} -> deviceCmds)
   lift $ unless (vkGetPipelineExecutableInternalRepresentationsKHRPtr /= nullFunPtr) $
     throwIO $ IOError Nothing InvalidArgument "" "The function pointer for vkGetPipelineExecutableInternalRepresentationsKHR is null" Nothing Nothing
@@ -589,12 +607,20 @@ getPipelineExecutableInternalRepresentationsKHR device executableInfo = liftIO .
   let device' = deviceHandle (device)
   pExecutableInfo <- ContT $ withCStruct (executableInfo)
   pPInternalRepresentationCount <- ContT $ bracket (callocBytes @Word32 4) free
-  r <- lift $ traceAroundEvent "vkGetPipelineExecutableInternalRepresentationsKHR" (vkGetPipelineExecutableInternalRepresentationsKHR' device' pExecutableInfo (pPInternalRepresentationCount) (nullPtr))
+  r <- lift $ traceAroundEvent "vkGetPipelineExecutableInternalRepresentationsKHR" (vkGetPipelineExecutableInternalRepresentationsKHR'
+                                                                                      device'
+                                                                                      pExecutableInfo
+                                                                                      (pPInternalRepresentationCount)
+                                                                                      (nullPtr))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pInternalRepresentationCount <- lift $ peek @Word32 pPInternalRepresentationCount
   pPInternalRepresentations <- ContT $ bracket (callocBytes @PipelineExecutableInternalRepresentationKHR ((fromIntegral (pInternalRepresentationCount)) * 552)) free
   _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPInternalRepresentations `advancePtrBytes` (i * 552) :: Ptr PipelineExecutableInternalRepresentationKHR) . ($ ())) [0..(fromIntegral (pInternalRepresentationCount)) - 1]
-  r' <- lift $ traceAroundEvent "vkGetPipelineExecutableInternalRepresentationsKHR" (vkGetPipelineExecutableInternalRepresentationsKHR' device' pExecutableInfo (pPInternalRepresentationCount) ((pPInternalRepresentations)))
+  r' <- lift $ traceAroundEvent "vkGetPipelineExecutableInternalRepresentationsKHR" (vkGetPipelineExecutableInternalRepresentationsKHR'
+                                                                                       device'
+                                                                                       pExecutableInfo
+                                                                                       (pPInternalRepresentationCount)
+                                                                                       ((pPInternalRepresentations)))
   lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
   pInternalRepresentationCount' <- lift $ peek @Word32 pPInternalRepresentationCount
   pInternalRepresentations' <- lift $ generateM (fromIntegral (pInternalRepresentationCount')) (\i -> peekCStruct @PipelineExecutableInternalRepresentationKHR (((pPInternalRepresentations) `advancePtrBytes` (552 * (i)) :: Ptr PipelineExecutableInternalRepresentationKHR)))
@@ -1047,7 +1073,11 @@ instance FromCStruct PipelineExecutableInternalRepresentationKHR where
     dataSize <- peek @CSize ((p `plusPtr` 536 :: Ptr CSize))
     pData <- peek @(Ptr ()) ((p `plusPtr` 544 :: Ptr (Ptr ())))
     pure $ PipelineExecutableInternalRepresentationKHR
-             name description (bool32ToBool isText) (coerce @CSize @Word64 dataSize) pData
+             name
+             description
+             (bool32ToBool isText)
+             (coerce @CSize @Word64 dataSize)
+             pData
 
 instance Storable PipelineExecutableInternalRepresentationKHR where
   sizeOf ~_ = 552
@@ -1114,23 +1144,30 @@ newtype PipelineExecutableStatisticFormatKHR = PipelineExecutableStatisticFormat
 -- 'Vulkan.Core10.FundamentalTypes.TRUE' or
 -- 'Vulkan.Core10.FundamentalTypes.FALSE' and /should/ be read from the
 -- @b32@ field of 'PipelineExecutableStatisticValueKHR'.
-pattern PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR  = PipelineExecutableStatisticFormatKHR 0
+pattern PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR = PipelineExecutableStatisticFormatKHR 0
+
 -- | 'PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR' specifies that the
 -- statistic is returned as a signed 64-bit integer and /should/ be read
 -- from the @i64@ field of 'PipelineExecutableStatisticValueKHR'.
-pattern PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR   = PipelineExecutableStatisticFormatKHR 1
+pattern PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR = PipelineExecutableStatisticFormatKHR 1
+
 -- | 'PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR' specifies that the
 -- statistic is returned as an unsigned 64-bit integer and /should/ be read
 -- from the @u64@ field of 'PipelineExecutableStatisticValueKHR'.
-pattern PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR  = PipelineExecutableStatisticFormatKHR 2
+pattern PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR = PipelineExecutableStatisticFormatKHR 2
+
 -- | 'PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR' specifies that the
 -- statistic is returned as a 64-bit floating-point value and /should/ be
 -- read from the @f64@ field of 'PipelineExecutableStatisticValueKHR'.
 pattern PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR = PipelineExecutableStatisticFormatKHR 3
-{-# complete PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR,
-             PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR,
-             PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR,
-             PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR :: PipelineExecutableStatisticFormatKHR #-}
+
+{-# COMPLETE
+  PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR
+  , PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR
+  , PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR
+  , PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR ::
+    PipelineExecutableStatisticFormatKHR
+  #-}
 
 conNamePipelineExecutableStatisticFormatKHR :: String
 conNamePipelineExecutableStatisticFormatKHR = "PipelineExecutableStatisticFormatKHR"
@@ -1140,25 +1177,40 @@ enumPrefixPipelineExecutableStatisticFormatKHR = "PIPELINE_EXECUTABLE_STATISTIC_
 
 showTablePipelineExecutableStatisticFormatKHR :: [(PipelineExecutableStatisticFormatKHR, String)]
 showTablePipelineExecutableStatisticFormatKHR =
-  [ (PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR , "BOOL32_KHR")
-  , (PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR  , "INT64_KHR")
-  , (PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR , "UINT64_KHR")
-  , (PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR, "FLOAT64_KHR")
+  [
+    ( PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR
+    , "BOOL32_KHR"
+    )
+  ,
+    ( PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR
+    , "INT64_KHR"
+    )
+  ,
+    ( PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR
+    , "UINT64_KHR"
+    )
+  ,
+    ( PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR
+    , "FLOAT64_KHR"
+    )
   ]
 
 instance Show PipelineExecutableStatisticFormatKHR where
-  showsPrec = enumShowsPrec enumPrefixPipelineExecutableStatisticFormatKHR
-                            showTablePipelineExecutableStatisticFormatKHR
-                            conNamePipelineExecutableStatisticFormatKHR
-                            (\(PipelineExecutableStatisticFormatKHR x) -> x)
-                            (showsPrec 11)
+  showsPrec =
+    enumShowsPrec
+      enumPrefixPipelineExecutableStatisticFormatKHR
+      showTablePipelineExecutableStatisticFormatKHR
+      conNamePipelineExecutableStatisticFormatKHR
+      (\(PipelineExecutableStatisticFormatKHR x) -> x)
+      (showsPrec 11)
 
 instance Read PipelineExecutableStatisticFormatKHR where
-  readPrec = enumReadPrec enumPrefixPipelineExecutableStatisticFormatKHR
-                          showTablePipelineExecutableStatisticFormatKHR
-                          conNamePipelineExecutableStatisticFormatKHR
-                          PipelineExecutableStatisticFormatKHR
-
+  readPrec =
+    enumReadPrec
+      enumPrefixPipelineExecutableStatisticFormatKHR
+      showTablePipelineExecutableStatisticFormatKHR
+      conNamePipelineExecutableStatisticFormatKHR
+      PipelineExecutableStatisticFormatKHR
 
 type KHR_PIPELINE_EXECUTABLE_PROPERTIES_SPEC_VERSION = 1
 

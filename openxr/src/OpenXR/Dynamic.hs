@@ -238,18 +238,102 @@ deriving instance Eq InstanceCmds
 deriving instance Show InstanceCmds
 instance Zero InstanceCmds where
   zero = InstanceCmds
-    nullPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
     nullFunPtr nullFunPtr nullFunPtr nullFunPtr
 
 foreign import ccall
@@ -337,7 +421,8 @@ initInstanceCmds handle = do
   xrGetVulkanGraphicsDeviceKHR <- getInstanceProcAddr' handle (Ptr "xrGetVulkanGraphicsDeviceKHR"#)
   xrGetOpenGLGraphicsRequirementsKHR <- getInstanceProcAddr' handle (Ptr "xrGetOpenGLGraphicsRequirementsKHR"#)
   xrGetOpenGLESGraphicsRequirementsKHR <- getInstanceProcAddr' handle (Ptr "xrGetOpenGLESGraphicsRequirementsKHR"#)
-  xrGetVulkanGraphicsRequirementsKHR <- getFirstInstanceProcAddr [(Ptr "xrGetVulkanGraphicsRequirements2KHR"#), (Ptr "xrGetVulkanGraphicsRequirementsKHR"#)]
+  xrGetVulkanGraphicsRequirementsKHR <- getFirstInstanceProcAddr [ (Ptr "xrGetVulkanGraphicsRequirements2KHR"#)
+                                                                 , (Ptr "xrGetVulkanGraphicsRequirementsKHR"#) ]
   xrGetD3D11GraphicsRequirementsKHR <- getInstanceProcAddr' handle (Ptr "xrGetD3D11GraphicsRequirementsKHR"#)
   xrGetD3D12GraphicsRequirementsKHR <- getInstanceProcAddr' handle (Ptr "xrGetD3D12GraphicsRequirementsKHR"#)
   xrPerfSettingsSetPerformanceLevelEXT <- getInstanceProcAddr' handle (Ptr "xrPerfSettingsSetPerformanceLevelEXT"#)
