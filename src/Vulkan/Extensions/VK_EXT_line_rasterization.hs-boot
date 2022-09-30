@@ -135,6 +135,7 @@
 module Vulkan.Extensions.VK_EXT_line_rasterization  ( PhysicalDeviceLineRasterizationFeaturesEXT
                                                     , PhysicalDeviceLineRasterizationPropertiesEXT
                                                     , PipelineRasterizationLineStateCreateInfoEXT
+                                                    , LineRasterizationModeEXT
                                                     ) where
 
 import Vulkan.CStruct (FromCStruct)
@@ -163,4 +164,7 @@ instance ToCStruct PipelineRasterizationLineStateCreateInfoEXT
 instance Show PipelineRasterizationLineStateCreateInfoEXT
 
 instance FromCStruct PipelineRasterizationLineStateCreateInfoEXT
+
+
+data LineRasterizationModeEXT
 

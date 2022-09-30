@@ -55,6 +55,9 @@ module Vulkan.Core13.Enums.FormatFeatureFlags2  ( pattern FORMAT_FEATURE_2_SAMPL
                                                                         , FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT
                                                                         , FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT
                                                                         , FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT
+                                                                        , FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV
+                                                                        , FORMAT_FEATURE_2_OPTICAL_FLOW_VECTOR_BIT_NV
+                                                                        , FORMAT_FEATURE_2_OPTICAL_FLOW_IMAGE_BIT_NV
                                                                         , FORMAT_FEATURE_2_BOX_FILTER_SAMPLED_BIT_QCOM
                                                                         , FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM
                                                                         , FORMAT_FEATURE_2_WEIGHT_SAMPLED_IMAGE_BIT_QCOM
@@ -476,6 +479,19 @@ type FormatFeatureFlags2 = FormatFeatureFlagBits2
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer storage texel buffers>
 --     for write operations without specifying a format.
 --
+-- -   'FORMAT_FEATURE_2_OPTICAL_FLOW_IMAGE_BIT_NV' specifies that an image
+--     view with this format /can/ be used as an input or reference to
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#opticalflow-operations optical flow operations>
+--
+-- -   'FORMAT_FEATURE_2_OPTICAL_FLOW_VECTOR_BIT_NV' specifies that an
+--     image view with this format /can/ be used as a flow vector map
+--     (either as hint, output or global flow) for
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#opticalflow-operations optical flow operations>
+--
+-- -   'FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV' specifies that an image
+--     view with this format /can/ be used as an output cost map for
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#opticalflow-operations optical flow operations>
+--
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_format_feature_flags2 VK_KHR_format_feature_flags2>,
@@ -698,6 +714,22 @@ pattern FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT = FormatFeatureFlagBit
 -- performed by @OpImage*Dref*@ instructions.
 pattern FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT = FormatFeatureFlagBits2 0x0000000200000000
 
+-- | 'FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV' specifies that an image view
+-- with this format /can/ be used as an output cost map for
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#opticalflow-operations optical flow operations>
+pattern FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV = FormatFeatureFlagBits2 0x0000040000000000
+
+-- | 'FORMAT_FEATURE_2_OPTICAL_FLOW_VECTOR_BIT_NV' specifies that an image
+-- view with this format /can/ be used as a flow vector map (either as
+-- hint, output or global flow) for
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#opticalflow-operations optical flow operations>
+pattern FORMAT_FEATURE_2_OPTICAL_FLOW_VECTOR_BIT_NV = FormatFeatureFlagBits2 0x0000020000000000
+
+-- | 'FORMAT_FEATURE_2_OPTICAL_FLOW_IMAGE_BIT_NV' specifies that an image
+-- view with this format /can/ be used as an input or reference to
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#opticalflow-operations optical flow operations>
+pattern FORMAT_FEATURE_2_OPTICAL_FLOW_IMAGE_BIT_NV = FormatFeatureFlagBits2 0x0000010000000000
+
 -- | 'FORMAT_FEATURE_2_BOX_FILTER_SAMPLED_BIT_QCOM' specifies that image
 -- views created with this format /can/ be sampled in
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-boxfilter box filter sampling>
@@ -870,6 +902,18 @@ showTableFormatFeatureFlagBits2 =
   ,
     ( FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT
     , "SAMPLED_IMAGE_DEPTH_COMPARISON_BIT"
+    )
+  ,
+    ( FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV
+    , "OPTICAL_FLOW_COST_BIT_NV"
+    )
+  ,
+    ( FORMAT_FEATURE_2_OPTICAL_FLOW_VECTOR_BIT_NV
+    , "OPTICAL_FLOW_VECTOR_BIT_NV"
+    )
+  ,
+    ( FORMAT_FEATURE_2_OPTICAL_FLOW_IMAGE_BIT_NV
+    , "OPTICAL_FLOW_IMAGE_BIT_NV"
     )
   ,
     ( FORMAT_FEATURE_2_BOX_FILTER_SAMPLED_BIT_QCOM

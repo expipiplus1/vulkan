@@ -3,6 +3,8 @@
 module Vulkan.Core10.Enums.QueryType  (QueryType( QUERY_TYPE_OCCLUSION
                                                 , QUERY_TYPE_PIPELINE_STATISTICS
                                                 , QUERY_TYPE_TIMESTAMP
+                                                , QUERY_TYPE_MICROMAP_COMPACTED_SIZE_EXT
+                                                , QUERY_TYPE_MICROMAP_SERIALIZATION_SIZE_EXT
                                                 , QUERY_TYPE_ACCELERATION_STRUCTURE_SIZE_KHR
                                                 , QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_BOTTOM_LEVEL_POINTERS_KHR
                                                 , QUERY_TYPE_PRIMITIVES_GENERATED_EXT
@@ -33,7 +35,9 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core10.Query.QueryPoolCreateInfo',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.cmdWriteAccelerationStructuresPropertiesKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdWriteAccelerationStructuresPropertiesNV',
--- 'Vulkan.Extensions.VK_KHR_acceleration_structure.writeAccelerationStructuresPropertiesKHR'
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.cmdWriteMicromapsPropertiesEXT',
+-- 'Vulkan.Extensions.VK_KHR_acceleration_structure.writeAccelerationStructuresPropertiesKHR',
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.writeMicromapsPropertiesEXT'
 newtype QueryType = QueryType Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
@@ -48,6 +52,12 @@ pattern QUERY_TYPE_PIPELINE_STATISTICS = QueryType 1
 -- | 'QUERY_TYPE_TIMESTAMP' specifies a
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#queries-timestamps timestamp query>.
 pattern QUERY_TYPE_TIMESTAMP = QueryType 2
+
+-- No documentation found for Nested "VkQueryType" "VK_QUERY_TYPE_MICROMAP_COMPACTED_SIZE_EXT"
+pattern QUERY_TYPE_MICROMAP_COMPACTED_SIZE_EXT = QueryType 1000396001
+
+-- No documentation found for Nested "VkQueryType" "VK_QUERY_TYPE_MICROMAP_SERIALIZATION_SIZE_EXT"
+pattern QUERY_TYPE_MICROMAP_SERIALIZATION_SIZE_EXT = QueryType 1000396000
 
 -- | 'QUERY_TYPE_ACCELERATION_STRUCTURE_SIZE_KHR' specifies an
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure-copying acceleration structure size query>
@@ -104,6 +114,8 @@ pattern QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT = QueryType 1000028004
   QUERY_TYPE_OCCLUSION
   , QUERY_TYPE_PIPELINE_STATISTICS
   , QUERY_TYPE_TIMESTAMP
+  , QUERY_TYPE_MICROMAP_COMPACTED_SIZE_EXT
+  , QUERY_TYPE_MICROMAP_SERIALIZATION_SIZE_EXT
   , QUERY_TYPE_ACCELERATION_STRUCTURE_SIZE_KHR
   , QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_BOTTOM_LEVEL_POINTERS_KHR
   , QUERY_TYPE_PRIMITIVES_GENERATED_EXT
@@ -128,6 +140,14 @@ showTableQueryType =
   [ (QUERY_TYPE_OCCLUSION, "OCCLUSION")
   , (QUERY_TYPE_PIPELINE_STATISTICS, "PIPELINE_STATISTICS")
   , (QUERY_TYPE_TIMESTAMP, "TIMESTAMP")
+  ,
+    ( QUERY_TYPE_MICROMAP_COMPACTED_SIZE_EXT
+    , "MICROMAP_COMPACTED_SIZE_EXT"
+    )
+  ,
+    ( QUERY_TYPE_MICROMAP_SERIALIZATION_SIZE_EXT
+    , "MICROMAP_SERIALIZATION_SIZE_EXT"
+    )
   ,
     ( QUERY_TYPE_ACCELERATION_STRUCTURE_SIZE_KHR
     , "ACCELERATION_STRUCTURE_SIZE_KHR"

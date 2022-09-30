@@ -107,6 +107,7 @@ import GHC.Show (Show(showsPrec))
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.ColorBlendEquationEXT',
 -- 'Vulkan.Core10.Pipeline.PipelineColorBlendAttachmentState'
 newtype BlendFactor = BlendFactor Int32
   deriving newtype (Eq, Ord, Storable, Zero)

@@ -4,6 +4,9 @@ module Vulkan.Core10.Enums.PipelineCreateFlagBits  ( PipelineCreateFlags
                                                    , PipelineCreateFlagBits( PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT
                                                                            , PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT
                                                                            , PIPELINE_CREATE_DERIVATIVE_BIT
+                                                                           , PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT
+                                                                           , PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT
+                                                                           , PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT
                                                                            , PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT
                                                                            , PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT
                                                                            , PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV
@@ -185,6 +188,16 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --     specifies that the pipeline /may/ be used with an attachment
 --     feedback loop including depth-stencil attachments.
 --
+-- -   'PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT' specifies
+--     that the pipeline /can/ be used with acceleration structures which
+--     reference an opacity micromap array.
+--
+-- -   'PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT' specifies that the
+--     pipeline /must/ not be bound to a protected command buffer.
+--
+-- -   'PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT' specifies that the
+--     pipeline /must/ not be bound to an unprotected command buffer.
+--
 -- It is valid to set both 'PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT' and
 -- 'PIPELINE_CREATE_DERIVATIVE_BIT'. This allows a pipeline to be both a
 -- parent and possibly a child in a pipeline hierarchy. See
@@ -227,6 +240,15 @@ pattern PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT = PipelineCreateFlagBits 0x0000000
 
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_DERIVATIVE_BIT"
 pattern PIPELINE_CREATE_DERIVATIVE_BIT = PipelineCreateFlagBits 0x00000004
+
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT"
+pattern PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT = PipelineCreateFlagBits 0x40000000
+
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT"
+pattern PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT = PipelineCreateFlagBits 0x08000000
+
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT"
+pattern PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT = PipelineCreateFlagBits 0x01000000
 
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"
 pattern PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT = PipelineCreateFlagBits 0x04000000
@@ -316,6 +338,18 @@ showTablePipelineCreateFlagBits =
   ,
     ( PIPELINE_CREATE_DERIVATIVE_BIT
     , "DERIVATIVE_BIT"
+    )
+  ,
+    ( PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT
+    , "PROTECTED_ACCESS_ONLY_BIT_EXT"
+    )
+  ,
+    ( PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT
+    , "NO_PROTECTED_ACCESS_BIT_EXT"
+    )
+  ,
+    ( PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT
+    , "RAY_TRACING_OPACITY_MICROMAP_BIT_EXT"
     )
   ,
     ( PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT

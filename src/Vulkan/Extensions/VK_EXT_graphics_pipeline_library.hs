@@ -362,7 +362,9 @@ instance Zero PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT where
 -- @pNext@ chain of 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo', it
 -- specifies the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets subsets of the graphics pipeline>
--- being created.
+-- being created, excluding any subsets from linked pipeline libraries. If
+-- the pipeline is created with pipeline libraries, state from those
+-- libraries is aggregated with said subset.
 --
 -- If this structure is omitted, and either
 -- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@flags@ includes

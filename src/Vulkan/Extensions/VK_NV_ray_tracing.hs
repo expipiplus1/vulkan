@@ -2959,6 +2959,10 @@ instance Zero RayTracingShaderGroupCreateInfoNV where
 --     or
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_CALLABLE_BIT_KHR'
 --
+-- -   #VUID-VkRayTracingPipelineCreateInfoNV-flags-07402# @flags@ /must/
+--     not include
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoNV-sType-sType# @sType@ /must/

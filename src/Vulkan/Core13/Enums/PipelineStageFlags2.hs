@@ -53,6 +53,8 @@ module Vulkan.Core13.Enums.PipelineStageFlags2  ( pattern PIPELINE_STAGE_2_NONE_
                                                                         , PIPELINE_STAGE_2_INDEX_INPUT_BIT
                                                                         , PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT
                                                                         , PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT
+                                                                        , PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV
+                                                                        , PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT
                                                                         , PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR
                                                                         , PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI
                                                                         , PIPELINE_STAGE_2_SUBPASS_SHADING_BIT_HUAWEI
@@ -396,6 +398,15 @@ pattern PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT = PipelineStageFlagBits2 0x0
 -- -   'PIPELINE_STAGE_2_MESH_SHADER_BIT_EXT'
 pattern PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT = PipelineStageFlagBits2 0x0000004000000000
 
+-- | 'PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV' specifies the stage of the
+-- pipeline where
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#opticalflow-operations optical flow operation>
+-- are performed.
+pattern PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV = PipelineStageFlagBits2 0x0000000020000000
+
+-- No documentation found for Nested "VkPipelineStageFlagBits2" "VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT"
+pattern PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT = PipelineStageFlagBits2 0x0000000040000000
+
 -- | 'PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR' specifies the
 -- execution of
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#acceleration-structure-copying acceleration structure copy commands>.
@@ -546,6 +557,14 @@ showTablePipelineStageFlagBits2 =
   ,
     ( PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT
     , "PRE_RASTERIZATION_SHADERS_BIT"
+    )
+  ,
+    ( PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV
+    , "OPTICAL_FLOW_BIT_NV"
+    )
+  ,
+    ( PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT
+    , "MICROMAP_BUILD_BIT_EXT"
     )
   ,
     ( PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR

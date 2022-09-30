@@ -135,6 +135,30 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT'
 --     flag set
 --
+-- -   #VUID-VkPipelineLibraryCreateInfoKHR-pipeline-07404# If @pipeline@
+--     is being created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT',
+--     every element of @pLibraries@ /must/ have been created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT'
+--
+-- -   #VUID-VkPipelineLibraryCreateInfoKHR-pipeline-07405# If @pipeline@
+--     is being created without
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT',
+--     every element of @pLibraries@ /must/ have been created without
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT'
+--
+-- -   #VUID-VkPipelineLibraryCreateInfoKHR-pipeline-07406# If @pipeline@
+--     is being created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT',
+--     every element of @pLibraries@ /must/ have been created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT'
+--
+-- -   #VUID-VkPipelineLibraryCreateInfoKHR-pipeline-07407# If @pipeline@
+--     is being created without
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT',
+--     every element of @pLibraries@ /must/ have been created without
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkPipelineLibraryCreateInfoKHR-sType-sType# @sType@ /must/ be

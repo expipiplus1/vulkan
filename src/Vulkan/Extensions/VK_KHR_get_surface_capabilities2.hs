@@ -223,6 +223,7 @@ import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_full_screen_exclusive (SurfaceCapabilitiesFullScreenExclusiveEXT)
 import Vulkan.Extensions.VK_KHR_surface (SurfaceCapabilitiesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_present_barrier (SurfaceCapabilitiesPresentBarrierNV)
 import Vulkan.Extensions.VK_KHR_surface (SurfaceFormatKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_full_screen_exclusive (SurfaceFullScreenExclusiveInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_full_screen_exclusive (SurfaceFullScreenExclusiveWin32InfoEXT)
@@ -648,6 +649,7 @@ instance es ~ '[] => Zero (PhysicalDeviceSurfaceInfo2KHR es) where
 --     'Vulkan.Extensions.VK_AMD_display_native_hdr.DisplayNativeHdrSurfaceCapabilitiesAMD',
 --     'Vulkan.Extensions.VK_KHR_shared_presentable_image.SharedPresentSurfaceCapabilitiesKHR',
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceCapabilitiesFullScreenExclusiveEXT',
+--     'Vulkan.Extensions.VK_NV_present_barrier.SurfaceCapabilitiesPresentBarrierNV',
 --     or
 --     'Vulkan.Extensions.VK_KHR_surface_protected_capabilities.SurfaceProtectedCapabilitiesKHR'
 --
@@ -680,6 +682,7 @@ instance Extensible SurfaceCapabilities2KHR where
   getNext SurfaceCapabilities2KHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SurfaceCapabilities2KHR e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @SurfaceCapabilitiesPresentBarrierNV = Just f
     | Just Refl <- eqT @e @SurfaceCapabilitiesFullScreenExclusiveEXT = Just f
     | Just Refl <- eqT @e @SurfaceProtectedCapabilitiesKHR = Just f
     | Just Refl <- eqT @e @SharedPresentSurfaceCapabilitiesKHR = Just f

@@ -481,7 +481,8 @@ instance Zero PipelineRasterizationProvokingVertexStateCreateInfoEXT where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_provoking_vertex VK_EXT_provoking_vertex>,
--- 'PipelineRasterizationProvokingVertexStateCreateInfoEXT'
+-- 'PipelineRasterizationProvokingVertexStateCreateInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetProvokingVertexModeEXT'
 newtype ProvokingVertexModeEXT = ProvokingVertexModeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 

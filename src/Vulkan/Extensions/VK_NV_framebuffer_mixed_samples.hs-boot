@@ -120,7 +120,9 @@
 --
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
-module Vulkan.Extensions.VK_NV_framebuffer_mixed_samples  (PipelineCoverageModulationStateCreateInfoNV) where
+module Vulkan.Extensions.VK_NV_framebuffer_mixed_samples  ( PipelineCoverageModulationStateCreateInfoNV
+                                                          , CoverageModulationModeNV
+                                                          ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
@@ -132,4 +134,7 @@ instance ToCStruct PipelineCoverageModulationStateCreateInfoNV
 instance Show PipelineCoverageModulationStateCreateInfoNV
 
 instance FromCStruct PipelineCoverageModulationStateCreateInfoNV
+
+
+data CoverageModulationModeNV
 

@@ -9,6 +9,8 @@ module Vulkan.Extensions.Handles  ( IndirectCommandsLayoutNV(..)
                                   , DeferredOperationKHR(..)
                                   , CuModuleNVX(..)
                                   , CuFunctionNVX(..)
+                                  , OpticalFlowSessionNV(..)
+                                  , MicromapEXT(..)
                                   , DisplayKHR(..)
                                   , DisplayModeKHR(..)
                                   , SurfaceKHR(..)
@@ -62,6 +64,8 @@ import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DEFERRED_OPERATION
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DISPLAY_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DISPLAY_MODE_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_MICROMAP_EXT))
+import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_OPTICAL_FLOW_SESSION_NV))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_PERFORMANCE_CONFIGURATION_INTEL))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SURFACE_KHR))
 import Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_SWAPCHAIN_KHR))
@@ -237,9 +241,13 @@ instance Show BufferCollectionFUCHSIA where
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_deferred_host_operations VK_KHR_deferred_host_operations>,
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.buildAccelerationStructuresKHR',
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.buildMicromapsEXT',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.copyAccelerationStructureKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.copyAccelerationStructureToMemoryKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.copyMemoryToAccelerationStructureKHR',
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.copyMemoryToMicromapEXT',
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.copyMicromapEXT',
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.copyMicromapToMemoryEXT',
 -- 'Vulkan.Extensions.VK_KHR_deferred_host_operations.createDeferredOperationKHR',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.createRayTracingPipelinesKHR',
 -- 'Vulkan.Extensions.VK_KHR_deferred_host_operations.deferredOperationJoinKHR',
@@ -288,6 +296,48 @@ instance HasObjectType CuFunctionNVX where
   objectTypeAndHandle (CuFunctionNVX h) = (OBJECT_TYPE_CU_FUNCTION_NVX, h)
 instance Show CuFunctionNVX where
   showsPrec p (CuFunctionNVX x) = showParen (p >= 11) (showString "CuFunctionNVX 0x" . showHex x)
+
+
+-- | VkOpticalFlowSessionNV - Opaque handle to an optical flow session object
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_optical_flow VK_NV_optical_flow>,
+-- 'Vulkan.Extensions.VK_NV_optical_flow.bindOpticalFlowSessionImageNV',
+-- 'Vulkan.Extensions.VK_NV_optical_flow.cmdOpticalFlowExecuteNV',
+-- 'Vulkan.Extensions.VK_NV_optical_flow.createOpticalFlowSessionNV',
+-- 'Vulkan.Extensions.VK_NV_optical_flow.destroyOpticalFlowSessionNV'
+newtype OpticalFlowSessionNV = OpticalFlowSessionNV Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance HasObjectType OpticalFlowSessionNV where
+  objectTypeAndHandle (OpticalFlowSessionNV h) = ( OBJECT_TYPE_OPTICAL_FLOW_SESSION_NV
+                                                 , h )
+instance Show OpticalFlowSessionNV where
+  showsPrec p (OpticalFlowSessionNV x) = showParen (p >= 11) (showString "OpticalFlowSessionNV 0x" . showHex x)
+
+
+-- | VkMicromapEXT - Opaque handle to a micromap object
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_opacity_micromap VK_EXT_opacity_micromap>,
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.AccelerationStructureTrianglesOpacityMicromapEXT',
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.CopyMemoryToMicromapInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.CopyMicromapInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.CopyMicromapToMemoryInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.MicromapBuildInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.cmdWriteMicromapsPropertiesEXT',
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.createMicromapEXT',
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.destroyMicromapEXT',
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.writeMicromapsPropertiesEXT'
+newtype MicromapEXT = MicromapEXT Word64
+  deriving newtype (Eq, Ord, Storable, Zero)
+  deriving anyclass (IsHandle)
+instance HasObjectType MicromapEXT where
+  objectTypeAndHandle (MicromapEXT h) = (OBJECT_TYPE_MICROMAP_EXT, h)
+instance Show MicromapEXT where
+  showsPrec p (MicromapEXT x) = showParen (p >= 11) (showString "MicromapEXT 0x" . showHex x)
 
 
 -- | VkDisplayKHR - Opaque handle to a display object

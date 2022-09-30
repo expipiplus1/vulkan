@@ -3237,6 +3237,14 @@ instance Zero RayTracingShaderGroupCreateInfoKHR where
 --     or
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_CALLABLE_BIT_KHR'
 --
+-- -   #VUID-VkRayTracingPipelineCreateInfoKHR-flags-07403# If @flags@
+--     includes
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT',
+--     each element of @pLibraryInfo->pLibraries@ /must/ have been created
+--     with the
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT'
+--     bit set
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkRayTracingPipelineCreateInfoKHR-sType-sType# @sType@ /must/

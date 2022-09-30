@@ -44,6 +44,8 @@ type SampleCountFlags = SampleCountFlagBits
 -- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo',
 -- 'SampleCountFlags',
 -- 'Vulkan.Extensions.VK_EXT_sample_locations.SampleLocationsInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT',
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT',
 -- 'Vulkan.Extensions.VK_EXT_sample_locations.getPhysicalDeviceMultisamplePropertiesEXT',
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.getPhysicalDeviceSparseImageFormatProperties'
 newtype SampleCountFlagBits = SampleCountFlagBits Flags

@@ -185,6 +185,7 @@ module Vulkan.Core10.Enums.Format  (Format( FORMAT_UNDEFINED
                                           , FORMAT_ASTC_12x10_SRGB_BLOCK
                                           , FORMAT_ASTC_12x12_UNORM_BLOCK
                                           , FORMAT_ASTC_12x12_SRGB_BLOCK
+                                          , FORMAT_R16G16_S10_5_NV
                                           , FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG
                                           , FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG
                                           , FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG
@@ -277,6 +278,8 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_astc_decode_mode.ImageViewASTCDecodeModeEXT',
 -- 'Vulkan.Core10.ImageView.ImageViewCreateInfo',
+-- 'Vulkan.Extensions.VK_NV_optical_flow.OpticalFlowImageFormatPropertiesNV',
+-- 'Vulkan.Extensions.VK_NV_optical_flow.OpticalFlowSessionCreateInfoNV',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceSparseImageFormatInfo2',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo',
@@ -1305,6 +1308,11 @@ pattern FORMAT_ASTC_12x12_UNORM_BLOCK = Format 183
 -- nonlinear encoding applied to the RGB components.
 pattern FORMAT_ASTC_12x12_SRGB_BLOCK = Format 184
 
+-- | 'FORMAT_R16G16_S10_5_NV' specifies a two-component, fixed-point format
+-- where most significant bit specifies the sign bit, next 10 bits specify
+-- the integer value and last 5 bits represent the fractional value.
+pattern FORMAT_R16G16_S10_5_NV = Format 1000464000
+
 -- | 'FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG' specifies a four-component, PVRTC
 -- compressed format where each 64-bit compressed texel block encodes a 4×4
 -- rectangle of unsigned normalized RGBA texel data with sRGB nonlinear
@@ -2212,6 +2220,7 @@ pattern FORMAT_G8B8G8R8_422_UNORM = Format 1000156000
   , FORMAT_ASTC_12x10_SRGB_BLOCK
   , FORMAT_ASTC_12x12_UNORM_BLOCK
   , FORMAT_ASTC_12x12_SRGB_BLOCK
+  , FORMAT_R16G16_S10_5_NV
   , FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG
   , FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG
   , FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG
@@ -2506,6 +2515,7 @@ showTableFormat =
   , (FORMAT_ASTC_12x10_SRGB_BLOCK, "ASTC_12x10_SRGB_BLOCK")
   , (FORMAT_ASTC_12x12_UNORM_BLOCK, "ASTC_12x12_UNORM_BLOCK")
   , (FORMAT_ASTC_12x12_SRGB_BLOCK, "ASTC_12x12_SRGB_BLOCK")
+  , (FORMAT_R16G16_S10_5_NV, "R16G16_S10_5_NV")
   ,
     ( FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG
     , "PVRTC2_4BPP_SRGB_BLOCK_IMG"

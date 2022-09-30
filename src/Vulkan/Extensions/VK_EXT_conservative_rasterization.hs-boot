@@ -154,6 +154,7 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_conservative_rasterization  ( PhysicalDeviceConservativeRasterizationPropertiesEXT
                                                             , PipelineRasterizationConservativeStateCreateInfoEXT
+                                                            , ConservativeRasterizationModeEXT
                                                             ) where
 
 import Vulkan.CStruct (FromCStruct)
@@ -174,4 +175,7 @@ instance ToCStruct PipelineRasterizationConservativeStateCreateInfoEXT
 instance Show PipelineRasterizationConservativeStateCreateInfoEXT
 
 instance FromCStruct PipelineRasterizationConservativeStateCreateInfoEXT
+
+
+data ConservativeRasterizationModeEXT
 

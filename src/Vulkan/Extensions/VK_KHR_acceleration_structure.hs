@@ -1200,6 +1200,8 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( destroyAccelerationStr
                                                                                      , GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR
                                                                                      , GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR
                                                                                      , GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR
+                                                                                     , GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_EXT
+                                                                                     , GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_EXT
                                                                                      , ..
                                                                                      )
                                                         , GeometryFlagsKHR
@@ -1213,6 +1215,9 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( destroyAccelerationStr
                                                                                                , BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR
                                                                                                , BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR
                                                                                                , BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR
+                                                                                               , BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT
+                                                                                               , BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_EXT
+                                                                                               , BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_EXT
                                                                                                , BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV
                                                                                                , ..
                                                                                                )
@@ -1343,6 +1348,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (Accelerat
 import Vulkan.Extensions.Handles (AccelerationStructureKHR)
 import Vulkan.Extensions.Handles (AccelerationStructureKHR(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (AccelerationStructureMotionInfoNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_opacity_micromap (AccelerationStructureTrianglesOpacityMicromapEXT)
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Bool32)
 import Vulkan.Core10.Handles (Buffer)
@@ -4717,6 +4723,14 @@ foreign import ccall
 --     -   Its @primitiveCount@ member is less than or equal to the
 --         corresponding element of @pMaxPrimitiveCounts@.
 --
+--     -   For each element of either @pGeometries@ or @ppGeometries@ at a
+--         given index, with a @geometryType@ member equal to
+--         'GEOMETRY_TYPE_TRIANGLES_KHR', if the @pNext@ chain contains
+--         'Vulkan.Extensions.VK_EXT_opacity_micromap.AccelerationStructureTrianglesOpacityMicromapEXT'
+--         the corresponding member of @pBuildInfo@ also contains
+--         'Vulkan.Extensions.VK_EXT_opacity_micromap.AccelerationStructureTrianglesOpacityMicromapEXT'
+--         and with an equivalent @micromap@.
+--
 -- Similarly, the @updateScratchSize@ value will support any build command
 -- specifying the 'BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR' @mode@
 -- under the above conditions, and the @buildScratchSize@ value will
@@ -5225,8 +5239,12 @@ instance Zero PhysicalDeviceAccelerationStructurePropertiesKHR where
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR'
 --
 -- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-pNext-pNext#
---     @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+--     Each @pNext@ member of any structure (including this one) in the
+--     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
+--     instance of
 --     'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureGeometryMotionTrianglesDataNV'
+--     or
+--     'Vulkan.Extensions.VK_EXT_opacity_micromap.AccelerationStructureTrianglesOpacityMicromapEXT'
 --
 -- -   #VUID-VkAccelerationStructureGeometryTrianglesDataKHR-sType-unique#
 --     The @sType@ value of each struct in the @pNext@ chain /must/ be
@@ -5286,6 +5304,7 @@ instance Extensible AccelerationStructureGeometryTrianglesDataKHR where
   getNext AccelerationStructureGeometryTrianglesDataKHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends AccelerationStructureGeometryTrianglesDataKHR e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @AccelerationStructureTrianglesOpacityMicromapEXT = Just f
     | Just Refl <- eqT @e @AccelerationStructureGeometryMotionTrianglesDataNV = Just f
     | otherwise = Nothing
 
@@ -5643,6 +5662,13 @@ instance Zero AccelerationStructureGeometryKHR where
 -- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-flags-04929# If
 --     'BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV' is set in @flags@,
 --     @type@ /must/ not be 'ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR'
+--
+-- -   #VUID-VkAccelerationStructureBuildGeometryInfoKHR-flags-07334# If
+--     @flags@ has the
+--     'BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_EXT' bit
+--     set then it /must/ not have the
+--     'BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT'
+--     bit set.
 --
 -- == Valid Usage (Implicit)
 --
@@ -6529,7 +6555,7 @@ instance Zero AccelerationStructureDeviceAddressInfoKHR where
 -- @pVersionData@ is a /pointer/ to an array of
 -- 2×'Vulkan.Core10.APIConstants.UUID_SIZE' @uint8_t@ values instead of two
 -- 'Vulkan.Core10.APIConstants.UUID_SIZE' arrays as the expected use case
--- for this member is to be pointed at the header of an previously
+-- for this member is to be pointed at the header of a previously
 -- serialized acceleration structure (via
 -- 'cmdCopyAccelerationStructureToMemoryKHR' or
 -- 'copyAccelerationStructureToMemoryKHR') that is loaded in memory. Using
@@ -6562,7 +6588,7 @@ instance ToCStruct AccelerationStructureVersionInfoKHR where
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_VERSION_INFO_KHR)
     lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     lift $ unless (Data.ByteString.length (versionData) == 2 * UUID_SIZE) $
-      throwIO $ IOError Nothing InvalidArgument "" "AccelerationStructureVersionKHR::versionData must be 2*VK_UUID_SIZE bytes" Nothing Nothing
+      throwIO $ IOError Nothing InvalidArgument "" "VkAccelerationStructureVersionInfoKHR::versionData must be 2*VK_UUID_SIZE bytes" Nothing Nothing
     versionData' <- fmap (castPtr @CChar @Word8) . ContT $ unsafeUseAsCString (versionData)
     lift $ poke ((p `plusPtr` 16 :: Ptr (Ptr Word8))) versionData'
     lift $ f
@@ -7042,6 +7068,12 @@ pattern GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR = GeometryInstanceFlagBitsKHR 0x0
 -- SPIR-V @OpaqueKHR@ ray flag.
 pattern GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR = GeometryInstanceFlagBitsKHR 0x00000008
 
+-- No documentation found for Nested "VkGeometryInstanceFlagBitsKHR" "VK_GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_EXT"
+pattern GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_EXT = GeometryInstanceFlagBitsKHR 0x00000020
+
+-- No documentation found for Nested "VkGeometryInstanceFlagBitsKHR" "VK_GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_EXT"
+pattern GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_EXT = GeometryInstanceFlagBitsKHR 0x00000010
+
 conNameGeometryInstanceFlagBitsKHR :: String
 conNameGeometryInstanceFlagBitsKHR = "GeometryInstanceFlagBitsKHR"
 
@@ -7065,6 +7097,14 @@ showTableGeometryInstanceFlagBitsKHR =
   ,
     ( GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR
     , "FORCE_NO_OPAQUE_BIT_KHR"
+    )
+  ,
+    ( GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_EXT
+    , "DISABLE_OPACITY_MICROMAPS_EXT"
+    )
+  ,
+    ( GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_EXT
+    , "FORCE_OPACITY_MICROMAP_2_STATE_EXT"
     )
   ]
 
@@ -7193,6 +7233,24 @@ pattern BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR = BuildAccelerati
 -- of build time or trace performance.
 pattern BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR = BuildAccelerationStructureFlagBitsKHR 0x00000010
 
+-- | 'BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT'
+-- indicates that the data of the opacity micromaps associated with the
+-- specified acceleration structure /may/ change with an acceleration
+-- structure update.
+pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT = BuildAccelerationStructureFlagBitsKHR 0x00000100
+
+-- | 'BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_EXT'
+-- indicates that the specified acceleration structure /may/ be referenced
+-- in an instance with 'GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_EXT'
+-- set.
+pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_EXT = BuildAccelerationStructureFlagBitsKHR 0x00000080
+
+-- | 'BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_EXT'
+-- indicates that the opacity micromaps associated with the specified
+-- acceleration structure /may/ change with an acceleration structure
+-- update.
+pattern BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_EXT = BuildAccelerationStructureFlagBitsKHR 0x00000040
+
 -- No documentation found for Nested "VkBuildAccelerationStructureFlagBitsKHR" "VK_BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV"
 pattern BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV = BuildAccelerationStructureFlagBitsKHR 0x00000020
 
@@ -7223,6 +7281,18 @@ showTableBuildAccelerationStructureFlagBitsKHR =
   ,
     ( BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR
     , "LOW_MEMORY_BIT_KHR"
+    )
+  ,
+    ( BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT
+    , "ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT"
+    )
+  ,
+    ( BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_EXT
+    , "ALLOW_DISABLE_OPACITY_MICROMAPS_EXT"
+    )
+  ,
+    ( BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_EXT
+    , "ALLOW_OPACITY_MICROMAP_UPDATE_EXT"
     )
   ,
     ( BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV
@@ -7594,7 +7664,8 @@ instance Read GeometryTypeKHR where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
--- 'getAccelerationStructureBuildSizesKHR'
+-- 'getAccelerationStructureBuildSizesKHR',
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.getMicromapBuildSizesEXT'
 newtype AccelerationStructureBuildTypeKHR = AccelerationStructureBuildTypeKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
@@ -7663,7 +7734,8 @@ instance Read AccelerationStructureBuildTypeKHR where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
--- 'getDeviceAccelerationStructureCompatibilityKHR'
+-- 'getDeviceAccelerationStructureCompatibilityKHR',
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.getDeviceMicromapCompatibilityEXT'
 newtype AccelerationStructureCompatibilityKHR = AccelerationStructureCompatibilityKHR Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 

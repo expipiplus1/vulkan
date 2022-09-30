@@ -5,6 +5,7 @@ module Vulkan.Core10.Enums.QueueFlagBits  ( QueueFlags
                                                          , QUEUE_COMPUTE_BIT
                                                          , QUEUE_TRANSFER_BIT
                                                          , QUEUE_SPARSE_BINDING_BIT
+                                                         , QUEUE_OPTICAL_FLOW_BIT_NV
                                                          , QUEUE_PROTECTED_BIT
                                                          , ..
                                                          )
@@ -33,10 +34,12 @@ type QueueFlags = QueueFlagBits
 -- exposed by the implementation /must/ support both graphics and compute
 -- operations.
 --
--- Furthermore, if the protected memory physical device feature is
--- supported, then at least one queue family of at least one physical
--- device exposed by the implementation /must/ support graphics operations,
--- compute operations, and protected memory operations.
+-- Furthermore, if the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-protectedMemory protectedMemory>
+-- physical device feature is supported, then at least one queue family of
+-- at least one physical device exposed by the implementation /must/
+-- support graphics operations, compute operations, and protected memory
+-- operations.
 --
 -- Note
 --
@@ -76,6 +79,10 @@ pattern QUEUE_TRANSFER_BIT = QueueFlagBits 0x00000004
 -- queue family /must/ support this bit.
 pattern QUEUE_SPARSE_BINDING_BIT = QueueFlagBits 0x00000008
 
+-- | 'QUEUE_OPTICAL_FLOW_BIT_NV' specifies that queues in this queue family
+-- support optical flow operations.
+pattern QUEUE_OPTICAL_FLOW_BIT_NV = QueueFlagBits 0x00000100
+
 -- | 'QUEUE_PROTECTED_BIT' specifies that queues in this queue family support
 -- the
 -- 'Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DEVICE_QUEUE_CREATE_PROTECTED_BIT'
@@ -98,6 +105,7 @@ showTableQueueFlagBits =
   , (QUEUE_COMPUTE_BIT, "COMPUTE_BIT")
   , (QUEUE_TRANSFER_BIT, "TRANSFER_BIT")
   , (QUEUE_SPARSE_BINDING_BIT, "SPARSE_BINDING_BIT")
+  , (QUEUE_OPTICAL_FLOW_BIT_NV, "OPTICAL_FLOW_BIT_NV")
   , (QUEUE_PROTECTED_BIT, "PROTECTED_BIT")
   ]
 

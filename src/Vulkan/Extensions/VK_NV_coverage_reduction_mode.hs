@@ -590,7 +590,8 @@ instance Read PipelineCoverageReductionStateCreateFlagsNV where
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_coverage_reduction_mode VK_NV_coverage_reduction_mode>,
 -- 'FramebufferMixedSamplesCombinationNV',
--- 'PipelineCoverageReductionStateCreateInfoNV'
+-- 'PipelineCoverageReductionStateCreateInfoNV',
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageReductionModeNV'
 newtype CoverageReductionModeNV = CoverageReductionModeNV Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 

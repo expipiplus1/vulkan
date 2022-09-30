@@ -330,7 +330,8 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_viewport_swizzle VK_NV_viewport_swizzle>,
 -- 'PipelineViewportSwizzleStateCreateInfoNV',
--- 'ViewportCoordinateSwizzleNV'
+-- 'ViewportCoordinateSwizzleNV',
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportSwizzleNV'
 data ViewportSwizzleNV = ViewportSwizzleNV
   { -- | @x@ is a 'ViewportCoordinateSwizzleNV' value specifying the swizzle
     -- operation to apply to the x component of the primitive
