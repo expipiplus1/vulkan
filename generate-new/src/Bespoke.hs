@@ -479,6 +479,7 @@ difficultLengths =
         structName
         `elem` [ "VkAccelerationStructureVersionInfoKHR"
                , "VkAccelerationStructureVersionKHR"
+               , "VkMicromapVersionInfoEXT"
                ]
       -> \case
         p
@@ -500,7 +501,8 @@ difficultLengths =
                 tellQualImport 'BS.length
                 let
                   err =
-                    "AccelerationStructureVersionKHR::versionData must be "
+                    unCName structName
+                      <> "::versionData must be "
                       <> len
                       <> " bytes"
                   uuidSizeDoc = mkPatternName "VK_UUID_SIZE"

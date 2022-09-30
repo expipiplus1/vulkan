@@ -134,7 +134,7 @@ isDefaultableForeignType t =
 
 -- TODO: These shouldn't be defaultable, probably a spec oversight
 hasUnknownEnum :: CType -> Bool
-hasUnknownEnum = (`elem` [TypeName "VkFormat", TypeName "VkObjectType"])
+hasUnknownEnum = (`elem` [TypeName "VkFormat", TypeName "VkObjectType", TypeName "VkOpticalFlowPerformanceLevelNV"])
 
 -- | Is this a type we don't want to marshal
 isPassAsPointerType' :: CType -> Bool

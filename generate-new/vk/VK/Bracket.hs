@@ -139,6 +139,8 @@ brackets marshaledCommands handles = context "brackets" $ do
         , "VkDisplayModeKHR"
         , "VkSurfaceKHR"
         , "VkPerformanceConfigurationINTEL"
+        , "VkOpticalFlowSessionNV"
+        , "VkMicromapEXT"
         ]
       handleNames = hName <$> handles
       -- A crude way of getting all the type names we generate
