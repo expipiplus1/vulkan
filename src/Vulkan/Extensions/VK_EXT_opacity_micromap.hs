@@ -399,6 +399,7 @@
 -- This page is a generated document. Fixes and changes should be made to
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_EXT_opacity_micromap  ( createMicromapEXT
+                                                  , withMicromapEXT
                                                   , cmdBuildMicromapsEXT
                                                   , buildMicromapsEXT
                                                   , destroyMicromapEXT
@@ -713,6 +714,19 @@ createMicromapEXT device createInfo allocator = liftIO . evalContT $ do
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pMicromap <- lift $ peek @MicromapEXT pPMicromap
   pure $ (pMicromap)
+
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createMicromapEXT' and 'destroyMicromapEXT'
+--
+-- To ensure that 'destroyMicromapEXT' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
+--
+withMicromapEXT :: forall io r . MonadIO io => Device -> MicromapCreateInfoEXT -> Maybe AllocationCallbacks -> (io MicromapEXT -> (MicromapEXT -> io ()) -> r) -> r
+withMicromapEXT device pCreateInfo pAllocator b =
+  b (createMicromapEXT device pCreateInfo pAllocator)
+    (\(o0) -> destroyMicromapEXT device o0 pAllocator)
 
 
 foreign import ccall

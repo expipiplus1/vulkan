@@ -290,6 +290,7 @@
 -- the generator scripts, not directly.
 module Vulkan.Extensions.VK_NV_optical_flow  ( getPhysicalDeviceOpticalFlowImageFormatsNV
                                              , createOpticalFlowSessionNV
+                                             , withOpticalFlowSessionNV
                                              , destroyOpticalFlowSessionNV
                                              , bindOpticalFlowSessionImageNV
                                              , cmdOpticalFlowExecuteNV
@@ -678,6 +679,19 @@ createOpticalFlowSessionNV device createInfo allocator = liftIO . evalContT $ do
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pSession <- lift $ peek @OpticalFlowSessionNV pPSession
   pure $ (pSession)
+
+-- | A convenience wrapper to make a compatible pair of calls to
+-- 'createOpticalFlowSessionNV' and 'destroyOpticalFlowSessionNV'
+--
+-- To ensure that 'destroyOpticalFlowSessionNV' is always called: pass
+-- 'Control.Exception.bracket' (or the allocate function from your
+-- favourite resource management library) as the last argument.
+-- To just extract the pair pass '(,)' as the last argument.
+--
+withOpticalFlowSessionNV :: forall a io r . (Extendss OpticalFlowSessionCreateInfoNV a, PokeChain a, MonadIO io) => Device -> OpticalFlowSessionCreateInfoNV a -> Maybe AllocationCallbacks -> (io OpticalFlowSessionNV -> (OpticalFlowSessionNV -> io ()) -> r) -> r
+withOpticalFlowSessionNV device pCreateInfo pAllocator b =
+  b (createOpticalFlowSessionNV device pCreateInfo pAllocator)
+    (\(o0) -> destroyOpticalFlowSessionNV device o0 pAllocator)
 
 
 foreign import ccall
