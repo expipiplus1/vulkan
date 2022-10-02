@@ -67,6 +67,7 @@ import Vulkan.Extensions.VK_EXT_descriptor_indexing (pattern EXT_DESCRIPTOR_INDE
 import Vulkan.Extensions.VK_EXT_fragment_density_map (pattern EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_fragment_shader_interlock (pattern EXT_FRAGMENT_SHADER_INTERLOCK_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_mesh_shader (pattern EXT_MESH_SHADER_EXTENSION_NAME)
+import Vulkan.Extensions.VK_EXT_opacity_micromap (pattern EXT_OPACITY_MICROMAP_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_post_depth_coverage (pattern EXT_POST_DEPTH_COVERAGE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_shader_atomic_float2 (pattern EXT_SHADER_ATOMIC_FLOAT_2_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_shader_atomic_float (pattern EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME)
@@ -111,6 +112,7 @@ import Vulkan.Extensions.VK_KHR_shader_subgroup_uniform_control_flow (pattern KH
 import Vulkan.Extensions.VK_KHR_shader_terminate_invocation (pattern KHR_SHADER_TERMINATE_INVOCATION_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_spirv_1_4 (pattern KHR_SPIRV_1_4_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_storage_buffer_storage_class (pattern KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME)
+import Vulkan.Extensions.VK_KHR_synchronization2 (pattern KHR_SYNCHRONIZATION_2_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_variable_pointers (pattern KHR_VARIABLE_POINTERS_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_vulkan_memory_model (pattern KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_workgroup_memory_explicit_layout (pattern KHR_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_EXTENSION_NAME)
@@ -3142,6 +3144,50 @@ spirvCapabilityRequirements = \case
       , RequireDeviceExtension
           { deviceExtensionLayerName = Nothing
           , deviceExtensionName = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "RayTracingOpacityMicromapEXT" ->
+    (,)
+      [ RequireInstanceExtension
+          { instanceExtensionLayerName = Nothing
+          , instanceExtensionName = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+          , instanceExtensionMinVersion = 0
+          }
+      ]
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = EXT_OPACITY_MICROMAP_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_SYNCHRONIZATION_2_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_MAINTENANCE_3_EXTENSION_NAME
           , deviceExtensionMinVersion = 0
           }
       ]

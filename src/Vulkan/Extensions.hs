@@ -47,6 +47,8 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_depth_clip_enable
                           , module Vulkan.Extensions.VK_EXT_depth_range_unrestricted
                           , module Vulkan.Extensions.VK_EXT_descriptor_indexing
+                          , module Vulkan.Extensions.VK_EXT_device_address_binding_report
+                          , module Vulkan.Extensions.VK_EXT_device_fault
                           , module Vulkan.Extensions.VK_EXT_device_memory_report
                           , module Vulkan.Extensions.VK_EXT_direct_mode_display
                           , module Vulkan.Extensions.VK_EXT_directfb_surface
@@ -55,6 +57,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_display_surface_counter
                           , module Vulkan.Extensions.VK_EXT_extended_dynamic_state
                           , module Vulkan.Extensions.VK_EXT_extended_dynamic_state2
+                          , module Vulkan.Extensions.VK_EXT_extended_dynamic_state3
                           , module Vulkan.Extensions.VK_EXT_external_memory_dma_buf
                           , module Vulkan.Extensions.VK_EXT_external_memory_host
                           , module Vulkan.Extensions.VK_EXT_filter_cubic
@@ -88,12 +91,14 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled
                           , module Vulkan.Extensions.VK_EXT_mutable_descriptor_type
                           , module Vulkan.Extensions.VK_EXT_non_seamless_cube_map
+                          , module Vulkan.Extensions.VK_EXT_opacity_micromap
                           , module Vulkan.Extensions.VK_EXT_pageable_device_local_memory
                           , module Vulkan.Extensions.VK_EXT_pci_bus_info
                           , module Vulkan.Extensions.VK_EXT_physical_device_drm
                           , module Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
                           , module Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
                           , module Vulkan.Extensions.VK_EXT_pipeline_properties
+                          , module Vulkan.Extensions.VK_EXT_pipeline_protected_access
                           , module Vulkan.Extensions.VK_EXT_pipeline_robustness
                           , module Vulkan.Extensions.VK_EXT_post_depth_coverage
                           , module Vulkan.Extensions.VK_EXT_primitive_topology_list_restart
@@ -270,6 +275,8 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_NV_inherited_viewport_scissor
                           , module Vulkan.Extensions.VK_NV_linear_color_attachment
                           , module Vulkan.Extensions.VK_NV_mesh_shader
+                          , module Vulkan.Extensions.VK_NV_optical_flow
+                          , module Vulkan.Extensions.VK_NV_present_barrier
                           , module Vulkan.Extensions.VK_NV_ray_tracing
                           , module Vulkan.Extensions.VK_NV_ray_tracing_motion_blur
                           , module Vulkan.Extensions.VK_NV_representative_fragment_test
@@ -341,6 +348,8 @@ import Vulkan.Extensions.VK_EXT_depth_clip_control
 import Vulkan.Extensions.VK_EXT_depth_clip_enable
 import Vulkan.Extensions.VK_EXT_depth_range_unrestricted
 import Vulkan.Extensions.VK_EXT_descriptor_indexing
+import Vulkan.Extensions.VK_EXT_device_address_binding_report
+import Vulkan.Extensions.VK_EXT_device_fault
 import Vulkan.Extensions.VK_EXT_device_memory_report
 import Vulkan.Extensions.VK_EXT_direct_mode_display
 import Vulkan.Extensions.VK_EXT_directfb_surface
@@ -349,6 +358,7 @@ import Vulkan.Extensions.VK_EXT_display_control
 import Vulkan.Extensions.VK_EXT_display_surface_counter
 import Vulkan.Extensions.VK_EXT_extended_dynamic_state
 import Vulkan.Extensions.VK_EXT_extended_dynamic_state2
+import Vulkan.Extensions.VK_EXT_extended_dynamic_state3
 import Vulkan.Extensions.VK_EXT_external_memory_dma_buf
 import Vulkan.Extensions.VK_EXT_external_memory_host
 import Vulkan.Extensions.VK_EXT_filter_cubic
@@ -382,12 +392,14 @@ import Vulkan.Extensions.VK_EXT_multi_draw
 import Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled
 import Vulkan.Extensions.VK_EXT_mutable_descriptor_type
 import Vulkan.Extensions.VK_EXT_non_seamless_cube_map
+import Vulkan.Extensions.VK_EXT_opacity_micromap
 import Vulkan.Extensions.VK_EXT_pageable_device_local_memory
 import Vulkan.Extensions.VK_EXT_pci_bus_info
 import Vulkan.Extensions.VK_EXT_physical_device_drm
 import Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
 import Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
 import Vulkan.Extensions.VK_EXT_pipeline_properties
+import Vulkan.Extensions.VK_EXT_pipeline_protected_access
 import Vulkan.Extensions.VK_EXT_pipeline_robustness
 import Vulkan.Extensions.VK_EXT_post_depth_coverage
 import Vulkan.Extensions.VK_EXT_primitive_topology_list_restart
@@ -564,6 +576,8 @@ import Vulkan.Extensions.VK_NV_glsl_shader
 import Vulkan.Extensions.VK_NV_inherited_viewport_scissor
 import Vulkan.Extensions.VK_NV_linear_color_attachment
 import Vulkan.Extensions.VK_NV_mesh_shader
+import Vulkan.Extensions.VK_NV_optical_flow
+import Vulkan.Extensions.VK_NV_present_barrier
 import Vulkan.Extensions.VK_NV_ray_tracing
 import Vulkan.Extensions.VK_NV_ray_tracing_motion_blur
 import Vulkan.Extensions.VK_NV_representative_fragment_test

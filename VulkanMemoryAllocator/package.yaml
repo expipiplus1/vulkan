@@ -1,5 +1,5 @@
 name: VulkanMemoryAllocator
-version: "0.10.3.1"
+version: "0.10.4"
 synopsis: Bindings to the VulkanMemoryAllocator library
 category: Graphics
 maintainer: Ellie Hermaszewska <live.long.and.prosper@monoid.al>
@@ -14,13 +14,13 @@ library:
   source-dirs: src
   include-dirs:
     VulkanMemoryAllocator/include
-  extra-libraries:
-    stdc++
+
+
   cxx-sources:
     src/lib.cpp
   dependencies:
     - base <5
-    - vulkan >= 3.6 && < 3.23
+    - vulkan >= 3.6 && < 3.24
     - bytestring
     - transformers
     - vector
@@ -39,6 +39,26 @@ library:
         - -optcxx -std=c++17
     - condition: false
       other-modules: Paths_VulkanMemoryAllocator
+    # C++ stdlib linking (mainly cribbed from text)
+    - condition: impl(ghc >= 9.4)
+      then:
+        dependencies: system-cxx-std-lib == 1.0
+      else:
+        when:
+          - condition: os(linux)
+            extra-libraries: stdc++
+          - condition: os(darwin) || os(freebsd)
+            extra-libraries: c++
+          - condition: os(openbsd)
+            extra-libraries: c++ c++abi pthread
+          - condition: os(windows)
+            when:
+              condition: impl(ghc < 9.3)
+              then:
+                extra-libraries: stdc++
+              else:
+                extra-libraries: c++ c++abi
+
   ghc-options:
     - -Wall
     - -Wno-unticked-promoted-constructors

@@ -87,7 +87,7 @@ unReservedWord t = if t `elem` (keywords <> preludeWords) then t <> "'" else t
     , "type"
     , "where"
     ]
-  preludeWords = ["filter"]
+  preludeWords = ["filter", "id"]
 
 chooseAlign :: Int -> (Doc ann, TH.Name, Doc ann -> Doc ann)
 chooseAlign align = if align <= 8

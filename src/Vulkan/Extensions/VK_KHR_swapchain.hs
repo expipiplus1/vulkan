@@ -1246,6 +1246,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_display_control (SwapchainCounter
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_display_native_hdr (SwapchainDisplayNativeHdrCreateInfoAMD)
 import Vulkan.Extensions.Handles (SwapchainKHR)
 import Vulkan.Extensions.Handles (SwapchainKHR(..))
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_present_barrier (SwapchainPresentBarrierCreateInfoNV)
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.APIConstants (pattern MAX_DEVICE_GROUP_SIZE)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR))
@@ -1380,6 +1381,17 @@ foreign import ccall
 -- does not match the extents of the monitor. Other reasons for failure may
 -- include the app not being set as high-dpi aware, or if the physical
 -- device and monitor are not compatible in this mode.
+--
+-- If the @pNext@ chain of 'SwapchainCreateInfoKHR' includes a
+-- 'Vulkan.Extensions.VK_NV_present_barrier.SwapchainPresentBarrierCreateInfoNV'
+-- structure, then that structure includes additional swapchain creation
+-- parameters specific to the present barrier. Swapchain creation /may/
+-- fail if the state of the current system restricts the usage of the
+-- present barrier feature
+-- 'Vulkan.Extensions.VK_NV_present_barrier.SurfaceCapabilitiesPresentBarrierNV',
+-- or a swapchain itself does not satisfy all the required conditions. In
+-- this scenario 'Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+-- is returned.
 --
 -- When the 'Vulkan.Extensions.Handles.SurfaceKHR' in
 -- 'SwapchainCreateInfoKHR' is a display surface, then the
@@ -2696,8 +2708,9 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveInfoEXT',
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveWin32InfoEXT',
 --     'Vulkan.Extensions.VK_EXT_display_control.SwapchainCounterCreateInfoEXT',
+--     'Vulkan.Extensions.VK_AMD_display_native_hdr.SwapchainDisplayNativeHdrCreateInfoAMD',
 --     or
---     'Vulkan.Extensions.VK_AMD_display_native_hdr.SwapchainDisplayNativeHdrCreateInfoAMD'
+--     'Vulkan.Extensions.VK_NV_present_barrier.SwapchainPresentBarrierCreateInfoNV'
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-sType-unique# The @sType@ value of
 --     each struct in the @pNext@ chain /must/ be unique
@@ -2881,6 +2894,7 @@ instance Extensible SwapchainCreateInfoKHR where
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SwapchainCreateInfoKHR e => b) -> Maybe b
   extends _ f
     | Just Refl <- eqT @e @ImageCompressionControlEXT = Just f
+    | Just Refl <- eqT @e @SwapchainPresentBarrierCreateInfoNV = Just f
     | Just Refl <- eqT @e @SurfaceFullScreenExclusiveWin32InfoEXT = Just f
     | Just Refl <- eqT @e @SurfaceFullScreenExclusiveInfoEXT = Just f
     | Just Refl <- eqT @e @ImageFormatListCreateInfo = Just f

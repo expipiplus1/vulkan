@@ -1504,6 +1504,10 @@ instance es ~ '[] => Zero (PipelineShaderStageCreateInfo es) where
 --     'Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_feedback.PipelineCreationFeedbackCreateInfo'::@pipelineStageCreationFeedbackCount@
 --     is not @0@, it /must/ be @1@
 --
+-- -   #VUID-VkComputePipelineCreateInfo-flags-07367# @flags@ /must/ not
+--     include
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkComputePipelineCreateInfo-sType-sType# @sType@ /must/ be
@@ -3119,6 +3123,14 @@ instance Zero PipelineColorBlendAttachmentState where
 --     feature is not enabled, @flags@ /must/ not include
 --     'Vulkan.Core10.Enums.PipelineColorBlendStateCreateFlagBits.PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_EXT'
 --
+-- -   #VUID-VkPipelineColorBlendStateCreateInfo-pAttachments-07353# If any
+--     of
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT',
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT',
+--     or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_MASK_EXT'
+--     are not set, @pAttachments@ /must/ not be @NULL@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkPipelineColorBlendStateCreateInfo-sType-sType# @sType@
@@ -3141,9 +3153,10 @@ instance Zero PipelineColorBlendAttachmentState where
 --     values
 --
 -- -   #VUID-VkPipelineColorBlendStateCreateInfo-pAttachments-parameter# If
---     @attachmentCount@ is not @0@, @pAttachments@ /must/ be a valid
---     pointer to an array of @attachmentCount@ valid
---     'PipelineColorBlendAttachmentState' structures
+--     @attachmentCount@ is not @0@, and @pAttachments@ is not @NULL@,
+--     @pAttachments@ /must/ be a valid pointer to an array of
+--     @attachmentCount@ valid 'PipelineColorBlendAttachmentState'
+--     structures
 --
 -- = See Also
 --
@@ -3165,9 +3178,19 @@ data PipelineColorBlendStateCreateInfo (es :: [Type]) = PipelineColorBlendStateC
     logicOpEnable :: Bool
   , -- | @logicOp@ selects which logical operation to apply.
     logicOp :: LogicOp
+  , -- | @attachmentCount@ is the number of 'PipelineColorBlendAttachmentState'
+    -- elements in @pAttachments@.
+    attachmentCount :: Word32
   , -- | @pAttachments@ is a pointer to an array of
     -- 'PipelineColorBlendAttachmentState' structures defining blend state for
     -- each color attachment.
+    --
+    -- @pAttachments@ is ignored if all of
+    -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT',
+    -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT',
+    -- and
+    -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_MASK_EXT'
+    -- dynamic states set.
     attachments :: Vector PipelineColorBlendAttachmentState
   , -- | @blendConstants@ is a pointer to an array of four values used as the R,
     -- G, B, and A components of the blend constant that are used in blending,
@@ -3201,10 +3224,21 @@ instance ( Extendss PipelineColorBlendStateCreateInfo es
     lift $ poke ((p `plusPtr` 16 :: Ptr PipelineColorBlendStateCreateFlags)) (flags)
     lift $ poke ((p `plusPtr` 20 :: Ptr Bool32)) (boolToBool32 (logicOpEnable))
     lift $ poke ((p `plusPtr` 24 :: Ptr LogicOp)) (logicOp)
-    lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (attachments)) :: Word32))
-    pPAttachments' <- ContT $ allocaBytes @PipelineColorBlendAttachmentState ((Data.Vector.length (attachments)) * 32)
-    lift $ Data.Vector.imapM_ (\i e -> poke (pPAttachments' `plusPtr` (32 * (i)) :: Ptr PipelineColorBlendAttachmentState) (e)) (attachments)
-    lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr PipelineColorBlendAttachmentState))) (pPAttachments')
+    let pAttachmentsLength = Data.Vector.length $ (attachments)
+    attachmentCount'' <- lift $ if (attachmentCount) == 0
+      then pure $ fromIntegral pAttachmentsLength
+      else do
+        unless (fromIntegral pAttachmentsLength == (attachmentCount) || pAttachmentsLength == 0) $
+          throwIO $ IOError Nothing InvalidArgument "" "pAttachments must be empty or have 'attachmentCount' elements" Nothing Nothing
+        pure (attachmentCount)
+    lift $ poke ((p `plusPtr` 28 :: Ptr Word32)) (attachmentCount'')
+    pAttachments'' <- if Data.Vector.null (attachments)
+      then pure nullPtr
+      else do
+        pPAttachments <- ContT $ allocaBytes @PipelineColorBlendAttachmentState (((Data.Vector.length (attachments))) * 32)
+        lift $ Data.Vector.imapM_ (\i e -> poke (pPAttachments `plusPtr` (32 * (i)) :: Ptr PipelineColorBlendAttachmentState) (e)) ((attachments))
+        pure $ pPAttachments
+    lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr PipelineColorBlendAttachmentState))) pAttachments''
     let pBlendConstants' = lowerArrayPtr ((p `plusPtr` 40 :: Ptr (FixedArray 4 CFloat)))
     lift $ case (blendConstants) of
       (e0, e1, e2, e3) -> do
@@ -3240,7 +3274,8 @@ instance ( Extendss PipelineColorBlendStateCreateInfo es
     logicOp <- peek @LogicOp ((p `plusPtr` 24 :: Ptr LogicOp))
     attachmentCount <- peek @Word32 ((p `plusPtr` 28 :: Ptr Word32))
     pAttachments <- peek @(Ptr PipelineColorBlendAttachmentState) ((p `plusPtr` 32 :: Ptr (Ptr PipelineColorBlendAttachmentState)))
-    pAttachments' <- generateM (fromIntegral attachmentCount) (\i -> peekCStruct @PipelineColorBlendAttachmentState ((pAttachments `advancePtrBytes` (32 * (i)) :: Ptr PipelineColorBlendAttachmentState)))
+    let pAttachmentsLength = if pAttachments == nullPtr then 0 else (fromIntegral attachmentCount)
+    pAttachments' <- generateM pAttachmentsLength (\i -> peekCStruct @PipelineColorBlendAttachmentState ((pAttachments `advancePtrBytes` (32 * (i)) :: Ptr PipelineColorBlendAttachmentState)))
     let pblendConstants = lowerArrayPtr @CFloat ((p `plusPtr` 40 :: Ptr (FixedArray 4 CFloat)))
     blendConstants0 <- peek @CFloat ((pblendConstants `advancePtrBytes` 0 :: Ptr CFloat))
     blendConstants1 <- peek @CFloat ((pblendConstants `advancePtrBytes` 4 :: Ptr CFloat))
@@ -3251,6 +3286,7 @@ instance ( Extendss PipelineColorBlendStateCreateInfo es
              flags
              (bool32ToBool logicOpEnable)
              logicOp
+             attachmentCount
              pAttachments'
              (( (coerce @CFloat @Float blendConstants0)
               , (coerce @CFloat @Float blendConstants1)
@@ -3260,6 +3296,7 @@ instance ( Extendss PipelineColorBlendStateCreateInfo es
 instance es ~ '[] => Zero (PipelineColorBlendStateCreateInfo es) where
   zero = PipelineColorBlendStateCreateInfo
            ()
+           zero
            zero
            zero
            zero
@@ -3776,7 +3813,9 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- created. For example, if a pipeline only included
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 -- then any dynamic state value corresponding to depth or stencil testing
--- has no effect.
+-- has no effect. Any linked library that has dynamic state enabled that
+-- same dynamic state /must/ also be enabled in all the other linked
+-- libraries to which that dynamic state applies.
 --
 -- A complete graphics pipeline always includes
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
@@ -4571,6 +4610,20 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT'
 --     or
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-pipelineProtectedAccess-07368# If
+--     the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineProtectedAccess pipelineProtectedAccess>
+--     feature is not enabled, @flags@ /must/ not include
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT'
+--     or
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-flags-07369# @flags@ /must/ not
+--     include both
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT'
+--     and
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT'
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicState-04494# If the
 --     pipeline is being created with
@@ -5976,6 +6029,227 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
 --     any value of @stage@ /must/ not be set in more than one element of
 --     @pStages@
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3TessellationDomainOrigin-07370#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3TessellationDomainOrigin extendedDynamicState3TessellationDomainOrigin>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3DepthClampEnable-07371#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3DepthClampEnable extendedDynamicState3DepthClampEnable>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3PolygonMode-07372#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3PolygonMode extendedDynamicState3PolygonMode>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_POLYGON_MODE_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3RasterizationSamples-07373#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3RasterizationSamples extendedDynamicState3RasterizationSamples>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3SampleMask-07374#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3SampleMask extendedDynamicState3SampleMask>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_MASK_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3AlphaToCoverageEnable-07375#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3AlphaToCoverageEnable extendedDynamicState3AlphaToCoverageEnable>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3AlphaToOneEnable-07376#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3AlphaToOneEnable extendedDynamicState3AlphaToOneEnable>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_ONE_ENABLE_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3LogicOpEnable-07377#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3LogicOpEnable extendedDynamicState3LogicOpEnable>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_ENABLE_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3ColorBlendEnable-07378#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ColorBlendEnable extendedDynamicState3ColorBlendEnable>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3ColorBlendEquation-07379#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ColorBlendEquation extendedDynamicState3ColorBlendEquation>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3ColorWriteMask-07380#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ColorWriteMask extendedDynamicState3ColorWriteMask>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_MASK_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3RasterizationStream-07381#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3RasterizationStream extendedDynamicState3RasterizationStream>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_STREAM_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3ConservativeRasterizationMode-07382#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ConservativeRasterizationMode extendedDynamicState3ConservativeRasterizationMode>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CONSERVATIVE_RASTERIZATION_MODE_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3ExtraPrimitiveOverestimationSize-07383#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ExtraPrimitiveOverestimationSize extendedDynamicState3ExtraPrimitiveOverestimationSize>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXTRA_PRIMITIVE_OVERESTIMATION_SIZE_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3DepthClipEnable-07384#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3DepthClipEnable extendedDynamicState3DepthClipEnable>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLIP_ENABLE_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3SampleLocationsEnable-07385#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3SampleLocationsEnable extendedDynamicState3SampleLocationsEnable>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3ColorBlendAdvanced-07386#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ColorBlendAdvanced extendedDynamicState3ColorBlendAdvanced>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ADVANCED_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3ProvokingVertexMode-07387#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ProvokingVertexMode extendedDynamicState3ProvokingVertexMode>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PROVOKING_VERTEX_MODE_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3LineRasterizationMode-07388#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3LineRasterizationMode extendedDynamicState3LineRasterizationMode>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3LineStippleEnable-07389#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3LineStippleEnable extendedDynamicState3LineStippleEnable>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3DepthClipNegativeOneToOne-07390#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3DepthClipNegativeOneToOne extendedDynamicState3DepthClipNegativeOneToOne>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3ViewportWScalingEnable-07391#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ViewportWScalingEnable extendedDynamicState3ViewportWScalingEnable>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_ENABLE_NV'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3ViewportSwizzle-07392#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ViewportSwizzle extendedDynamicState3ViewportSwizzle>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SWIZZLE_NV'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3CoverageToColorEnable-07393#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3CoverageToColorEnable extendedDynamicState3CoverageToColorEnable>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3CoverageToColorLocation-07394#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3CoverageToColorLocation extendedDynamicState3CoverageToColorLocation>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_LOCATION_NV'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3CoverageModulationMode-07395#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3CoverageModulationMode extendedDynamicState3CoverageModulationMode>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_MODE_NV'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3CoverageModulationTableEnable-07396#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3CoverageModulationTableEnable extendedDynamicState3CoverageModulationTableEnable>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_ENABLE_NV'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3CoverageModulationTable-07397#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3CoverageModulationTable extendedDynamicState3CoverageModulationTable>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_NV'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3CoverageReductionMode-07398#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3CoverageReductionMode extendedDynamicState3CoverageReductionMode>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3RepresentativeFragmentTestEnable-07399#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3RepresentativeFragmentTestEnable extendedDynamicState3RepresentativeFragmentTestEnable>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-extendedDynamicState3ShadingRateImageEnable-07400#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3ShadingRateImageEnable extendedDynamicState3ShadingRateImageEnable>
+--     feature is not enabled, there /must/ be no element of the
+--     @pDynamicStates@ member of @pDynamicState@ set to
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SHADING_RATE_IMAGE_ENABLE_NV'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-flags-07401# @flags@ /must/ not
+--     include
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT'
 --
 -- == Valid Usage (Implicit)
 --

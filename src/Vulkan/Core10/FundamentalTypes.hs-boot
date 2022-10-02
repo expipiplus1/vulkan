@@ -8,10 +8,12 @@ module Vulkan.Core10.FundamentalTypes  ( Extent2D
                                        , Bool32
                                        , DeviceAddress
                                        , DeviceSize
+                                       , SampleMask
                                        ) where
 
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
+import Data.Word (Word32)
 import Data.Word (Word64)
 import Data.Kind (Type)
 
@@ -67,9 +69,12 @@ data Bool32
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.BindIndexBufferIndirectCommandNV',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.BindVertexBufferIndirectCommandNV',
 -- 'Vulkan.Extensions.VK_EXT_buffer_device_address.BufferDeviceAddressCreateInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_device_address_binding_report.DeviceAddressBindingCallbackDataEXT',
+-- 'Vulkan.Extensions.VK_EXT_device_fault.DeviceFaultAddressInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.DeviceOrHostAddressConstKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.DeviceOrHostAddressKHR',
 -- 'Vulkan.Extensions.VK_NVX_image_view_handle.ImageViewAddressPropertiesNVX',
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.MicromapCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.StridedDeviceAddressRegionKHR',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1.TraceRaysIndirectCommand2KHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.cmdBuildAccelerationStructuresIndirectKHR',
@@ -88,6 +93,7 @@ type DeviceAddress = Word64
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureCreateInfoNV',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryAabbsDataKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureGeometryTrianglesDataKHR',
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.AccelerationStructureTrianglesOpacityMicromapEXT',
 -- 'Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferPropertiesANDROID',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2.BindBufferMemoryInfo',
@@ -103,6 +109,9 @@ type DeviceAddress = Word64
 -- 'Vulkan.Core10.BufferView.BufferViewCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_conditional_rendering.ConditionalRenderingBeginInfoEXT',
 -- 'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo',
+-- 'Vulkan.Extensions.VK_EXT_device_address_binding_report.DeviceAddressBindingCallbackDataEXT',
+-- 'Vulkan.Extensions.VK_EXT_device_fault.DeviceFaultAddressInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_device_fault.DeviceFaultCountsEXT',
 -- 'Vulkan.Extensions.VK_EXT_device_memory_report.DeviceMemoryReportCallbackDataEXT',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsInfoNV',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.GeometryAABBNV',
@@ -114,6 +123,9 @@ type DeviceAddress = Word64
 -- 'Vulkan.Core10.Memory.MemoryAllocateInfo',
 -- 'Vulkan.Core10.DeviceInitialization.MemoryHeap',
 -- 'Vulkan.Core10.MemoryManagement.MemoryRequirements',
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.MicromapBuildInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.MicromapBuildSizesInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_opacity_micromap.MicromapCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_external_memory_host.PhysicalDeviceExternalMemoryHostPropertiesEXT',
 -- 'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.PhysicalDeviceMaintenance3Properties',
@@ -167,4 +179,14 @@ type DeviceAddress = Word64
 -- 'Vulkan.Core10.Query.getQueryPoolResults',
 -- 'Vulkan.Core10.Memory.mapMemory'
 type DeviceSize = Word64
+
+
+-- | VkSampleMask - Mask of sample coverage information
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
+-- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo',
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT'
+type SampleMask = Word32
 

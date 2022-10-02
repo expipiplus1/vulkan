@@ -259,7 +259,7 @@ jobs:
     - run: nix-build --arg compiler '${{ matrix.ghc }}' -A openxr
     - run: nix-build --arg compiler '${{ matrix.ghc }}' ./nix/haskell-packages.nix --arg openxrNoVulkan true -A openxr
     - run: nix-build --arg compiler '${{ matrix.ghc }}' -A vulkan-examples
-    - run: nix-build --arg compiler '${{ matrix.ghc }}' nix/release.nix
+    - run: nix-build --arg compiler '${{ matrix.ghc }}' -j1 nix/release.nix
     - run: nix-build --arg compiler '${{ matrix.ghc }}' nix/release.nix -A docs
     - run: nix-build --arg compiler '${{ matrix.ghc }}' nix/release.nix -A docs-combined
     - run: XDG_DATA_DIRS=$(mktemp -d) nix-shell --arg compiler '${{ matrix.ghc }}' examples --run 'ghc-pkg list'
@@ -278,7 +278,7 @@ jobs:
         name: vulkan-haskell
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
 
-    - run: nix-build nix/release.nix -A sdistTest
+    - run: nix-build nix/release.nix -j1 -A sdistTest
 
   nix-generator:
     runs-on: ubuntu-latest

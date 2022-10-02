@@ -613,7 +613,8 @@ instance Zero PipelineRasterizationLineStateCreateInfoEXT where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_line_rasterization VK_EXT_line_rasterization>,
--- 'PipelineRasterizationLineStateCreateInfoEXT'
+-- 'PipelineRasterizationLineStateCreateInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
 newtype LineRasterizationModeEXT = LineRasterizationModeEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 

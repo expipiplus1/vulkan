@@ -73,6 +73,9 @@ import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ClearDepthStencilValu
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ClearRect)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shading_rate_image (CoarseSampleOrderCustomNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shading_rate_image (CoarseSampleOrderTypeNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_extended_dynamic_state3 (ColorBlendAdvancedEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_extended_dynamic_state3 (ColorBlendEquationEXT)
+import {-# SOURCE #-} Vulkan.Core10.Enums.ColorComponentFlagBits (ColorComponentFlags)
 import {-# SOURCE #-} Vulkan.Core10.CommandBuffer (CommandBufferAllocateInfo)
 import {-# SOURCE #-} Vulkan.Core10.CommandBuffer (CommandBufferBeginInfo)
 import {-# SOURCE #-} Vulkan.Core10.Enums.CommandBufferResetFlagBits (CommandBufferResetFlags)
@@ -84,6 +87,7 @@ import {-# SOURCE #-} Vulkan.Core11.Enums.CommandPoolTrimFlags (CommandPoolTrimF
 import {-# SOURCE #-} Vulkan.Core10.Enums.CompareOp (CompareOp)
 import {-# SOURCE #-} Vulkan.Core10.Pipeline (ComputePipelineCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_conditional_rendering (ConditionalRenderingBeginInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_conservative_rasterization (ConservativeRasterizationModeEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_cooperative_matrix (CooperativeMatrixPropertiesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_acceleration_structure (CopyAccelerationStructureInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_acceleration_structure (CopyAccelerationStructureModeKHR)
@@ -94,6 +98,11 @@ import {-# SOURCE #-} Vulkan.Core10.DescriptorSet (CopyDescriptorSet)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2 (CopyImageInfo2)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2 (CopyImageToBufferInfo2)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_acceleration_structure (CopyMemoryToAccelerationStructureInfoKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_opacity_micromap (CopyMemoryToMicromapInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_opacity_micromap (CopyMicromapInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_opacity_micromap (CopyMicromapToMemoryInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_framebuffer_mixed_samples (CoverageModulationModeNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_coverage_reduction_mode (CoverageReductionModeNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NVX_binary_import (CuFunctionCreateInfoNVX)
 import {-# SOURCE #-} Vulkan.Extensions.Handles (CuFunctionNVX)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NVX_binary_import (CuLaunchInfoNVX)
@@ -134,6 +143,8 @@ import {-# SOURCE #-} Vulkan.Core10.FundamentalTypes (DeviceAddress)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_maintenance4 (DeviceBufferMemoryRequirements)
 import {-# SOURCE #-} Vulkan.Core10.Device (DeviceCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_display_control (DeviceEventInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_device_fault (DeviceFaultCountsEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_device_fault (DeviceFaultInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain (DeviceGroupPresentCapabilitiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain (DeviceGroupPresentModeFlagsKHR)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_maintenance4 (DeviceImageMemoryRequirements)
@@ -228,6 +239,7 @@ import {-# SOURCE #-} Vulkan.Extensions.Handles (IndirectCommandsLayoutNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_INTEL_performance_query (InitializePerformanceApiInfoINTEL)
 import {-# SOURCE #-} Vulkan.Core10.Handles (Instance_T)
 import {-# SOURCE #-} Vulkan.Core10.LayerDiscovery (LayerProperties)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_line_rasterization (LineRasterizationModeEXT)
 import {-# SOURCE #-} Vulkan.Core10.Enums.LogicOp (LogicOp)
 import {-# SOURCE #-} Vulkan.Extensions.VK_MVK_macos_surface (MacOSSurfaceCreateInfoMVK)
 import {-# SOURCE #-} Vulkan.Core10.Memory (MappedMemoryRange)
@@ -247,10 +259,21 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_get_memory_requirements2 (MemoryR
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_external_memory_win32 (MemoryWin32HandlePropertiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_external_memory (MemoryZirconHandlePropertiesFUCHSIA)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_surface (MetalSurfaceCreateInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_opacity_micromap (MicromapBuildInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_opacity_micromap (MicromapBuildSizesInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_opacity_micromap (MicromapCreateInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.Handles (MicromapEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_opacity_micromap (MicromapVersionInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_multi_draw (MultiDrawIndexedInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_multi_draw (MultiDrawInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (MultisamplePropertiesEXT)
 import {-# SOURCE #-} Vulkan.Core10.Enums.ObjectType (ObjectType)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_optical_flow (OpticalFlowExecuteInfoNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_optical_flow (OpticalFlowImageFormatInfoNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_optical_flow (OpticalFlowImageFormatPropertiesNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_optical_flow (OpticalFlowSessionBindingPointNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_optical_flow (OpticalFlowSessionCreateInfoNV)
+import {-# SOURCE #-} Vulkan.Extensions.Handles (OpticalFlowSessionNV)
 import {-# SOURCE #-} Vulkan.Core10.FuncPointers (PFN_vkVoidFunction)
 import {-# SOURCE #-} Vulkan.Extensions.VK_GOOGLE_display_timing (PastPresentationTimingGOOGLE)
 import {-# SOURCE #-} Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits (PeerMemoryFeatureFlags)
@@ -294,11 +317,13 @@ import {-# SOURCE #-} Vulkan.Core10.PipelineLayout (PipelineLayoutCreateInfo)
 import {-# SOURCE #-} Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlagBits)
 import {-# SOURCE #-} Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlags)
 import {-# SOURCE #-} Vulkan.Core13.Enums.PipelineStageFlags2 (PipelineStageFlags2)
+import {-# SOURCE #-} Vulkan.Core10.Enums.PolygonMode (PolygonMode)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain (PresentInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_surface (PresentModeKHR)
 import {-# SOURCE #-} Vulkan.Core10.Enums.PrimitiveTopology (PrimitiveTopology)
 import {-# SOURCE #-} Vulkan.Core13.Handles (PrivateDataSlot)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_private_data (PrivateDataSlotCreateInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_provoking_vertex (ProvokingVertexModeEXT)
 import {-# SOURCE #-} Vulkan.Core10.Enums.QueryControlFlagBits (QueryControlFlags)
 import {-# SOURCE #-} Vulkan.Core10.Handles (QueryPool)
 import {-# SOURCE #-} Vulkan.Core10.Query (QueryPoolCreateInfo)
@@ -323,6 +348,7 @@ import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2 (Resolve
 import {-# SOURCE #-} Vulkan.Core10.Enums.Result (Result)
 import {-# SOURCE #-} Vulkan.Core10.Enums.SampleCountFlagBits (SampleCountFlagBits)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (SampleLocationsInfoEXT)
+import {-# SOURCE #-} Vulkan.Core10.FundamentalTypes (SampleMask)
 import {-# SOURCE #-} Vulkan.Core10.Handles (Sampler)
 import {-# SOURCE #-} Vulkan.Core10.Sampler (SamplerCreateInfo)
 import {-# SOURCE #-} Vulkan.Core11.Handles (SamplerYcbcrConversion)
@@ -369,6 +395,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_surface (SurfaceFormatKHR)
 import {-# SOURCE #-} Vulkan.Extensions.Handles (SurfaceKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain (SwapchainCreateInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.Handles (SwapchainKHR)
+import {-# SOURCE #-} Vulkan.Core11.Enums.TessellationDomainOrigin (TessellationDomainOrigin)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_tile_properties (TilePropertiesQCOM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_calibrated_timestamps (TimeDomainEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_validation_cache (ValidationCacheCreateInfoEXT)
@@ -377,6 +404,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state (Verte
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_vertex_input_dynamic_state (VertexInputBindingDescription2EXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NN_vi_surface (ViSurfaceCreateInfoNN)
 import {-# SOURCE #-} Vulkan.Core10.Pipeline (Viewport)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_viewport_swizzle (ViewportSwizzleNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_clip_space_w_scaling (ViewportWScalingNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_xlib_surface (VisualID)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_wayland_surface (WaylandSurfaceCreateInfoKHR)
@@ -466,7 +494,7 @@ data InstanceCmds = InstanceCmds
   , pVkGetPhysicalDeviceCalibrateableTimeDomainsEXT :: FunPtr (Ptr PhysicalDevice_T -> ("pTimeDomainCount" ::: Ptr Word32) -> ("pTimeDomains" ::: Ptr TimeDomainEXT) -> IO Result)
   , pVkCreateDebugUtilsMessengerEXT :: FunPtr (Ptr Instance_T -> ("pCreateInfo" ::: Ptr DebugUtilsMessengerCreateInfoEXT) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pMessenger" ::: Ptr DebugUtilsMessengerEXT) -> IO Result)
   , pVkDestroyDebugUtilsMessengerEXT :: FunPtr (Ptr Instance_T -> DebugUtilsMessengerEXT -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
-  , pVkSubmitDebugUtilsMessageEXT :: FunPtr (Ptr Instance_T -> DebugUtilsMessageSeverityFlagBitsEXT -> ("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT) -> ("pCallbackData" ::: Ptr DebugUtilsMessengerCallbackDataEXT) -> IO ())
+  , pVkSubmitDebugUtilsMessageEXT :: FunPtr (Ptr Instance_T -> DebugUtilsMessageSeverityFlagBitsEXT -> ("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT) -> ("pCallbackData" ::: Ptr (SomeStruct DebugUtilsMessengerCallbackDataEXT)) -> IO ())
   , pVkGetPhysicalDeviceCooperativeMatrixPropertiesNV :: FunPtr (Ptr PhysicalDevice_T -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr CooperativeMatrixPropertiesNV) -> IO Result)
   , pVkGetPhysicalDeviceSurfacePresentModes2EXT :: FunPtr (Ptr PhysicalDevice_T -> ("pSurfaceInfo" ::: Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR)) -> ("pPresentModeCount" ::: Ptr Word32) -> ("pPresentModes" ::: Ptr PresentModeKHR) -> IO Result)
   , pVkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR :: FunPtr (Ptr PhysicalDevice_T -> ("queueFamilyIndex" ::: Word32) -> ("pCounterCount" ::: Ptr Word32) -> ("pCounters" ::: Ptr PerformanceCounterKHR) -> ("pCounterDescriptions" ::: Ptr PerformanceCounterDescriptionKHR) -> IO Result)
@@ -477,6 +505,7 @@ data InstanceCmds = InstanceCmds
   , pVkGetPhysicalDeviceFragmentShadingRatesKHR :: FunPtr (Ptr PhysicalDevice_T -> ("pFragmentShadingRateCount" ::: Ptr Word32) -> ("pFragmentShadingRates" ::: Ptr PhysicalDeviceFragmentShadingRateKHR) -> IO Result)
   , pVkAcquireDrmDisplayEXT :: FunPtr (Ptr PhysicalDevice_T -> ("drmFd" ::: Int32) -> DisplayKHR -> IO Result)
   , pVkGetDrmDisplayEXT :: FunPtr (Ptr PhysicalDevice_T -> ("drmFd" ::: Int32) -> ("connectorId" ::: Word32) -> Ptr DisplayKHR -> IO Result)
+  , pVkGetPhysicalDeviceOpticalFlowImageFormatsNV :: FunPtr (Ptr PhysicalDevice_T -> ("pOpticalFlowImageFormatInfo" ::: Ptr OpticalFlowImageFormatInfoNV) -> ("pFormatCount" ::: Ptr Word32) -> ("pImageFormatProperties" ::: Ptr OpticalFlowImageFormatPropertiesNV) -> IO Result)
   }
 
 deriving instance Eq InstanceCmds
@@ -484,6 +513,7 @@ deriving instance Show InstanceCmds
 instance Zero InstanceCmds where
   zero = InstanceCmds
     nullPtr
+    nullFunPtr
     nullFunPtr
     nullFunPtr
     nullFunPtr
@@ -688,6 +718,7 @@ initInstanceCmds handle = do
   vkGetPhysicalDeviceFragmentShadingRatesKHR <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceFragmentShadingRatesKHR"#)
   vkAcquireDrmDisplayEXT <- getInstanceProcAddr' handle (Ptr "vkAcquireDrmDisplayEXT"#)
   vkGetDrmDisplayEXT <- getInstanceProcAddr' handle (Ptr "vkGetDrmDisplayEXT"#)
+  vkGetPhysicalDeviceOpticalFlowImageFormatsNV <- getInstanceProcAddr' handle (Ptr "vkGetPhysicalDeviceOpticalFlowImageFormatsNV"#)
   pure $ InstanceCmds handle
     (castFunPtr @_ @(Ptr Instance_T -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyInstance)
     (castFunPtr @_ @(Ptr Instance_T -> ("pPhysicalDeviceCount" ::: Ptr Word32) -> ("pPhysicalDevices" ::: Ptr (Ptr PhysicalDevice_T)) -> IO Result) vkEnumeratePhysicalDevices)
@@ -765,7 +796,7 @@ initInstanceCmds handle = do
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("pTimeDomainCount" ::: Ptr Word32) -> ("pTimeDomains" ::: Ptr TimeDomainEXT) -> IO Result) vkGetPhysicalDeviceCalibrateableTimeDomainsEXT)
     (castFunPtr @_ @(Ptr Instance_T -> ("pCreateInfo" ::: Ptr DebugUtilsMessengerCreateInfoEXT) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pMessenger" ::: Ptr DebugUtilsMessengerEXT) -> IO Result) vkCreateDebugUtilsMessengerEXT)
     (castFunPtr @_ @(Ptr Instance_T -> DebugUtilsMessengerEXT -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyDebugUtilsMessengerEXT)
-    (castFunPtr @_ @(Ptr Instance_T -> DebugUtilsMessageSeverityFlagBitsEXT -> ("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT) -> ("pCallbackData" ::: Ptr DebugUtilsMessengerCallbackDataEXT) -> IO ()) vkSubmitDebugUtilsMessageEXT)
+    (castFunPtr @_ @(Ptr Instance_T -> DebugUtilsMessageSeverityFlagBitsEXT -> ("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT) -> ("pCallbackData" ::: Ptr (SomeStruct DebugUtilsMessengerCallbackDataEXT)) -> IO ()) vkSubmitDebugUtilsMessageEXT)
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr CooperativeMatrixPropertiesNV) -> IO Result) vkGetPhysicalDeviceCooperativeMatrixPropertiesNV)
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("pSurfaceInfo" ::: Ptr (SomeStruct PhysicalDeviceSurfaceInfo2KHR)) -> ("pPresentModeCount" ::: Ptr Word32) -> ("pPresentModes" ::: Ptr PresentModeKHR) -> IO Result) vkGetPhysicalDeviceSurfacePresentModes2EXT)
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("queueFamilyIndex" ::: Word32) -> ("pCounterCount" ::: Ptr Word32) -> ("pCounters" ::: Ptr PerformanceCounterKHR) -> ("pCounterDescriptions" ::: Ptr PerformanceCounterDescriptionKHR) -> IO Result) vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR)
@@ -776,6 +807,7 @@ initInstanceCmds handle = do
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("pFragmentShadingRateCount" ::: Ptr Word32) -> ("pFragmentShadingRates" ::: Ptr PhysicalDeviceFragmentShadingRateKHR) -> IO Result) vkGetPhysicalDeviceFragmentShadingRatesKHR)
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("drmFd" ::: Int32) -> DisplayKHR -> IO Result) vkAcquireDrmDisplayEXT)
     (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("drmFd" ::: Int32) -> ("connectorId" ::: Word32) -> Ptr DisplayKHR -> IO Result) vkGetDrmDisplayEXT)
+    (castFunPtr @_ @(Ptr PhysicalDevice_T -> ("pOpticalFlowImageFormatInfo" ::: Ptr OpticalFlowImageFormatInfoNV) -> ("pFormatCount" ::: Ptr Word32) -> ("pImageFormatProperties" ::: Ptr OpticalFlowImageFormatPropertiesNV) -> IO Result) vkGetPhysicalDeviceOpticalFlowImageFormatsNV)
 
 data DeviceCmds = DeviceCmds
   { deviceCmdsHandle :: Ptr Device_T
@@ -1105,6 +1137,37 @@ data DeviceCmds = DeviceCmds
   , pVkCmdSetLogicOpEXT :: FunPtr (Ptr CommandBuffer_T -> LogicOp -> IO ())
   , pVkCmdSetPrimitiveRestartEnable :: FunPtr (Ptr CommandBuffer_T -> ("primitiveRestartEnable" ::: Bool32) -> IO ())
   , pVkCreatePrivateDataSlot :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr PrivateDataSlotCreateInfo) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pPrivateDataSlot" ::: Ptr PrivateDataSlot) -> IO Result)
+  , pVkCmdSetTessellationDomainOriginEXT :: FunPtr (Ptr CommandBuffer_T -> TessellationDomainOrigin -> IO ())
+  , pVkCmdSetDepthClampEnableEXT :: FunPtr (Ptr CommandBuffer_T -> ("depthClampEnable" ::: Bool32) -> IO ())
+  , pVkCmdSetPolygonModeEXT :: FunPtr (Ptr CommandBuffer_T -> PolygonMode -> IO ())
+  , pVkCmdSetRasterizationSamplesEXT :: FunPtr (Ptr CommandBuffer_T -> ("rasterizationSamples" ::: SampleCountFlagBits) -> IO ())
+  , pVkCmdSetSampleMaskEXT :: FunPtr (Ptr CommandBuffer_T -> ("samples" ::: SampleCountFlagBits) -> ("pSampleMask" ::: Ptr SampleMask) -> IO ())
+  , pVkCmdSetAlphaToCoverageEnableEXT :: FunPtr (Ptr CommandBuffer_T -> ("alphaToCoverageEnable" ::: Bool32) -> IO ())
+  , pVkCmdSetAlphaToOneEnableEXT :: FunPtr (Ptr CommandBuffer_T -> ("alphaToOneEnable" ::: Bool32) -> IO ())
+  , pVkCmdSetLogicOpEnableEXT :: FunPtr (Ptr CommandBuffer_T -> ("logicOpEnable" ::: Bool32) -> IO ())
+  , pVkCmdSetColorBlendEnableEXT :: FunPtr (Ptr CommandBuffer_T -> ("firstAttachment" ::: Word32) -> ("attachmentCount" ::: Word32) -> ("pColorBlendEnables" ::: Ptr Bool32) -> IO ())
+  , pVkCmdSetColorBlendEquationEXT :: FunPtr (Ptr CommandBuffer_T -> ("firstAttachment" ::: Word32) -> ("attachmentCount" ::: Word32) -> ("pColorBlendEquations" ::: Ptr ColorBlendEquationEXT) -> IO ())
+  , pVkCmdSetColorWriteMaskEXT :: FunPtr (Ptr CommandBuffer_T -> ("firstAttachment" ::: Word32) -> ("attachmentCount" ::: Word32) -> ("pColorWriteMasks" ::: Ptr ColorComponentFlags) -> IO ())
+  , pVkCmdSetRasterizationStreamEXT :: FunPtr (Ptr CommandBuffer_T -> ("rasterizationStream" ::: Word32) -> IO ())
+  , pVkCmdSetConservativeRasterizationModeEXT :: FunPtr (Ptr CommandBuffer_T -> ConservativeRasterizationModeEXT -> IO ())
+  , pVkCmdSetExtraPrimitiveOverestimationSizeEXT :: FunPtr (Ptr CommandBuffer_T -> ("extraPrimitiveOverestimationSize" ::: CFloat) -> IO ())
+  , pVkCmdSetDepthClipEnableEXT :: FunPtr (Ptr CommandBuffer_T -> ("depthClipEnable" ::: Bool32) -> IO ())
+  , pVkCmdSetSampleLocationsEnableEXT :: FunPtr (Ptr CommandBuffer_T -> ("sampleLocationsEnable" ::: Bool32) -> IO ())
+  , pVkCmdSetColorBlendAdvancedEXT :: FunPtr (Ptr CommandBuffer_T -> ("firstAttachment" ::: Word32) -> ("attachmentCount" ::: Word32) -> ("pColorBlendAdvanced" ::: Ptr ColorBlendAdvancedEXT) -> IO ())
+  , pVkCmdSetProvokingVertexModeEXT :: FunPtr (Ptr CommandBuffer_T -> ProvokingVertexModeEXT -> IO ())
+  , pVkCmdSetLineRasterizationModeEXT :: FunPtr (Ptr CommandBuffer_T -> LineRasterizationModeEXT -> IO ())
+  , pVkCmdSetLineStippleEnableEXT :: FunPtr (Ptr CommandBuffer_T -> ("stippledLineEnable" ::: Bool32) -> IO ())
+  , pVkCmdSetDepthClipNegativeOneToOneEXT :: FunPtr (Ptr CommandBuffer_T -> ("negativeOneToOne" ::: Bool32) -> IO ())
+  , pVkCmdSetViewportWScalingEnableNV :: FunPtr (Ptr CommandBuffer_T -> ("viewportWScalingEnable" ::: Bool32) -> IO ())
+  , pVkCmdSetViewportSwizzleNV :: FunPtr (Ptr CommandBuffer_T -> ("firstViewport" ::: Word32) -> ("viewportCount" ::: Word32) -> ("pViewportSwizzles" ::: Ptr ViewportSwizzleNV) -> IO ())
+  , pVkCmdSetCoverageToColorEnableNV :: FunPtr (Ptr CommandBuffer_T -> ("coverageToColorEnable" ::: Bool32) -> IO ())
+  , pVkCmdSetCoverageToColorLocationNV :: FunPtr (Ptr CommandBuffer_T -> ("coverageToColorLocation" ::: Word32) -> IO ())
+  , pVkCmdSetCoverageModulationModeNV :: FunPtr (Ptr CommandBuffer_T -> CoverageModulationModeNV -> IO ())
+  , pVkCmdSetCoverageModulationTableEnableNV :: FunPtr (Ptr CommandBuffer_T -> ("coverageModulationTableEnable" ::: Bool32) -> IO ())
+  , pVkCmdSetCoverageModulationTableNV :: FunPtr (Ptr CommandBuffer_T -> ("coverageModulationTableCount" ::: Word32) -> ("pCoverageModulationTable" ::: Ptr CFloat) -> IO ())
+  , pVkCmdSetShadingRateImageEnableNV :: FunPtr (Ptr CommandBuffer_T -> ("shadingRateImageEnable" ::: Bool32) -> IO ())
+  , pVkCmdSetCoverageReductionModeNV :: FunPtr (Ptr CommandBuffer_T -> CoverageReductionModeNV -> IO ())
+  , pVkCmdSetRepresentativeFragmentTestEnableNV :: FunPtr (Ptr CommandBuffer_T -> ("representativeFragmentTestEnable" ::: Bool32) -> IO ())
   , pVkDestroyPrivateDataSlot :: FunPtr (Ptr Device_T -> PrivateDataSlot -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
   , pVkSetPrivateData :: FunPtr (Ptr Device_T -> ObjectType -> ("objectHandle" ::: Word64) -> PrivateDataSlot -> ("data" ::: Word64) -> IO Result)
   , pVkGetPrivateData :: FunPtr (Ptr Device_T -> ObjectType -> ("objectHandle" ::: Word64) -> PrivateDataSlot -> ("pData" ::: Ptr Word64) -> IO ())
@@ -1143,6 +1206,20 @@ data DeviceCmds = DeviceCmds
   , pVkCmdEndRendering :: FunPtr (Ptr CommandBuffer_T -> IO ())
   , pVkGetDescriptorSetLayoutHostMappingInfoVALVE :: FunPtr (Ptr Device_T -> ("pBindingReference" ::: Ptr DescriptorSetBindingReferenceVALVE) -> ("pHostMapping" ::: Ptr DescriptorSetLayoutHostMappingInfoVALVE) -> IO ())
   , pVkGetDescriptorSetHostMappingVALVE :: FunPtr (Ptr Device_T -> DescriptorSet -> ("ppData" ::: Ptr (Ptr ())) -> IO ())
+  , pVkCreateMicromapEXT :: FunPtr (Ptr Device_T -> Ptr MicromapCreateInfoEXT -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pMicromap" ::: Ptr MicromapEXT) -> IO Result)
+  , pVkCmdBuildMicromapsEXT :: FunPtr (Ptr CommandBuffer_T -> ("infoCount" ::: Word32) -> ("pInfos" ::: Ptr MicromapBuildInfoEXT) -> IO ())
+  , pVkBuildMicromapsEXT :: FunPtr (Ptr Device_T -> DeferredOperationKHR -> ("infoCount" ::: Word32) -> ("pInfos" ::: Ptr MicromapBuildInfoEXT) -> IO Result)
+  , pVkDestroyMicromapEXT :: FunPtr (Ptr Device_T -> MicromapEXT -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
+  , pVkCmdCopyMicromapEXT :: FunPtr (Ptr CommandBuffer_T -> Ptr CopyMicromapInfoEXT -> IO ())
+  , pVkCopyMicromapEXT :: FunPtr (Ptr Device_T -> DeferredOperationKHR -> Ptr CopyMicromapInfoEXT -> IO Result)
+  , pVkCmdCopyMicromapToMemoryEXT :: FunPtr (Ptr CommandBuffer_T -> ("pInfo" ::: Ptr CopyMicromapToMemoryInfoEXT) -> IO ())
+  , pVkCopyMicromapToMemoryEXT :: FunPtr (Ptr Device_T -> DeferredOperationKHR -> ("pInfo" ::: Ptr CopyMicromapToMemoryInfoEXT) -> IO Result)
+  , pVkCmdCopyMemoryToMicromapEXT :: FunPtr (Ptr CommandBuffer_T -> Ptr CopyMemoryToMicromapInfoEXT -> IO ())
+  , pVkCopyMemoryToMicromapEXT :: FunPtr (Ptr Device_T -> DeferredOperationKHR -> Ptr CopyMemoryToMicromapInfoEXT -> IO Result)
+  , pVkCmdWriteMicromapsPropertiesEXT :: FunPtr (Ptr CommandBuffer_T -> ("micromapCount" ::: Word32) -> ("pMicromaps" ::: Ptr MicromapEXT) -> QueryType -> QueryPool -> ("firstQuery" ::: Word32) -> IO ())
+  , pVkWriteMicromapsPropertiesEXT :: FunPtr (Ptr Device_T -> ("micromapCount" ::: Word32) -> ("pMicromaps" ::: Ptr MicromapEXT) -> QueryType -> ("dataSize" ::: CSize) -> ("pData" ::: Ptr ()) -> ("stride" ::: CSize) -> IO Result)
+  , pVkGetDeviceMicromapCompatibilityEXT :: FunPtr (Ptr Device_T -> Ptr MicromapVersionInfoEXT -> ("pCompatibility" ::: Ptr AccelerationStructureCompatibilityKHR) -> IO ())
+  , pVkGetMicromapBuildSizesEXT :: FunPtr (Ptr Device_T -> AccelerationStructureBuildTypeKHR -> Ptr MicromapBuildInfoEXT -> ("pSizeInfo" ::: Ptr MicromapBuildSizesInfoEXT) -> IO ())
   , pVkGetShaderModuleIdentifierEXT :: FunPtr (Ptr Device_T -> ShaderModule -> ("pIdentifier" ::: Ptr ShaderModuleIdentifierEXT) -> IO ())
   , pVkGetShaderModuleCreateInfoIdentifierEXT :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr (SomeStruct ShaderModuleCreateInfo)) -> ("pIdentifier" ::: Ptr ShaderModuleIdentifierEXT) -> IO ())
   , pVkGetImageSubresourceLayout2EXT :: FunPtr (Ptr Device_T -> Image -> ("pSubresource" ::: Ptr ImageSubresource2EXT) -> ("pLayout" ::: Ptr (SomeStruct SubresourceLayout2EXT)) -> IO ())
@@ -1150,6 +1227,11 @@ data DeviceCmds = DeviceCmds
   , pVkExportMetalObjectsEXT :: FunPtr (Ptr Device_T -> ("pMetalObjectsInfo" ::: Ptr (SomeStruct ExportMetalObjectsInfoEXT)) -> IO ())
   , pVkGetFramebufferTilePropertiesQCOM :: FunPtr (Ptr Device_T -> Framebuffer -> ("pPropertiesCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr TilePropertiesQCOM) -> IO Result)
   , pVkGetDynamicRenderingTilePropertiesQCOM :: FunPtr (Ptr Device_T -> ("pRenderingInfo" ::: Ptr (SomeStruct RenderingInfo)) -> ("pProperties" ::: Ptr TilePropertiesQCOM) -> IO Result)
+  , pVkCreateOpticalFlowSessionNV :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr (SomeStruct OpticalFlowSessionCreateInfoNV)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pSession" ::: Ptr OpticalFlowSessionNV) -> IO Result)
+  , pVkDestroyOpticalFlowSessionNV :: FunPtr (Ptr Device_T -> OpticalFlowSessionNV -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
+  , pVkBindOpticalFlowSessionImageNV :: FunPtr (Ptr Device_T -> OpticalFlowSessionNV -> OpticalFlowSessionBindingPointNV -> ImageView -> ImageLayout -> IO Result)
+  , pVkCmdOpticalFlowExecuteNV :: FunPtr (Ptr CommandBuffer_T -> OpticalFlowSessionNV -> ("pExecuteInfo" ::: Ptr OpticalFlowExecuteInfoNV) -> IO ())
+  , pVkGetDeviceFaultInfoEXT :: FunPtr (Ptr Device_T -> ("pFaultCounts" ::: Ptr DeviceFaultCountsEXT) -> ("pFaultInfo" ::: Ptr DeviceFaultInfoEXT) -> IO Result)
   }
 
 deriving instance Eq DeviceCmds
@@ -1524,7 +1606,55 @@ instance Zero DeviceCmds where
     nullFunPtr
     nullFunPtr
     nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1922,6 +2052,37 @@ initDeviceCmds instanceCmds handle = do
                                                            , (Ptr "vkCmdSetPrimitiveRestartEnable"#) ]
   vkCreatePrivateDataSlot <- getFirstDeviceProcAddr [ (Ptr "vkCreatePrivateDataSlotEXT"#)
                                                     , (Ptr "vkCreatePrivateDataSlot"#) ]
+  vkCmdSetTessellationDomainOriginEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetTessellationDomainOriginEXT"#)
+  vkCmdSetDepthClampEnableEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetDepthClampEnableEXT"#)
+  vkCmdSetPolygonModeEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetPolygonModeEXT"#)
+  vkCmdSetRasterizationSamplesEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetRasterizationSamplesEXT"#)
+  vkCmdSetSampleMaskEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetSampleMaskEXT"#)
+  vkCmdSetAlphaToCoverageEnableEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetAlphaToCoverageEnableEXT"#)
+  vkCmdSetAlphaToOneEnableEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetAlphaToOneEnableEXT"#)
+  vkCmdSetLogicOpEnableEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetLogicOpEnableEXT"#)
+  vkCmdSetColorBlendEnableEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetColorBlendEnableEXT"#)
+  vkCmdSetColorBlendEquationEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetColorBlendEquationEXT"#)
+  vkCmdSetColorWriteMaskEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetColorWriteMaskEXT"#)
+  vkCmdSetRasterizationStreamEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetRasterizationStreamEXT"#)
+  vkCmdSetConservativeRasterizationModeEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetConservativeRasterizationModeEXT"#)
+  vkCmdSetExtraPrimitiveOverestimationSizeEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetExtraPrimitiveOverestimationSizeEXT"#)
+  vkCmdSetDepthClipEnableEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetDepthClipEnableEXT"#)
+  vkCmdSetSampleLocationsEnableEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetSampleLocationsEnableEXT"#)
+  vkCmdSetColorBlendAdvancedEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetColorBlendAdvancedEXT"#)
+  vkCmdSetProvokingVertexModeEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetProvokingVertexModeEXT"#)
+  vkCmdSetLineRasterizationModeEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetLineRasterizationModeEXT"#)
+  vkCmdSetLineStippleEnableEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetLineStippleEnableEXT"#)
+  vkCmdSetDepthClipNegativeOneToOneEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetDepthClipNegativeOneToOneEXT"#)
+  vkCmdSetViewportWScalingEnableNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetViewportWScalingEnableNV"#)
+  vkCmdSetViewportSwizzleNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetViewportSwizzleNV"#)
+  vkCmdSetCoverageToColorEnableNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetCoverageToColorEnableNV"#)
+  vkCmdSetCoverageToColorLocationNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetCoverageToColorLocationNV"#)
+  vkCmdSetCoverageModulationModeNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetCoverageModulationModeNV"#)
+  vkCmdSetCoverageModulationTableEnableNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetCoverageModulationTableEnableNV"#)
+  vkCmdSetCoverageModulationTableNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetCoverageModulationTableNV"#)
+  vkCmdSetShadingRateImageEnableNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetShadingRateImageEnableNV"#)
+  vkCmdSetCoverageReductionModeNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetCoverageReductionModeNV"#)
+  vkCmdSetRepresentativeFragmentTestEnableNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetRepresentativeFragmentTestEnableNV"#)
   vkDestroyPrivateDataSlot <- getFirstDeviceProcAddr [ (Ptr "vkDestroyPrivateDataSlotEXT"#)
                                                      , (Ptr "vkDestroyPrivateDataSlot"#) ]
   vkSetPrivateData <- getFirstDeviceProcAddr [ (Ptr "vkSetPrivateDataEXT"#)
@@ -1977,6 +2138,20 @@ initDeviceCmds instanceCmds handle = do
                                               , (Ptr "vkCmdEndRendering"#) ]
   vkGetDescriptorSetLayoutHostMappingInfoVALVE <- getDeviceProcAddr' handle (Ptr "vkGetDescriptorSetLayoutHostMappingInfoVALVE"#)
   vkGetDescriptorSetHostMappingVALVE <- getDeviceProcAddr' handle (Ptr "vkGetDescriptorSetHostMappingVALVE"#)
+  vkCreateMicromapEXT <- getDeviceProcAddr' handle (Ptr "vkCreateMicromapEXT"#)
+  vkCmdBuildMicromapsEXT <- getDeviceProcAddr' handle (Ptr "vkCmdBuildMicromapsEXT"#)
+  vkBuildMicromapsEXT <- getDeviceProcAddr' handle (Ptr "vkBuildMicromapsEXT"#)
+  vkDestroyMicromapEXT <- getDeviceProcAddr' handle (Ptr "vkDestroyMicromapEXT"#)
+  vkCmdCopyMicromapEXT <- getDeviceProcAddr' handle (Ptr "vkCmdCopyMicromapEXT"#)
+  vkCopyMicromapEXT <- getDeviceProcAddr' handle (Ptr "vkCopyMicromapEXT"#)
+  vkCmdCopyMicromapToMemoryEXT <- getDeviceProcAddr' handle (Ptr "vkCmdCopyMicromapToMemoryEXT"#)
+  vkCopyMicromapToMemoryEXT <- getDeviceProcAddr' handle (Ptr "vkCopyMicromapToMemoryEXT"#)
+  vkCmdCopyMemoryToMicromapEXT <- getDeviceProcAddr' handle (Ptr "vkCmdCopyMemoryToMicromapEXT"#)
+  vkCopyMemoryToMicromapEXT <- getDeviceProcAddr' handle (Ptr "vkCopyMemoryToMicromapEXT"#)
+  vkCmdWriteMicromapsPropertiesEXT <- getDeviceProcAddr' handle (Ptr "vkCmdWriteMicromapsPropertiesEXT"#)
+  vkWriteMicromapsPropertiesEXT <- getDeviceProcAddr' handle (Ptr "vkWriteMicromapsPropertiesEXT"#)
+  vkGetDeviceMicromapCompatibilityEXT <- getDeviceProcAddr' handle (Ptr "vkGetDeviceMicromapCompatibilityEXT"#)
+  vkGetMicromapBuildSizesEXT <- getDeviceProcAddr' handle (Ptr "vkGetMicromapBuildSizesEXT"#)
   vkGetShaderModuleIdentifierEXT <- getDeviceProcAddr' handle (Ptr "vkGetShaderModuleIdentifierEXT"#)
   vkGetShaderModuleCreateInfoIdentifierEXT <- getDeviceProcAddr' handle (Ptr "vkGetShaderModuleCreateInfoIdentifierEXT"#)
   vkGetImageSubresourceLayout2EXT <- getDeviceProcAddr' handle (Ptr "vkGetImageSubresourceLayout2EXT"#)
@@ -1984,6 +2159,11 @@ initDeviceCmds instanceCmds handle = do
   vkExportMetalObjectsEXT <- getDeviceProcAddr' handle (Ptr "vkExportMetalObjectsEXT"#)
   vkGetFramebufferTilePropertiesQCOM <- getDeviceProcAddr' handle (Ptr "vkGetFramebufferTilePropertiesQCOM"#)
   vkGetDynamicRenderingTilePropertiesQCOM <- getDeviceProcAddr' handle (Ptr "vkGetDynamicRenderingTilePropertiesQCOM"#)
+  vkCreateOpticalFlowSessionNV <- getDeviceProcAddr' handle (Ptr "vkCreateOpticalFlowSessionNV"#)
+  vkDestroyOpticalFlowSessionNV <- getDeviceProcAddr' handle (Ptr "vkDestroyOpticalFlowSessionNV"#)
+  vkBindOpticalFlowSessionImageNV <- getDeviceProcAddr' handle (Ptr "vkBindOpticalFlowSessionImageNV"#)
+  vkCmdOpticalFlowExecuteNV <- getDeviceProcAddr' handle (Ptr "vkCmdOpticalFlowExecuteNV"#)
+  vkGetDeviceFaultInfoEXT <- getDeviceProcAddr' handle (Ptr "vkGetDeviceFaultInfoEXT"#)
   pure $ DeviceCmds handle
     (castFunPtr @_ @(Ptr Device_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction) vkGetDeviceProcAddr)
     (castFunPtr @_ @(Ptr Device_T -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyDevice)
@@ -2311,6 +2491,37 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr CommandBuffer_T -> LogicOp -> IO ()) vkCmdSetLogicOpEXT)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("primitiveRestartEnable" ::: Bool32) -> IO ()) vkCmdSetPrimitiveRestartEnable)
     (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr PrivateDataSlotCreateInfo) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pPrivateDataSlot" ::: Ptr PrivateDataSlot) -> IO Result) vkCreatePrivateDataSlot)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> TessellationDomainOrigin -> IO ()) vkCmdSetTessellationDomainOriginEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("depthClampEnable" ::: Bool32) -> IO ()) vkCmdSetDepthClampEnableEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> PolygonMode -> IO ()) vkCmdSetPolygonModeEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("rasterizationSamples" ::: SampleCountFlagBits) -> IO ()) vkCmdSetRasterizationSamplesEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("samples" ::: SampleCountFlagBits) -> ("pSampleMask" ::: Ptr SampleMask) -> IO ()) vkCmdSetSampleMaskEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("alphaToCoverageEnable" ::: Bool32) -> IO ()) vkCmdSetAlphaToCoverageEnableEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("alphaToOneEnable" ::: Bool32) -> IO ()) vkCmdSetAlphaToOneEnableEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("logicOpEnable" ::: Bool32) -> IO ()) vkCmdSetLogicOpEnableEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("firstAttachment" ::: Word32) -> ("attachmentCount" ::: Word32) -> ("pColorBlendEnables" ::: Ptr Bool32) -> IO ()) vkCmdSetColorBlendEnableEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("firstAttachment" ::: Word32) -> ("attachmentCount" ::: Word32) -> ("pColorBlendEquations" ::: Ptr ColorBlendEquationEXT) -> IO ()) vkCmdSetColorBlendEquationEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("firstAttachment" ::: Word32) -> ("attachmentCount" ::: Word32) -> ("pColorWriteMasks" ::: Ptr ColorComponentFlags) -> IO ()) vkCmdSetColorWriteMaskEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("rasterizationStream" ::: Word32) -> IO ()) vkCmdSetRasterizationStreamEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ConservativeRasterizationModeEXT -> IO ()) vkCmdSetConservativeRasterizationModeEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("extraPrimitiveOverestimationSize" ::: CFloat) -> IO ()) vkCmdSetExtraPrimitiveOverestimationSizeEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("depthClipEnable" ::: Bool32) -> IO ()) vkCmdSetDepthClipEnableEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("sampleLocationsEnable" ::: Bool32) -> IO ()) vkCmdSetSampleLocationsEnableEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("firstAttachment" ::: Word32) -> ("attachmentCount" ::: Word32) -> ("pColorBlendAdvanced" ::: Ptr ColorBlendAdvancedEXT) -> IO ()) vkCmdSetColorBlendAdvancedEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ProvokingVertexModeEXT -> IO ()) vkCmdSetProvokingVertexModeEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> LineRasterizationModeEXT -> IO ()) vkCmdSetLineRasterizationModeEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("stippledLineEnable" ::: Bool32) -> IO ()) vkCmdSetLineStippleEnableEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("negativeOneToOne" ::: Bool32) -> IO ()) vkCmdSetDepthClipNegativeOneToOneEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("viewportWScalingEnable" ::: Bool32) -> IO ()) vkCmdSetViewportWScalingEnableNV)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("firstViewport" ::: Word32) -> ("viewportCount" ::: Word32) -> ("pViewportSwizzles" ::: Ptr ViewportSwizzleNV) -> IO ()) vkCmdSetViewportSwizzleNV)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("coverageToColorEnable" ::: Bool32) -> IO ()) vkCmdSetCoverageToColorEnableNV)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("coverageToColorLocation" ::: Word32) -> IO ()) vkCmdSetCoverageToColorLocationNV)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> CoverageModulationModeNV -> IO ()) vkCmdSetCoverageModulationModeNV)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("coverageModulationTableEnable" ::: Bool32) -> IO ()) vkCmdSetCoverageModulationTableEnableNV)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("coverageModulationTableCount" ::: Word32) -> ("pCoverageModulationTable" ::: Ptr CFloat) -> IO ()) vkCmdSetCoverageModulationTableNV)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("shadingRateImageEnable" ::: Bool32) -> IO ()) vkCmdSetShadingRateImageEnableNV)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> CoverageReductionModeNV -> IO ()) vkCmdSetCoverageReductionModeNV)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("representativeFragmentTestEnable" ::: Bool32) -> IO ()) vkCmdSetRepresentativeFragmentTestEnableNV)
     (castFunPtr @_ @(Ptr Device_T -> PrivateDataSlot -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyPrivateDataSlot)
     (castFunPtr @_ @(Ptr Device_T -> ObjectType -> ("objectHandle" ::: Word64) -> PrivateDataSlot -> ("data" ::: Word64) -> IO Result) vkSetPrivateData)
     (castFunPtr @_ @(Ptr Device_T -> ObjectType -> ("objectHandle" ::: Word64) -> PrivateDataSlot -> ("pData" ::: Ptr Word64) -> IO ()) vkGetPrivateData)
@@ -2349,6 +2560,20 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr CommandBuffer_T -> IO ()) vkCmdEndRendering)
     (castFunPtr @_ @(Ptr Device_T -> ("pBindingReference" ::: Ptr DescriptorSetBindingReferenceVALVE) -> ("pHostMapping" ::: Ptr DescriptorSetLayoutHostMappingInfoVALVE) -> IO ()) vkGetDescriptorSetLayoutHostMappingInfoVALVE)
     (castFunPtr @_ @(Ptr Device_T -> DescriptorSet -> ("ppData" ::: Ptr (Ptr ())) -> IO ()) vkGetDescriptorSetHostMappingVALVE)
+    (castFunPtr @_ @(Ptr Device_T -> Ptr MicromapCreateInfoEXT -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pMicromap" ::: Ptr MicromapEXT) -> IO Result) vkCreateMicromapEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("infoCount" ::: Word32) -> ("pInfos" ::: Ptr MicromapBuildInfoEXT) -> IO ()) vkCmdBuildMicromapsEXT)
+    (castFunPtr @_ @(Ptr Device_T -> DeferredOperationKHR -> ("infoCount" ::: Word32) -> ("pInfos" ::: Ptr MicromapBuildInfoEXT) -> IO Result) vkBuildMicromapsEXT)
+    (castFunPtr @_ @(Ptr Device_T -> MicromapEXT -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyMicromapEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> Ptr CopyMicromapInfoEXT -> IO ()) vkCmdCopyMicromapEXT)
+    (castFunPtr @_ @(Ptr Device_T -> DeferredOperationKHR -> Ptr CopyMicromapInfoEXT -> IO Result) vkCopyMicromapEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("pInfo" ::: Ptr CopyMicromapToMemoryInfoEXT) -> IO ()) vkCmdCopyMicromapToMemoryEXT)
+    (castFunPtr @_ @(Ptr Device_T -> DeferredOperationKHR -> ("pInfo" ::: Ptr CopyMicromapToMemoryInfoEXT) -> IO Result) vkCopyMicromapToMemoryEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> Ptr CopyMemoryToMicromapInfoEXT -> IO ()) vkCmdCopyMemoryToMicromapEXT)
+    (castFunPtr @_ @(Ptr Device_T -> DeferredOperationKHR -> Ptr CopyMemoryToMicromapInfoEXT -> IO Result) vkCopyMemoryToMicromapEXT)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("micromapCount" ::: Word32) -> ("pMicromaps" ::: Ptr MicromapEXT) -> QueryType -> QueryPool -> ("firstQuery" ::: Word32) -> IO ()) vkCmdWriteMicromapsPropertiesEXT)
+    (castFunPtr @_ @(Ptr Device_T -> ("micromapCount" ::: Word32) -> ("pMicromaps" ::: Ptr MicromapEXT) -> QueryType -> ("dataSize" ::: CSize) -> ("pData" ::: Ptr ()) -> ("stride" ::: CSize) -> IO Result) vkWriteMicromapsPropertiesEXT)
+    (castFunPtr @_ @(Ptr Device_T -> Ptr MicromapVersionInfoEXT -> ("pCompatibility" ::: Ptr AccelerationStructureCompatibilityKHR) -> IO ()) vkGetDeviceMicromapCompatibilityEXT)
+    (castFunPtr @_ @(Ptr Device_T -> AccelerationStructureBuildTypeKHR -> Ptr MicromapBuildInfoEXT -> ("pSizeInfo" ::: Ptr MicromapBuildSizesInfoEXT) -> IO ()) vkGetMicromapBuildSizesEXT)
     (castFunPtr @_ @(Ptr Device_T -> ShaderModule -> ("pIdentifier" ::: Ptr ShaderModuleIdentifierEXT) -> IO ()) vkGetShaderModuleIdentifierEXT)
     (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr (SomeStruct ShaderModuleCreateInfo)) -> ("pIdentifier" ::: Ptr ShaderModuleIdentifierEXT) -> IO ()) vkGetShaderModuleCreateInfoIdentifierEXT)
     (castFunPtr @_ @(Ptr Device_T -> Image -> ("pSubresource" ::: Ptr ImageSubresource2EXT) -> ("pLayout" ::: Ptr (SomeStruct SubresourceLayout2EXT)) -> IO ()) vkGetImageSubresourceLayout2EXT)
@@ -2356,4 +2581,9 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr Device_T -> ("pMetalObjectsInfo" ::: Ptr (SomeStruct ExportMetalObjectsInfoEXT)) -> IO ()) vkExportMetalObjectsEXT)
     (castFunPtr @_ @(Ptr Device_T -> Framebuffer -> ("pPropertiesCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr TilePropertiesQCOM) -> IO Result) vkGetFramebufferTilePropertiesQCOM)
     (castFunPtr @_ @(Ptr Device_T -> ("pRenderingInfo" ::: Ptr (SomeStruct RenderingInfo)) -> ("pProperties" ::: Ptr TilePropertiesQCOM) -> IO Result) vkGetDynamicRenderingTilePropertiesQCOM)
+    (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr (SomeStruct OpticalFlowSessionCreateInfoNV)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pSession" ::: Ptr OpticalFlowSessionNV) -> IO Result) vkCreateOpticalFlowSessionNV)
+    (castFunPtr @_ @(Ptr Device_T -> OpticalFlowSessionNV -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyOpticalFlowSessionNV)
+    (castFunPtr @_ @(Ptr Device_T -> OpticalFlowSessionNV -> OpticalFlowSessionBindingPointNV -> ImageView -> ImageLayout -> IO Result) vkBindOpticalFlowSessionImageNV)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> OpticalFlowSessionNV -> ("pExecuteInfo" ::: Ptr OpticalFlowExecuteInfoNV) -> IO ()) vkCmdOpticalFlowExecuteNV)
+    (castFunPtr @_ @(Ptr Device_T -> ("pFaultCounts" ::: Ptr DeviceFaultCountsEXT) -> ("pFaultInfo" ::: Ptr DeviceFaultInfoEXT) -> IO Result) vkGetDeviceFaultInfoEXT)
 

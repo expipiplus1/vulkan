@@ -1549,13 +1549,14 @@ cmdWriteTimestamp2 commandBuffer stage queryPool query = liftIO $ do
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT',
 --     or one of the @VK_PIPELINE_STAGE_*_SHADER_BIT@ stages
 --
--- -   #VUID-VkMemoryBarrier2-srcAccessMask-03908# If @srcAccessMask@
+-- -   #VUID-VkMemoryBarrier2-srcAccessMask-07454# If @srcAccessMask@
 --     includes
 --     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_SHADER_READ_BIT',
 --     @srcStageMask@ /must/ include
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_GRAPHICS_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
 --     or one of the @VK_PIPELINE_STAGE_*_SHADER_BIT@ stages
 --
 -- -   #VUID-VkMemoryBarrier2-srcAccessMask-03909# If @srcAccessMask@
@@ -1773,6 +1774,32 @@ cmdWriteTimestamp2 commandBuffer stage queryPool query = liftIO $ do
 --     includes @VK_ACCESS_2_VIDEO_ENCODE_WRITE_BIT_KHR@, @srcStageMask@
 --     /must/ include @VK_PIPELINE_STAGE_2_VIDEO_ENCODE_BIT_KHR@
 --
+-- -   #VUID-VkMemoryBarrier2-srcAccessMask-07455# If @srcAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_OPTICAL_FLOW_READ_BIT_NV',
+--     @srcStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV'
+--
+-- -   #VUID-VkMemoryBarrier2-srcAccessMask-07456# If @srcAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_OPTICAL_FLOW_WRITE_BIT_NV',
+--     @srcStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV'
+--
+-- -   #VUID-VkMemoryBarrier2-srcAccessMask-07457# If @srcAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_WRITE_BIT_EXT',
+--     @srcStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
+--
+-- -   #VUID-VkMemoryBarrier2-srcAccessMask-07458# If @srcAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_READ_BIT_EXT',
+--     @srcStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
+--     or
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
+--
 -- -   #VUID-VkMemoryBarrier2-dstStageMask-03929# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometryShader>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
@@ -1898,13 +1925,14 @@ cmdWriteTimestamp2 commandBuffer stage queryPool query = liftIO $ do
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT',
 --     or one of the @VK_PIPELINE_STAGE_*_SHADER_BIT@ stages
 --
--- -   #VUID-VkMemoryBarrier2-dstAccessMask-03908# If @dstAccessMask@
+-- -   #VUID-VkMemoryBarrier2-dstAccessMask-07454# If @dstAccessMask@
 --     includes
 --     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_SHADER_READ_BIT',
 --     @dstStageMask@ /must/ include
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_GRAPHICS_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
 --     or one of the @VK_PIPELINE_STAGE_*_SHADER_BIT@ stages
 --
 -- -   #VUID-VkMemoryBarrier2-dstAccessMask-03909# If @dstAccessMask@
@@ -2121,6 +2149,32 @@ cmdWriteTimestamp2 commandBuffer stage queryPool query = liftIO $ do
 -- -   #VUID-VkMemoryBarrier2-dstAccessMask-04861# If @dstAccessMask@
 --     includes @VK_ACCESS_2_VIDEO_ENCODE_WRITE_BIT_KHR@, @dstStageMask@
 --     /must/ include @VK_PIPELINE_STAGE_2_VIDEO_ENCODE_BIT_KHR@
+--
+-- -   #VUID-VkMemoryBarrier2-dstAccessMask-07455# If @dstAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_OPTICAL_FLOW_READ_BIT_NV',
+--     @dstStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV'
+--
+-- -   #VUID-VkMemoryBarrier2-dstAccessMask-07456# If @dstAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_OPTICAL_FLOW_WRITE_BIT_NV',
+--     @dstStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV'
+--
+-- -   #VUID-VkMemoryBarrier2-dstAccessMask-07457# If @dstAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_WRITE_BIT_EXT',
+--     @dstStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
+--
+-- -   #VUID-VkMemoryBarrier2-dstAccessMask-07458# If @dstAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_READ_BIT_EXT',
+--     @dstStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
+--     or
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
 --
 -- == Valid Usage (Implicit)
 --
@@ -2427,13 +2481,14 @@ instance Zero MemoryBarrier2 where
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT',
 --     or one of the @VK_PIPELINE_STAGE_*_SHADER_BIT@ stages
 --
--- -   #VUID-VkImageMemoryBarrier2-srcAccessMask-03908# If @srcAccessMask@
+-- -   #VUID-VkImageMemoryBarrier2-srcAccessMask-07454# If @srcAccessMask@
 --     includes
 --     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_SHADER_READ_BIT',
 --     @srcStageMask@ /must/ include
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_GRAPHICS_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
 --     or one of the @VK_PIPELINE_STAGE_*_SHADER_BIT@ stages
 --
 -- -   #VUID-VkImageMemoryBarrier2-srcAccessMask-03909# If @srcAccessMask@
@@ -2651,6 +2706,32 @@ instance Zero MemoryBarrier2 where
 --     includes @VK_ACCESS_2_VIDEO_ENCODE_WRITE_BIT_KHR@, @srcStageMask@
 --     /must/ include @VK_PIPELINE_STAGE_2_VIDEO_ENCODE_BIT_KHR@
 --
+-- -   #VUID-VkImageMemoryBarrier2-srcAccessMask-07455# If @srcAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_OPTICAL_FLOW_READ_BIT_NV',
+--     @srcStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV'
+--
+-- -   #VUID-VkImageMemoryBarrier2-srcAccessMask-07456# If @srcAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_OPTICAL_FLOW_WRITE_BIT_NV',
+--     @srcStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV'
+--
+-- -   #VUID-VkImageMemoryBarrier2-srcAccessMask-07457# If @srcAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_WRITE_BIT_EXT',
+--     @srcStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
+--
+-- -   #VUID-VkImageMemoryBarrier2-srcAccessMask-07458# If @srcAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_READ_BIT_EXT',
+--     @srcStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
+--     or
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
+--
 -- -   #VUID-VkImageMemoryBarrier2-dstStageMask-03929# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometryShader>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
@@ -2776,13 +2857,14 @@ instance Zero MemoryBarrier2 where
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT',
 --     or one of the @VK_PIPELINE_STAGE_*_SHADER_BIT@ stages
 --
--- -   #VUID-VkImageMemoryBarrier2-dstAccessMask-03908# If @dstAccessMask@
+-- -   #VUID-VkImageMemoryBarrier2-dstAccessMask-07454# If @dstAccessMask@
 --     includes
 --     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_SHADER_READ_BIT',
 --     @dstStageMask@ /must/ include
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_GRAPHICS_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
 --     or one of the @VK_PIPELINE_STAGE_*_SHADER_BIT@ stages
 --
 -- -   #VUID-VkImageMemoryBarrier2-dstAccessMask-03909# If @dstAccessMask@
@@ -2999,6 +3081,32 @@ instance Zero MemoryBarrier2 where
 -- -   #VUID-VkImageMemoryBarrier2-dstAccessMask-04861# If @dstAccessMask@
 --     includes @VK_ACCESS_2_VIDEO_ENCODE_WRITE_BIT_KHR@, @dstStageMask@
 --     /must/ include @VK_PIPELINE_STAGE_2_VIDEO_ENCODE_BIT_KHR@
+--
+-- -   #VUID-VkImageMemoryBarrier2-dstAccessMask-07455# If @dstAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_OPTICAL_FLOW_READ_BIT_NV',
+--     @dstStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV'
+--
+-- -   #VUID-VkImageMemoryBarrier2-dstAccessMask-07456# If @dstAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_OPTICAL_FLOW_WRITE_BIT_NV',
+--     @dstStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV'
+--
+-- -   #VUID-VkImageMemoryBarrier2-dstAccessMask-07457# If @dstAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_WRITE_BIT_EXT',
+--     @dstStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
+--
+-- -   #VUID-VkImageMemoryBarrier2-dstAccessMask-07458# If @dstAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_READ_BIT_EXT',
+--     @dstStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
+--     or
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
 --
 -- -   #VUID-VkImageMemoryBarrier2-subresourceRange-01486#
 --     @subresourceRange.baseMipLevel@ /must/ be less than the @mipLevels@
@@ -3684,13 +3792,14 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2 es) where
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT',
 --     or one of the @VK_PIPELINE_STAGE_*_SHADER_BIT@ stages
 --
--- -   #VUID-VkBufferMemoryBarrier2-srcAccessMask-03908# If @srcAccessMask@
+-- -   #VUID-VkBufferMemoryBarrier2-srcAccessMask-07454# If @srcAccessMask@
 --     includes
 --     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_SHADER_READ_BIT',
 --     @srcStageMask@ /must/ include
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_GRAPHICS_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
 --     or one of the @VK_PIPELINE_STAGE_*_SHADER_BIT@ stages
 --
 -- -   #VUID-VkBufferMemoryBarrier2-srcAccessMask-03909# If @srcAccessMask@
@@ -3908,6 +4017,32 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2 es) where
 --     includes @VK_ACCESS_2_VIDEO_ENCODE_WRITE_BIT_KHR@, @srcStageMask@
 --     /must/ include @VK_PIPELINE_STAGE_2_VIDEO_ENCODE_BIT_KHR@
 --
+-- -   #VUID-VkBufferMemoryBarrier2-srcAccessMask-07455# If @srcAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_OPTICAL_FLOW_READ_BIT_NV',
+--     @srcStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV'
+--
+-- -   #VUID-VkBufferMemoryBarrier2-srcAccessMask-07456# If @srcAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_OPTICAL_FLOW_WRITE_BIT_NV',
+--     @srcStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV'
+--
+-- -   #VUID-VkBufferMemoryBarrier2-srcAccessMask-07457# If @srcAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_WRITE_BIT_EXT',
+--     @srcStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
+--
+-- -   #VUID-VkBufferMemoryBarrier2-srcAccessMask-07458# If @srcAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_READ_BIT_EXT',
+--     @srcStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
+--     or
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
+--
 -- -   #VUID-VkBufferMemoryBarrier2-dstStageMask-03929# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometryShader>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
@@ -4033,13 +4168,14 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2 es) where
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT',
 --     or one of the @VK_PIPELINE_STAGE_*_SHADER_BIT@ stages
 --
--- -   #VUID-VkBufferMemoryBarrier2-dstAccessMask-03908# If @dstAccessMask@
+-- -   #VUID-VkBufferMemoryBarrier2-dstAccessMask-07454# If @dstAccessMask@
 --     includes
 --     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_SHADER_READ_BIT',
 --     @dstStageMask@ /must/ include
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_GRAPHICS_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
 --     or one of the @VK_PIPELINE_STAGE_*_SHADER_BIT@ stages
 --
 -- -   #VUID-VkBufferMemoryBarrier2-dstAccessMask-03909# If @dstAccessMask@
@@ -4256,6 +4392,32 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2 es) where
 -- -   #VUID-VkBufferMemoryBarrier2-dstAccessMask-04861# If @dstAccessMask@
 --     includes @VK_ACCESS_2_VIDEO_ENCODE_WRITE_BIT_KHR@, @dstStageMask@
 --     /must/ include @VK_PIPELINE_STAGE_2_VIDEO_ENCODE_BIT_KHR@
+--
+-- -   #VUID-VkBufferMemoryBarrier2-dstAccessMask-07455# If @dstAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_OPTICAL_FLOW_READ_BIT_NV',
+--     @dstStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV'
+--
+-- -   #VUID-VkBufferMemoryBarrier2-dstAccessMask-07456# If @dstAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_OPTICAL_FLOW_WRITE_BIT_NV',
+--     @dstStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV'
+--
+-- -   #VUID-VkBufferMemoryBarrier2-dstAccessMask-07457# If @dstAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_WRITE_BIT_EXT',
+--     @dstStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
+--
+-- -   #VUID-VkBufferMemoryBarrier2-dstAccessMask-07458# If @dstAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_READ_BIT_EXT',
+--     @dstStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
+--     or
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
 --
 -- -   #VUID-VkBufferMemoryBarrier2-offset-01187# @offset@ /must/ be less
 --     than the size of @buffer@

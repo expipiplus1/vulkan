@@ -134,6 +134,7 @@
 module Vulkan.Extensions.VK_NV_coverage_reduction_mode  ( FramebufferMixedSamplesCombinationNV
                                                         , PhysicalDeviceCoverageReductionModeFeaturesNV
                                                         , PipelineCoverageReductionStateCreateInfoNV
+                                                        , CoverageReductionModeNV
                                                         ) where
 
 import Vulkan.CStruct (FromCStruct)
@@ -162,4 +163,7 @@ instance ToCStruct PipelineCoverageReductionStateCreateInfoNV
 instance Show PipelineCoverageReductionStateCreateInfoNV
 
 instance FromCStruct PipelineCoverageReductionStateCreateInfoNV
+
+
+data CoverageReductionModeNV
 

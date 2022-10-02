@@ -2,6 +2,10 @@
 
 ## WIP
 
+## [0.10.4] - 2022-10-02
+- More robust linking against C++ standard library
+- Raise upper bound on `vulkan`
+
 ## [0.10.3.1] - 2022-09-27
 - Enable c++17 to get VMA aligned alloc
 

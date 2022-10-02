@@ -184,6 +184,7 @@
 module Vulkan.Extensions.VK_EXT_provoking_vertex  ( PhysicalDeviceProvokingVertexFeaturesEXT
                                                   , PhysicalDeviceProvokingVertexPropertiesEXT
                                                   , PipelineRasterizationProvokingVertexStateCreateInfoEXT
+                                                  , ProvokingVertexModeEXT
                                                   ) where
 
 import Vulkan.CStruct (FromCStruct)
@@ -212,4 +213,7 @@ instance ToCStruct PipelineRasterizationProvokingVertexStateCreateInfoEXT
 instance Show PipelineRasterizationProvokingVertexStateCreateInfoEXT
 
 instance FromCStruct PipelineRasterizationProvokingVertexStateCreateInfoEXT
+
+
+data ProvokingVertexModeEXT
 

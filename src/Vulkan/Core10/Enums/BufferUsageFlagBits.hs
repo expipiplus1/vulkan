@@ -10,6 +10,8 @@ module Vulkan.Core10.Enums.BufferUsageFlagBits  ( BufferUsageFlags
                                                                      , BUFFER_USAGE_INDEX_BUFFER_BIT
                                                                      , BUFFER_USAGE_VERTEX_BUFFER_BIT
                                                                      , BUFFER_USAGE_INDIRECT_BUFFER_BIT
+                                                                     , BUFFER_USAGE_MICROMAP_STORAGE_BIT_EXT
+                                                                     , BUFFER_USAGE_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT
                                                                      , BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR
                                                                      , BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR
                                                                      , BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR
@@ -106,6 +108,12 @@ pattern BUFFER_USAGE_VERTEX_BUFFER_BIT = BufferUsageFlagBits 0x00000080
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.GeneratedCommandsInfoNV'
 pattern BUFFER_USAGE_INDIRECT_BUFFER_BIT = BufferUsageFlagBits 0x00000100
 
+-- No documentation found for Nested "VkBufferUsageFlagBits" "VK_BUFFER_USAGE_MICROMAP_STORAGE_BIT_EXT"
+pattern BUFFER_USAGE_MICROMAP_STORAGE_BIT_EXT = BufferUsageFlagBits 0x01000000
+
+-- No documentation found for Nested "VkBufferUsageFlagBits" "VK_BUFFER_USAGE_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT"
+pattern BUFFER_USAGE_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT = BufferUsageFlagBits 0x00800000
+
 -- | 'BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR' specifies that the buffer is
 -- suitable for use as a
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shader-binding-table Shader Binding Table>.
@@ -188,6 +196,14 @@ showTableBufferUsageFlagBits =
   ,
     ( BUFFER_USAGE_INDIRECT_BUFFER_BIT
     , "INDIRECT_BUFFER_BIT"
+    )
+  ,
+    ( BUFFER_USAGE_MICROMAP_STORAGE_BIT_EXT
+    , "MICROMAP_STORAGE_BIT_EXT"
+    )
+  ,
+    ( BUFFER_USAGE_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT
+    , "MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT"
     )
   ,
     ( BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR

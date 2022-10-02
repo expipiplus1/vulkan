@@ -499,7 +499,10 @@ module Vulkan.Extensions.VK_EXT_debug_utils  ( DebugUtilsLabelEXT
 import Vulkan.CStruct (FromCStruct)
 import Vulkan.CStruct (ToCStruct)
 import Data.Kind (Type)
-
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
+import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
 data DebugUtilsLabelEXT
 
 instance ToCStruct DebugUtilsLabelEXT
@@ -508,12 +511,15 @@ instance Show DebugUtilsLabelEXT
 instance FromCStruct DebugUtilsLabelEXT
 
 
-data DebugUtilsMessengerCallbackDataEXT
+type role DebugUtilsMessengerCallbackDataEXT nominal
+data DebugUtilsMessengerCallbackDataEXT (es :: [Type])
 
-instance ToCStruct DebugUtilsMessengerCallbackDataEXT
-instance Show DebugUtilsMessengerCallbackDataEXT
+instance ( Extendss DebugUtilsMessengerCallbackDataEXT es
+         , PokeChain es ) => ToCStruct (DebugUtilsMessengerCallbackDataEXT es)
+instance Show (Chain es) => Show (DebugUtilsMessengerCallbackDataEXT es)
 
-instance FromCStruct DebugUtilsMessengerCallbackDataEXT
+instance ( Extendss DebugUtilsMessengerCallbackDataEXT es
+         , PeekChain es ) => FromCStruct (DebugUtilsMessengerCallbackDataEXT es)
 
 
 data DebugUtilsMessengerCreateInfoEXT

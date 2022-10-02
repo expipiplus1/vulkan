@@ -708,6 +708,20 @@ foreign import ccall
 --     by the current subpass /must/ be bound to the pipeline via a
 --     descriptor set
 --
+-- -   #VUID-vkCmdDrawMeshTasksEXT-OpTypeImage-07468# If any shader
+--     executed by this pipeline accesses an @OpTypeImage@ variable with a
+--     @Dim@ operand of @SubpassData@, it /must/ be decorated with an
+--     @InputAttachmentIndex@ that corresponds to a valid input attachment
+--     in the current subpass
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-None-07469# Input attachment views
+--     accessed in a subpass /must/ be created with the same
+--     'Vulkan.Core10.Enums.Format.Format' as the corresponding subpass
+--     definition be created with a 'Vulkan.Core10.Handles.ImageView' that
+--     is an attachment in the currently bound
+--     'Vulkan.Core10.Handles.Framebuffer' at an index that corresponds to
+--     a valid input attachment in the current subpass
+--
 -- -   #VUID-vkCmdDrawMeshTasksEXT-None-06537# Memory backing image
 --     subresources used as attachments in the current render pass /must/
 --     not be written in any way other than as an attachment by this
@@ -1217,6 +1231,360 @@ foreign import ccall
 --     query is active, the bound graphics pipeline /must/ not have been
 --     created with a non-zero value in
 --     'Vulkan.Extensions.VK_EXT_transform_feedback.PipelineRasterizationStateStreamCreateInfoEXT'::@rasterizationStream@.
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-pColorBlendEnables-07470# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT'
+--     state enabled and the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     set @pColorBlendEnables@ for any attachment to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then for those attachments in
+--     the subpass the corresponding image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT'
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-rasterizationSamples-07471# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state enabled, and the current subpass does not use any color
+--     and\/or depth\/stencil attachments, then the @rasterizationSamples@
+--     in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--     /must/ follow the rules for a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-noattachments zero-attachment subpass>
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-samples-07472# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_MASK_EXT'
+--     state enabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state disabled, then the @samples@ parameter in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT'
+--     /must/ be greater or equal to the
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     parameter used to create the bound graphics pipeline
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-samples-07473# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_MASK_EXT'
+--     state and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     states enabled, then the @samples@ parameter in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT'
+--     /must/ be greater or equal to the @rasterizationSamples@ parameter
+--     in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-multisampledRenderToSingleSampled-07475#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state enabled, and none of the @VK_AMD_mixed_attachment_samples@
+--     extension, @VK_NV_framebuffer_mixed_samples@ extension, or the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is enabled, then the @rasterizationSamples@ in the last call
+--     to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--     /must/ be the same as the current subpass color and\/or
+--     depth\/stencil attachments
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-firstAttachment-07476# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the attachments specified by the
+--     @firstAttachment@ and @attachmentCount@ parameters of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     calls /must/ specify an enable for all active color attachments in
+--     the current subpass
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-firstAttachment-07477# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the attachments specified by the
+--     @firstAttachment@ and @attachmentCount@ parameters of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
+--     calls /must/ specify the blend equations for all active color
+--     attachments in the current subpass where blending is enabled
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-firstAttachment-07478# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_MASK_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorWriteMaskEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the attachments specified by the
+--     @firstAttachment@ and @attachmentCount@ parameters of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorWriteMaskEXT'
+--     calls /must/ specify the color write mask for all active color
+--     attachments in the current subpass
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-firstAttachment-07479# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ADVANCED_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendAdvancedEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the attachments specified by the
+--     @firstAttachment@ and @attachmentCount@ parameters of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendAdvancedEXT'
+--     calls /must/ specify the advanced blend equations for all active
+--     color attachments in the current subpass where blending is enabled
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-advancedBlendMaxColorAttachments-07480#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ADVANCED_EXT'
+--     and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT'
+--     dynamic states enabled and the last calls to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     and
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendAdvancedEXT'
+--     have enabled advanced blending, then the number of active color
+--     attachments in the current subpass must not exceed
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-advancedBlendMaxColorAttachments advancedBlendMaxColorAttachments>
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-primitivesGeneratedQueryWithNonZeroStreams-07481#
+--     If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-primitivesGeneratedQueryWithNonZeroStreams primitivesGeneratedQueryWithNonZeroStreams>
+--     feature is not enabled and the
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT'
+--     query is active, and the bound graphics pipeline was created with
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_STREAM_EXT'
+--     state enabled, the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationStreamEXT'
+--     /must/ have set the @rasterizationStream@ to zero
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-sampleLocationsPerPixel-07482# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state enabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state disabled, then the @sampleLocationsPerPixel@ member of
+--     @pSampleLocationsInfo@ in the last call to
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ equal the @rasterizationSamples@ member of the
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'
+--     structure the bound graphics pipeline has been created with
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-sampleLocationsPerPixel-07483# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state enabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state enabled, then the @sampleLocationsPerPixel@ member of
+--     @pSampleLocationsInfo@ in the last call to
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ equal the @rasterizationSamples@ parameter of the last call
+--     to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-sampleLocationsEnable-07484# If the
+--     bound graphics pipeline was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, and @sampleLocationsEnable@ was
+--     'Vulkan.Core10.FundamentalTypes.TRUE' in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT',
+--     and the current subpass has a depth\/stencil attachment, then that
+--     attachment /must/ have been created with the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
+--     bit set
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-sampleLocationsEnable-07485# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state enabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, and if @sampleLocationsEnable@ was
+--     'Vulkan.Core10.FundamentalTypes.TRUE' in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT',
+--     then the @sampleLocationsInfo.sampleLocationGridSize.width@ in the
+--     last call to
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ evenly divide
+--     'Vulkan.Extensions.VK_EXT_sample_locations.MultisamplePropertiesEXT'::@sampleLocationGridSize.width@
+--     as returned by
+--     'Vulkan.Extensions.VK_EXT_sample_locations.getPhysicalDeviceMultisamplePropertiesEXT'
+--     with a @samples@ parameter equaling @rasterizationSamples@
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-sampleLocationsEnable-07486# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state enabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, and if @sampleLocationsEnable@ was
+--     'Vulkan.Core10.FundamentalTypes.TRUE' in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT',
+--     then the @sampleLocationsInfo.sampleLocationGridSize.height@ in the
+--     last call to
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ evenly divide
+--     'Vulkan.Extensions.VK_EXT_sample_locations.MultisamplePropertiesEXT'::@sampleLocationGridSize.height@
+--     as returned by
+--     'Vulkan.Extensions.VK_EXT_sample_locations.getPhysicalDeviceMultisamplePropertiesEXT'
+--     with a @samples@ parameter equaling @rasterizationSamples@
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-sampleLocationsEnable-07487# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, and if @sampleLocationsEnable@ was
+--     'Vulkan.Core10.FundamentalTypes.TRUE' in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT',
+--     the fragment shader code /must/ not statically use the extended
+--     instruction @InterpolateAtSample@
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-coverageModulationTableEnable-07488# If
+--     the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_ENABLE_NV'
+--     state enabled and the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableEnableNV'
+--     set @coverageModulationTableEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then the
+--     @coverageModulationTableCount@ parameter in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableNV'
+--     /must/ equal the current @rasterizationSamples@ divided by the
+--     number of color samples in the current subpass
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-rasterizationSamples-07489# If the
+--     @VK_NV_framebuffer_mixed_samples@ extension is enabled, and if
+--     current subpass has a depth\/stencil attachment and depth test,
+--     stencil test, or depth bounds test are enabled in the currently
+--     bound pipeline state, then the current @rasterizationSamples@ must
+--     be the same as the sample count of the depth\/stencil attachment
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-coverageToColorEnable-07490# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV'
+--     state enabled and the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
+--     set the @coverageToColorEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then the current subpass must
+--     have a color attachment at the location selected by the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorLocationNV'
+--     @coverageToColorLocation@, with a
+--     'Vulkan.Core10.Enums.Format.Format' of
+--     'Vulkan.Core10.Enums.Format.FORMAT_R8_UINT',
+--     'Vulkan.Core10.Enums.Format.FORMAT_R8_SINT',
+--     'Vulkan.Core10.Enums.Format.FORMAT_R16_UINT',
+--     'Vulkan.Core10.Enums.Format.FORMAT_R16_SINT',
+--     'Vulkan.Core10.Enums.Format.FORMAT_R32_UINT', or
+--     'Vulkan.Core10.Enums.Format.FORMAT_R32_SINT'
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-coverageReductionMode-07491# If this
+--     @VK_NV_coverage_reduction_mode@ extension is enabled, the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV'
+--     and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     states enabled, the current coverage reduction mode
+--     @coverageReductionMode@, then the current @rasterizationSamples@,
+--     and the sample counts for the color and depth\/stencil attachments
+--     (if the subpass has them) must be a valid combination returned by
+--     'Vulkan.Extensions.VK_NV_coverage_reduction_mode.getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV'
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-viewportCount-07492# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
+--     dynamic state enabled, but not the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SWIZZLE_NV'
+--     dynamic state enabled, then the bound graphics pipeline /must/ have
+--     been created with
+--     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'::@viewportCount@
+--     greater or equal to the @viewportCount@ parameter in the last call
+--     to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-viewportCount-07493# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
+--     and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SWIZZLE_NV'
+--     dynamic states enabled then the @viewportCount@ parameter in the
+--     last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportSwizzleNV'
+--     /must/ be greater than or equal to the @viewportCount@ parameter in
+--     the last call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-rasterizationSamples-07494# If the
+--     @VK_NV_framebuffer_mixed_samples@ extension is enabled, and if the
+--     current subpass has any color attachments and @rasterizationSamples@
+--     of the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--     is greater than the number of color samples, then the pipeline
+--     @sampleShadingEnable@ /must/ be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-stippledLineEnable-07495# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT'
+--     or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
+--     dynamic states enabled, and if the current @stippledLineEnable@
+--     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
+--     @lineRasterizationMode@ state is
+--     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_EXT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>
+--     feature /must/ be enabled
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-stippledLineEnable-07496# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT'
+--     or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
+--     dynamic states enabled, and if the current @stippledLineEnable@
+--     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
+--     @lineRasterizationMode@ state is
+--     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_BRESENHAM_EXT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledBresenhamLines stippledBresenhamLines>
+--     feature /must/ be enabled
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-stippledLineEnable-07497# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT'
+--     or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
+--     dynamic states enabled, and if the current @stippledLineEnable@
+--     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
+--     @lineRasterizationMode@ state is
+--     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledSmoothLines stippledSmoothLines>
+--     feature /must/ be enabled
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-stippledLineEnable-07498# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT'
+--     or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
+--     dynamic states enabled, and if the current @stippledLineEnable@
+--     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
+--     @lineRasterizationMode@ state is
+--     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_DEFAULT_EXT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>
+--     feature /must/ be enabled and
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@strictLines@
+--     must be VK_TRUE
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-conservativePointAndLineRasterization-07499#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CONSERVATIVE_RASTERIZATION_MODE_EXT'
+--     dynamic state enabled,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-conservativePointAndLineRasterization conservativePointAndLineRasterization>
+--     is not supported, and the effective primitive topology output by the
+--     last pre-rasterization shader stage is a line or point, then the
+--     @conservativeRasterizationMode@ set by the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT'
+--     /must/ be
+--     'Vulkan.Extensions.VK_EXT_conservative_rasterization.CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT'
 --
 -- -   #VUID-vkCmdDrawMeshTasksEXT-stage-07073# If the currently bound
 --     pipeline was created with the
@@ -1768,6 +2136,20 @@ foreign import ccall
 --     attachment used by the current subpass /must/ be bound to the
 --     pipeline via a descriptor set
 --
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-OpTypeImage-07468# If any shader
+--     executed by this pipeline accesses an @OpTypeImage@ variable with a
+--     @Dim@ operand of @SubpassData@, it /must/ be decorated with an
+--     @InputAttachmentIndex@ that corresponds to a valid input attachment
+--     in the current subpass
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-None-07469# Input attachment
+--     views accessed in a subpass /must/ be created with the same
+--     'Vulkan.Core10.Enums.Format.Format' as the corresponding subpass
+--     definition be created with a 'Vulkan.Core10.Handles.ImageView' that
+--     is an attachment in the currently bound
+--     'Vulkan.Core10.Handles.Framebuffer' at an index that corresponds to
+--     a valid input attachment in the current subpass
+--
 -- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-None-06537# Memory backing image
 --     subresources used as attachments in the current render pass /must/
 --     not be written in any way other than as an attachment by this
@@ -2278,6 +2660,360 @@ foreign import ccall
 --     query is active, the bound graphics pipeline /must/ not have been
 --     created with a non-zero value in
 --     'Vulkan.Extensions.VK_EXT_transform_feedback.PipelineRasterizationStateStreamCreateInfoEXT'::@rasterizationStream@.
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-pColorBlendEnables-07470# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT'
+--     state enabled and the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     set @pColorBlendEnables@ for any attachment to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then for those attachments in
+--     the subpass the corresponding image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT'
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-rasterizationSamples-07471# If
+--     the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state enabled, and the current subpass does not use any color
+--     and\/or depth\/stencil attachments, then the @rasterizationSamples@
+--     in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--     /must/ follow the rules for a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-noattachments zero-attachment subpass>
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-samples-07472# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_MASK_EXT'
+--     state enabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state disabled, then the @samples@ parameter in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT'
+--     /must/ be greater or equal to the
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     parameter used to create the bound graphics pipeline
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-samples-07473# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_MASK_EXT'
+--     state and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     states enabled, then the @samples@ parameter in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT'
+--     /must/ be greater or equal to the @rasterizationSamples@ parameter
+--     in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-multisampledRenderToSingleSampled-07475#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state enabled, and none of the @VK_AMD_mixed_attachment_samples@
+--     extension, @VK_NV_framebuffer_mixed_samples@ extension, or the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is enabled, then the @rasterizationSamples@ in the last call
+--     to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--     /must/ be the same as the current subpass color and\/or
+--     depth\/stencil attachments
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-firstAttachment-07476# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the attachments specified by the
+--     @firstAttachment@ and @attachmentCount@ parameters of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     calls /must/ specify an enable for all active color attachments in
+--     the current subpass
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-firstAttachment-07477# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the attachments specified by the
+--     @firstAttachment@ and @attachmentCount@ parameters of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
+--     calls /must/ specify the blend equations for all active color
+--     attachments in the current subpass where blending is enabled
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-firstAttachment-07478# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_MASK_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorWriteMaskEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the attachments specified by the
+--     @firstAttachment@ and @attachmentCount@ parameters of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorWriteMaskEXT'
+--     calls /must/ specify the color write mask for all active color
+--     attachments in the current subpass
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-firstAttachment-07479# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ADVANCED_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendAdvancedEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the attachments specified by the
+--     @firstAttachment@ and @attachmentCount@ parameters of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendAdvancedEXT'
+--     calls /must/ specify the advanced blend equations for all active
+--     color attachments in the current subpass where blending is enabled
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-advancedBlendMaxColorAttachments-07480#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ADVANCED_EXT'
+--     and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT'
+--     dynamic states enabled and the last calls to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     and
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendAdvancedEXT'
+--     have enabled advanced blending, then the number of active color
+--     attachments in the current subpass must not exceed
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-advancedBlendMaxColorAttachments advancedBlendMaxColorAttachments>
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-primitivesGeneratedQueryWithNonZeroStreams-07481#
+--     If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-primitivesGeneratedQueryWithNonZeroStreams primitivesGeneratedQueryWithNonZeroStreams>
+--     feature is not enabled and the
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT'
+--     query is active, and the bound graphics pipeline was created with
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_STREAM_EXT'
+--     state enabled, the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationStreamEXT'
+--     /must/ have set the @rasterizationStream@ to zero
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-sampleLocationsPerPixel-07482#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state enabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state disabled, then the @sampleLocationsPerPixel@ member of
+--     @pSampleLocationsInfo@ in the last call to
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ equal the @rasterizationSamples@ member of the
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'
+--     structure the bound graphics pipeline has been created with
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-sampleLocationsPerPixel-07483#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state enabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state enabled, then the @sampleLocationsPerPixel@ member of
+--     @pSampleLocationsInfo@ in the last call to
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ equal the @rasterizationSamples@ parameter of the last call
+--     to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-sampleLocationsEnable-07484# If
+--     the bound graphics pipeline was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, and @sampleLocationsEnable@ was
+--     'Vulkan.Core10.FundamentalTypes.TRUE' in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT',
+--     and the current subpass has a depth\/stencil attachment, then that
+--     attachment /must/ have been created with the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
+--     bit set
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-sampleLocationsEnable-07485# If
+--     the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state enabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, and if @sampleLocationsEnable@ was
+--     'Vulkan.Core10.FundamentalTypes.TRUE' in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT',
+--     then the @sampleLocationsInfo.sampleLocationGridSize.width@ in the
+--     last call to
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ evenly divide
+--     'Vulkan.Extensions.VK_EXT_sample_locations.MultisamplePropertiesEXT'::@sampleLocationGridSize.width@
+--     as returned by
+--     'Vulkan.Extensions.VK_EXT_sample_locations.getPhysicalDeviceMultisamplePropertiesEXT'
+--     with a @samples@ parameter equaling @rasterizationSamples@
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-sampleLocationsEnable-07486# If
+--     the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state enabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, and if @sampleLocationsEnable@ was
+--     'Vulkan.Core10.FundamentalTypes.TRUE' in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT',
+--     then the @sampleLocationsInfo.sampleLocationGridSize.height@ in the
+--     last call to
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ evenly divide
+--     'Vulkan.Extensions.VK_EXT_sample_locations.MultisamplePropertiesEXT'::@sampleLocationGridSize.height@
+--     as returned by
+--     'Vulkan.Extensions.VK_EXT_sample_locations.getPhysicalDeviceMultisamplePropertiesEXT'
+--     with a @samples@ parameter equaling @rasterizationSamples@
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-sampleLocationsEnable-07487# If
+--     the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, and if @sampleLocationsEnable@ was
+--     'Vulkan.Core10.FundamentalTypes.TRUE' in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT',
+--     the fragment shader code /must/ not statically use the extended
+--     instruction @InterpolateAtSample@
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-coverageModulationTableEnable-07488#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_ENABLE_NV'
+--     state enabled and the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableEnableNV'
+--     set @coverageModulationTableEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then the
+--     @coverageModulationTableCount@ parameter in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableNV'
+--     /must/ equal the current @rasterizationSamples@ divided by the
+--     number of color samples in the current subpass
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-rasterizationSamples-07489# If
+--     the @VK_NV_framebuffer_mixed_samples@ extension is enabled, and if
+--     current subpass has a depth\/stencil attachment and depth test,
+--     stencil test, or depth bounds test are enabled in the currently
+--     bound pipeline state, then the current @rasterizationSamples@ must
+--     be the same as the sample count of the depth\/stencil attachment
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-coverageToColorEnable-07490# If
+--     the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV'
+--     state enabled and the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
+--     set the @coverageToColorEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then the current subpass must
+--     have a color attachment at the location selected by the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorLocationNV'
+--     @coverageToColorLocation@, with a
+--     'Vulkan.Core10.Enums.Format.Format' of
+--     'Vulkan.Core10.Enums.Format.FORMAT_R8_UINT',
+--     'Vulkan.Core10.Enums.Format.FORMAT_R8_SINT',
+--     'Vulkan.Core10.Enums.Format.FORMAT_R16_UINT',
+--     'Vulkan.Core10.Enums.Format.FORMAT_R16_SINT',
+--     'Vulkan.Core10.Enums.Format.FORMAT_R32_UINT', or
+--     'Vulkan.Core10.Enums.Format.FORMAT_R32_SINT'
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-coverageReductionMode-07491# If
+--     this @VK_NV_coverage_reduction_mode@ extension is enabled, the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV'
+--     and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     states enabled, the current coverage reduction mode
+--     @coverageReductionMode@, then the current @rasterizationSamples@,
+--     and the sample counts for the color and depth\/stencil attachments
+--     (if the subpass has them) must be a valid combination returned by
+--     'Vulkan.Extensions.VK_NV_coverage_reduction_mode.getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV'
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-viewportCount-07492# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
+--     dynamic state enabled, but not the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SWIZZLE_NV'
+--     dynamic state enabled, then the bound graphics pipeline /must/ have
+--     been created with
+--     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'::@viewportCount@
+--     greater or equal to the @viewportCount@ parameter in the last call
+--     to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-viewportCount-07493# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
+--     and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SWIZZLE_NV'
+--     dynamic states enabled then the @viewportCount@ parameter in the
+--     last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportSwizzleNV'
+--     /must/ be greater than or equal to the @viewportCount@ parameter in
+--     the last call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-rasterizationSamples-07494# If
+--     the @VK_NV_framebuffer_mixed_samples@ extension is enabled, and if
+--     the current subpass has any color attachments and
+--     @rasterizationSamples@ of the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--     is greater than the number of color samples, then the pipeline
+--     @sampleShadingEnable@ /must/ be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-stippledLineEnable-07495# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT'
+--     or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
+--     dynamic states enabled, and if the current @stippledLineEnable@
+--     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
+--     @lineRasterizationMode@ state is
+--     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_EXT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>
+--     feature /must/ be enabled
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-stippledLineEnable-07496# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT'
+--     or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
+--     dynamic states enabled, and if the current @stippledLineEnable@
+--     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
+--     @lineRasterizationMode@ state is
+--     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_BRESENHAM_EXT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledBresenhamLines stippledBresenhamLines>
+--     feature /must/ be enabled
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-stippledLineEnable-07497# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT'
+--     or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
+--     dynamic states enabled, and if the current @stippledLineEnable@
+--     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
+--     @lineRasterizationMode@ state is
+--     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledSmoothLines stippledSmoothLines>
+--     feature /must/ be enabled
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-stippledLineEnable-07498# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT'
+--     or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
+--     dynamic states enabled, and if the current @stippledLineEnable@
+--     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
+--     @lineRasterizationMode@ state is
+--     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_DEFAULT_EXT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>
+--     feature /must/ be enabled and
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@strictLines@
+--     must be VK_TRUE
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-conservativePointAndLineRasterization-07499#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CONSERVATIVE_RASTERIZATION_MODE_EXT'
+--     dynamic state enabled,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-conservativePointAndLineRasterization conservativePointAndLineRasterization>
+--     is not supported, and the effective primitive topology output by the
+--     last pre-rasterization shader stage is a line or point, then the
+--     @conservativeRasterizationMode@ set by the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT'
+--     /must/ be
+--     'Vulkan.Extensions.VK_EXT_conservative_rasterization.CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT'
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-stage-07073# If the currently
 --     bound pipeline was created with the
@@ -2818,6 +3554,20 @@ foreign import ccall
 --     attachment used by the current subpass /must/ be bound to the
 --     pipeline via a descriptor set
 --
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-OpTypeImage-07468# If any
+--     shader executed by this pipeline accesses an @OpTypeImage@ variable
+--     with a @Dim@ operand of @SubpassData@, it /must/ be decorated with
+--     an @InputAttachmentIndex@ that corresponds to a valid input
+--     attachment in the current subpass
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-None-07469# Input
+--     attachment views accessed in a subpass /must/ be created with the
+--     same 'Vulkan.Core10.Enums.Format.Format' as the corresponding
+--     subpass definition be created with a
+--     'Vulkan.Core10.Handles.ImageView' that is an attachment in the
+--     currently bound 'Vulkan.Core10.Handles.Framebuffer' at an index that
+--     corresponds to a valid input attachment in the current subpass
+--
 -- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-None-06537# Memory backing
 --     image subresources used as attachments in the current render pass
 --     /must/ not be written in any way other than as an attachment by this
@@ -3328,6 +4078,360 @@ foreign import ccall
 --     query is active, the bound graphics pipeline /must/ not have been
 --     created with a non-zero value in
 --     'Vulkan.Extensions.VK_EXT_transform_feedback.PipelineRasterizationStateStreamCreateInfoEXT'::@rasterizationStream@.
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-pColorBlendEnables-07470#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT'
+--     state enabled and the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     set @pColorBlendEnables@ for any attachment to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then for those attachments in
+--     the subpass the corresponding image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT'
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-rasterizationSamples-07471#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state enabled, and the current subpass does not use any color
+--     and\/or depth\/stencil attachments, then the @rasterizationSamples@
+--     in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--     /must/ follow the rules for a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-noattachments zero-attachment subpass>
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-samples-07472# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_MASK_EXT'
+--     state enabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state disabled, then the @samples@ parameter in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT'
+--     /must/ be greater or equal to the
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'::@rasterizationSamples@
+--     parameter used to create the bound graphics pipeline
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-samples-07473# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_MASK_EXT'
+--     state and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     states enabled, then the @samples@ parameter in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT'
+--     /must/ be greater or equal to the @rasterizationSamples@ parameter
+--     in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-multisampledRenderToSingleSampled-07475#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state enabled, and none of the @VK_AMD_mixed_attachment_samples@
+--     extension, @VK_NV_framebuffer_mixed_samples@ extension, or the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
+--     feature is enabled, then the @rasterizationSamples@ in the last call
+--     to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--     /must/ be the same as the current subpass color and\/or
+--     depth\/stencil attachments
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-firstAttachment-07476# If
+--     the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the attachments specified by the
+--     @firstAttachment@ and @attachmentCount@ parameters of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     calls /must/ specify an enable for all active color attachments in
+--     the current subpass
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-firstAttachment-07477# If
+--     the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the attachments specified by the
+--     @firstAttachment@ and @attachmentCount@ parameters of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
+--     calls /must/ specify the blend equations for all active color
+--     attachments in the current subpass where blending is enabled
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-firstAttachment-07478# If
+--     the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_MASK_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorWriteMaskEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the attachments specified by the
+--     @firstAttachment@ and @attachmentCount@ parameters of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorWriteMaskEXT'
+--     calls /must/ specify the color write mask for all active color
+--     attachments in the current subpass
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-firstAttachment-07479# If
+--     the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ADVANCED_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendAdvancedEXT'
+--     /must/ have been called in the current command buffer prior to this
+--     drawing command, and the attachments specified by the
+--     @firstAttachment@ and @attachmentCount@ parameters of
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendAdvancedEXT'
+--     calls /must/ specify the advanced blend equations for all active
+--     color attachments in the current subpass where blending is enabled
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-advancedBlendMaxColorAttachments-07480#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ADVANCED_EXT'
+--     and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT'
+--     dynamic states enabled and the last calls to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     and
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendAdvancedEXT'
+--     have enabled advanced blending, then the number of active color
+--     attachments in the current subpass must not exceed
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-advancedBlendMaxColorAttachments advancedBlendMaxColorAttachments>
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-primitivesGeneratedQueryWithNonZeroStreams-07481#
+--     If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-primitivesGeneratedQueryWithNonZeroStreams primitivesGeneratedQueryWithNonZeroStreams>
+--     feature is not enabled and the
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT'
+--     query is active, and the bound graphics pipeline was created with
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_STREAM_EXT'
+--     state enabled, the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationStreamEXT'
+--     /must/ have set the @rasterizationStream@ to zero
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-sampleLocationsPerPixel-07482#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state enabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state disabled, then the @sampleLocationsPerPixel@ member of
+--     @pSampleLocationsInfo@ in the last call to
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ equal the @rasterizationSamples@ member of the
+--     'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo'
+--     structure the bound graphics pipeline has been created with
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-sampleLocationsPerPixel-07483#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state enabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     state enabled, then the @sampleLocationsPerPixel@ member of
+--     @pSampleLocationsInfo@ in the last call to
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ equal the @rasterizationSamples@ parameter of the last call
+--     to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-sampleLocationsEnable-07484#
+--     If the bound graphics pipeline was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, and @sampleLocationsEnable@ was
+--     'Vulkan.Core10.FundamentalTypes.TRUE' in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT',
+--     and the current subpass has a depth\/stencil attachment, then that
+--     attachment /must/ have been created with the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
+--     bit set
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-sampleLocationsEnable-07485#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state enabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, and if @sampleLocationsEnable@ was
+--     'Vulkan.Core10.FundamentalTypes.TRUE' in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT',
+--     then the @sampleLocationsInfo.sampleLocationGridSize.width@ in the
+--     last call to
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ evenly divide
+--     'Vulkan.Extensions.VK_EXT_sample_locations.MultisamplePropertiesEXT'::@sampleLocationGridSize.width@
+--     as returned by
+--     'Vulkan.Extensions.VK_EXT_sample_locations.getPhysicalDeviceMultisamplePropertiesEXT'
+--     with a @samples@ parameter equaling @rasterizationSamples@
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-sampleLocationsEnable-07486#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     state enabled and the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, and if @sampleLocationsEnable@ was
+--     'Vulkan.Core10.FundamentalTypes.TRUE' in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT',
+--     then the @sampleLocationsInfo.sampleLocationGridSize.height@ in the
+--     last call to
+--     'Vulkan.Extensions.VK_EXT_sample_locations.cmdSetSampleLocationsEXT'
+--     /must/ evenly divide
+--     'Vulkan.Extensions.VK_EXT_sample_locations.MultisamplePropertiesEXT'::@sampleLocationGridSize.height@
+--     as returned by
+--     'Vulkan.Extensions.VK_EXT_sample_locations.getPhysicalDeviceMultisamplePropertiesEXT'
+--     with a @samples@ parameter equaling @rasterizationSamples@
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-sampleLocationsEnable-07487#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     state enabled, and if @sampleLocationsEnable@ was
+--     'Vulkan.Core10.FundamentalTypes.TRUE' in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT',
+--     the fragment shader code /must/ not statically use the extended
+--     instruction @InterpolateAtSample@
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-coverageModulationTableEnable-07488#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_ENABLE_NV'
+--     state enabled and the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableEnableNV'
+--     set @coverageModulationTableEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then the
+--     @coverageModulationTableCount@ parameter in the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableNV'
+--     /must/ equal the current @rasterizationSamples@ divided by the
+--     number of color samples in the current subpass
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-rasterizationSamples-07489#
+--     If the @VK_NV_framebuffer_mixed_samples@ extension is enabled, and
+--     if current subpass has a depth\/stencil attachment and depth test,
+--     stencil test, or depth bounds test are enabled in the currently
+--     bound pipeline state, then the current @rasterizationSamples@ must
+--     be the same as the sample count of the depth\/stencil attachment
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-coverageToColorEnable-07490#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV'
+--     state enabled and the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
+--     set the @coverageToColorEnable@ to
+--     'Vulkan.Core10.FundamentalTypes.TRUE', then the current subpass must
+--     have a color attachment at the location selected by the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorLocationNV'
+--     @coverageToColorLocation@, with a
+--     'Vulkan.Core10.Enums.Format.Format' of
+--     'Vulkan.Core10.Enums.Format.FORMAT_R8_UINT',
+--     'Vulkan.Core10.Enums.Format.FORMAT_R8_SINT',
+--     'Vulkan.Core10.Enums.Format.FORMAT_R16_UINT',
+--     'Vulkan.Core10.Enums.Format.FORMAT_R16_SINT',
+--     'Vulkan.Core10.Enums.Format.FORMAT_R32_UINT', or
+--     'Vulkan.Core10.Enums.Format.FORMAT_R32_SINT'
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-coverageReductionMode-07491#
+--     If this @VK_NV_coverage_reduction_mode@ extension is enabled, the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV'
+--     and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     states enabled, the current coverage reduction mode
+--     @coverageReductionMode@, then the current @rasterizationSamples@,
+--     and the sample counts for the color and depth\/stencil attachments
+--     (if the subpass has them) must be a valid combination returned by
+--     'Vulkan.Extensions.VK_NV_coverage_reduction_mode.getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV'
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-viewportCount-07492# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
+--     dynamic state enabled, but not the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SWIZZLE_NV'
+--     dynamic state enabled, then the bound graphics pipeline /must/ have
+--     been created with
+--     'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'::@viewportCount@
+--     greater or equal to the @viewportCount@ parameter in the last call
+--     to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-viewportCount-07493# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT'
+--     and
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SWIZZLE_NV'
+--     dynamic states enabled then the @viewportCount@ parameter in the
+--     last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportSwizzleNV'
+--     /must/ be greater than or equal to the @viewportCount@ parameter in
+--     the last call to
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetViewportWithCount'
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-rasterizationSamples-07494#
+--     If the @VK_NV_framebuffer_mixed_samples@ extension is enabled, and
+--     if the current subpass has any color attachments and
+--     @rasterizationSamples@ of the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--     is greater than the number of color samples, then the pipeline
+--     @sampleShadingEnable@ /must/ be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-stippledLineEnable-07495#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT'
+--     or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
+--     dynamic states enabled, and if the current @stippledLineEnable@
+--     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
+--     @lineRasterizationMode@ state is
+--     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_EXT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>
+--     feature /must/ be enabled
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-stippledLineEnable-07496#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT'
+--     or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
+--     dynamic states enabled, and if the current @stippledLineEnable@
+--     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
+--     @lineRasterizationMode@ state is
+--     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_BRESENHAM_EXT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledBresenhamLines stippledBresenhamLines>
+--     feature /must/ be enabled
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-stippledLineEnable-07497#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT'
+--     or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
+--     dynamic states enabled, and if the current @stippledLineEnable@
+--     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
+--     @lineRasterizationMode@ state is
+--     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledSmoothLines stippledSmoothLines>
+--     feature /must/ be enabled
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-stippledLineEnable-07498#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT'
+--     or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
+--     dynamic states enabled, and if the current @stippledLineEnable@
+--     state is 'Vulkan.Core10.FundamentalTypes.TRUE' and the current
+--     @lineRasterizationMode@ state is
+--     'Vulkan.Extensions.VK_EXT_line_rasterization.LINE_RASTERIZATION_MODE_DEFAULT_EXT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-stippledRectangularLines stippledRectangularLines>
+--     feature /must/ be enabled and
+--     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@strictLines@
+--     must be VK_TRUE
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-conservativePointAndLineRasterization-07499#
+--     If the bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CONSERVATIVE_RASTERIZATION_MODE_EXT'
+--     dynamic state enabled,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-conservativePointAndLineRasterization conservativePointAndLineRasterization>
+--     is not supported, and the effective primitive topology output by the
+--     last pre-rasterization shader stage is a line or point, then the
+--     @conservativeRasterizationMode@ set by the last call to
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT'
+--     /must/ be
+--     'Vulkan.Extensions.VK_EXT_conservative_rasterization.CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT'
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-stage-07073# If the
 --     currently bound pipeline was created with the

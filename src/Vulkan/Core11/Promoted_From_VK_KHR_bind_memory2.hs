@@ -219,8 +219,8 @@ bindImageMemory2 device bindInfos = liftIO . evalContT $ do
 --
 -- == Valid Usage
 --
--- -   #VUID-VkBindBufferMemoryInfo-buffer-01029# @buffer@ /must/ not
---     already be backed by a memory object
+-- -   #VUID-VkBindBufferMemoryInfo-buffer-07459# @buffer@ /must/ not have
+--     been bound to a memory object
 --
 -- -   #VUID-VkBindBufferMemoryInfo-buffer-01030# @buffer@ /must/ not have
 --     been created with any sparse memory binding flags
@@ -445,8 +445,8 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --
 -- == Valid Usage
 --
--- -   #VUID-VkBindImageMemoryInfo-image-01044# @image@ /must/ not already
---     be backed by a memory object
+-- -   #VUID-VkBindImageMemoryInfo-image-07460# @image@ /must/ not have
+--     been bound to a memory object
 --
 -- -   #VUID-VkBindImageMemoryInfo-image-01045# @image@ /must/ not have
 --     been created with any sparse memory binding flags

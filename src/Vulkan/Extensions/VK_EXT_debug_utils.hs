@@ -516,6 +516,7 @@ module Vulkan.Extensions.VK_EXT_debug_utils  ( setDebugUtilsObjectNameEXT
                                              , DebugUtilsMessageTypeFlagBitsEXT( DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
                                                                                , DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
                                                                                , DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
+                                                                               , DEBUG_UTILS_MESSAGE_TYPE_DEVICE_ADDRESS_BINDING_BIT_EXT
                                                                                , ..
                                                                                )
                                              , PFN_vkDebugUtilsMessengerCallbackEXT
@@ -534,12 +535,14 @@ import Vulkan.Internal.Utils (traceAroundEvent)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
+import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Utils (maybePeek)
 import GHC.Base (when)
 import GHC.IO (throwIO)
+import GHC.Ptr (castPtr)
 import GHC.Ptr (nullFunPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -563,6 +566,7 @@ import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.Bits (FiniteBits)
 import Data.String (IsString)
+import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CFloat)
@@ -590,10 +594,12 @@ import Data.Kind (Type)
 import Control.Monad.Trans.Cont (ContT(..))
 import Data.Vector (Vector)
 import Vulkan.CStruct.Utils (advancePtrBytes)
+import Vulkan.CStruct.Extends (forgetExtensions)
 import Vulkan.CStruct.Utils (lowerArrayPtr)
 import Vulkan.NamedType ((:::))
 import Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Vulkan.Core10.FundamentalTypes (Bool32)
+import Vulkan.CStruct.Extends (Chain)
 import Vulkan.Core10.Handles (CommandBuffer)
 import Vulkan.Core10.Handles (CommandBuffer(..))
 import Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
@@ -603,6 +609,7 @@ import Vulkan.Extensions.Handles (DebugUtilsMessengerEXT(..))
 import Vulkan.Core10.Handles (Device)
 import Vulkan.Core10.Handles (Device(..))
 import Vulkan.Core10.Handles (Device(Device))
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_device_address_binding_report (DeviceAddressBindingCallbackDataEXT)
 import Vulkan.Dynamic (DeviceCmds(pVkCmdBeginDebugUtilsLabelEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdEndDebugUtilsLabelEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkCmdInsertDebugUtilsLabelEXT))
@@ -612,6 +619,9 @@ import Vulkan.Dynamic (DeviceCmds(pVkQueueInsertDebugUtilsLabelEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkSetDebugUtilsObjectNameEXT))
 import Vulkan.Dynamic (DeviceCmds(pVkSetDebugUtilsObjectTagEXT))
 import Vulkan.Core10.Handles (Device_T)
+import Vulkan.CStruct.Extends (Extends)
+import Vulkan.CStruct.Extends (Extendss)
+import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (Instance(..))
@@ -621,12 +631,17 @@ import Vulkan.Dynamic (InstanceCmds(pVkDestroyDebugUtilsMessengerEXT))
 import Vulkan.Dynamic (InstanceCmds(pVkSubmitDebugUtilsMessageEXT))
 import Vulkan.Core10.Handles (Instance_T)
 import Vulkan.Core10.Enums.ObjectType (ObjectType)
+import Vulkan.CStruct.Extends (PeekChain)
+import Vulkan.CStruct.Extends (PeekChain(..))
+import Vulkan.CStruct.Extends (PokeChain)
+import Vulkan.CStruct.Extends (PokeChain(..))
 import Vulkan.Core10.Handles (Queue)
 import Vulkan.Core10.Handles (Queue(..))
 import Vulkan.Core10.Handles (Queue(Queue))
 import Vulkan.Core10.Handles (Queue_T)
 import Vulkan.Core10.Enums.Result (Result)
 import Vulkan.Core10.Enums.Result (Result(..))
+import Vulkan.CStruct.Extends (SomeStruct)
 import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT))
@@ -1351,7 +1366,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkSubmitDebugUtilsMessageEXT
-  :: FunPtr (Ptr Instance_T -> DebugUtilsMessageSeverityFlagBitsEXT -> DebugUtilsMessageTypeFlagsEXT -> Ptr DebugUtilsMessengerCallbackDataEXT -> IO ()) -> Ptr Instance_T -> DebugUtilsMessageSeverityFlagBitsEXT -> DebugUtilsMessageTypeFlagsEXT -> Ptr DebugUtilsMessengerCallbackDataEXT -> IO ()
+  :: FunPtr (Ptr Instance_T -> DebugUtilsMessageSeverityFlagBitsEXT -> DebugUtilsMessageTypeFlagsEXT -> Ptr (SomeStruct DebugUtilsMessengerCallbackDataEXT) -> IO ()) -> Ptr Instance_T -> DebugUtilsMessageSeverityFlagBitsEXT -> DebugUtilsMessageTypeFlagsEXT -> Ptr (SomeStruct DebugUtilsMessengerCallbackDataEXT) -> IO ()
 
 -- | vkSubmitDebugUtilsMessageEXT - Inject a message into a debug stream
 --
@@ -1393,8 +1408,10 @@ foreign import ccall
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_debug_utils VK_EXT_debug_utils>,
 -- 'DebugUtilsMessageSeverityFlagBitsEXT', 'DebugUtilsMessageTypeFlagsEXT',
 -- 'DebugUtilsMessengerCallbackDataEXT', 'Vulkan.Core10.Handles.Instance'
-submitDebugUtilsMessageEXT :: forall io
-                            . (MonadIO io)
+submitDebugUtilsMessageEXT :: forall a io
+                            . ( Extendss DebugUtilsMessengerCallbackDataEXT a
+                              , PokeChain a
+                              , MonadIO io )
                            => -- | @instance@ is the debug stream’s 'Vulkan.Core10.Handles.Instance'.
                               Instance
                            -> -- | @messageSeverity@ is a 'DebugUtilsMessageSeverityFlagBitsEXT' value
@@ -1405,7 +1422,7 @@ submitDebugUtilsMessageEXT :: forall io
                               ("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT)
                            -> -- | @pCallbackData@ contains all the callback related data in the
                               -- 'DebugUtilsMessengerCallbackDataEXT' structure.
-                              DebugUtilsMessengerCallbackDataEXT
+                              (DebugUtilsMessengerCallbackDataEXT a)
                            -> io ()
 submitDebugUtilsMessageEXT instance'
                              messageSeverity
@@ -1420,7 +1437,7 @@ submitDebugUtilsMessageEXT instance'
                                                             (instanceHandle (instance'))
                                                             (messageSeverity)
                                                             (messageTypes)
-                                                            pCallbackData)
+                                                            (forgetExtensions pCallbackData))
   pure $ ()
 
 
@@ -1904,7 +1921,11 @@ instance Zero DebugUtilsMessengerCreateInfoEXT where
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT'
 --
 -- -   #VUID-VkDebugUtilsMessengerCallbackDataEXT-pNext-pNext# @pNext@
---     /must/ be @NULL@
+--     /must/ be @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_EXT_device_address_binding_report.DeviceAddressBindingCallbackDataEXT'
+--
+-- -   #VUID-VkDebugUtilsMessengerCallbackDataEXT-sType-unique# The @sType@
+--     value of each struct in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkDebugUtilsMessengerCallbackDataEXT-flags-zerobitmask#
 --     @flags@ /must/ be @0@
@@ -1938,8 +1959,10 @@ instance Zero DebugUtilsMessengerCreateInfoEXT where
 -- 'DebugUtilsObjectNameInfoEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'submitDebugUtilsMessageEXT'
-data DebugUtilsMessengerCallbackDataEXT = DebugUtilsMessengerCallbackDataEXT
-  { -- | @flags@ is @0@ and is reserved for future use.
+data DebugUtilsMessengerCallbackDataEXT (es :: [Type]) = DebugUtilsMessengerCallbackDataEXT
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @flags@ is @0@ and is reserved for future use.
     flags :: DebugUtilsMessengerCallbackDataFlagsEXT
   , -- | @pMessageIdName@ is a null-terminated string that identifies the
     -- particular message ID that is associated with the provided message. If
@@ -1975,15 +1998,26 @@ data DebugUtilsMessengerCallbackDataEXT = DebugUtilsMessengerCallbackDataEXT
   }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (DebugUtilsMessengerCallbackDataEXT)
+deriving instance Generic (DebugUtilsMessengerCallbackDataEXT (es :: [Type]))
 #endif
-deriving instance Show DebugUtilsMessengerCallbackDataEXT
+deriving instance Show (Chain es) => Show (DebugUtilsMessengerCallbackDataEXT es)
 
-instance ToCStruct DebugUtilsMessengerCallbackDataEXT where
+instance Extensible DebugUtilsMessengerCallbackDataEXT where
+  extensibleTypeName = "DebugUtilsMessengerCallbackDataEXT"
+  setNext DebugUtilsMessengerCallbackDataEXT{..} next' = DebugUtilsMessengerCallbackDataEXT{next = next', ..}
+  getNext DebugUtilsMessengerCallbackDataEXT{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends DebugUtilsMessengerCallbackDataEXT e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @DeviceAddressBindingCallbackDataEXT = Just f
+    | otherwise = Nothing
+
+instance ( Extendss DebugUtilsMessengerCallbackDataEXT es
+         , PokeChain es ) => ToCStruct (DebugUtilsMessengerCallbackDataEXT es) where
   withCStruct x f = allocaBytes 96 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p DebugUtilsMessengerCallbackDataEXT{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr DebugUtilsMessengerCallbackDataFlagsEXT)) (flags)
     pMessageIdName'' <- case (messageIdName) of
       Nothing -> pure nullPtr
@@ -2009,14 +2043,18 @@ instance ToCStruct DebugUtilsMessengerCallbackDataEXT where
   cStructAlignment = 8
   pokeZeroCStruct p f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ poke ((p `plusPtr` 32 :: Ptr Int32)) (zero)
     pMessage'' <- ContT $ useAsCString (mempty)
     lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr CChar))) pMessage''
     lift $ f
 
-instance FromCStruct DebugUtilsMessengerCallbackDataEXT where
+instance ( Extendss DebugUtilsMessengerCallbackDataEXT es
+         , PeekChain es ) => FromCStruct (DebugUtilsMessengerCallbackDataEXT es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     flags <- peek @DebugUtilsMessengerCallbackDataFlagsEXT ((p `plusPtr` 16 :: Ptr DebugUtilsMessengerCallbackDataFlagsEXT))
     pMessageIdName <- peek @(Ptr CChar) ((p `plusPtr` 24 :: Ptr (Ptr CChar)))
     pMessageIdName' <- maybePeek (\j -> packCString (j)) pMessageIdName
@@ -2032,6 +2070,7 @@ instance FromCStruct DebugUtilsMessengerCallbackDataEXT where
     pObjects <- peek @(Ptr DebugUtilsObjectNameInfoEXT) ((p `plusPtr` 88 :: Ptr (Ptr DebugUtilsObjectNameInfoEXT)))
     pObjects' <- generateM (fromIntegral objectCount) (\i -> peekCStruct @DebugUtilsObjectNameInfoEXT ((pObjects `advancePtrBytes` (40 * (i)) :: Ptr DebugUtilsObjectNameInfoEXT)))
     pure $ DebugUtilsMessengerCallbackDataEXT
+             next
              flags
              pMessageIdName'
              messageIdNumber
@@ -2040,8 +2079,9 @@ instance FromCStruct DebugUtilsMessengerCallbackDataEXT where
              pCmdBufLabels'
              pObjects'
 
-instance Zero DebugUtilsMessengerCallbackDataEXT where
+instance es ~ '[] => Zero (DebugUtilsMessengerCallbackDataEXT es) where
   zero = DebugUtilsMessengerCallbackDataEXT
+           ()
            zero
            Nothing
            zero
@@ -2257,6 +2297,11 @@ pattern DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT = DebugUtilsMessageTypeFlagB
 -- have worked.
 pattern DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT = DebugUtilsMessageTypeFlagBitsEXT 0x00000004
 
+-- | 'DEBUG_UTILS_MESSAGE_TYPE_DEVICE_ADDRESS_BINDING_BIT_EXT' specifies that
+-- the implementation has modified the set of GPU-visible virtual addresses
+-- associated with a Vulkan object.
+pattern DEBUG_UTILS_MESSAGE_TYPE_DEVICE_ADDRESS_BINDING_BIT_EXT = DebugUtilsMessageTypeFlagBitsEXT 0x00000008
+
 conNameDebugUtilsMessageTypeFlagBitsEXT :: String
 conNameDebugUtilsMessageTypeFlagBitsEXT = "DebugUtilsMessageTypeFlagBitsEXT"
 
@@ -2277,6 +2322,10 @@ showTableDebugUtilsMessageTypeFlagBitsEXT =
     ( DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
     , "PERFORMANCE_BIT_EXT"
     )
+  ,
+    ( DEBUG_UTILS_MESSAGE_TYPE_DEVICE_ADDRESS_BINDING_BIT_EXT
+    , "DEVICE_ADDRESS_BINDING_BIT_EXT"
+    )
   ]
 
 instance Show DebugUtilsMessageTypeFlagBitsEXT where
@@ -2296,7 +2345,7 @@ instance Read DebugUtilsMessageTypeFlagBitsEXT where
       conNameDebugUtilsMessageTypeFlagBitsEXT
       DebugUtilsMessageTypeFlagBitsEXT
 
-type FN_vkDebugUtilsMessengerCallbackEXT = DebugUtilsMessageSeverityFlagBitsEXT -> ("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT) -> ("pCallbackData" ::: Ptr DebugUtilsMessengerCallbackDataEXT) -> ("pUserData" ::: Ptr ()) -> IO Bool32
+type FN_vkDebugUtilsMessengerCallbackEXT = DebugUtilsMessageSeverityFlagBitsEXT -> ("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT) -> ("pCallbackData" ::: Ptr (SomeStruct DebugUtilsMessengerCallbackDataEXT)) -> ("pUserData" ::: Ptr ()) -> IO Bool32
 -- | PFN_vkDebugUtilsMessengerCallbackEXT - Application-defined debug
 -- messenger callback function
 --

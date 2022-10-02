@@ -43,6 +43,10 @@ module Vulkan.Core13.Enums.AccessFlags2  ( pattern ACCESS_2_NONE_KHR
                                                           , ACCESS_2_SHADER_SAMPLED_READ_BIT
                                                           , ACCESS_2_SHADER_STORAGE_READ_BIT
                                                           , ACCESS_2_SHADER_STORAGE_WRITE_BIT
+                                                          , ACCESS_2_OPTICAL_FLOW_WRITE_BIT_NV
+                                                          , ACCESS_2_OPTICAL_FLOW_READ_BIT_NV
+                                                          , ACCESS_2_MICROMAP_WRITE_BIT_EXT
+                                                          , ACCESS_2_MICROMAP_READ_BIT_EXT
                                                           , ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR
                                                           , ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI
                                                           , ACCESS_2_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT
@@ -362,6 +366,36 @@ pattern ACCESS_2_SHADER_STORAGE_READ_BIT = AccessFlagBits2 0x0000000200000000
 -- in any shader pipeline stage.
 pattern ACCESS_2_SHADER_STORAGE_WRITE_BIT = AccessFlagBits2 0x0000000400000000
 
+-- | 'ACCESS_2_OPTICAL_FLOW_WRITE_BIT_NV' specifies write access to an image
+-- or buffer resource as part of a
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#opticalflow-operations optical flow operation>.
+-- Such access occurs in the
+-- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV'
+-- pipeline stage.
+pattern ACCESS_2_OPTICAL_FLOW_WRITE_BIT_NV = AccessFlagBits2 0x0000080000000000
+
+-- | 'ACCESS_2_OPTICAL_FLOW_READ_BIT_NV' specifies read access to an image or
+-- buffer resource as part of a
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#opticalflow-operations optical flow operation>.
+-- Such access occurs in the
+-- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV'
+-- pipeline stage.
+pattern ACCESS_2_OPTICAL_FLOW_READ_BIT_NV = AccessFlagBits2 0x0000040000000000
+
+-- | 'ACCESS_2_MICROMAP_WRITE_BIT_EXT' specifies write access to a micromap
+-- object. Such access occurs in the
+-- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
+-- pipeline stage.
+pattern ACCESS_2_MICROMAP_WRITE_BIT_EXT = AccessFlagBits2 0x0000200000000000
+
+-- | 'ACCESS_2_MICROMAP_READ_BIT_EXT' specifies read access to a micromap
+-- object. Such access occurs in the
+-- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
+-- and
+-- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
+-- pipeline stages.
+pattern ACCESS_2_MICROMAP_READ_BIT_EXT = AccessFlagBits2 0x0000100000000000
+
 -- | 'ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR' specifies read access to a
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shader-binding-table shader binding table>
 -- in any shader pipeline stage.
@@ -519,6 +553,22 @@ showTableAccessFlagBits2 =
   ,
     ( ACCESS_2_SHADER_STORAGE_WRITE_BIT
     , "SHADER_STORAGE_WRITE_BIT"
+    )
+  ,
+    ( ACCESS_2_OPTICAL_FLOW_WRITE_BIT_NV
+    , "OPTICAL_FLOW_WRITE_BIT_NV"
+    )
+  ,
+    ( ACCESS_2_OPTICAL_FLOW_READ_BIT_NV
+    , "OPTICAL_FLOW_READ_BIT_NV"
+    )
+  ,
+    ( ACCESS_2_MICROMAP_WRITE_BIT_EXT
+    , "MICROMAP_WRITE_BIT_EXT"
+    )
+  ,
+    ( ACCESS_2_MICROMAP_READ_BIT_EXT
+    , "MICROMAP_READ_BIT_EXT"
     )
   ,
     ( ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR

@@ -26,6 +26,8 @@ module Vulkan.Core10.Enums.ObjectType  (ObjectType( OBJECT_TYPE_UNKNOWN
                                                   , OBJECT_TYPE_DESCRIPTOR_SET
                                                   , OBJECT_TYPE_FRAMEBUFFER
                                                   , OBJECT_TYPE_COMMAND_POOL
+                                                  , OBJECT_TYPE_OPTICAL_FLOW_SESSION_NV
+                                                  , OBJECT_TYPE_MICROMAP_EXT
                                                   , OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA
                                                   , OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV
                                                   , OBJECT_TYPE_DEFERRED_OPERATION_KHR
@@ -147,6 +149,8 @@ import GHC.Show (Show(showsPrec))
 -- +-----------------------------------------------+-----------------------------------------------------------+
 -- | 'OBJECT_TYPE_PRIVATE_DATA_SLOT'               | 'Vulkan.Core13.Handles.PrivateDataSlot'                   |
 -- +-----------------------------------------------+-----------------------------------------------------------+
+-- | 'OBJECT_TYPE_OPTICAL_FLOW_SESSION_NV'         | 'Vulkan.Extensions.Handles.OpticalFlowSessionNV'          |
+-- +-----------------------------------------------+-----------------------------------------------------------+
 --
 -- 'ObjectType' and Vulkan Handle Relationship
 --
@@ -241,6 +245,12 @@ pattern OBJECT_TYPE_FRAMEBUFFER = ObjectType 24
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_COMMAND_POOL"
 pattern OBJECT_TYPE_COMMAND_POOL = ObjectType 25
 
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_OPTICAL_FLOW_SESSION_NV"
+pattern OBJECT_TYPE_OPTICAL_FLOW_SESSION_NV = ObjectType 1000464000
+
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_MICROMAP_EXT"
+pattern OBJECT_TYPE_MICROMAP_EXT = ObjectType 1000396000
+
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA"
 pattern OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA = ObjectType 1000366000
 
@@ -322,6 +332,8 @@ pattern OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION = ObjectType 1000156000
   , OBJECT_TYPE_DESCRIPTOR_SET
   , OBJECT_TYPE_FRAMEBUFFER
   , OBJECT_TYPE_COMMAND_POOL
+  , OBJECT_TYPE_OPTICAL_FLOW_SESSION_NV
+  , OBJECT_TYPE_MICROMAP_EXT
   , OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA
   , OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NV
   , OBJECT_TYPE_DEFERRED_OPERATION_KHR
@@ -380,6 +392,11 @@ showTableObjectType =
   , (OBJECT_TYPE_DESCRIPTOR_SET, "DESCRIPTOR_SET")
   , (OBJECT_TYPE_FRAMEBUFFER, "FRAMEBUFFER")
   , (OBJECT_TYPE_COMMAND_POOL, "COMMAND_POOL")
+  ,
+    ( OBJECT_TYPE_OPTICAL_FLOW_SESSION_NV
+    , "OPTICAL_FLOW_SESSION_NV"
+    )
+  , (OBJECT_TYPE_MICROMAP_EXT, "MICROMAP_EXT")
   ,
     ( OBJECT_TYPE_BUFFER_COLLECTION_FUCHSIA
     , "BUFFER_COLLECTION_FUCHSIA"

@@ -90,6 +90,7 @@ import Vulkan.Core10.Enums.ImageType (ImageType)
 import Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ImportMetalIOSurfaceInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ImportMetalTextureInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_optical_flow (OpticalFlowImageFormatInfoNV)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.CStruct.Extends (PokeChain)
@@ -1562,6 +1563,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_KHR_swapchain.ImageSwapchainCreateInfoKHR',
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalIOSurfaceInfoEXT',
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalTextureInfoEXT',
+--     'Vulkan.Extensions.VK_NV_optical_flow.OpticalFlowImageFormatInfoNV',
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
 --
@@ -1678,6 +1680,7 @@ instance Extensible ImageCreateInfo where
   getNext ImageCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends ImageCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @OpticalFlowImageFormatInfoNV = Just f
     | Just Refl <- eqT @e @ImportMetalIOSurfaceInfoEXT = Just f
     | Just Refl <- eqT @e @ImportMetalTextureInfoEXT = Just f
     | Just Refl <- eqT @e @ExportMetalObjectCreateInfoEXT = Just f

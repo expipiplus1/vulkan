@@ -664,6 +664,7 @@ instance Zero PipelineColorBlendAdvancedStateCreateInfoEXT where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_blend_operation_advanced VK_EXT_blend_operation_advanced>,
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.ColorBlendAdvancedEXT',
 -- 'PipelineColorBlendAdvancedStateCreateInfoEXT'
 newtype BlendOverlapEXT = BlendOverlapEXT Int32
   deriving newtype (Eq, Ord, Storable, Zero)

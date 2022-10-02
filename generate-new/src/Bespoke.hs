@@ -154,14 +154,16 @@ data BespokeScheme where
 
 bespokeSchemes :: KnownSpecFlavor t => Spec t -> Sem r [BespokeScheme]
 bespokeSchemes spec =
-  pure
-    $  [baseInOut, wsiScheme, dualPurposeBytestrings, nextPointers spec]
-    <> difficultLengths
-    <> [bitfields]
-    <> [accelerationStructureGeometry]
-    <> [buildingAccelerationStructures]
-    <> openXRSchemes
-    <> [cuLaunchSchemes]
+  pure $
+    [baseInOut, wsiScheme, dualPurposeBytestrings, nextPointers spec]
+      <> difficultLengths
+      <> [ bitfields
+         , accelerationStructureGeometry
+         , buildingAccelerationStructures
+         , micromapUsageCounts
+         , cuLaunchSchemes
+         ]
+      <> openXRSchemes
 
 baseInOut :: BespokeScheme
 baseInOut = BespokeScheme $ \case
@@ -479,6 +481,7 @@ difficultLengths =
         structName
         `elem` [ "VkAccelerationStructureVersionInfoKHR"
                , "VkAccelerationStructureVersionKHR"
+               , "VkMicromapVersionInfoEXT"
                ]
       -> \case
         p
@@ -500,7 +503,8 @@ difficultLengths =
                 tellQualImport 'BS.length
                 let
                   err =
-                    "AccelerationStructureVersionKHR::versionData must be "
+                    unCName structName
+                      <> "::versionData must be "
                       <> len
                       <> " bytes"
                   uuidSizeDoc = mkPatternName "VK_UUID_SIZE"
@@ -717,6 +721,18 @@ buildingAccelerationStructures = BespokeScheme $ \case
       -> Just $ Vector NotNullable (Vector NotNullable (Normal elemTy))
     _ -> Nothing
 
+  _ -> const Nothing
+
+micromapUsageCounts :: BespokeScheme
+micromapUsageCounts = BespokeScheme $ \case
+  "VkMicromapBuildInfoEXT" -> \case
+    (p :: a) | "ppUsageCounts" <- name p, Ptr Const (Ptr Const _) <- type' p ->
+      Just $ ElidedUnivalued "nullPtr"
+    _ -> Nothing
+  "VkAccelerationStructureTrianglesOpacityMicromapEXT" -> \case
+    (p :: a) | "ppUsageCounts" <- name p, Ptr Const (Ptr Const _) <- type' p ->
+      Just $ ElidedUnivalued "nullPtr"
+    _ -> Nothing
   _ -> const Nothing
 
 structChainVar :: String

@@ -9,6 +9,37 @@ module Vulkan.Core10.Enums.DynamicState  (DynamicState( DYNAMIC_STATE_VIEWPORT
                                                       , DYNAMIC_STATE_STENCIL_COMPARE_MASK
                                                       , DYNAMIC_STATE_STENCIL_WRITE_MASK
                                                       , DYNAMIC_STATE_STENCIL_REFERENCE
+                                                      , DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV
+                                                      , DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV
+                                                      , DYNAMIC_STATE_SHADING_RATE_IMAGE_ENABLE_NV
+                                                      , DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_NV
+                                                      , DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_ENABLE_NV
+                                                      , DYNAMIC_STATE_COVERAGE_MODULATION_MODE_NV
+                                                      , DYNAMIC_STATE_COVERAGE_TO_COLOR_LOCATION_NV
+                                                      , DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV
+                                                      , DYNAMIC_STATE_VIEWPORT_SWIZZLE_NV
+                                                      , DYNAMIC_STATE_VIEWPORT_W_SCALING_ENABLE_NV
+                                                      , DYNAMIC_STATE_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT
+                                                      , DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT
+                                                      , DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT
+                                                      , DYNAMIC_STATE_PROVOKING_VERTEX_MODE_EXT
+                                                      , DYNAMIC_STATE_COLOR_BLEND_ADVANCED_EXT
+                                                      , DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT
+                                                      , DYNAMIC_STATE_DEPTH_CLIP_ENABLE_EXT
+                                                      , DYNAMIC_STATE_EXTRA_PRIMITIVE_OVERESTIMATION_SIZE_EXT
+                                                      , DYNAMIC_STATE_CONSERVATIVE_RASTERIZATION_MODE_EXT
+                                                      , DYNAMIC_STATE_RASTERIZATION_STREAM_EXT
+                                                      , DYNAMIC_STATE_COLOR_WRITE_MASK_EXT
+                                                      , DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT
+                                                      , DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT
+                                                      , DYNAMIC_STATE_LOGIC_OP_ENABLE_EXT
+                                                      , DYNAMIC_STATE_ALPHA_TO_ONE_ENABLE_EXT
+                                                      , DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT
+                                                      , DYNAMIC_STATE_SAMPLE_MASK_EXT
+                                                      , DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT
+                                                      , DYNAMIC_STATE_POLYGON_MODE_EXT
+                                                      , DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT
+                                                      , DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT
                                                       , DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT
                                                       , DYNAMIC_STATE_LOGIC_OP_EXT
                                                       , DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT
@@ -141,6 +172,252 @@ pattern DYNAMIC_STATE_STENCIL_WRITE_MASK = DynamicState 7
 -- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo' member
 -- @stencilTestEnable@ set to 'Vulkan.Core10.FundamentalTypes.TRUE'
 pattern DYNAMIC_STATE_STENCIL_REFERENCE = DynamicState 8
+
+-- | 'DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV' specifies that the
+-- @coverageReductionMode@ state in
+-- 'Vulkan.Extensions.VK_NV_coverage_reduction_mode.PipelineCoverageReductionStateCreateInfoNV'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageReductionModeNV'
+-- before any draw call.
+pattern DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV = DynamicState 1000455032
+
+-- | 'DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV' specifies that
+-- the @representativeFragmentTestEnable@ state in
+-- 'Vulkan.Extensions.VK_NV_representative_fragment_test.PipelineRepresentativeFragmentTestStateCreateInfoNV'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRepresentativeFragmentTestEnableNV'
+-- before any draw call.
+pattern DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV = DynamicState 1000455031
+
+-- | 'DYNAMIC_STATE_SHADING_RATE_IMAGE_ENABLE_NV' specifies that the
+-- @shadingRateImageEnable@ state in
+-- 'Vulkan.Extensions.VK_NV_shading_rate_image.PipelineViewportShadingRateImageStateCreateInfoNV'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetShadingRateImageEnableNV'
+-- before any draw call.
+pattern DYNAMIC_STATE_SHADING_RATE_IMAGE_ENABLE_NV = DynamicState 1000455030
+
+-- | 'DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_NV' specifies that the
+-- @coverageModulationTableCount@, and @pCoverageModulationTable@ states in
+-- 'Vulkan.Extensions.VK_NV_framebuffer_mixed_samples.PipelineCoverageModulationStateCreateInfoNV'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableNV'
+-- before any draw call.
+pattern DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_NV = DynamicState 1000455029
+
+-- | 'DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_ENABLE_NV' specifies that the
+-- @coverageModulationTableEnable@ state in
+-- 'Vulkan.Extensions.VK_NV_framebuffer_mixed_samples.PipelineCoverageModulationStateCreateInfoNV'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableEnableNV'
+-- before any draw call.
+pattern DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_ENABLE_NV = DynamicState 1000455028
+
+-- | 'DYNAMIC_STATE_COVERAGE_MODULATION_MODE_NV' specifies that the
+-- @coverageModulationMode@ state in
+-- 'Vulkan.Extensions.VK_NV_framebuffer_mixed_samples.PipelineCoverageModulationStateCreateInfoNV'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationModeNV'
+-- before any draw call.
+pattern DYNAMIC_STATE_COVERAGE_MODULATION_MODE_NV = DynamicState 1000455027
+
+-- | 'DYNAMIC_STATE_COVERAGE_TO_COLOR_LOCATION_NV' specifies that the
+-- @coverageToColorLocation@ state in
+-- 'Vulkan.Extensions.VK_NV_fragment_coverage_to_color.PipelineCoverageToColorStateCreateInfoNV'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorLocationNV'
+-- before any draw call.
+pattern DYNAMIC_STATE_COVERAGE_TO_COLOR_LOCATION_NV = DynamicState 1000455026
+
+-- | 'DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV' specifies that the
+-- @coverageToColorEnable@ state in
+-- 'Vulkan.Extensions.VK_NV_fragment_coverage_to_color.PipelineCoverageToColorStateCreateInfoNV'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
+-- before any draw call.
+pattern DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV = DynamicState 1000455025
+
+-- | 'DYNAMIC_STATE_VIEWPORT_SWIZZLE_NV' specifies that the @viewportCount@,
+-- and @pViewportSwizzles@ states in
+-- 'Vulkan.Extensions.VK_NV_viewport_swizzle.PipelineViewportSwizzleStateCreateInfoNV'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportSwizzleNV'
+-- before any draw call.
+pattern DYNAMIC_STATE_VIEWPORT_SWIZZLE_NV = DynamicState 1000455024
+
+-- | 'DYNAMIC_STATE_VIEWPORT_W_SCALING_ENABLE_NV' specifies that the
+-- @viewportWScalingEnable@ state in
+-- 'Vulkan.Extensions.VK_NV_clip_space_w_scaling.PipelineViewportWScalingStateCreateInfoNV'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportWScalingEnableNV'
+-- before any draw call.
+pattern DYNAMIC_STATE_VIEWPORT_W_SCALING_ENABLE_NV = DynamicState 1000455023
+
+-- | 'DYNAMIC_STATE_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT' specifies that the
+-- @negativeOneToOne@ state in
+-- 'Vulkan.Extensions.VK_EXT_depth_clip_control.PipelineViewportDepthClipControlCreateInfoEXT'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipNegativeOneToOneEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT = DynamicState 1000455022
+
+-- | 'DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT' specifies that the
+-- @stippledLineEnable@ state in
+-- 'Vulkan.Extensions.VK_EXT_line_rasterization.PipelineRasterizationLineStateCreateInfoEXT'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT = DynamicState 1000455021
+
+-- | 'DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT' specifies that the
+-- @lineRasterizationMode@ state in
+-- 'Vulkan.Extensions.VK_EXT_line_rasterization.PipelineRasterizationLineStateCreateInfoEXT'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT = DynamicState 1000455020
+
+-- | 'DYNAMIC_STATE_PROVOKING_VERTEX_MODE_EXT' specifies that the
+-- @provokingVertexMode@ state in
+-- 'Vulkan.Extensions.VK_EXT_provoking_vertex.PipelineRasterizationProvokingVertexStateCreateInfoEXT'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetProvokingVertexModeEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_PROVOKING_VERTEX_MODE_EXT = DynamicState 1000455019
+
+-- | 'DYNAMIC_STATE_COLOR_BLEND_ADVANCED_EXT' specifies that the
+-- @colorBlendOp@ state in
+-- 'Vulkan.Core10.Pipeline.PipelineColorBlendAttachmentState', and
+-- @srcPremultiplied@, @dstPremultiplied@, and @blendOverlap@ states in
+-- 'Vulkan.Extensions.VK_EXT_blend_operation_advanced.PipelineColorBlendAdvancedStateCreateInfoEXT'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendAdvancedEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_COLOR_BLEND_ADVANCED_EXT = DynamicState 1000455018
+
+-- | 'DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT' specifies that the
+-- @sampleLocationsEnable@ state in
+-- 'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT = DynamicState 1000455017
+
+-- | 'DYNAMIC_STATE_DEPTH_CLIP_ENABLE_EXT' specifies that the
+-- @depthClipEnable@ state in
+-- 'Vulkan.Extensions.VK_EXT_depth_clip_enable.PhysicalDeviceDepthClipEnableFeaturesEXT'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipEnableEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_DEPTH_CLIP_ENABLE_EXT = DynamicState 1000455016
+
+-- | 'DYNAMIC_STATE_EXTRA_PRIMITIVE_OVERESTIMATION_SIZE_EXT' specifies that
+-- the @extraPrimitiveOverestimationSize@ state in
+-- 'Vulkan.Extensions.VK_EXT_conservative_rasterization.PipelineRasterizationConservativeStateCreateInfoEXT'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetExtraPrimitiveOverestimationSizeEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_EXTRA_PRIMITIVE_OVERESTIMATION_SIZE_EXT = DynamicState 1000455015
+
+-- | 'DYNAMIC_STATE_CONSERVATIVE_RASTERIZATION_MODE_EXT' specifies that the
+-- @conservativeRasterizationMode@ state in
+-- 'Vulkan.Extensions.VK_EXT_conservative_rasterization.PipelineRasterizationConservativeStateCreateInfoEXT'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_CONSERVATIVE_RASTERIZATION_MODE_EXT = DynamicState 1000455014
+
+-- | 'DYNAMIC_STATE_RASTERIZATION_STREAM_EXT' specifies that the
+-- @rasterizationStream@ state in
+-- 'Vulkan.Extensions.VK_EXT_transform_feedback.PipelineRasterizationStateStreamCreateInfoEXT'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationStreamEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_RASTERIZATION_STREAM_EXT = DynamicState 1000455013
+
+-- | 'DYNAMIC_STATE_COLOR_WRITE_MASK_EXT' specifies that the @colorWriteMask@
+-- state in 'Vulkan.Core10.Pipeline.PipelineColorBlendAttachmentState' will
+-- be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorWriteMaskEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_COLOR_WRITE_MASK_EXT = DynamicState 1000455012
+
+-- | 'DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT' specifies that the
+-- @srcColorBlendFactor@, @dstColorBlendFactor@, @colorBlendOp@,
+-- @srcAlphaBlendFactor@, @dstAlphaBlendFactor@, and @alphaBlendOp@ states
+-- in 'Vulkan.Core10.Pipeline.PipelineColorBlendAttachmentState' will be
+-- ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT = DynamicState 1000455011
+
+-- | 'DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT' specifies that the @blendEnable@
+-- state in 'Vulkan.Core10.Pipeline.PipelineColorBlendAttachmentState' will
+-- be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT = DynamicState 1000455010
+
+-- | 'DYNAMIC_STATE_LOGIC_OP_ENABLE_EXT' specifies that the @logicOpEnable@
+-- state in 'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo' will
+-- be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLogicOpEnableEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_LOGIC_OP_ENABLE_EXT = DynamicState 1000455009
+
+-- | 'DYNAMIC_STATE_ALPHA_TO_ONE_ENABLE_EXT' specifies that the
+-- @alphaToOneEnable@ state in
+-- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo' will be
+-- ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToOneEnableEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_ALPHA_TO_ONE_ENABLE_EXT = DynamicState 1000455008
+
+-- | 'DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT' specifies that the
+-- @alphaToCoverageEnable@ state in
+-- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo' will be
+-- ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToCoverageEnableEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT = DynamicState 1000455007
+
+-- | 'DYNAMIC_STATE_SAMPLE_MASK_EXT' specifies that the @pSampleMask@ state
+-- in 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo' will be
+-- ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_SAMPLE_MASK_EXT = DynamicState 1000455006
+
+-- | 'DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT' specifies that the
+-- @rasterizationSamples@ state in
+-- 'Vulkan.Core10.Pipeline.PipelineMultisampleStateCreateInfo' will be
+-- ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT = DynamicState 1000455005
+
+-- | 'DYNAMIC_STATE_POLYGON_MODE_EXT' specifies that the @polygonMode@ state
+-- in 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo' will be
+-- ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_POLYGON_MODE_EXT = DynamicState 1000455004
+
+-- | 'DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT' specifies that the
+-- @depthClampEnable@ state in
+-- 'Vulkan.Core10.Pipeline.PipelineRasterizationStateCreateInfo' will be
+-- ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClampEnableEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT = DynamicState 1000455003
+
+-- | 'DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT' specifies that the
+-- @domainOrigin@ state in
+-- 'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.PipelineTessellationDomainOriginStateCreateInfo'
+-- will be ignored and /must/ be set dynamically with
+-- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetTessellationDomainOriginEXT'
+-- before any draw call.
+pattern DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT = DynamicState 1000455002
 
 -- | 'DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT' specifies that the
 -- @pColorWriteEnables@ state in
@@ -387,6 +664,37 @@ pattern DYNAMIC_STATE_CULL_MODE = DynamicState 1000267000
   , DYNAMIC_STATE_STENCIL_COMPARE_MASK
   , DYNAMIC_STATE_STENCIL_WRITE_MASK
   , DYNAMIC_STATE_STENCIL_REFERENCE
+  , DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV
+  , DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV
+  , DYNAMIC_STATE_SHADING_RATE_IMAGE_ENABLE_NV
+  , DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_NV
+  , DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_ENABLE_NV
+  , DYNAMIC_STATE_COVERAGE_MODULATION_MODE_NV
+  , DYNAMIC_STATE_COVERAGE_TO_COLOR_LOCATION_NV
+  , DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV
+  , DYNAMIC_STATE_VIEWPORT_SWIZZLE_NV
+  , DYNAMIC_STATE_VIEWPORT_W_SCALING_ENABLE_NV
+  , DYNAMIC_STATE_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT
+  , DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT
+  , DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT
+  , DYNAMIC_STATE_PROVOKING_VERTEX_MODE_EXT
+  , DYNAMIC_STATE_COLOR_BLEND_ADVANCED_EXT
+  , DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT
+  , DYNAMIC_STATE_DEPTH_CLIP_ENABLE_EXT
+  , DYNAMIC_STATE_EXTRA_PRIMITIVE_OVERESTIMATION_SIZE_EXT
+  , DYNAMIC_STATE_CONSERVATIVE_RASTERIZATION_MODE_EXT
+  , DYNAMIC_STATE_RASTERIZATION_STREAM_EXT
+  , DYNAMIC_STATE_COLOR_WRITE_MASK_EXT
+  , DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT
+  , DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT
+  , DYNAMIC_STATE_LOGIC_OP_ENABLE_EXT
+  , DYNAMIC_STATE_ALPHA_TO_ONE_ENABLE_EXT
+  , DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT
+  , DYNAMIC_STATE_SAMPLE_MASK_EXT
+  , DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT
+  , DYNAMIC_STATE_POLYGON_MODE_EXT
+  , DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT
+  , DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT
   , DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT
   , DYNAMIC_STATE_LOGIC_OP_EXT
   , DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT
@@ -441,6 +749,124 @@ showTableDynamicState =
     , "STENCIL_WRITE_MASK"
     )
   , (DYNAMIC_STATE_STENCIL_REFERENCE, "STENCIL_REFERENCE")
+  ,
+    ( DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV
+    , "COVERAGE_REDUCTION_MODE_NV"
+    )
+  ,
+    ( DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV
+    , "REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV"
+    )
+  ,
+    ( DYNAMIC_STATE_SHADING_RATE_IMAGE_ENABLE_NV
+    , "SHADING_RATE_IMAGE_ENABLE_NV"
+    )
+  ,
+    ( DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_NV
+    , "COVERAGE_MODULATION_TABLE_NV"
+    )
+  ,
+    ( DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_ENABLE_NV
+    , "COVERAGE_MODULATION_TABLE_ENABLE_NV"
+    )
+  ,
+    ( DYNAMIC_STATE_COVERAGE_MODULATION_MODE_NV
+    , "COVERAGE_MODULATION_MODE_NV"
+    )
+  ,
+    ( DYNAMIC_STATE_COVERAGE_TO_COLOR_LOCATION_NV
+    , "COVERAGE_TO_COLOR_LOCATION_NV"
+    )
+  ,
+    ( DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV
+    , "COVERAGE_TO_COLOR_ENABLE_NV"
+    )
+  ,
+    ( DYNAMIC_STATE_VIEWPORT_SWIZZLE_NV
+    , "VIEWPORT_SWIZZLE_NV"
+    )
+  ,
+    ( DYNAMIC_STATE_VIEWPORT_W_SCALING_ENABLE_NV
+    , "VIEWPORT_W_SCALING_ENABLE_NV"
+    )
+  ,
+    ( DYNAMIC_STATE_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT
+    , "DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT"
+    )
+  ,
+    ( DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT
+    , "LINE_STIPPLE_ENABLE_EXT"
+    )
+  ,
+    ( DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT
+    , "LINE_RASTERIZATION_MODE_EXT"
+    )
+  ,
+    ( DYNAMIC_STATE_PROVOKING_VERTEX_MODE_EXT
+    , "PROVOKING_VERTEX_MODE_EXT"
+    )
+  ,
+    ( DYNAMIC_STATE_COLOR_BLEND_ADVANCED_EXT
+    , "COLOR_BLEND_ADVANCED_EXT"
+    )
+  ,
+    ( DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT
+    , "SAMPLE_LOCATIONS_ENABLE_EXT"
+    )
+  ,
+    ( DYNAMIC_STATE_DEPTH_CLIP_ENABLE_EXT
+    , "DEPTH_CLIP_ENABLE_EXT"
+    )
+  ,
+    ( DYNAMIC_STATE_EXTRA_PRIMITIVE_OVERESTIMATION_SIZE_EXT
+    , "EXTRA_PRIMITIVE_OVERESTIMATION_SIZE_EXT"
+    )
+  ,
+    ( DYNAMIC_STATE_CONSERVATIVE_RASTERIZATION_MODE_EXT
+    , "CONSERVATIVE_RASTERIZATION_MODE_EXT"
+    )
+  ,
+    ( DYNAMIC_STATE_RASTERIZATION_STREAM_EXT
+    , "RASTERIZATION_STREAM_EXT"
+    )
+  ,
+    ( DYNAMIC_STATE_COLOR_WRITE_MASK_EXT
+    , "COLOR_WRITE_MASK_EXT"
+    )
+  ,
+    ( DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT
+    , "COLOR_BLEND_EQUATION_EXT"
+    )
+  ,
+    ( DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT
+    , "COLOR_BLEND_ENABLE_EXT"
+    )
+  ,
+    ( DYNAMIC_STATE_LOGIC_OP_ENABLE_EXT
+    , "LOGIC_OP_ENABLE_EXT"
+    )
+  ,
+    ( DYNAMIC_STATE_ALPHA_TO_ONE_ENABLE_EXT
+    , "ALPHA_TO_ONE_ENABLE_EXT"
+    )
+  ,
+    ( DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT
+    , "ALPHA_TO_COVERAGE_ENABLE_EXT"
+    )
+  , (DYNAMIC_STATE_SAMPLE_MASK_EXT, "SAMPLE_MASK_EXT")
+  ,
+    ( DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT
+    , "RASTERIZATION_SAMPLES_EXT"
+    )
+  , (DYNAMIC_STATE_POLYGON_MODE_EXT, "POLYGON_MODE_EXT")
+  ,
+    ( DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT
+    , "DEPTH_CLAMP_ENABLE_EXT"
+    )
+  ,
+    ( DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT
+    , "TESSELLATION_DOMAIN_ORIGIN_EXT"
+    )
   ,
     ( DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT
     , "COLOR_WRITE_ENABLE_EXT"

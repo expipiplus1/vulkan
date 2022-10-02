@@ -95,6 +95,8 @@ brackets marshaledCommands handles = context "brackets" $ do
     , cdBracket "CuModuleNVX"
     , cdBracket "CuFunctionNVX"
     , cdBracket "BufferCollectionFUCHSIA"
+    , cdBracket "OpticalFlowSessionNV"
+    , cdBracket "MicromapEXT"
     , pure withCommmandBuffers
     , afBracket "Memory"
     , pure withDescriptorSets
