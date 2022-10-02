@@ -102,6 +102,8 @@ At the moment the extensions are disabled in Bespoke.hs
 
 During development unfinished bits not to forget are listed here.
 
+- [ ] src/Vulkan/Core10/Pipeline.hs attachmentCount, is the optional marking here correct?
+
 ### OpenXR
 
 - [x] Handle levels
