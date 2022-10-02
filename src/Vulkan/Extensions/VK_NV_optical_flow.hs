@@ -1534,7 +1534,7 @@ data OpticalFlowSessionCreatePrivateDataInfoNV = OpticalFlowSessionCreatePrivate
   { -- | @id@ is an identifier for data which is passed at a memory location
     -- specified in
     -- 'OpticalFlowSessionCreatePrivateDataInfoNV'::@pPrivateData@.
-    id :: Word32
+    id' :: Word32
   , -- | @size@ is is the size of data in bytes which is passed at a memory
     -- location specified in
     -- 'OpticalFlowSessionCreatePrivateDataInfoNV'::@pPrivateData@.
@@ -1556,7 +1556,7 @@ instance ToCStruct OpticalFlowSessionCreatePrivateDataInfoNV where
   pokeCStruct p OpticalFlowSessionCreatePrivateDataInfoNV{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_OPTICAL_FLOW_SESSION_CREATE_PRIVATE_DATA_INFO_NV)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Word32)) (id)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (id')
     poke ((p `plusPtr` 20 :: Ptr Word32)) (size)
     poke ((p `plusPtr` 24 :: Ptr (Ptr ()))) (privateData)
     f
@@ -1572,11 +1572,11 @@ instance ToCStruct OpticalFlowSessionCreatePrivateDataInfoNV where
 
 instance FromCStruct OpticalFlowSessionCreatePrivateDataInfoNV where
   peekCStruct p = do
-    id <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
+    id' <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
     size <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
     pPrivateData <- peek @(Ptr ()) ((p `plusPtr` 24 :: Ptr (Ptr ())))
     pure $ OpticalFlowSessionCreatePrivateDataInfoNV
-             id size pPrivateData
+             id' size pPrivateData
 
 instance Storable OpticalFlowSessionCreatePrivateDataInfoNV where
   sizeOf ~_ = 32
