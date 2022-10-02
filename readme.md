@@ -313,8 +313,8 @@ packages:
 - `pkg-config` and `SDL2` to build the Haskell `sdl2` package.
 - `glslang` (for the `glslangValidator` binary, to build the shaders)
 
-Jonathan Merritt has made an excellent video detailing how to set up everything 
-necessary for running the examples on macOS 
+Jonathan Merritt has made an excellent video detailing how to set up everything
+necessary for running the examples on macOS
 [here](https://www.youtube.com/watch?v=BaBt-CNBfd0).
 
 ### Building using Nix
@@ -385,52 +385,48 @@ any version of nixpkgs from the last 3 months should do the trick.
 
 ### Building on Windows with Cabal
 
-- Clone this repo
+- Clone this repo with submodules (to get the C header in order to build VulkanMemoryAllocator)
+  - `git clone --recursive https://github.com/expipiplus1/vulkan`
 - Install GHC and Cabal
-  - I downloaded the GHC binary package from
-    [here](https://www.haskell.org/ghc/download_ghc_8_8_4.html), extracted it
-    and added the `bin` directory to `PATH`.
-  - You might want to consider a newer version of ghc!
-  - I downloaded the cabal-install binary package from [here](https://www.haskell.org/cabal/download.html)
-- Make sure your graphics driver has installed `vulkan-1.dll` in `C:/windows/system32`
+  - I used [ghcup](https://www.haskell.org/ghcup/)
+  - Make sure that the `libstdc++` dll is in `PATH`, I had to add
+    `C:\ghcup\ghc\9.2.4\mingw\bin` to my user `PATH` variable
+- Make sure your graphics driver has installed `vulkan-1.dll` in
+  `C:/windows/system32`
 - Install the LunarG Vulkan SDK
   - https://vulkan.lunarg.com/sdk/home#windows
-  - Remember the installation directory, use in place of `C:/VulkanSDK/1.2.135.0` below
+  - Remember the installation directory, use in place of `C:/VulkanSDK/1.3.224.1` below
+  - Install the SDL2 library/header (You can run `maintenancetool` in the SDK directory to
+    install this later if you forgot)
   - We will link against `vulkan-1.lib` from this installation
-  - We will use the `glslangValidator` from this installation, make sure it's
-    in your `PATH` or otherwise made available to `ghc`
-- Install `pkg-config` or `pkg-config-lite` (for the `sdl2` package), perform any one of:
-  - Install using chocolatey: `choco install pkgconfiglite`
-  - Install from SourceForge: Download from
-    [here](https://sourceforge.net/projects/pkgconfiglite/files/) and put the
-    binary in your `PATH`
-  - Install by following the instructions
-    [here](https://stackoverflow.com/questions/1710922/how-to-install-pkg-config-in-windows)
-  - Patch SDL2 to not require pkg-config with [this
-    patch](https://gist.github.com/anonymous/9d1060281ed7127a54d2)
-- Install SDL2 (condensed instructions from
-  [here](https://gist.github.com/anonymous/9d1060281ed7127a54d2)):
-  - Navigate to <https://www.libsdl.org/download-2.0.php>
-  - Download the Mingw64 development library
-  - Extract the `x86_64-w64-mingw32` directory somwhere, I installed it as `~/AppData/Roaming/local/SDL2`
-  - Copy the `lib/pkgconfig/sdl2.pc` file to `~/AppData/Roaming/local/lib/pkgconfig/sdl2.pc`
+  - We will use the `glslangValidator` from this installation.
+- Restart your shell to pick up the new `PATH` environment set up by the SDK installer
+  The Vulkan SDK installer
 - Inform Cabal about header and library locations by adding the following to
-  `cabal.project.local`, changed accodingly for your install paths for SDL2 and
-  the Vulkan SDK.
-  
+  `cabal.project.local`, changed accodingly for your install path for the Vulkan SDK.
+  Also use a patched SDL2 which doens't use pkgconfig (a pain to install on Windows)
+
     ```
     package sdl2
-      extra-lib-dirs: C:/Users/ms/AppData/Roaming/local/SDL2/lib/
-      extra-include-dirs: C:/Users/ms/AppData/Roaming/local/SDL2/include/SDL2/
+        extra-lib-dirs: C:/VulkanSDK/1.3.224.1/lib/
+        extra-include-dirs: C:/VulkanSDK/1.3.224.1/Include/SDL2
+        flags: -pkgconfig
+    source-repository-package
+        type: git
+        location: https://github.com/expipiplus1/sdl2
+        tag: d39453f601a6478875e5a2477010fa66d3d2cd95
 
     package vulkan
-      extra-lib-dirs: C:/VulkanSDK/1.2.135.0/lib/
+        extra-lib-dirs: C:/VulkanSDK/1.3.224.1/lib/
 
     package vulkan-utils
-      extra-include-dirs: C:/VulkanSDK/1.2.135.0/Include/
+        extra-include-dirs: C:/VulkanSDK/1.3.224.1/Include/
 
     package VulkanMemoryAllocator
-      extra-include-dirs: C:/VulkanSDK/1.2.135.0/Include/
+        extra-include-dirs: C:/VulkanSDK/1.3.224.1/Include/
+
+    package vulkan-examples
+        extra-prog-path: C:/VulkanSDK/1.3.224.1/bin
     ```
 
 - Run `cabal build examples` to build the examples
@@ -450,12 +446,11 @@ locations) and building after following the instructions above.
 
 ```yaml
 extra-lib-dirs:
-- C:/Users/ms/AppData/Roaming/local/SDL2/lib/
 - C:/VulkanSDK/1.2.135.0/lib/
 
 extra-include-dirs:
-- C:/Users/ms/AppData/Roaming/local/SDL2/include/SDL2/
 - C:/VulkanSDK/1.2.135.0/Include/
+- C:/VulkanSDK/1.3.224.1/Include/SDL2
 ```
 
 ## Examples
@@ -465,7 +460,7 @@ There exists a package to build some example programs in the
 
 ## Current Status
 
-All the core Vulkan 1.0, 1.1, and 1.2 functionality is here as well as all the
+All the core Vulkan 1.0, 1.1, 1.2, and 1.3 functionality is here as well as all the
 extensions (except the video ones).
 
 This is currently a 64 bit only library.
