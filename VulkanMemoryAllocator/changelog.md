@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+- More robust linking against C++ standard library
 
 ## [0.10.3.1] - 2022-09-27
 - Enable c++17 to get VMA aligned alloc
