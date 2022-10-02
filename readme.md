@@ -331,7 +331,7 @@ attribute for each of the following packages:
 - `vulkan-examples`, some examples, this package is dependency-heavy
 - `generate-new`, the program to generate the source of `vulkan` and
   `VulkanMemoryAllocator`, also quite dependency-heavy (this only build with
-  ghc 8.8).
+  ghc 8.10).
 
 You may want to pass your `<nixpkgs>` as `pkgs` to `default.nix` to avoid
 rebuilding a parallel set of haskell packages based on the pegged nixpkgs
@@ -390,6 +390,7 @@ any version of nixpkgs from the last 3 months should do the trick.
   - I downloaded the GHC binary package from
     [here](https://www.haskell.org/ghc/download_ghc_8_8_4.html), extracted it
     and added the `bin` directory to `PATH`.
+  - You might want to consider a newer version of ghc!
   - I downloaded the cabal-install binary package from [here](https://www.haskell.org/cabal/download.html)
 - Make sure your graphics driver has installed `vulkan-1.dll` in `C:/windows/system32`
 - Install the LunarG Vulkan SDK
