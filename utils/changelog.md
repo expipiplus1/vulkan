@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+- Relax bounds on `vulkan`
 
 ## [0.5.10] - 2022-09-27
 - Improve error messages for requirements TH
