@@ -414,7 +414,7 @@ any version of nixpkgs from the last 3 months should do the trick.
     source-repository-package
         type: git
         location: https://github.com/expipiplus1/sdl2
-        tag: d39453f601a6478875e5a2477010fa66d3d2cd95
+        tag: 35f45303a0af522f10197f09e4bf52bc49b97ef4
 
     package vulkan
         extra-lib-dirs: C:/VulkanSDK/1.3.224.1/lib/
