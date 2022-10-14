@@ -544,14 +544,14 @@ foreign import ccall
 --
 -- 'Vulkan.Core10.Enums.Format.FORMAT_R16G16_S10_5_NV' is initially
 -- supported for images with
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#opticalflow-usage optical usage>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#opticalflow-usage optical flow usage>
 -- 'OPTICAL_FLOW_USAGE_OUTPUT_BIT_NV', 'OPTICAL_FLOW_USAGE_HINT_BIT_NV' and
 -- 'OPTICAL_FLOW_USAGE_GLOBAL_FLOW_BIT_NV'.
 --
 -- 'Vulkan.Core10.Enums.Format.FORMAT_R8_UINT' and
 -- 'Vulkan.Core10.Enums.Format.FORMAT_R32_UINT' are initially supported for
 -- images with
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#opticalflow-usage optical usage>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#opticalflow-usage optical flow usage>
 -- 'OPTICAL_FLOW_USAGE_COST_BIT_NV'. It is recommended to use
 -- 'Vulkan.Core10.Enums.Format.FORMAT_R8_UINT' because of the lower
 -- bandwidth.

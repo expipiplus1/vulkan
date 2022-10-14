@@ -2160,29 +2160,6 @@ instance Zero CopyDescriptorSet where
 --
 -- = Description
 --
--- -   @pImmutableSamplers@ affects initialization of samplers. If
---     @descriptorType@ specifies a
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER' or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
---     type descriptor, then @pImmutableSamplers@ /can/ be used to
---     initialize a set of /immutable samplers/. Immutable samplers are
---     permanently bound into the set layout and /must/ not be changed;
---     updating a
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER'
---     descriptor with immutable samplers is not allowed and updates to a
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
---     descriptor with immutable samplers does not modify the samplers (the
---     image views are updated, but the sampler updates are ignored). If
---     @pImmutableSamplers@ is not @NULL@, then it is a pointer to an array
---     of sampler handles that will be copied into the set layout and used
---     for the corresponding binding. Only the sampler handles are copied;
---     the sampler objects /must/ not be destroyed before the final use of
---     the set layout and any descriptor pools and sets created using it.
---     If @pImmutableSamplers@ is @NULL@, then the sampler slots are
---     dynamic and sampler handles /must/ be bound into descriptor sets
---     using this layout. If @descriptorType@ is not one of these
---     descriptor types, then @pImmutableSamplers@ is ignored.
---
 -- The above layout definition allows the descriptor bindings to be
 -- specified sparsely such that not all binding numbers between 0 and the
 -- maximum binding number need to be specified in the @pBindings@ array.
@@ -2290,7 +2267,27 @@ data DescriptorSetLayoutBinding = DescriptorSetLayoutBinding
     -- combinations of stages /can/ use a descriptor binding, and in particular
     -- a binding /can/ be used by both graphics stages and the compute stage.
     stageFlags :: ShaderStageFlags
-  , -- No documentation found for Nested "VkDescriptorSetLayoutBinding" "pImmutableSamplers"
+  , -- | @pImmutableSamplers@ affects initialization of samplers. If
+    -- @descriptorType@ specifies a
+    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER' or
+    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
+    -- type descriptor, then @pImmutableSamplers@ /can/ be used to initialize a
+    -- set of /immutable samplers/. Immutable samplers are permanently bound
+    -- into the set layout and /must/ not be changed; updating a
+    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER' descriptor
+    -- with immutable samplers is not allowed and updates to a
+    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
+    -- descriptor with immutable samplers does not modify the samplers (the
+    -- image views are updated, but the sampler updates are ignored). If
+    -- @pImmutableSamplers@ is not @NULL@, then it is a pointer to an array of
+    -- sampler handles that will be copied into the set layout and used for the
+    -- corresponding binding. Only the sampler handles are copied; the sampler
+    -- objects /must/ not be destroyed before the final use of the set layout
+    -- and any descriptor pools and sets created using it. If
+    -- @pImmutableSamplers@ is @NULL@, then the sampler slots are dynamic and
+    -- sampler handles /must/ be bound into descriptor sets using this layout.
+    -- If @descriptorType@ is not one of these descriptor types, then
+    -- @pImmutableSamplers@ is ignored.
     immutableSamplers :: Vector Sampler
   }
   deriving (Typeable)

@@ -290,6 +290,17 @@ instance Zero PhysicalDevicePipelineRobustnessFeaturesEXT where
 -- and a pipeline stage, the 'PipelineRobustnessCreateInfoEXT' specified
 -- for the pipeline stage will take precedence.
 --
+-- When 'PipelineRobustnessCreateInfoEXT' is specified for a pipeline, it
+-- only affects the subset of the pipeline that is specified by the create
+-- info, as opposed to subsets linked from pipeline libraries. For
+-- 'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo', that subset is
+-- specified by
+-- 'Vulkan.Extensions.VK_EXT_graphics_pipeline_library.GraphicsPipelineLibraryCreateInfoEXT'::@flags@.
+-- For
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR',
+-- that subset is specified by the specific stages in
+-- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineCreateInfoKHR'::@pStages@.
+--
 -- == Valid Usage
 --
 -- -   #VUID-VkPipelineRobustnessCreateInfoEXT-pipelineRobustness-06926# If
@@ -566,8 +577,8 @@ newtype PipelineRobustnessBufferBehaviorEXT = PipelineRobustnessBufferBehaviorEX
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- | 'PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DEVICE_DEFAULT_EXT' specifies that
--- this pipeline stage follows the robustness behavior of the logical
--- device that created this pipeline
+-- this pipeline stage follows the behavior of robustness features that are
+-- enabled on the device that created this pipeline
 pattern PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DEVICE_DEFAULT_EXT = PipelineRobustnessBufferBehaviorEXT 0
 
 -- | 'PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DISABLED_EXT' specifies that buffer
@@ -652,8 +663,8 @@ newtype PipelineRobustnessImageBehaviorEXT = PipelineRobustnessImageBehaviorEXT 
   deriving newtype (Eq, Ord, Storable, Zero)
 
 -- | 'PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DEVICE_DEFAULT_EXT' specifies that
--- this pipeline stage follows the robustness behavior of the logical
--- device that created this pipeline
+-- this pipeline stage follows the behavior of robustness features that are
+-- enabled on the device that created this pipeline
 pattern PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DEVICE_DEFAULT_EXT = PipelineRobustnessImageBehaviorEXT 0
 
 -- | 'PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DISABLED_EXT' specifies that image

@@ -128,6 +128,14 @@
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT'
 --
+-- == New Built-In Variables
+--
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#interfaces-builtin-variables-fullycoveredext FullyCoveredEXT>
+--
+-- == New SPIR-V Capabilities
+--
+-- -   <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#spirvenv-capabilities-table-FragmentFullyCoveredEXT FragmentFullyCoveredEXT>
+--
 -- == Version History
 --
 -- -   Revision 1.1, 2020-09-06 (Piers Daniell)
