@@ -815,9 +815,6 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     of 'Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
 --     values
 --
--- -   #VUID-VkSubmitInfo-pWaitDstStageMask-requiredbitmask# Each element
---     of @pWaitDstStageMask@ /must/ not be @0@
---
 -- -   #VUID-VkSubmitInfo-pCommandBuffers-parameter# If
 --     @commandBufferCount@ is not @0@, @pCommandBuffers@ /must/ be a valid
 --     pointer to an array of @commandBufferCount@ valid

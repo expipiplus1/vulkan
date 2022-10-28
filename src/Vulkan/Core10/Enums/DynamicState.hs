@@ -305,7 +305,7 @@ pattern DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT = DynamicState 1000455017
 
 -- | 'DYNAMIC_STATE_DEPTH_CLIP_ENABLE_EXT' specifies that the
 -- @depthClipEnable@ state in
--- 'Vulkan.Extensions.VK_EXT_depth_clip_enable.PhysicalDeviceDepthClipEnableFeaturesEXT'
+-- 'Vulkan.Extensions.VK_EXT_depth_clip_enable.PipelineRasterizationDepthClipStateCreateInfoEXT'
 -- will be ignored and /must/ be set dynamically with
 -- 'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipEnableEXT'
 -- before any draw call.

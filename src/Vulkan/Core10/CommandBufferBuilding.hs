@@ -401,46 +401,6 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI',
 --     @pipeline@ /must/ be a subpass shading pipeline
 --
--- -   #VUID-vkCmdBindPipeline-pipeline-06195# If @pipeline@ is a graphics
---     pipeline, this command has been called inside a render pass instance
---     started with
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
---     and commands using the previously bound graphics pipeline have been
---     recorded within the render pass instance, then the value of
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@colorAttachmentCount@
---     specified by this pipeline /must/ match that set in the previous
---     pipeline
---
--- -   #VUID-vkCmdBindPipeline-pipeline-06196# If @pipeline@ is a graphics
---     pipeline, this command has been called inside a render pass instance
---     started with
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
---     and commands using the previously bound graphics pipeline have been
---     recorded within the render pass instance, then the elements of
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
---     specified by this pipeline /must/ match that set in the previous
---     pipeline
---
--- -   #VUID-vkCmdBindPipeline-pipeline-06197# If @pipeline@ is a graphics
---     pipeline, this command has been called inside a render pass instance
---     started with
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
---     and commands using the previously bound graphics pipeline have been
---     recorded within the render pass instance, then the value of
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@depthAttachmentFormat@
---     specified by this pipeline /must/ match that set in the previous
---     pipeline
---
--- -   #VUID-vkCmdBindPipeline-pipeline-06194# If @pipeline@ is a graphics
---     pipeline, this command has been called inside a render pass instance
---     started with
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
---     and commands using the previously bound graphics pipeline have been
---     recorded within the render pass instance, then the value of
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@stencilAttachmentFormat@
---     specified by this pipeline /must/ match that set in the previous
---     pipeline
---
 -- -   #VUID-vkCmdBindPipeline-pipeline-06856# If @pipeline@ is a graphics
 --     pipeline, this command has been called inside a render pass instance
 --     started with
@@ -2649,6 +2609,20 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
 --     used to create the currently bound graphics pipeline
 --
+-- -   #VUID-vkCmdDraw-colorAttachmentCount-07616# If the current render
+--     pass instance was begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
+--     and
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
+--     greater than @0@, then each element of the
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
+--     array with a @imageView@ equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have the
+--     corresponding element of
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
+--     used to create the currently bound pipeline equal to
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--
 -- -   #VUID-vkCmdDraw-attachmentCount-06667# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT'
@@ -2683,6 +2657,16 @@ foreign import ccall
 --     to the 'Vulkan.Core10.Enums.Format.Format' used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --
+-- -   #VUID-vkCmdDraw-pDepthAttachment-07617# If the current render pass
+--     instance was begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
+--     and
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
+--     was 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@depthAttachmentFormat@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--
 -- -   #VUID-vkCmdDraw-pStencilAttachment-06182# If the current render pass
 --     instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
@@ -2693,6 +2677,16 @@ foreign import ccall
 --     used to create the currently bound graphics pipeline /must/ be equal
 --     to the 'Vulkan.Core10.Enums.Format.Format' used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
+--
+-- -   #VUID-vkCmdDraw-pStencilAttachment-07618# If the current render pass
+--     instance was begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
+--     and
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
+--     was 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@stencilAttachmentFormat@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
 -- -   #VUID-vkCmdDraw-imageView-06183# If the current render pass instance
 --     was begun with
@@ -2846,6 +2840,254 @@ foreign import ccall
 --     query is active, the bound graphics pipeline /must/ not have been
 --     created with a non-zero value in
 --     'Vulkan.Extensions.VK_EXT_transform_feedback.PipelineRasterizationStateStreamCreateInfoEXT'::@rasterizationStream@.
+--
+-- -   #VUID-vkCmdDraw-None-07619# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetTessellationDomainOriginEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07620# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClampEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07621# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_POLYGON_MODE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07622# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07623# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_MASK_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07624# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToCoverageEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07625# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_ONE_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToOneEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07626# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLogicOpEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07627# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07628# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07629# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_MASK_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorWriteMaskEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07630# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_STREAM_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationStreamEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07631# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CONSERVATIVE_RASTERIZATION_MODE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07632# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXTRA_PRIMITIVE_OVERESTIMATION_SIZE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetExtraPrimitiveOverestimationSizeEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07633# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLIP_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07634# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07635# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ADVANCED_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendAdvancedEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07636# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PROVOKING_VERTEX_MODE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetProvokingVertexModeEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07637# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07638# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07639# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipNegativeOneToOneEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07640# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportWScalingEnableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07641# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SWIZZLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportSwizzleNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07642# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07643# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_LOCATION_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorLocationNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07644# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_MODE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationModeNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07645# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableEnableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07646# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07647# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SHADING_RATE_IMAGE_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetShadingRateImageEnableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07648# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRepresentativeFragmentTestEnableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDraw-None-07649# If the bound graphics pipeline state was
+--     created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageReductionModeNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
 --
 -- -   #VUID-vkCmdDraw-pColorBlendEnables-07470# If the bound graphics
 --     pipeline state was created with the
@@ -4132,6 +4374,20 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
 --     used to create the currently bound graphics pipeline
 --
+-- -   #VUID-vkCmdDrawIndexed-colorAttachmentCount-07616# If the current
+--     render pass instance was begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
+--     and
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
+--     greater than @0@, then each element of the
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
+--     array with a @imageView@ equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have the
+--     corresponding element of
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
+--     used to create the currently bound pipeline equal to
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--
 -- -   #VUID-vkCmdDrawIndexed-attachmentCount-06667# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT'
@@ -4166,6 +4422,16 @@ foreign import ccall
 --     to the 'Vulkan.Core10.Enums.Format.Format' used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --
+-- -   #VUID-vkCmdDrawIndexed-pDepthAttachment-07617# If the current render
+--     pass instance was begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
+--     and
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
+--     was 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@depthAttachmentFormat@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--
 -- -   #VUID-vkCmdDrawIndexed-pStencilAttachment-06182# If the current
 --     render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
@@ -4176,6 +4442,16 @@ foreign import ccall
 --     used to create the currently bound graphics pipeline /must/ be equal
 --     to the 'Vulkan.Core10.Enums.Format.Format' used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
+--
+-- -   #VUID-vkCmdDrawIndexed-pStencilAttachment-07618# If the current
+--     render pass instance was begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
+--     and
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
+--     was 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@stencilAttachmentFormat@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
 -- -   #VUID-vkCmdDrawIndexed-imageView-06183# If the current render pass
 --     instance was begun with
@@ -4329,6 +4605,254 @@ foreign import ccall
 --     query is active, the bound graphics pipeline /must/ not have been
 --     created with a non-zero value in
 --     'Vulkan.Extensions.VK_EXT_transform_feedback.PipelineRasterizationStateStreamCreateInfoEXT'::@rasterizationStream@.
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07619# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetTessellationDomainOriginEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07620# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClampEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07621# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_POLYGON_MODE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07622# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07623# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_MASK_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07624# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToCoverageEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07625# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_ONE_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToOneEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07626# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLogicOpEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07627# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07628# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07629# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_MASK_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorWriteMaskEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07630# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_STREAM_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationStreamEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07631# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CONSERVATIVE_RASTERIZATION_MODE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07632# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXTRA_PRIMITIVE_OVERESTIMATION_SIZE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetExtraPrimitiveOverestimationSizeEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07633# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLIP_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07634# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07635# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ADVANCED_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendAdvancedEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07636# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PROVOKING_VERTEX_MODE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetProvokingVertexModeEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07637# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07638# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07639# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipNegativeOneToOneEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07640# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportWScalingEnableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07641# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SWIZZLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportSwizzleNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07642# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07643# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_LOCATION_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorLocationNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07644# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_MODE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationModeNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07645# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableEnableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07646# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07647# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SHADING_RATE_IMAGE_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetShadingRateImageEnableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07648# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRepresentativeFragmentTestEnableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexed-None-07649# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageReductionModeNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
 --
 -- -   #VUID-vkCmdDrawIndexed-pColorBlendEnables-07470# If the bound
 --     graphics pipeline state was created with the
@@ -5614,6 +6138,20 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
 --     used to create the currently bound graphics pipeline
 --
+-- -   #VUID-vkCmdDrawIndirect-colorAttachmentCount-07616# If the current
+--     render pass instance was begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
+--     and
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
+--     greater than @0@, then each element of the
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
+--     array with a @imageView@ equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have the
+--     corresponding element of
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
+--     used to create the currently bound pipeline equal to
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--
 -- -   #VUID-vkCmdDrawIndirect-attachmentCount-06667# If the bound graphics
 --     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT'
@@ -5648,6 +6186,16 @@ foreign import ccall
 --     to the 'Vulkan.Core10.Enums.Format.Format' used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --
+-- -   #VUID-vkCmdDrawIndirect-pDepthAttachment-07617# If the current
+--     render pass instance was begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
+--     and
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
+--     was 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@depthAttachmentFormat@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--
 -- -   #VUID-vkCmdDrawIndirect-pStencilAttachment-06182# If the current
 --     render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
@@ -5658,6 +6206,16 @@ foreign import ccall
 --     used to create the currently bound graphics pipeline /must/ be equal
 --     to the 'Vulkan.Core10.Enums.Format.Format' used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
+--
+-- -   #VUID-vkCmdDrawIndirect-pStencilAttachment-07618# If the current
+--     render pass instance was begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
+--     and
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
+--     was 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@stencilAttachmentFormat@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
 -- -   #VUID-vkCmdDrawIndirect-imageView-06183# If the current render pass
 --     instance was begun with
@@ -5811,6 +6369,254 @@ foreign import ccall
 --     query is active, the bound graphics pipeline /must/ not have been
 --     created with a non-zero value in
 --     'Vulkan.Extensions.VK_EXT_transform_feedback.PipelineRasterizationStateStreamCreateInfoEXT'::@rasterizationStream@.
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07619# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetTessellationDomainOriginEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07620# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClampEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07621# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_POLYGON_MODE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07622# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07623# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_MASK_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07624# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToCoverageEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07625# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_ONE_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToOneEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07626# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLogicOpEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07627# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07628# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07629# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_MASK_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorWriteMaskEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07630# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_STREAM_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationStreamEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07631# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CONSERVATIVE_RASTERIZATION_MODE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07632# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXTRA_PRIMITIVE_OVERESTIMATION_SIZE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetExtraPrimitiveOverestimationSizeEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07633# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLIP_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07634# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07635# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ADVANCED_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendAdvancedEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07636# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PROVOKING_VERTEX_MODE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetProvokingVertexModeEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07637# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07638# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07639# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipNegativeOneToOneEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07640# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportWScalingEnableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07641# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SWIZZLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportSwizzleNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07642# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07643# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_LOCATION_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorLocationNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07644# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_MODE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationModeNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07645# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableEnableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07646# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07647# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SHADING_RATE_IMAGE_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetShadingRateImageEnableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07648# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRepresentativeFragmentTestEnableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirect-None-07649# If the bound graphics pipeline
+--     state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageReductionModeNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
 --
 -- -   #VUID-vkCmdDrawIndirect-pColorBlendEnables-07470# If the bound
 --     graphics pipeline state was created with the
@@ -7105,6 +7911,20 @@ foreign import ccall
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
 --     used to create the currently bound graphics pipeline
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-colorAttachmentCount-07616# If the
+--     current render pass instance was begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
+--     and
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@colorAttachmentCount@
+--     greater than @0@, then each element of the
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
+--     array with a @imageView@ equal to
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ have the
+--     corresponding element of
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@pColorAttachmentFormats@
+--     used to create the currently bound pipeline equal to
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-attachmentCount-06667# If the bound
 --     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT'
@@ -7139,6 +7959,16 @@ foreign import ccall
 --     to the 'Vulkan.Core10.Enums.Format.Format' used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
 --
+-- -   #VUID-vkCmdDrawIndexedIndirect-pDepthAttachment-07617# If the
+--     current render pass instance was begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
+--     and
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pDepthAttachment->imageView@
+--     was 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@depthAttachmentFormat@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
+--
 -- -   #VUID-vkCmdDrawIndexedIndirect-pStencilAttachment-06182# If the
 --     current render pass instance was begun with
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
@@ -7149,6 +7979,16 @@ foreign import ccall
 --     used to create the currently bound graphics pipeline /must/ be equal
 --     to the 'Vulkan.Core10.Enums.Format.Format' used to create
 --     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-pStencilAttachment-07618# If the
+--     current render pass instance was begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
+--     and
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pStencilAttachment->imageView@
+--     was 'Vulkan.Core10.APIConstants.NULL_HANDLE', the value of
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@stencilAttachmentFormat@
+--     used to create the currently bound graphics pipeline /must/ be equal
+--     to 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-imageView-06183# If the current
 --     render pass instance was begun with
@@ -7302,6 +8142,254 @@ foreign import ccall
 --     query is active, the bound graphics pipeline /must/ not have been
 --     created with a non-zero value in
 --     'Vulkan.Extensions.VK_EXT_transform_feedback.PipelineRasterizationStateStreamCreateInfoEXT'::@rasterizationStream@.
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07619# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetTessellationDomainOriginEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07620# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClampEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07621# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_POLYGON_MODE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetPolygonModeEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07622# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationSamplesEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07623# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_MASK_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleMaskEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07624# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToCoverageEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07625# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_ALPHA_TO_ONE_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetAlphaToOneEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07626# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LOGIC_OP_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLogicOpEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07627# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07628# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendEquationEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07629# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_MASK_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorWriteMaskEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07630# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_RASTERIZATION_STREAM_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRasterizationStreamEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07631# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_CONSERVATIVE_RASTERIZATION_MODE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetConservativeRasterizationModeEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07632# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_EXTRA_PRIMITIVE_OVERESTIMATION_SIZE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetExtraPrimitiveOverestimationSizeEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07633# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLIP_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07634# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetSampleLocationsEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07635# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ADVANCED_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetColorBlendAdvancedEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07636# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PROVOKING_VERTEX_MODE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetProvokingVertexModeEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07637# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineRasterizationModeEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07638# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetLineStippleEnableEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07639# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetDepthClipNegativeOneToOneEXT'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07640# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_W_SCALING_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportWScalingEnableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07641# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_SWIZZLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetViewportSwizzleNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07642# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorEnableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07643# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_TO_COLOR_LOCATION_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageToColorLocationNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07644# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_MODE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationModeNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07645# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableEnableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07646# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageModulationTableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07647# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SHADING_RATE_IMAGE_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetShadingRateImageEnableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07648# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetRepresentativeFragmentTestEnableNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-07649# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV'
+--     dynamic state enabled then
+--     'Vulkan.Extensions.VK_EXT_extended_dynamic_state3.cmdSetCoverageReductionModeNV'
+--     must have been called in the current command buffer prior to this
+--     drawing command
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-pColorBlendEnables-07470# If the
 --     bound graphics pipeline state was created with the
@@ -8828,10 +9916,11 @@ foreign import ccall
 --
 -- = Description
 --
--- Each region in @pRegions@ is copied from the source buffer to the same
--- region of the destination buffer. @srcBuffer@ and @dstBuffer@ /can/ be
--- the same buffer or alias the same memory, but the resulting values are
--- undefined if the copy regions overlap in memory.
+-- Each source region specified by @pRegions@ is copied from the source
+-- buffer to the destination region of the destination buffer. If any of
+-- the specified regions in @srcBuffer@ overlaps in memory with any of the
+-- specified regions in @dstBuffer@, values read from those overlapping
+-- regions are undefined.
 --
 -- == Valid Usage
 --
@@ -8992,49 +10081,36 @@ foreign import ccall
 --
 -- = Description
 --
--- Each region in @pRegions@ is copied from the source image to the same
--- region of the destination image. @srcImage@ and @dstImage@ /can/ be the
--- same image or alias the same memory.
+-- Each source region specified by @pRegions@ is copied from the source
+-- image to the destination region of the destination image. If any of the
+-- specified regions in @srcImage@ overlaps in memory with any of the
+-- specified regions in @dstImage@, values read from those overlapping
+-- regions are undefined.
 --
--- If either @srcImage@ or @dstImage@ has a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
--- regions of each plane to be copied /must/ be specified separately using
--- the @srcSubresource@ and @dstSubresource@ members of the 'ImageCopy'
--- structure. In this case, the @aspectMask@ of the @srcSubresource@ or
--- @dstSubresource@ that refers to the multi-planar image /must/ be
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT', or
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'. For
--- the purposes of 'cmdCopyImage', each plane of a multi-planar image is
--- treated as having the format listed in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatible-planes>
--- for the plane identified by the @aspectMask@ of the corresponding
--- subresource. This applies both to 'Vulkan.Core10.Enums.Format.Format'
--- and to coordinates used in the copy, which correspond to texels in the
--- /plane/ rather than how these texels map to coordinates in the image as
--- a whole.
---
--- Note
---
--- For example, the
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' plane
--- of a 'Vulkan.Core10.Enums.Format.FORMAT_G8_B8R8_2PLANE_420_UNORM' image
--- is compatible with an image of format
--- 'Vulkan.Core10.Enums.Format.FORMAT_R8G8_UNORM' and (less usefully) with
--- the 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
--- plane of an image of format
--- 'Vulkan.Core10.Enums.Format.FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16',
--- as each texel is 2 bytes in size.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion Multi-planar images>
+-- /can/ only be copied on a per-plane basis, and the subresources used in
+-- each region when copying to or from such images /must/ specify only one
+-- plane, though different regions /can/ specify different planes. When
+-- copying planes of multi-planar images, the format considered is the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatible-planes compatible format for that plane>,
+-- rather than the format of the multi-planar image.
 --
 -- If the format of the destination image has a different
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility-classes block extent>
 -- than the source image (e.g. one is a compressed format), the offset and
 -- extent for each of the regions specified is
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-size-compatibility scaled according to the block extents of each format>
--- to match in size.
+-- to match in size. Copy regions for each image /must/ be aligned to a
+-- multiple of the texel block extent in each dimension, except at the
+-- edges of the image, where region extents /must/ match the edge of the
+-- image.
 --
--- 'cmdCopyImage' /can/ be used to copy image data between multisample
--- images, but both images /must/ have the same number of samples.
+-- Image data /can/ be copied between images with different image types. If
+-- one image is 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' and the other
+-- image is 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' with multiple
+-- layers, then each slice is copied to or from a different layer; @depth@
+-- slices in the 3D image correspond to @layerCount@ layers in the 2D
+-- image, with an effective @depth@ of @1@ used for the 2D image.
 --
 -- == Valid Usage
 --
@@ -10003,25 +11079,21 @@ foreign import ccall
 --
 -- = Description
 --
--- Each region in @pRegions@ is copied from the specified region of the
--- source buffer to the specified region of the destination image.
+-- Each source region specified by @pRegions@ is copied from the source
+-- buffer to the destination region of the destination image according to
+-- the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#copies-buffers-images-addressing addressing calculations>
+-- for each resource. If any of the specified regions in @srcBuffer@
+-- overlaps in memory with any of the specified regions in @dstImage@,
+-- values read from those overlapping regions are undefined. If any region
+-- accesses a depth aspect in @dstImage@ and the
+-- @VK_EXT_depth_range_unrestricted@ extension is not enabled, values
+-- copied from @srcBuffer@ outside of the range [0,1] will be be written as
+-- undefined values to the destination image.
 --
--- If @dstImage@ has a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
--- regions of each plane to be a target of a copy /must/ be specified
--- separately using the @pRegions@ member of the 'BufferImageCopy'
--- structure. In this case, the @aspectMask@ of @imageSubresource@ /must/
--- be 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT', or
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'. For
--- the purposes of 'cmdCopyBufferToImage', each plane of a multi-planar
--- image is treated as having the format listed in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatible-planes>
--- for the plane identified by the @aspectMask@ of the corresponding
--- subresource. This applies both to 'Vulkan.Core10.Enums.Format.Format'
--- and to coordinates used in the copy, which correspond to texels in the
--- /plane/ rather than how these texels map to coordinates in the image as
--- a whole.
+-- Copy regions for the image /must/ be aligned to a multiple of the texel
+-- block extent in each dimension, except at the edges of the image, where
+-- region extents /must/ match the edge of the image.
 --
 -- == Valid Usage
 --
@@ -10370,25 +11442,17 @@ foreign import ccall
 --
 -- = Description
 --
--- Each region in @pRegions@ is copied from the specified region of the
--- source image to the specified region of the destination buffer.
+-- Each source region specified by @pRegions@ is copied from the source
+-- buffer to the destination region of the destination image according to
+-- the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#copies-buffers-images-addressing addressing calculations>
+-- for each resource. If any of the specified regions in @srcImage@
+-- overlaps in memory with any of the specified regions in @dstBuffer@,
+-- values read from those overlapping regions are undefined.
 --
--- If @srcImage@ has a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
--- regions of each plane to be a source of a copy /must/ be specified
--- separately using the @pRegions@ member of the 'BufferImageCopy'
--- structure. In this case, the @aspectMask@ of @imageSubresource@ /must/
--- be 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT', or
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'. For
--- the purposes of 'cmdCopyBufferToImage', each plane of a multi-planar
--- image is treated as having the format listed in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatible-planes>
--- for the plane identified by the @aspectMask@ of the corresponding
--- subresource. This applies both to 'Vulkan.Core10.Enums.Format.Format'
--- and to coordinates used in the copy, which correspond to texels in the
--- /plane/ rather than how these texels map to coordinates in the image as
--- a whole.
+-- Copy regions for the image /must/ be aligned to a multiple of the texel
+-- block extent in each dimension, except at the edges of the image, where
+-- region extents /must/ match the edge of the image.
 --
 -- == Valid Usage
 --
@@ -11543,9 +12607,9 @@ foreign import ccall
 -- -   #VUID-vkCmdClearAttachments-pRects-06937# The layers specified by
 --     each element of @pRects@ /must/ be contained within every attachment
 --     that @pAttachments@ refers to, i.e. for each element of @pRects@,
---     'ClearRect'::@baseArrayLayer@
---     'ClearRect'::@layerCount@ /must/ be less than or equal to the number
---     of layers rendered to in the current render pass instance
+--     'ClearRect'::@baseArrayLayer@ + 'ClearRect'::@layerCount@ /must/ be
+--     less than or equal to the number of layers rendered to in the
+--     current render pass instance
 --
 -- -   #VUID-vkCmdClearAttachments-layerCount-01934# The @layerCount@
 --     member of each element of @pRects@ /must/ not be @0@
@@ -15092,6 +16156,12 @@ foreign import ccall
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#queries-operation-active active>
 --     in @commandBuffer@
 --
+-- -   #VUID-vkCmdExecuteCommands-commandBuffer-07594# @commandBuffer@
+--     /must/ not have any queries other than
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_OCCLUSION' and
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PIPELINE_STATISTICS'
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#queries-operation-active active>
+--
 -- -   #VUID-vkCmdExecuteCommands-commandBuffer-01820# If @commandBuffer@
 --     is a protected command buffer and
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
@@ -15220,6 +16290,21 @@ foreign import ccall
 --     'Vulkan.Core10.CommandBuffer.CommandBufferBeginInfo'::@pInheritanceInfo@
 --     used to begin recording each element of @pCommandBuffers@ /must/ be
 --     equal to the format used to create that image view
+--
+-- -   #VUID-vkCmdExecuteCommands-imageView-07606# If 'cmdExecuteCommands'
+--     is being called within a render pass instance begun with
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering',
+--     if the @imageView@ member of an element of the
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.RenderingInfo'::@pColorAttachments@
+--     parameter to
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.cmdBeginRendering'
+--     is 'Vulkan.Core10.APIConstants.NULL_HANDLE', the corresponding
+--     element of the @pColorAttachmentFormats@ member of the
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfo'
+--     structure included in the @pNext@ chain of
+--     'Vulkan.Core10.CommandBuffer.CommandBufferBeginInfo'::@pInheritanceInfo@
+--     used to begin recording each element of @pCommandBuffers@ /must/ be
+--     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
 -- -   #VUID-vkCmdExecuteCommands-pDepthAttachment-06029# If
 --     'cmdExecuteCommands' is being called within a render pass instance
@@ -15724,21 +16809,6 @@ instance Zero BufferCopy where
 
 -- | VkImageCopy - Structure specifying an image copy operation
 --
--- = Description
---
--- For 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' images, copies are
--- performed slice by slice starting with the @z@ member of the @srcOffset@
--- or @dstOffset@, and copying @depth@ slices. For images with multiple
--- layers, copies are performed layer by layer starting with the
--- @baseArrayLayer@ member of the @srcSubresource@ or @dstSubresource@ and
--- copying @layerCount@ layers. Image data /can/ be copied between images
--- with different image types. If one image is
--- 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' and the other image is
--- 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' with multiple layers, then
--- each slice is copied to or from a different layer; @depth@ slices in the
--- 3D image correspond to @layerCount@ layers in the 2D image, with an
--- effective @depth@ of @1@ used for the 2D image.
---
 -- == Valid Usage
 --
 -- -   #VUID-VkImageCopy-extent-00140# The number of slices of the @extent@
@@ -15943,54 +17013,6 @@ instance Zero ImageBlit where
 
 
 -- | VkBufferImageCopy - Structure specifying a buffer image copy operation
---
--- = Description
---
--- When copying to or from a depth or stencil aspect, the data in buffer
--- memory uses a layout that is a (mostly) tightly packed representation of
--- the depth or stencil data. Specifically:
---
--- -   data copied to or from the stencil aspect of any depth\/stencil
---     format is tightly packed with one
---     'Vulkan.Core10.Enums.Format.FORMAT_S8_UINT' value per texel.
---
--- -   data copied to or from the depth aspect of a
---     'Vulkan.Core10.Enums.Format.FORMAT_D16_UNORM' or
---     'Vulkan.Core10.Enums.Format.FORMAT_D16_UNORM_S8_UINT' format is
---     tightly packed with one
---     'Vulkan.Core10.Enums.Format.FORMAT_D16_UNORM' value per texel.
---
--- -   data copied to or from the depth aspect of a
---     'Vulkan.Core10.Enums.Format.FORMAT_D32_SFLOAT' or
---     'Vulkan.Core10.Enums.Format.FORMAT_D32_SFLOAT_S8_UINT' format is
---     tightly packed with one
---     'Vulkan.Core10.Enums.Format.FORMAT_D32_SFLOAT' value per texel.
---
--- -   data copied to or from the depth aspect of a
---     'Vulkan.Core10.Enums.Format.FORMAT_X8_D24_UNORM_PACK32' or
---     'Vulkan.Core10.Enums.Format.FORMAT_D24_UNORM_S8_UINT' format is
---     packed with one 32-bit word per texel with the D24 value in the LSBs
---     of the word, and undefined values in the eight MSBs.
---
--- Note
---
--- To copy both the depth and stencil aspects of a depth\/stencil format,
--- two entries in @pRegions@ /can/ be used, where one specifies the depth
--- aspect in @imageSubresource@, and the other specifies the stencil
--- aspect.
---
--- Because depth or stencil aspect buffer to image copies /may/ require
--- format conversions on some implementations, they are not supported on
--- queues that do not support graphics.
---
--- When copying to a depth aspect, and the
--- @VK_EXT_depth_range_unrestricted@ extension is not enabled, the data in
--- buffer memory /must/ be in the range [0,1], or the resulting values are
--- undefined.
---
--- Copies are done layer by layer starting with image layer
--- @baseArrayLayer@ member of @imageSubresource@. @layerCount@ layers are
--- copied from the source image or to the destination image.
 --
 -- == Valid Usage
 --

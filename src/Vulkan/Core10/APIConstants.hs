@@ -337,7 +337,12 @@ pattern MAX_GLOBAL_PRIORITY_SIZE_KHR = 16
 
 type MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT = 32
 
--- No documentation found for TopLevel "VK_MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT"
+-- | VK_MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT - Maximum length of a shader
+-- module identifier
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_EXT_shader_module_identifier VK_EXT_shader_module_identifier>
 pattern MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT :: forall a . Integral a => a
 pattern MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT = 32
 

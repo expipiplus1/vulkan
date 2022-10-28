@@ -34,9 +34,6 @@
 --
 --     -   Eric Werness
 --
--- [__Extension Proposal__]
---     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_opacity_micromap.adoc VK_EXT_opacity_micromap>
---
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]
@@ -45,10 +42,10 @@
 -- [__Interactions and External Dependencies__]
 --
 --     -   This extension requires
---         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_ray_tracing_opacity_micromap.html SPV_EXT_ray_tracing_opacity_micromap>
+--         <https://htmlpreview.github.io/?https://github.com/KhronosGroup/SPIRV-Registry/blob/master/extensions/EXT/SPV_EXT_opacity_micromap.html SPV_EXT_opacity_micromap>
 --
 --     -   This extension provides API support for
---         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/EXT/GLSL_EXT_ray_tracing_opacity_micromap.txt GLSL_EXT_ray_tracing_opacity_micromap>
+--         <https://github.com/KhronosGroup/GLSL/blob/master/extensions/ext/GLSL_EXT_opacity_micromap.txt GLSL_EXT_opacity_micromap>
 --
 -- [__Contributors__]
 --

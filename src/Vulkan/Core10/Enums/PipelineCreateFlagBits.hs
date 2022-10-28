@@ -156,8 +156,9 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --
 -- -   When creating multiple pipelines,
 --     'PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT' specifies that control
---     will be returned to the application on failure of the corresponding
---     pipeline rather than continuing to create additional pipelines.
+--     will be returned to the application if any individual pipeline
+--     returns a result which is not 'Vulkan.Core10.Enums.Result.SUCCESS'
+--     rather than continuing to create additional pipelines.
 --
 -- -   'PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV' specifies that the
 --     pipeline is allowed to use @OpTraceRayMotionNV@.
