@@ -584,10 +584,12 @@ foreign import ccall
 -- The allocated descriptor sets are returned in @pDescriptorSets@.
 --
 -- When a descriptor set is allocated, the initial state is largely
--- uninitialized and all descriptors are undefined. Descriptors also become
--- undefined if the underlying resource is destroyed. Descriptor sets
--- containing undefined descriptors /can/ still be bound and used, subject
--- to the following conditions:
+-- uninitialized and all descriptors are undefined, with the exception that
+-- samplers with a non-null @pImmutableSamplers@ are initialized on
+-- allocation. Descriptors also become undefined if the underlying resource
+-- or view object is destroyed. Descriptor sets containing undefined
+-- descriptors /can/ still be bound and used, subject to the following
+-- conditions:
 --
 -- -   For descriptor set bindings created with the
 --     'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT'
@@ -1409,9 +1411,8 @@ instance Zero DescriptorImageInfo where
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     the @imageView@ member of each element of @pImageInfo@ /must/ be
 --     either a valid 'Vulkan.Core10.Handles.ImageView' handle or
 --     'Vulkan.Core10.APIConstants.NULL_HANDLE'
@@ -1420,13 +1421,18 @@ instance Zero DescriptorImageInfo where
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     and the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
 --     feature is not enabled, the @imageView@ member of each element of
 --     @pImageInfo@ /must/ not be 'Vulkan.Core10.APIConstants.NULL_HANDLE'
+--
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-07683# If @descriptorType@
+--     is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
+--     the @imageView@ member of each element of @pImageInfo@ /must/ not be
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-02221# If @descriptorType@
 --     is
@@ -2160,29 +2166,6 @@ instance Zero CopyDescriptorSet where
 --
 -- = Description
 --
--- -   @pImmutableSamplers@ affects initialization of samplers. If
---     @descriptorType@ specifies a
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER' or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
---     type descriptor, then @pImmutableSamplers@ /can/ be used to
---     initialize a set of /immutable samplers/. Immutable samplers are
---     permanently bound into the set layout and /must/ not be changed;
---     updating a
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER'
---     descriptor with immutable samplers is not allowed and updates to a
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
---     descriptor with immutable samplers does not modify the samplers (the
---     image views are updated, but the sampler updates are ignored). If
---     @pImmutableSamplers@ is not @NULL@, then it is a pointer to an array
---     of sampler handles that will be copied into the set layout and used
---     for the corresponding binding. Only the sampler handles are copied;
---     the sampler objects /must/ not be destroyed before the final use of
---     the set layout and any descriptor pools and sets created using it.
---     If @pImmutableSamplers@ is @NULL@, then the sampler slots are
---     dynamic and sampler handles /must/ be bound into descriptor sets
---     using this layout. If @descriptorType@ is not one of these
---     descriptor types, then @pImmutableSamplers@ is ignored.
---
 -- The above layout definition allows the descriptor bindings to be
 -- specified sparsely such that not all binding numbers between 0 and the
 -- maximum binding number need to be specified in the @pBindings@ array.
@@ -2290,7 +2273,27 @@ data DescriptorSetLayoutBinding = DescriptorSetLayoutBinding
     -- combinations of stages /can/ use a descriptor binding, and in particular
     -- a binding /can/ be used by both graphics stages and the compute stage.
     stageFlags :: ShaderStageFlags
-  , -- No documentation found for Nested "VkDescriptorSetLayoutBinding" "pImmutableSamplers"
+  , -- | @pImmutableSamplers@ affects initialization of samplers. If
+    -- @descriptorType@ specifies a
+    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER' or
+    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
+    -- type descriptor, then @pImmutableSamplers@ /can/ be used to initialize a
+    -- set of /immutable samplers/. Immutable samplers are permanently bound
+    -- into the set layout and /must/ not be changed; updating a
+    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER' descriptor
+    -- with immutable samplers is not allowed and updates to a
+    -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
+    -- descriptor with immutable samplers does not modify the samplers (the
+    -- image views are updated, but the sampler updates are ignored). If
+    -- @pImmutableSamplers@ is not @NULL@, then it is a pointer to an array of
+    -- sampler handles that will be copied into the set layout and used for the
+    -- corresponding binding. Only the sampler handles are copied; the sampler
+    -- objects /must/ not be destroyed before the final use of the set layout
+    -- and any descriptor pools and sets created using it. If
+    -- @pImmutableSamplers@ is @NULL@, then the sampler slots are dynamic and
+    -- sampler handles /must/ be bound into descriptor sets using this layout.
+    -- If @descriptorType@ is not one of these descriptor types, then
+    -- @pImmutableSamplers@ is ignored.
     immutableSamplers :: Vector Sampler
   }
   deriving (Typeable)

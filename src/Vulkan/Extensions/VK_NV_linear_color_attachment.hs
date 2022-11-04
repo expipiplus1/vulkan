@@ -142,7 +142,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_LINEAR_COLOR_ATTACHMENT_FEATURES_NV))
 -- | VkPhysicalDeviceLinearColorAttachmentFeaturesNV - Structure describing
 -- whether
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary Linear Color Attachment>
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-linear-color-attachment Linear Color Attachment>
 -- rendering is supported by the implementation
 --
 -- = Members
@@ -171,7 +171,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 data PhysicalDeviceLinearColorAttachmentFeaturesNV = PhysicalDeviceLinearColorAttachmentFeaturesNV
   { -- | #features-linearColorAttachment# @linearColorAttachment@ indicates
     -- whether the implementation supports renderable
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary Linear Color Attachment>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-linear-color-attachment Linear Color Attachment>
     linearColorAttachment :: Bool }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)

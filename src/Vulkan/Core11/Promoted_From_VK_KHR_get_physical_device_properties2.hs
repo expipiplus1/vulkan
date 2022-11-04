@@ -116,6 +116,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_conditional_rendering (PhysicalDe
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_conservative_rasterization (PhysicalDeviceConservativeRasterizationPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_cooperative_matrix (PhysicalDeviceCooperativeMatrixFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_cooperative_matrix (PhysicalDeviceCooperativeMatrixPropertiesNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_copy_memory_indirect (PhysicalDeviceCopyMemoryIndirectFeaturesNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_copy_memory_indirect (PhysicalDeviceCopyMemoryIndirectPropertiesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_corner_sampled_image (PhysicalDeviceCornerSampledImageFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_coverage_reduction_mode (PhysicalDeviceCoverageReductionModeFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_custom_border_color (PhysicalDeviceCustomBorderColorFeaturesEXT)
@@ -188,6 +190,8 @@ import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance3 (PhysicalD
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_maintenance4 (PhysicalDeviceMaintenance4Features)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_maintenance4 (PhysicalDeviceMaintenance4Properties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_memory_budget (PhysicalDeviceMemoryBudgetPropertiesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_memory_decompression (PhysicalDeviceMemoryDecompressionFeaturesNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_memory_decompression (PhysicalDeviceMemoryDecompressionPropertiesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_memory_priority (PhysicalDeviceMemoryPriorityFeaturesEXT)
 import Vulkan.Core10.DeviceInitialization (PhysicalDeviceMemoryProperties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_mesh_shader (PhysicalDeviceMeshShaderFeaturesEXT)
@@ -234,6 +238,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_push_descriptor (PhysicalDevicePu
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_rgba10x6_formats (PhysicalDeviceRGBA10X6FormatsFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_rasterization_order_attachment_access (PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_query (PhysicalDeviceRayQueryFeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder (PhysicalDeviceRayTracingInvocationReorderFeaturesNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder (PhysicalDeviceRayTracingInvocationReorderPropertiesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1 (PhysicalDeviceRayTracingMaintenance1FeaturesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (PhysicalDeviceRayTracingMotionBlurFeaturesNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelineFeaturesKHR)
@@ -251,6 +257,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_atomic_float2 (PhysicalDev
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_shader_atomic_float (PhysicalDeviceShaderAtomicFloatFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_shader_atomic_int64 (PhysicalDeviceShaderAtomicInt64Features)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_shader_clock (PhysicalDeviceShaderClockFeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_shader_core_builtins (PhysicalDeviceShaderCoreBuiltinsFeaturesARM)
+import {-# SOURCE #-} Vulkan.Extensions.VK_ARM_shader_core_builtins (PhysicalDeviceShaderCoreBuiltinsPropertiesARM)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_shader_core_properties2 (PhysicalDeviceShaderCoreProperties2AMD)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_shader_core_properties (PhysicalDeviceShaderCorePropertiesAMD)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_shader_demote_to_helper_invocation (PhysicalDeviceShaderDemoteToHelperInvocationFeatures)
@@ -805,7 +813,7 @@ getPhysicalDeviceSparseImageFormatProperties2 physicalDevice
 -- features defined by extensions. This structure /can/ be used in
 -- 'getPhysicalDeviceFeatures2' or /can/ be included in the @pNext@ chain
 -- of a 'Vulkan.Core10.Device.DeviceCreateInfo' structure, in which case it
--- controls which features are enabled in the device in lieu of
+-- controls which features are enabled on the device in lieu of
 -- @pEnabledFeatures@.
 --
 -- == Valid Usage (Implicit)
@@ -837,6 +845,8 @@ instance Extensible PhysicalDeviceFeatures2 where
   getNext PhysicalDeviceFeatures2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceFeatures2 e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceRayTracingInvocationReorderFeaturesNV = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceShaderCoreBuiltinsFeaturesARM = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFaultFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceOpticalFlowFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceAddressBindingReportFeaturesEXT = Just f
@@ -938,6 +948,8 @@ instance Extensible PhysicalDeviceFeatures2 where
     | Just Refl <- eqT @e @PhysicalDeviceMeshShaderFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceInvocationMaskFeaturesHUAWEI = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShadingRateImageFeaturesNV = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceMemoryDecompressionFeaturesNV = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceCopyMemoryIndirectFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderImageFootprintFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceComputeShaderDerivativesFeaturesNV = Just f
@@ -1029,6 +1041,7 @@ instance es ~ '[] => Zero (PhysicalDeviceFeatures2 es) where
 --     'Vulkan.Extensions.VK_EXT_blend_operation_advanced.PhysicalDeviceBlendOperationAdvancedPropertiesEXT',
 --     'Vulkan.Extensions.VK_EXT_conservative_rasterization.PhysicalDeviceConservativeRasterizationPropertiesEXT',
 --     'Vulkan.Extensions.VK_NV_cooperative_matrix.PhysicalDeviceCooperativeMatrixPropertiesNV',
+--     'Vulkan.Extensions.VK_NV_copy_memory_indirect.PhysicalDeviceCopyMemoryIndirectPropertiesNV',
 --     'Vulkan.Extensions.VK_EXT_custom_border_color.PhysicalDeviceCustomBorderColorPropertiesEXT',
 --     'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.PhysicalDeviceDepthStencilResolveProperties',
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties',
@@ -1052,6 +1065,7 @@ instance es ~ '[] => Zero (PhysicalDeviceFeatures2 es) where
 --     'Vulkan.Extensions.VK_EXT_line_rasterization.PhysicalDeviceLineRasterizationPropertiesEXT',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.PhysicalDeviceMaintenance3Properties',
 --     'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.PhysicalDeviceMaintenance4Properties',
+--     'Vulkan.Extensions.VK_NV_memory_decompression.PhysicalDeviceMemoryDecompressionPropertiesNV',
 --     'Vulkan.Extensions.VK_EXT_mesh_shader.PhysicalDeviceMeshShaderPropertiesEXT',
 --     'Vulkan.Extensions.VK_NV_mesh_shader.PhysicalDeviceMeshShaderPropertiesNV',
 --     'Vulkan.Extensions.VK_EXT_multi_draw.PhysicalDeviceMultiDrawPropertiesEXT',
@@ -1067,11 +1081,13 @@ instance es ~ '[] => Zero (PhysicalDeviceFeatures2 es) where
 --     'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.PhysicalDeviceProtectedMemoryProperties',
 --     'Vulkan.Extensions.VK_EXT_provoking_vertex.PhysicalDeviceProvokingVertexPropertiesEXT',
 --     'Vulkan.Extensions.VK_KHR_push_descriptor.PhysicalDevicePushDescriptorPropertiesKHR',
+--     'Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder.PhysicalDeviceRayTracingInvocationReorderPropertiesNV',
 --     'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.PhysicalDeviceRayTracingPipelinePropertiesKHR',
 --     'Vulkan.Extensions.VK_NV_ray_tracing.PhysicalDeviceRayTracingPropertiesNV',
 --     'Vulkan.Extensions.VK_EXT_robustness2.PhysicalDeviceRobustness2PropertiesEXT',
 --     'Vulkan.Extensions.VK_EXT_sample_locations.PhysicalDeviceSampleLocationsPropertiesEXT',
 --     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.PhysicalDeviceSamplerFilterMinmaxProperties',
+--     'Vulkan.Extensions.VK_ARM_shader_core_builtins.PhysicalDeviceShaderCoreBuiltinsPropertiesARM',
 --     'Vulkan.Extensions.VK_AMD_shader_core_properties2.PhysicalDeviceShaderCoreProperties2AMD',
 --     'Vulkan.Extensions.VK_AMD_shader_core_properties.PhysicalDeviceShaderCorePropertiesAMD',
 --     'Vulkan.Core13.Promoted_From_VK_KHR_shader_integer_dot_product.PhysicalDeviceShaderIntegerDotProductProperties',
@@ -1121,6 +1137,8 @@ instance Extensible PhysicalDeviceProperties2 where
   getNext PhysicalDeviceProperties2{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceProperties2 e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @PhysicalDeviceRayTracingInvocationReorderPropertiesNV = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceShaderCoreBuiltinsPropertiesARM = Just f
     | Just Refl <- eqT @e @PhysicalDeviceOpticalFlowPropertiesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceImageProcessingPropertiesQCOM = Just f
     | Just Refl <- eqT @e @PhysicalDevicePipelineRobustnessPropertiesEXT = Just f
@@ -1156,6 +1174,8 @@ instance Extensible PhysicalDeviceProperties2 where
     | Just Refl <- eqT @e @PhysicalDeviceMeshShaderPropertiesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceMeshShaderPropertiesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShadingRateImagePropertiesNV = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceMemoryDecompressionPropertiesNV = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceCopyMemoryIndirectPropertiesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceTransformFeedbackPropertiesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceDepthStencilResolveProperties = Just f
     | Just Refl <- eqT @e @PhysicalDevicePCIBusInfoPropertiesEXT = Just f

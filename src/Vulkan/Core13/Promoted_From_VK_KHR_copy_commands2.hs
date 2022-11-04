@@ -114,10 +114,12 @@ foreign import ccall
 --
 -- = Description
 --
--- This command is functionally identical to
--- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyBuffer', but includes
--- extensible sub-structures that include @sType@ and @pNext@ parameters,
--- allowing them to be more easily extended.
+-- Each source region specified by @pCopyBufferInfo->pname@:pRegions is
+-- copied from the source buffer to the destination region of the
+-- destination buffer. If any of the specified regions in
+-- @pCopyBufferInfo->pname@:srcBuffer overlaps in memory with any of the
+-- specified regions in @pCopyBufferInfo->pname@:dstBuffer, values read
+-- from those overlapping regions are undefined.
 --
 -- == Valid Usage
 --
@@ -1312,14 +1314,6 @@ instance Zero ImageResolve2 where
 
 -- | VkCopyBufferInfo2 - Structure specifying parameters of a buffer copy
 -- command
---
--- = Description
---
--- Members defined by this structure with the same name as parameters in
--- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyBuffer' have the identical
--- effect to those parameters; the child structure 'BufferCopy2' is a
--- variant of 'Vulkan.Core10.CommandBufferBuilding.BufferCopy' which
--- includes @sType@ and @pNext@ parameters, allowing it to be extended.
 --
 -- == Valid Usage
 --
