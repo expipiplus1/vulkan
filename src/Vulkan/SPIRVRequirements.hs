@@ -33,6 +33,7 @@ import Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (PhysicalDeviceRayTracing
 import Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (PhysicalDeviceRayTracingPipelineFeaturesKHR(..))
 import Vulkan.Extensions.VK_EXT_shader_atomic_float2 (PhysicalDeviceShaderAtomicFloat2FeaturesEXT(..))
 import Vulkan.Extensions.VK_EXT_shader_atomic_float (PhysicalDeviceShaderAtomicFloatFeaturesEXT(..))
+import Vulkan.Extensions.VK_ARM_shader_core_builtins (PhysicalDeviceShaderCoreBuiltinsFeaturesARM(..))
 import Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation (PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT)
 import Vulkan.Core13.Promoted_From_VK_EXT_shader_demote_to_helper_invocation (PhysicalDeviceShaderDemoteToHelperInvocationFeatures(..))
 import Vulkan.Core11.Promoted_From_VK_KHR_shader_draw_parameters (PhysicalDeviceShaderDrawParametersFeatures(..))
@@ -57,12 +58,15 @@ import Vulkan.Extensions.VK_AMD_gcn_shader (pattern AMD_GCN_SHADER_EXTENSION_NAM
 import Vulkan.Extensions.VK_AMD_gpu_shader_half_float (pattern AMD_GPU_SHADER_HALF_FLOAT_EXTENSION_NAME)
 import Vulkan.Extensions.VK_AMD_gpu_shader_int16 (pattern AMD_GPU_SHADER_INT16_EXTENSION_NAME)
 import Vulkan.Extensions.VK_AMD_shader_ballot (pattern AMD_SHADER_BALLOT_EXTENSION_NAME)
+import Vulkan.Extensions.VK_AMD_shader_early_and_late_fragment_tests (pattern AMD_SHADER_EARLY_AND_LATE_FRAGMENT_TESTS_EXTENSION_NAME)
 import Vulkan.Extensions.VK_AMD_shader_explicit_vertex_parameter (pattern AMD_SHADER_EXPLICIT_VERTEX_PARAMETER_EXTENSION_NAME)
 import Vulkan.Extensions.VK_AMD_shader_fragment_mask (pattern AMD_SHADER_FRAGMENT_MASK_EXTENSION_NAME)
 import Vulkan.Extensions.VK_AMD_shader_image_load_store_lod (pattern AMD_SHADER_IMAGE_LOAD_STORE_LOD_EXTENSION_NAME)
 import Vulkan.Extensions.VK_AMD_shader_trinary_minmax (pattern AMD_SHADER_TRINARY_MINMAX_EXTENSION_NAME)
 import Vulkan.Extensions.VK_AMD_texture_gather_bias_lod (pattern AMD_TEXTURE_GATHER_BIAS_LOD_EXTENSION_NAME)
+import Vulkan.Extensions.VK_ARM_shader_core_builtins (pattern ARM_SHADER_CORE_BUILTINS_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_buffer_device_address (pattern EXT_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME)
+import Vulkan.Extensions.VK_EXT_conservative_rasterization (pattern EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_descriptor_indexing (pattern EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_fragment_density_map (pattern EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME)
 import Vulkan.Extensions.VK_EXT_fragment_shader_interlock (pattern EXT_FRAGMENT_SHADER_INTERLOCK_EXTENSION_NAME)
@@ -124,6 +128,7 @@ import Vulkan.Extensions.VK_NV_fragment_shader_barycentric (pattern NV_FRAGMENT_
 import Vulkan.Extensions.VK_NV_geometry_shader_passthrough (pattern NV_GEOMETRY_SHADER_PASSTHROUGH_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_mesh_shader (pattern NV_MESH_SHADER_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_ray_tracing (pattern NV_RAY_TRACING_EXTENSION_NAME)
+import Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder (pattern NV_RAY_TRACING_INVOCATION_REORDER_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (pattern NV_RAY_TRACING_MOTION_BLUR_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_sample_mask_override_coverage (pattern NV_SAMPLE_MASK_OVERRIDE_COVERAGE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_NV_shader_image_footprint (pattern NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME)
@@ -246,6 +251,15 @@ spirvExtensionRequirements = \case
           , deviceExtensionMinVersion = 0
           }
       ]
+  "SPV_AMD_shader_early_and_late_fragment_tests" ->
+    (,)
+      []
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = AMD_SHADER_EARLY_AND_LATE_FRAGMENT_TESTS_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
   "SPV_KHR_shader_draw_parameters" ->
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 1 0]
@@ -363,6 +377,60 @@ spirvExtensionRequirements = \case
       [ RequireDeviceExtension
           { deviceExtensionLayerName = Nothing
           , deviceExtensionName = NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "SPV_NV_shader_invocation_reorder" ->
+    (,)
+      [ RequireInstanceExtension
+          { instanceExtensionLayerName = Nothing
+          , instanceExtensionName = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+          , instanceExtensionMinVersion = 0
+          }
+      ]
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = NV_RAY_TRACING_INVOCATION_REORDER_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_SPIRV_1_4_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_MAINTENANCE_3_EXTENSION_NAME
           , deviceExtensionMinVersion = 0
           }
       ]
@@ -2006,6 +2074,20 @@ spirvCapabilityRequirements = \case
           , deviceExtensionMinVersion = 0
           }
       ]
+  "FragmentFullyCoveredEXT" ->
+    (,)
+      [ RequireInstanceExtension
+          { instanceExtensionLayerName = Nothing
+          , instanceExtensionName = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+          , instanceExtensionMinVersion = 0
+          }
+      ]
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
   "Float16" ->
     (,)
       [ RequireInstanceVersion $ MAKE_API_VERSION 1 2 0
@@ -3168,6 +3250,74 @@ spirvCapabilityRequirements = \case
       , RequireDeviceExtension
           { deviceExtensionLayerName = Nothing
           , deviceExtensionName = KHR_SYNCHRONIZATION_2_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_MAINTENANCE_3_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "CoreBuiltinsARM" ->
+    (,)
+      []
+      [ RequireDeviceFeature
+          { featureName = "shaderCoreBuiltins"
+          , checkFeature = \PhysicalDeviceShaderCoreBuiltinsFeaturesARM{shaderCoreBuiltins} -> shaderCoreBuiltins
+          , enableFeature = \_ -> PhysicalDeviceShaderCoreBuiltinsFeaturesARM{shaderCoreBuiltins = True}
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = ARM_SHADER_CORE_BUILTINS_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "ShaderInvocationReorderNV" ->
+    (,)
+      [ RequireInstanceExtension
+          { instanceExtensionLayerName = Nothing
+          , instanceExtensionName = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+          , instanceExtensionMinVersion = 0
+          }
+      ]
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = NV_RAY_TRACING_INVOCATION_REORDER_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_SPIRV_1_4_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
           , deviceExtensionMinVersion = 0
           }
       , RequireDeviceExtension

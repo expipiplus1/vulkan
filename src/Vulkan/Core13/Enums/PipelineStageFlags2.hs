@@ -404,7 +404,8 @@ pattern PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT = PipelineStageFlagBits2 
 -- are performed.
 pattern PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV = PipelineStageFlagBits2 0x0000000020000000
 
--- No documentation found for Nested "VkPipelineStageFlagBits2" "VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT"
+-- | 'PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT' specifies the execution of
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#micromap micromap commands>.
 pattern PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT = PipelineStageFlagBits2 0x0000000040000000
 
 -- | 'PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR' specifies the

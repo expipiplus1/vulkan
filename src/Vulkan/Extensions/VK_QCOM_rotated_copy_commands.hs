@@ -155,6 +155,29 @@ import Vulkan.Extensions.VK_KHR_surface (SurfaceTransformFlagsKHR)
 -- | VkCopyCommandTransformInfoQCOM - Structure describing transform
 -- parameters of rotated copy command
 --
+-- = Description
+--
+-- Including this structure in the @pNext@ chain of
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.BufferImageCopy2'
+-- defines a rotation to be performed when copying between an image and a
+-- buffer. Including this structure in the @pNext@ chain of
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.BlitImageInfo2'
+-- defines a rotation to be performed when blitting between two images. If
+-- this structure is not specified in either case, the implementation
+-- behaves as if it was specified with a @transform@ equal to
+-- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR'.
+--
+-- Specifying a transform for a copy between an image and a buffer
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#copies-buffers-images-rotation-addressing rotates the region accessed in the image around the offset>.
+-- Specifying a transform for a blit performs a similar transform as
+-- described in
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#copies-images-scaling-rotation Image Blits with Scaling and Rotation>.
+--
+-- Rotations other than
+-- 'Vulkan.Extensions.VK_KHR_surface.SURFACE_TRANSFORM_IDENTITY_BIT_KHR'
+-- /can/ only be specified for single-plane 2D images with a 1x1x1
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility-classes texel block extent>.
+--
 -- == Valid Usage (Implicit)
 --
 -- = See Also

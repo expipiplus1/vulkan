@@ -1396,14 +1396,6 @@ instance Zero PhysicalDeviceDynamicRenderingFeatures where
 --     feature is not enabled, @rasterizationSamples@ /must/ be a valid
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits' value
 --
--- -   #VUID-VkCommandBufferInheritanceRenderingInfo-pColorAttachmentFormats-06006#
---     If any element of @pColorAttachmentFormats@ is not
---     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', it /must/ be a format
---     with
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
---     that include
---     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
---
 -- -   #VUID-VkCommandBufferInheritanceRenderingInfo-depthAttachmentFormat-06540#
 --     If @depthAttachmentFormat@ is not
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', it /must/ be a format
@@ -1418,14 +1410,17 @@ instance Zero PhysicalDeviceDynamicRenderingFeatures where
 --     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   #VUID-VkCommandBufferInheritanceRenderingInfoKHR-pColorAttachmentFormats-06492#
---     When rendering to a
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary Linear Color attachment>,
---     if any element of @pColorAttachmentFormats@ is not
+--     If any element of @pColorAttachmentFormats@ is not
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', it /must/ be a format
 --     with
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#potential-format-features potential format features>
 --     that include
+--     'Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COLOR_ATTACHMENT_BIT',
+--     or
 --     'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV'
+--     if the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-linearColorAttachment linearColorAttachment>
+--     feature is enabled
 --
 -- -   #VUID-VkCommandBufferInheritanceRenderingInfo-stencilAttachmentFormat-06541#
 --     If @stencilAttachmentFormat@ is not

@@ -120,11 +120,11 @@
 -- Applications can prevent unexpected compilation by setting
 -- 'PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_EXT' on
 -- @Vk*PipelineCreateInfo@::@flags@. When set, an ICD must not attempt
--- pipeline or shader compilation to create the pipeline object. The ICD
--- will return the result 'PIPELINE_COMPILE_REQUIRED_EXT'. An ICD may still
--- return a valid 'Vulkan.Core10.Handles.Pipeline' object by either
--- re-using existing pre-compiled objects such as those from a pipeline
--- cache, or derivative pipelines.
+-- pipeline or shader compilation to create the pipeline object. In such a
+-- case, if the implementation fails to create a pipeline without
+-- compilation, the implementation /must/ return the result
+-- 'PIPELINE_COMPILE_REQUIRED_EXT' and return
+-- 'Vulkan.Core10.APIConstants.NULL_HANDLE' for the pipeline.
 --
 -- By default @vkCreate*Pipelines@ calls must attempt to create all
 -- pipelines before returning. Setting

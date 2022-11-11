@@ -309,6 +309,9 @@ getPhysicalDeviceExternalImageFormatPropertiesNV :: forall io
                                                  -> -- | @externalHandleType@ is either one of the bits from
                                                     -- 'ExternalMemoryHandleTypeFlagBitsNV', or 0.
                                                     --
+                                                    -- #VUID-vkGetPhysicalDeviceExternalImageFormatPropertiesNV-externalHandleType-07721#
+                                                    -- @externalHandleType@ /must/ not have more than one bit set
+                                                    --
                                                     -- #VUID-vkGetPhysicalDeviceExternalImageFormatPropertiesNV-externalHandleType-parameter#
                                                     -- @externalHandleType@ /must/ be a valid combination of
                                                     -- 'ExternalMemoryHandleTypeFlagBitsNV' values

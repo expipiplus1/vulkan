@@ -456,6 +456,11 @@ pattern NV_EXTERNAL_MEMORY_RDMA_EXTENSION_NAME :: forall a . (Eq a, IsString a) 
 pattern NV_EXTERNAL_MEMORY_RDMA_EXTENSION_NAME = "VK_NV_external_memory_rdma"
 
 
--- No documentation found for TopLevel "VkRemoteAddressNV"
+-- | VkRemoteAddressNV - Remote device address type
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_external_memory_rdma VK_NV_external_memory_rdma>,
+-- 'getMemoryRemoteAddressNV'
 type RemoteAddressNV = Ptr ()
 

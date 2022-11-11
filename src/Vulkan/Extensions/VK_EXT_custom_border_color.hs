@@ -292,11 +292,25 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_C
 -- | VkSamplerCustomBorderColorCreateInfoEXT - Structure specifying custom
 -- border color
 --
+-- = Description
+--
+-- Note
+--
+-- If @format@ is a combined depth stencil format, the aspect is determined
+-- by the value of
+-- 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@pname@:borderColor. If
+-- 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@pname@:borderColor is
+-- 'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_CUSTOM_EXT', the
+-- depth aspect is considered. If
+-- 'Vulkan.Core10.Sampler.SamplerCreateInfo'::@pname@:borderColor is
+-- 'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_INT_CUSTOM_EXT', the
+-- stencil aspect is considered.
+--
 -- == Valid Usage
 --
--- -   #VUID-VkSamplerCustomBorderColorCreateInfoEXT-format-04013# If
---     provided @format@ is not
---     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED' then the
+-- -   #VUID-VkSamplerCustomBorderColorCreateInfoEXT-format-07605# If
+--     @format@ is not 'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED' and
+--     @format@ is not a combined depth stencil format then the
 --     'Vulkan.Core10.Sampler.SamplerCreateInfo'::@borderColor@ type /must/
 --     match the sampled type of the provided @format@, as shown in the
 --     /SPIR-V Sampled Type/ column of the

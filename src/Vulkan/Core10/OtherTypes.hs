@@ -160,9 +160,10 @@ instance Zero MemoryBarrier where
 -- access types in the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks source access mask>
 -- specified by @srcAccessMask@. If @srcAccessMask@ includes
--- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_HOST_WRITE_BIT', memory
--- writes performed by that access type are also made visible, as that
--- access type is not performed through a resource.
+-- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_HOST_WRITE_BIT', a
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-available-and-visible memory domain operation>
+-- is performed where available memory in the host domain is also made
+-- available to the device domain.
 --
 -- The second
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
@@ -171,9 +172,18 @@ instance Zero MemoryBarrier where
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-masks destination access mask>
 -- specified by @dstAccessMask@. If @dstAccessMask@ includes
 -- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_HOST_WRITE_BIT' or
--- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_HOST_READ_BIT', available
--- memory writes are also made visible to accesses of those types, as those
--- access types are not performed through a resource.
+-- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_HOST_READ_BIT', a
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies-available-and-visible memory domain operation>
+-- is performed where available memory in the device domain is also made
+-- available to the host domain.
+--
+-- Note
+--
+-- When
+-- 'Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_HOST_COHERENT_BIT'
+-- is used, available memory in host domain is automatically made visible
+-- to host domain, and any host write is automatically made available to
+-- host domain.
 --
 -- If @srcQueueFamilyIndex@ is not equal to @dstQueueFamilyIndex@, and
 -- @srcQueueFamilyIndex@ is equal to the current queue family, then the

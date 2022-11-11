@@ -21,6 +21,10 @@
 --
 --     -   Requires support for Vulkan 1.0
 --
+-- [__Deprecation state__]
+--
+--     -   /Deprecated/ without replacement
+--
 -- [__Contact__]
 --
 --     -   Stuart Smith
@@ -42,6 +46,11 @@
 -- @VK_IMG_format_pvrtc@ provides additional texture compression
 -- functionality specific to Imagination Technologies PowerVR Texture
 -- compression format (called PVRTC).
+--
+-- == Deprecation
+--
+-- Both PVRTC1 and PVRTC2 are slower than standard image formats on PowerVR
+-- GPUs, and support will be removed from future hardware.
 --
 -- == New Enum Constants
 --
