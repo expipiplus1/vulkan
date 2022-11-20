@@ -1,4 +1,4 @@
-<img src="./haskell-vulkan.png" width="348" alt="Haskell Vulkan Logo">
+![](haskell-vulkan.png)
 
 Slightly high level Haskell bindings to the Vulkan graphics API.
 
