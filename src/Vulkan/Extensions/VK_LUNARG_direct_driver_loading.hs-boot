@@ -56,7 +56,7 @@
 --
 -- == New Function Pointers
 --
--- -   'PFN_vkGetInstanceProcAddr'
+-- -   'PFN_vkGetInstanceProcAddrLUNARG'
 --
 -- == New Enums
 --
@@ -86,7 +86,7 @@
 --
 -- == See Also
 --
--- 'PFN_vkGetInstanceProcAddr', 'DirectDriverLoadingFlagsLUNARG',
+-- 'PFN_vkGetInstanceProcAddrLUNARG', 'DirectDriverLoadingFlagsLUNARG',
 -- 'DirectDriverLoadingInfoLUNARG', 'DirectDriverLoadingListLUNARG',
 -- 'DirectDriverLoadingModeLUNARG'
 --

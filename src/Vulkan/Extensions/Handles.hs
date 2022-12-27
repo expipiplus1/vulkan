@@ -482,7 +482,11 @@ instance Show SurfaceKHR where
 -- transition the image’s layout, queue rendering commands to it, etc.
 -- Finally, the application presents the image with
 -- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR', which releases the
--- acquisition of the image.
+-- acquisition of the image. The application /can/ also release the
+-- acquisition of the image through
+-- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.releaseSwapchainImagesEXT',
+-- if the image is not in use by the device, and skip the present
+-- operation.
 --
 -- The presentation engine controls the order in which presentable images
 -- are acquired for use by the application.
@@ -501,6 +505,7 @@ instance Show SurfaceKHR where
 -- 'Vulkan.Extensions.VK_KHR_swapchain.BindImageMemorySwapchainInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.ImageSwapchainCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR',
+-- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.ReleaseSwapchainImagesInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.acquireFullScreenExclusiveModeEXT',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.acquireNextImageKHR',

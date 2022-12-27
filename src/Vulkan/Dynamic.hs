@@ -346,6 +346,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_ray_tracing_pipeline (RayTracingP
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing (RayTracingPipelineCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Core10.FundamentalTypes (Rect2D)
 import {-# SOURCE #-} Vulkan.Extensions.VK_GOOGLE_display_timing (RefreshCycleDurationGOOGLE)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_swapchain_maintenance1 (ReleaseSwapchainImagesInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_external_memory_rdma (RemoteAddressNV)
 import {-# SOURCE #-} Vulkan.Core10.Handles (RenderPass)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (RenderPassBeginInfo)
@@ -1256,6 +1257,7 @@ data DeviceCmds = DeviceCmds
   , pVkBindOpticalFlowSessionImageNV :: FunPtr (Ptr Device_T -> OpticalFlowSessionNV -> OpticalFlowSessionBindingPointNV -> ImageView -> ImageLayout -> IO Result)
   , pVkCmdOpticalFlowExecuteNV :: FunPtr (Ptr CommandBuffer_T -> OpticalFlowSessionNV -> ("pExecuteInfo" ::: Ptr OpticalFlowExecuteInfoNV) -> IO ())
   , pVkGetDeviceFaultInfoEXT :: FunPtr (Ptr Device_T -> ("pFaultCounts" ::: Ptr DeviceFaultCountsEXT) -> ("pFaultInfo" ::: Ptr DeviceFaultInfoEXT) -> IO Result)
+  , pVkReleaseSwapchainImagesEXT :: FunPtr (Ptr Device_T -> ("pReleaseInfo" ::: Ptr ReleaseSwapchainImagesInfoEXT) -> IO Result)
   }
 
 deriving instance Eq DeviceCmds
@@ -1694,7 +1696,7 @@ instance Zero DeviceCmds where
     nullFunPtr
     nullFunPtr
     nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -2219,6 +2221,7 @@ initDeviceCmds instanceCmds handle = do
   vkBindOpticalFlowSessionImageNV <- getDeviceProcAddr' handle (Ptr "vkBindOpticalFlowSessionImageNV"#)
   vkCmdOpticalFlowExecuteNV <- getDeviceProcAddr' handle (Ptr "vkCmdOpticalFlowExecuteNV"#)
   vkGetDeviceFaultInfoEXT <- getDeviceProcAddr' handle (Ptr "vkGetDeviceFaultInfoEXT"#)
+  vkReleaseSwapchainImagesEXT <- getDeviceProcAddr' handle (Ptr "vkReleaseSwapchainImagesEXT"#)
   pure $ DeviceCmds handle
     (castFunPtr @_ @(Ptr Device_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction) vkGetDeviceProcAddr)
     (castFunPtr @_ @(Ptr Device_T -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyDevice)
@@ -2656,4 +2659,5 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr Device_T -> OpticalFlowSessionNV -> OpticalFlowSessionBindingPointNV -> ImageView -> ImageLayout -> IO Result) vkBindOpticalFlowSessionImageNV)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> OpticalFlowSessionNV -> ("pExecuteInfo" ::: Ptr OpticalFlowExecuteInfoNV) -> IO ()) vkCmdOpticalFlowExecuteNV)
     (castFunPtr @_ @(Ptr Device_T -> ("pFaultCounts" ::: Ptr DeviceFaultCountsEXT) -> ("pFaultInfo" ::: Ptr DeviceFaultInfoEXT) -> IO Result) vkGetDeviceFaultInfoEXT)
+    (castFunPtr @_ @(Ptr Device_T -> ("pReleaseInfo" ::: Ptr ReleaseSwapchainImagesInfoEXT) -> IO Result) vkReleaseSwapchainImagesEXT)
 

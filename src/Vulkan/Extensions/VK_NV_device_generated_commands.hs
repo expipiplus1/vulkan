@@ -1178,7 +1178,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-06887# If the current
 --     render pass instance uses a depth\/stencil attachment with a
---     read-only layout for the stencil aspect and stencil test is enabled,
+--     read-only layout for the stencil aspect, both front and back
+--     @writeMask@ are not zero, and stencil test is enabled,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-stencil all stencil ops>
 --     /must/ be 'Vulkan.Core10.Enums.StencilOp.STENCIL_OP_KEEP'
 --

@@ -56,7 +56,7 @@
 --
 -- == New Function Pointers
 --
--- -   'PFN_vkGetInstanceProcAddr'
+-- -   'PFN_vkGetInstanceProcAddrLUNARG'
 --
 -- == New Enums
 --
@@ -86,7 +86,7 @@
 --
 -- == See Also
 --
--- 'PFN_vkGetInstanceProcAddr', 'DirectDriverLoadingFlagsLUNARG',
+-- 'PFN_vkGetInstanceProcAddrLUNARG', 'DirectDriverLoadingFlagsLUNARG',
 -- 'DirectDriverLoadingInfoLUNARG', 'DirectDriverLoadingListLUNARG',
 -- 'DirectDriverLoadingModeLUNARG'
 --
@@ -104,8 +104,8 @@ module Vulkan.Extensions.VK_LUNARG_direct_driver_loading  ( DirectDriverLoadingI
                                                                                          , DIRECT_DRIVER_LOADING_MODE_INCLUSIVE_LUNARG
                                                                                          , ..
                                                                                          )
-                                                          , PFN_vkGetInstanceProcAddr
-                                                          , FN_vkGetInstanceProcAddr
+                                                          , PFN_vkGetInstanceProcAddrLUNARG
+                                                          , FN_vkGetInstanceProcAddrLUNARG
                                                           , LUNARG_DIRECT_DRIVER_LOADING_SPEC_VERSION
                                                           , pattern LUNARG_DIRECT_DRIVER_LOADING_SPEC_VERSION
                                                           , LUNARG_DIRECT_DRIVER_LOADING_EXTENSION_NAME
@@ -165,16 +165,20 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DIRECT_DR
 --
 -- = See Also
 --
--- 'PFN_vkGetInstanceProcAddr',
+-- 'PFN_vkGetInstanceProcAddrLUNARG',
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_LUNARG_direct_driver_loading VK_LUNARG_direct_driver_loading>,
 -- 'DirectDriverLoadingFlagsLUNARG', 'DirectDriverLoadingListLUNARG',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DirectDriverLoadingInfoLUNARG = DirectDriverLoadingInfoLUNARG
-  { -- | #VUID-VkDirectDriverLoadingInfoLUNARG-flags-zerobitmask# @flags@ /must/
+  { -- | @flags@ is reserved for future use.
+    --
+    -- #VUID-VkDirectDriverLoadingInfoLUNARG-flags-zerobitmask# @flags@ /must/
     -- be @0@
     flags :: DirectDriverLoadingFlagsLUNARG
-  , -- No documentation found for Nested "VkDirectDriverLoadingInfoLUNARG" "pfnGetInstanceProcAddr"
-    pfnGetInstanceProcAddr :: PFN_vkGetInstanceProcAddr
+  , -- | @pfnGetInstanceProcAddr@ is a 'PFN_vkGetInstanceProcAddrLUNARG' pointer
+    -- to the driver 'Vulkan.Core10.DeviceInitialization.getInstanceProcAddr'
+    -- function.
+    pfnGetInstanceProcAddr :: PFN_vkGetInstanceProcAddrLUNARG
   }
   deriving (Typeable, Eq)
 #if defined(GENERIC_INSTANCES)
@@ -188,7 +192,7 @@ instance ToCStruct DirectDriverLoadingInfoLUNARG where
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DIRECT_DRIVER_LOADING_INFO_LUNARG)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr DirectDriverLoadingFlagsLUNARG)) (flags)
-    poke ((p `plusPtr` 24 :: Ptr PFN_vkGetInstanceProcAddr)) (pfnGetInstanceProcAddr)
+    poke ((p `plusPtr` 24 :: Ptr PFN_vkGetInstanceProcAddrLUNARG)) (pfnGetInstanceProcAddr)
     f
   cStructSize = 32
   cStructAlignment = 8
@@ -196,13 +200,13 @@ instance ToCStruct DirectDriverLoadingInfoLUNARG where
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DIRECT_DRIVER_LOADING_INFO_LUNARG)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
     poke ((p `plusPtr` 16 :: Ptr DirectDriverLoadingFlagsLUNARG)) (zero)
-    poke ((p `plusPtr` 24 :: Ptr PFN_vkGetInstanceProcAddr)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr PFN_vkGetInstanceProcAddrLUNARG)) (zero)
     f
 
 instance FromCStruct DirectDriverLoadingInfoLUNARG where
   peekCStruct p = do
     flags <- peek @DirectDriverLoadingFlagsLUNARG ((p `plusPtr` 16 :: Ptr DirectDriverLoadingFlagsLUNARG))
-    pfnGetInstanceProcAddr <- peek @PFN_vkGetInstanceProcAddr ((p `plusPtr` 24 :: Ptr PFN_vkGetInstanceProcAddr))
+    pfnGetInstanceProcAddr <- peek @PFN_vkGetInstanceProcAddrLUNARG ((p `plusPtr` 24 :: Ptr PFN_vkGetInstanceProcAddrLUNARG))
     pure $ DirectDriverLoadingInfoLUNARG
              flags pfnGetInstanceProcAddr
 
@@ -221,6 +225,15 @@ instance Zero DirectDriverLoadingInfoLUNARG where
 -- | VkDirectDriverLoadingListLUNARG - Structure specifying additional
 -- drivers to load
 --
+-- = Description
+--
+-- When creating a Vulkan instance for which additional drivers are to be
+-- included, add a 'DirectDriverLoadingListLUNARG' structure to the pNext
+-- chain of the 'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo'
+-- structure, and include in it the list of 'DirectDriverLoadingInfoLUNARG'
+-- structures which contain the information necessary to load additional
+-- drivers.
+--
 -- == Valid Usage (Implicit)
 --
 -- = See Also
@@ -229,10 +242,15 @@ instance Zero DirectDriverLoadingInfoLUNARG where
 -- 'DirectDriverLoadingInfoLUNARG', 'DirectDriverLoadingModeLUNARG',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data DirectDriverLoadingListLUNARG = DirectDriverLoadingListLUNARG
-  { -- | #VUID-VkDirectDriverLoadingListLUNARG-mode-parameter# @mode@ /must/ be a
+  { -- | @mode@ controls the mode in which to load the provided drivers.
+    --
+    -- #VUID-VkDirectDriverLoadingListLUNARG-mode-parameter# @mode@ /must/ be a
     -- valid 'DirectDriverLoadingModeLUNARG' value
     mode :: DirectDriverLoadingModeLUNARG
-  , -- | #VUID-VkDirectDriverLoadingListLUNARG-pDrivers-parameter# @pDrivers@
+  , -- | @pDrivers@ is a pointer to an array of @driverCount@
+    -- 'DirectDriverLoadingInfoLUNARG' structures.
+    --
+    -- #VUID-VkDirectDriverLoadingListLUNARG-pDrivers-parameter# @pDrivers@
     -- /must/ be a valid pointer to an array of @driverCount@ valid
     -- 'DirectDriverLoadingInfoLUNARG' structures
     drivers :: Vector DirectDriverLoadingInfoLUNARG
@@ -327,10 +345,12 @@ instance Read DirectDriverLoadingFlagsLUNARG where
 newtype DirectDriverLoadingModeLUNARG = DirectDriverLoadingModeLUNARG Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- No documentation found for Nested "VkDirectDriverLoadingModeLUNARG" "VK_DIRECT_DRIVER_LOADING_MODE_EXCLUSIVE_LUNARG"
+-- | 'DIRECT_DRIVER_LOADING_MODE_EXCLUSIVE_LUNARG' specifies that the
+-- provided drivers are used instead of the system-loaded drivers.
 pattern DIRECT_DRIVER_LOADING_MODE_EXCLUSIVE_LUNARG = DirectDriverLoadingModeLUNARG 0
 
--- No documentation found for Nested "VkDirectDriverLoadingModeLUNARG" "VK_DIRECT_DRIVER_LOADING_MODE_INCLUSIVE_LUNARG"
+-- | 'DIRECT_DRIVER_LOADING_MODE_INCLUSIVE_LUNARG' specifies that the
+-- provided drivers are used in addition to the system-loaded drivers.
 pattern DIRECT_DRIVER_LOADING_MODE_INCLUSIVE_LUNARG = DirectDriverLoadingModeLUNARG 1
 
 {-# COMPLETE
@@ -374,14 +394,29 @@ instance Read DirectDriverLoadingModeLUNARG where
       conNameDirectDriverLoadingModeLUNARG
       DirectDriverLoadingModeLUNARG
 
-type FN_vkGetInstanceProcAddr = Ptr Instance_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction
--- | PFN_vkGetInstanceProcAddr - Type definition for vkGetInstanceProcAddr
+type FN_vkGetInstanceProcAddrLUNARG = Ptr Instance_T -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction
+-- | PFN_vkGetInstanceProcAddrLUNARG - Type definition for
+-- vkGetInstanceProcAddr
+--
+-- = Description
+--
+-- This type is compatible with the type of a pointer to the
+-- 'Vulkan.Core10.DeviceInitialization.getInstanceProcAddr' command, but is
+-- used only to specify device driver addresses in
+-- 'DirectDriverLoadingInfoLUNARG'::@pfnGetInstanceProcAddr@.
+--
+-- Note
+--
+-- This type exists only because of limitations in the XML schema and
+-- processing scripts, and its name may change in the future. Ideally we
+-- would use the @PFN_vkGetInstanceProcAddr@ type generated in the
+-- @vulkan_core.h@ header.
 --
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_LUNARG_direct_driver_loading VK_LUNARG_direct_driver_loading>,
 -- 'DirectDriverLoadingInfoLUNARG'
-type PFN_vkGetInstanceProcAddr = FunPtr FN_vkGetInstanceProcAddr
+type PFN_vkGetInstanceProcAddrLUNARG = FunPtr FN_vkGetInstanceProcAddrLUNARG
 
 
 type LUNARG_DIRECT_DRIVER_LOADING_SPEC_VERSION = 1

@@ -215,6 +215,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_shading_rate_image (PhysicalDevice
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_subgroup_size_control (PhysicalDeviceSubgroupSizeControlFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subpass_merge_feedback (PhysicalDeviceSubpassMergeFeedbackFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_subpass_shading (PhysicalDeviceSubpassShadingFeaturesHUAWEI)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_swapchain_maintenance1 (PhysicalDeviceSwapchainMaintenance1FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 (PhysicalDeviceSynchronization2Features)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_texel_buffer_alignment (PhysicalDeviceTexelBufferAlignmentFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_texture_compression_astc_hdr (PhysicalDeviceTextureCompressionASTCHDRFeatures)
@@ -959,6 +960,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Core13.Promoted_From_VK_EXT_subgroup_size_control.PhysicalDeviceSubgroupSizeControlFeatures',
 --     'Vulkan.Extensions.VK_EXT_subpass_merge_feedback.PhysicalDeviceSubpassMergeFeedbackFeaturesEXT',
 --     'Vulkan.Extensions.VK_HUAWEI_subpass_shading.PhysicalDeviceSubpassShadingFeaturesHUAWEI',
+--     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.PhysicalDeviceSwapchainMaintenance1FeaturesEXT',
 --     'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.PhysicalDeviceSynchronization2Features',
 --     'Vulkan.Extensions.VK_EXT_texel_buffer_alignment.PhysicalDeviceTexelBufferAlignmentFeaturesEXT',
 --     'Vulkan.Core13.Promoted_From_VK_EXT_texture_compression_astc_hdr.PhysicalDeviceTextureCompressionASTCHDRFeatures',
@@ -1060,6 +1062,7 @@ instance Extensible DeviceCreateInfo where
   extends _ f
     | Just Refl <- eqT @e @PhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM = Just f
     | Just Refl <- eqT @e @PhysicalDeviceRayTracingInvocationReorderFeaturesNV = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceSwapchainMaintenance1FeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderCoreBuiltinsFeaturesARM = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFaultFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceOpticalFlowFeaturesNV = Just f

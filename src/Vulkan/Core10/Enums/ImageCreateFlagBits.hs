@@ -96,7 +96,9 @@ pattern IMAGE_CREATE_CUBE_COMPATIBLE_BIT = ImageCreateFlagBits 0x00000010
 -- 'IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM'.
 pattern IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM = ImageCreateFlagBits 0x00008000
 
--- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT"
+-- | 'IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT' specifies that the image /can/
+-- be used to create a 'Vulkan.Core10.Handles.ImageView' of type
+-- 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D'.
 pattern IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT = ImageCreateFlagBits 0x00020000
 
 -- | 'IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT' specifies

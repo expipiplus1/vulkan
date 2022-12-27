@@ -204,11 +204,7 @@ pattern IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT = ImageLayout 1000218000
 pattern IMAGE_LAYOUT_SHARED_PRESENT_KHR = ImageLayout 1000111000
 
 -- | 'IMAGE_LAYOUT_PRESENT_SRC_KHR' /must/ only be used for presenting a
--- presentable image for display. A swapchain’s image /must/ be
--- transitioned to this layout before calling
--- 'Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR', and /must/ be
--- transitioned away from this layout after calling
--- 'Vulkan.Extensions.VK_KHR_swapchain.acquireNextImageKHR'.
+-- presentable image for display.
 pattern IMAGE_LAYOUT_PRESENT_SRC_KHR = ImageLayout 1000001002
 
 -- | 'IMAGE_LAYOUT_ATTACHMENT_OPTIMAL' specifies a layout that /must/ only be

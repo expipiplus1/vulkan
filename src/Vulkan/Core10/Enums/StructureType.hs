@@ -246,6 +246,15 @@ module Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYPE_APPLICA
                                                         , STRUCTURE_TYPE_GRAPHICS_PIPELINE_SHADER_GROUPS_CREATE_INFO_NV
                                                         , STRUCTURE_TYPE_GRAPHICS_SHADER_GROUP_CREATE_INFO_NV
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV
+                                                        , STRUCTURE_TYPE_RELEASE_SWAPCHAIN_IMAGES_INFO_EXT
+                                                        , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_SCALING_CREATE_INFO_EXT
+                                                        , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODE_INFO_EXT
+                                                        , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODES_CREATE_INFO_EXT
+                                                        , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_FENCE_INFO_EXT
+                                                        , STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_EXT
+                                                        , STRUCTURE_TYPE_SURFACE_PRESENT_MODE_COMPATIBILITY_EXT
+                                                        , STRUCTURE_TYPE_SURFACE_PRESENT_SCALING_CAPABILITIES_EXT
+                                                        , STRUCTURE_TYPE_SURFACE_PRESENT_MODE_EXT
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_2_FEATURES_EXT
                                                         , STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INTERNAL_REPRESENTATION_KHR
                                                         , STRUCTURE_TYPE_PIPELINE_EXECUTABLE_STATISTIC_KHR
@@ -1197,6 +1206,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_HUAWEI_subpass_shading.PhysicalDeviceSubpassShadingFeaturesHUAWEI',
 -- 'Vulkan.Extensions.VK_HUAWEI_subpass_shading.PhysicalDeviceSubpassShadingPropertiesHUAWEI',
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR',
+-- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.PhysicalDeviceSwapchainMaintenance1FeaturesEXT',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.PhysicalDeviceSynchronization2Features',
 -- 'Vulkan.Extensions.VK_EXT_texel_buffer_alignment.PhysicalDeviceTexelBufferAlignmentFeaturesEXT',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_texel_buffer_alignment.PhysicalDeviceTexelBufferAlignmentProperties',
@@ -1294,6 +1304,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingPipelineInterfaceCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.RayTracingShaderGroupCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.RayTracingShaderGroupCreateInfoNV',
+-- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.ReleaseSwapchainImagesInfoEXT',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.RenderPassAttachmentBeginInfo',
 -- 'Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo',
 -- 'Vulkan.Core10.Pass.RenderPassCreateInfo',
@@ -1354,11 +1365,18 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceFormat2KHR',
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveWin32InfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeCompatibilityEXT',
+-- 'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeEXT',
+-- 'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentScalingCapabilitiesEXT',
 -- 'Vulkan.Extensions.VK_KHR_surface_protected_capabilities.SurfaceProtectedCapabilitiesKHR',
 -- 'Vulkan.Extensions.VK_EXT_display_control.SwapchainCounterCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_AMD_display_native_hdr.SwapchainDisplayNativeHdrCreateInfoAMD',
 -- 'Vulkan.Extensions.VK_NV_present_barrier.SwapchainPresentBarrierCreateInfoNV',
+-- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentFenceInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentModeInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentModesCreateInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentScalingCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.SysmemColorSpaceFUCHSIA',
 -- 'Vulkan.Extensions.VK_AMD_texture_gather_bias_lod.TextureLODGatherFormatPropertiesAMD',
 -- 'Vulkan.Extensions.VK_QCOM_tile_properties.TilePropertiesQCOM',
@@ -2174,6 +2192,33 @@ pattern STRUCTURE_TYPE_GRAPHICS_SHADER_GROUP_CREATE_INFO_NV = StructureType 1000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV = StructureType 1000277000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RELEASE_SWAPCHAIN_IMAGES_INFO_EXT"
+pattern STRUCTURE_TYPE_RELEASE_SWAPCHAIN_IMAGES_INFO_EXT = StructureType 1000275005
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SWAPCHAIN_PRESENT_SCALING_CREATE_INFO_EXT"
+pattern STRUCTURE_TYPE_SWAPCHAIN_PRESENT_SCALING_CREATE_INFO_EXT = StructureType 1000275004
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODE_INFO_EXT"
+pattern STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODE_INFO_EXT = StructureType 1000275003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODES_CREATE_INFO_EXT"
+pattern STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODES_CREATE_INFO_EXT = StructureType 1000275002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SWAPCHAIN_PRESENT_FENCE_INFO_EXT"
+pattern STRUCTURE_TYPE_SWAPCHAIN_PRESENT_FENCE_INFO_EXT = StructureType 1000275001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_EXT = StructureType 1000275000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SURFACE_PRESENT_MODE_COMPATIBILITY_EXT"
+pattern STRUCTURE_TYPE_SURFACE_PRESENT_MODE_COMPATIBILITY_EXT = StructureType 1000274002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SURFACE_PRESENT_SCALING_CAPABILITIES_EXT"
+pattern STRUCTURE_TYPE_SURFACE_PRESENT_SCALING_CAPABILITIES_EXT = StructureType 1000274001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SURFACE_PRESENT_MODE_EXT"
+pattern STRUCTURE_TYPE_SURFACE_PRESENT_MODE_EXT = StructureType 1000274000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_2_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_2_FEATURES_EXT = StructureType 1000273000
@@ -3721,6 +3766,15 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_GRAPHICS_PIPELINE_SHADER_GROUPS_CREATE_INFO_NV
   , STRUCTURE_TYPE_GRAPHICS_SHADER_GROUP_CREATE_INFO_NV
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV
+  , STRUCTURE_TYPE_RELEASE_SWAPCHAIN_IMAGES_INFO_EXT
+  , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_SCALING_CREATE_INFO_EXT
+  , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODE_INFO_EXT
+  , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODES_CREATE_INFO_EXT
+  , STRUCTURE_TYPE_SWAPCHAIN_PRESENT_FENCE_INFO_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_EXT
+  , STRUCTURE_TYPE_SURFACE_PRESENT_MODE_COMPATIBILITY_EXT
+  , STRUCTURE_TYPE_SURFACE_PRESENT_SCALING_CAPABILITIES_EXT
+  , STRUCTURE_TYPE_SURFACE_PRESENT_MODE_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_2_FEATURES_EXT
   , STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INTERNAL_REPRESENTATION_KHR
   , STRUCTURE_TYPE_PIPELINE_EXECUTABLE_STATISTIC_KHR
@@ -5133,6 +5187,42 @@ showTableStructureType =
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV
     , "PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV"
+    )
+  ,
+    ( STRUCTURE_TYPE_RELEASE_SWAPCHAIN_IMAGES_INFO_EXT
+    , "RELEASE_SWAPCHAIN_IMAGES_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_SWAPCHAIN_PRESENT_SCALING_CREATE_INFO_EXT
+    , "SWAPCHAIN_PRESENT_SCALING_CREATE_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODE_INFO_EXT
+    , "SWAPCHAIN_PRESENT_MODE_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODES_CREATE_INFO_EXT
+    , "SWAPCHAIN_PRESENT_MODES_CREATE_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_SWAPCHAIN_PRESENT_FENCE_INFO_EXT
+    , "SWAPCHAIN_PRESENT_FENCE_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_EXT
+    , "PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_SURFACE_PRESENT_MODE_COMPATIBILITY_EXT
+    , "SURFACE_PRESENT_MODE_COMPATIBILITY_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_SURFACE_PRESENT_SCALING_CAPABILITIES_EXT
+    , "SURFACE_PRESENT_SCALING_CAPABILITIES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_SURFACE_PRESENT_MODE_EXT
+    , "SURFACE_PRESENT_MODE_EXT"
     )
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_2_FEATURES_EXT

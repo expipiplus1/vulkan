@@ -1282,7 +1282,11 @@ instance Zero SurfaceFormatKHR where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_surface VK_KHR_surface>,
+-- 'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeCompatibilityEXT',
+-- 'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeEXT',
 -- 'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR',
+-- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentModeInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentModesCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_full_screen_exclusive.getPhysicalDeviceSurfacePresentModes2EXT',
 -- 'getPhysicalDeviceSurfacePresentModesKHR'
 newtype PresentModeKHR = PresentModeKHR Int32
