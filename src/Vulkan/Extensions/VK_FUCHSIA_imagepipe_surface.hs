@@ -102,6 +102,8 @@ module Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface  ( createImagePipeSurfaceF
                                                        , SurfaceKHR(..)
                                                        ) where
 
+import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
 import Vulkan.Internal.Utils (traceAroundEvent)
@@ -133,8 +135,6 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
-import GHC.Bits (Bits)
-import GHC.Bits (FiniteBits)
 import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))

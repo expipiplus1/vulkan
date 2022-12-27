@@ -110,6 +110,8 @@ module Vulkan.Extensions.VK_AMD_pipeline_compiler_control  ( PipelineCompilerCon
                                                            , pattern AMD_PIPELINE_COMPILER_CONTROL_EXTENSION_NAME
                                                            ) where
 
+import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytes)
@@ -129,8 +131,6 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
-import GHC.Bits (Bits)
-import GHC.Bits (FiniteBits)
 import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import GHC.Read (Read(readPrec))

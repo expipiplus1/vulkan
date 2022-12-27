@@ -534,6 +534,8 @@ module Vulkan.Extensions.VK_KHR_performance_query  ( enumeratePhysicalDeviceQueu
                                                    , pattern KHR_PERFORMANCE_QUERY_EXTENSION_NAME
                                                    ) where
 
+import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
@@ -578,8 +580,6 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
-import GHC.Bits (Bits)
-import GHC.Bits (FiniteBits)
 import GHC.Generics (Generic)
 import GHC.IO.Exception (IOErrorType(..))
 import GHC.IO.Exception (IOException(..))

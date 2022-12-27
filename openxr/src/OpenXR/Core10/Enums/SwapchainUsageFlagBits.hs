@@ -13,14 +13,14 @@ module OpenXR.Core10.Enums.SwapchainUsageFlagBits  ( SwapchainUsageFlags
                                                                            )
                                                    ) where
 
+import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import OpenXR.Internal.Utils (enumReadPrec)
 import OpenXR.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
 import OpenXR.Zero (Zero)
 import Foreign.Storable (Storable)
-import GHC.Bits (Bits)
-import GHC.Bits (FiniteBits)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import OpenXR.Core10.FundamentalTypes (Flags64)

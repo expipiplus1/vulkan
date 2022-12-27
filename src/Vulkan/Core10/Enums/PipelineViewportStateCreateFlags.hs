@@ -2,14 +2,14 @@
 -- No documentation found for Chapter "PipelineViewportStateCreateFlags"
 module Vulkan.Core10.Enums.PipelineViewportStateCreateFlags  (PipelineViewportStateCreateFlags(..)) where
 
+import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
 import Vulkan.Zero (Zero)
 import Foreign.Storable (Storable)
-import GHC.Bits (Bits)
-import GHC.Bits (FiniteBits)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))
 import Vulkan.Core10.FundamentalTypes (Flags)

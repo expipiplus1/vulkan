@@ -174,6 +174,8 @@ module Vulkan.Extensions.VK_EXT_conservative_rasterization  ( PhysicalDeviceCons
                                                             , pattern EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME
                                                             ) where
 
+import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytes)
@@ -198,8 +200,6 @@ import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
 import qualified Foreign.Storable (Storable(..))
-import GHC.Bits (Bits)
-import GHC.Bits (FiniteBits)
 import GHC.Generics (Generic)
 import Data.Int (Int32)
 import Foreign.Ptr (Ptr)
