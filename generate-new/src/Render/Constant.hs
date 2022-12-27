@@ -29,7 +29,7 @@ renderConstant Constant {..} = contextShow constName $ do
       StrValue i ->
         let a = mkName "a"
         in  pure
-              ( ForallT [PlainTV a]
+              ( ForallT [PlainTV a SpecifiedSpec]
                         [ConT ''Eq :@ VarT a, ConT ''IsString :@ VarT a]
                         (VarT a)
               , viaShow i
@@ -38,7 +38,7 @@ renderConstant Constant {..} = contextShow constName $ do
       IntegralValue i ->
         let a = mkName "a"
         in  pure
-              ( ForallT [PlainTV a] [ConT ''Integral :@ VarT a] (VarT a)
+              ( ForallT [PlainTV a SpecifiedSpec] [ConT ''Integral :@ VarT a] (VarT a)
               , viaShow i
               , i >= 0
               )

@@ -218,7 +218,7 @@ thNameNamespace n = case nameSpace n of
 -- Configuration
 ----------------------------------------------------------------
 
-type HasRenderParams r = MemberWithError (Input RenderParams) r
+type HasRenderParams r = Member (Input RenderParams) r
 
 data RenderParams = RenderParams
   { mkTyName :: CName -> HName
@@ -350,7 +350,7 @@ data IdiomaticTypeTo
 -- Generating RenderElements
 ----------------------------------------------------------------
 
-type HasRenderElem r = MemberWithError (State RenderElement) r
+type HasRenderElem r = Member (State RenderElement) r
 
 genRe :: Text -> Sem (State RenderElement : r) () -> Sem r RenderElement
 genRe n m = do
@@ -393,12 +393,12 @@ tellExplicitModule mod = gets reExplicitModule >>= \case
   Just m | m == mod -> pure ()
   _ -> throw "Render element has been given two explicit modules"
 
-tellExport :: MemberWithError (State RenderElement) r => Export -> Sem r ()
+tellExport :: Member (State RenderElement) r => Export -> Sem r ()
 tellExport e = modify' (\r -> r { reExports = reExports r <> V.singleton e })
 
 -- | A convenience for declaraing a data declaration and also putting it in the
 -- hs boot file
-tellDataExport :: MemberWithError (State RenderElement) r => HName -> Sem r ()
+tellDataExport :: Member (State RenderElement) r => HName -> Sem r ()
 tellDataExport e = do
   let dat = EData e
   modify' (\r -> r { reExports = reExports r <> V.singleton dat })
@@ -406,18 +406,18 @@ tellDataExport e = do
     tellExport dat { exportWithAll = False }
     tellDoc $ "data" <+> pretty e
 
-tellInternal :: MemberWithError (State RenderElement) r => Export -> Sem r ()
+tellInternal :: Member (State RenderElement) r => Export -> Sem r ()
 tellInternal e =
   modify' (\r -> r { reInternal = reInternal r <> V.singleton e })
 
-tellCanFormat :: MemberWithError (State RenderElement) r => Sem r ()
+tellCanFormat :: Member (State RenderElement) r => Sem r ()
 tellCanFormat = modify' (\r -> r { reCanFormat = All True })
 
-tellDoc :: MemberWithError (State RenderElement) r => Doc () -> Sem r ()
+tellDoc :: Member (State RenderElement) r => Doc () -> Sem r ()
 tellDoc d = modify' (\r -> r { reDoc = \h -> reDoc r h `lineMaybe` Just d })
 
 tellDocWithHaddock
-  :: MemberWithError (State RenderElement) r
+  :: Member (State RenderElement) r
   => ((Documentee -> Doc ()) -> Doc ())
   -> Sem r ()
 tellDocWithHaddock d =
@@ -495,15 +495,15 @@ tellImportWith parent dat =
   addImport (Import parent False (V.singleton dat) False False)
 
 tellReexportMod
-  :: MemberWithError (State RenderElement) r => ModName -> Sem r ()
+  :: Member (State RenderElement) r => ModName -> Sem r ()
 tellReexportMod e =
   modify' (\r -> r { reReexportedModules = insert e (reReexportedModules r) })
 
-tellNotReexportable :: MemberWithError (State RenderElement) r => Sem r ()
+tellNotReexportable :: Member (State RenderElement) r => Sem r ()
 tellNotReexportable = modify' (\r -> r { reReexportable = All False })
 
 tellLanguageExtension
-  :: MemberWithError (State RenderElement) r => LanguageExtension -> Sem r ()
+  :: Member (State RenderElement) r => LanguageExtension -> Sem r ()
 tellLanguageExtension e =
   modify' (\r -> r { reExtensions = insert e (reExtensions r) })
 

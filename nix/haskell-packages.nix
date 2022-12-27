@@ -100,9 +100,6 @@ let
         };
       } super.hs-speedscope));
 
-      autoapply = doJailbreak super.autoapply;
-      sdl2 = dontCheck (doJailbreak super.sdl2_2_5_3_3);
-
       #
       # Overrides for generate
       #

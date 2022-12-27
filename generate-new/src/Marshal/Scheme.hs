@@ -203,10 +203,10 @@ instance P.Show (CustomSchemeElided a) where
         . P.showString " _ _"
 
 type ND r a =
-  (MemberWithError (Input MarshalParams) r, HasSpecInfo r)
+  (Member (Input MarshalParams) r, HasSpecInfo r)
   => Sem (Fail ': NonDet ': r) a
 
-type HasMarshalParams r = MemberWithError (Input MarshalParams) r
+type HasMarshalParams r = Member (Input MarshalParams) r
 
 -- | Some functions to control the marshaling
 data MarshalParams = MarshalParams

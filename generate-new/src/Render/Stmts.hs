@@ -36,6 +36,7 @@ import           Data.Dependent.Map             ( DMap )
 import qualified Data.GADT.Compare             as DMap
 import qualified Data.GADT.Show                as DMap
 import qualified Data.List.Extra               as List
+import qualified Data.Kind                      ( Type )
 import qualified Data.Map                      as Map
 import qualified Data.Set                      as Set
 import           Data.Some                      ( Some(..) )
@@ -470,7 +471,7 @@ lookupRef ref = do
 -- Types
 ----------------------------------------------------------------
 
-data Value' s r (a :: *) where
+data Value' s r (a :: Data.Kind.Type) where
   Value'
     :: Coercible (Doc ()) a
     => { rType     :: Maybe Type
@@ -499,7 +500,7 @@ data Inline
   deriving (Show)
 
 -- | A handle with which one can refer to the results of other statements
-data Ref s (a :: *) where
+data Ref s (a :: Data.Kind.Type) where
   Ref :: Typeable a => { unRef :: Int } -> Ref s a
 
 deriving instance Eq (Ref s a)

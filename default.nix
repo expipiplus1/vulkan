@@ -13,7 +13,7 @@ let
     vulkan-validation-layers
   ];
 
-  generator-ghc-version = "8.10.7";
+  generator-ghc-version = "9.2.4";
 
   packages = p:
     with p;

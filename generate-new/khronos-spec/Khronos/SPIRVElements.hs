@@ -27,7 +27,7 @@ import           Marshal.Struct                 ( MarshaledStruct
                                                 , msMembers
                                                 , msmScheme
                                                 )
-import           Polysemy                       ( MemberWithError )
+import           Polysemy                       ( Member )
 import           Polysemy.Input
 import qualified Prelude
 import           Prettyprinter
@@ -57,7 +57,7 @@ renderSPIRVElements exts caps structs =
     renderCaps caps
 
 type HasMarshalledStructs r
-  = MemberWithError (Input (CName -> Maybe (MarshaledStruct AStruct))) r
+  = Member (Input (CName -> Maybe (MarshaledStruct AStruct))) r
 
 renderExts
   :: ( HasRenderElem r

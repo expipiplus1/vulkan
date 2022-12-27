@@ -72,7 +72,7 @@ cToHsTypeQuantified
 cToHsTypeQuantified preserve t = do
   (negNames, posNames, t) <- runRenderTypeContext
     $ cToHsType' Unwrapped preserve t
-  pure $ ForallT (PlainTV . cVarName <$> (negNames <> posNames)) [] t
+  pure $ ForallT ((`PlainTV` SpecifiedSpec) . cVarName <$> (negNames <> posNames)) [] t
 
 cToHsTypeWithContext
   :: forall r

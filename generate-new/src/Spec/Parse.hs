@@ -53,7 +53,7 @@ import           Spec.Types
 ----------------------------------------------------------------
 
 type P a
-  = forall r . (MemberWithError (Input TypeNames) r, HasErr r) => Sem r a
+  = forall r . (Member (Input TypeNames) r, HasErr r) => Sem r a
 
 parseSpec
   :: forall t r

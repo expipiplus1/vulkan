@@ -28,32 +28,32 @@ import           Relude
 import           Validation
 
 type Err = E.Error (Vector Text)
-type HasErr r = MemberWithError Err r
+type HasErr r = Member Err r
 
 runErr :: forall r a. Sem (Err ': r) a -> Sem r (Either (Vector Text) a)
 runErr = E.runError
 
-throw :: forall r a. MemberWithError Err r => Text -> Sem r a
+throw :: forall r a. Member Err r => Text -> Sem r a
 throw = E.throw . singleton
 
 throwMany
-  :: forall r f a . (MemberWithError Err r, Foldable f) => f Text -> Sem r a
+  :: forall r f a . (Member Err r, Foldable f) => f Text -> Sem r a
 throwMany = E.throw . V.fromList . toList
 
-context :: forall r a . MemberWithError Err r => Text -> Sem r a -> Sem r a
+context :: forall r a . Member Err r => Text -> Sem r a -> Sem r a
 context c m = E.catch @(Vector Text) m $ \e -> E.throw ((c <> ":" <+>) <$> e)
 
 contextShow
-  :: forall c r a . (Show c, MemberWithError Err r) => c -> Sem r a -> Sem r a
+  :: forall c r a . (Show c, Member Err r) => c -> Sem r a -> Sem r a
 contextShow = context . show
 
-fromEither :: MemberWithError Err r => Either Text a -> Sem r a
+fromEither :: Member Err r => Either Text a -> Sem r a
 fromEither = E.fromEither . first singleton
 
-fromEitherShow :: (Show e, MemberWithError Err r) => Either e a -> Sem r a
+fromEitherShow :: (Show e, Member Err r) => Either e a -> Sem r a
 fromEitherShow = fromEither . first show
 
-note :: MemberWithError Err r => Text -> Maybe a -> Sem r a
+note :: Member Err r => Text -> Maybe a -> Sem r a
 note e = \case
   Nothing -> throw e
   Just x  -> pure x

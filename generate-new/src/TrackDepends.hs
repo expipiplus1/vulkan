@@ -13,4 +13,4 @@ data Dependency
 
 type TrackDepends = Writer [Dependency]
 
-type HasTrackDepends r = MemberWithError TrackDepends r
+type HasTrackDepends r = Member TrackDepends r
