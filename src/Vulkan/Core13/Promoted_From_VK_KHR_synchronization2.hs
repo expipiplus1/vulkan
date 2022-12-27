@@ -1800,6 +1800,14 @@ cmdWriteTimestamp2 commandBuffer stage queryPool query = liftIO $ do
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
 --
+-- -   #VUID-VkMemoryBarrier2-srcAccessMask-08118# If @srcAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_DESCRIPTOR_BUFFER_READ_BIT_EXT',
+--     @srcStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_GRAPHICS_BIT',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT',
+--     or one of @VK_PIPELINE_STAGE_*_SHADER_BIT@ stages
+--
 -- -   #VUID-VkMemoryBarrier2-dstStageMask-03929# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometryShader>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
@@ -2175,6 +2183,14 @@ cmdWriteTimestamp2 commandBuffer stage queryPool query = liftIO $ do
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
+--
+-- -   #VUID-VkMemoryBarrier2-dstAccessMask-08118# If @dstAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_DESCRIPTOR_BUFFER_READ_BIT_EXT',
+--     @dstStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_GRAPHICS_BIT',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT',
+--     or one of @VK_PIPELINE_STAGE_*_SHADER_BIT@ stages
 --
 -- == Valid Usage (Implicit)
 --
@@ -2732,6 +2748,14 @@ instance Zero MemoryBarrier2 where
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
 --
+-- -   #VUID-VkImageMemoryBarrier2-srcAccessMask-08118# If @srcAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_DESCRIPTOR_BUFFER_READ_BIT_EXT',
+--     @srcStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_GRAPHICS_BIT',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT',
+--     or one of @VK_PIPELINE_STAGE_*_SHADER_BIT@ stages
+--
 -- -   #VUID-VkImageMemoryBarrier2-dstStageMask-03929# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometryShader>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
@@ -3107,6 +3131,14 @@ instance Zero MemoryBarrier2 where
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
+--
+-- -   #VUID-VkImageMemoryBarrier2-dstAccessMask-08118# If @dstAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_DESCRIPTOR_BUFFER_READ_BIT_EXT',
+--     @dstStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_GRAPHICS_BIT',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT',
+--     or one of @VK_PIPELINE_STAGE_*_SHADER_BIT@ stages
 --
 -- -   #VUID-VkImageMemoryBarrier2-subresourceRange-01486#
 --     @subresourceRange.baseMipLevel@ /must/ be less than the @mipLevels@
@@ -4043,6 +4075,14 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2 es) where
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
 --
+-- -   #VUID-VkBufferMemoryBarrier2-srcAccessMask-08118# If @srcAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_DESCRIPTOR_BUFFER_READ_BIT_EXT',
+--     @srcStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_GRAPHICS_BIT',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT',
+--     or one of @VK_PIPELINE_STAGE_*_SHADER_BIT@ stages
+--
 -- -   #VUID-VkBufferMemoryBarrier2-dstStageMask-03929# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-geometryShader geometryShader>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
@@ -4418,6 +4458,14 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2 es) where
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
+--
+-- -   #VUID-VkBufferMemoryBarrier2-dstAccessMask-08118# If @dstAccessMask@
+--     includes
+--     'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_DESCRIPTOR_BUFFER_READ_BIT_EXT',
+--     @dstStageMask@ /must/ include
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_GRAPHICS_BIT',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT',
+--     or one of @VK_PIPELINE_STAGE_*_SHADER_BIT@ stages
 --
 -- -   #VUID-VkBufferMemoryBarrier2-offset-01187# @offset@ /must/ be less
 --     than the size of @buffer@

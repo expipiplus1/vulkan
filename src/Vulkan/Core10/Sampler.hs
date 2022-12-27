@@ -69,6 +69,7 @@ import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.Enums.Filter (Filter)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_descriptor_buffer (OpaqueCaptureDescriptorDataCreateInfoEXT)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.CStruct.Extends (PokeChain)
@@ -139,6 +140,8 @@ foreign import ccall
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Vulkan.Extensions.VK_KHR_buffer_device_address.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR'
 --
 -- = See Also
 --
@@ -503,6 +506,18 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_EXT_custom_border_color.PhysicalDeviceCustomBorderColorPropertiesEXT'
 --     structure
 --
+-- -   #VUID-VkSamplerCreateInfo-flags-08110# If @flags@ includes
+--     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT',
+--     the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
+--     feature /must/ be enabled
+--
+-- -   #VUID-VkSamplerCreateInfo-pNext-08111# If the @pNext@ chain includes
+--     a
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT'
+--     structure, @flags@ /must/ contain
+--     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
+--
 -- -   #VUID-VkSamplerCreateInfo-flags-06964# If @flags@ includes
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM',
 --     then @minFilter@ and @magFilter@ /must/ be
@@ -549,6 +564,7 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 -- -   #VUID-VkSamplerCreateInfo-pNext-pNext# Each @pNext@ member of any
 --     structure (including this one) in the @pNext@ chain /must/ be either
 --     @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT',
 --     'Vulkan.Extensions.VK_EXT_border_color_swizzle.SamplerBorderColorComponentMappingCreateInfoEXT',
 --     'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT',
 --     'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo',
@@ -705,6 +721,7 @@ instance Extensible SamplerCreateInfo where
   getNext SamplerCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SamplerCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @OpaqueCaptureDescriptorDataCreateInfoEXT = Just f
     | Just Refl <- eqT @e @SamplerBorderColorComponentMappingCreateInfoEXT = Just f
     | Just Refl <- eqT @e @SamplerCustomBorderColorCreateInfoEXT = Just f
     | Just Refl <- eqT @e @SamplerReductionModeCreateInfo = Just f

@@ -3982,6 +3982,41 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_PATCH_LIST',
 --     @pStages@ /must/ include tessellation shader stages
 --
+-- -   #VUID-VkGraphicsPipelineCreateInfo-Vertex-07722# If the pipeline is
+--     being created with a @Vertex@ @Execution@ @Model@ and no
+--     @TessellationEvaluation@ or @Geometry@ @Execution@ @Model@, and the
+--     @topology@ member of @pInputAssembly@ is
+--     'Vulkan.Core10.Enums.PrimitiveTopology.PRIMITIVE_TOPOLOGY_POINT_LIST',
+--     a @PointSize@ decorated variable /must/ be written to
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-TessellationEvaluation-07723# If
+--     the pipeline is being created with a @TessellationEvaluation@
+--     @Execution@ @Model@, no @Geometry@ @Execution@ @Model@, uses the
+--     @PointMode@ @Execution@ @Mode@, and
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderTessellationAndGeometryPointSize shaderTessellationAndGeometryPointSize>
+--     is enabled, a @PointSize@ decorated variable /must/ be written to
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-TessellationEvaluation-07724# If
+--     the pipeline is being created with a @TessellationEvaluation@
+--     @Execution@ @Model@, no @Geometry@ @Execution@ @Model@, uses the
+--     @PointMode@ @Execution@ @Mode@, and
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderTessellationAndGeometryPointSize shaderTessellationAndGeometryPointSize>
+--     is not enabled, a @PointSize@ decorated variable /must/ not be
+--     written to
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-Geometry-07725# If the pipeline
+--     is being created with a @Geometry@ @Execution@ @Model@, uses the
+--     @OutputPoints@ @Execution@ @Mode@, and
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderTessellationAndGeometryPointSize shaderTessellationAndGeometryPointSize>
+--     is enabled, a @PointSize@ decorated variable /must/ be written to
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-Geometry-07726# If the pipeline
+--     is being created with a @Geometry@ @Execution@ @Model@, uses the
+--     @OutputPoints@ @Execution@ @Mode@, and
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderTessellationAndGeometryPointSize shaderTessellationAndGeometryPointSize>
+--     is not enabled, a @PointSize@ decorated variable /must/ not be
+--     written to
+--
 -- -   #VUID-VkGraphicsPipelineCreateInfo-pStages-00738# If the pipeline is
 --     being created with
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>

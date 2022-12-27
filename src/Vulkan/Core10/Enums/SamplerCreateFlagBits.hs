@@ -3,6 +3,7 @@
 module Vulkan.Core10.Enums.SamplerCreateFlagBits  ( SamplerCreateFlags
                                                   , SamplerCreateFlagBits( SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM
                                                                          , SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT
+                                                                         , SAMPLER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT
                                                                          , SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT
                                                                          , SAMPLER_CREATE_SUBSAMPLED_BIT_EXT
                                                                          , ..
@@ -55,6 +56,13 @@ pattern SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM = SamplerCreateFlagBits 0x00000
 -- is not performed.
 pattern SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT = SamplerCreateFlagBits 0x00000004
 
+-- | 'SAMPLER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT' specifies that
+-- the sampler /can/ be used with descriptor buffers when capturing and
+-- replaying (e.g. for trace capture and replay), see
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT'
+-- for more detail.
+pattern SAMPLER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = SamplerCreateFlagBits 0x00000008
+
 -- | 'SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT' specifies that
 -- the implementation /may/ use approximations when reconstructing a full
 -- color value for texture access from a subsampled image.
@@ -81,6 +89,10 @@ showTableSamplerCreateFlagBits =
   ,
     ( SAMPLER_CREATE_NON_SEAMLESS_CUBE_MAP_BIT_EXT
     , "NON_SEAMLESS_CUBE_MAP_BIT_EXT"
+    )
+  ,
+    ( SAMPLER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT
+    , "DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT"
     )
   ,
     ( SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT

@@ -144,6 +144,7 @@ instance Show ValidationCacheEXT where
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_acceleration_structure VK_KHR_acceleration_structure>,
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureBuildGeometryInfoKHR',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.AccelerationStructureCaptureDescriptorDataInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureDeviceAddressInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.CopyAccelerationStructureInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.CopyAccelerationStructureToMemoryInfoKHR',
@@ -169,6 +170,7 @@ instance Show AccelerationStructureKHR where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_ray_tracing VK_NV_ray_tracing>,
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.AccelerationStructureCaptureDescriptorDataInfoEXT',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureMemoryRequirementsInfoNV',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.BindAccelerationStructureMemoryInfoNV',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV',

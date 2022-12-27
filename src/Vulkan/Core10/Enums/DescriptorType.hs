@@ -141,6 +141,7 @@ import GHC.Show (Show(showsPrec))
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.DescriptorGetInfoEXT',
 -- 'Vulkan.Core10.DescriptorSet.DescriptorPoolSize',
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutBinding',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template.DescriptorUpdateTemplateEntry',

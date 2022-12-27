@@ -2,6 +2,7 @@
 -- No documentation found for Chapter "ImageViewCreateFlagBits"
 module Vulkan.Core10.Enums.ImageViewCreateFlagBits  ( ImageViewCreateFlags
                                                     , ImageViewCreateFlagBits( IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT
+                                                                             , IMAGE_VIEW_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT
                                                                              , IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT
                                                                              , ..
                                                                              )
@@ -36,6 +37,13 @@ newtype ImageViewCreateFlagBits = ImageViewCreateFlagBits Flags
 -- buffer that the render pass is recorded into
 pattern IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT = ImageViewCreateFlagBits 0x00000002
 
+-- | 'IMAGE_VIEW_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT' specifies
+-- that the image view /can/ be used with descriptor buffers when capturing
+-- and replaying (e.g. for trace capture and replay), see
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT'
+-- for more detail.
+pattern IMAGE_VIEW_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = ImageViewCreateFlagBits 0x00000004
+
 -- | 'IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT' specifies that
 -- the fragment density map will be read by device during
 -- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
@@ -45,17 +53,21 @@ conNameImageViewCreateFlagBits :: String
 conNameImageViewCreateFlagBits = "ImageViewCreateFlagBits"
 
 enumPrefixImageViewCreateFlagBits :: String
-enumPrefixImageViewCreateFlagBits = "IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_D"
+enumPrefixImageViewCreateFlagBits = "IMAGE_VIEW_CREATE_"
 
 showTableImageViewCreateFlagBits :: [(ImageViewCreateFlagBits, String)]
 showTableImageViewCreateFlagBits =
   [
     ( IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT
-    , "EFERRED_BIT_EXT"
+    , "FRAGMENT_DENSITY_MAP_DEFERRED_BIT_EXT"
+    )
+  ,
+    ( IMAGE_VIEW_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT
+    , "DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT"
     )
   ,
     ( IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT
-    , "YNAMIC_BIT_EXT"
+    , "FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT"
     )
   ]
 

@@ -19,7 +19,7 @@
 --
 -- [__Extension and Version Dependencies__]
 --
---     -   Requires support for Vulkan 1.0
+--     -   Requires support for Vulkan 1.1
 --
 --     -   Requires @VK_KHR_get_physical_device_properties2@ to be enabled
 --         for any device-level functionality

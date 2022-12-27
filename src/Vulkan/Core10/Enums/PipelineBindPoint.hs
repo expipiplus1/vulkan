@@ -28,10 +28,12 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.IndirectCommandsLayoutCreateInfoNV',
 -- 'Vulkan.Core10.Pass.SubpassDescription',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.SubpassDescription2',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdBindDescriptorBufferEmbeddedSamplersEXT',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdBindPipeline',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.cmdBindPipelineShaderGroupNV',
--- 'Vulkan.Extensions.VK_KHR_push_descriptor.cmdPushDescriptorSetKHR'
+-- 'Vulkan.Extensions.VK_KHR_push_descriptor.cmdPushDescriptorSetKHR',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT'
 newtype PipelineBindPoint = PipelineBindPoint Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 

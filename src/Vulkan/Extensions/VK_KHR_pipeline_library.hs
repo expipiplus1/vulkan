@@ -135,6 +135,12 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT'
 --     flag set
 --
+-- -   #VUID-VkPipelineLibraryCreateInfoKHR-pLibraries-08096# If any
+--     element of @pLibraries@ was created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
+--     all elements /must/ have been created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
 -- -   #VUID-VkPipelineLibraryCreateInfoKHR-pipeline-07404# If @pipeline@
 --     is being created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT',

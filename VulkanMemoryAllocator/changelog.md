@@ -2,6 +2,9 @@
 
 ## WIP
 
+## [0.10.5] - 2022-12-27
+- Bump VMA
+
 ## [0.10.4] - 2022-10-02
 - More robust linking against C++ standard library
 - Raise upper bound on `vulkan`

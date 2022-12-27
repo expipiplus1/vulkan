@@ -679,6 +679,7 @@ import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryInstanceFlagsKHR
 import Vulkan.Extensions.VK_KHR_acceleration_structure (GeometryTypeKHR)
 import Vulkan.Core10.Enums.IndexType (IndexType)
 import Vulkan.Extensions.VK_KHR_get_memory_requirements2 (MemoryRequirements2KHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_descriptor_buffer (OpaqueCaptureDescriptorDataCreateInfoEXT)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.Core10.Handles (Pipeline)
@@ -859,7 +860,7 @@ foreign import ccall
   unsafe
 #endif
   "dynamic" mkVkCreateAccelerationStructureNV
-  :: FunPtr (Ptr Device_T -> Ptr AccelerationStructureCreateInfoNV -> Ptr AllocationCallbacks -> Ptr AccelerationStructureNV -> IO Result) -> Ptr Device_T -> Ptr AccelerationStructureCreateInfoNV -> Ptr AllocationCallbacks -> Ptr AccelerationStructureNV -> IO Result
+  :: FunPtr (Ptr Device_T -> Ptr (SomeStruct AccelerationStructureCreateInfoNV) -> Ptr AllocationCallbacks -> Ptr AccelerationStructureNV -> IO Result) -> Ptr Device_T -> Ptr (SomeStruct AccelerationStructureCreateInfoNV) -> Ptr AllocationCallbacks -> Ptr AccelerationStructureNV -> IO Result
 
 -- | vkCreateAccelerationStructureNV - Create a new acceleration structure
 -- object
@@ -911,14 +912,16 @@ foreign import ccall
 -- 'Vulkan.Extensions.Handles.AccelerationStructureNV',
 -- 'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Vulkan.Core10.Handles.Device'
-createAccelerationStructureNV :: forall io
-                               . (MonadIO io)
+createAccelerationStructureNV :: forall a io
+                               . ( Extendss AccelerationStructureCreateInfoNV a
+                                 , PokeChain a
+                                 , MonadIO io )
                               => -- | @device@ is the logical device that creates the buffer object.
                                  Device
                               -> -- | @pCreateInfo@ is a pointer to a 'AccelerationStructureCreateInfoNV'
                                  -- structure containing parameters affecting creation of the acceleration
                                  -- structure.
-                                 AccelerationStructureCreateInfoNV
+                                 (AccelerationStructureCreateInfoNV a)
                               -> -- | @pAllocator@ controls host memory allocation as described in the
                                  -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#memory-allocation Memory Allocation>
                                  -- chapter.
@@ -938,7 +941,7 @@ createAccelerationStructureNV device
   pPAccelerationStructure <- ContT $ bracket (callocBytes @AccelerationStructureNV 8) free
   r <- lift $ traceAroundEvent "vkCreateAccelerationStructureNV" (vkCreateAccelerationStructureNV'
                                                                     (deviceHandle (device))
-                                                                    pCreateInfo
+                                                                    (forgetExtensions pCreateInfo)
                                                                     pAllocator
                                                                     (pPAccelerationStructure))
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
@@ -953,7 +956,7 @@ createAccelerationStructureNV device
 -- favourite resource management library) as the last argument.
 -- To just extract the pair pass '(,)' as the last argument.
 --
-withAccelerationStructureNV :: forall io r . MonadIO io => Device -> AccelerationStructureCreateInfoNV -> Maybe AllocationCallbacks -> (io AccelerationStructureNV -> (AccelerationStructureNV -> io ()) -> r) -> r
+withAccelerationStructureNV :: forall a io r . (Extendss AccelerationStructureCreateInfoNV a, PokeChain a, MonadIO io) => Device -> AccelerationStructureCreateInfoNV a -> Maybe AllocationCallbacks -> (io AccelerationStructureNV -> (AccelerationStructureNV -> io ()) -> r) -> r
 withAccelerationStructureNV device pCreateInfo pAllocator b =
   b (createAccelerationStructureNV device pCreateInfo pAllocator)
     (\(o0) -> destroyAccelerationStructureNV device o0 pAllocator)
@@ -1823,13 +1826,44 @@ foreign import ccall
 --     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdTraceRaysNV-None-02699# Descriptors in each bound
+-- -   #VUID-vkCmdTraceRaysNV-None-08114# Descriptors in each bound
 --     descriptor set, specified via
 --     'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets', /must/
---     be valid as described by
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptor-validity descriptor validity>
---     if they are statically used by the 'Vulkan.Core10.Handles.Pipeline'
---     bound to the pipeline bind point used by this command
+--     be valid if they are statically used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     used by this command and the bound 'Vulkan.Core10.Handles.Pipeline'
+--     was not created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdTraceRaysNV-None-08115# If the descriptors used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     were specified via
+--     'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets', the
+--     bound 'Vulkan.Core10.Handles.Pipeline' /must/ have been created
+--     without
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdTraceRaysNV-None-08116# Descriptors in bound descriptor
+--     buffers, specified via
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
+--     /must/ be valid if they are dynamically used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     used by this command and the bound 'Vulkan.Core10.Handles.Pipeline'
+--     was created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdTraceRaysNV-None-08117# If the descriptors used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     were specified via
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
+--     the bound 'Vulkan.Core10.Handles.Pipeline' /must/ have been created
+--     with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdTraceRaysNV-None-08119# If a descriptor is dynamically
+--     used with a 'Vulkan.Core10.Handles.Pipeline' created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
+--     the descriptor memory /must/ be resident.
 --
 -- -   #VUID-vkCmdTraceRaysNV-None-02700# A valid pipeline /must/ be bound
 --     to the pipeline bind point used by this command
@@ -3736,7 +3770,11 @@ instance Zero AccelerationStructureInfoNV where
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_NV'
 --
 -- -   #VUID-VkAccelerationStructureCreateInfoNV-pNext-pNext# @pNext@
---     /must/ be @NULL@
+--     /must/ be @NULL@ or a pointer to a valid instance of
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT'
+--
+-- -   #VUID-VkAccelerationStructureCreateInfoNV-sType-unique# The @sType@
+--     value of each struct in the @pNext@ chain /must/ be unique
 --
 -- -   #VUID-VkAccelerationStructureCreateInfoNV-info-parameter# @info@
 --     /must/ be a valid 'AccelerationStructureInfoNV' structure
@@ -3748,8 +3786,10 @@ instance Zero AccelerationStructureInfoNV where
 -- 'Vulkan.Core10.FundamentalTypes.DeviceSize',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createAccelerationStructureNV'
-data AccelerationStructureCreateInfoNV = AccelerationStructureCreateInfoNV
-  { -- | @compactedSize@ is the size from the result of
+data AccelerationStructureCreateInfoNV (es :: [Type]) = AccelerationStructureCreateInfoNV
+  { -- | @pNext@ is @NULL@ or a pointer to a structure extending this structure.
+    next :: Chain es
+  , -- | @compactedSize@ is the size from the result of
     -- 'cmdWriteAccelerationStructuresPropertiesNV' if this acceleration
     -- structure is going to be the target of a compacting copy.
     compactedSize :: DeviceSize
@@ -3759,15 +3799,26 @@ data AccelerationStructureCreateInfoNV = AccelerationStructureCreateInfoNV
   }
   deriving (Typeable)
 #if defined(GENERIC_INSTANCES)
-deriving instance Generic (AccelerationStructureCreateInfoNV)
+deriving instance Generic (AccelerationStructureCreateInfoNV (es :: [Type]))
 #endif
-deriving instance Show AccelerationStructureCreateInfoNV
+deriving instance Show (Chain es) => Show (AccelerationStructureCreateInfoNV es)
 
-instance ToCStruct AccelerationStructureCreateInfoNV where
+instance Extensible AccelerationStructureCreateInfoNV where
+  extensibleTypeName = "AccelerationStructureCreateInfoNV"
+  setNext AccelerationStructureCreateInfoNV{..} next' = AccelerationStructureCreateInfoNV{next = next', ..}
+  getNext AccelerationStructureCreateInfoNV{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends AccelerationStructureCreateInfoNV e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @OpaqueCaptureDescriptorDataCreateInfoEXT = Just f
+    | otherwise = Nothing
+
+instance ( Extendss AccelerationStructureCreateInfoNV es
+         , PokeChain es ) => ToCStruct (AccelerationStructureCreateInfoNV es) where
   withCStruct x f = allocaBytes 64 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p AccelerationStructureCreateInfoNV{..} f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_NV)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
     lift $ poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (compactedSize)
     ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr AccelerationStructureInfoNV)) (info) . ($ ())
     lift $ f
@@ -3775,20 +3826,25 @@ instance ToCStruct AccelerationStructureCreateInfoNV where
   cStructAlignment = 8
   pokeZeroCStruct p f = evalContT $ do
     lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_NV)
-    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
     lift $ poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (zero)
     ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr AccelerationStructureInfoNV)) (zero) . ($ ())
     lift $ f
 
-instance FromCStruct AccelerationStructureCreateInfoNV where
+instance ( Extendss AccelerationStructureCreateInfoNV es
+         , PeekChain es ) => FromCStruct (AccelerationStructureCreateInfoNV es) where
   peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
     compactedSize <- peek @DeviceSize ((p `plusPtr` 16 :: Ptr DeviceSize))
     info <- peekCStruct @AccelerationStructureInfoNV ((p `plusPtr` 24 :: Ptr AccelerationStructureInfoNV))
     pure $ AccelerationStructureCreateInfoNV
-             compactedSize info
+             next compactedSize info
 
-instance Zero AccelerationStructureCreateInfoNV where
+instance es ~ '[] => Zero (AccelerationStructureCreateInfoNV es) where
   zero = AccelerationStructureCreateInfoNV
+           ()
            zero
            zero
 

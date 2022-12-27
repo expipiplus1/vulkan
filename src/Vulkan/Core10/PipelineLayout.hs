@@ -688,6 +688,14 @@ instance Zero PushConstantRange where
 --     is not enabled, elements of @pSetLayouts@ /must/ be valid
 --     'Vulkan.Core10.Handles.DescriptorSetLayout' objects
 --
+-- -   #VUID-VkPipelineLayoutCreateInfo-pSetLayouts-08008# If any element
+--     of @pSetLayouts@ was created with the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--     bit set, all elements of @pSetLayouts@ /must/ have been created with
+--     the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--     bit set
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkPipelineLayoutCreateInfo-sType-sType# @sType@ /must/ be

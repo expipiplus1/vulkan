@@ -74,6 +74,7 @@ import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
 import Vulkan.CStruct.Extends (Extensible(..))
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_external_memory (ExternalMemoryBufferCreateInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_descriptor_buffer (OpaqueCaptureDescriptorDataCreateInfoEXT)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.CStruct.Extends (PokeChain)
@@ -402,6 +403,54 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     equal to
 --     'Vulkan.Core13.Promoted_From_VK_KHR_maintenance4.PhysicalDeviceMaintenance4Properties'::@maxBufferSize@
 --
+-- -   #VUID-VkBufferCreateInfo-usage-08097# If @usage@ includes
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT',
+--     creating this 'Vulkan.Core10.Handles.Buffer' /must/ not cause the
+--     total required space for all currently valid buffers using this flag
+--     on the device to exceed
+--     VkPhysicalDeviceDescriptorBufferPropertiesEXT::@samplerDescriptorBufferAddressSpaceSize@
+--     or
+--     VkPhysicalDeviceDescriptorBufferPropertiesEXT::@descriptorBufferAddressSpaceSize@
+--
+-- -   #VUID-VkBufferCreateInfo-usage-08098# If @usage@ includes
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT',
+--     creating this 'Vulkan.Core10.Handles.Buffer' /must/ not cause the
+--     total required space for all currently valid buffers using this flag
+--     on the device to exceed
+--     VkPhysicalDeviceDescriptorBufferPropertiesEXT::@resourceDescriptorBufferAddressSpaceSize@
+--     or
+--     VkPhysicalDeviceDescriptorBufferPropertiesEXT::@descriptorBufferAddressSpaceSize@
+--
+-- -   #VUID-VkBufferCreateInfo-flags-08099# If @flags@ includes
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT',
+--     the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
+--     feature /must/ be enabled
+--
+-- -   #VUID-VkBufferCreateInfo-pNext-08100# If the @pNext@ chain includes
+--     a
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT'
+--     structure, @flags@ /must/ contain
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
+--
+-- -   #VUID-VkBufferCreateInfo-usage-08101# If @usage@ includes
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT',
+--     the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBufferPushDescriptors descriptorBufferPushDescriptors>
+--     feature /must/ be enabled
+--
+-- -   #VUID-VkBufferCreateInfo-usage-08102# If @usage@ includes
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT'
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-bufferlessPushDescriptors ::bufferlessPushDescriptors>
+--     /must/ be 'Vulkan.Core10.FundamentalTypes.FALSE'
+--
+-- -   #VUID-VkBufferCreateInfo-usage-08103# If @usage@ includes
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT',
+--     @usage@ /must/ contain at least one of
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT'
+--     or
+--     'Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkBufferCreateInfo-sType-sType# @sType@ /must/ be
@@ -415,6 +464,7 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     'Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.BufferOpaqueCaptureAddressCreateInfo',
 --     'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo',
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT',
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
 --
@@ -481,6 +531,7 @@ instance Extensible BufferCreateInfo where
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends BufferCreateInfo e => b) -> Maybe b
   extends _ f
     | Just Refl <- eqT @e @BufferCollectionBufferCreateInfoFUCHSIA = Just f
+    | Just Refl <- eqT @e @OpaqueCaptureDescriptorDataCreateInfoEXT = Just f
     | Just Refl <- eqT @e @BufferDeviceAddressCreateInfoEXT = Just f
     | Just Refl <- eqT @e @BufferOpaqueCaptureAddressCreateInfo = Just f
     | Just Refl <- eqT @e @ExternalMemoryBufferCreateInfo = Just f

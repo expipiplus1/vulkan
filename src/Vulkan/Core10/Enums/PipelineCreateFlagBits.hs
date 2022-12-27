@@ -12,6 +12,7 @@ module Vulkan.Core10.Enums.PipelineCreateFlagBits  ( PipelineCreateFlags
                                                                            , PIPELINE_CREATE_RAY_TRACING_ALLOW_MOTION_BIT_NV
                                                                            , PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT
                                                                            , PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT
+                                                                           , PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT
                                                                            , PIPELINE_CREATE_LIBRARY_BIT_KHR
                                                                            , PIPELINE_CREATE_INDIRECT_BINDABLE_BIT_NV
                                                                            , PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR
@@ -181,6 +182,12 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --     necessary to later perform an optimal link with
 --     'PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT'.
 --
+-- -   'PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT' specifies that a
+--     pipeline will be used with
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorbuffers descriptor buffers>,
+--     rather than
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets descriptor sets>.
+--
 -- -   'PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT' specifies
 --     that the pipeline /may/ be used with an attachment feedback loop
 --     including color attachments.
@@ -265,6 +272,9 @@ pattern PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT = PipelineCreateFlagBits 
 
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT"
 pattern PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT = PipelineCreateFlagBits 0x00800000
+
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT"
+pattern PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT = PipelineCreateFlagBits 0x20000000
 
 -- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_LIBRARY_BIT_KHR"
 pattern PIPELINE_CREATE_LIBRARY_BIT_KHR = PipelineCreateFlagBits 0x00000800
@@ -371,6 +381,10 @@ showTablePipelineCreateFlagBits =
   ,
     ( PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT
     , "RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT"
+    )
+  ,
+    ( PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT
+    , "DESCRIPTOR_BUFFER_BIT_EXT"
     )
   ,
     ( PIPELINE_CREATE_LIBRARY_BIT_KHR

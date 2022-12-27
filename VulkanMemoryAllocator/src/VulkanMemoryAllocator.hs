@@ -5188,39 +5188,26 @@ data AllocationCreateInfo = AllocationCreateInfo
   , -- | Intended usage of memory.
     --
     -- You can leave 'MEMORY_USAGE_UNKNOWN' if you specify memory requirements
-    -- in other way.
-    --
-    -- >  
-    --
-    -- If @pool@ is not null, this member is ignored.
+    -- in other way. If @pool@ is not null, this member is ignored.
     usage :: MemoryUsage
   , -- | Flags that must be set in a Memory Type chosen for an allocation.
     --
-    -- Leave 0 if you specify memory requirements in other way.
-    --
-    -- >  
-    --
-    -- If @pool@ is not null, this member is ignored.
+    -- Leave 0 if you specify memory requirements in other way. If @pool@ is
+    -- not null, this member is ignored.
     requiredFlags :: MemoryPropertyFlags
   , -- | Flags that preferably should be set in a memory type chosen for an
     -- allocation.
     --
-    -- Set to 0 if no additional flags are preferred.
-    --
-    -- >  
-    --
-    -- If @pool@ is not null, this member is ignored.
+    -- Set to 0 if no additional flags are preferred. If @pool@ is not null,
+    -- this member is ignored.
     preferredFlags :: MemoryPropertyFlags
   , -- | Bitmask containing one bit set for every memory type acceptable for this
     -- allocation.
     --
     -- Value 0 is equivalent to @UINT32_MAX@ - it means any memory type is
     -- accepted if it meets other requirements specified by this structure,
-    -- with no further restrictions on memory type index.
-    --
-    -- >  
-    --
-    -- If @pool@ is not null, this member is ignored.
+    -- with no further restrictions on memory type index. If @pool@ is not
+    -- null, this member is ignored.
     memoryTypeBits :: Word32
   , -- | Pool that this allocation should be created in.
     --

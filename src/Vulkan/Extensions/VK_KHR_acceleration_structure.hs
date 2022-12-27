@@ -1224,6 +1224,7 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( destroyAccelerationStr
                                                         , AccelerationStructureCreateFlagsKHR
                                                         , AccelerationStructureCreateFlagBitsKHR( ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR
                                                                                                 , ACCELERATION_STRUCTURE_CREATE_MOTION_BIT_NV
+                                                                                                , ACCELERATION_STRUCTURE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT
                                                                                                 , ..
                                                                                                 )
                                                         , CopyAccelerationStructureModeKHR( COPY_ACCELERATION_STRUCTURE_MODE_CLONE_KHR
@@ -1387,6 +1388,7 @@ import Vulkan.CStruct.Extends (Extensible(..))
 import Vulkan.Core10.FundamentalTypes (Flags)
 import Vulkan.Core10.Enums.Format (Format)
 import Vulkan.Core10.Enums.IndexType (IndexType)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_descriptor_buffer (OpaqueCaptureDescriptorDataCreateInfoEXT)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.CStruct.Extends (PokeChain)
@@ -6043,15 +6045,31 @@ instance Zero AccelerationStructureBuildRangeInfoKHR where
 --     then @flags@ /must/ contain
 --     'ACCELERATION_STRUCTURE_CREATE_MOTION_BIT_NV'
 --
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-createFlags-08108# If
+--     @createFlags@ includes
+--     'ACCELERATION_STRUCTURE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT',
+--     the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
+--     feature /must/ be enabled
+--
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-pNext-08109# If the
+--     @pNext@ chain includes a
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT'
+--     structure, @createFlags@ /must/ contain
+--     'ACCELERATION_STRUCTURE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkAccelerationStructureCreateInfoKHR-sType-sType# @sType@
 --     /must/ be
 --     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR'
 --
--- -   #VUID-VkAccelerationStructureCreateInfoKHR-pNext-pNext# @pNext@
---     /must/ be @NULL@ or a pointer to a valid instance of
+-- -   #VUID-VkAccelerationStructureCreateInfoKHR-pNext-pNext# Each @pNext@
+--     member of any structure (including this one) in the @pNext@ chain
+--     /must/ be either @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureMotionInfoNV'
+--     or
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT'
 --
 -- -   #VUID-VkAccelerationStructureCreateInfoKHR-sType-unique# The @sType@
 --     value of each struct in the @pNext@ chain /must/ be unique
@@ -6112,6 +6130,7 @@ instance Extensible AccelerationStructureCreateInfoKHR where
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends AccelerationStructureCreateInfoKHR e => b) -> Maybe b
   extends _ f
     | Just Refl <- eqT @e @AccelerationStructureMotionInfoNV = Just f
+    | Just Refl <- eqT @e @OpaqueCaptureDescriptorDataCreateInfoEXT = Just f
     | otherwise = Nothing
 
 instance ( Extendss AccelerationStructureCreateInfoKHR es
@@ -7337,6 +7356,14 @@ pattern ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR = Ac
 -- No documentation found for Nested "VkAccelerationStructureCreateFlagBitsKHR" "VK_ACCELERATION_STRUCTURE_CREATE_MOTION_BIT_NV"
 pattern ACCELERATION_STRUCTURE_CREATE_MOTION_BIT_NV = AccelerationStructureCreateFlagBitsKHR 0x00000004
 
+-- | 'ACCELERATION_STRUCTURE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
+-- specifies that the acceleration structure /can/ be used with descriptor
+-- buffers when capturing and replaying (e.g. for trace capture and
+-- replay), see
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT'
+-- for more detail.
+pattern ACCELERATION_STRUCTURE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = AccelerationStructureCreateFlagBitsKHR 0x00000008
+
 conNameAccelerationStructureCreateFlagBitsKHR :: String
 conNameAccelerationStructureCreateFlagBitsKHR = "AccelerationStructureCreateFlagBitsKHR"
 
@@ -7352,6 +7379,10 @@ showTableAccelerationStructureCreateFlagBitsKHR =
   ,
     ( ACCELERATION_STRUCTURE_CREATE_MOTION_BIT_NV
     , "MOTION_BIT_NV"
+    )
+  ,
+    ( ACCELERATION_STRUCTURE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT
+    , "DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT"
     )
   ]
 

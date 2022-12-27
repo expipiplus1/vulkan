@@ -12,6 +12,9 @@ module Vulkan.Core10.Enums.BufferUsageFlagBits  ( BufferUsageFlags
                                                                      , BUFFER_USAGE_INDIRECT_BUFFER_BIT
                                                                      , BUFFER_USAGE_MICROMAP_STORAGE_BIT_EXT
                                                                      , BUFFER_USAGE_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT
+                                                                     , BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT
+                                                                     , BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT
+                                                                     , BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT
                                                                      , BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR
                                                                      , BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR
                                                                      , BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR
@@ -114,6 +117,23 @@ pattern BUFFER_USAGE_MICROMAP_STORAGE_BIT_EXT = BufferUsageFlagBits 0x01000000
 -- No documentation found for Nested "VkBufferUsageFlagBits" "VK_BUFFER_USAGE_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT"
 pattern BUFFER_USAGE_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT = BufferUsageFlagBits 0x00800000
 
+-- | 'BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT' specifies that
+-- the buffer, when bound, /can/ be used by the implementation to support
+-- push descriptors when using descriptor buffers.
+pattern BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT = BufferUsageFlagBits 0x04000000
+
+-- | 'BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT' specifies that the
+-- buffer is suitable to contain resource descriptors when bound as a
+-- descriptor buffer.
+pattern BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT = BufferUsageFlagBits 0x00400000
+
+-- | 'BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT' specifies that the
+-- buffer is suitable to contain sampler and combined image sampler
+-- descriptors when bound as a descriptor buffer. Buffers containing
+-- combined image sampler descriptors /must/ also specify
+-- 'BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT'.
+pattern BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT = BufferUsageFlagBits 0x00200000
+
 -- | 'BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR' specifies that the buffer is
 -- suitable for use as a
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#shader-binding-table Shader Binding Table>.
@@ -204,6 +224,18 @@ showTableBufferUsageFlagBits =
   ,
     ( BUFFER_USAGE_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT
     , "MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT"
+    )
+  ,
+    ( BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT
+    , "PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT"
+    )
+  ,
+    ( BUFFER_USAGE_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT
+    , "RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT"
+    )
+  ,
+    ( BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT
+    , "SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT"
     )
   ,
     ( BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR
