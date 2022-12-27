@@ -69,6 +69,8 @@ structMemberScheme Struct {..} member = do
         -- Structs don't have wrapped handles because it's annoying to pass
         -- the command record into the peek functions
       , rawDispatchableHandles
+        -- Const pointers to non-dispatchable handles (drop the ptr)
+      , nonDispatchableHandles
         -- Everything left over is treated as a boring scalar parameter
       , scalarScheme
       ]

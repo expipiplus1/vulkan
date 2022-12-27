@@ -166,6 +166,21 @@ renderParams handles = r
         , ("VK_GEOMETRY_TYPE_AABBS_KHR"    , "aabbs")
         , ("VK_GEOMETRY_TYPE_INSTANCES_KHR", "instances")
         ]
+      , UnionDiscriminator
+        "VkDescriptorDataEXT"
+        "VkDescriptorType"
+        "type"
+        [ ( "VK_DESCRIPTOR_TYPE_SAMPLER", "pSampler")
+        , ( "VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER", "pCombinedImageSampler")
+        , ( "VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT", "pInputAttachmentImage")
+        , ( "VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE", "pSampledImage")
+        , ( "VK_DESCRIPTOR_TYPE_STORAGE_IMAGE", "pStorageImage")
+        , ( "VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER", "pUniformTexelBuffer")
+        , ( "VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER", "pStorageTexelBuffer")
+        , ( "VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER", "pUniformBuffer")
+        , ( "VK_DESCRIPTOR_TYPE_STORAGE_BUFFER", "pStorageBuffer")
+        , ( "VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR", "accelerationStructure")
+        ]
       ]
     , successCodeType                = TypeName "VkResult"
     , isSuccessCodeReturned          = (/= "VK_SUCCESS")

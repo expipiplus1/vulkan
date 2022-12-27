@@ -501,6 +501,13 @@ rawDispatchableHandles p = do
   normalCheck t p
   pure . Preserve $ t
 
+nonDispatchableHandles :: Marshalable a => a -> ND r (MarshalScheme a)
+nonDispatchableHandles p = do
+  Ptr Const t@(TypeName n) <- pure $ type' p
+  Just h <- getHandle n
+  guard (NonDispatchable == hDispatchable h)
+  pure . Preserve $ t
+
 -- | The "default" method of marshalling something, store as ordinary member
 scalarScheme :: Marshalable a => a -> ND r (MarshalScheme a)
 scalarScheme p = do
