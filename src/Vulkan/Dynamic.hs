@@ -1136,7 +1136,6 @@ data DeviceCmds = DeviceCmds
   , pVkCmdSetDepthBiasEnable :: FunPtr (Ptr CommandBuffer_T -> ("depthBiasEnable" ::: Bool32) -> IO ())
   , pVkCmdSetLogicOpEXT :: FunPtr (Ptr CommandBuffer_T -> LogicOp -> IO ())
   , pVkCmdSetPrimitiveRestartEnable :: FunPtr (Ptr CommandBuffer_T -> ("primitiveRestartEnable" ::: Bool32) -> IO ())
-  , pVkCreatePrivateDataSlot :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr PrivateDataSlotCreateInfo) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pPrivateDataSlot" ::: Ptr PrivateDataSlot) -> IO Result)
   , pVkCmdSetTessellationDomainOriginEXT :: FunPtr (Ptr CommandBuffer_T -> TessellationDomainOrigin -> IO ())
   , pVkCmdSetDepthClampEnableEXT :: FunPtr (Ptr CommandBuffer_T -> ("depthClampEnable" ::: Bool32) -> IO ())
   , pVkCmdSetPolygonModeEXT :: FunPtr (Ptr CommandBuffer_T -> PolygonMode -> IO ())
@@ -1168,6 +1167,7 @@ data DeviceCmds = DeviceCmds
   , pVkCmdSetShadingRateImageEnableNV :: FunPtr (Ptr CommandBuffer_T -> ("shadingRateImageEnable" ::: Bool32) -> IO ())
   , pVkCmdSetCoverageReductionModeNV :: FunPtr (Ptr CommandBuffer_T -> CoverageReductionModeNV -> IO ())
   , pVkCmdSetRepresentativeFragmentTestEnableNV :: FunPtr (Ptr CommandBuffer_T -> ("representativeFragmentTestEnable" ::: Bool32) -> IO ())
+  , pVkCreatePrivateDataSlot :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr PrivateDataSlotCreateInfo) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pPrivateDataSlot" ::: Ptr PrivateDataSlot) -> IO Result)
   , pVkDestroyPrivateDataSlot :: FunPtr (Ptr Device_T -> PrivateDataSlot -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
   , pVkSetPrivateData :: FunPtr (Ptr Device_T -> ObjectType -> ("objectHandle" ::: Word64) -> PrivateDataSlot -> ("data" ::: Word64) -> IO Result)
   , pVkGetPrivateData :: FunPtr (Ptr Device_T -> ObjectType -> ("objectHandle" ::: Word64) -> PrivateDataSlot -> ("pData" ::: Ptr Word64) -> IO ())
@@ -2050,8 +2050,6 @@ initDeviceCmds instanceCmds handle = do
   vkCmdSetLogicOpEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetLogicOpEXT"#)
   vkCmdSetPrimitiveRestartEnable <- getFirstDeviceProcAddr [ (Ptr "vkCmdSetPrimitiveRestartEnableEXT"#)
                                                            , (Ptr "vkCmdSetPrimitiveRestartEnable"#) ]
-  vkCreatePrivateDataSlot <- getFirstDeviceProcAddr [ (Ptr "vkCreatePrivateDataSlotEXT"#)
-                                                    , (Ptr "vkCreatePrivateDataSlot"#) ]
   vkCmdSetTessellationDomainOriginEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetTessellationDomainOriginEXT"#)
   vkCmdSetDepthClampEnableEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetDepthClampEnableEXT"#)
   vkCmdSetPolygonModeEXT <- getDeviceProcAddr' handle (Ptr "vkCmdSetPolygonModeEXT"#)
@@ -2083,6 +2081,8 @@ initDeviceCmds instanceCmds handle = do
   vkCmdSetShadingRateImageEnableNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetShadingRateImageEnableNV"#)
   vkCmdSetCoverageReductionModeNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetCoverageReductionModeNV"#)
   vkCmdSetRepresentativeFragmentTestEnableNV <- getDeviceProcAddr' handle (Ptr "vkCmdSetRepresentativeFragmentTestEnableNV"#)
+  vkCreatePrivateDataSlot <- getFirstDeviceProcAddr [ (Ptr "vkCreatePrivateDataSlotEXT"#)
+                                                    , (Ptr "vkCreatePrivateDataSlot"#) ]
   vkDestroyPrivateDataSlot <- getFirstDeviceProcAddr [ (Ptr "vkDestroyPrivateDataSlotEXT"#)
                                                      , (Ptr "vkDestroyPrivateDataSlot"#) ]
   vkSetPrivateData <- getFirstDeviceProcAddr [ (Ptr "vkSetPrivateDataEXT"#)
@@ -2490,7 +2490,6 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("depthBiasEnable" ::: Bool32) -> IO ()) vkCmdSetDepthBiasEnable)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> LogicOp -> IO ()) vkCmdSetLogicOpEXT)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("primitiveRestartEnable" ::: Bool32) -> IO ()) vkCmdSetPrimitiveRestartEnable)
-    (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr PrivateDataSlotCreateInfo) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pPrivateDataSlot" ::: Ptr PrivateDataSlot) -> IO Result) vkCreatePrivateDataSlot)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> TessellationDomainOrigin -> IO ()) vkCmdSetTessellationDomainOriginEXT)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("depthClampEnable" ::: Bool32) -> IO ()) vkCmdSetDepthClampEnableEXT)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> PolygonMode -> IO ()) vkCmdSetPolygonModeEXT)
@@ -2522,6 +2521,7 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("shadingRateImageEnable" ::: Bool32) -> IO ()) vkCmdSetShadingRateImageEnableNV)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> CoverageReductionModeNV -> IO ()) vkCmdSetCoverageReductionModeNV)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("representativeFragmentTestEnable" ::: Bool32) -> IO ()) vkCmdSetRepresentativeFragmentTestEnableNV)
+    (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr PrivateDataSlotCreateInfo) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pPrivateDataSlot" ::: Ptr PrivateDataSlot) -> IO Result) vkCreatePrivateDataSlot)
     (castFunPtr @_ @(Ptr Device_T -> PrivateDataSlot -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyPrivateDataSlot)
     (castFunPtr @_ @(Ptr Device_T -> ObjectType -> ("objectHandle" ::: Word64) -> PrivateDataSlot -> ("data" ::: Word64) -> IO Result) vkSetPrivateData)
     (castFunPtr @_ @(Ptr Device_T -> ObjectType -> ("objectHandle" ::: Word64) -> PrivateDataSlot -> ("pData" ::: Ptr Word64) -> IO ()) vkGetPrivateData)

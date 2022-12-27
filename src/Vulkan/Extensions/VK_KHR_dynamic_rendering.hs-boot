@@ -85,9 +85,9 @@
 -- buffers, rather than relying on secondary command buffers.
 --
 -- This extension also incorporates 'ATTACHMENT_STORE_OP_NONE_KHR' from
--- <VK_QCOM_render_pass_store_ops.html VK_QCOM_render_pass_store_ops>,
--- enabling applications to avoid unnecessary synchronization when an
--- attachment is not written during a render pass.
+-- @VK_QCOM_render_pass_store_ops@, enabling applications to avoid
+-- unnecessary synchronization when an attachment is not written during a
+-- render pass.
 --
 -- == New Commands
 --

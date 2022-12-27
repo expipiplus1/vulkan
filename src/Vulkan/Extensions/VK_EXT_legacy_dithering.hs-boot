@@ -71,10 +71,6 @@
 --
 -- -   'EXT_LEGACY_DITHERING_SPEC_VERSION'
 --
--- -   Extending 'Vulkan.Core13.Enums.RenderingFlagBits.RenderingFlagBits':
---
---     -   'Vulkan.Core13.Enums.RenderingFlagBits.RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT'
---
 -- -   Extending 'Vulkan.Core10.Enums.StructureType.StructureType':
 --
 --     -   'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_LEGACY_DITHERING_FEATURES_EXT'
@@ -83,6 +79,22 @@
 --     'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SubpassDescriptionFlagBits':
 --
 --     -   'Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_ENABLE_LEGACY_DITHERING_BIT_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_KHR_dynamic_rendering VK_KHR_dynamic_rendering>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core13.Enums.RenderingFlagBits.RenderingFlagBits':
+--
+--     -   'Vulkan.Core13.Enums.RenderingFlagBits.RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT'
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#versions-1.3 Version 1.3>
+-- is supported:
+--
+-- -   Extending 'Vulkan.Core13.Enums.RenderingFlagBits.RenderingFlagBits':
+--
+--     -   'Vulkan.Core13.Enums.RenderingFlagBits.RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT'
 --
 -- == Version History
 --

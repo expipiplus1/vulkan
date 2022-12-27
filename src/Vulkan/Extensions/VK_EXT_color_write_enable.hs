@@ -383,10 +383,16 @@ instance Zero PhysicalDeviceColorWriteEnableFeaturesEXT where
 --     feature is not enabled, all elements of @pColorWriteEnables@ /must/
 --     be 'Vulkan.Core10.FundamentalTypes.TRUE'
 --
--- -   #VUID-VkPipelineColorWriteCreateInfoEXT-attachmentCount-04802#
---     @attachmentCount@ /must/ be equal to the @attachmentCount@ member of
---     the 'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo'
---     structure specified during pipeline creation
+-- -   #VUID-VkPipelineColorWriteCreateInfoEXT-attachmentCount-07608# If
+--     the pipeline is being created with
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT',
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT',
+--     or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_MASK_EXT'
+--     dynamic states not set, @attachmentCount@ /must/ be equal to the
+--     @attachmentCount@ member of the
+--     'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo' structure
+--     specified during pipeline creation
 --
 -- -   #VUID-VkPipelineColorWriteCreateInfoEXT-attachmentCount-06655#
 --     @attachmentCount@ /must/ be less than or equal to the

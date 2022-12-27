@@ -15,7 +15,7 @@
 --     498
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -111,6 +111,10 @@
 -- -   Revision 1, 2022-10-05 (Kevin Petit)
 --
 --     -   Initial revision
+--
+-- -   Revision 2, 2022-10-26 (Kevin Petit)
+--
+--     -   Add @shaderCoreMask@ property
 --
 -- == See Also
 --
