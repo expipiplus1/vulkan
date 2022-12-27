@@ -61,8 +61,8 @@
 --
 -- == Description
 --
--- @VK_EXT_pipeline_robustness@ allows users to request robustness on a
--- per-pipeline stage basis.
+-- This extension allows users to request robustness on a per-pipeline
+-- stage basis.
 --
 -- As
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>

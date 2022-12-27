@@ -197,6 +197,11 @@ instance Show PhysicalDeviceExternalMemoryRDMAFeaturesNV
 instance FromCStruct PhysicalDeviceExternalMemoryRDMAFeaturesNV
 
 
--- No documentation found for TopLevel "VkRemoteAddressNV"
+-- | VkRemoteAddressNV - Remote device address type
+--
+-- = See Also
+--
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_NV_external_memory_rdma VK_NV_external_memory_rdma>,
+-- 'getMemoryRemoteAddressNV'
 type RemoteAddressNV = Ptr ()
 

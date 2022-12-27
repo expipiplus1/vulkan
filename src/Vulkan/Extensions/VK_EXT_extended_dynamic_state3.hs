@@ -950,11 +950,6 @@ foreign import ccall
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3AlphaToCoverageEnable extendedDynamicState3AlphaToCoverageEnable>
 --     feature /must/ be enabled
 --
--- -   #VUID-vkCmdSetAlphaToCoverageEnableEXT-alphaToOne-07344# If the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-alphaToOne alphaToOne>
---     feature is not enabled, @alphaToOneEnable@ /must/ be
---     'Vulkan.Core10.FundamentalTypes.FALSE'
---
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdSetAlphaToCoverageEnableEXT-commandBuffer-parameter#
@@ -1041,6 +1036,11 @@ foreign import ccall
 --     The
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-extendedDynamicState3AlphaToOneEnable extendedDynamicState3AlphaToOneEnable>
 --     feature /must/ be enabled
+--
+-- -   #VUID-vkCmdSetAlphaToOneEnableEXT-alphaToOne-07607# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-alphaToOne alphaToOne>
+--     feature is not enabled, @alphaToOneEnable@ /must/ be
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- == Valid Usage (Implicit)
 --
@@ -1448,9 +1448,6 @@ foreign import ccall
 --     @attachmentCount@ valid combinations of
 --     'Vulkan.Core10.Enums.ColorComponentFlagBits.ColorComponentFlagBits'
 --     values
---
--- -   #VUID-vkCmdSetColorWriteMaskEXT-pColorWriteMasks-requiredbitmask#
---     Each element of @pColorWriteMasks@ /must/ not be @0@
 --
 -- -   #VUID-vkCmdSetColorWriteMaskEXT-commandBuffer-recording#
 --     @commandBuffer@ /must/ be in the

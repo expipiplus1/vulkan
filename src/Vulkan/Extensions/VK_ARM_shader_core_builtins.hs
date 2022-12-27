@@ -15,7 +15,7 @@
 --     498
 --
 -- [__Revision__]
---     1
+--     2
 --
 -- [__Extension and Version Dependencies__]
 --
@@ -112,6 +112,10 @@
 --
 --     -   Initial revision
 --
+-- -   Revision 2, 2022-10-26 (Kevin Petit)
+--
+--     -   Add @shaderCoreMask@ property
+--
 -- == See Also
 --
 -- 'PhysicalDeviceShaderCoreBuiltinsFeaturesARM',
@@ -149,6 +153,7 @@ import qualified Foreign.Storable (Storable(..))
 import GHC.Generics (Generic)
 import Foreign.Ptr (Ptr)
 import Data.Word (Word32)
+import Data.Word (Word64)
 import Data.Kind (Type)
 import Vulkan.Core10.FundamentalTypes (bool32ToBool)
 import Vulkan.Core10.FundamentalTypes (boolToBool32)
@@ -176,7 +181,12 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_ARM_shader_core_builtins VK_ARM_shader_core_builtins>,
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceShaderCoreBuiltinsPropertiesARM = PhysicalDeviceShaderCoreBuiltinsPropertiesARM
-  { -- | #limits-shaderCoreCount# @shaderCoreCount@ is the number of shader cores
+  { -- | #limits-shaderCoreMask# @shaderCoreMask@ is a bitfield where each bit
+    -- set represents the presence of a shader core whose ID is the bit
+    -- position. The highest ID for any shader core on the device is the
+    -- position of the most significant bit set.
+    shaderCoreMask :: Word64
+  , -- | #limits-shaderCoreCount# @shaderCoreCount@ is the number of shader cores
     -- on the device.
     shaderCoreCount :: Word32
   , -- | #limits-shaderWarpsPerCore# @shaderWarpsPerCore@ is the maximum number
@@ -190,37 +200,41 @@ deriving instance Generic (PhysicalDeviceShaderCoreBuiltinsPropertiesARM)
 deriving instance Show PhysicalDeviceShaderCoreBuiltinsPropertiesARM
 
 instance ToCStruct PhysicalDeviceShaderCoreBuiltinsPropertiesARM where
-  withCStruct x f = allocaBytes 24 $ \p -> pokeCStruct p x (f p)
+  withCStruct x f = allocaBytes 32 $ \p -> pokeCStruct p x (f p)
   pokeCStruct p PhysicalDeviceShaderCoreBuiltinsPropertiesARM{..} f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_PROPERTIES_ARM)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Word32)) (shaderCoreCount)
-    poke ((p `plusPtr` 20 :: Ptr Word32)) (shaderWarpsPerCore)
+    poke ((p `plusPtr` 16 :: Ptr Word64)) (shaderCoreMask)
+    poke ((p `plusPtr` 24 :: Ptr Word32)) (shaderCoreCount)
+    poke ((p `plusPtr` 28 :: Ptr Word32)) (shaderWarpsPerCore)
     f
-  cStructSize = 24
+  cStructSize = 32
   cStructAlignment = 8
   pokeZeroCStruct p f = do
     poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_PROPERTIES_ARM)
     poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
-    poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
-    poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 16 :: Ptr Word64)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 28 :: Ptr Word32)) (zero)
     f
 
 instance FromCStruct PhysicalDeviceShaderCoreBuiltinsPropertiesARM where
   peekCStruct p = do
-    shaderCoreCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
-    shaderWarpsPerCore <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
+    shaderCoreMask <- peek @Word64 ((p `plusPtr` 16 :: Ptr Word64))
+    shaderCoreCount <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
+    shaderWarpsPerCore <- peek @Word32 ((p `plusPtr` 28 :: Ptr Word32))
     pure $ PhysicalDeviceShaderCoreBuiltinsPropertiesARM
-             shaderCoreCount shaderWarpsPerCore
+             shaderCoreMask shaderCoreCount shaderWarpsPerCore
 
 instance Storable PhysicalDeviceShaderCoreBuiltinsPropertiesARM where
-  sizeOf ~_ = 24
+  sizeOf ~_ = 32
   alignment ~_ = 8
   peek = peekCStruct
   poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero PhysicalDeviceShaderCoreBuiltinsPropertiesARM where
   zero = PhysicalDeviceShaderCoreBuiltinsPropertiesARM
+           zero
            zero
            zero
 
@@ -293,11 +307,11 @@ instance Zero PhysicalDeviceShaderCoreBuiltinsFeaturesARM where
            zero
 
 
-type ARM_SHADER_CORE_BUILTINS_SPEC_VERSION = 1
+type ARM_SHADER_CORE_BUILTINS_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_ARM_SHADER_CORE_BUILTINS_SPEC_VERSION"
 pattern ARM_SHADER_CORE_BUILTINS_SPEC_VERSION :: forall a . Integral a => a
-pattern ARM_SHADER_CORE_BUILTINS_SPEC_VERSION = 1
+pattern ARM_SHADER_CORE_BUILTINS_SPEC_VERSION = 2
 
 
 type ARM_SHADER_CORE_BUILTINS_EXTENSION_NAME = "VK_ARM_shader_core_builtins"

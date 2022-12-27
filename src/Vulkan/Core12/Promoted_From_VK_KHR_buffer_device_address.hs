@@ -172,6 +172,15 @@ foreign import ccall
 -- by 'Vulkan.Core10.MemoryManagement.MemoryRequirements'::@alignment@ for
 -- the buffer in 'BufferDeviceAddressInfo'::@buffer@.
 --
+-- If multiple 'Vulkan.Core10.Handles.Buffer' objects are bound to
+-- overlapping ranges of 'Vulkan.Core10.Handles.DeviceMemory',
+-- implementations /may/ return address ranges which overlap. In this case,
+-- it is ambiguous which 'Vulkan.Core10.Handles.Buffer' is associated with
+-- any given device address. For purposes of valid usage, if multiple
+-- 'Vulkan.Core10.Handles.Buffer' objects /can/ be attributed to a device
+-- address, a 'Vulkan.Core10.Handles.Buffer' is selected such that valid
+-- usage passes, if it exists.
+--
 -- == Valid Usage
 --
 -- -   #VUID-vkGetBufferDeviceAddress-bufferDeviceAddress-03324# The
