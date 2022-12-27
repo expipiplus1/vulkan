@@ -1,5 +1,5 @@
-{-# language TemplateHaskell #-}
 {-# language QuasiQuotes #-}
+{-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
 module Render.Enum where
 
 import           Prettyprinter

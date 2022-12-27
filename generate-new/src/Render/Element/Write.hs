@@ -35,7 +35,7 @@ import           System.FilePath
 import qualified Data.Vector.Generic           as VG
 import           Type.Reflection
 
-import           Control.Exception              ( IOException )
+import           Control.Exception ( IOException, try )
 import           Control.Exception.Base         ( catch )
 import           Documentation
 import           Documentation.Haddock
@@ -48,7 +48,6 @@ import           Render.SpecInfo
 import           Render.Utils
 import           Spec.Types
 import           Write.Segment
-import Control.Exception (try)
 
 ----------------------------------------------------------------
 -- Rendering
@@ -118,7 +117,9 @@ renderSegments getDoc out segments = do
     nubOrdOn (reExports . snd) <$> forV sourceImportNames findBootElems
 
   let requiredBootSegments =
-        fmap (\((m, re) : res) -> Segment m (fromList (re : (snd <$> res))))
+        fmap (\case
+            [] -> error "empty group"
+            ((m, re) : res) -> Segment m (fromList (re : (snd <$> res))))
           . groupOn fst
           . sortOn fst
           $ requiredBootElements
@@ -458,7 +459,7 @@ readFileMaybe f =
 -- If we don't put PatternSynonyms here the fourmolu eatst he comments on them 
 ormoluConfig :: Ormolu.Config Ormolu.RegionIndices
 ormoluConfig = Ormolu.defaultConfig
-  { Ormolu.cfgDynOptions  = [Ormolu.DynOption "-XPatternSynonyms"] 
+  { Ormolu.cfgDynOptions  = [Ormolu.DynOption "-XPatternSynonyms"]
   , Ormolu.cfgPrinterOpts = Ormolu.defaultPrinterOpts
     { Ormolu.poIndentation = pure 2
     -- , Ormolu.poFunctionArrows = pure Ormolu.LeadingArrows

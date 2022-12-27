@@ -1,6 +1,7 @@
 {-# LANGUAGE NamedFieldPuns #-}
 {-# language QuasiQuotes #-}
 {-# language TemplateHaskell #-}
+{-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
 module Bespoke
   ( forbiddenConstants
   , neverExtendedStructs

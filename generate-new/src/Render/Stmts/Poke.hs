@@ -459,9 +459,11 @@ lengthFromNames isElided lenName lenType os rs = do
   let allVecs = toList (rsLengthRefs <> osLengthRefs)
   (assertions, getLenValue) <- if isElided
     then do
-      let firstLengthRef@(_, _, len1) : otherLengthRefs = allVecs
-      assertions <- traverse (assertSame firstLengthRef) otherLengthRefs
-      pure (assertions, use @r len1)
+      case allVecs of
+        [] -> error "empty allVecs"
+        firstLengthRef@(_, _, len1) : otherLengthRefs -> do
+          assertions <- traverse (assertSame firstLengthRef) otherLengthRefs
+          pure (assertions, use @r len1)
     else case allVecs of
       -- If we just have one vector, infer the length from that
       [v] -> pure ([], use =<< inferLength v)
