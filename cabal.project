@@ -6,4 +6,6 @@ packages:
   ./examples
   ./generate-new/
 
-constraints: nothunks +vector
+constraints:
+  nothunks +vector,
+  sdl2 -pkgconfig
