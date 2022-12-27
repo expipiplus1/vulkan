@@ -12186,9 +12186,9 @@ foreign import ccall
 --     'Vulkan.Core10.ImageView.ImageSubresourceRange' element of
 --     @pRanges@, if the @levelCount@ member is not
 --     'Vulkan.Core10.APIConstants.REMAINING_MIP_LEVELS', then
---     @baseMipLevel@ + @levelCount@ /must/ be less than the @mipLevels@
---     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was
---     created
+--     @baseMipLevel@ + @levelCount@ /must/ be less than or equal to the
+--     @mipLevels@ specified in 'Vulkan.Core10.Image.ImageCreateInfo' when
+--     @image@ was created
 --
 -- -   #VUID-vkCmdClearColorImage-baseArrayLayer-01472# The
 --     'Vulkan.Core10.ImageView.ImageSubresourceRange'::@baseArrayLayer@
@@ -12200,7 +12200,7 @@ foreign import ccall
 --     'Vulkan.Core10.ImageView.ImageSubresourceRange' element of
 --     @pRanges@, if the @layerCount@ member is not
 --     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', then
---     @baseArrayLayer@ + @layerCount@ /must/ be less than the
+--     @baseArrayLayer@ + @layerCount@ /must/ be less than or equal to the
 --     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
 --     when @image@ was created
 --
@@ -12418,9 +12418,9 @@ foreign import ccall
 --     'Vulkan.Core10.ImageView.ImageSubresourceRange' element of
 --     @pRanges@, if the @levelCount@ member is not
 --     'Vulkan.Core10.APIConstants.REMAINING_MIP_LEVELS', then
---     @baseMipLevel@ + @levelCount@ /must/ be less than the @mipLevels@
---     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was
---     created
+--     @baseMipLevel@ + @levelCount@ /must/ be less than or equal to the
+--     @mipLevels@ specified in 'Vulkan.Core10.Image.ImageCreateInfo' when
+--     @image@ was created
 --
 -- -   #VUID-vkCmdClearDepthStencilImage-baseArrayLayer-01476# The
 --     'Vulkan.Core10.ImageView.ImageSubresourceRange'::@baseArrayLayer@
@@ -12432,7 +12432,7 @@ foreign import ccall
 --     'Vulkan.Core10.ImageView.ImageSubresourceRange' element of
 --     @pRanges@, if the @layerCount@ member is not
 --     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS', then
---     @baseArrayLayer@ + @layerCount@ /must/ be less than the
+--     @baseArrayLayer@ + @layerCount@ /must/ be less than or equal to the
 --     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
 --     when @image@ was created
 --

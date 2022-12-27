@@ -362,6 +362,14 @@ foreign import ccall
 -- If @event@ is already in the signaled state when 'setEvent' is executed,
 -- then 'setEvent' has no effect, and no event signal operation occurs.
 --
+-- Note
+--
+-- If a command buffer is waiting for an event to be signaled from the
+-- host, the application must signal the event before submitting the
+-- command buffer, as described in the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#commandbuffers-submission-progress queue forward progress>
+-- section.
+--
 -- == Valid Usage
 --
 -- -   #VUID-vkSetEvent-event-03941# @event@ /must/ not have been created

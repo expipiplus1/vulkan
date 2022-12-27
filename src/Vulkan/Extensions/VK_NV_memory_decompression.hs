@@ -205,9 +205,9 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdDecompressMemoryNV-None-07684#
+-- -   #VUID-vkCmdDecompressMemoryNV-None-07684# The
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-memoryDecompression memoryDecompression>
---     /must/ be enabled
+--     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
@@ -263,9 +263,9 @@ cmdDecompressMemoryNV :: forall io
                       => -- | @commandBuffer@ is the command buffer into which the command will be
                          -- recorded.
                          CommandBuffer
-                      -> -- | @pDecompressMemoryRegions@ is a pointer to an array of size
-                         -- @decompressRegionCount@ of 'DecompressMemoryRegionNV' structures used to
-                         -- specify the decompression parameters.
+                      -> -- | @pDecompressMemoryRegions@ is a pointer to an array of
+                         -- @decompressRegionCount@ 'DecompressMemoryRegionNV' structures specifying
+                         -- decompression parameters.
                          ("decompressMemoryRegions" ::: Vector DecompressMemoryRegionNV)
                       -> io ()
 cmdDecompressMemoryNV commandBuffer
@@ -301,9 +301,9 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkCmdDecompressMemoryIndirectCountNV-None-07692#
+-- -   #VUID-vkCmdDecompressMemoryIndirectCountNV-None-07692# The
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-memoryDecompression memoryDecompression>
---     /must/ be enabled
+--     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdDecompressMemoryIndirectCountNV-indirectCommandsAddress-07693#
 --     If @indirectCommandsAddress@ comes from a non-sparse buffer then it
@@ -521,9 +521,9 @@ instance Zero PhysicalDeviceMemoryDecompressionFeaturesNV where
 -- 'MemoryDecompressionMethodFlagsNV',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceMemoryDecompressionPropertiesNV = PhysicalDeviceMemoryDecompressionPropertiesNV
-  { -- | @decompressionMethods@ specifies the list of all the memory
-    -- decompression methods supported by the implementation as a bitmask of
-    -- 'MemoryDecompressionMethodFlagBitsNV'.
+  { -- | @decompressionMethods@ is a bitmask of
+    -- 'MemoryDecompressionMethodFlagBitsNV' specifying memory decompression
+    -- methods supported by the implementation.
     decompressionMethods :: MemoryDecompressionMethodFlagsNV
   , -- | @maxDecompressionIndirectCount@ specifies the maximum supported count
     -- value in the @countBuffer@ of 'cmdDecompressMemoryIndirectCountNV'
@@ -626,9 +626,9 @@ data DecompressMemoryRegionNV = DecompressMemoryRegionNV
     compressedSize :: DeviceSize
   , -- | @decompressedSize@ is the size of decompressed data in bytes.
     decompressedSize :: DeviceSize
-  , -- | @decompressionMethod@ is a single bit value from
-    -- 'MemoryDecompressionMethodFlagBitsNV' which specifies the decompression
-    -- method used to decompress data.
+  , -- | @decompressionMethod@ is a bitmask of
+    -- 'MemoryDecompressionMethodFlagBitsNV' with a single bit set specifying
+    -- the method used to decompress data.
     decompressionMethod :: MemoryDecompressionMethodFlagsNV
   }
   deriving (Typeable, Eq)
@@ -696,8 +696,8 @@ type MemoryDecompressionMethodFlagsNV = MemoryDecompressionMethodFlagBitsNV
 newtype MemoryDecompressionMethodFlagBitsNV = MemoryDecompressionMethodFlagBitsNV Flags64
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
--- | 'MEMORY_DECOMPRESSION_METHOD_GDEFLATE_1_0_BIT_NV' specifies that
--- GDEFLATE 1.0 algorithm is used to decompress data.
+-- | 'MEMORY_DECOMPRESSION_METHOD_GDEFLATE_1_0_BIT_NV' specifies that the
+-- GDeflate 1.0 algorithm is used to decompress data.
 pattern MEMORY_DECOMPRESSION_METHOD_GDEFLATE_1_0_BIT_NV = MemoryDecompressionMethodFlagBitsNV 0x0000000000000001
 
 conNameMemoryDecompressionMethodFlagBitsNV :: String
