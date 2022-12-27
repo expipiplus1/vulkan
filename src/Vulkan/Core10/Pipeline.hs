@@ -4370,43 +4370,51 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-noattachments zero-attachment subpass>
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06046# If @renderPass@
---     is a valid renderPass, @subpass@ /must/ be a valid subpass within
---     @renderPass@
+--     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', @subpass@ /must/ be
+--     a valid subpass within @renderPass@
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06047# If @renderPass@
---     is a valid renderPass, the pipeline is being created with
+--     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the pipeline is
+--     being created with
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
---     and the @renderPass@ has multiview enabled and @subpass@ has more
---     than one bit set in the view mask and @multiviewTessellationShader@
---     is not enabled, then @pStages@ /must/ not include tessellation
---     shaders
+--     @subpass@ viewMask is not @0@, and @multiviewTessellationShader@ is
+--     not enabled, then @pStages@ /must/ not include tessellation shaders
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06048# If @renderPass@
---     is a valid renderPass, the pipeline is being created with
+--     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the pipeline is
+--     being created with
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
---     and the @renderPass@ has multiview enabled and @subpass@ has more
---     than one bit set in the view mask and @multiviewGeometryShader@ is
---     not enabled, then @pStages@ /must/ not include a geometry shader
+--     @subpass@ viewMask is not @0@, and @multiviewGeometryShader@ is not
+--     enabled, then @pStages@ /must/ not include a geometry shader
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06049# If @renderPass@
---     is a valid renderPass, the pipeline is being created with
+--     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the pipeline is
+--     being created with
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
---     and the @renderPass@ has multiview enabled and @subpass@ has more
---     than one bit set in the view mask, shaders in the pipeline /must/
---     not write to the @Layer@ built-in output
+--     and @subpass@ viewMask is not @0@, all of the shaders in the
+--     pipeline /must/ not write to the @Layer@ built-in output
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06050# If @renderPass@
---     is a valid renderPass and the pipeline is being created with
+--     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' and the pipeline is
+--     being created with
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
---     and the @renderPass@ has multiview enabled, then all shaders /must/
---     not include variables decorated with the @Layer@ built-in decoration
---     in their interfaces
+--     and @subpass@ viewMask is not @0@, then all of the shaders in the
+--     pipeline /must/ not include variables decorated with the @Layer@
+--     built-in decoration in their interfaces
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-07717# If @renderPass@
+--     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE' and the pipeline is
+--     being created with
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     and @subpass@ viewMask is not @0@, then all of the shaders in the
+--     pipeline /must/ not include variables decorated with the @ViewMask@
+--     built-in decoration in their interfaces
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-07064# If @renderPass@
---     is a valid renderPass, the pipeline is being created with
+--     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', the pipeline is
+--     being created with
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
---     and the @renderPass@ has multiview enabled and @subpass@ has more
---     than one bit set in the view mask and @multiviewMeshShader@ is not
+--     @subpass@ viewMask is not @0@, and @multiviewMeshShader@ is not
 --     enabled, then @pStages@ /must/ not include a mesh shader
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-flags-00764# @flags@ /must/ not
@@ -5253,9 +5261,8 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     is 'Vulkan.Core10.APIConstants.NULL_HANDLE', the pipeline is being
 --     created with
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
---     the @viewMask@ member of a
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'
---     structure included in the @pNext@ chain is not @0@, and the
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@viewMask@
+--     is not @0@, and the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview-tess multiviewTessellationShader>
 --     feature is not enabled, then @pStages@ /must/ not include
 --     tessellation shaders
@@ -5264,22 +5271,49 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     is 'Vulkan.Core10.APIConstants.NULL_HANDLE', the pipeline is being
 --     created with
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
---     the @viewMask@ member of a
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'
---     structure included in the @pNext@ chain is not @0@, and the
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@viewMask@
+--     is not @0@, and the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview-gs multiviewGeometryShader>
 --     feature is not enabled, then @pStages@ /must/ not include a geometry
 --     shader
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-07718# If @renderPass@
+--     is 'Vulkan.Core10.APIConstants.NULL_HANDLE', the pipeline is being
+--     created with
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     and
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@viewMask@
+--     is not @0@, all of the shaders in the pipeline /must/ not write to
+--     the @Layer@ built-in output
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06059# If @renderPass@
 --     is 'Vulkan.Core10.APIConstants.NULL_HANDLE', the pipeline is being
 --     created with
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
---     and the @viewMask@ member of a
---     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'
---     structure included in the @pNext@ chain is not @0@, shaders in
---     @pStages@ /must/ not include variables decorated with the @Layer@
---     built-in decoration in their interfaces
+--     and
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@viewMask@
+--     is not @0@, all of the shaders in the pipeline /must/ not include
+--     variables decorated with the @Layer@ built-in decoration in their
+--     interfaces
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-07719# If @renderPass@
+--     is 'Vulkan.Core10.APIConstants.NULL_HANDLE', the pipeline is being
+--     created with
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     and
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@viewMask@
+--     is not @0@, all of the shaders in the pipeline /must/ not include
+--     variables decorated with the @ViewIndex@ built-in decoration in
+--     their interfaces
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-07720# If @renderPass@
+--     is 'Vulkan.Core10.APIConstants.NULL_HANDLE', the pipeline is being
+--     created with
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     and
+--     'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.PipelineRenderingCreateInfo'::@viewMask@
+--     is not @0@, and @multiviewMeshShader@ is not enabled, then @pStages@
+--     /must/ not include a mesh shader
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-renderPass-06061# If the pipeline
 --     is being created with

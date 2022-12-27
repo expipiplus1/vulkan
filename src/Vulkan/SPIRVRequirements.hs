@@ -380,6 +380,60 @@ spirvExtensionRequirements = \case
           , deviceExtensionMinVersion = 0
           }
       ]
+  "SPV_NV_shader_invocation_reorder" ->
+    (,)
+      [ RequireInstanceExtension
+          { instanceExtensionLayerName = Nothing
+          , instanceExtensionName = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+          , instanceExtensionMinVersion = 0
+          }
+      ]
+      [ RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = NV_RAY_TRACING_INVOCATION_REORDER_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_SPIRV_1_4_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = KHR_MAINTENANCE_3_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
   "SPV_EXT_shader_viewport_index_layer" ->
     (,)
       [RequireInstanceVersion $ MAKE_API_VERSION 1 2 0]
