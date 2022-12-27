@@ -5,3 +5,5 @@ packages:
   ./utils
   ./examples
   ./generate-new/
+
+constraints: nothunks +vector
