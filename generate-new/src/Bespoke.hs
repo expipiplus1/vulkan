@@ -62,6 +62,7 @@ import           Render.Stmts.Utils
 import           Render.Type
 import           Render.Utils
 import           Spec.Types
+import Language.Haskell.TH.Syntax (mkNameG_v)
 
 ----------------------------------------------------------------
 -- Changes to the spec
@@ -406,7 +407,7 @@ difficultLengths =
           assertMul4 <- unitStmt $ do
             ValueDoc bs <- use bsRef
             tellQualImport 'BS.length
-            tellImport '(.&.)
+            tellImport (mkNameG_v "base" "Data.Bits" ".&.")
             let err = "code size must be a multiple of 4"
                 cond =
                   parens $ "Data.ByteString.length" <+> bs <+> ".&. 3 == 0"
@@ -423,7 +424,7 @@ difficultLengths =
                 pure . ContTAction $ "ContT $ unsafeUseAsCString" <+> bs
               )
             tellImport 'ptrToWordPtr
-            tellImport '(.&.)
+            tellImport (mkNameG_v "base" "Data.Bits" ".&.")
             tellImport 'castPtr
             tellImport ''CChar
             tellImport ''Word32
@@ -586,14 +587,14 @@ bitfields = BespokeScheme $ \case
       then pure base
       else stmt Nothing Nothing $ do
         ValueDoc base <- use base
-        tellImport 'shiftR
+        tellImport (mkName "Data.Bits.shiftR")
         pure . Pure InlineOnce . ValueDoc $ parens
           (base <+> "`shiftR`" <+> viaShow bitShift)
     masked <- if bitSize == 32
       then pure shifted
       else stmt Nothing Nothing $ do
         ValueDoc shifted <- use shifted
-        tellImport '(.&.)
+        tellImport (mkNameG_v "base" "Data.Bits" ".&.")
         tellImport 'coerce
         let mask = "coerce @Word32 0x"
               <> pretty (showHex ((1 `shiftL` bitSize :: Int) - 1) "")
@@ -627,8 +628,8 @@ bitfields = BespokeScheme $ \case
                          stmt (Just tyH) Nothing $ do
                            ValueDoc slaveDoc  <- useViaName (unCName slaveName)
                            ValueDoc masterDoc <- use masterRef
-                           tellImport 'shiftL
-                           tellImport '(.|.)
+                           tellImport (mkName "Data.Bits.shiftL")
+                           tellImport (mkNameG_v "base" "Data.Bits" ".|.")
                            tellImport 'coerce
                            pure
                              .   Pure InlineOnce
