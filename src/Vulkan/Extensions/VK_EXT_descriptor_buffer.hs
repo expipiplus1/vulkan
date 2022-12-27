@@ -3204,15 +3204,15 @@ instance Zero OpaqueCaptureDescriptorDataCreateInfoEXT where
 
 
 data DescriptorDataEXT
-  = PSampler Sampler
-  | PCombinedImageSampler DescriptorImageInfo
-  | PInputAttachmentImage DescriptorImageInfo
-  | PSampledImage (Maybe DescriptorImageInfo)
-  | PStorageImage (Maybe DescriptorImageInfo)
-  | PUniformTexelBuffer (Maybe DescriptorAddressInfoEXT)
-  | PStorageTexelBuffer (Maybe DescriptorAddressInfoEXT)
-  | PUniformBuffer (Maybe DescriptorAddressInfoEXT)
-  | PStorageBuffer (Maybe DescriptorAddressInfoEXT)
+  = Sampler Sampler
+  | CombinedImageSampler DescriptorImageInfo
+  | InputAttachmentImage DescriptorImageInfo
+  | SampledImage (Maybe DescriptorImageInfo)
+  | StorageImage (Maybe DescriptorImageInfo)
+  | UniformTexelBuffer (Maybe DescriptorAddressInfoEXT)
+  | StorageTexelBuffer (Maybe DescriptorAddressInfoEXT)
+  | UniformBuffer (Maybe DescriptorAddressInfoEXT)
+  | StorageBuffer (Maybe DescriptorAddressInfoEXT)
   | AccelerationStructure DeviceAddress
   deriving (Show)
 
@@ -3220,39 +3220,39 @@ instance ToCStruct DescriptorDataEXT where
   withCStruct x f = allocaBytes 8 $ \p -> pokeCStruct p x (f p)
   pokeCStruct :: Ptr DescriptorDataEXT -> DescriptorDataEXT -> IO a -> IO a
   pokeCStruct p = (. const) . runContT .  \case
-    PSampler v -> lift $ poke (castPtr @_ @(Ptr Sampler) p) (v)
-    PCombinedImageSampler v -> do
+    Sampler v -> lift $ poke (castPtr @_ @(Ptr Sampler) p) (v)
+    CombinedImageSampler v -> do
       pCombinedImageSampler <- ContT $ withCStruct (v)
       lift $ poke (castPtr @_ @(Ptr DescriptorImageInfo) p) pCombinedImageSampler
-    PInputAttachmentImage v -> do
+    InputAttachmentImage v -> do
       pInputAttachmentImage <- ContT $ withCStruct (v)
       lift $ poke (castPtr @_ @(Ptr DescriptorImageInfo) p) pInputAttachmentImage
-    PSampledImage v -> do
+    SampledImage v -> do
       pSampledImage <- case (v) of
         Nothing -> pure nullPtr
         Just j -> ContT $ withCStruct (j)
       lift $ poke (castPtr @_ @(Ptr DescriptorImageInfo) p) pSampledImage
-    PStorageImage v -> do
+    StorageImage v -> do
       pStorageImage <- case (v) of
         Nothing -> pure nullPtr
         Just j -> ContT $ withCStruct (j)
       lift $ poke (castPtr @_ @(Ptr DescriptorImageInfo) p) pStorageImage
-    PUniformTexelBuffer v -> do
+    UniformTexelBuffer v -> do
       pUniformTexelBuffer <- case (v) of
         Nothing -> pure nullPtr
         Just j -> ContT $ withCStruct (j)
       lift $ poke (castPtr @_ @(Ptr DescriptorAddressInfoEXT) p) pUniformTexelBuffer
-    PStorageTexelBuffer v -> do
+    StorageTexelBuffer v -> do
       pStorageTexelBuffer <- case (v) of
         Nothing -> pure nullPtr
         Just j -> ContT $ withCStruct (j)
       lift $ poke (castPtr @_ @(Ptr DescriptorAddressInfoEXT) p) pStorageTexelBuffer
-    PUniformBuffer v -> do
+    UniformBuffer v -> do
       pUniformBuffer <- case (v) of
         Nothing -> pure nullPtr
         Just j -> ContT $ withCStruct (j)
       lift $ poke (castPtr @_ @(Ptr DescriptorAddressInfoEXT) p) pUniformBuffer
-    PStorageBuffer v -> do
+    StorageBuffer v -> do
       pStorageBuffer <- case (v) of
         Nothing -> pure nullPtr
         Just j -> ContT $ withCStruct (j)
@@ -3264,29 +3264,29 @@ instance ToCStruct DescriptorDataEXT where
   cStructAlignment = 8
 
 instance Zero DescriptorDataEXT where
-  zero = PSampler zero
+  zero = Sampler zero
 
 peekDescriptorDataEXT :: DescriptorType -> Ptr DescriptorDataEXT -> IO DescriptorDataEXT
 peekDescriptorDataEXT tag p = case tag of
-  DESCRIPTOR_TYPE_SAMPLER -> PSampler <$> (peek @(Ptr Sampler) (castPtr @_ @(Ptr Sampler) p))
-  DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER -> PCombinedImageSampler <$> (peekCStruct @DescriptorImageInfo =<< peek (castPtr @_ @(Ptr DescriptorImageInfo) p))
-  DESCRIPTOR_TYPE_INPUT_ATTACHMENT -> PInputAttachmentImage <$> (peekCStruct @DescriptorImageInfo =<< peek (castPtr @_ @(Ptr DescriptorImageInfo) p))
-  DESCRIPTOR_TYPE_SAMPLED_IMAGE -> PSampledImage <$> (do
+  DESCRIPTOR_TYPE_SAMPLER -> Sampler <$> (peek @(Ptr Sampler) (castPtr @_ @(Ptr Sampler) p))
+  DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER -> CombinedImageSampler <$> (peekCStruct @DescriptorImageInfo =<< peek (castPtr @_ @(Ptr DescriptorImageInfo) p))
+  DESCRIPTOR_TYPE_INPUT_ATTACHMENT -> InputAttachmentImage <$> (peekCStruct @DescriptorImageInfo =<< peek (castPtr @_ @(Ptr DescriptorImageInfo) p))
+  DESCRIPTOR_TYPE_SAMPLED_IMAGE -> SampledImage <$> (do
     pSampledImage <- peek @(Ptr DescriptorImageInfo) (castPtr @_ @(Ptr DescriptorImageInfo) p)
     maybePeek (\j -> peekCStruct @DescriptorImageInfo (j)) pSampledImage)
-  DESCRIPTOR_TYPE_STORAGE_IMAGE -> PStorageImage <$> (do
+  DESCRIPTOR_TYPE_STORAGE_IMAGE -> StorageImage <$> (do
     pStorageImage <- peek @(Ptr DescriptorImageInfo) (castPtr @_ @(Ptr DescriptorImageInfo) p)
     maybePeek (\j -> peekCStruct @DescriptorImageInfo (j)) pStorageImage)
-  DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER -> PUniformTexelBuffer <$> (do
+  DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER -> UniformTexelBuffer <$> (do
     pUniformTexelBuffer <- peek @(Ptr DescriptorAddressInfoEXT) (castPtr @_ @(Ptr DescriptorAddressInfoEXT) p)
     maybePeek (\j -> peekCStruct @DescriptorAddressInfoEXT (j)) pUniformTexelBuffer)
-  DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER -> PStorageTexelBuffer <$> (do
+  DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER -> StorageTexelBuffer <$> (do
     pStorageTexelBuffer <- peek @(Ptr DescriptorAddressInfoEXT) (castPtr @_ @(Ptr DescriptorAddressInfoEXT) p)
     maybePeek (\j -> peekCStruct @DescriptorAddressInfoEXT (j)) pStorageTexelBuffer)
-  DESCRIPTOR_TYPE_UNIFORM_BUFFER -> PUniformBuffer <$> (do
+  DESCRIPTOR_TYPE_UNIFORM_BUFFER -> UniformBuffer <$> (do
     pUniformBuffer <- peek @(Ptr DescriptorAddressInfoEXT) (castPtr @_ @(Ptr DescriptorAddressInfoEXT) p)
     maybePeek (\j -> peekCStruct @DescriptorAddressInfoEXT (j)) pUniformBuffer)
-  DESCRIPTOR_TYPE_STORAGE_BUFFER -> PStorageBuffer <$> (do
+  DESCRIPTOR_TYPE_STORAGE_BUFFER -> StorageBuffer <$> (do
     pStorageBuffer <- peek @(Ptr DescriptorAddressInfoEXT) (castPtr @_ @(Ptr DescriptorAddressInfoEXT) p)
     maybePeek (\j -> peekCStruct @DescriptorAddressInfoEXT (j)) pStorageBuffer)
   DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR -> AccelerationStructure <$> (peek @DeviceAddress (castPtr @_ @DeviceAddress p))
