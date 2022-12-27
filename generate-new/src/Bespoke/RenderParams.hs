@@ -48,6 +48,7 @@ renderParams handles = r
                                                _ -> id
                                              )
                                            . upperCaseFirst
+                                           . dropPointer
                                            . dropVk
     , mkMemberName                   = \_parent ->
                                          TermName . lowerCaseFirst . dropPointer . unCName
