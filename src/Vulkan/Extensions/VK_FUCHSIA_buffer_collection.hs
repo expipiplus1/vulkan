@@ -623,7 +623,7 @@ foreign import ccall
 --     'BufferCollectionBufferCreateInfoFUCHSIA' chained to their
 --     'Vulkan.Core10.Image.ImageCreateInfo' or
 --     'Vulkan.Core10.Buffer.BufferCreateInfo' structures respectively,
---     /may/ outlive @collection@.
+--     /may/ outlive @collection@
 --
 -- == Valid Usage (Implicit)
 --
@@ -717,7 +717,7 @@ foreign import ccall
 --     calling 'getBufferCollectionPropertiesFUCHSIA', the constraints on
 --     the buffer collection /must/ have been set by either
 --     'setBufferCollectionImageConstraintsFUCHSIA' or
---     'setBufferCollectionBufferConstraintsFUCHSIA'.
+--     'setBufferCollectionBufferConstraintsFUCHSIA'
 --
 -- == Valid Usage (Implicit)
 --

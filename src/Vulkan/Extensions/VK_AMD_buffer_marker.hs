@@ -198,7 +198,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_MESH_SHADER_BIT_EXT'
 --
 -- -   #VUID-vkCmdWriteBufferMarkerAMD-pipelineStage-07077# If the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader task shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-taskShader taskShader>
 --     feature is not enabled, @pipelineStage@ /must/ not be
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_EXT'
 --

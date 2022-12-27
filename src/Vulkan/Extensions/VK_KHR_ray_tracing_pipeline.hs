@@ -1057,7 +1057,7 @@ foreign import ccall
 -- -   #VUID-vkCmdTraceRaysKHR-None-08119# If a descriptor is dynamically
 --     used with a 'Vulkan.Core10.Handles.Pipeline' created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
---     the descriptor memory /must/ be resident.
+--     the descriptor memory /must/ be resident
 --
 -- -   #VUID-vkCmdTraceRaysKHR-None-02700# A valid pipeline /must/ be bound
 --     to the pipeline bind point used by this command
@@ -1155,6 +1155,20 @@ foreign import ccall
 --     object that enables
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
 --     that object /must/ not use the @ConstOffset@ and @Offset@ operands
+--
+-- -   #VUID-vkCmdTraceRaysKHR-viewType-07752# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
+--     command, then the image view’s @viewType@ /must/ match the @Dim@
+--     operand of the @OpTypeImage@ as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-operation-validation ???>
+--
+-- -   #VUID-vkCmdTraceRaysKHR-format-07753# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
+--     command, then the image view’s @format@ /must/ match the numeric
+--     format from the @Sampled@ @Type@ operand of the @OpTypeImage@ as
+--     described in the SPIR-V Sampled Type column of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-numericformat ???>
+--     table
 --
 -- -   #VUID-vkCmdTraceRaysKHR-None-04115# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
@@ -1258,14 +1272,14 @@ foreign import ccall
 --     @OpImageBlockMatchSADQCOM@ or OpImageBlockMatchSSDQCOM is used to
 --     read from a reference image as result of this command, then the
 --     specified reference coordinates /must/ not fail
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-integer-coordinate-validation integer texel coordinate validation>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-integer-coordinate-validation integer texel coordinate validation>
 --
 -- -   #VUID-vkCmdTraceRaysKHR-OpImageWeightedSampleQCOM-06977# If
 --     @OpImageWeightedSampleQCOM@, @OpImageBoxFilterQCOM@,
 --     @OpImageBlockMatchSSDQCOM@, or @OpImageBlockMatchSADQCOM@ uses a
 --     'Vulkan.Core10.Handles.Sampler' as a result of this command, then
 --     the sampler /must/ have been created with
---     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
+--     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'
 --
 -- -   #VUID-vkCmdTraceRaysKHR-OpImageWeightedSampleQCOM-06978# If any
 --     command other than @OpImageWeightedSampleQCOM@,
@@ -1273,7 +1287,7 @@ foreign import ccall
 --     @OpImageBlockMatchSADQCOM@ uses a 'Vulkan.Core10.Handles.Sampler' as
 --     a result of this command, then the sampler /must/ not have been
 --     created with
---     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
+--     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'
 --
 -- -   #VUID-vkCmdTraceRaysKHR-None-07288# Any shader invocation executed
 --     by this command /must/
@@ -1681,8 +1695,16 @@ foreign import ccall
   "dynamic" mkVkGetRayTracingCaptureReplayShaderGroupHandlesKHR
   :: FunPtr (Ptr Device_T -> Pipeline -> Word32 -> Word32 -> CSize -> Ptr () -> IO Result) -> Ptr Device_T -> Pipeline -> Word32 -> Word32 -> CSize -> Ptr () -> IO Result
 
--- | vkGetRayTracingCaptureReplayShaderGroupHandlesKHR - Query ray tracing
--- capture replay pipeline shader group handles
+-- | vkGetRayTracingCaptureReplayShaderGroupHandlesKHR - Query opaque capture
+-- replay data for pipeline shader group handles
+--
+-- = Description
+--
+-- Once queried, this opaque data /can/ be provided at pipeline creation
+-- time (in a subsequent execution), using
+-- 'RayTracingShaderGroupCreateInfoKHR'::@pShaderGroupCaptureReplayHandle@,
+-- as described in
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#ray-tracing-capture-replay Ray Tracing Capture Replay>.
 --
 -- == Valid Usage
 --
@@ -2174,7 +2196,7 @@ foreign import ccall
 --     dynamically used with a 'Vulkan.Core10.Handles.Pipeline' created
 --     with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
---     the descriptor memory /must/ be resident.
+--     the descriptor memory /must/ be resident
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02700# A valid pipeline /must/
 --     be bound to the pipeline bind point used by this command
@@ -2272,6 +2294,20 @@ foreign import ccall
 --     object that enables
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
 --     that object /must/ not use the @ConstOffset@ and @Offset@ operands
+--
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-viewType-07752# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
+--     command, then the image view’s @viewType@ /must/ match the @Dim@
+--     operand of the @OpTypeImage@ as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-operation-validation ???>
+--
+-- -   #VUID-vkCmdTraceRaysIndirectKHR-format-07753# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
+--     command, then the image view’s @format@ /must/ match the numeric
+--     format from the @Sampled@ @Type@ operand of the @OpTypeImage@ as
+--     described in the SPIR-V Sampled Type column of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-numericformat ???>
+--     table
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-None-04115# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
@@ -2377,14 +2413,14 @@ foreign import ccall
 --     @OpImageBlockMatchSADQCOM@ or OpImageBlockMatchSSDQCOM is used to
 --     read from a reference image as result of this command, then the
 --     specified reference coordinates /must/ not fail
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-integer-coordinate-validation integer texel coordinate validation>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-integer-coordinate-validation integer texel coordinate validation>
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-OpImageWeightedSampleQCOM-06977# If
 --     @OpImageWeightedSampleQCOM@, @OpImageBoxFilterQCOM@,
 --     @OpImageBlockMatchSSDQCOM@, or @OpImageBlockMatchSADQCOM@ uses a
 --     'Vulkan.Core10.Handles.Sampler' as a result of this command, then
 --     the sampler /must/ have been created with
---     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
+--     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-OpImageWeightedSampleQCOM-06978# If
 --     any command other than @OpImageWeightedSampleQCOM@,
@@ -2392,7 +2428,7 @@ foreign import ccall
 --     @OpImageBlockMatchSADQCOM@ uses a 'Vulkan.Core10.Handles.Sampler' as
 --     a result of this command, then the sampler /must/ not have been
 --     created with
---     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
+--     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-None-07288# Any shader invocation
 --     executed by this command /must/
@@ -2970,7 +3006,10 @@ data RayTracingShaderGroupCreateInfoKHR = RayTracingShaderGroupCreateInfoKHR
     -- 'Vulkan.Core10.APIConstants.SHADER_UNUSED_KHR' otherwise.
     intersectionShader :: Word32
   , -- | @pShaderGroupCaptureReplayHandle@ is @NULL@ or a pointer to replay
-    -- information for this shader group. Ignored if
+    -- information for this shader group queried from
+    -- 'getRayTracingCaptureReplayShaderGroupHandlesKHR', as described in
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#ray-tracing-capture-replay Ray Tracing Capture Replay>.
+    -- Ignored if
     -- 'PhysicalDeviceRayTracingPipelineFeaturesKHR'::@rayTracingPipelineShaderGroupHandleCaptureReplay@
     -- is 'Vulkan.Core10.FundamentalTypes.FALSE'.
     shaderGroupCaptureReplayHandle :: Ptr ()

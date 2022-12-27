@@ -654,7 +654,7 @@ deviceWaitIdleSafe = deviceWaitIdleSafeOrUnsafe mkVkDeviceWaitIdleSafe
 --     feature is not enabled, @pWaitDstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_EXT'
 --
--- -   #VUID-VkSubmitInfo-shadingRateImage-07318# If neither the
+-- -   #VUID-VkSubmitInfo-pWaitDstStageMask-07318# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>

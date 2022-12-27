@@ -144,6 +144,7 @@ import Vulkan.Core10.Handles (Device(Device))
 import Vulkan.Dynamic (DeviceCmds(pVkGetDeviceProcAddr))
 import Vulkan.Core10.FundamentalTypes (DeviceSize)
 import Vulkan.Core10.Handles (Device_T)
+import {-# SOURCE #-} Vulkan.Extensions.VK_LUNARG_direct_driver_loading (DirectDriverLoadingListLUNARG)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ExportMetalObjectCreateInfoEXT)
 import Vulkan.CStruct.Extends (Extends)
 import Vulkan.CStruct.Extends (Extendss)
@@ -1489,6 +1490,11 @@ instance Zero ApplicationInfo where
 -- 'Vulkan.Extensions.VK_EXT_debug_utils.createDebugUtilsMessengerEXT' to
 -- create persistent callback objects.
 --
+-- An application can add additional drivers by including the
+-- 'Vulkan.Extensions.VK_LUNARG_direct_driver_loading.DirectDriverLoadingListLUNARG'
+-- struct to the @pNext@ element of the 'InstanceCreateInfo' structure
+-- given to 'createInstance'.
+--
 -- == Valid Usage
 --
 -- -   #VUID-VkInstanceCreateInfo-pNext-04925# If the @pNext@ chain of
@@ -1509,12 +1515,19 @@ instance Zero ApplicationInfo where
 --     structure, its @exportObjectType@ member /must/ be either
 --     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_DEVICE_BIT_EXT'
 --     or
---     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_COMMAND_QUEUE_BIT_EXT'.
+--     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_COMMAND_QUEUE_BIT_EXT'
 --
 -- -   #VUID-VkInstanceCreateInfo-flags-06559# If @flags@ has the
 --     'Vulkan.Core10.Enums.InstanceCreateFlagBits.INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR'
 --     bit set, the list of enabled extensions in @ppEnabledExtensionNames@
 --     /must/ contain @VK_KHR_portability_enumeration@
+--
+-- -   #VUID-VkInstanceCreateInfo-pNext# If the @pNext@ chain of
+--     'InstanceCreateInfo' includes a
+--     'Vulkan.Extensions.VK_LUNARG_direct_driver_loading.DirectDriverLoadingListLUNARG'
+--     structure, the list of enabled extensions in
+--     @ppEnabledExtensionNames@ /must/ contain
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_LUNARG_direct_driver_loading VK_LUNARG_direct_driver_loading>
 --
 -- == Valid Usage (Implicit)
 --
@@ -1526,6 +1539,7 @@ instance Zero ApplicationInfo where
 --     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_EXT_debug_report.DebugReportCallbackCreateInfoEXT',
 --     'Vulkan.Extensions.VK_EXT_debug_utils.DebugUtilsMessengerCreateInfoEXT',
+--     'Vulkan.Extensions.VK_LUNARG_direct_driver_loading.DirectDriverLoadingListLUNARG',
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT',
 --     'Vulkan.Extensions.VK_EXT_validation_features.ValidationFeaturesEXT',
 --     or 'Vulkan.Extensions.VK_EXT_validation_flags.ValidationFlagsEXT'
@@ -1600,6 +1614,7 @@ instance Extensible InstanceCreateInfo where
   getNext InstanceCreateInfo{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends InstanceCreateInfo e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @DirectDriverLoadingListLUNARG = Just f
     | Just Refl <- eqT @e @ExportMetalObjectCreateInfoEXT = Just f
     | Just Refl <- eqT @e @DebugUtilsMessengerCreateInfoEXT = Just f
     | Just Refl <- eqT @e @ValidationFeaturesEXT = Just f

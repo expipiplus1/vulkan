@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.34.7.
+-- This file has been generated from package.yaml by hpack version 0.35.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -530,6 +530,7 @@ library
       Vulkan.Extensions.VK_KHR_xcb_surface
       Vulkan.Extensions.VK_KHR_xlib_surface
       Vulkan.Extensions.VK_KHR_zero_initialize_workgroup_memory
+      Vulkan.Extensions.VK_LUNARG_direct_driver_loading
       Vulkan.Extensions.VK_MVK_ios_surface
       Vulkan.Extensions.VK_MVK_macos_surface
       Vulkan.Extensions.VK_NN_vi_surface
@@ -580,6 +581,7 @@ library
       Vulkan.Extensions.VK_NVX_multiview_per_view_attributes
       Vulkan.Extensions.VK_QCOM_fragment_density_map_offset
       Vulkan.Extensions.VK_QCOM_image_processing
+      Vulkan.Extensions.VK_QCOM_multiview_per_view_viewports
       Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
       Vulkan.Extensions.VK_QCOM_render_pass_store_ops
       Vulkan.Extensions.VK_QCOM_render_pass_transform
@@ -640,6 +642,7 @@ library
     , bytestring
     , transformers
     , vector
+  default-language: Haskell2010
   if os(windows)
     extra-libraries:
         vulkan-1
@@ -655,7 +658,6 @@ library
     cpp-options: -DGENERIC_INSTANCES
   if flag(trace-calls)
     cpp-options: -DTRACE_CALLS
-  default-language: Haskell2010
 
 test-suite test
   type: exitcode-stdio-1.0

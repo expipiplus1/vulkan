@@ -166,7 +166,7 @@ import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SAMPLER_B
 -- -   #VUID-VkSamplerBorderColorComponentMappingCreateInfoEXT-borderColorSwizzle-06437#
 --     The
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-borderColorSwizzle borderColorSwizzle>
---     feature /must/ be enabled.
+--     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --

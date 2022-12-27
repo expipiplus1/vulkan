@@ -379,7 +379,7 @@ foreign import ccall
 --     and either the
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
 --     or 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT'
---     usage bits.
+--     usage bits
 --
 -- -   #VUID-vkCmdBeginRenderPass2-initialLayout-07003# If any of the
 --     @initialLayout@ or @finalLayout@ member of the
@@ -392,7 +392,7 @@ foreign import ccall
 --     specified in the @framebuffer@ member of @pRenderPassBegin@ /must/
 --     have been created with a @usage@ value the
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT'
---     usage bit.
+--     usage bit
 --
 -- == Valid Usage (Implicit)
 --
@@ -634,7 +634,7 @@ foreign import ccall
 --     'Vulkan.Core10.CommandBufferBuilding.cmdBeginQuery'* was called
 --     within a subpass of the render pass, the corresponding
 --     'Vulkan.Core10.CommandBufferBuilding.cmdEndQuery'* /must/ have been
---     called subsequently within the same subpass.
+--     called subsequently within the same subpass
 --
 -- == Valid Usage (Implicit)
 --
@@ -1882,7 +1882,7 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_EXT'
 --
--- -   #VUID-VkSubpassDependency2-shadingRateImage-07318# If neither the
+-- -   #VUID-VkSubpassDependency2-srcStageMask-07318# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
@@ -1930,7 +1930,7 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_EXT'
 --
--- -   #VUID-VkSubpassDependency2-shadingRateImage-07318# If neither the
+-- -   #VUID-VkSubpassDependency2-dstStageMask-07318# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>

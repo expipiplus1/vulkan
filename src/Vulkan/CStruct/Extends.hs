@@ -223,6 +223,8 @@ import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_private_data (DevicePri
 import {-# SOURCE #-} Vulkan.Core10.Device (DeviceQueueCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_global_priority (DeviceQueueGlobalPriorityCreateInfoKHR)
 import {-# SOURCE #-} Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory (DeviceQueueInfo2)
+import {-# SOURCE #-} Vulkan.Extensions.VK_LUNARG_direct_driver_loading (DirectDriverLoadingInfoLUNARG)
+import {-# SOURCE #-} Vulkan.Extensions.VK_LUNARG_direct_driver_loading (DirectDriverLoadingListLUNARG)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_directfb_surface (DirectFBSurfaceCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Core10.OtherTypes (DispatchIndirectCommand)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_display_control (DisplayEventInfoEXT)
@@ -539,6 +541,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_multi_draw (PhysicalDeviceMultiDr
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled (PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_multiview (PhysicalDeviceMultiviewFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NVX_multiview_per_view_attributes (PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX)
+import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_multiview_per_view_viewports (PhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_multiview (PhysicalDeviceMultiviewProperties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_mutable_descriptor_type (PhysicalDeviceMutableDescriptorTypeFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_non_seamless_cube_map (PhysicalDeviceNonSeamlessCubeMapFeaturesEXT)
@@ -1153,6 +1156,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceFaultFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderCoreBuiltinsFeaturesARM = ()
   Extends DeviceCreateInfo PhysicalDeviceRayTracingInvocationReorderFeaturesNV = ()
+  Extends DeviceCreateInfo PhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM = ()
   Extends DeviceQueueCreateInfo DeviceQueueGlobalPriorityCreateInfoKHR = ()
   Extends EventCreateInfo ExportMetalObjectCreateInfoEXT = ()
   Extends EventCreateInfo ImportMetalSharedEventInfoEXT = ()
@@ -1220,6 +1224,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends InstanceCreateInfo ValidationFeaturesEXT = ()
   Extends InstanceCreateInfo DebugUtilsMessengerCreateInfoEXT = ()
   Extends InstanceCreateInfo ExportMetalObjectCreateInfoEXT = ()
+  Extends InstanceCreateInfo DirectDriverLoadingListLUNARG = ()
   Extends MemoryAllocateInfo DedicatedAllocationMemoryAllocateInfoNV = ()
   Extends MemoryAllocateInfo ExportMemoryAllocateInfoNV = ()
   Extends MemoryAllocateInfo ImportMemoryWin32HandleInfoNV = ()
@@ -1383,6 +1388,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceFaultFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderCoreBuiltinsFeaturesARM = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRayTracingInvocationReorderFeaturesNV = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceExternalImageFormatInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 ImageFormatListCreateInfo = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceImageDrmFormatModifierInfoEXT = ()
@@ -2080,6 +2086,8 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_FEATURES_ARM -> go @PhysicalDeviceShaderCoreBuiltinsFeaturesARM
   STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_NV -> go @PhysicalDeviceRayTracingInvocationReorderFeaturesNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_PROPERTIES_NV -> go @PhysicalDeviceRayTracingInvocationReorderPropertiesNV
+  STRUCTURE_TYPE_DIRECT_DRIVER_LOADING_LIST_LUNARG -> go @DirectDriverLoadingListLUNARG
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_VIEWPORTS_FEATURES_QCOM -> go @PhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM
   t -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("Unrecognized struct type: " <> show t) Nothing Nothing
  where
   go :: forall e . (Typeable e, FromCStruct e, ToCStruct e, Show e) => IO b
@@ -2546,6 +2554,8 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceShaderCoreBuiltinsFeaturesARM #-}
 {-# complete (::&) :: PhysicalDeviceRayTracingInvocationReorderFeaturesNV #-}
 {-# complete (::&) :: PhysicalDeviceRayTracingInvocationReorderPropertiesNV #-}
+{-# complete (::&) :: DirectDriverLoadingListLUNARG #-}
+{-# complete (::&) :: PhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM #-}
 
 -- | View the head and tail of a 'Chain', see '::&'
 --

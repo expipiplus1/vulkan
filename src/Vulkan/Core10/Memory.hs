@@ -999,7 +999,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     chain /must/ include a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     structure with either its @image@ or @buffer@ field set to a value
---     other than 'Vulkan.Core10.APIConstants.NULL_HANDLE'.
+--     other than 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-VkMemoryAllocateInfo-image-06384# If the parameters define an
 --     import operation from an
@@ -1027,7 +1027,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     @memoryTypeIndex@ /must/ be from
 --     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionPropertiesFUCHSIA'
 --     as retrieved by
---     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.getBufferCollectionPropertiesFUCHSIA'.
+--     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.getBufferCollectionPropertiesFUCHSIA'
 --
 -- -   #VUID-VkMemoryAllocateInfo-pNext-00639# If the @pNext@ chain
 --     includes a
@@ -1304,7 +1304,7 @@ getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
 --     includes a
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
 --     structure, its @exportObjectType@ member /must/ be
---     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_BUFFER_BIT_EXT'.
+--     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_BUFFER_BIT_EXT'
 --
 -- == Valid Usage (Implicit)
 --

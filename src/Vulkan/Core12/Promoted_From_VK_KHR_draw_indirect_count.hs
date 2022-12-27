@@ -211,7 +211,7 @@ foreign import ccall
 --     dynamically used with a 'Vulkan.Core10.Handles.Pipeline' created
 --     with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
---     the descriptor memory /must/ be resident.
+--     the descriptor memory /must/ be resident
 --
 -- -   #VUID-vkCmdDrawIndirectCount-None-02700# A valid pipeline /must/ be
 --     bound to the pipeline bind point used by this command
@@ -309,6 +309,20 @@ foreign import ccall
 --     object that enables
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
 --     that object /must/ not use the @ConstOffset@ and @Offset@ operands
+--
+-- -   #VUID-vkCmdDrawIndirectCount-viewType-07752# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
+--     command, then the image view’s @viewType@ /must/ match the @Dim@
+--     operand of the @OpTypeImage@ as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-operation-validation ???>
+--
+-- -   #VUID-vkCmdDrawIndirectCount-format-07753# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
+--     command, then the image view’s @format@ /must/ match the numeric
+--     format from the @Sampled@ @Type@ operand of the @OpTypeImage@ as
+--     described in the SPIR-V Sampled Type column of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-numericformat ???>
+--     table
 --
 -- -   #VUID-vkCmdDrawIndirectCount-None-04115# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
@@ -412,14 +426,14 @@ foreign import ccall
 --     @OpImageBlockMatchSADQCOM@ or OpImageBlockMatchSSDQCOM is used to
 --     read from a reference image as result of this command, then the
 --     specified reference coordinates /must/ not fail
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-integer-coordinate-validation integer texel coordinate validation>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-integer-coordinate-validation integer texel coordinate validation>
 --
 -- -   #VUID-vkCmdDrawIndirectCount-OpImageWeightedSampleQCOM-06977# If
 --     @OpImageWeightedSampleQCOM@, @OpImageBoxFilterQCOM@,
 --     @OpImageBlockMatchSSDQCOM@, or @OpImageBlockMatchSADQCOM@ uses a
 --     'Vulkan.Core10.Handles.Sampler' as a result of this command, then
 --     the sampler /must/ have been created with
---     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
+--     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'
 --
 -- -   #VUID-vkCmdDrawIndirectCount-OpImageWeightedSampleQCOM-06978# If any
 --     command other than @OpImageWeightedSampleQCOM@,
@@ -427,7 +441,7 @@ foreign import ccall
 --     @OpImageBlockMatchSADQCOM@ uses a 'Vulkan.Core10.Handles.Sampler' as
 --     a result of this command, then the sampler /must/ not have been
 --     created with
---     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
+--     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'
 --
 -- -   #VUID-vkCmdDrawIndirectCount-None-07288# Any shader invocation
 --     executed by this command /must/
@@ -449,9 +463,9 @@ foreign import ccall
 --     to
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
--- -   #VUID-vkCmdDrawIndirectCount-None-02686# Every input attachment used
---     by the current subpass /must/ be bound to the pipeline via a
---     descriptor set
+-- -   #VUID-vkCmdDrawIndirectCount-None-07748# If any shader statically
+--     accesses an input attachment, a valid descriptor /must/ be bound to
+--     the pipeline via a descriptor set
 --
 -- -   #VUID-vkCmdDrawIndirectCount-OpTypeImage-07468# If any shader
 --     executed by this pipeline accesses an @OpTypeImage@ variable with a
@@ -462,10 +476,11 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndirectCount-None-07469# Input attachment views
 --     accessed in a subpass /must/ be created with the same
 --     'Vulkan.Core10.Enums.Format.Format' as the corresponding subpass
---     definition be created with a 'Vulkan.Core10.Handles.ImageView' that
---     is an attachment in the currently bound
---     'Vulkan.Core10.Handles.Framebuffer' at an index that corresponds to
---     a valid input attachment in the current subpass
+--     definition, and be created with a 'Vulkan.Core10.Handles.ImageView'
+--     that is compatible with the attachment referenced by the subpass\'
+--     @pInputAttachments@[@InputAttachmentIndex@] in the currently bound
+--     'Vulkan.Core10.Handles.Framebuffer' as specified by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#compatibility-inputattachment Fragment Input Attachment Compatibility>
 --
 -- -   #VUID-vkCmdDrawIndirectCount-None-06537# Memory backing image
 --     subresources used as attachments in the current render pass /must/
@@ -793,28 +808,30 @@ foreign import ccall
 --     used to create the currently bound pipeline equal to
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
--- -   #VUID-vkCmdDrawIndirectCount-attachmentCount-06667# If the bound
---     graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawIndirectCount-None-07749# If the bound graphics
+--     pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT'
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
---     drawing command, and the @attachmentCount@ parameter of
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndirectCount-attachmentCount-07750# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT'
+--     dynamic state enabled then the @attachmentCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
 --     /must/ be greater than or equal to the
 --     'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo'::@attachmentCount@
 --     of the currently bound graphics pipeline
 --
--- -   #VUID-vkCmdDrawIndirectCount-attachmentCount-06815# If the bound
---     graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT'
+-- -   #VUID-vkCmdDrawIndirectCount-None-07751# If the bound graphics
+--     pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
 --     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEXT'
 --     /must/ have been called in the current command buffer prior to this
---     drawing command, and the @attachmentCount@ parameter of
---     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
---     /must/ be less than or equal to the @maxColorAttachments@ member of
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'
+--     drawing command
 --
 -- -   #VUID-vkCmdDrawIndirectCount-pDepthAttachment-06181# If the current
 --     render pass instance was begun with
@@ -1000,7 +1017,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT'
 --     query is active,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-discard rasterization discard>
---     /must/ not be enabled.
+--     /must/ not be enabled
 --
 -- -   #VUID-vkCmdDrawIndirectCount-primitivesGeneratedQueryWithNonZeroStreams-06709#
 --     If the
@@ -1009,7 +1026,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT'
 --     query is active, the bound graphics pipeline /must/ not have been
 --     created with a non-zero value in
---     'Vulkan.Extensions.VK_EXT_transform_feedback.PipelineRasterizationStateStreamCreateInfoEXT'::@rasterizationStream@.
+--     'Vulkan.Extensions.VK_EXT_transform_feedback.PipelineRasterizationStateStreamCreateInfoEXT'::@rasterizationStream@
 --
 -- -   #VUID-vkCmdDrawIndirectCount-None-07619# If the bound graphics
 --     pipeline state was created with the
@@ -2056,7 +2073,7 @@ foreign import ccall
 --     dynamically used with a 'Vulkan.Core10.Handles.Pipeline' created
 --     with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
---     the descriptor memory /must/ be resident.
+--     the descriptor memory /must/ be resident
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-None-02700# A valid pipeline
 --     /must/ be bound to the pipeline bind point used by this command
@@ -2154,6 +2171,20 @@ foreign import ccall
 --     object that enables
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
 --     that object /must/ not use the @ConstOffset@ and @Offset@ operands
+--
+-- -   #VUID-vkCmdDrawIndexedIndirectCount-viewType-07752# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
+--     command, then the image view’s @viewType@ /must/ match the @Dim@
+--     operand of the @OpTypeImage@ as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-operation-validation ???>
+--
+-- -   #VUID-vkCmdDrawIndexedIndirectCount-format-07753# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
+--     command, then the image view’s @format@ /must/ match the numeric
+--     format from the @Sampled@ @Type@ operand of the @OpTypeImage@ as
+--     described in the SPIR-V Sampled Type column of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-numericformat ???>
+--     table
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-None-04115# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
@@ -2259,14 +2290,14 @@ foreign import ccall
 --     If @OpImageBlockMatchSADQCOM@ or OpImageBlockMatchSSDQCOM is used to
 --     read from a reference image as result of this command, then the
 --     specified reference coordinates /must/ not fail
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-integer-coordinate-validation integer texel coordinate validation>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-integer-coordinate-validation integer texel coordinate validation>
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-OpImageWeightedSampleQCOM-06977#
 --     If @OpImageWeightedSampleQCOM@, @OpImageBoxFilterQCOM@,
 --     @OpImageBlockMatchSSDQCOM@, or @OpImageBlockMatchSADQCOM@ uses a
 --     'Vulkan.Core10.Handles.Sampler' as a result of this command, then
 --     the sampler /must/ have been created with
---     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
+--     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-OpImageWeightedSampleQCOM-06978#
 --     If any command other than @OpImageWeightedSampleQCOM@,
@@ -2274,7 +2305,7 @@ foreign import ccall
 --     @OpImageBlockMatchSADQCOM@ uses a 'Vulkan.Core10.Handles.Sampler' as
 --     a result of this command, then the sampler /must/ not have been
 --     created with
---     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
+--     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-None-07288# Any shader
 --     invocation executed by this command /must/
@@ -2296,9 +2327,9 @@ foreign import ccall
 --     to
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
--- -   #VUID-vkCmdDrawIndexedIndirectCount-None-02686# Every input
---     attachment used by the current subpass /must/ be bound to the
---     pipeline via a descriptor set
+-- -   #VUID-vkCmdDrawIndexedIndirectCount-None-07748# If any shader
+--     statically accesses an input attachment, a valid descriptor /must/
+--     be bound to the pipeline via a descriptor set
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-OpTypeImage-07468# If any shader
 --     executed by this pipeline accesses an @OpTypeImage@ variable with a
@@ -2309,10 +2340,11 @@ foreign import ccall
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-None-07469# Input attachment
 --     views accessed in a subpass /must/ be created with the same
 --     'Vulkan.Core10.Enums.Format.Format' as the corresponding subpass
---     definition be created with a 'Vulkan.Core10.Handles.ImageView' that
---     is an attachment in the currently bound
---     'Vulkan.Core10.Handles.Framebuffer' at an index that corresponds to
---     a valid input attachment in the current subpass
+--     definition, and be created with a 'Vulkan.Core10.Handles.ImageView'
+--     that is compatible with the attachment referenced by the subpass\'
+--     @pInputAttachments@[@InputAttachmentIndex@] in the currently bound
+--     'Vulkan.Core10.Handles.Framebuffer' as specified by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#compatibility-inputattachment Fragment Input Attachment Compatibility>
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-None-06537# Memory backing image
 --     subresources used as attachments in the current render pass /must/
@@ -2641,28 +2673,30 @@ foreign import ccall
 --     used to create the currently bound pipeline equal to
 --     'Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'
 --
--- -   #VUID-vkCmdDrawIndexedIndirectCount-attachmentCount-06667# If the
---     bound graphics pipeline state was created with the
+-- -   #VUID-vkCmdDrawIndexedIndirectCount-None-07749# If the bound
+--     graphics pipeline state was created with the
 --     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT'
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
 --     /must/ have been called in the current command buffer prior to this
---     drawing command, and the @attachmentCount@ parameter of
+--     drawing command
+--
+-- -   #VUID-vkCmdDrawIndexedIndirectCount-attachmentCount-07750# If the
+--     bound graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT'
+--     dynamic state enabled then the @attachmentCount@ parameter of
 --     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
 --     /must/ be greater than or equal to the
 --     'Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo'::@attachmentCount@
 --     of the currently bound graphics pipeline
 --
--- -   #VUID-vkCmdDrawIndexedIndirectCount-attachmentCount-06815# If the
---     bound graphics pipeline state was created with the
---     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT'
+-- -   #VUID-vkCmdDrawIndexedIndirectCount-None-07751# If the bound
+--     graphics pipeline state was created with the
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_DISCARD_RECTANGLE_EXT'
 --     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEXT'
 --     /must/ have been called in the current command buffer prior to this
---     drawing command, and the @attachmentCount@ parameter of
---     'Vulkan.Extensions.VK_EXT_color_write_enable.cmdSetColorWriteEnableEXT'
---     /must/ be less than or equal to the @maxColorAttachments@ member of
---     'Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'
+--     drawing command
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-pDepthAttachment-06181# If the
 --     current render pass instance was begun with
@@ -2848,7 +2882,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT'
 --     query is active,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-discard rasterization discard>
---     /must/ not be enabled.
+--     /must/ not be enabled
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-primitivesGeneratedQueryWithNonZeroStreams-06709#
 --     If the
@@ -2857,7 +2891,7 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PRIMITIVES_GENERATED_EXT'
 --     query is active, the bound graphics pipeline /must/ not have been
 --     created with a non-zero value in
---     'Vulkan.Extensions.VK_EXT_transform_feedback.PipelineRasterizationStateStreamCreateInfoEXT'::@rasterizationStream@.
+--     'Vulkan.Extensions.VK_EXT_transform_feedback.PipelineRasterizationStateStreamCreateInfoEXT'::@rasterizationStream@
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-None-07619# If the bound
 --     graphics pipeline state was created with the

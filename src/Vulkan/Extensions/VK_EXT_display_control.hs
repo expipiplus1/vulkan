@@ -516,9 +516,8 @@ foreign import ccall
 -- -   #VUID-vkGetSwapchainCounterEXT-pCounterValue-parameter#
 --     @pCounterValue@ /must/ be a valid pointer to a @uint64_t@ value
 --
--- -   #VUID-vkGetSwapchainCounterEXT-commonparent# Both of @device@, and
---     @swapchain@ /must/ have been created, allocated, or retrieved from
---     the same 'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-vkGetSwapchainCounterEXT-swapchain-parent# @swapchain@ /must/
+--     have been created, allocated, or retrieved from @device@
 --
 -- == Return Codes
 --

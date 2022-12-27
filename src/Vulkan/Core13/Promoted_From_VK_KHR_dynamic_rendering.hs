@@ -232,7 +232,7 @@ foreign import ccall
 --     'Vulkan.Core10.CommandBufferBuilding.cmdBeginQuery'* was called
 --     within the render pass, the corresponding
 --     'Vulkan.Core10.CommandBufferBuilding.cmdEndQuery'* /must/ have been
---     called subsequently within the same subpass.
+--     called subsequently within the same subpass
 --
 -- == Valid Usage (Implicit)
 --
@@ -430,7 +430,7 @@ instance Zero PipelineRenderingCreateInfo where
 --     that is either
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT' or
 --     equal to
---     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'::@rasterizationSamples@.
+--     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'::@rasterizationSamples@
 --
 -- -   #VUID-VkRenderingInfo-imageView-06859# If
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#subpass-multisampledrendertosinglesampled multisampled-render-to-single-sampled>
@@ -441,7 +441,7 @@ instance Zero PipelineRenderingCreateInfo where
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT' /must/
 --     have been created with
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT'
---     in their 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@.
+--     in their 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@
 --
 -- -   #VUID-VkRenderingInfo-pNext-06077# If the @pNext@ chain does not
 --     contain
@@ -643,6 +643,43 @@ instance Zero PipelineRenderingCreateInfo where
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL',
 --     or
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkRenderingInfo-pDepthAttachment-07732# If @pDepthAttachment@
+--     is not @NULL@ and @pDepthAttachment->imageView@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', @pDepthAttachment->layout@
+--     /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkRenderingInfo-pDepthAttachment-07733# If @pDepthAttachment@
+--     is not @NULL@, @pDepthAttachment->imageView@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', and
+--     @pDepthAttachment->resolveMode@ is not
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE',
+--     @pDepthAttachment->resolveImageLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkRenderingInfo-pStencilAttachment-07734# If
+--     @pStencilAttachment@ is not @NULL@ and
+--     @pStencilAttachment->imageView@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @pStencilAttachment->layout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL'
+--
+-- -   #VUID-VkRenderingInfo-pStencilAttachment-07735# If
+--     @pStencilAttachment@ is not @NULL@, @pStencilAttachment->imageView@
+--     is not 'Vulkan.Core10.APIConstants.NULL_HANDLE', and
+--     @pStencilAttachment->resolveMode@ is not
+--     'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE',
+--     @pStencilAttachment->resolveImageLayout@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
+--     or
+--     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL'
 --
 -- -   #VUID-VkRenderingInfo-pDepthAttachment-06102# If @pDepthAttachment@
 --     is not @NULL@ and @pDepthAttachment->imageView@ is not
@@ -998,10 +1035,14 @@ instance es ~ '[] => Zero (RenderingInfo es) where
 -- 'Vulkan.Core12.Enums.ResolveModeFlagBits.RESOLVE_MODE_NONE', and
 -- @resolveImageView@ is not 'Vulkan.Core10.APIConstants.NULL_HANDLE',
 -- values in @resolveImageView@ within the render area become undefined
--- once rendering begins. At the end of rendering, the color values written
--- to each pixel location in @imageView@ will be resolved according to
--- @resolveMode@ and stored into the the same location in
--- @resolveImageView@.
+-- once rendering begins. Only values in the aspect corresponding to the
+-- use of this attachment become undefined (the depth aspect if this
+-- attachment is used as 'RenderingInfo'::@pDepthAttachment@, and the
+-- stencil aspect if it is used as @pStencilAttachment@).
+--
+-- At the end of rendering, the values written to each pixel location in
+-- @imageView@ will be resolved according to @resolveMode@ and stored into
+-- the the same location in @resolveImageView@.
 --
 -- Note
 --

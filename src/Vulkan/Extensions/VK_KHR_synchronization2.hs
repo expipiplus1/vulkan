@@ -692,8 +692,7 @@ foreign import ccall
 --     feature is not enabled, @stage@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT'
 --
--- -   #VUID-vkCmdWriteBufferMarker2AMD-shadingRateImage-07316# If neither
---     the
+-- -   #VUID-vkCmdWriteBufferMarker2AMD-stage-07316# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>

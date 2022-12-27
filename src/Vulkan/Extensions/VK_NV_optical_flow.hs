@@ -56,6 +56,11 @@
 -- This extension allows applications to estimate 2D displacement of pixels
 -- between two frames.
 --
+-- Note
+--
+-- This extension is designed to be used with upcoming NVIDIA Optical Flow
+-- SDK Version 5 which will be available on NVIDIA Developer webpage.
+--
 -- == New Object Types
 --
 -- -   'Vulkan.Extensions.Handles.OpticalFlowSessionNV'
@@ -1283,67 +1288,67 @@ instance Zero OpticalFlowImageFormatPropertiesNV where
 -- -   #VUID-VkOpticalFlowSessionCreateInfoNV-width-07581# @width@ /must/
 --     be greater than or equal to
 --     'PhysicalDeviceOpticalFlowPropertiesNV'::@minWidth@ and less than or
---     equal to 'PhysicalDeviceOpticalFlowPropertiesNV'::@maxWidth@.
+--     equal to 'PhysicalDeviceOpticalFlowPropertiesNV'::@maxWidth@
 --
 -- -   #VUID-VkOpticalFlowSessionCreateInfoNV-height-07582# @height@ /must/
 --     be greater than or equal to
 --     'PhysicalDeviceOpticalFlowPropertiesNV'::@minHeight@ and less than
---     or equal to 'PhysicalDeviceOpticalFlowPropertiesNV'::@maxHeight@.
+--     or equal to 'PhysicalDeviceOpticalFlowPropertiesNV'::@maxHeight@
 --
 -- -   #VUID-VkOpticalFlowSessionCreateInfoNV-imageFormat-07583#
 --     @imageFormat@ /must/ be one of the formats returned by
 --     'getPhysicalDeviceOpticalFlowImageFormatsNV' for
---     'OPTICAL_FLOW_USAGE_INPUT_BIT_NV'.
+--     'OPTICAL_FLOW_USAGE_INPUT_BIT_NV'
 --
 -- -   #VUID-VkOpticalFlowSessionCreateInfoNV-flowVectorFormat-07584#
 --     @flowVectorFormat@ /must/ be one of the formats returned by
 --     'getPhysicalDeviceOpticalFlowImageFormatsNV' for
---     'OPTICAL_FLOW_USAGE_OUTPUT_BIT_NV'.
+--     'OPTICAL_FLOW_USAGE_OUTPUT_BIT_NV'
 --
 -- -   #VUID-VkOpticalFlowSessionCreateInfoNV-costFormat-07585#
 --     @costFormat@ /must/ be one of the formats returned by
 --     'getPhysicalDeviceOpticalFlowImageFormatsNV' for
 --     'OPTICAL_FLOW_USAGE_COST_BIT_NV' if
---     'OPTICAL_FLOW_SESSION_CREATE_ENABLE_COST_BIT_NV' is set in @flags@.
+--     'OPTICAL_FLOW_SESSION_CREATE_ENABLE_COST_BIT_NV' is set in @flags@
 --
 -- -   #VUID-VkOpticalFlowSessionCreateInfoNV-outputGridSize-07586#
 --     @outputGridSize@ /must/ be exactly one of the bits reported in
---     'PhysicalDeviceOpticalFlowPropertiesNV'::@supportedOutputGridSizes@.
+--     'PhysicalDeviceOpticalFlowPropertiesNV'::@supportedOutputGridSizes@
 --
 -- -   #VUID-VkOpticalFlowSessionCreateInfoNV-hintGridSize-07587#
 --     @hintGridSize@ /must/ be exactly one of the bits reported in
 --     'PhysicalDeviceOpticalFlowPropertiesNV'::@supportedHintGridSizes@ if
---     'OPTICAL_FLOW_SESSION_CREATE_ENABLE_HINT_BIT_NV' is set in @flags@.
+--     'OPTICAL_FLOW_SESSION_CREATE_ENABLE_HINT_BIT_NV' is set in @flags@
 --
 -- -   #VUID-VkOpticalFlowSessionCreateInfoNV-flags-07588#
 --     'OPTICAL_FLOW_SESSION_CREATE_ENABLE_HINT_BIT_NV' /must/ not be set
 --     in @flags@ if
 --     'PhysicalDeviceOpticalFlowPropertiesNV'::@hintSupported@ is
---     'Vulkan.Core10.FundamentalTypes.FALSE'.
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   #VUID-VkOpticalFlowSessionCreateInfoNV-flags-07589#
 --     'OPTICAL_FLOW_SESSION_CREATE_ENABLE_COST_BIT_NV' /must/ not be set
 --     in @flags@ if
 --     'PhysicalDeviceOpticalFlowPropertiesNV'::@costSupported@ is
---     'Vulkan.Core10.FundamentalTypes.FALSE'.
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   #VUID-VkOpticalFlowSessionCreateInfoNV-flags-07590#
 --     'OPTICAL_FLOW_SESSION_CREATE_ENABLE_GLOBAL_FLOW_BIT_NV' /must/ not
 --     be set in @flags@ if
 --     'PhysicalDeviceOpticalFlowPropertiesNV'::@globalFlowSupported@ is
---     'Vulkan.Core10.FundamentalTypes.FALSE'.
+--     'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- -   #VUID-VkOpticalFlowSessionCreateInfoNV-flags-07591#
 --     'OPTICAL_FLOW_SESSION_CREATE_ALLOW_REGIONS_BIT_NV' /must/ not be set
 --     in @flags@ if
 --     'PhysicalDeviceOpticalFlowPropertiesNV'::@maxNumRegionsOfInterest@
---     is 0.
+--     is 0
 --
 -- -   #VUID-VkOpticalFlowSessionCreateInfoNV-flags-07592#
 --     'OPTICAL_FLOW_SESSION_CREATE_BOTH_DIRECTIONS_BIT_NV' /must/ not be
 --     set in @flags@ if
 --     'PhysicalDeviceOpticalFlowPropertiesNV'::@bidirectionalFlowSupported@
---     is 'Vulkan.Core10.FundamentalTypes.FALSE'.
+--     is 'Vulkan.Core10.FundamentalTypes.FALSE'
 --
 -- == Valid Usage (Implicit)
 --
@@ -1599,7 +1604,7 @@ instance Zero OpticalFlowSessionCreatePrivateDataInfoNV where
 -- -   #VUID-VkOpticalFlowExecuteInfoNV-regionCount-07593# @regionCount@
 --     /must/ be 0 if 'OPTICAL_FLOW_SESSION_CREATE_ALLOW_REGIONS_BIT_NV'
 --     was not set for 'Vulkan.Extensions.Handles.OpticalFlowSessionNV' on
---     which this command is operating.
+--     which this command is operating
 --
 -- == Valid Usage (Implicit)
 --

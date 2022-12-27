@@ -56,6 +56,11 @@
 -- This extension allows applications to estimate 2D displacement of pixels
 -- between two frames.
 --
+-- Note
+--
+-- This extension is designed to be used with upcoming NVIDIA Optical Flow
+-- SDK Version 5 which will be available on NVIDIA Developer webpage.
+--
 -- == New Object Types
 --
 -- -   'Vulkan.Extensions.Handles.OpticalFlowSessionNV'

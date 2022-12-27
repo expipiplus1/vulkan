@@ -599,6 +599,13 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
 --     bit set
 --
+-- -   #VUID-VkBindImageMemoryInfo-image-07736# If @image@ was created with
+--     the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
+--     bit set, then the @pNext@ chain /must/ include a
+--     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo'
+--     structure
+--
 -- -   #VUID-VkBindImageMemoryInfo-pNext-01619# If the @pNext@ chain
 --     includes a
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo'

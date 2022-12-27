@@ -344,7 +344,7 @@ destroyBufferView device bufferView allocator = liftIO . evalContT $ do
 --     includes a
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
 --     structure, its @exportObjectType@ member /must/ be
---     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT'.
+--     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT'
 --
 -- == Valid Usage (Implicit)
 --

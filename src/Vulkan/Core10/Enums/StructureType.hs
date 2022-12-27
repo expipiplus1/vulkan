@@ -55,6 +55,7 @@ module Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYPE_APPLICA
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_EXT
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_PROPERTIES_NV
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_NV
+                                                        , STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_VIEWPORTS_FEATURES_QCOM
                                                         , STRUCTURE_TYPE_AMIGO_PROFILING_SUBMIT_INFO_SEC
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_AMIGO_PROFILING_FEATURES_SEC
                                                         , STRUCTURE_TYPE_TILE_PROPERTIES_QCOM
@@ -73,6 +74,8 @@ module Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYPE_APPLICA
                                                         , STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_MODULE_IDENTIFIER_CREATE_INFO_EXT
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MODULE_IDENTIFIER_PROPERTIES_EXT
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MODULE_IDENTIFIER_FEATURES_EXT
+                                                        , STRUCTURE_TYPE_DIRECT_DRIVER_LOADING_LIST_LUNARG
+                                                        , STRUCTURE_TYPE_DIRECT_DRIVER_LOADING_INFO_LUNARG
                                                         , STRUCTURE_TYPE_RENDER_PASS_SUBPASS_FEEDBACK_CREATE_INFO_EXT
                                                         , STRUCTURE_TYPE_RENDER_PASS_CREATION_FEEDBACK_CREATE_INFO_EXT
                                                         , STRUCTURE_TYPE_RENDER_PASS_CREATION_CONTROL_EXT
@@ -835,6 +838,8 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core10.Device.DeviceQueueCreateInfo',
 -- 'Vulkan.Extensions.VK_KHR_global_priority.DeviceQueueGlobalPriorityCreateInfoKHR',
 -- 'Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.DeviceQueueInfo2',
+-- 'Vulkan.Extensions.VK_LUNARG_direct_driver_loading.DirectDriverLoadingInfoLUNARG',
+-- 'Vulkan.Extensions.VK_LUNARG_direct_driver_loading.DirectDriverLoadingListLUNARG',
 -- 'Vulkan.Extensions.VK_EXT_directfb_surface.DirectFBSurfaceCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_display_control.DisplayEventInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_display.DisplayModeCreateInfoKHR',
@@ -1107,6 +1112,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewFeatures',
 -- 'Vulkan.Extensions.VK_NVX_multiview_per_view_attributes.PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX',
+-- 'Vulkan.Extensions.VK_QCOM_multiview_per_view_viewports.PhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewProperties',
 -- 'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.PhysicalDeviceMutableDescriptorTypeFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_non_seamless_cube_map.PhysicalDeviceNonSeamlessCubeMapFeaturesEXT',
@@ -1596,6 +1602,9 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_PROPERTIES
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_NV"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_NV = StructureType 1000490000
 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_VIEWPORTS_FEATURES_QCOM"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_VIEWPORTS_FEATURES_QCOM = StructureType 1000488000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_AMIGO_PROFILING_SUBMIT_INFO_SEC"
 pattern STRUCTURE_TYPE_AMIGO_PROFILING_SUBMIT_INFO_SEC = StructureType 1000485001
 
@@ -1649,6 +1658,12 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MODULE_IDENTIFIER_PROPERTIES_EXT =
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MODULE_IDENTIFIER_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MODULE_IDENTIFIER_FEATURES_EXT = StructureType 1000462000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DIRECT_DRIVER_LOADING_LIST_LUNARG"
+pattern STRUCTURE_TYPE_DIRECT_DRIVER_LOADING_LIST_LUNARG = StructureType 1000459001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DIRECT_DRIVER_LOADING_INFO_LUNARG"
+pattern STRUCTURE_TYPE_DIRECT_DRIVER_LOADING_INFO_LUNARG = StructureType 1000459000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDER_PASS_SUBPASS_FEEDBACK_CREATE_INFO_EXT"
 pattern STRUCTURE_TYPE_RENDER_PASS_SUBPASS_FEEDBACK_CREATE_INFO_EXT = StructureType 1000458003
@@ -3515,6 +3530,7 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_PROPERTIES_NV
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_NV
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_VIEWPORTS_FEATURES_QCOM
   , STRUCTURE_TYPE_AMIGO_PROFILING_SUBMIT_INFO_SEC
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_AMIGO_PROFILING_FEATURES_SEC
   , STRUCTURE_TYPE_TILE_PROPERTIES_QCOM
@@ -3533,6 +3549,8 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_MODULE_IDENTIFIER_CREATE_INFO_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MODULE_IDENTIFIER_PROPERTIES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MODULE_IDENTIFIER_FEATURES_EXT
+  , STRUCTURE_TYPE_DIRECT_DRIVER_LOADING_LIST_LUNARG
+  , STRUCTURE_TYPE_DIRECT_DRIVER_LOADING_INFO_LUNARG
   , STRUCTURE_TYPE_RENDER_PASS_SUBPASS_FEEDBACK_CREATE_INFO_EXT
   , STRUCTURE_TYPE_RENDER_PASS_CREATION_FEEDBACK_CREATE_INFO_EXT
   , STRUCTURE_TYPE_RENDER_PASS_CREATION_CONTROL_EXT
@@ -4356,6 +4374,10 @@ showTableStructureType =
     , "PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_NV"
     )
   ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_VIEWPORTS_FEATURES_QCOM
+    , "PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_VIEWPORTS_FEATURES_QCOM"
+    )
+  ,
     ( STRUCTURE_TYPE_AMIGO_PROFILING_SUBMIT_INFO_SEC
     , "AMIGO_PROFILING_SUBMIT_INFO_SEC"
     )
@@ -4426,6 +4448,14 @@ showTableStructureType =
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MODULE_IDENTIFIER_FEATURES_EXT
     , "PHYSICAL_DEVICE_SHADER_MODULE_IDENTIFIER_FEATURES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_DIRECT_DRIVER_LOADING_LIST_LUNARG
+    , "DIRECT_DRIVER_LOADING_LIST_LUNARG"
+    )
+  ,
+    ( STRUCTURE_TYPE_DIRECT_DRIVER_LOADING_INFO_LUNARG
+    , "DIRECT_DRIVER_LOADING_INFO_LUNARG"
     )
   ,
     ( STRUCTURE_TYPE_RENDER_PASS_SUBPASS_FEEDBACK_CREATE_INFO_EXT

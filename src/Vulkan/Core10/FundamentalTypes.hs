@@ -515,6 +515,7 @@ instance Zero Rect2D where
 -- 'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT',
 -- 'Vulkan.Core11.Promoted_From_VK_KHR_multiview.PhysicalDeviceMultiviewFeatures',
 -- 'Vulkan.Extensions.VK_NVX_multiview_per_view_attributes.PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX',
+-- 'Vulkan.Extensions.VK_QCOM_multiview_per_view_viewports.PhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM',
 -- 'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.PhysicalDeviceMutableDescriptorTypeFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_non_seamless_cube_map.PhysicalDeviceNonSeamlessCubeMapFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_opacity_micromap.PhysicalDeviceOpacityMicromapFeaturesEXT',

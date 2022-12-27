@@ -514,7 +514,7 @@ resetEvent device event = liftIO $ do
 -- -   #VUID-VkEventCreateInfo-pNext-06790# If the @pNext@ chain includes a
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
 --     structure, its @exportObjectType@ member /must/ be
---     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_SHARED_EVENT_BIT_EXT'.
+--     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_SHARED_EVENT_BIT_EXT'
 --
 -- == Valid Usage (Implicit)
 --
