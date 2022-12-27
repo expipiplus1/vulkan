@@ -165,6 +165,7 @@ jobs:
 
     - name: Set up yq
       uses: frenck/action-setup-yq@v1
+      with: {version: v4.30.5} # frenck/action-setup-yq#35
 
     - name: Install system dependencies Linux
       if: matrix.os == 'ubuntu-20.04'
