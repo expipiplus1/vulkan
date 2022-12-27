@@ -12,10 +12,11 @@ default-extensions:
 - BlockArguments
 - ConstraintKinds
 - DataKinds
-- DeriveFunctor
+- DeepSubsumption
 - DeriveFoldable
-- DeriveTraversable
+- DeriveFunctor
 - DeriveGeneric
+- DeriveTraversable
 - DerivingVia
 - DisambiguateRecordFields
 - DuplicateRecordFields
