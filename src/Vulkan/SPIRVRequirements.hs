@@ -8,9 +8,9 @@ module Vulkan.SPIRVRequirements  ( spirvExtensionRequirements
 
 import Vulkan.Requirement (DeviceRequirement(..))
 import Vulkan.Requirement (InstanceRequirement(..))
-import Data.Bits ((.&.))
-import Data.Bits (zeroBits)
-import Data.Bits (Bits)
+import GHC.Bits ((.&.))
+import GHC.Bits (zeroBits)
+import GHC.Bits (Bits)
 import Data.ByteString (ByteString)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (PhysicalDevice)

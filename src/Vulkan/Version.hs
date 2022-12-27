@@ -12,10 +12,10 @@ module Vulkan.Version  ( pattern HEADER_VERSION
                        , _API_VERSION_PATCH
                        ) where
 
-import Data.Bits ((.&.))
-import Data.Bits ((.|.))
-import Data.Bits (shiftL)
-import Data.Bits (shiftR)
+import GHC.Bits ((.&.))
+import GHC.Bits ((.|.))
+import GHC.Bits (shiftL)
+import GHC.Bits (shiftR)
 import Data.Word (Word32)
 
 pattern HEADER_VERSION :: Word32
