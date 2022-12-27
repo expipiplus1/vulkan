@@ -1,6 +1,7 @@
 # Change Log
 
 ## WIP
+- Bump VMA
 
 ## [0.10.4] - 2022-10-02
 - More robust linking against C++ standard library
