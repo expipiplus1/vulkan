@@ -69,6 +69,9 @@ data Bool32
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.BindIndexBufferIndirectCommandNV',
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.BindVertexBufferIndirectCommandNV',
 -- 'Vulkan.Extensions.VK_EXT_buffer_device_address.BufferDeviceAddressCreateInfoEXT',
+-- 'Vulkan.Extensions.VK_NV_copy_memory_indirect.CopyMemoryIndirectCommandNV',
+-- 'Vulkan.Extensions.VK_NV_copy_memory_indirect.CopyMemoryToImageIndirectCommandNV',
+-- 'Vulkan.Extensions.VK_NV_memory_decompression.DecompressMemoryRegionNV',
 -- 'Vulkan.Extensions.VK_EXT_device_address_binding_report.DeviceAddressBindingCallbackDataEXT',
 -- 'Vulkan.Extensions.VK_EXT_device_fault.DeviceFaultAddressInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.DeviceOrHostAddressConstKHR',
@@ -78,6 +81,9 @@ data Bool32
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.StridedDeviceAddressRegionKHR',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1.TraceRaysIndirectCommand2KHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.cmdBuildAccelerationStructuresIndirectKHR',
+-- 'Vulkan.Extensions.VK_NV_copy_memory_indirect.cmdCopyMemoryIndirectNV',
+-- 'Vulkan.Extensions.VK_NV_copy_memory_indirect.cmdCopyMemoryToImageIndirectNV',
+-- 'Vulkan.Extensions.VK_NV_memory_decompression.cmdDecompressMemoryIndirectCountNV',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_maintenance1.cmdTraceRaysIndirect2KHR',
 -- 'Vulkan.Extensions.VK_KHR_ray_tracing_pipeline.cmdTraceRaysIndirectKHR'
 type DeviceAddress = Word64
@@ -108,6 +114,8 @@ type DeviceAddress = Word64
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.BufferMemoryBarrier2',
 -- 'Vulkan.Core10.BufferView.BufferViewCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_conditional_rendering.ConditionalRenderingBeginInfoEXT',
+-- 'Vulkan.Extensions.VK_NV_copy_memory_indirect.CopyMemoryIndirectCommandNV',
+-- 'Vulkan.Extensions.VK_NV_memory_decompression.DecompressMemoryRegionNV',
 -- 'Vulkan.Core10.DescriptorSet.DescriptorBufferInfo',
 -- 'Vulkan.Extensions.VK_EXT_device_address_binding_report.DeviceAddressBindingCallbackDataEXT',
 -- 'Vulkan.Extensions.VK_EXT_device_fault.DeviceFaultAddressInfoEXT',

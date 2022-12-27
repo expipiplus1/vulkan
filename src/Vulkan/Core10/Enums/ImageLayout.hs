@@ -87,6 +87,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyBufferToImage',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyImage',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyImageToBuffer',
+-- 'Vulkan.Extensions.VK_NV_copy_memory_indirect.cmdCopyMemoryToImageIndirectNV',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdResolveImage'
 newtype ImageLayout = ImageLayout Int32
   deriving newtype (Eq, Ord, Storable, Zero)

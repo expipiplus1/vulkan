@@ -54,7 +54,7 @@
 --
 --     -   Jason Ekstrand, Intel
 --
---     -   Ian Elliot, Google
+--     -   Ian Elliott, Google
 --
 --     -   Jesse Hall, Google
 --
