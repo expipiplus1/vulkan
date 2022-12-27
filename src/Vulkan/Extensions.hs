@@ -255,6 +255,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_NV_clip_space_w_scaling
                           , module Vulkan.Extensions.VK_NV_compute_shader_derivatives
                           , module Vulkan.Extensions.VK_NV_cooperative_matrix
+                          , module Vulkan.Extensions.VK_NV_copy_memory_indirect
                           , module Vulkan.Extensions.VK_NV_corner_sampled_image
                           , module Vulkan.Extensions.VK_NV_coverage_reduction_mode
                           , module Vulkan.Extensions.VK_NV_dedicated_allocation
@@ -275,10 +276,12 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_NV_glsl_shader
                           , module Vulkan.Extensions.VK_NV_inherited_viewport_scissor
                           , module Vulkan.Extensions.VK_NV_linear_color_attachment
+                          , module Vulkan.Extensions.VK_NV_memory_decompression
                           , module Vulkan.Extensions.VK_NV_mesh_shader
                           , module Vulkan.Extensions.VK_NV_optical_flow
                           , module Vulkan.Extensions.VK_NV_present_barrier
                           , module Vulkan.Extensions.VK_NV_ray_tracing
+                          , module Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder
                           , module Vulkan.Extensions.VK_NV_ray_tracing_motion_blur
                           , module Vulkan.Extensions.VK_NV_representative_fragment_test
                           , module Vulkan.Extensions.VK_NV_sample_mask_override_coverage
@@ -557,6 +560,7 @@ import Vulkan.Extensions.VK_NV_acquire_winrt_display
 import Vulkan.Extensions.VK_NV_clip_space_w_scaling
 import Vulkan.Extensions.VK_NV_compute_shader_derivatives
 import Vulkan.Extensions.VK_NV_cooperative_matrix
+import Vulkan.Extensions.VK_NV_copy_memory_indirect
 import Vulkan.Extensions.VK_NV_corner_sampled_image
 import Vulkan.Extensions.VK_NV_coverage_reduction_mode
 import Vulkan.Extensions.VK_NV_dedicated_allocation
@@ -577,10 +581,12 @@ import Vulkan.Extensions.VK_NV_geometry_shader_passthrough
 import Vulkan.Extensions.VK_NV_glsl_shader
 import Vulkan.Extensions.VK_NV_inherited_viewport_scissor
 import Vulkan.Extensions.VK_NV_linear_color_attachment
+import Vulkan.Extensions.VK_NV_memory_decompression
 import Vulkan.Extensions.VK_NV_mesh_shader
 import Vulkan.Extensions.VK_NV_optical_flow
 import Vulkan.Extensions.VK_NV_present_barrier
 import Vulkan.Extensions.VK_NV_ray_tracing
+import Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder
 import Vulkan.Extensions.VK_NV_ray_tracing_motion_blur
 import Vulkan.Extensions.VK_NV_representative_fragment_test
 import Vulkan.Extensions.VK_NV_sample_mask_override_coverage

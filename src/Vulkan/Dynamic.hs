@@ -124,6 +124,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_debug_utils (DebugUtilsMessengerC
 import {-# SOURCE #-} Vulkan.Extensions.Handles (DebugUtilsMessengerEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_debug_utils (DebugUtilsObjectNameInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_debug_utils (DebugUtilsObjectTagInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_NV_memory_decompression (DecompressMemoryRegionNV)
 import {-# SOURCE #-} Vulkan.Extensions.Handles (DeferredOperationKHR)
 import {-# SOURCE #-} Vulkan.Core10.Enums.DependencyFlagBits (DependencyFlags)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 (DependencyInfo)
@@ -220,6 +221,7 @@ import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ImageResolve)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2 (ImageSparseMemoryRequirementsInfo2)
 import {-# SOURCE #-} Vulkan.Core10.SparseResourceMemoryManagement (ImageSubresource)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_compression_control (ImageSubresource2EXT)
+import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ImageSubresourceLayers)
 import {-# SOURCE #-} Vulkan.Core10.ImageView (ImageSubresourceRange)
 import {-# SOURCE #-} Vulkan.Core10.Enums.ImageTiling (ImageTiling)
 import {-# SOURCE #-} Vulkan.Core10.Enums.ImageType (ImageType)
@@ -917,6 +919,8 @@ data DeviceCmds = DeviceCmds
   , pVkCmdBlitImage :: FunPtr (Ptr CommandBuffer_T -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr ImageBlit) -> Filter -> IO ())
   , pVkCmdCopyBufferToImage :: FunPtr (Ptr CommandBuffer_T -> ("srcBuffer" ::: Buffer) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr BufferImageCopy) -> IO ())
   , pVkCmdCopyImageToBuffer :: FunPtr (Ptr CommandBuffer_T -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstBuffer" ::: Buffer) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr BufferImageCopy) -> IO ())
+  , pVkCmdCopyMemoryIndirectNV :: FunPtr (Ptr CommandBuffer_T -> ("copyBufferAddress" ::: DeviceAddress) -> ("copyCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
+  , pVkCmdCopyMemoryToImageIndirectNV :: FunPtr (Ptr CommandBuffer_T -> ("copyBufferAddress" ::: DeviceAddress) -> ("copyCount" ::: Word32) -> ("stride" ::: Word32) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("pImageSubresources" ::: Ptr ImageSubresourceLayers) -> IO ())
   , pVkCmdUpdateBuffer :: FunPtr (Ptr CommandBuffer_T -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> ("dataSize" ::: DeviceSize) -> ("pData" ::: Ptr ()) -> IO ())
   , pVkCmdFillBuffer :: FunPtr (Ptr CommandBuffer_T -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> DeviceSize -> ("data" ::: Word32) -> IO ())
   , pVkCmdClearColorImage :: FunPtr (Ptr CommandBuffer_T -> Image -> ImageLayout -> ("pColor" ::: Ptr ClearColorValue) -> ("rangeCount" ::: Word32) -> ("pRanges" ::: Ptr ImageSubresourceRange) -> IO ())
@@ -1190,6 +1194,8 @@ data DeviceCmds = DeviceCmds
   , pVkCmdWriteTimestamp2 :: FunPtr (Ptr CommandBuffer_T -> PipelineStageFlags2 -> QueryPool -> ("query" ::: Word32) -> IO ())
   , pVkCmdWriteBufferMarker2AMD :: FunPtr (Ptr CommandBuffer_T -> PipelineStageFlags2 -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> ("marker" ::: Word32) -> IO ())
   , pVkGetQueueCheckpointData2NV :: FunPtr (Ptr Queue_T -> ("pCheckpointDataCount" ::: Ptr Word32) -> ("pCheckpointData" ::: Ptr CheckpointData2NV) -> IO ())
+  , pVkCmdDecompressMemoryNV :: FunPtr (Ptr CommandBuffer_T -> ("decompressRegionCount" ::: Word32) -> ("pDecompressMemoryRegions" ::: Ptr DecompressMemoryRegionNV) -> IO ())
+  , pVkCmdDecompressMemoryIndirectCountNV :: FunPtr (Ptr CommandBuffer_T -> ("indirectCommandsAddress" ::: DeviceAddress) -> ("indirectCommandsCountAddress" ::: DeviceAddress) -> ("stride" ::: Word32) -> IO ())
   , pVkCreateCuModuleNVX :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr CuModuleCreateInfoNVX) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pModule" ::: Ptr CuModuleNVX) -> IO Result)
   , pVkCreateCuFunctionNVX :: FunPtr (Ptr Device_T -> ("pCreateInfo" ::: Ptr CuFunctionCreateInfoNVX) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pFunction" ::: Ptr CuFunctionNVX) -> IO Result)
   , pVkDestroyCuModuleNVX :: FunPtr (Ptr Device_T -> CuModuleNVX -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ())
@@ -1654,7 +1660,15 @@ instance Zero DeviceCmds where
     nullFunPtr
     nullFunPtr
     nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr nullFunPtr
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1782,6 +1796,8 @@ initDeviceCmds instanceCmds handle = do
   vkCmdBlitImage <- getDeviceProcAddr' handle (Ptr "vkCmdBlitImage"#)
   vkCmdCopyBufferToImage <- getDeviceProcAddr' handle (Ptr "vkCmdCopyBufferToImage"#)
   vkCmdCopyImageToBuffer <- getDeviceProcAddr' handle (Ptr "vkCmdCopyImageToBuffer"#)
+  vkCmdCopyMemoryIndirectNV <- getDeviceProcAddr' handle (Ptr "vkCmdCopyMemoryIndirectNV"#)
+  vkCmdCopyMemoryToImageIndirectNV <- getDeviceProcAddr' handle (Ptr "vkCmdCopyMemoryToImageIndirectNV"#)
   vkCmdUpdateBuffer <- getDeviceProcAddr' handle (Ptr "vkCmdUpdateBuffer"#)
   vkCmdFillBuffer <- getDeviceProcAddr' handle (Ptr "vkCmdFillBuffer"#)
   vkCmdClearColorImage <- getDeviceProcAddr' handle (Ptr "vkCmdClearColorImage"#)
@@ -2120,6 +2136,8 @@ initDeviceCmds instanceCmds handle = do
                                                  , (Ptr "vkCmdWriteTimestamp2"#) ]
   vkCmdWriteBufferMarker2AMD <- getDeviceProcAddr' handle (Ptr "vkCmdWriteBufferMarker2AMD"#)
   vkGetQueueCheckpointData2NV <- getDeviceProcAddr' handle (Ptr "vkGetQueueCheckpointData2NV"#)
+  vkCmdDecompressMemoryNV <- getDeviceProcAddr' handle (Ptr "vkCmdDecompressMemoryNV"#)
+  vkCmdDecompressMemoryIndirectCountNV <- getDeviceProcAddr' handle (Ptr "vkCmdDecompressMemoryIndirectCountNV"#)
   vkCreateCuModuleNVX <- getDeviceProcAddr' handle (Ptr "vkCreateCuModuleNVX"#)
   vkCreateCuFunctionNVX <- getDeviceProcAddr' handle (Ptr "vkCreateCuFunctionNVX"#)
   vkDestroyCuModuleNVX <- getDeviceProcAddr' handle (Ptr "vkDestroyCuModuleNVX"#)
@@ -2271,6 +2289,8 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr ImageBlit) -> Filter -> IO ()) vkCmdBlitImage)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("srcBuffer" ::: Buffer) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr BufferImageCopy) -> IO ()) vkCmdCopyBufferToImage)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstBuffer" ::: Buffer) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr BufferImageCopy) -> IO ()) vkCmdCopyImageToBuffer)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("copyBufferAddress" ::: DeviceAddress) -> ("copyCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()) vkCmdCopyMemoryIndirectNV)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("copyBufferAddress" ::: DeviceAddress) -> ("copyCount" ::: Word32) -> ("stride" ::: Word32) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("pImageSubresources" ::: Ptr ImageSubresourceLayers) -> IO ()) vkCmdCopyMemoryToImageIndirectNV)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> ("dataSize" ::: DeviceSize) -> ("pData" ::: Ptr ()) -> IO ()) vkCmdUpdateBuffer)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> DeviceSize -> ("data" ::: Word32) -> IO ()) vkCmdFillBuffer)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> Image -> ImageLayout -> ("pColor" ::: Ptr ClearColorValue) -> ("rangeCount" ::: Word32) -> ("pRanges" ::: Ptr ImageSubresourceRange) -> IO ()) vkCmdClearColorImage)
@@ -2544,6 +2564,8 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr CommandBuffer_T -> PipelineStageFlags2 -> QueryPool -> ("query" ::: Word32) -> IO ()) vkCmdWriteTimestamp2)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> PipelineStageFlags2 -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> ("marker" ::: Word32) -> IO ()) vkCmdWriteBufferMarker2AMD)
     (castFunPtr @_ @(Ptr Queue_T -> ("pCheckpointDataCount" ::: Ptr Word32) -> ("pCheckpointData" ::: Ptr CheckpointData2NV) -> IO ()) vkGetQueueCheckpointData2NV)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("decompressRegionCount" ::: Word32) -> ("pDecompressMemoryRegions" ::: Ptr DecompressMemoryRegionNV) -> IO ()) vkCmdDecompressMemoryNV)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("indirectCommandsAddress" ::: DeviceAddress) -> ("indirectCommandsCountAddress" ::: DeviceAddress) -> ("stride" ::: Word32) -> IO ()) vkCmdDecompressMemoryIndirectCountNV)
     (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr CuModuleCreateInfoNVX) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pModule" ::: Ptr CuModuleNVX) -> IO Result) vkCreateCuModuleNVX)
     (castFunPtr @_ @(Ptr Device_T -> ("pCreateInfo" ::: Ptr CuFunctionCreateInfoNVX) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pFunction" ::: Ptr CuFunctionNVX) -> IO Result) vkCreateCuFunctionNVX)
     (castFunPtr @_ @(Ptr Device_T -> CuModuleNVX -> ("pAllocator" ::: Ptr AllocationCallbacks) -> IO ()) vkDestroyCuModuleNVX)

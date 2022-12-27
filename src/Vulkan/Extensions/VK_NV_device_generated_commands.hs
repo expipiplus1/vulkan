@@ -847,9 +847,10 @@ foreign import ccall
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02699# Descriptors in
 --     each bound descriptor set, specified via
 --     'Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets', /must/
---     be valid if they are statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command
+--     be valid as described by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptor-validity descriptor validity>
+--     if they are statically used by the 'Vulkan.Core10.Handles.Pipeline'
+--     bound to the pipeline bind point used by this command
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-02700# A valid pipeline
 --     /must/ be bound to the pipeline bind point used by this command
@@ -2293,7 +2294,7 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-dynamicPrimitiveTopologyUnrestricted dynamicPrimitiveTopologyUnrestricted>
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then the
 --     @primitiveTopology@ parameter in the last call to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
 --     /must/ be of the same
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
 --     as the pipeline
@@ -2340,9 +2341,9 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdExecuteGeneratedCommandsNV-None-04879# If the bound
 --     graphics pipeline state was created with the
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE'
 --     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnableEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnable'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --

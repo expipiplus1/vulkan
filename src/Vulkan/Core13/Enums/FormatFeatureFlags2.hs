@@ -406,7 +406,7 @@ type FormatFeatureFlags2 = FormatFeatureFlagBits2
 --
 -- -   'FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV' specifies that the
 --     format is supported as a renderable
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary Linear Color Attachment>.
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-linear-color-attachment Linear Color Attachment>.
 --     This bit will be set for renderable color formats in the
 --     @linearTilingFeatures@. This /must/ not be set in the
 --     @optimalTilingFeatures@ or @bufferFeatures@ members.
@@ -758,7 +758,7 @@ pattern FORMAT_FEATURE_2_WEIGHT_IMAGE_BIT_QCOM = FormatFeatureFlagBits2 0x000000
 
 -- | 'FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV' specifies that the
 -- format is supported as a renderable
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary Linear Color Attachment>.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#glossary-linear-color-attachment Linear Color Attachment>.
 -- This bit will be set for renderable color formats in the
 -- @linearTilingFeatures@. This /must/ not be set in the
 -- @optimalTilingFeatures@ or @bufferFeatures@ members.

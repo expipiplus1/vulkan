@@ -5,7 +5,7 @@ cabal-version: 2.2
 -- see: https://github.com/sol/hpack
 
 name:           vulkan
-version:        3.23.2
+version:        3.23.3
 synopsis:       Bindings to the Vulkan graphics API.
 description:    Please see [the readme](https://github.com/expipiplus1/vulkan/#readme)
 category:       Graphics
@@ -536,6 +536,7 @@ library
       Vulkan.Extensions.VK_NV_clip_space_w_scaling
       Vulkan.Extensions.VK_NV_compute_shader_derivatives
       Vulkan.Extensions.VK_NV_cooperative_matrix
+      Vulkan.Extensions.VK_NV_copy_memory_indirect
       Vulkan.Extensions.VK_NV_corner_sampled_image
       Vulkan.Extensions.VK_NV_coverage_reduction_mode
       Vulkan.Extensions.VK_NV_dedicated_allocation
@@ -556,10 +557,12 @@ library
       Vulkan.Extensions.VK_NV_glsl_shader
       Vulkan.Extensions.VK_NV_inherited_viewport_scissor
       Vulkan.Extensions.VK_NV_linear_color_attachment
+      Vulkan.Extensions.VK_NV_memory_decompression
       Vulkan.Extensions.VK_NV_mesh_shader
       Vulkan.Extensions.VK_NV_optical_flow
       Vulkan.Extensions.VK_NV_present_barrier
       Vulkan.Extensions.VK_NV_ray_tracing
+      Vulkan.Extensions.VK_NV_ray_tracing_invocation_reorder
       Vulkan.Extensions.VK_NV_ray_tracing_motion_blur
       Vulkan.Extensions.VK_NV_representative_fragment_test
       Vulkan.Extensions.VK_NV_sample_mask_override_coverage

@@ -1411,6 +1411,31 @@ foreign import ccall
 -- even if the pipeline layout includes a non-trivial descriptor set layout
 -- for that set number.
 --
+-- When consuming a descriptor, a descriptor is considered valid if the
+-- descriptor is not undefined as described by
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptor-set-initial-state descriptor set allocation>.
+-- If the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-nullDescriptor nullDescriptor>
+-- feature is enabled, a null descriptor is also considered valid. A
+-- descriptor that was disturbed by
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>,
+-- or was never bound by 'cmdBindDescriptorSets' is not considered valid.
+-- If a pipeline accesses a descriptor either statically or dynamically
+-- depending on the
+-- 'Vulkan.Core12.Enums.DescriptorBindingFlagBits.DescriptorBindingFlagBits',
+-- the consuming descriptor type in the pipeline /must/ match the
+-- 'Vulkan.Core10.Enums.DescriptorType.DescriptorType' in
+-- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo' for the
+-- descriptor to be considered valid. If a descriptor is a mutable
+-- descriptor, the consuming descriptor type in the pipeline /must/ match
+-- the active descriptor type for the descriptor to be considered valid.
+--
+-- Note
+--
+-- Further validation may be carried out beyond validation for descriptor
+-- types, e.g.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#textures-input-validation Texel Input Validation>.
+--
 -- If any of the sets being bound include dynamic uniform or storage
 -- buffers, then @pDynamicOffsets@ includes one element for each array
 -- element in each dynamic descriptor type binding in each set. Values are
@@ -2047,9 +2072,11 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDraw-None-02699# Descriptors in each bound descriptor
---     set, specified via 'cmdBindDescriptorSets', /must/ be valid if they
---     are statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to
---     the pipeline bind point used by this command
+--     set, specified via 'cmdBindDescriptorSets', /must/ be valid as
+--     described by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptor-validity descriptor validity>
+--     if they are statically used by the 'Vulkan.Core10.Handles.Pipeline'
+--     bound to the pipeline bind point used by this command
 --
 -- -   #VUID-vkCmdDraw-None-02700# A valid pipeline /must/ be bound to the
 --     pipeline bind point used by this command
@@ -3503,7 +3530,7 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-dynamicPrimitiveTopologyUnrestricted dynamicPrimitiveTopologyUnrestricted>
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then the
 --     @primitiveTopology@ parameter in the last call to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
 --     /must/ be of the same
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
 --     as the pipeline
@@ -3550,9 +3577,9 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDraw-None-04879# If the bound graphics pipeline state was
 --     created with the
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE'
 --     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnableEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnable'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
@@ -3805,9 +3832,10 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexed-None-02699# Descriptors in each bound
 --     descriptor set, specified via 'cmdBindDescriptorSets', /must/ be
---     valid if they are statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command
+--     valid as described by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptor-validity descriptor validity>
+--     if they are statically used by the 'Vulkan.Core10.Handles.Pipeline'
+--     bound to the pipeline bind point used by this command
 --
 -- -   #VUID-vkCmdDrawIndexed-None-02700# A valid pipeline /must/ be bound
 --     to the pipeline bind point used by this command
@@ -5268,7 +5296,7 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-dynamicPrimitiveTopologyUnrestricted dynamicPrimitiveTopologyUnrestricted>
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then the
 --     @primitiveTopology@ parameter in the last call to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
 --     /must/ be of the same
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
 --     as the pipeline
@@ -5315,9 +5343,9 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexed-None-04879# If the bound graphics pipeline
 --     state was created with the
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE'
 --     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnableEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnable'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
@@ -5568,9 +5596,10 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirect-None-02699# Descriptors in each bound
 --     descriptor set, specified via 'cmdBindDescriptorSets', /must/ be
---     valid if they are statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command
+--     valid as described by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptor-validity descriptor validity>
+--     if they are statically used by the 'Vulkan.Core10.Handles.Pipeline'
+--     bound to the pipeline bind point used by this command
 --
 -- -   #VUID-vkCmdDrawIndirect-None-02700# A valid pipeline /must/ be bound
 --     to the pipeline bind point used by this command
@@ -7010,7 +7039,7 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-dynamicPrimitiveTopologyUnrestricted dynamicPrimitiveTopologyUnrestricted>
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then the
 --     @primitiveTopology@ parameter in the last call to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
 --     /must/ be of the same
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
 --     as the pipeline
@@ -7057,9 +7086,9 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirect-None-04879# If the bound graphics pipeline
 --     state was created with the
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE'
 --     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnableEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnable'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
@@ -7341,9 +7370,10 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-02699# Descriptors in each bound
 --     descriptor set, specified via 'cmdBindDescriptorSets', /must/ be
---     valid if they are statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command
+--     valid as described by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptor-validity descriptor validity>
+--     if they are statically used by the 'Vulkan.Core10.Handles.Pipeline'
+--     bound to the pipeline bind point used by this command
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-02700# A valid pipeline /must/
 --     be bound to the pipeline bind point used by this command
@@ -8783,7 +8813,7 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-dynamicPrimitiveTopologyUnrestricted dynamicPrimitiveTopologyUnrestricted>
 --     is 'Vulkan.Core10.FundamentalTypes.FALSE', then the
 --     @primitiveTopology@ parameter in the last call to
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopologyEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state.cmdSetPrimitiveTopology'
 --     /must/ be of the same
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#drawing-primitive-topology-class topology class>
 --     as the pipeline
@@ -8830,9 +8860,9 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-04879# If the bound graphics
 --     pipeline state was created with the
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE_EXT'
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE'
 --     dynamic state enabled then
---     'Vulkan.Extensions.VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnableEXT'
+--     'Vulkan.Core13.Promoted_From_VK_EXT_extended_dynamic_state2.cmdSetPrimitiveRestartEnable'
 --     /must/ have been called in the current command buffer prior to this
 --     drawing command
 --
@@ -9115,9 +9145,11 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
 -- -   #VUID-vkCmdDispatch-None-02699# Descriptors in each bound descriptor
---     set, specified via 'cmdBindDescriptorSets', /must/ be valid if they
---     are statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to
---     the pipeline bind point used by this command
+--     set, specified via 'cmdBindDescriptorSets', /must/ be valid as
+--     described by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptor-validity descriptor validity>
+--     if they are statically used by the 'Vulkan.Core10.Handles.Pipeline'
+--     bound to the pipeline bind point used by this command
 --
 -- -   #VUID-vkCmdDispatch-None-02700# A valid pipeline /must/ be bound to
 --     the pipeline bind point used by this command
@@ -9591,9 +9623,10 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDispatchIndirect-None-02699# Descriptors in each bound
 --     descriptor set, specified via 'cmdBindDescriptorSets', /must/ be
---     valid if they are statically used by the
---     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
---     used by this command
+--     valid as described by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptor-validity descriptor validity>
+--     if they are statically used by the 'Vulkan.Core10.Handles.Pipeline'
+--     bound to the pipeline bind point used by this command
 --
 -- -   #VUID-vkCmdDispatchIndirect-None-02700# A valid pipeline /must/ be
 --     bound to the pipeline bind point used by this command
@@ -16680,12 +16713,14 @@ instance Zero ClearRect where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'BufferImageCopy',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.BufferImageCopy2',
+-- 'Vulkan.Extensions.VK_NV_copy_memory_indirect.CopyMemoryToImageIndirectCommandNV',
 -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlags', 'ImageBlit',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.ImageBlit2',
 -- 'ImageCopy',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.ImageCopy2',
 -- 'ImageResolve',
--- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.ImageResolve2'
+-- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.ImageResolve2',
+-- 'Vulkan.Extensions.VK_NV_copy_memory_indirect.cmdCopyMemoryToImageIndirectNV'
 data ImageSubresourceLayers = ImageSubresourceLayers
   { -- | @aspectMask@ is a combination of
     -- 'Vulkan.Core10.Enums.ImageAspectFlagBits.ImageAspectFlagBits', selecting

@@ -51,7 +51,7 @@
 --
 -- [__Contributors__]
 --
---     -   Ian Elliot, Google
+--     -   Ian Elliott, Google
 --
 --     -   Jesse Hall, Google
 --

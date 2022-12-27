@@ -262,7 +262,8 @@ waitForPresentKHRSafeOrUnsafe mkVkWaitForPresentKHR device
 -- There is no requirement for any precise timing relationship between the
 -- presentation of the image to the user and the update of the presentId
 -- value, but implementations /should/ make this as close as possible to
--- the presentation of the first pixel in the new image to the user.
+-- the presentation of the first pixel in the next image being presented to
+-- the user.
 --
 -- The call to 'waitForPresentKHR' will block until either the presentId
 -- associated with @swapchain@ is greater than or equal to @presentId@, or
