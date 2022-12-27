@@ -1,4 +1,4 @@
-# vulkan
+![](haskell-vulkan.png)
 
 Slightly high level Haskell bindings to the Vulkan graphics API.
 
