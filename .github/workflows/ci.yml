@@ -50,8 +50,7 @@ jobs:
       if: matrix.os == 'windows-latest'
       shell: bash
       run: |
-        choco install pkgconfiglite
-
+        choco install pkgconfiglite --download-checksum=2038c49d23b5ca19e2218ca89f06df18fe6d870b4c6b54c0498548ef88771f6f --download-checksum-type=sha256
         curl -L https://www.libsdl.org/release/SDL2-devel-2.0.12-mingw.tar.gz | tar xz
         SDL2=$(cygpath --windows --absolute "SDL2-2.0.12/x86_64-w64-mingw32")
         printf "%s\n" "$SDL2/bin" >> "$GITHUB_PATH"
@@ -177,7 +176,7 @@ jobs:
       if: matrix.os == 'windows-latest'
       shell: bash
       run: |
-        choco install pkgconfiglite
+        choco install pkgconfiglite --download-checksum=2038c49d23b5ca19e2218ca89f06df18fe6d870b4c6b54c0498548ef88771f6f --download-checksum-type=sha256
 
         curl -L https://www.libsdl.org/release/SDL2-devel-2.0.12-mingw.tar.gz | tar xz
         SDL2=$(cygpath --windows --absolute "SDL2-2.0.12/x86_64-w64-mingw32")

@@ -8828,10 +8828,11 @@ foreign import ccall
 --
 -- = Description
 --
--- Each region in @pRegions@ is copied from the source buffer to the same
--- region of the destination buffer. @srcBuffer@ and @dstBuffer@ /can/ be
--- the same buffer or alias the same memory, but the resulting values are
--- undefined if the copy regions overlap in memory.
+-- Each source region specified by @pRegions@ is copied from the source
+-- buffer to the destination region of the destination buffer. If any of
+-- the specified regions in @srcBuffer@ overlaps in memory with any of the
+-- specified regions in @dstBuffer@, values read from those overlapping
+-- regions are undefined.
 --
 -- == Valid Usage
 --
@@ -8992,49 +8993,36 @@ foreign import ccall
 --
 -- = Description
 --
--- Each region in @pRegions@ is copied from the source image to the same
--- region of the destination image. @srcImage@ and @dstImage@ /can/ be the
--- same image or alias the same memory.
+-- Each source region specified by @pRegions@ is copied from the source
+-- image to the destination region of the destination image. If any of the
+-- specified regions in @srcImage@ overlaps in memory with any of the
+-- specified regions in @dstImage@, values read from those overlapping
+-- regions are undefined.
 --
--- If either @srcImage@ or @dstImage@ has a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
--- regions of each plane to be copied /must/ be specified separately using
--- the @srcSubresource@ and @dstSubresource@ members of the 'ImageCopy'
--- structure. In this case, the @aspectMask@ of the @srcSubresource@ or
--- @dstSubresource@ that refers to the multi-planar image /must/ be
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT', or
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'. For
--- the purposes of 'cmdCopyImage', each plane of a multi-planar image is
--- treated as having the format listed in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatible-planes>
--- for the plane identified by the @aspectMask@ of the corresponding
--- subresource. This applies both to 'Vulkan.Core10.Enums.Format.Format'
--- and to coordinates used in the copy, which correspond to texels in the
--- /plane/ rather than how these texels map to coordinates in the image as
--- a whole.
---
--- Note
---
--- For example, the
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT' plane
--- of a 'Vulkan.Core10.Enums.Format.FORMAT_G8_B8R8_2PLANE_420_UNORM' image
--- is compatible with an image of format
--- 'Vulkan.Core10.Enums.Format.FORMAT_R8G8_UNORM' and (less usefully) with
--- the 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
--- plane of an image of format
--- 'Vulkan.Core10.Enums.Format.FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16',
--- as each texel is 2 bytes in size.
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion Multi-planar images>
+-- /can/ only be copied on a per-plane basis, and the subresources used in
+-- each region when copying to or from such images /must/ specify only one
+-- plane, though different regions /can/ specify different planes. When
+-- copying planes of multi-planar images, the format considered is the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatible-planes compatible format for that plane>,
+-- rather than the format of the multi-planar image.
 --
 -- If the format of the destination image has a different
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatibility-classes block extent>
 -- than the source image (e.g. one is a compressed format), the offset and
 -- extent for each of the regions specified is
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-size-compatibility scaled according to the block extents of each format>
--- to match in size.
+-- to match in size. Copy regions for each image /must/ be aligned to a
+-- multiple of the texel block extent in each dimension, except at the
+-- edges of the image, where region extents /must/ match the edge of the
+-- image.
 --
--- 'cmdCopyImage' /can/ be used to copy image data between multisample
--- images, but both images /must/ have the same number of samples.
+-- Image data /can/ be copied between images with different image types. If
+-- one image is 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' and the other
+-- image is 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' with multiple
+-- layers, then each slice is copied to or from a different layer; @depth@
+-- slices in the 3D image correspond to @layerCount@ layers in the 2D
+-- image, with an effective @depth@ of @1@ used for the 2D image.
 --
 -- == Valid Usage
 --
@@ -10003,25 +9991,21 @@ foreign import ccall
 --
 -- = Description
 --
--- Each region in @pRegions@ is copied from the specified region of the
--- source buffer to the specified region of the destination image.
+-- Each source region specified by @pRegions@ is copied from the source
+-- buffer to the destination region of the destination image according to
+-- the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#copies-buffers-images-addressing addressing calculations>
+-- for each resource. If any of the specified regions in @srcBuffer@
+-- overlaps in memory with any of the specified regions in @dstImage@,
+-- values read from those overlapping regions are undefined. If any region
+-- accesses a depth aspect in @dstImage@ and the
+-- @VK_EXT_depth_range_unrestricted@ extension is not enabled, values
+-- copied from @srcBuffer@ outside of the range [0,1] will be be written as
+-- undefined values to the destination image.
 --
--- If @dstImage@ has a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
--- regions of each plane to be a target of a copy /must/ be specified
--- separately using the @pRegions@ member of the 'BufferImageCopy'
--- structure. In this case, the @aspectMask@ of @imageSubresource@ /must/
--- be 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT', or
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'. For
--- the purposes of 'cmdCopyBufferToImage', each plane of a multi-planar
--- image is treated as having the format listed in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatible-planes>
--- for the plane identified by the @aspectMask@ of the corresponding
--- subresource. This applies both to 'Vulkan.Core10.Enums.Format.Format'
--- and to coordinates used in the copy, which correspond to texels in the
--- /plane/ rather than how these texels map to coordinates in the image as
--- a whole.
+-- Copy regions for the image /must/ be aligned to a multiple of the texel
+-- block extent in each dimension, except at the edges of the image, where
+-- region extents /must/ match the edge of the image.
 --
 -- == Valid Usage
 --
@@ -10370,25 +10354,17 @@ foreign import ccall
 --
 -- = Description
 --
--- Each region in @pRegions@ is copied from the specified region of the
--- source image to the specified region of the destination buffer.
+-- Each source region specified by @pRegions@ is copied from the source
+-- buffer to the destination region of the destination image according to
+-- the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#copies-buffers-images-addressing addressing calculations>
+-- for each resource. If any of the specified regions in @srcImage@
+-- overlaps in memory with any of the specified regions in @dstBuffer@,
+-- values read from those overlapping regions are undefined.
 --
--- If @srcImage@ has a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
--- regions of each plane to be a source of a copy /must/ be specified
--- separately using the @pRegions@ member of the 'BufferImageCopy'
--- structure. In this case, the @aspectMask@ of @imageSubresource@ /must/
--- be 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT', or
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'. For
--- the purposes of 'cmdCopyBufferToImage', each plane of a multi-planar
--- image is treated as having the format listed in
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatible-planes>
--- for the plane identified by the @aspectMask@ of the corresponding
--- subresource. This applies both to 'Vulkan.Core10.Enums.Format.Format'
--- and to coordinates used in the copy, which correspond to texels in the
--- /plane/ rather than how these texels map to coordinates in the image as
--- a whole.
+-- Copy regions for the image /must/ be aligned to a multiple of the texel
+-- block extent in each dimension, except at the edges of the image, where
+-- region extents /must/ match the edge of the image.
 --
 -- == Valid Usage
 --
@@ -11543,9 +11519,9 @@ foreign import ccall
 -- -   #VUID-vkCmdClearAttachments-pRects-06937# The layers specified by
 --     each element of @pRects@ /must/ be contained within every attachment
 --     that @pAttachments@ refers to, i.e. for each element of @pRects@,
---     'ClearRect'::@baseArrayLayer@
---     'ClearRect'::@layerCount@ /must/ be less than or equal to the number
---     of layers rendered to in the current render pass instance
+--     'ClearRect'::@baseArrayLayer@ + 'ClearRect'::@layerCount@ /must/ be
+--     less than or equal to the number of layers rendered to in the
+--     current render pass instance
 --
 -- -   #VUID-vkCmdClearAttachments-layerCount-01934# The @layerCount@
 --     member of each element of @pRects@ /must/ not be @0@
@@ -15092,6 +15068,12 @@ foreign import ccall
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#queries-operation-active active>
 --     in @commandBuffer@
 --
+-- -   #VUID-vkCmdExecuteCommands-commandBuffer-07594# @commandBuffer@
+--     /must/ not have any queries other than
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_OCCLUSION' and
+--     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PIPELINE_STATISTICS'
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#queries-operation-active active>
+--
 -- -   #VUID-vkCmdExecuteCommands-commandBuffer-01820# If @commandBuffer@
 --     is a protected command buffer and
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
@@ -15724,21 +15706,6 @@ instance Zero BufferCopy where
 
 -- | VkImageCopy - Structure specifying an image copy operation
 --
--- = Description
---
--- For 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' images, copies are
--- performed slice by slice starting with the @z@ member of the @srcOffset@
--- or @dstOffset@, and copying @depth@ slices. For images with multiple
--- layers, copies are performed layer by layer starting with the
--- @baseArrayLayer@ member of the @srcSubresource@ or @dstSubresource@ and
--- copying @layerCount@ layers. Image data /can/ be copied between images
--- with different image types. If one image is
--- 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' and the other image is
--- 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' with multiple layers, then
--- each slice is copied to or from a different layer; @depth@ slices in the
--- 3D image correspond to @layerCount@ layers in the 2D image, with an
--- effective @depth@ of @1@ used for the 2D image.
---
 -- == Valid Usage
 --
 -- -   #VUID-VkImageCopy-extent-00140# The number of slices of the @extent@
@@ -15943,54 +15910,6 @@ instance Zero ImageBlit where
 
 
 -- | VkBufferImageCopy - Structure specifying a buffer image copy operation
---
--- = Description
---
--- When copying to or from a depth or stencil aspect, the data in buffer
--- memory uses a layout that is a (mostly) tightly packed representation of
--- the depth or stencil data. Specifically:
---
--- -   data copied to or from the stencil aspect of any depth\/stencil
---     format is tightly packed with one
---     'Vulkan.Core10.Enums.Format.FORMAT_S8_UINT' value per texel.
---
--- -   data copied to or from the depth aspect of a
---     'Vulkan.Core10.Enums.Format.FORMAT_D16_UNORM' or
---     'Vulkan.Core10.Enums.Format.FORMAT_D16_UNORM_S8_UINT' format is
---     tightly packed with one
---     'Vulkan.Core10.Enums.Format.FORMAT_D16_UNORM' value per texel.
---
--- -   data copied to or from the depth aspect of a
---     'Vulkan.Core10.Enums.Format.FORMAT_D32_SFLOAT' or
---     'Vulkan.Core10.Enums.Format.FORMAT_D32_SFLOAT_S8_UINT' format is
---     tightly packed with one
---     'Vulkan.Core10.Enums.Format.FORMAT_D32_SFLOAT' value per texel.
---
--- -   data copied to or from the depth aspect of a
---     'Vulkan.Core10.Enums.Format.FORMAT_X8_D24_UNORM_PACK32' or
---     'Vulkan.Core10.Enums.Format.FORMAT_D24_UNORM_S8_UINT' format is
---     packed with one 32-bit word per texel with the D24 value in the LSBs
---     of the word, and undefined values in the eight MSBs.
---
--- Note
---
--- To copy both the depth and stencil aspects of a depth\/stencil format,
--- two entries in @pRegions@ /can/ be used, where one specifies the depth
--- aspect in @imageSubresource@, and the other specifies the stencil
--- aspect.
---
--- Because depth or stencil aspect buffer to image copies /may/ require
--- format conversions on some implementations, they are not supported on
--- queues that do not support graphics.
---
--- When copying to a depth aspect, and the
--- @VK_EXT_depth_range_unrestricted@ extension is not enabled, the data in
--- buffer memory /must/ be in the range [0,1], or the resulting values are
--- undefined.
---
--- Copies are done layer by layer starting with image layer
--- @baseArrayLayer@ member of @imageSubresource@. @layerCount@ layers are
--- copied from the source image or to the destination image.
 --
 -- == Valid Usage
 --

@@ -5,7 +5,7 @@ cabal-version: 2.2
 -- see: https://github.com/sol/hpack
 
 name:           vulkan
-version:        3.23
+version:        3.23.1
 synopsis:       Bindings to the Vulkan graphics API.
 description:    Please see [the readme](https://github.com/expipiplus1/vulkan/#readme)
 category:       Graphics
@@ -310,6 +310,7 @@ library
       Vulkan.Extensions.VK_AMD_texture_gather_bias_lod
       Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
       Vulkan.Extensions.VK_ARM_rasterization_order_attachment_access
+      Vulkan.Extensions.VK_ARM_shader_core_builtins
       Vulkan.Extensions.VK_EXT_4444_formats
       Vulkan.Extensions.VK_EXT_acquire_drm_display
       Vulkan.Extensions.VK_EXT_acquire_xlib_display

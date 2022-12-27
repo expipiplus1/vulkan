@@ -478,7 +478,7 @@ data PhysicalDeviceDescriptorIndexingProperties = PhysicalDeviceDescriptorIndexi
     -- @robustBufferAccessUpdateAfterBind@ is a boolean value indicating
     -- whether
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
-    -- /can/ be enabled in a device simultaneously with
+    -- /can/ be enabled on a device simultaneously with
     -- @descriptorBindingUniformBufferUpdateAfterBind@,
     -- @descriptorBindingStorageBufferUpdateAfterBind@,
     -- @descriptorBindingUniformTexelBufferUpdateAfterBind@, and\/or
