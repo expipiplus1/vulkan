@@ -113,6 +113,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasin
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clamp_zero_one (PhysicalDeviceDepthClampZeroOneFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clip_control (PhysicalDeviceDepthClipControlFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clip_enable (PhysicalDeviceDepthClipEnableFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_descriptor_buffer (PhysicalDeviceDescriptorBufferFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing (PhysicalDeviceDescriptorIndexingFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping (PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands (PhysicalDeviceDeviceGeneratedCommandsFeaturesNV)
@@ -813,6 +814,11 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderImageFloat32AtomicMinMax shaderImageFloat32AtomicMinMax>
 --     /must/ be enabled
 --
+-- -   #VUID-VkDeviceCreateInfo-None-08095# If
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBuffer descriptorBuffer>
+--     is enabled, @ppEnabledExtensionNames@ /must/ not contain
+--     @VK_AMD_shader_fragment_mask@
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkDeviceCreateInfo-sType-sType# @sType@ /must/ be
@@ -851,6 +857,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_EXT_depth_clamp_zero_one.PhysicalDeviceDepthClampZeroOneFeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_depth_clip_control.PhysicalDeviceDepthClipControlFeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_depth_clip_enable.PhysicalDeviceDepthClipEnableFeaturesEXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.PhysicalDeviceDescriptorBufferFeaturesEXT',
 --     'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingFeatures',
 --     'Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping.PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE',
 --     'Vulkan.Extensions.VK_NV_device_generated_commands.PhysicalDeviceDeviceGeneratedCommandsFeaturesNV',
@@ -1078,6 +1085,7 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @PhysicalDeviceRayTracingMotionBlurFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFragmentShaderBarycentricFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderIntegerDotProductFeatures = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceDescriptorBufferFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceProvokingVertexFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceInheritedViewportScissorFeaturesNV = Just f

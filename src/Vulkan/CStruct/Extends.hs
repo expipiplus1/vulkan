@@ -53,6 +53,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_acceleration_structure (AabbPosit
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_acceleration_structure (AccelerationStructureBuildGeometryInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_acceleration_structure (AccelerationStructureBuildRangeInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_acceleration_structure (AccelerationStructureBuildSizesInfoKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_descriptor_buffer (AccelerationStructureCaptureDescriptorDataInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_acceleration_structure (AccelerationStructureCreateInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing (AccelerationStructureCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_acceleration_structure (AccelerationStructureDeviceAddressInfoKHR)
@@ -100,6 +101,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands (BindSha
 import {-# SOURCE #-} Vulkan.Core10.SparseResourceMemoryManagement (BindSparseInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_device_generated_commands (BindVertexBufferIndirectCommandNV)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2 (BlitImageInfo2)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_descriptor_buffer (BufferCaptureDescriptorDataInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_buffer_collection (BufferCollectionBufferCreateInfoFUCHSIA)
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_buffer_collection (BufferCollectionConstraintsInfoFUCHSIA)
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_buffer_collection (BufferCollectionCreateInfoFUCHSIA)
@@ -174,7 +176,11 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation (DedicatedAll
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation (DedicatedAllocationImageCreateInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_dedicated_allocation (DedicatedAllocationMemoryAllocateInfoNV)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 (DependencyInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_descriptor_buffer (DescriptorAddressInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_descriptor_buffer (DescriptorBufferBindingInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_descriptor_buffer (DescriptorBufferBindingPushDescriptorBufferHandleEXT)
 import {-# SOURCE #-} Vulkan.Core10.DescriptorSet (DescriptorBufferInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_descriptor_buffer (DescriptorGetInfoEXT)
 import {-# SOURCE #-} Vulkan.Core10.DescriptorSet (DescriptorImageInfo)
 import {-# SOURCE #-} Vulkan.Core10.DescriptorSet (DescriptorPoolCreateInfo)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block (DescriptorPoolInlineUniformBlockCreateInfo)
@@ -300,6 +306,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_headless_surface (HeadlessSurface
 import {-# SOURCE #-} Vulkan.Extensions.VK_MVK_ios_surface (IOSSurfaceCreateInfoMVK)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (ImageBlit)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2 (ImageBlit2)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_descriptor_buffer (ImageCaptureDescriptorDataInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_compression_control (ImageCompressionControlEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_compression_control (ImageCompressionPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_buffer_collection (ImageConstraintsInfoFUCHSIA)
@@ -329,6 +336,7 @@ import {-# SOURCE #-} Vulkan.Core10.ImageView (ImageSubresourceRange)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain (ImageSwapchainCreateInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_astc_decode_mode (ImageViewASTCDecodeModeEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NVX_image_view_handle (ImageViewAddressPropertiesNVX)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_descriptor_buffer (ImageViewCaptureDescriptorDataInfoEXT)
 import {-# SOURCE #-} Vulkan.Core10.ImageView (ImageViewCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NVX_image_view_handle (ImageViewHandleInfoNVX)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_view_min_lod (ImageViewMinLodCreateInfoEXT)
@@ -396,6 +404,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_mutable_descriptor_type (MutableD
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_mutable_descriptor_type (MutableDescriptorTypeListEXT)
 import {-# SOURCE #-} Vulkan.Core10.FundamentalTypes (Offset2D)
 import {-# SOURCE #-} Vulkan.Core10.FundamentalTypes (Offset3D)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_descriptor_buffer (OpaqueCaptureDescriptorDataCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_optical_flow (OpticalFlowExecuteInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_optical_flow (OpticalFlowImageFormatInfoNV)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_optical_flow (OpticalFlowImageFormatPropertiesNV)
@@ -442,6 +451,9 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clamp_zero_one (PhysicalDev
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clip_control (PhysicalDeviceDepthClipControlFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_depth_clip_enable (PhysicalDeviceDepthClipEnableFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve (PhysicalDeviceDepthStencilResolveProperties)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_descriptor_buffer (PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_descriptor_buffer (PhysicalDeviceDescriptorBufferFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_descriptor_buffer (PhysicalDeviceDescriptorBufferPropertiesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing (PhysicalDeviceDescriptorIndexingFeatures)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing (PhysicalDeviceDescriptorIndexingProperties)
 import {-# SOURCE #-} Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping (PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE)
@@ -740,6 +752,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing_motion_blur (SRTDataNV
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (SampleLocationEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_sample_locations (SampleLocationsInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_border_color_swizzle (SamplerBorderColorComponentMappingCreateInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_descriptor_buffer (SamplerCaptureDescriptorDataInfoEXT)
 import {-# SOURCE #-} Vulkan.Core10.Sampler (SamplerCreateInfo)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_custom_border_color (SamplerCustomBorderColorCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax (SamplerReductionModeCreateInfo)
@@ -950,7 +963,9 @@ instance Zero BaseInStructure where
 
 
 type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
+  Extends AccelerationStructureCreateInfoKHR OpaqueCaptureDescriptorDataCreateInfoEXT = ()
   Extends AccelerationStructureCreateInfoKHR AccelerationStructureMotionInfoNV = ()
+  Extends AccelerationStructureCreateInfoNV OpaqueCaptureDescriptorDataCreateInfoEXT = ()
   Extends AccelerationStructureGeometryTrianglesDataKHR AccelerationStructureGeometryMotionTrianglesDataNV = ()
   Extends AccelerationStructureGeometryTrianglesDataKHR AccelerationStructureTrianglesOpacityMicromapEXT = ()
   Extends AndroidHardwareBufferPropertiesANDROID AndroidHardwareBufferFormatPropertiesANDROID = ()
@@ -967,6 +982,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends BufferCreateInfo ExternalMemoryBufferCreateInfo = ()
   Extends BufferCreateInfo BufferOpaqueCaptureAddressCreateInfo = ()
   Extends BufferCreateInfo BufferDeviceAddressCreateInfoEXT = ()
+  Extends BufferCreateInfo OpaqueCaptureDescriptorDataCreateInfoEXT = ()
   Extends BufferCreateInfo BufferCollectionBufferCreateInfoFUCHSIA = ()
   Extends BufferImageCopy2 CopyCommandTransformInfoQCOM = ()
   Extends BufferViewCreateInfo ExportMetalObjectCreateInfoEXT = ()
@@ -982,6 +998,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends ComputePipelineCreateInfo PipelineCompilerControlCreateInfoAMD = ()
   Extends ComputePipelineCreateInfo PipelineRobustnessCreateInfoEXT = ()
   Extends DebugUtilsMessengerCallbackDataEXT DeviceAddressBindingCallbackDataEXT = ()
+  Extends DescriptorBufferBindingInfoEXT DescriptorBufferBindingPushDescriptorBufferHandleEXT = ()
   Extends DescriptorPoolCreateInfo DescriptorPoolInlineUniformBlockCreateInfo = ()
   Extends DescriptorPoolCreateInfo MutableDescriptorTypeCreateInfoEXT = ()
   Extends DescriptorSetAllocateInfo DescriptorSetVariableDescriptorCountAllocateInfo = ()
@@ -1106,6 +1123,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceInheritedViewportScissorFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceProvokingVertexFeaturesEXT = ()
+  Extends DeviceCreateInfo PhysicalDeviceDescriptorBufferFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderIntegerDotProductFeatures = ()
   Extends DeviceCreateInfo PhysicalDeviceFragmentShaderBarycentricFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDeviceRayTracingMotionBlurFeaturesNV = ()
@@ -1174,6 +1192,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends ImageCreateInfo ImageDrmFormatModifierListCreateInfoEXT = ()
   Extends ImageCreateInfo ImageDrmFormatModifierExplicitCreateInfoEXT = ()
   Extends ImageCreateInfo ImageStencilUsageCreateInfo = ()
+  Extends ImageCreateInfo OpaqueCaptureDescriptorDataCreateInfoEXT = ()
   Extends ImageCreateInfo BufferCollectionImageCreateInfoFUCHSIA = ()
   Extends ImageCreateInfo ImageCompressionControlEXT = ()
   Extends ImageCreateInfo ExportMetalObjectCreateInfoEXT = ()
@@ -1192,6 +1211,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends ImageViewCreateInfo ImageViewUsageCreateInfo = ()
   Extends ImageViewCreateInfo SamplerYcbcrConversionInfo = ()
   Extends ImageViewCreateInfo ImageViewASTCDecodeModeEXT = ()
+  Extends ImageViewCreateInfo OpaqueCaptureDescriptorDataCreateInfoEXT = ()
   Extends ImageViewCreateInfo ImageViewMinLodCreateInfoEXT = ()
   Extends ImageViewCreateInfo ExportMetalObjectCreateInfoEXT = ()
   Extends ImageViewCreateInfo ImageViewSampleWeightCreateInfoQCOM = ()
@@ -1333,6 +1353,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceInheritedViewportScissorFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceProvokingVertexFeaturesEXT = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceDescriptorBufferFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderIntegerDotProductFeatures = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceFragmentShaderBarycentricFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRayTracingMotionBlurFeaturesNV = ()
@@ -1426,6 +1447,8 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceProperties2 PhysicalDeviceFragmentShadingRatePropertiesKHR = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceFragmentShadingRateEnumsPropertiesNV = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceProvokingVertexPropertiesEXT = ()
+  Extends PhysicalDeviceProperties2 PhysicalDeviceDescriptorBufferPropertiesEXT = ()
+  Extends PhysicalDeviceProperties2 PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceShaderIntegerDotProductProperties = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceDrmPropertiesEXT = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceFragmentShaderBarycentricPropertiesKHR = ()
@@ -1498,6 +1521,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends SamplerCreateInfo SamplerReductionModeCreateInfo = ()
   Extends SamplerCreateInfo SamplerCustomBorderColorCreateInfoEXT = ()
   Extends SamplerCreateInfo SamplerBorderColorComponentMappingCreateInfoEXT = ()
+  Extends SamplerCreateInfo OpaqueCaptureDescriptorDataCreateInfoEXT = ()
   Extends SamplerYcbcrConversionCreateInfo ExternalFormatANDROID = ()
   Extends SemaphoreCreateInfo ExportSemaphoreCreateInfo = ()
   Extends SemaphoreCreateInfo ExportSemaphoreWin32HandleInfoKHR = ()
@@ -1971,6 +1995,11 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_PROVOKING_VERTEX_FEATURES_EXT -> go @PhysicalDeviceProvokingVertexFeaturesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_PROVOKING_VERTEX_PROPERTIES_EXT -> go @PhysicalDeviceProvokingVertexPropertiesEXT
   STRUCTURE_TYPE_PIPELINE_RASTERIZATION_PROVOKING_VERTEX_STATE_CREATE_INFO_EXT -> go @PipelineRasterizationProvokingVertexStateCreateInfoEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_FEATURES_EXT -> go @PhysicalDeviceDescriptorBufferFeaturesEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT -> go @PhysicalDeviceDescriptorBufferPropertiesEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_DENSITY_MAP_PROPERTIES_EXT -> go @PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT
+  STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_PUSH_DESCRIPTOR_BUFFER_HANDLE_EXT -> go @DescriptorBufferBindingPushDescriptorBufferHandleEXT
+  STRUCTURE_TYPE_OPAQUE_CAPTURE_DESCRIPTOR_DATA_CREATE_INFO_EXT -> go @OpaqueCaptureDescriptorDataCreateInfoEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES -> go @PhysicalDeviceShaderIntegerDotProductFeatures
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES -> go @PhysicalDeviceShaderIntegerDotProductProperties
   STRUCTURE_TYPE_PHYSICAL_DEVICE_DRM_PROPERTIES_EXT -> go @PhysicalDeviceDrmPropertiesEXT
@@ -2432,6 +2461,11 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceProvokingVertexFeaturesEXT #-}
 {-# complete (::&) :: PhysicalDeviceProvokingVertexPropertiesEXT #-}
 {-# complete (::&) :: PipelineRasterizationProvokingVertexStateCreateInfoEXT #-}
+{-# complete (::&) :: PhysicalDeviceDescriptorBufferFeaturesEXT #-}
+{-# complete (::&) :: PhysicalDeviceDescriptorBufferPropertiesEXT #-}
+{-# complete (::&) :: PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT #-}
+{-# complete (::&) :: DescriptorBufferBindingPushDescriptorBufferHandleEXT #-}
+{-# complete (::&) :: OpaqueCaptureDescriptorDataCreateInfoEXT #-}
 {-# complete (::&) :: PhysicalDeviceShaderIntegerDotProductFeatures #-}
 {-# complete (::&) :: PhysicalDeviceShaderIntegerDotProductProperties #-}
 {-# complete (::&) :: PhysicalDeviceDrmPropertiesEXT #-}

@@ -96,7 +96,11 @@ pattern DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT = DescriptorBindingFlagBits 0x000
 -- the purposes of counting against limits such as @maxDescriptorSet@* and
 -- @maxPerStageDescriptor@*, the full value of @descriptorCount@ is
 -- counted, except for descriptor bindings with a descriptor type of
--- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'.
+-- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK',
+-- when
+-- 'Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo'::@flags@
+-- does not contain
+-- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'.
 -- In this case, @descriptorCount@ specifies the upper bound on the byte
 -- size of the binding; thus it counts against the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxInlineUniformBlockSize maxInlineUniformBlockSize>

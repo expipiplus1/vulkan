@@ -1191,6 +1191,7 @@ instance Zero DescriptorBufferInfo where
 -- = See Also
 --
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.DescriptorDataEXT',
 -- 'Vulkan.Core10.Enums.ImageLayout.ImageLayout',
 -- 'Vulkan.Core10.Handles.ImageView', 'Vulkan.Core10.Handles.Sampler',
 -- 'WriteDescriptorSet'
@@ -2202,11 +2203,30 @@ instance Zero CopyDescriptorSet where
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
 --     then @descriptorCount@ /must/ be a multiple of @4@
 --
--- -   #VUID-VkDescriptorSetLayoutBinding-descriptorType-02210# If
+-- -   #VUID-VkDescriptorSetLayoutBinding-descriptorType-08004# If
 --     @descriptorType@ is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK'
+--     'Vulkan.Extensions.VK_EXT_inline_uniform_block.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+--     and 'DescriptorSetLayoutCreateInfo'::@flags@ does not contain
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
 --     then @descriptorCount@ /must/ be less than or equal to
---     'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockProperties'::@maxInlineUniformBlockSize@
+--     'Vulkan.Extensions.VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockPropertiesEXT'::@maxInlineUniformBlockSize@
+--
+-- -   #VUID-VkDescriptorSetLayoutBinding-flags-08005# If
+--     'DescriptorSetLayoutCreateInfo'::@flags@ contains
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_EMBEDDED_IMMUTABLE_SAMPLERS_BIT_EXT',
+--     @descriptorType@ /must/ be
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER'
+--
+-- -   #VUID-VkDescriptorSetLayoutBinding-flags-08006# If
+--     'DescriptorSetLayoutCreateInfo'::@flags@ contains
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_EMBEDDED_IMMUTABLE_SAMPLERS_BIT_EXT',
+--     @descriptorCount@ /must/ less than or equal to @1@
+--
+-- -   #VUID-VkDescriptorSetLayoutBinding-flags-08007# If
+--     'DescriptorSetLayoutCreateInfo'::@flags@ contains
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_EMBEDDED_IMMUTABLE_SAMPLERS_BIT_EXT',
+--     and @descriptorCount@ is equal to @1@, @pImmutableSamplers@ /must/
+--     not be @NULL@
 --
 -- -   #VUID-VkDescriptorSetLayoutBinding-descriptorCount-00283# If
 --     @descriptorCount@ is not @0@, @stageFlags@ /must/ be a valid
@@ -2445,6 +2465,33 @@ instance Zero DescriptorSetLayoutBinding where
 --     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT',
 --     'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.PhysicalDeviceMutableDescriptorTypeFeaturesEXT'::@mutableDescriptorType@
 --     /must/ be enabled
+--
+-- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-08000# If @flags@
+--     contains
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
+--     then all elements of @pBindings@ /must/ not have a @descriptorType@
+--     of
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
+--
+-- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-08001# If @flags@
+--     contains
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_EMBEDDED_IMMUTABLE_SAMPLERS_BIT_EXT',
+--     @flags@ /must/ also contain
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-08002# If @flags@
+--     contains
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
+--     then @flags@ /must/ not contain
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
+--
+-- -   #VUID-VkDescriptorSetLayoutCreateInfo-flags-08003# If @flags@
+--     contains
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
+--     then @flags@ /must/ not contain
+--     'Vulkan.Extensions.VK_VALVE_mutable_descriptor_type.DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_VALVE'
 --
 -- == Valid Usage (Implicit)
 --
@@ -2868,6 +2915,11 @@ instance es ~ '[] => Zero (DescriptorPoolCreateInfo es) where
 --     bit set, @descriptorPool@ /must/ have been created with the
 --     'Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_HOST_ONLY_BIT_EXT'
 --     flag set
+--
+-- -   #VUID-VkDescriptorSetAllocateInfo-pSetLayouts-08009# Each element of
+--     @pSetLayouts@ /must/ not have been created with the
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--     bit set
 --
 -- == Valid Usage (Implicit)
 --

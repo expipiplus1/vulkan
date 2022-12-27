@@ -1283,8 +1283,8 @@ instance Zero ExportMetalSharedEventInfoEXT where
 -- 'Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo' structure includes
 -- both 'ImportMetalSharedEventInfoEXT' and
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo',
--- the @signaledValue@ property of the imported @MTLSharedEvent@ object
--- will be set to @initialValue@ of
+-- the @signaledValue@ property of the imported @id\<MTLSharedEvent>@
+-- object will be set to @initialValue@ of
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'.
 --
 -- == Valid Usage (Implicit)

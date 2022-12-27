@@ -488,12 +488,15 @@ import {-# SOURCE #-} Vulkan.CStruct.Extends (Chain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (Extendss)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PeekChain)
 import {-# SOURCE #-} Vulkan.CStruct.Extends (PokeChain)
-data AccelerationStructureCreateInfoNV
+type role AccelerationStructureCreateInfoNV nominal
+data AccelerationStructureCreateInfoNV (es :: [Type])
 
-instance ToCStruct AccelerationStructureCreateInfoNV
-instance Show AccelerationStructureCreateInfoNV
+instance ( Extendss AccelerationStructureCreateInfoNV es
+         , PokeChain es ) => ToCStruct (AccelerationStructureCreateInfoNV es)
+instance Show (Chain es) => Show (AccelerationStructureCreateInfoNV es)
 
-instance FromCStruct AccelerationStructureCreateInfoNV
+instance ( Extendss AccelerationStructureCreateInfoNV es
+         , PeekChain es ) => FromCStruct (AccelerationStructureCreateInfoNV es)
 
 
 data AccelerationStructureInfoNV

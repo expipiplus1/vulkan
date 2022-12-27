@@ -4,6 +4,7 @@ module Vulkan.Core10.Enums.BufferCreateFlagBits  ( BufferCreateFlags
                                                  , BufferCreateFlagBits( BUFFER_CREATE_SPARSE_BINDING_BIT
                                                                        , BUFFER_CREATE_SPARSE_RESIDENCY_BIT
                                                                        , BUFFER_CREATE_SPARSE_ALIASED_BIT
+                                                                       , BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT
                                                                        , BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT
                                                                        , BUFFER_CREATE_PROTECTED_BIT
                                                                        , ..
@@ -58,6 +59,13 @@ pattern BUFFER_CREATE_SPARSE_RESIDENCY_BIT = BufferCreateFlagBits 0x00000002
 -- 'BUFFER_CREATE_SPARSE_BINDING_BIT' flag.
 pattern BUFFER_CREATE_SPARSE_ALIASED_BIT = BufferCreateFlagBits 0x00000004
 
+-- | 'BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT' specifies that
+-- the buffer /can/ be used with descriptor buffers when capturing and
+-- replaying (e.g. for trace capture and replay), see
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT'
+-- for more detail.
+pattern BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = BufferCreateFlagBits 0x00000020
+
 -- | 'BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT' specifies that the
 -- buffer’s address /can/ be saved and reused on a subsequent run (e.g. for
 -- trace capture and replay), see
@@ -88,6 +96,10 @@ showTableBufferCreateFlagBits =
   ,
     ( BUFFER_CREATE_SPARSE_ALIASED_BIT
     , "SPARSE_ALIASED_BIT"
+    )
+  ,
+    ( BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT
+    , "DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT"
     )
   ,
     ( BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT

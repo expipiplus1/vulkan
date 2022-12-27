@@ -227,6 +227,15 @@ foreign import ccall
 --     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImportMemoryBufferCollectionFUCHSIA'
 --     chained to 'Vulkan.Core10.Memory.MemoryAllocateInfo'::@pNext@
 --
+-- -   #VUID-vkBindBufferMemory-descriptorBufferCaptureReplay-08112# If the
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.PhysicalDeviceDescriptorBufferFeaturesEXT'
+--     ::@descriptorBufferCaptureReplay@ feature is enabled and @buffer@
+--     was created with the
+--     'Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
+--     bit set, @memory@ /must/ have been allocated with the
+--     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
+--     bit set
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkBindBufferMemory-device-parameter# @device@ /must/ be a
@@ -470,6 +479,15 @@ foreign import ccall
 --     /must/ also have been set in
 --     'Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
 --     when @image@ was created
+--
+-- -   #VUID-vkBindImageMemory-descriptorBufferCaptureReplay-08113# If the
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.PhysicalDeviceDescriptorBufferFeaturesEXT'
+--     ::@descriptorBufferCaptureReplay@ feature is enabled and @image@ was
+--     created with the
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
+--     bit set, @memory@ /must/ have been allocated with the
+--     'Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
+--     bit set
 --
 -- -   #VUID-vkBindImageMemory-image-01608# @image@ /must/ not have been
 --     created with the

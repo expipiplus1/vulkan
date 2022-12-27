@@ -9,6 +9,7 @@ module Vulkan.Core10.Enums.ImageCreateFlagBits  ( ImageCreateFlags
                                                                      , IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM
                                                                      , IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT
                                                                      , IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT
+                                                                     , IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT
                                                                      , IMAGE_CREATE_SUBSAMPLED_BIT_EXT
                                                                      , IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT
                                                                      , IMAGE_CREATE_CORNER_SAMPLED_BIT_NV
@@ -102,6 +103,13 @@ pattern IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT = ImageCreateFlagBits 0x00020000
 -- that an image /can/ be used with
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#multisampled-render-to-single-sampled multisampled rendering as a single-sampled framebuffer attachment>
 pattern IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT = ImageCreateFlagBits 0x00040000
+
+-- | 'IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT' specifies that
+-- the image /can/ be used with descriptor buffers when capturing and
+-- replaying (e.g. for trace capture and replay), see
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT'
+-- for more detail.
+pattern IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = ImageCreateFlagBits 0x00010000
 
 -- | 'IMAGE_CREATE_SUBSAMPLED_BIT_EXT' specifies that an image /can/ be in a
 -- subsampled format which /may/ be more optimal when written as an
@@ -245,6 +253,10 @@ showTableImageCreateFlagBits =
   ,
     ( IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT
     , "MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT"
+    )
+  ,
+    ( IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT
+    , "DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT"
     )
   ,
     ( IMAGE_CREATE_SUBSAMPLED_BIT_EXT

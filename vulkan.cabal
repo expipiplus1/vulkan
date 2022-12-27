@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.34.7.
+-- This file has been generated from package.yaml by hpack version 0.35.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -331,6 +331,7 @@ library
       Vulkan.Extensions.VK_EXT_depth_clip_control
       Vulkan.Extensions.VK_EXT_depth_clip_enable
       Vulkan.Extensions.VK_EXT_depth_range_unrestricted
+      Vulkan.Extensions.VK_EXT_descriptor_buffer
       Vulkan.Extensions.VK_EXT_descriptor_indexing
       Vulkan.Extensions.VK_EXT_device_address_binding_report
       Vulkan.Extensions.VK_EXT_device_fault
@@ -639,6 +640,7 @@ library
     , bytestring
     , transformers
     , vector
+  default-language: Haskell2010
   if os(windows)
     extra-libraries:
         vulkan-1
@@ -654,7 +656,6 @@ library
     cpp-options: -DGENERIC_INSTANCES
   if flag(trace-calls)
     cpp-options: -DTRACE_CALLS
-  default-language: Haskell2010
 
 test-suite test
   type: exitcode-stdio-1.0

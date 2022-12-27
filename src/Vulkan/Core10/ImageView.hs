@@ -75,6 +75,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_image_view_min_lod (ImageViewMinL
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_image_processing (ImageViewSampleWeightCreateInfoQCOM)
 import Vulkan.Core10.Enums.ImageViewType (ImageViewType)
 import {-# SOURCE #-} Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (ImageViewUsageCreateInfo)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_descriptor_buffer (OpaqueCaptureDescriptorDataCreateInfoEXT)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
 import Vulkan.CStruct.Extends (PokeChain)
@@ -127,6 +128,8 @@ foreign import ccall
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Vulkan.Extensions.VK_KHR_buffer_device_address.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR'
 --
 -- = See Also
 --
@@ -1206,6 +1209,18 @@ instance Zero ImageSubresourceRange where
 --     members of @components@ /must/ have the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
 --
+-- -   #VUID-VkImageViewCreateInfo-flags-08106# If @flags@ includes
+--     'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT',
+--     the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
+--     feature /must/ be enabled
+--
+-- -   #VUID-VkImageViewCreateInfo-pNext-08107# If the @pNext@ chain
+--     includes a
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT'
+--     structure, @flags@ /must/ contain
+--     'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
+--
 -- -   #VUID-VkImageViewCreateInfo-pNext-06787# If the @pNext@ chain
 --     includes a
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
@@ -1330,6 +1345,7 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Extensions.VK_EXT_image_view_min_lod.ImageViewMinLodCreateInfoEXT',
 --     'Vulkan.Extensions.VK_QCOM_image_processing.ImageViewSampleWeightCreateInfoQCOM',
 --     'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.ImageViewUsageCreateInfo',
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT',
 --     or
 --     'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --
@@ -1406,6 +1422,7 @@ instance Extensible ImageViewCreateInfo where
     | Just Refl <- eqT @e @ImageViewSampleWeightCreateInfoQCOM = Just f
     | Just Refl <- eqT @e @ExportMetalObjectCreateInfoEXT = Just f
     | Just Refl <- eqT @e @ImageViewMinLodCreateInfoEXT = Just f
+    | Just Refl <- eqT @e @OpaqueCaptureDescriptorDataCreateInfoEXT = Just f
     | Just Refl <- eqT @e @ImageViewASTCDecodeModeEXT = Just f
     | Just Refl <- eqT @e @SamplerYcbcrConversionInfo = Just f
     | Just Refl <- eqT @e @ImageViewUsageCreateInfo = Just f

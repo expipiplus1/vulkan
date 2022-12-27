@@ -1395,7 +1395,11 @@ foreign import ccall
 -- [@firstSet@..@firstSet@+@descriptorSetCount@-1] for subsequent
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-bindpoint-commands bound pipeline commands>
 -- set by @pipelineBindPoint@. Any bindings that were previously applied
--- via these sets are no longer valid.
+-- via these sets , or calls to
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT'
+-- or
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdBindDescriptorBufferEmbeddedSamplersEXT',
+-- are no longer valid.
 --
 -- Once bound, a descriptor set affects rendering of subsequent commands
 -- that interact with the given pipeline type in the command buffer until
@@ -1540,6 +1544,12 @@ foreign import ccall
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-graphicsPipelineLibrary graphicsPipelineLibrary>
 --     is not enabled, each element of @pDescriptorSets@ /must/ be a valid
 --     'Vulkan.Core10.Handles.DescriptorSet'
+--
+-- -   #VUID-vkCmdBindDescriptorSets-pDescriptorSets-08010# Each element of
+--     @pDescriptorSets@ /must/ have been allocated with a
+--     'Vulkan.Core10.Handles.DescriptorSetLayout' which was not created
+--     with
+--     'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
 --
 -- == Valid Usage (Implicit)
 --
@@ -2071,12 +2081,40 @@ foreign import ccall
 --     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDraw-None-02699# Descriptors in each bound descriptor
---     set, specified via 'cmdBindDescriptorSets', /must/ be valid as
---     described by
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptor-validity descriptor validity>
---     if they are statically used by the 'Vulkan.Core10.Handles.Pipeline'
---     bound to the pipeline bind point used by this command
+-- -   #VUID-vkCmdDraw-None-08114# Descriptors in each bound descriptor
+--     set, specified via 'cmdBindDescriptorSets', /must/ be valid if they
+--     are statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to
+--     the pipeline bind point used by this command and the bound
+--     'Vulkan.Core10.Handles.Pipeline' was not created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDraw-None-08115# If the descriptors used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     were specified via 'cmdBindDescriptorSets', the bound
+--     'Vulkan.Core10.Handles.Pipeline' /must/ have been created without
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDraw-None-08116# Descriptors in bound descriptor buffers,
+--     specified via
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
+--     /must/ be valid if they are dynamically used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     used by this command and the bound 'Vulkan.Core10.Handles.Pipeline'
+--     was created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDraw-None-08117# If the descriptors used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     were specified via
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
+--     the bound 'Vulkan.Core10.Handles.Pipeline' /must/ have been created
+--     with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDraw-None-08119# If a descriptor is dynamically used with
+--     a 'Vulkan.Core10.Handles.Pipeline' created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
+--     the descriptor memory /must/ be resident.
 --
 -- -   #VUID-vkCmdDraw-None-02700# A valid pipeline /must/ be bound to the
 --     pipeline bind point used by this command
@@ -3830,12 +3868,41 @@ foreign import ccall
 --     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDrawIndexed-None-02699# Descriptors in each bound
+-- -   #VUID-vkCmdDrawIndexed-None-08114# Descriptors in each bound
 --     descriptor set, specified via 'cmdBindDescriptorSets', /must/ be
---     valid as described by
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptor-validity descriptor validity>
---     if they are statically used by the 'Vulkan.Core10.Handles.Pipeline'
---     bound to the pipeline bind point used by this command
+--     valid if they are statically used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     used by this command and the bound 'Vulkan.Core10.Handles.Pipeline'
+--     was not created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08115# If the descriptors used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     were specified via 'cmdBindDescriptorSets', the bound
+--     'Vulkan.Core10.Handles.Pipeline' /must/ have been created without
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08116# Descriptors in bound descriptor
+--     buffers, specified via
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
+--     /must/ be valid if they are dynamically used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     used by this command and the bound 'Vulkan.Core10.Handles.Pipeline'
+--     was created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08117# If the descriptors used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     were specified via
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
+--     the bound 'Vulkan.Core10.Handles.Pipeline' /must/ have been created
+--     with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDrawIndexed-None-08119# If a descriptor is dynamically
+--     used with a 'Vulkan.Core10.Handles.Pipeline' created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
+--     the descriptor memory /must/ be resident.
 --
 -- -   #VUID-vkCmdDrawIndexed-None-02700# A valid pipeline /must/ be bound
 --     to the pipeline bind point used by this command
@@ -5594,12 +5661,41 @@ foreign import ccall
 --     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDrawIndirect-None-02699# Descriptors in each bound
+-- -   #VUID-vkCmdDrawIndirect-None-08114# Descriptors in each bound
 --     descriptor set, specified via 'cmdBindDescriptorSets', /must/ be
---     valid as described by
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptor-validity descriptor validity>
---     if they are statically used by the 'Vulkan.Core10.Handles.Pipeline'
---     bound to the pipeline bind point used by this command
+--     valid if they are statically used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     used by this command and the bound 'Vulkan.Core10.Handles.Pipeline'
+--     was not created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08115# If the descriptors used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     were specified via 'cmdBindDescriptorSets', the bound
+--     'Vulkan.Core10.Handles.Pipeline' /must/ have been created without
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08116# Descriptors in bound descriptor
+--     buffers, specified via
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
+--     /must/ be valid if they are dynamically used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     used by this command and the bound 'Vulkan.Core10.Handles.Pipeline'
+--     was created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08117# If the descriptors used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     were specified via
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
+--     the bound 'Vulkan.Core10.Handles.Pipeline' /must/ have been created
+--     with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDrawIndirect-None-08119# If a descriptor is dynamically
+--     used with a 'Vulkan.Core10.Handles.Pipeline' created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
+--     the descriptor memory /must/ be resident.
 --
 -- -   #VUID-vkCmdDrawIndirect-None-02700# A valid pipeline /must/ be bound
 --     to the pipeline bind point used by this command
@@ -7368,12 +7464,42 @@ foreign import ccall
 --     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDrawIndexedIndirect-None-02699# Descriptors in each bound
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08114# Descriptors in each bound
 --     descriptor set, specified via 'cmdBindDescriptorSets', /must/ be
---     valid as described by
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptor-validity descriptor validity>
---     if they are statically used by the 'Vulkan.Core10.Handles.Pipeline'
---     bound to the pipeline bind point used by this command
+--     valid if they are statically used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     used by this command and the bound 'Vulkan.Core10.Handles.Pipeline'
+--     was not created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08115# If the descriptors used
+--     by the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
+--     point were specified via 'cmdBindDescriptorSets', the bound
+--     'Vulkan.Core10.Handles.Pipeline' /must/ have been created without
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08116# Descriptors in bound
+--     descriptor buffers, specified via
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
+--     /must/ be valid if they are dynamically used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     used by this command and the bound 'Vulkan.Core10.Handles.Pipeline'
+--     was created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08117# If the descriptors used
+--     by the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
+--     point were specified via
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
+--     the bound 'Vulkan.Core10.Handles.Pipeline' /must/ have been created
+--     with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-None-08119# If a descriptor is
+--     dynamically used with a 'Vulkan.Core10.Handles.Pipeline' created
+--     with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
+--     the descriptor memory /must/ be resident.
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-02700# A valid pipeline /must/
 --     be bound to the pipeline bind point used by this command
@@ -9144,12 +9270,40 @@ foreign import ccall
 --     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDispatch-None-02699# Descriptors in each bound descriptor
---     set, specified via 'cmdBindDescriptorSets', /must/ be valid as
---     described by
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptor-validity descriptor validity>
---     if they are statically used by the 'Vulkan.Core10.Handles.Pipeline'
---     bound to the pipeline bind point used by this command
+-- -   #VUID-vkCmdDispatch-None-08114# Descriptors in each bound descriptor
+--     set, specified via 'cmdBindDescriptorSets', /must/ be valid if they
+--     are statically used by the 'Vulkan.Core10.Handles.Pipeline' bound to
+--     the pipeline bind point used by this command and the bound
+--     'Vulkan.Core10.Handles.Pipeline' was not created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDispatch-None-08115# If the descriptors used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     were specified via 'cmdBindDescriptorSets', the bound
+--     'Vulkan.Core10.Handles.Pipeline' /must/ have been created without
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDispatch-None-08116# Descriptors in bound descriptor
+--     buffers, specified via
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
+--     /must/ be valid if they are dynamically used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     used by this command and the bound 'Vulkan.Core10.Handles.Pipeline'
+--     was created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDispatch-None-08117# If the descriptors used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     were specified via
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
+--     the bound 'Vulkan.Core10.Handles.Pipeline' /must/ have been created
+--     with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDispatch-None-08119# If a descriptor is dynamically used
+--     with a 'Vulkan.Core10.Handles.Pipeline' created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
+--     the descriptor memory /must/ be resident.
 --
 -- -   #VUID-vkCmdDispatch-None-02700# A valid pipeline /must/ be bound to
 --     the pipeline bind point used by this command
@@ -9621,12 +9775,42 @@ foreign import ccall
 --     create the current 'Vulkan.Core10.Handles.Pipeline', as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility ???>
 --
--- -   #VUID-vkCmdDispatchIndirect-None-02699# Descriptors in each bound
+-- -   #VUID-vkCmdDispatchIndirect-None-08114# Descriptors in each bound
 --     descriptor set, specified via 'cmdBindDescriptorSets', /must/ be
---     valid as described by
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptor-validity descriptor validity>
---     if they are statically used by the 'Vulkan.Core10.Handles.Pipeline'
---     bound to the pipeline bind point used by this command
+--     valid if they are statically used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     used by this command and the bound 'Vulkan.Core10.Handles.Pipeline'
+--     was not created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDispatchIndirect-None-08115# If the descriptors used by
+--     the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
+--     point were specified via 'cmdBindDescriptorSets', the bound
+--     'Vulkan.Core10.Handles.Pipeline' /must/ have been created without
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDispatchIndirect-None-08116# Descriptors in bound
+--     descriptor buffers, specified via
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
+--     /must/ be valid if they are dynamically used by the
+--     'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind point
+--     used by this command and the bound 'Vulkan.Core10.Handles.Pipeline'
+--     was created with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDispatchIndirect-None-08117# If the descriptors used by
+--     the 'Vulkan.Core10.Handles.Pipeline' bound to the pipeline bind
+--     point were specified via
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdSetDescriptorBufferOffsetsEXT',
+--     the bound 'Vulkan.Core10.Handles.Pipeline' /must/ have been created
+--     with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT'
+--
+-- -   #VUID-vkCmdDispatchIndirect-None-08119# If a descriptor is
+--     dynamically used with a 'Vulkan.Core10.Handles.Pipeline' created
+--     with
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
+--     the descriptor memory /must/ be resident.
 --
 -- -   #VUID-vkCmdDispatchIndirect-None-02700# A valid pipeline /must/ be
 --     bound to the pipeline bind point used by this command

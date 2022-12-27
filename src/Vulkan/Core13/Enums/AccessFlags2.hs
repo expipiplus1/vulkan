@@ -49,6 +49,7 @@ module Vulkan.Core13.Enums.AccessFlags2  ( pattern ACCESS_2_NONE_KHR
                                                           , ACCESS_2_MICROMAP_READ_BIT_EXT
                                                           , ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR
                                                           , ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI
+                                                          , ACCESS_2_DESCRIPTOR_BUFFER_READ_BIT_EXT
                                                           , ACCESS_2_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT
                                                           , ACCESS_2_FRAGMENT_DENSITY_MAP_READ_BIT_EXT
                                                           , ACCESS_2_ACCELERATION_STRUCTURE_WRITE_BIT_KHR
@@ -407,6 +408,11 @@ pattern ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR = AccessFlagBits2 0x000001000
 -- pipeline stage.
 pattern ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI = AccessFlagBits2 0x0000008000000000
 
+-- | 'ACCESS_2_DESCRIPTOR_BUFFER_READ_BIT_EXT' specifies read access to a
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorbuffers descriptor buffer>
+-- in any shader pipeline stage.
+pattern ACCESS_2_DESCRIPTOR_BUFFER_READ_BIT_EXT = AccessFlagBits2 0x0000020000000000
+
 -- | 'ACCESS_2_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT' specifies read
 -- access to
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass color attachments>,
@@ -577,6 +583,10 @@ showTableAccessFlagBits2 =
   ,
     ( ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI
     , "INVOCATION_MASK_READ_BIT_HUAWEI"
+    )
+  ,
+    ( ACCESS_2_DESCRIPTOR_BUFFER_READ_BIT_EXT
+    , "DESCRIPTOR_BUFFER_READ_BIT_EXT"
     )
   ,
     ( ACCESS_2_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT

@@ -47,6 +47,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_depth_clip_control
                           , module Vulkan.Extensions.VK_EXT_depth_clip_enable
                           , module Vulkan.Extensions.VK_EXT_depth_range_unrestricted
+                          , module Vulkan.Extensions.VK_EXT_descriptor_buffer
                           , module Vulkan.Extensions.VK_EXT_descriptor_indexing
                           , module Vulkan.Extensions.VK_EXT_device_address_binding_report
                           , module Vulkan.Extensions.VK_EXT_device_fault
@@ -352,6 +353,7 @@ import Vulkan.Extensions.VK_EXT_depth_clamp_zero_one
 import Vulkan.Extensions.VK_EXT_depth_clip_control
 import Vulkan.Extensions.VK_EXT_depth_clip_enable
 import Vulkan.Extensions.VK_EXT_depth_range_unrestricted
+import Vulkan.Extensions.VK_EXT_descriptor_buffer
 import Vulkan.Extensions.VK_EXT_descriptor_indexing
 import Vulkan.Extensions.VK_EXT_device_address_binding_report
 import Vulkan.Extensions.VK_EXT_device_fault

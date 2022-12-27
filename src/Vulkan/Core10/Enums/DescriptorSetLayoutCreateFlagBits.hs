@@ -2,6 +2,8 @@
 -- No documentation found for Chapter "DescriptorSetLayoutCreateFlagBits"
 module Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits  ( DescriptorSetLayoutCreateFlags
                                                               , DescriptorSetLayoutCreateFlagBits( DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT
+                                                                                                 , DESCRIPTOR_SET_LAYOUT_CREATE_EMBEDDED_IMMUTABLE_SAMPLERS_BIT_EXT
+                                                                                                 , DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT
                                                                                                  , DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR
                                                                                                  , DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT
                                                                                                  , ..
@@ -43,6 +45,18 @@ newtype DescriptorSetLayoutCreateFlagBits = DescriptorSetLayoutCreateFlagBits Fl
 -- non-UpdateAfterBind limits, whichever is larger.
 pattern DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT = DescriptorSetLayoutCreateFlagBits 0x00000004
 
+-- | 'DESCRIPTOR_SET_LAYOUT_CREATE_EMBEDDED_IMMUTABLE_SAMPLERS_BIT_EXT'
+-- specifies that this is a layout only containing immutable samplers that
+-- /can/ be bound by
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.cmdBindDescriptorBufferEmbeddedSamplersEXT'.
+-- Unlike normal immutable samplers, embedded immutable samplers do not
+-- require the application to provide them in a descriptor buffer.
+pattern DESCRIPTOR_SET_LAYOUT_CREATE_EMBEDDED_IMMUTABLE_SAMPLERS_BIT_EXT = DescriptorSetLayoutCreateFlagBits 0x00000020
+
+-- | 'DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT' specifies that
+-- this layout /must/ only be used with descriptor buffers.
+pattern DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT = DescriptorSetLayoutCreateFlagBits 0x00000010
+
 -- | 'DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR' specifies that
 -- descriptor sets /must/ not be allocated using this layout, and
 -- descriptors are instead pushed by
@@ -72,6 +86,14 @@ showTableDescriptorSetLayoutCreateFlagBits =
   [
     ( DESCRIPTOR_SET_LAYOUT_CREATE_HOST_ONLY_POOL_BIT_EXT
     , "HOST_ONLY_POOL_BIT_EXT"
+    )
+  ,
+    ( DESCRIPTOR_SET_LAYOUT_CREATE_EMBEDDED_IMMUTABLE_SAMPLERS_BIT_EXT
+    , "EMBEDDED_IMMUTABLE_SAMPLERS_BIT_EXT"
+    )
+  ,
+    ( DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT
+    , "DESCRIPTOR_BUFFER_BIT_EXT"
     )
   ,
     ( DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR

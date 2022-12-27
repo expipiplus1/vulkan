@@ -187,6 +187,19 @@ module Vulkan.Core10.Enums.StructureType  (StructureType( STRUCTURE_TYPE_APPLICA
                                                         , STRUCTURE_TYPE_GRAPHICS_PIPELINE_LIBRARY_CREATE_INFO_EXT
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_PROPERTIES_EXT
                                                         , STRUCTURE_TYPE_PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_FEATURES_EXT
+                                                        , STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CAPTURE_DESCRIPTOR_DATA_INFO_EXT
+                                                        , STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_PUSH_DESCRIPTOR_BUFFER_HANDLE_EXT
+                                                        , STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_INFO_EXT
+                                                        , STRUCTURE_TYPE_OPAQUE_CAPTURE_DESCRIPTOR_DATA_CREATE_INFO_EXT
+                                                        , STRUCTURE_TYPE_SAMPLER_CAPTURE_DESCRIPTOR_DATA_INFO_EXT
+                                                        , STRUCTURE_TYPE_IMAGE_VIEW_CAPTURE_DESCRIPTOR_DATA_INFO_EXT
+                                                        , STRUCTURE_TYPE_IMAGE_CAPTURE_DESCRIPTOR_DATA_INFO_EXT
+                                                        , STRUCTURE_TYPE_BUFFER_CAPTURE_DESCRIPTOR_DATA_INFO_EXT
+                                                        , STRUCTURE_TYPE_DESCRIPTOR_GET_INFO_EXT
+                                                        , STRUCTURE_TYPE_DESCRIPTOR_ADDRESS_INFO_EXT
+                                                        , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_FEATURES_EXT
+                                                        , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_DENSITY_MAP_PROPERTIES_EXT
+                                                        , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT
                                                         , STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV
                                                         , STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV
                                                         , STRUCTURE_TYPE_IMPORT_METAL_SHARED_EVENT_INFO_EXT
@@ -682,6 +695,7 @@ import GHC.Show (Show(showsPrec))
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VK_VERSION_1_0 VK_VERSION_1_0>,
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureBuildGeometryInfoKHR',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureBuildSizesInfoKHR',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.AccelerationStructureCaptureDescriptorDataInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.AccelerationStructureCreateInfoNV',
 -- 'Vulkan.Extensions.VK_KHR_acceleration_structure.AccelerationStructureDeviceAddressInfoKHR',
@@ -721,6 +735,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core10.SparseResourceMemoryManagement.BindSparseInfo',
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkBindVideoSessionMemoryInfoKHR VkBindVideoSessionMemoryInfoKHR>,
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.BlitImageInfo2',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.BufferCaptureDescriptorDataInfoEXT',
 -- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionBufferCreateInfoFUCHSIA',
 -- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionConstraintsInfoFUCHSIA',
 -- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionCreateInfoFUCHSIA',
@@ -781,6 +796,10 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationImageCreateInfoNV',
 -- 'Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_synchronization2.DependencyInfo',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.DescriptorAddressInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.DescriptorBufferBindingInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.DescriptorBufferBindingPushDescriptorBufferHandleEXT',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.DescriptorGetInfoEXT',
 -- 'Vulkan.Core10.DescriptorSet.DescriptorPoolCreateInfo',
 -- 'Vulkan.Core13.Promoted_From_VK_EXT_inline_uniform_block.DescriptorPoolInlineUniformBlockCreateInfo',
 -- 'Vulkan.Core10.DescriptorSet.DescriptorSetAllocateInfo',
@@ -879,6 +898,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_EXT_headless_surface.HeadlessSurfaceCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_MVK_ios_surface.IOSSurfaceCreateInfoMVK',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.ImageBlit2',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.ImageCaptureDescriptorDataInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionControlEXT',
 -- 'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionPropertiesEXT',
 -- 'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.ImageConstraintsInfoFUCHSIA',
@@ -902,6 +922,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_KHR_swapchain.ImageSwapchainCreateInfoKHR',
 -- 'Vulkan.Extensions.VK_EXT_astc_decode_mode.ImageViewASTCDecodeModeEXT',
 -- 'Vulkan.Extensions.VK_NVX_image_view_handle.ImageViewAddressPropertiesNVX',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.ImageViewCaptureDescriptorDataInfoEXT',
 -- 'Vulkan.Core10.ImageView.ImageViewCreateInfo',
 -- 'Vulkan.Extensions.VK_NVX_image_view_handle.ImageViewHandleInfoNVX',
 -- 'Vulkan.Extensions.VK_EXT_image_view_min_lod.ImageViewMinLodCreateInfoEXT',
@@ -956,6 +977,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT',
 -- 'Vulkan.Extensions.VK_KHR_dynamic_rendering.MultiviewPerViewAttributesInfoNVX',
 -- 'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeCreateInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT',
 -- 'Vulkan.Extensions.VK_NV_optical_flow.OpticalFlowExecuteInfoNV',
 -- 'Vulkan.Extensions.VK_NV_optical_flow.OpticalFlowImageFormatInfoNV',
 -- 'Vulkan.Extensions.VK_NV_optical_flow.OpticalFlowImageFormatPropertiesNV',
@@ -1000,6 +1022,9 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Extensions.VK_EXT_depth_clip_control.PhysicalDeviceDepthClipControlFeaturesEXT',
 -- 'Vulkan.Extensions.VK_EXT_depth_clip_enable.PhysicalDeviceDepthClipEnableFeaturesEXT',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve.PhysicalDeviceDepthStencilResolveProperties',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.PhysicalDeviceDescriptorBufferFeaturesEXT',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.PhysicalDeviceDescriptorBufferPropertiesEXT',
 -- 'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingFeatures',
 -- 'Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties',
 -- 'Vulkan.Extensions.VK_VALVE_descriptor_set_host_mapping.PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE',
@@ -1282,6 +1307,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_copy_commands2.ResolveImageInfo2',
 -- 'Vulkan.Extensions.VK_EXT_sample_locations.SampleLocationsInfoEXT',
 -- 'Vulkan.Extensions.VK_EXT_border_color_swizzle.SamplerBorderColorComponentMappingCreateInfoEXT',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.SamplerCaptureDescriptorDataInfoEXT',
 -- 'Vulkan.Core10.Sampler.SamplerCreateInfo',
 -- 'Vulkan.Extensions.VK_EXT_custom_border_color.SamplerCustomBorderColorCreateInfoEXT',
 -- 'Vulkan.Core12.Promoted_From_VK_EXT_sampler_filter_minmax.SamplerReductionModeCreateInfo',
@@ -1965,6 +1991,45 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_PROPERTIES_EXT 
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_FEATURES_EXT"
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_FEATURES_EXT = StructureType 1000320000
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CAPTURE_DESCRIPTOR_DATA_INFO_EXT"
+pattern STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CAPTURE_DESCRIPTOR_DATA_INFO_EXT = StructureType 1000316009
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_PUSH_DESCRIPTOR_BUFFER_HANDLE_EXT"
+pattern STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_PUSH_DESCRIPTOR_BUFFER_HANDLE_EXT = StructureType 1000316012
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_INFO_EXT"
+pattern STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_INFO_EXT = StructureType 1000316011
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_OPAQUE_CAPTURE_DESCRIPTOR_DATA_CREATE_INFO_EXT"
+pattern STRUCTURE_TYPE_OPAQUE_CAPTURE_DESCRIPTOR_DATA_CREATE_INFO_EXT = StructureType 1000316010
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SAMPLER_CAPTURE_DESCRIPTOR_DATA_INFO_EXT"
+pattern STRUCTURE_TYPE_SAMPLER_CAPTURE_DESCRIPTOR_DATA_INFO_EXT = StructureType 1000316008
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_VIEW_CAPTURE_DESCRIPTOR_DATA_INFO_EXT"
+pattern STRUCTURE_TYPE_IMAGE_VIEW_CAPTURE_DESCRIPTOR_DATA_INFO_EXT = StructureType 1000316007
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_CAPTURE_DESCRIPTOR_DATA_INFO_EXT"
+pattern STRUCTURE_TYPE_IMAGE_CAPTURE_DESCRIPTOR_DATA_INFO_EXT = StructureType 1000316006
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BUFFER_CAPTURE_DESCRIPTOR_DATA_INFO_EXT"
+pattern STRUCTURE_TYPE_BUFFER_CAPTURE_DESCRIPTOR_DATA_INFO_EXT = StructureType 1000316005
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_GET_INFO_EXT"
+pattern STRUCTURE_TYPE_DESCRIPTOR_GET_INFO_EXT = StructureType 1000316004
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_ADDRESS_INFO_EXT"
+pattern STRUCTURE_TYPE_DESCRIPTOR_ADDRESS_INFO_EXT = StructureType 1000316003
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_FEATURES_EXT = StructureType 1000316002
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_DENSITY_MAP_PROPERTIES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_DENSITY_MAP_PROPERTIES_EXT = StructureType 1000316001
+
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT = StructureType 1000316000
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV"
 pattern STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV = StructureType 1000314009
@@ -3582,6 +3647,19 @@ pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = StructureType 10000
   , STRUCTURE_TYPE_GRAPHICS_PIPELINE_LIBRARY_CREATE_INFO_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_PROPERTIES_EXT
   , STRUCTURE_TYPE_PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_FEATURES_EXT
+  , STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CAPTURE_DESCRIPTOR_DATA_INFO_EXT
+  , STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_PUSH_DESCRIPTOR_BUFFER_HANDLE_EXT
+  , STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_INFO_EXT
+  , STRUCTURE_TYPE_OPAQUE_CAPTURE_DESCRIPTOR_DATA_CREATE_INFO_EXT
+  , STRUCTURE_TYPE_SAMPLER_CAPTURE_DESCRIPTOR_DATA_INFO_EXT
+  , STRUCTURE_TYPE_IMAGE_VIEW_CAPTURE_DESCRIPTOR_DATA_INFO_EXT
+  , STRUCTURE_TYPE_IMAGE_CAPTURE_DESCRIPTOR_DATA_INFO_EXT
+  , STRUCTURE_TYPE_BUFFER_CAPTURE_DESCRIPTOR_DATA_INFO_EXT
+  , STRUCTURE_TYPE_DESCRIPTOR_GET_INFO_EXT
+  , STRUCTURE_TYPE_DESCRIPTOR_ADDRESS_INFO_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_FEATURES_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_DENSITY_MAP_PROPERTIES_EXT
+  , STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT
   , STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV
   , STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV
   , STRUCTURE_TYPE_IMPORT_METAL_SHARED_EVENT_INFO_EXT
@@ -4804,6 +4882,58 @@ showTableStructureType =
   ,
     ( STRUCTURE_TYPE_PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_FEATURES_EXT
     , "PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_FEATURES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CAPTURE_DESCRIPTOR_DATA_INFO_EXT
+    , "ACCELERATION_STRUCTURE_CAPTURE_DESCRIPTOR_DATA_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_PUSH_DESCRIPTOR_BUFFER_HANDLE_EXT
+    , "DESCRIPTOR_BUFFER_BINDING_PUSH_DESCRIPTOR_BUFFER_HANDLE_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_INFO_EXT
+    , "DESCRIPTOR_BUFFER_BINDING_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_OPAQUE_CAPTURE_DESCRIPTOR_DATA_CREATE_INFO_EXT
+    , "OPAQUE_CAPTURE_DESCRIPTOR_DATA_CREATE_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_SAMPLER_CAPTURE_DESCRIPTOR_DATA_INFO_EXT
+    , "SAMPLER_CAPTURE_DESCRIPTOR_DATA_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_IMAGE_VIEW_CAPTURE_DESCRIPTOR_DATA_INFO_EXT
+    , "IMAGE_VIEW_CAPTURE_DESCRIPTOR_DATA_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_IMAGE_CAPTURE_DESCRIPTOR_DATA_INFO_EXT
+    , "IMAGE_CAPTURE_DESCRIPTOR_DATA_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_BUFFER_CAPTURE_DESCRIPTOR_DATA_INFO_EXT
+    , "BUFFER_CAPTURE_DESCRIPTOR_DATA_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_DESCRIPTOR_GET_INFO_EXT
+    , "DESCRIPTOR_GET_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_DESCRIPTOR_ADDRESS_INFO_EXT
+    , "DESCRIPTOR_ADDRESS_INFO_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_FEATURES_EXT
+    , "PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_FEATURES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_DENSITY_MAP_PROPERTIES_EXT
+    , "PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_DENSITY_MAP_PROPERTIES_EXT"
+    )
+  ,
+    ( STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT
+    , "PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_PROPERTIES_EXT"
     )
   ,
     ( STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV

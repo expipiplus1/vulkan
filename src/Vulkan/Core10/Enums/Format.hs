@@ -272,6 +272,7 @@ import GHC.Show (Show(showsPrec))
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2.AttachmentDescription2',
 -- 'Vulkan.Core10.BufferView.BufferViewCreateInfo',
 -- 'Vulkan.Core13.Promoted_From_VK_KHR_dynamic_rendering.CommandBufferInheritanceRenderingInfo',
+-- 'Vulkan.Extensions.VK_EXT_descriptor_buffer.DescriptorAddressInfoEXT',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer.FramebufferAttachmentImageInfo',
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.GeometryTrianglesNV',
 -- 'Vulkan.Core10.Image.ImageCreateInfo',

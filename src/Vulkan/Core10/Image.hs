@@ -90,6 +90,7 @@ import Vulkan.Core10.Enums.ImageType (ImageType)
 import Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ImportMetalIOSurfaceInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_metal_objects (ImportMetalTextureInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_descriptor_buffer (OpaqueCaptureDescriptorDataCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_optical_flow (OpticalFlowImageFormatInfoNV)
 import Vulkan.CStruct.Extends (PeekChain)
 import Vulkan.CStruct.Extends (PeekChain(..))
@@ -160,6 +161,8 @@ foreign import ccall
 --     -   'Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 --     -   'Vulkan.Core10.Enums.Result.ERROR_COMPRESSION_EXHAUSTED_EXT'
+--
+--     -   'Vulkan.Extensions.VK_KHR_buffer_device_address.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR'
 --
 -- = See Also
 --
@@ -1376,7 +1379,9 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     @samples@ /must/ be
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
 --
--- -   #VUID-VkImageCreateInfo-tiling-02084# If @usage@ includes
+-- -   #VUID-VkImageCreateInfo-shadingRateImage-07727# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
+--     feature is enabled and @usage@ includes
 --     'Vulkan.Extensions.VK_NV_shading_rate_image.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV',
 --     @tiling@ /must/ be
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL'
@@ -1511,6 +1516,17 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_EXT_image_drm_format_modifier.ImageDrmFormatModifierExplicitCreateInfoEXT'
 --     structure
 --
+-- -   #VUID-VkImageCreateInfo-flags-08104# If @flags@ includes
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT',
+--     the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-descriptorBufferCaptureReplay descriptorBufferCaptureReplay>
+--     feature /must/ be enabled
+--
+-- -   #VUID-VkImageCreateInfo-pNext-08105# If the @pNext@ chain includes a
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT'
+--     structure, @flags@ /must/ contain
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT'
+--
 -- -   #VUID-VkImageCreateInfo-pNext-06783# If the @pNext@ chain includes a
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
 --     structure, its @exportObjectType@ member /must/ be either
@@ -1563,6 +1579,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Extensions.VK_KHR_swapchain.ImageSwapchainCreateInfoKHR',
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalIOSurfaceInfoEXT',
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalTextureInfoEXT',
+--     'Vulkan.Extensions.VK_EXT_descriptor_buffer.OpaqueCaptureDescriptorDataCreateInfoEXT',
 --     'Vulkan.Extensions.VK_NV_optical_flow.OpticalFlowImageFormatInfoNV',
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
@@ -1686,6 +1703,7 @@ instance Extensible ImageCreateInfo where
     | Just Refl <- eqT @e @ExportMetalObjectCreateInfoEXT = Just f
     | Just Refl <- eqT @e @ImageCompressionControlEXT = Just f
     | Just Refl <- eqT @e @BufferCollectionImageCreateInfoFUCHSIA = Just f
+    | Just Refl <- eqT @e @OpaqueCaptureDescriptorDataCreateInfoEXT = Just f
     | Just Refl <- eqT @e @ImageStencilUsageCreateInfo = Just f
     | Just Refl <- eqT @e @ImageDrmFormatModifierExplicitCreateInfoEXT = Just f
     | Just Refl <- eqT @e @ImageDrmFormatModifierListCreateInfoEXT = Just f
