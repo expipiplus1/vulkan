@@ -99,6 +99,7 @@ let
           sha256 = "0q9kdlxhm37f260v4ydmznwmmsaa4w9mq3fh2iivj792y6ybmp5j";
         };
       } super.hs-speedscope));
+      opentelemetry-extra = markUnbroken (dontCheck super.opentelemetry-extra);
 
       #
       # Overrides for generate
