@@ -35,7 +35,7 @@ import           System.FilePath
 import qualified Data.Vector.Generic           as VG
 import           Type.Reflection
 
-import           Control.Exception              ( IOException )
+import           Control.Exception ( IOException, try )
 import           Control.Exception.Base         ( catch )
 import           Documentation
 import           Documentation.Haddock
@@ -48,7 +48,6 @@ import           Render.SpecInfo
 import           Render.Utils
 import           Spec.Types
 import           Write.Segment
-import Control.Exception (try)
 
 ----------------------------------------------------------------
 -- Rendering
@@ -57,7 +56,7 @@ import Control.Exception (try)
 renderSegments
   :: forall r
    . ( HasErr r
-     , MemberWithError (Embed IO) r
+     , Member (Embed IO) r
      , HasSpecInfo r
      , HasTypeInfo r
      , HasRenderedNames r
@@ -118,7 +117,9 @@ renderSegments getDoc out segments = do
     nubOrdOn (reExports . snd) <$> forV sourceImportNames findBootElems
 
   let requiredBootSegments =
-        fmap (\((m, re) : res) -> Segment m (fromList (re : (snd <$> res))))
+        fmap (\case
+            [] -> error "empty group"
+            ((m, re) : res) -> Segment m (fromList (re : (snd <$> res))))
           . groupOn fst
           . sortOn fst
           $ requiredBootElements
@@ -131,7 +132,7 @@ renderSegments getDoc out segments = do
              requiredBootSegments
 
 renderModule
-  :: ( MemberWithError (Embed IO) r
+  :: ( Member (Embed IO) r
      , HasErr r
      , HasSpecInfo r
      , HasTypeInfo r
@@ -410,7 +411,7 @@ newtype TypeInfo = TypeInfo
   { tiConMap :: HName -> Maybe HName
   }
 
-type HasTypeInfo r = MemberWithError (Input TypeInfo) r
+type HasTypeInfo r = Member (Input TypeInfo) r
 
 withTypeInfo
   :: HasRenderParams r => Spec t -> Sem (Input TypeInfo ': r) a -> Sem r a
@@ -458,15 +459,17 @@ readFileMaybe f =
 -- If we don't put PatternSynonyms here the fourmolu eatst he comments on them 
 ormoluConfig :: Ormolu.Config Ormolu.RegionIndices
 ormoluConfig = Ormolu.defaultConfig
-  { Ormolu.cfgDynOptions  = [Ormolu.DynOption "-XPatternSynonyms"] 
+  { Ormolu.cfgDynOptions  = [Ormolu.DynOption "-XPatternSynonyms"]
   , Ormolu.cfgPrinterOpts = Ormolu.defaultPrinterOpts
-    { Ormolu.poIndentation              = pure 2
-    , Ormolu.poCommaStyle               = pure Ormolu.Leading
-    , Ormolu.poIndentWheres             = pure True
-    , Ormolu.poRecordBraceSpace         = pure False
-    , Ormolu.poDiffFriendlyImportExport = pure False
-    , Ormolu.poRespectful               = pure False
-    , Ormolu.poHaddockStyle             = pure Ormolu.HaddockSingleLine
+    { Ormolu.poIndentation = pure 2
+    -- , Ormolu.poFunctionArrows = pure Ormolu.LeadingArrows
+    , Ormolu.poCommaStyle = pure Ormolu.Leading
+    , Ormolu.poImportExportStyle = pure Ormolu.ImportExportLeading
+    , Ormolu.poIndentWheres = pure False
+    , Ormolu.poRecordBraceSpace = pure False
+    , Ormolu.poNewlinesBetweenDecls = pure 1
+    , Ormolu.poHaddockStyle  = pure Ormolu.HaddockSingleLine
+    , Ormolu.poRespectful  = pure False
     }
   }
 

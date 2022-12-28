@@ -195,6 +195,8 @@ module Vulkan.Extensions.VK_EXT_image_compression_control  ( getImageSubresource
                                                            , pattern EXT_IMAGE_COMPRESSION_CONTROL_EXTENSION_NAME
                                                            ) where
 
+import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
 import Vulkan.Internal.Utils (traceAroundEvent)
@@ -218,8 +220,6 @@ import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
-import Data.Bits (Bits)
-import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)

@@ -184,6 +184,8 @@ module VulkanMemoryAllocator  ( createAllocator
                               , VirtualAllocationInfo(..)
                               ) where
 
+import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Vulkan (AllocationCallbacks)
 import Vulkan (BindBufferMemoryInfo)
 import Vulkan (BindImageMemoryInfo)
@@ -273,8 +275,6 @@ import Vulkan.NamedType ((:::))
 import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
-import Data.Bits (Bits)
-import Data.Bits (FiniteBits)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CFloat)

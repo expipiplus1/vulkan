@@ -289,9 +289,8 @@ foreign import ccall
 -- -   #VUID-vkGetSwapchainStatusKHR-swapchain-parameter# @swapchain@
 --     /must/ be a valid 'Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
--- -   #VUID-vkGetSwapchainStatusKHR-commonparent# Both of @device@, and
---     @swapchain@ /must/ have been created, allocated, or retrieved from
---     the same 'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-vkGetSwapchainStatusKHR-swapchain-parent# @swapchain@ /must/
+--     have been created, allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --

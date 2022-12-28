@@ -1121,6 +1121,8 @@ module Vulkan.Extensions.VK_KHR_swapchain  ( createSwapchainKHR
                                            , SurfaceTransformFlagsKHR
                                            ) where
 
+import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
@@ -1152,8 +1154,6 @@ import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
-import Data.Bits (Bits)
-import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -1565,10 +1565,9 @@ foreign import ccall
 --     not @NULL@, @pAllocator@ /must/ be a valid pointer to a valid
 --     'Vulkan.Core10.AllocationCallbacks.AllocationCallbacks' structure
 --
--- -   #VUID-vkDestroySwapchainKHR-commonparent# Both of @device@, and
---     @swapchain@ that are valid handles of non-ignored parameters /must/
---     have been created, allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-vkDestroySwapchainKHR-swapchain-parent# If @swapchain@ is a
+--     valid handle, it /must/ have been created, allocated, or retrieved
+--     from @device@
 --
 -- == Host Synchronization
 --
@@ -1648,9 +1647,8 @@ foreign import ccall
 --     valid pointer to an array of @pSwapchainImageCount@
 --     'Vulkan.Core10.Handles.Image' handles
 --
--- -   #VUID-vkGetSwapchainImagesKHR-commonparent# Both of @device@, and
---     @swapchain@ /must/ have been created, allocated, or retrieved from
---     the same 'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-vkGetSwapchainImagesKHR-swapchain-parent# @swapchain@ /must/
+--     have been created, allocated, or retrieved from @device@
 --
 -- == Return Codes
 --
@@ -1810,6 +1808,9 @@ acquireNextImageKHRSafeOrUnsafe mkVkAcquireNextImageKHR device
 -- -   #VUID-vkAcquireNextImageKHR-pImageIndex-parameter# @pImageIndex@
 --     /must/ be a valid pointer to a @uint32_t@ value
 --
+-- -   #VUID-vkAcquireNextImageKHR-swapchain-parent# @swapchain@ /must/
+--     have been created, allocated, or retrieved from @device@
+--
 -- -   #VUID-vkAcquireNextImageKHR-semaphore-parent# If @semaphore@ is a
 --     valid handle, it /must/ have been created, allocated, or retrieved
 --     from @device@
@@ -1817,11 +1818,6 @@ acquireNextImageKHRSafeOrUnsafe mkVkAcquireNextImageKHR device
 -- -   #VUID-vkAcquireNextImageKHR-fence-parent# If @fence@ is a valid
 --     handle, it /must/ have been created, allocated, or retrieved from
 --     @device@
---
--- -   #VUID-vkAcquireNextImageKHR-commonparent# Both of @device@, and
---     @swapchain@ that are valid handles of non-ignored parameters /must/
---     have been created, allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Instance'
 --
 -- == Host Synchronization
 --
@@ -2756,10 +2752,6 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice
 --     @oldSwapchain@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
--- -   #VUID-VkSwapchainCreateInfoKHR-oldSwapchain-parent# If
---     @oldSwapchain@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @surface@
---
 -- -   #VUID-VkSwapchainCreateInfoKHR-commonparent# Both of @oldSwapchain@,
 --     and @surface@ that are valid handles of non-ignored parameters
 --     /must/ have been created, allocated, or retrieved from the same
@@ -3093,8 +3085,7 @@ instance es ~ '[] => Zero (SwapchainCreateInfoKHR es) where
 -- -   #VUID-VkPresentInfoKHR-commonparent# Both of the elements of
 --     @pSwapchains@, and the elements of @pWaitSemaphores@ that are valid
 --     handles of non-ignored parameters /must/ have been created,
---     allocated, or retrieved from the same
---     'Vulkan.Core10.Handles.Instance'
+--     allocated, or retrieved from the same 'Vulkan.Core10.Handles.Device'
 --
 -- = See Also
 --
@@ -3514,7 +3505,7 @@ instance Zero BindImageMemorySwapchainInfoKHR where
 -- -   #VUID-VkAcquireNextImageInfoKHR-commonparent# Each of @fence@,
 --     @semaphore@, and @swapchain@ that are valid handles of non-ignored
 --     parameters /must/ have been created, allocated, or retrieved from
---     the same 'Vulkan.Core10.Handles.Instance'
+--     the same 'Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --

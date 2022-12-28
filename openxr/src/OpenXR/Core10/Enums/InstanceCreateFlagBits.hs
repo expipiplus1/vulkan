@@ -4,13 +4,13 @@ module OpenXR.Core10.Enums.InstanceCreateFlagBits  ( InstanceCreateFlags
                                                    , InstanceCreateFlagBits(..)
                                                    ) where
 
+import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import OpenXR.Internal.Utils (enumReadPrec)
 import OpenXR.Internal.Utils (enumShowsPrec)
 import GHC.Show (showString)
 import Numeric (showHex)
 import OpenXR.Zero (Zero)
-import Data.Bits (Bits)
-import Data.Bits (FiniteBits)
 import Foreign.Storable (Storable)
 import GHC.Read (Read(readPrec))
 import GHC.Show (Show(showsPrec))

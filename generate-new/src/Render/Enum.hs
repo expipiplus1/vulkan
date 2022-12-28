@@ -1,5 +1,5 @@
-{-# language TemplateHaskell #-}
 {-# language QuasiQuotes #-}
+{-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
 module Render.Enum where
 
 import           Prettyprinter
@@ -10,7 +10,6 @@ import           Relude                  hiding ( lift )
 import           Text.Printf
 import           Text.Show
 
-import           Data.Bits
 import           Foreign.Storable
 import           Numeric
 
@@ -75,8 +74,8 @@ renderEnum e@Enum {..} = do
       special <- case eType of
         AnEnum       -> pure []
         ABitmask _ _ -> do
-          tellImport ''Bits
-          tellImport ''FiniteBits
+          tellImport (mkName "Data.Bits.Bits")
+          tellImport (mkName "Data.Bits.FiniteBits")
           pure ["Bits", "FiniteBits"]
       pure (always <> special)
     let

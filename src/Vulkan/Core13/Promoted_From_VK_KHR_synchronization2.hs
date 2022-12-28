@@ -387,7 +387,7 @@ foreign import ccall
 --     feature is not enabled, @stageMask@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT'
 --
--- -   #VUID-vkCmdResetEvent2-shadingRateImage-07316# If neither the
+-- -   #VUID-vkCmdResetEvent2-stageMask-07316# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
@@ -1271,7 +1271,7 @@ foreign import ccall
 --     feature is not enabled, @stage@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT'
 --
--- -   #VUID-vkCmdWriteTimestamp2-shadingRateImage-07316# If neither the
+-- -   #VUID-vkCmdWriteTimestamp2-stage-07316# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
@@ -1461,7 +1461,7 @@ cmdWriteTimestamp2 commandBuffer stage queryPool query = liftIO $ do
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT'
 --
--- -   #VUID-VkMemoryBarrier2-shadingRateImage-07316# If neither the
+-- -   #VUID-VkMemoryBarrier2-srcStageMask-07316# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
@@ -1845,7 +1845,7 @@ cmdWriteTimestamp2 commandBuffer stage queryPool query = liftIO $ do
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT'
 --
--- -   #VUID-VkMemoryBarrier2-shadingRateImage-07316# If neither the
+-- -   #VUID-VkMemoryBarrier2-dstStageMask-07316# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
@@ -2409,7 +2409,7 @@ instance Zero MemoryBarrier2 where
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT'
 --
--- -   #VUID-VkImageMemoryBarrier2-shadingRateImage-07316# If neither the
+-- -   #VUID-VkImageMemoryBarrier2-srcStageMask-07316# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
@@ -2793,7 +2793,7 @@ instance Zero MemoryBarrier2 where
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT'
 --
--- -   #VUID-VkImageMemoryBarrier2-shadingRateImage-07316# If neither the
+-- -   #VUID-VkImageMemoryBarrier2-dstStageMask-07316# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
@@ -3432,7 +3432,7 @@ instance Zero MemoryBarrier2 where
 --     or 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT'
 --     usage bits, and the
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT'
---     usage bit.
+--     usage bit
 --
 -- -   #VUID-VkImageMemoryBarrier2-attachmentFeedbackLoopLayout-07313# If
 --     the
@@ -3736,7 +3736,7 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2 es) where
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT'
 --
--- -   #VUID-VkBufferMemoryBarrier2-shadingRateImage-07316# If neither the
+-- -   #VUID-VkBufferMemoryBarrier2-srcStageMask-07316# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
@@ -4120,7 +4120,7 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2 es) where
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT'
 --
--- -   #VUID-VkBufferMemoryBarrier2-shadingRateImage-07316# If neither the
+-- -   #VUID-VkBufferMemoryBarrier2-dstStageMask-07316# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
@@ -4836,7 +4836,7 @@ instance Zero DependencyInfo where
 --     feature is not enabled, @stageMask@ /must/ not contain
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT'
 --
--- -   #VUID-VkSemaphoreSubmitInfo-shadingRateImage-07316# If neither the
+-- -   #VUID-VkSemaphoreSubmitInfo-stageMask-07316# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>

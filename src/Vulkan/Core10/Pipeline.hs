@@ -4365,7 +4365,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Core10.FundamentalTypes.TRUE', then the
 --     @rasterizationSamples@ member of @pMultisampleState@ /must/ be equal
 --     to
---     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'::@rasterizationSamples@.
+--     'Vulkan.Extensions.VK_EXT_multisampled_render_to_single_sampled.MultisampledRenderToSingleSampledInfoEXT'::@rasterizationSamples@
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-subpass-01411# If the pipeline is
 --     being created with
@@ -6399,6 +6399,32 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 -- -   #VUID-VkGraphicsPipelineCreateInfo-flags-07401# @flags@ /must/ not
 --     include
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT'
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-07730# If the
+--     pipeline is being created with
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     and no element of the @pDynamicStates@ member of @pDynamicState@ is
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT' or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_VIEWPORT_WITH_COUNT',
+--     and if
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview-per-view-viewports multiviewPerViewViewports>
+--     is enabled, then the index of the most significant bit in each
+--     element of
+--     'Vulkan.Core11.Promoted_From_VK_KHR_multiview.RenderPassMultiviewCreateInfo'::@pViewMasks@
+--     /must/ be less than @pViewportState@::@viewportCount@
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-pDynamicStates-07731# If the
+--     pipeline is being created with
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-pre-rasterization pre-rasterization shader state>,
+--     and no element of the @pDynamicStates@ member of @pDynamicState@ is
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR' or
+--     'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_SCISSOR_WITH_COUNT',
+--     and if
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multiview-per-view-viewports multiviewPerViewViewports>
+--     is enabled, then the index of the most significant bit in each
+--     element of
+--     'Vulkan.Core11.Promoted_From_VK_KHR_multiview.RenderPassMultiviewCreateInfo'::@pViewMasks@
+--     /must/ be less than @pViewportState@::@scissorCount@
 --
 -- == Valid Usage (Implicit)
 --

@@ -134,6 +134,8 @@ module Vulkan.Extensions.VK_NV_framebuffer_mixed_samples  ( PipelineCoverageModu
                                                           , pattern NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME
                                                           ) where
 
+import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
 import Control.Monad (unless)
@@ -157,8 +159,6 @@ import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
-import Data.Bits (Bits)
-import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CFloat)

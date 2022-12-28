@@ -49,6 +49,8 @@ module OpenXR.Extensions.XR_EXTX_overlay  ( SessionCreateInfoOverlayEXTX(..)
                                           , pattern EXTX_OVERLAY_EXTENSION_NAME
                                           ) where
 
+import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import OpenXR.Internal.Utils (enumReadPrec)
 import OpenXR.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytes)
@@ -62,8 +64,6 @@ import OpenXR.CStruct (ToCStruct)
 import OpenXR.CStruct (ToCStruct(..))
 import OpenXR.Zero (Zero)
 import OpenXR.Zero (Zero(..))
-import Data.Bits (Bits)
-import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)

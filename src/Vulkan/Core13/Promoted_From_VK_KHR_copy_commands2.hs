@@ -440,6 +440,30 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
 --     is not supported, @dstImage@ /must/ not be an unprotected image
 --
+-- -   #VUID-vkCmdCopyBufferToImage2-commandBuffer-07737# If the queue
+--     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', the
+--     @bufferOffset@ member of any element of
+--     @pCopyBufferToImageInfo->pRegions@ /must/ be a multiple of @4@
+--
+-- -   #VUID-vkCmdCopyBufferToImage2-imageOffset-07738# The @imageOffset@
+--     and @imageExtent@ members of each element of
+--     @pCopyBufferToImageInfo->pRegions@ /must/ respect the image transfer
+--     granularity requirements of @commandBuffer@’s command pool’s queue
+--     family, as described in
+--     'Vulkan.Core10.DeviceInitialization.QueueFamilyProperties'
+--
+-- -   #VUID-vkCmdCopyBufferToImage2-commandBuffer-07739# If the queue
+--     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT', for each
+--     element of @pCopyBufferToImageInfo->pRegions@, the @aspectMask@
+--     member of @imageSubresource@ /must/ not be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdCopyBufferToImage2-commandBuffer-parameter#
@@ -543,6 +567,21 @@ foreign import ccall
 --     @commandBuffer@ is a protected command buffer and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-protectedNoFault protectedNoFault>
 --     is not supported, @dstBuffer@ /must/ not be an unprotected buffer
+--
+-- -   #VUID-vkCmdCopyImageToBuffer2-commandBuffer-07746# If the queue
+--     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
+--     @commandBuffer@ was allocated from does not support
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
+--     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', the
+--     @bufferOffset@ member of any element of
+--     @pCopyImageToBufferInfo->pRegions@ /must/ be a multiple of @4@
+--
+-- -   #VUID-vkCmdCopyImageToBuffer2-imageOffset-07747# The @imageOffset@
+--     and @imageExtent@ members of each element of
+--     @pCopyImageToBufferInfo->pRegions@ /must/ respect the image transfer
+--     granularity requirements of @commandBuffer@’s command pool’s queue
+--     family, as described in
+--     'Vulkan.Core10.DeviceInitialization.QueueFamilyProperties'
 --
 -- == Valid Usage (Implicit)
 --
@@ -793,35 +832,7 @@ instance Zero BufferCopy2 where
 
 -- | VkImageCopy2 - Structure specifying an image copy operation
 --
--- == Valid Usage
---
--- -   #VUID-VkImageCopy2-extent-00140# The number of slices of the
---     @extent@ (for 3D) or layers of the @srcSubresource@ (for non-3D)
---     /must/ match the number of slices of the @extent@ (for 3D) or layers
---     of the @dstSubresource@ (for non-3D)
---
--- -   #VUID-VkImageCopy2-extent-06668# @extent.width@ /must/ not be 0
---
--- -   #VUID-VkImageCopy2-extent-06669# @extent.height@ /must/ not be 0
---
--- -   #VUID-VkImageCopy2-extent-06670# @extent.depth@ /must/ not be 0
---
 -- == Valid Usage (Implicit)
---
--- -   #VUID-VkImageCopy2-sType-sType# @sType@ /must/ be
---     'Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMAGE_COPY_2'
---
--- -   #VUID-VkImageCopy2-pNext-pNext# @pNext@ /must/ be @NULL@
---
--- -   #VUID-VkImageCopy2-srcSubresource-parameter# @srcSubresource@ /must/
---     be a valid
---     'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers'
---     structure
---
--- -   #VUID-VkImageCopy2-dstSubresource-parameter# @dstSubresource@ /must/
---     be a valid
---     'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers'
---     structure
 --
 -- = See Also
 --
@@ -836,11 +847,17 @@ data ImageCopy2 = ImageCopy2
     -- 'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers' structures
     -- specifying the image subresources of the images used for the source and
     -- destination image data, respectively.
+    --
+    -- #VUID-VkImageCopy2-srcSubresource-parameter# @srcSubresource@ /must/ be
+    -- a valid 'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers'
+    -- structure
     srcSubresource :: ImageSubresourceLayers
   , -- | @srcOffset@ and @dstOffset@ select the initial @x@, @y@, and @z@ offsets
     -- in texels of the sub-regions of the source and destination image data.
     srcOffset :: Offset3D
-  , -- No documentation found for Nested "VkImageCopy2" "dstSubresource"
+  , -- | #VUID-VkImageCopy2-dstSubresource-parameter# @dstSubresource@ /must/ be
+    -- a valid 'Vulkan.Core10.CommandBufferBuilding.ImageSubresourceLayers'
+    -- structure
     dstSubresource :: ImageSubresourceLayers
   , -- No documentation found for Nested "VkImageCopy2" "dstOffset"
     dstOffset :: Offset3D
@@ -1659,6 +1676,16 @@ instance Zero CopyBufferInfo2 where
 --     'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then for each element
 --     of @pRegions@, @dstOffset.z@ /must/ be @0@
 --
+-- -   #VUID-VkCopyImageInfo2-srcImage-07743# If @srcImage@ and @dstImage@
+--     have a different 'Vulkan.Core10.Enums.ImageType.ImageType', one
+--     /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' and the
+--     other /must/ be 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
+--
+-- -   #VUID-VkCopyImageInfo2-srcImage-07744# If @srcImage@ and @dstImage@
+--     have the same 'Vulkan.Core10.Enums.ImageType.ImageType', the
+--     @layerCount@ member of @srcSubresource@ and @dstSubresource@ in each
+--     element of @pRegions@ /must/ match
+--
 -- -   #VUID-VkCopyImageInfo2-srcImage-01790# If @srcImage@ and @dstImage@
 --     are both of type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', then
 --     for each element of @pRegions@, @extent.depth@ /must/ be @1@
@@ -1807,6 +1834,9 @@ instance Zero CopyBufferInfo2 where
 --     /must/ have been included in the
 --     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'::@stencilUsage@
 --     used to create @dstImage@
+--
+-- -   #VUID-VkCopyImageInfo2-srcImage-07745# @srcImage@ and @dstImage@
+--     /must/ have the same sample count
 --
 -- == Valid Usage (Implicit)
 --
@@ -2352,24 +2382,9 @@ instance Zero BlitImageInfo2 where
 --     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
 --     when @dstImage@ was created
 --
--- -   #VUID-VkCopyBufferToImageInfo2-imageOffset-01793# The @imageOffset@
---     and @imageExtent@ members of each element of @pRegions@ /must/
---     respect the image transfer granularity requirements of
---     @commandBuffer@’s command pool’s queue family, as described in
---     'Vulkan.Core10.DeviceInitialization.QueueFamilyProperties'
---
 -- -   #VUID-VkCopyBufferToImageInfo2-dstImage-02543# @dstImage@ /must/ not
 --     have been created with @flags@ containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
---
--- -   #VUID-VkCopyBufferToImageInfo2-commandBuffer-04477# If the queue
---     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
---     @commandBuffer@ was allocated from does not support
---     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT', for each
---     element of @pRegions@, the @aspectMask@ member of @imageSubresource@
---     /must/ not be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-pRegions-06223# For each element of
 --     @pRegions@ not containing
@@ -2474,17 +2489,24 @@ instance Zero BlitImageInfo2 where
 --     @pRegions@, @imageSubresource.aspectMask@ /must/ specify aspects
 --     present in @dstImage@
 --
--- -   #VUID-VkCopyBufferToImageInfo2-aspectMask-01560# If @dstImage@ has a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+-- -   #VUID-VkCopyBufferToImageInfo2-pRegions-07740# If @dstImage@ has a
+--     'Vulkan.Core10.Enums.Format.Format' with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion two planes>
+--     then for each element of @pRegions@, @imageSubresource.aspectMask@
+--     /must/ be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
+--     or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT'
+--
+-- -   #VUID-VkCopyBufferToImageInfo2-pRegions-07741# If @dstImage@ has a
+--     'Vulkan.Core10.Enums.Format.Format' with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion three planes>
 --     then for each element of @pRegions@, @imageSubresource.aspectMask@
 --     /must/ be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
 --     or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
---     (with
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
---     valid only for image formats with three planes)
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-baseArrayLayer-00213# If @dstImage@
 --     is of type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', for each
@@ -2496,14 +2518,6 @@ instance Zero BlitImageInfo2 where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
 --     and then multiplied by the texel block size of @dstImage@ /must/ be
 --     less than or equal to 231-1
---
--- -   #VUID-VkCopyBufferToImageInfo2-commandBuffer-04052# If the queue
---     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
---     @commandBuffer@ was allocated from does not support
---     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
---     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', the
---     @bufferOffset@ member of any element of @pRegions@ /must/ be a
---     multiple of @4@
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-srcImage-04053# If @dstImage@ has a
 --     depth\/stencil format, the @bufferOffset@ member of any element of
@@ -2702,12 +2716,6 @@ instance Zero CopyBufferToImageInfo2 where
 --     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
 --     when @srcImage@ was created
 --
--- -   #VUID-VkCopyImageToBufferInfo2-imageOffset-01794# The @imageOffset@
---     and @imageExtent@ members of each element of @pRegions@ /must/
---     respect the image transfer granularity requirements of
---     @commandBuffer@’s command pool’s queue family, as described in
---     'Vulkan.Core10.DeviceInitialization.QueueFamilyProperties'
---
 -- -   #VUID-VkCopyImageToBufferInfo2-srcImage-02544# @srcImage@ /must/ not
 --     have been created with @flags@ containing
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
@@ -2815,17 +2823,24 @@ instance Zero CopyBufferToImageInfo2 where
 --     @pRegions@, @imageSubresource.aspectMask@ /must/ specify aspects
 --     present in @srcImage@
 --
--- -   #VUID-VkCopyImageToBufferInfo2-aspectMask-01560# If @srcImage@ has a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+-- -   #VUID-VkCopyImageToBufferInfo2-pRegions-07740# If @srcImage@ has a
+--     'Vulkan.Core10.Enums.Format.Format' with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion two planes>
+--     then for each element of @pRegions@, @imageSubresource.aspectMask@
+--     /must/ be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
+--     or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT'
+--
+-- -   #VUID-VkCopyImageToBufferInfo2-pRegions-07741# If @srcImage@ has a
+--     'Vulkan.Core10.Enums.Format.Format' with
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion three planes>
 --     then for each element of @pRegions@, @imageSubresource.aspectMask@
 --     /must/ be
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
 --     or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
---     (with
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
---     valid only for image formats with three planes)
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-baseArrayLayer-00213# If @srcImage@
 --     is of type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', for each
@@ -2837,14 +2852,6 @@ instance Zero CopyBufferToImageInfo2 where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
 --     and then multiplied by the texel block size of @srcImage@ /must/ be
 --     less than or equal to 231-1
---
--- -   #VUID-VkCopyImageToBufferInfo2-commandBuffer-04052# If the queue
---     family used to create the 'Vulkan.Core10.Handles.CommandPool' which
---     @commandBuffer@ was allocated from does not support
---     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
---     'Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT', the
---     @bufferOffset@ member of any element of @pRegions@ /must/ be a
---     multiple of @4@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-srcImage-04053# If @srcImage@ has a
 --     depth\/stencil format, the @bufferOffset@ member of any element of

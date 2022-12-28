@@ -435,7 +435,7 @@ foreign import ccall
 -- -   #VUID-vkCmdDispatchBase-None-08119# If a descriptor is dynamically
 --     used with a 'Vulkan.Core10.Handles.Pipeline' created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT',
---     the descriptor memory /must/ be resident.
+--     the descriptor memory /must/ be resident
 --
 -- -   #VUID-vkCmdDispatchBase-None-02700# A valid pipeline /must/ be bound
 --     to the pipeline bind point used by this command
@@ -533,6 +533,20 @@ foreign import ccall
 --     object that enables
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>,
 --     that object /must/ not use the @ConstOffset@ and @Offset@ operands
+--
+-- -   #VUID-vkCmdDispatchBase-viewType-07752# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
+--     command, then the image view’s @viewType@ /must/ match the @Dim@
+--     operand of the @OpTypeImage@ as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-operation-validation ???>
+--
+-- -   #VUID-vkCmdDispatchBase-format-07753# If a
+--     'Vulkan.Core10.Handles.ImageView' is accessed as a result of this
+--     command, then the image view’s @format@ /must/ match the numeric
+--     format from the @Sampled@ @Type@ operand of the @OpTypeImage@ as
+--     described in the SPIR-V Sampled Type column of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-numericformat ???>
+--     table
 --
 -- -   #VUID-vkCmdDispatchBase-None-04115# If a
 --     'Vulkan.Core10.Handles.ImageView' is accessed using @OpImageWrite@
@@ -636,14 +650,14 @@ foreign import ccall
 --     @OpImageBlockMatchSADQCOM@ or OpImageBlockMatchSSDQCOM is used to
 --     read from a reference image as result of this command, then the
 --     specified reference coordinates /must/ not fail
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-integer-coordinate-validation integer texel coordinate validation>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-integer-coordinate-validation integer texel coordinate validation>
 --
 -- -   #VUID-vkCmdDispatchBase-OpImageWeightedSampleQCOM-06977# If
 --     @OpImageWeightedSampleQCOM@, @OpImageBoxFilterQCOM@,
 --     @OpImageBlockMatchSSDQCOM@, or @OpImageBlockMatchSADQCOM@ uses a
 --     'Vulkan.Core10.Handles.Sampler' as a result of this command, then
 --     the sampler /must/ have been created with
---     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
+--     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'
 --
 -- -   #VUID-vkCmdDispatchBase-OpImageWeightedSampleQCOM-06978# If any
 --     command other than @OpImageWeightedSampleQCOM@,
@@ -651,7 +665,7 @@ foreign import ccall
 --     @OpImageBlockMatchSADQCOM@ uses a 'Vulkan.Core10.Handles.Sampler' as
 --     a result of this command, then the sampler /must/ not have been
 --     created with
---     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'.
+--     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM'
 --
 -- -   #VUID-vkCmdDispatchBase-None-07288# Any shader invocation executed
 --     by this command /must/

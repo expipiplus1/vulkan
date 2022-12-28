@@ -209,9 +209,9 @@ foreign import ccall
 -- -   #VUID-vkSetHdrMetadataEXT-swapchainCount-arraylength#
 --     @swapchainCount@ /must/ be greater than @0@
 --
--- -   #VUID-vkSetHdrMetadataEXT-commonparent# Both of @device@, and the
---     elements of @pSwapchains@ /must/ have been created, allocated, or
---     retrieved from the same 'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-vkSetHdrMetadataEXT-pSwapchains-parent# Each element of
+--     @pSwapchains@ /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- = See Also
 --

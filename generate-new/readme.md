@@ -32,7 +32,12 @@ In an environment with `doxygen` (`nix-shell -p doxygen`), in the
 `VulkanMemoryAllocator/VulkanMemoryAllocator` directory.
 
 ```bash
-(cd src && sed -i -e 's|^GENERATE_DOCBOOK.*|GENERATE_DOCBOOK=YES|' -e 's|^BRIEF_MEMBER_DESC.*|BRIEF_MEMBER_DESC=NO|' Doxyfile && doxygen Doxyfile)
+(cd src &&
+  sed -i -e 's|^GENERATE_DOCBOOK.*|GENERATE_DOCBOOK=YES|' \
+         -e 's|^BRIEF_MEMBER_DESC.*|BRIEF_MEMBER_DESC=NO|' \
+         -e 's|^PREDEFINED *=|PREDEFINED = VMA_STATS_STRING_ENABLED=1 |' \
+         Doxyfile &&
+  doxygen Doxyfile)
 ```
 
 The docbook documentation will be in `docs/docbook`.

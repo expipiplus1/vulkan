@@ -19,7 +19,7 @@ import           Haskell.Name
 import           Render.Element
 import           Spec.Types
 
-type HasRenderedNames r = MemberWithError (Input RenderedNames) r
+type HasRenderedNames r = Member (Input RenderedNames) r
 
 data RenderedNames = RenderedNames
   { rnStructs                :: HashMap HName Struct

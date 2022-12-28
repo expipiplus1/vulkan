@@ -50,7 +50,7 @@ data Qualifier
 type C = C.Type C.CIdentifier
 
 parseCType
-  :: (MemberWithError (Input TypeNames) r, HasErr r)
+  :: (Member (Input TypeNames) r, HasErr r)
   => ByteString
   -> Sem r CType
 parseCType bs = do

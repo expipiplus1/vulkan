@@ -246,6 +246,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_KHR_xcb_surface
                           , module Vulkan.Extensions.VK_KHR_xlib_surface
                           , module Vulkan.Extensions.VK_KHR_zero_initialize_workgroup_memory
+                          , module Vulkan.Extensions.VK_LUNARG_direct_driver_loading
                           , module Vulkan.Extensions.VK_MVK_ios_surface
                           , module Vulkan.Extensions.VK_MVK_macos_surface
                           , module Vulkan.Extensions.VK_NN_vi_surface
@@ -296,6 +297,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_NV_win32_keyed_mutex
                           , module Vulkan.Extensions.VK_QCOM_fragment_density_map_offset
                           , module Vulkan.Extensions.VK_QCOM_image_processing
+                          , module Vulkan.Extensions.VK_QCOM_multiview_per_view_viewports
                           , module Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
                           , module Vulkan.Extensions.VK_QCOM_render_pass_store_ops
                           , module Vulkan.Extensions.VK_QCOM_render_pass_transform
@@ -552,6 +554,7 @@ import Vulkan.Extensions.VK_KHR_workgroup_memory_explicit_layout
 import Vulkan.Extensions.VK_KHR_xcb_surface
 import Vulkan.Extensions.VK_KHR_xlib_surface
 import Vulkan.Extensions.VK_KHR_zero_initialize_workgroup_memory
+import Vulkan.Extensions.VK_LUNARG_direct_driver_loading
 import Vulkan.Extensions.VK_MVK_ios_surface
 import Vulkan.Extensions.VK_MVK_macos_surface
 import Vulkan.Extensions.VK_NN_vi_surface
@@ -602,6 +605,7 @@ import Vulkan.Extensions.VK_NV_viewport_swizzle
 import Vulkan.Extensions.VK_NV_win32_keyed_mutex
 import Vulkan.Extensions.VK_QCOM_fragment_density_map_offset
 import Vulkan.Extensions.VK_QCOM_image_processing
+import Vulkan.Extensions.VK_QCOM_multiview_per_view_viewports
 import Vulkan.Extensions.VK_QCOM_render_pass_shader_resolve
 import Vulkan.Extensions.VK_QCOM_render_pass_store_ops
 import Vulkan.Extensions.VK_QCOM_render_pass_transform

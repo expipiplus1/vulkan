@@ -179,7 +179,7 @@ writeInitDeviceCmds
   :: ( HasTypeInfo r
      , HasSpecInfo r
      , HasErr r
-     , MemberWithError (State RenderElement) r
+     , Member (State RenderElement) r
      , HasRenderParams r
      )
   => Vector MarshaledCommand
@@ -229,7 +229,7 @@ initCmdsStmts
   :: ( HasTypeInfo r
      , HasSpecInfo r
      , HasErr r
-     , MemberWithError (State RenderElement) r
+     , Member (State RenderElement) r
      , HasRenderParams r
      )
   => Doc ()
@@ -271,7 +271,7 @@ writeGetInstanceProcAddr
   :: ( HasTypeInfo r
      , HasSpecInfo r
      , HasErr r
-     , MemberWithError (State RenderElement) r
+     , Member (State RenderElement) r
      , HasRenderParams r
      )
   => SpecFlavor
@@ -329,7 +329,7 @@ writeMkGetDeviceProcAddr
   :: ( HasTypeInfo r
      , HasSpecInfo r
      , HasErr r
-     , MemberWithError (State RenderElement) r
+     , Member (State RenderElement) r
      , HasRenderParams r
      )
   => Sem r ()

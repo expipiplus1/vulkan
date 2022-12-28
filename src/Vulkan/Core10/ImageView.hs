@@ -1225,7 +1225,7 @@ instance Zero ImageSubresourceRange where
 --     includes a
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ExportMetalObjectCreateInfoEXT'
 --     structure, its @exportObjectType@ member /must/ be
---     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT'.
+--     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT'
 --
 -- -   #VUID-VkImageViewCreateInfo-pNext-06944# If the @pNext@ chain
 --     includes
@@ -1279,7 +1279,7 @@ instance Zero ImageSubresourceRange where
 --     'Vulkan.Extensions.VK_QCOM_image_processing.ImageViewSampleWeightCreateInfoQCOM'
 --     structure and @viewType@ is
 --     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_1D_ARRAY', then
---     @subresourceRange.layerCount@ /must/ be equal to @2@.
+--     @subresourceRange.layerCount@ /must/ be equal to @2@
 --
 -- -   #VUID-VkImageViewCreateInfo-pNext-06952# If the @pNext@ chain
 --     includes

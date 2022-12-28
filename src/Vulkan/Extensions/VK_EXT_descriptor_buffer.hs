@@ -847,7 +847,7 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdBindDescriptorBuffersEXT-pBindingInfos-08055# For any
 --     element of @pBindingInfos@, @usage@ /must/ match the buffer from
---     which @address@ was queried.
+--     which @address@ was queried
 --
 -- == Valid Usage (Implicit)
 --
@@ -1934,7 +1934,7 @@ data PhysicalDeviceDescriptorBufferPropertiesEXT = PhysicalDeviceDescriptorBuffe
     -- @uniformTexelBufferDescriptorSize@ indicates the size in bytes of a
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
     -- descriptor if the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
     -- feature is not enabled.
     uniformTexelBufferDescriptorSize :: Word64
   , -- | #limits-robustUniformTexelBufferDescriptorSize#
@@ -1942,14 +1942,14 @@ data PhysicalDeviceDescriptorBufferPropertiesEXT = PhysicalDeviceDescriptorBuffe
     -- a
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
     -- descriptor if the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
     -- feature is enabled.
     robustUniformTexelBufferDescriptorSize :: Word64
   , -- | #limits-storageTexelBufferDescriptorSize#
     -- @storageTexelBufferDescriptorSize@ indicates the size in bytes of a
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
     -- descriptor if the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
     -- feature is not enabled.
     storageTexelBufferDescriptorSize :: Word64
   , -- | #limits-robustStorageTexelBufferDescriptorSize#
@@ -1957,7 +1957,7 @@ data PhysicalDeviceDescriptorBufferPropertiesEXT = PhysicalDeviceDescriptorBuffe
     -- a
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
     -- descriptor if the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
     -- feature is enabled.
     robustStorageTexelBufferDescriptorSize :: Word64
   , -- | #limits-uniformBufferDescriptorSize# @uniformBufferDescriptorSize@
@@ -1969,7 +1969,7 @@ data PhysicalDeviceDescriptorBufferPropertiesEXT = PhysicalDeviceDescriptorBuffe
     -- @robustUniformBufferDescriptorSize@ indicates the size in bytes of a
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
     -- descriptor if the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
     -- feature is enabled.
     robustUniformBufferDescriptorSize :: Word64
   , -- | #limits-storageBufferDescriptorSize# @storageBufferDescriptorSize@
@@ -1981,7 +1981,7 @@ data PhysicalDeviceDescriptorBufferPropertiesEXT = PhysicalDeviceDescriptorBuffe
     -- @robustStorageBufferDescriptorSize@ indicates the size in bytes of a
     -- 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
     -- descriptor if the
-    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
+    -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess robustBufferAccess>
     -- feature is enabled.
     robustStorageBufferDescriptorSize :: Word64
   , -- | #limits-inputAttachmentDescriptorSize# @inputAttachmentDescriptorSize@

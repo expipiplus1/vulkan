@@ -521,7 +521,7 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 -- -   #VUID-VkSamplerCreateInfo-flags-06964# If @flags@ includes
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM',
 --     then @minFilter@ and @magFilter@ /must/ be
---     'Vulkan.Core10.Enums.Filter.FILTER_NEAREST'.
+--     'Vulkan.Core10.Enums.Filter.FILTER_NEAREST'
 --
 -- -   #VUID-VkSamplerCreateInfo-flags-06965# If @flags@ includes
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM',
@@ -544,7 +544,7 @@ destroySampler device sampler allocator = liftIO . evalContT $ do
 --     and if @addressModeU@ or @addressModeV@ is
 --     'Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER',
 --     then @borderColor@ /must/ be
---     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_TRANSPARENT_BLACK'.
+--     'Vulkan.Core10.Enums.BorderColor.BORDER_COLOR_FLOAT_TRANSPARENT_BLACK'
 --
 -- -   #VUID-VkSamplerCreateInfo-flags-06969# If @flags@ includes
 --     'Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM',

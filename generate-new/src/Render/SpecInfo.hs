@@ -15,7 +15,7 @@ import qualified Data.Vector                   as V
 import           Render.Element
 import           Spec.Types
 
-type HasSpecInfo r = MemberWithError (Input SpecInfo) r
+type HasSpecInfo r = Member (Input SpecInfo) r
 
 type SizeMap = CType -> Maybe (Int, Int)
 

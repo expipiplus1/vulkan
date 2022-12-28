@@ -10,7 +10,7 @@ import           Relude                  hiding ( State
                                                 , modify'
                                                 )
 
-type HasRenderState r = MemberWithError (State RenderState) r
+type HasRenderState r = Member (State RenderState) r
 
 newtype RenderState = RenderState
   { storableStructOrUnionSet :: Set.Set HName

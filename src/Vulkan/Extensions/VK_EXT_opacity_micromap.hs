@@ -470,6 +470,8 @@ module Vulkan.Extensions.VK_EXT_opacity_micromap  ( createMicromapEXT
                                                   , AccelerationStructureCompatibilityKHR(..)
                                                   ) where
 
+import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
 import Vulkan.Internal.Utils (traceAroundEvent)
@@ -504,8 +506,6 @@ import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
-import Data.Bits (Bits)
-import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
@@ -754,9 +754,16 @@ foreign import ccall
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
 -- and an
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
--- of 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_READ_BIT_EXT' or
--- 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_WRITE_BIT_EXT'.
--- Similarly for accesses to 'MicromapBuildInfoEXT'::@dstMicromap@.
+-- of ('Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_READ_BIT_EXT' |
+-- 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_WRITE_BIT_EXT').
+-- Accesses to 'MicromapBuildInfoEXT'::@dstMicromap@ /must/ be
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
+-- with the
+-- 'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT'
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- and an
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
+-- of 'Vulkan.Core13.Enums.AccessFlags2.ACCESS_2_MICROMAP_WRITE_BIT_EXT'.
 --
 -- Accesses to other input buffers as identified by any used values of
 -- 'MicromapBuildInfoEXT'::@data@ or
@@ -2341,7 +2348,7 @@ getMicromapBuildSizesEXT device buildType buildInfo = liftIO . evalContT $ do
 --
 -- -   #VUID-VkMicromapBuildInfoEXT-pUsageCounts-07516# Only one of
 --     @pUsageCounts@ or @ppUsageCounts@ /can/ be a valid pointer, the
---     other /must/ be @NULL@.
+--     other /must/ be @NULL@
 --
 -- -   #VUID-VkMicromapBuildInfoEXT-type-07517# If @type@ is
 --     'MICROMAP_TYPE_OPACITY_MICROMAP_EXT' the @format@ member of
@@ -3065,7 +3072,7 @@ instance Zero MicromapBuildSizesInfoEXT where
 -- -   #VUID-VkMicromapUsageEXT-format-07519# If the 'MicromapTypeEXT' of
 --     the micromap is 'MICROMAP_TYPE_OPACITY_MICROMAP_EXT' then @format@
 --     /must/ be 'OPACITY_MICROMAP_FORMAT_2_STATE_EXT' or
---     'OPACITY_MICROMAP_FORMAT_4_STATE_EXT'.
+--     'OPACITY_MICROMAP_FORMAT_4_STATE_EXT'
 --
 -- -   #VUID-VkMicromapUsageEXT-format-07520# If the 'MicromapTypeEXT' of
 --     the micromap is 'MICROMAP_TYPE_OPACITY_MICROMAP_EXT' and @format@ is
@@ -3146,7 +3153,7 @@ instance Zero MicromapUsageEXT where
 -- -   #VUID-VkMicromapTriangleEXT-format-07522# If the 'MicromapTypeEXT'
 --     of the micromap is 'MICROMAP_TYPE_OPACITY_MICROMAP_EXT' then
 --     @format@ /must/ be 'OPACITY_MICROMAP_FORMAT_2_STATE_EXT' or
---     'OPACITY_MICROMAP_FORMAT_4_STATE_EXT'.
+--     'OPACITY_MICROMAP_FORMAT_4_STATE_EXT'
 --
 -- -   #VUID-VkMicromapTriangleEXT-format-07523# If the 'MicromapTypeEXT'
 --     of the micromap is 'MICROMAP_TYPE_OPACITY_MICROMAP_EXT' and @format@
@@ -3409,7 +3416,7 @@ instance Zero PhysicalDeviceOpacityMicromapPropertiesEXT where
 --
 -- -   #VUID-VkAccelerationStructureTrianglesOpacityMicromapEXT-pUsageCounts-07335#
 --     Only one of @pUsageCounts@ or @ppUsageCounts@ /can/ be a valid
---     pointer, the other /must/ be @NULL@.
+--     pointer, the other /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --

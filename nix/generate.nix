@@ -1,4 +1,4 @@
-{ pkgs ? import ./nixpkgs.nix, compiler ? "ghc8107"
+{ pkgs ? import ./nixpkgs.nix, compiler ? null
 , vulkan-docs ? ../generate-new/Vulkan-Docs, withDocs ? false }:
 
 with pkgs;

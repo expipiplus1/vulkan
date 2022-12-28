@@ -1768,7 +1768,7 @@ instance Zero SubpassDescription where
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_EXT'
 --
--- -   #VUID-VkSubpassDependency-shadingRateImage-07318# If neither the
+-- -   #VUID-VkSubpassDependency-srcStageMask-07318# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
@@ -1816,7 +1816,7 @@ instance Zero SubpassDescription where
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TASK_SHADER_BIT_EXT'
 --
--- -   #VUID-VkSubpassDependency-shadingRateImage-07318# If neither the
+-- -   #VUID-VkSubpassDependency-dstStageMask-07318# If neither the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shadingRateImage>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFragmentShadingRate attachmentFragmentShadingRate>
@@ -2393,7 +2393,7 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#renderpass-fragmentdensitymapoffsets fragment density map offsets>
 --     other than (0,0), each element of @pAttachments@ /must/ have been
 --     created with a @flags@ value including
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM'.
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM'
 --
 -- -   #VUID-VkFramebufferCreateInfo-pAttachments-00880# If @flags@ does
 --     not include
@@ -2756,7 +2756,7 @@ instance es ~ '[] => Zero (RenderPassCreateInfo es) where
 --     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT' /must/
 --     have been created with
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT'
---     in their 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@.
+--     in their 'Vulkan.Core10.Image.ImageCreateInfo'::@flags@
 --
 -- -   #VUID-VkFramebufferCreateInfo-samples-07009# If
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#subpass-multisampledrendertosinglesampled multisampled-render-to-single-sampled>

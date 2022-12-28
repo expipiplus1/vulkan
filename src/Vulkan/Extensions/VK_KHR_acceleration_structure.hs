@@ -1265,6 +1265,10 @@ module Vulkan.Extensions.VK_KHR_acceleration_structure  ( destroyAccelerationStr
                                                         , DebugReportObjectTypeEXT(..)
                                                         ) where
 
+import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
+import Data.Bits (shiftL)
+import Data.Bits (shiftR)
 import Vulkan.CStruct.Utils (FixedArray)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
@@ -1274,8 +1278,6 @@ import Control.Monad (unless)
 import Control.Monad.IO.Class (liftIO)
 import Data.Bits ((.&.))
 import Data.Bits ((.|.))
-import Data.Bits (shiftL)
-import Data.Bits (shiftR)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytes)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -1308,8 +1310,6 @@ import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
-import Data.Bits (Bits)
-import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -2844,13 +2844,25 @@ foreign import ccall
 -- and an
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
 -- of
--- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR'
--- or
--- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR'.
--- Similarly for accesses to each
+-- ('Vulkan.Core10.Enums.AccessFlagBits.ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR'
+-- |
+-- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR').
+-- Accesses to each
 -- 'AccelerationStructureBuildGeometryInfoKHR'::@srcAccelerationStructure@
 -- and
--- 'AccelerationStructureBuildGeometryInfoKHR'::@dstAccelerationStructure@.
+-- 'AccelerationStructureBuildGeometryInfoKHR'::@dstAccelerationStructure@
+-- /must/ be
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-dependencies synchronized>
+-- with the
+-- 'Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR'
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-pipeline-stages pipeline stage>
+-- and an
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#synchronization-access-types access type>
+-- of
+-- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_ACCELERATION_STRUCTURE_READ_BIT_KHR'
+-- or
+-- 'Vulkan.Core10.Enums.AccessFlagBits.ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_KHR',
+-- as appropriate.
 --
 -- Accesses to other input buffers as identified by any used values of
 -- 'Vulkan.Extensions.VK_NV_ray_tracing_motion_blur.AccelerationStructureGeometryMotionTrianglesDataNV'::@vertexData@,
@@ -5670,7 +5682,7 @@ instance Zero AccelerationStructureGeometryKHR where
 --     'BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_EXT' bit
 --     set then it /must/ not have the
 --     'BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_EXT'
---     bit set.
+--     bit set
 --
 -- == Valid Usage (Implicit)
 --

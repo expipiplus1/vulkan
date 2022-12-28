@@ -1,4 +1,5 @@
 {-# language QuasiQuotes #-}
+{-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
 module Render.Spec.Versions
   ( specVersions
   ) where
@@ -11,12 +12,12 @@ import           Polysemy.Input
 import           Relude
 import           Text.InterpolatedString.Perl6.Unindented
 
-import           Data.Bits
-
 import           Error
 import           Haskell.Name
 import           Render.Element
 import           Spec.Parse
+import Language.Haskell.TH (mkName)
+import Language.Haskell.TH.Syntax (mkNameG_v)
 
 specVersions
   :: forall r
@@ -86,10 +87,10 @@ versionConstruction = genRe "version construction" $ do
   RenderParams {..} <- input
   tellExplicitModule =<< mkModuleName ["Version"]
   tellImport ''Word32
-  tellImport '(.&.)
-  tellImport '(.|.)
-  tellImport 'shiftL
-  tellImport 'shiftR
+  tellImport (mkNameG_v "base" "Data.Bits" ".&.")
+  tellImport (mkNameG_v "base" "Data.Bits" ".|.")
+  tellImport (mkName "Data.Bits.shiftL")
+  tellImport (mkName "Data.Bits.shiftR")
   let patMajor = TermName ("_" <> unName (mkPatternName "VK_VERSION_MAJOR"))
       patMinor = TermName ("_" <> unName (mkPatternName "VK_VERSION_MINOR"))
       patPatch = TermName ("_" <> unName (mkPatternName "VK_VERSION_PATCH"))

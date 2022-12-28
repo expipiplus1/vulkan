@@ -63,6 +63,8 @@ module OpenXR.Extensions.XR_KHR_vulkan_enable2  ( createVulkanInstanceKHR
                                                 , getVulkanGraphicsRequirementsKHR
                                                 ) where
 
+import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import OpenXR.Internal.Utils (enumReadPrec)
 import OpenXR.Internal.Utils (enumShowsPrec)
 import OpenXR.Internal.Utils (traceAroundEvent)
@@ -98,8 +100,6 @@ import qualified OpenXR.VulkanTypes (Result(..))
 import OpenXR.Zero (Zero)
 import OpenXR.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
-import Data.Bits (Bits)
-import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)

@@ -312,7 +312,7 @@ instance Zero PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM where
 --     If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-fragmentDensityMapOffsets fragmentDensityMapOffsets>
 --     feature is not enabled or fragment density map is not enabled in the
---     render pass, @fragmentDensityOffsetCount@ /must/ equal @0@.
+--     render pass, @fragmentDensityOffsetCount@ /must/ equal @0@
 --
 -- -   #VUID-VkSubpassFragmentDensityMapOffsetEndInfoQCOM-fragmentDensityMapAttachment-06504#
 --     If
@@ -320,7 +320,7 @@ instance Zero PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM where
 --     is not is not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' and was
 --     not created with
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM',
---     @fragmentDensityOffsetCount@ /must/ equal @0@.
+--     @fragmentDensityOffsetCount@ /must/ equal @0@
 --
 -- -   #VUID-VkSubpassFragmentDensityMapOffsetEndInfoQCOM-pDepthStencilAttachment-06505#
 --     If
@@ -328,7 +328,7 @@ instance Zero PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM where
 --     is not is not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' and was
 --     not created with
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM',
---     @fragmentDensityOffsetCount@ /must/ equal @0@.
+--     @fragmentDensityOffsetCount@ /must/ equal @0@
 --
 -- -   #VUID-VkSubpassFragmentDensityMapOffsetEndInfoQCOM-pInputAttachments-06506#
 --     If any element of
@@ -336,7 +336,7 @@ instance Zero PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM where
 --     is not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' and was not
 --     created with
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM',
---     @fragmentDensityOffsetCount@ /must/ equal @0@.
+--     @fragmentDensityOffsetCount@ /must/ equal @0@
 --
 -- -   #VUID-VkSubpassFragmentDensityMapOffsetEndInfoQCOM-pColorAttachments-06507#
 --     If any element of
@@ -344,7 +344,7 @@ instance Zero PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM where
 --     is not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' and was not
 --     created with
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM',
---     @fragmentDensityOffsetCount@ /must/ equal @0@.
+--     @fragmentDensityOffsetCount@ /must/ equal @0@
 --
 -- -   #VUID-VkSubpassFragmentDensityMapOffsetEndInfoQCOM-pResolveAttachments-06508#
 --     If any element of
@@ -352,7 +352,7 @@ instance Zero PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM where
 --     not is not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' and was
 --     not created with
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM',
---     @fragmentDensityOffsetCount@ /must/ equal @0@.
+--     @fragmentDensityOffsetCount@ /must/ equal @0@
 --
 -- -   #VUID-VkSubpassFragmentDensityMapOffsetEndInfoQCOM-pPreserveAttachments-06509#
 --     If any element of
@@ -360,26 +360,26 @@ instance Zero PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM where
 --     not is not 'Vulkan.Core10.APIConstants.ATTACHMENT_UNUSED' and was
 --     not created with
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_QCOM',
---     @fragmentDensityOffsetCount@ /must/ equal @0@.
+--     @fragmentDensityOffsetCount@ /must/ equal @0@
 --
 -- -   #VUID-VkSubpassFragmentDensityMapOffsetEndInfoQCOM-fragmentDensityOffsetCount-06510#
 --     If @fragmentDensityOffsetCount@ is not @0@ and multiview is enabled
 --     for the render pass, @fragmentDensityOffsetCount@ /must/ equal the
 --     @layerCount@ that was specified in creating the fragment density map
---     attachment view.
+--     attachment view
 --
 -- -   #VUID-VkSubpassFragmentDensityMapOffsetEndInfoQCOM-fragmentDensityOffsetCount-06511#
 --     If @fragmentDensityOffsetCount@ is not @0@ and multiview is not
 --     enabled for the render pass, @fragmentDensityOffsetCount@ /must/
---     equal @1@.
+--     equal @1@
 --
 -- -   #VUID-VkSubpassFragmentDensityMapOffsetEndInfoQCOM-x-06512# The @x@
 --     component of each element of @pFragmentDensityOffsets@ /must/ be an
---     integer multiple of @fragmentDensityOffsetGranularity.width@.
+--     integer multiple of @fragmentDensityOffsetGranularity.width@
 --
 -- -   #VUID-VkSubpassFragmentDensityMapOffsetEndInfoQCOM-y-06513# The @y@
 --     component of each element of @pFragmentDensityOffsets@ /must/ be an
---     integer multiple of @fragmentDensityOffsetGranularity.height@.
+--     integer multiple of @fragmentDensityOffsetGranularity.height@
 --
 -- == Valid Usage (Implicit)
 --

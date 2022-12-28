@@ -8,10 +8,10 @@ module OpenXR.Version  ( pattern CURRENT_API_VERSION
                        , Version(..)
                        ) where
 
-import Data.Bits ((.&.))
-import Data.Bits ((.|.))
 import Data.Bits (shiftL)
 import Data.Bits (shiftR)
+import Data.Bits ((.&.))
+import Data.Bits ((.|.))
 import OpenXR.Zero (Zero)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)

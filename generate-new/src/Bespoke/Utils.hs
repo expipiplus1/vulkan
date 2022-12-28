@@ -26,6 +26,7 @@ import           Foreign.Marshal.Alloc          ( callocBytes )
 import           Haskell.Name
 import           Render.Element
 import           Spec.Name                      ( CName(CName) )
+import Language.Haskell.TH.Syntax (mkNameG_tc)
 
 hasObjectTypeClass :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 hasObjectTypeClass = genRe "HasObjectType class" $ do
@@ -68,7 +69,7 @@ marshalUtils = genRe "marshal utils" $ do
     , 'peekElemOff
     , 'natVal
     , ''KnownNat
-    , ''(<=)
+    , mkNameG_tc "base" "GHC.TypeNats" "<="
     , 'natVal
     , 'plusPtr
     , ''Nat

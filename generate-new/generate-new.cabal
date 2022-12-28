@@ -1,6 +1,6 @@
 cabal-version: 2.0
 
--- This file has been generated from package.yaml by hpack version 0.34.7.
+-- This file has been generated from package.yaml by hpack version 0.35.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -152,7 +152,7 @@ library
     , pandoc
     , parsec
     , parsers
-    , polysemy >=1.4 && <1.7
+    , polysemy >=1.4 && <1.8
     , pretty-show
     , prettyprinter
     , regex-applicative
@@ -260,7 +260,7 @@ library khronos-spec
     , pandoc
     , parsec
     , parsers
-    , polysemy >=1.4 && <1.7
+    , polysemy >=1.4 && <1.8
     , pretty-show
     , prettyprinter
     , regex-applicative
@@ -364,7 +364,7 @@ executable vk
     , pandoc
     , parsec
     , parsers
-    , polysemy >=1.4 && <1.7
+    , polysemy >=1.4 && <1.8
     , pretty-show
     , prettyprinter
     , regex-applicative
@@ -471,7 +471,7 @@ executable vma
     , pandoc
     , parsec
     , parsers
-    , polysemy >=1.4 && <1.7
+    , polysemy >=1.4 && <1.8
     , pretty-show
     , prettyprinter
     , regex-applicative
@@ -576,7 +576,7 @@ executable xr
     , pandoc
     , parsec
     , parsers
-    , polysemy >=1.4 && <1.7
+    , polysemy >=1.4 && <1.8
     , pretty-show
     , prettyprinter
     , regex-applicative

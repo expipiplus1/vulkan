@@ -1473,18 +1473,18 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core10.Handles.Image' is to be used to import memory from a
 --     'Vulkan.Extensions.Handles.BufferCollectionFUCHSIA', a
 --     'Vulkan.Extensions.VK_FUCHSIA_buffer_collection.BufferCollectionImageCreateInfoFUCHSIA'
---     structure /must/ be chained to @pNext@.
+--     structure /must/ be chained to @pNext@
 --
 -- -   #VUID-VkImageCreateInfo-multisampledRenderToSingleSampled-06882# If
 --     the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-multisampledRenderToSingleSampled multisampledRenderToSingleSampled>
 --     feature is not enabled, @flags@ /must/ not contain
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT'.
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT'
 --
 -- -   #VUID-VkImageCreateInfo-flags-06883# If @flags@ contains
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT',
 --     @samples@ /must/ be
---     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'.
+--     'Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
 --
 -- -   #VUID-VkImageCreateInfo-pNext-06743# If the @pNext@ chain includes a
 --     'Vulkan.Extensions.VK_EXT_image_compression_control.ImageCompressionControlEXT'
@@ -1532,7 +1532,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     structure, its @exportObjectType@ member /must/ be either
 --     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_TEXTURE_BIT_EXT'
 --     or
---     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_IOSURFACE_BIT_EXT'.
+--     'Vulkan.Extensions.VK_EXT_metal_objects.EXPORT_METAL_OBJECT_TYPE_METAL_IOSURFACE_BIT_EXT'
 --
 -- -   #VUID-VkImageCreateInfo-pNext-06784# If the @pNext@ chain includes a
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalTextureInfoEXT'
@@ -1540,14 +1540,14 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
 --     or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'.
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
 --
 -- -   #VUID-VkImageCreateInfo-pNext-06785# If the @pNext@ chain includes a
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalTextureInfoEXT'
 --     structure and the image does not have a multi-planar format, then
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalTextureInfoEXT'::@plane@
 --     /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'.
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
 --
 -- -   #VUID-VkImageCreateInfo-pNext-06786# If the @pNext@ chain includes a
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalTextureInfoEXT'
@@ -1555,7 +1555,7 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     planes, then
 --     'Vulkan.Extensions.VK_EXT_metal_objects.ImportMetalTextureInfoEXT'::@plane@
 --     /must/ not be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'.
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
 --
 -- == Valid Usage (Implicit)
 --

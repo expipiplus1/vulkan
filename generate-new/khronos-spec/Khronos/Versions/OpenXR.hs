@@ -1,4 +1,5 @@
 {-# language QuasiQuotes #-}
+{-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
 module Khronos.Versions.OpenXR
   ( specVersions
   ) where
@@ -10,8 +11,7 @@ import           Polysemy
 import           Polysemy.Input
 import           Relude
 import           Text.InterpolatedString.Perl6.Unindented
-
-import           Data.Bits
+import           Language.Haskell.TH.Syntax (mkName, mkNameG_v)
 
 import           Error
 import           Haskell.Name
@@ -105,10 +105,10 @@ versionConstruction = genRe "version construction" $ do
   tellImport ''Word16
   tellImport ''Word32
   tellImport ''Word64
-  tellImport '(.&.)
-  tellImport '(.|.)
-  tellImport 'shiftL
-  tellImport 'shiftR
+  tellImport (mkNameG_v "base" "Data.Bits" ".&.")
+  tellImport (mkNameG_v "base" "Data.Bits" ".|.")
+  tellImport (mkName "Data.Bits.shiftL")
+  tellImport (mkName "Data.Bits.shiftR")
   let p = mkPatternName "XR_MAKE_VERSION"
   tellExport (EPat p)
   let patMajor = TermName ("_" <> unName (mkPatternName "XR_VERSION_MAJOR"))

@@ -234,6 +234,8 @@ module Vulkan.Extensions.VK_EXT_metal_objects  ( exportMetalObjectsEXT
                                                , MTLSharedEvent_id
                                                ) where
 
+import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
 import Vulkan.Internal.Utils (traceAroundEvent)
@@ -257,8 +259,6 @@ import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
-import Data.Bits (Bits)
-import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -424,7 +424,7 @@ instance Zero ExportMetalObjectCreateInfoEXT where
 --     @exportObjectType@ member of a 'ExportMetalObjectCreateInfoEXT'
 --     structure in the @pNext@ chain of the
 --     'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo' structure in
---     the 'Vulkan.Core10.DeviceInitialization.createInstance' command.
+--     the 'Vulkan.Core10.DeviceInitialization.createInstance' command
 --
 -- -   #VUID-VkExportMetalObjectsInfoEXT-pNext-06792# If the @pNext@ chain
 --     includes a 'ExportMetalCommandQueueInfoEXT' structure, the
@@ -433,7 +433,7 @@ instance Zero ExportMetalObjectCreateInfoEXT where
 --     @exportObjectType@ member of a 'ExportMetalObjectCreateInfoEXT'
 --     structure in the @pNext@ chain of the
 --     'Vulkan.Core10.DeviceInitialization.InstanceCreateInfo' structure in
---     the 'Vulkan.Core10.DeviceInitialization.createInstance' command.
+--     the 'Vulkan.Core10.DeviceInitialization.createInstance' command
 --
 -- -   #VUID-VkExportMetalObjectsInfoEXT-pNext-06793# If the @pNext@ chain
 --     includes a 'ExportMetalBufferInfoEXT' structure, the
@@ -443,12 +443,12 @@ instance Zero ExportMetalObjectCreateInfoEXT where
 --     @exportObjectType@ member of a 'ExportMetalObjectCreateInfoEXT'
 --     structure in the @pNext@ chain of the
 --     'Vulkan.Core10.Memory.MemoryAllocateInfo' structure in the
---     'Vulkan.Core10.Memory.allocateMemory' command.
+--     'Vulkan.Core10.Memory.allocateMemory' command
 --
 -- -   #VUID-VkExportMetalObjectsInfoEXT-pNext-06794# If the @pNext@ chain
 --     includes a 'ExportMetalTextureInfoEXT' structure, exactly one of its
 --     @image@, @imageView@, or @bufferView@ members /must/ not be
---     'Vulkan.Core10.APIConstants.NULL_HANDLE'.
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-VkExportMetalObjectsInfoEXT-pNext-06795# If the @pNext@ chain
 --     includes a 'ExportMetalTextureInfoEXT' structure, and its @image@
@@ -458,7 +458,7 @@ instance Zero ExportMetalObjectCreateInfoEXT where
 --     @exportObjectType@ member of a 'ExportMetalObjectCreateInfoEXT'
 --     structure in the @pNext@ chain of the
 --     'Vulkan.Core10.Image.ImageCreateInfo' structure in the
---     'Vulkan.Core10.Image.createImage' command.
+--     'Vulkan.Core10.Image.createImage' command
 --
 -- -   #VUID-VkExportMetalObjectsInfoEXT-pNext-06796# If the @pNext@ chain
 --     includes a 'ExportMetalTextureInfoEXT' structure, and its
@@ -469,7 +469,7 @@ instance Zero ExportMetalObjectCreateInfoEXT where
 --     @exportObjectType@ member of a 'ExportMetalObjectCreateInfoEXT'
 --     structure in the @pNext@ chain of the
 --     'Vulkan.Core10.ImageView.ImageViewCreateInfo' structure in the
---     'Vulkan.Core10.ImageView.createImageView' command.
+--     'Vulkan.Core10.ImageView.createImageView' command
 --
 -- -   #VUID-VkExportMetalObjectsInfoEXT-pNext-06797# If the @pNext@ chain
 --     includes a 'ExportMetalTextureInfoEXT' structure, and its
@@ -480,7 +480,7 @@ instance Zero ExportMetalObjectCreateInfoEXT where
 --     @exportObjectType@ member of a 'ExportMetalObjectCreateInfoEXT'
 --     structure in the @pNext@ chain of the
 --     'Vulkan.Core10.BufferView.BufferViewCreateInfo' structure in the
---     'Vulkan.Core10.BufferView.createBufferView' command.
+--     'Vulkan.Core10.BufferView.createBufferView' command
 --
 -- -   #VUID-VkExportMetalObjectsInfoEXT-pNext-06798# If the @pNext@ chain
 --     includes a 'ExportMetalTextureInfoEXT' structure, and if either its
@@ -489,13 +489,13 @@ instance Zero ExportMetalObjectCreateInfoEXT where
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
 --     or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'.
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
 --
 -- -   #VUID-VkExportMetalObjectsInfoEXT-pNext-06799# If the @pNext@ chain
 --     includes a 'ExportMetalTextureInfoEXT' structure, and if the
 --     'Vulkan.Core10.Handles.Image' in its @image@ member does not have a
 --     multi-planar format, then its @plane@ member /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'.
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
 --
 -- -   #VUID-VkExportMetalObjectsInfoEXT-pNext-06800# If the @pNext@ chain
 --     includes a 'ExportMetalTextureInfoEXT' structure, and if the
@@ -508,7 +508,7 @@ instance Zero ExportMetalObjectCreateInfoEXT where
 --     includes a 'ExportMetalTextureInfoEXT' structure, and if the
 --     'Vulkan.Core10.Handles.ImageView' in its @imageView@ member does not
 --     have a multi-planar format, then its @plane@ member /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'.
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
 --
 -- -   #VUID-VkExportMetalObjectsInfoEXT-pNext-06802# If the @pNext@ chain
 --     includes a 'ExportMetalTextureInfoEXT' structure, and if the
@@ -524,12 +524,12 @@ instance Zero ExportMetalObjectCreateInfoEXT where
 --     the @exportObjectType@ member of a 'ExportMetalObjectCreateInfoEXT'
 --     structure in the @pNext@ chain of the
 --     'Vulkan.Core10.Image.ImageCreateInfo' structure in the
---     'Vulkan.Core10.Image.createImage' command.
+--     'Vulkan.Core10.Image.createImage' command
 --
 -- -   #VUID-VkExportMetalObjectsInfoEXT-pNext-06804# If the @pNext@ chain
 --     includes a 'ExportMetalSharedEventInfoEXT' structure, exactly one of
 --     its @semaphore@ or @event@ members /must/ not be
---     'Vulkan.Core10.APIConstants.NULL_HANDLE'.
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   #VUID-VkExportMetalObjectsInfoEXT-pNext-06805# If the @pNext@ chain
 --     includes a 'ExportMetalSharedEventInfoEXT' structure, and its
@@ -540,7 +540,7 @@ instance Zero ExportMetalObjectCreateInfoEXT where
 --     @exportObjectType@ member of a 'ExportMetalObjectCreateInfoEXT'
 --     structure in the @pNext@ chain of the
 --     'Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo' structure in the
---     'Vulkan.Core10.QueueSemaphore.createSemaphore' command.
+--     'Vulkan.Core10.QueueSemaphore.createSemaphore' command
 --
 -- -   #VUID-VkExportMetalObjectsInfoEXT-pNext-06806# If the @pNext@ chain
 --     includes a 'ExportMetalSharedEventInfoEXT' structure, and its
@@ -550,7 +550,7 @@ instance Zero ExportMetalObjectCreateInfoEXT where
 --     in the @exportObjectType@ member of a
 --     'ExportMetalObjectCreateInfoEXT' structure in the @pNext@ chain of
 --     the 'Vulkan.Core10.Event.EventCreateInfo' structure in the
---     'Vulkan.Core10.Event.createEvent' command.
+--     'Vulkan.Core10.Event.createEvent' command
 --
 -- == Valid Usage (Implicit)
 --

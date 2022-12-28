@@ -12,18 +12,18 @@ module Vulkan.Version  ( pattern HEADER_VERSION
                        , _API_VERSION_PATCH
                        ) where
 
-import Data.Bits ((.&.))
-import Data.Bits ((.|.))
 import Data.Bits (shiftL)
 import Data.Bits (shiftR)
+import Data.Bits ((.&.))
+import Data.Bits ((.|.))
 import Data.Word (Word32)
 
 pattern HEADER_VERSION :: Word32
-pattern HEADER_VERSION = 235
+pattern HEADER_VERSION = 236
 
 
 pattern HEADER_VERSION_COMPLETE :: Word32
-pattern HEADER_VERSION_COMPLETE = MAKE_API_VERSION 1 3 235
+pattern HEADER_VERSION_COMPLETE = MAKE_API_VERSION 1 3 236
 
 
 pattern MAKE_API_VERSION :: Word32 -> Word32 -> Word32 -> Word32

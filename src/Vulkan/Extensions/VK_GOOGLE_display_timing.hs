@@ -216,9 +216,8 @@ foreign import ccall
 --     @pDisplayTimingProperties@ /must/ be a valid pointer to a
 --     'RefreshCycleDurationGOOGLE' structure
 --
--- -   #VUID-vkGetRefreshCycleDurationGOOGLE-commonparent# Both of
---     @device@, and @swapchain@ /must/ have been created, allocated, or
---     retrieved from the same 'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-vkGetRefreshCycleDurationGOOGLE-swapchain-parent# @swapchain@
+--     /must/ have been created, allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -309,9 +308,9 @@ foreign import ccall
 --     /must/ be a valid pointer to an array of @pPresentationTimingCount@
 --     'PastPresentationTimingGOOGLE' structures
 --
--- -   #VUID-vkGetPastPresentationTimingGOOGLE-commonparent# Both of
---     @device@, and @swapchain@ /must/ have been created, allocated, or
---     retrieved from the same 'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-vkGetPastPresentationTimingGOOGLE-swapchain-parent#
+--     @swapchain@ /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- == Host Synchronization
 --

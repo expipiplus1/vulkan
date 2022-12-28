@@ -17,7 +17,7 @@ echo "Generating Vulkan-Docs documentation"
     --run "./makeAllExts refpages generated")
 
 echo "Building generator"
-generate=$(IN_NIX_SHELL='' nix-build --argstr compiler ghc8107 -A generate-new)
+generate=$(IN_NIX_SHELL='' nix-build  -A generate-new)
 
 echo "Cleaning src"
 git rm --quiet -r src/Vulkan src/Vulkan.hs
@@ -37,7 +37,10 @@ git -C VulkanMemoryAllocator/VulkanMemoryAllocator clean -dxf &&
 
 echo "Generating VMA documentation" &&
 (cd VulkanMemoryAllocator/VulkanMemoryAllocator &&
-  sed -i -e 's|^GENERATE_DOCBOOK.*|GENERATE_DOCBOOK=YES|' -e 's|^BRIEF_MEMBER_DESC.*|BRIEF_MEMBER_DESC=NO|' Doxyfile &&
+  sed -i -e 's|^GENERATE_DOCBOOK.*|GENERATE_DOCBOOK=YES|' \
+         -e 's|^BRIEF_MEMBER_DESC.*|BRIEF_MEMBER_DESC=NO|' \
+         -e 's|^PREDEFINED *=|PREDEFINED = VMA_STATS_STRING_ENABLED=1 |' \
+         Doxyfile &&
   nix-shell -p cmake vulkan-headers vulkan-loader doxygen --run 'cmake . -DBUILD_DOCUMENTATION=ON && cmake --build . --target doc_doxygen' )
 
 echo "Generating Vulkan-Docs headers"

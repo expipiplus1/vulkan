@@ -12,10 +12,11 @@ default-extensions:
 - BlockArguments
 - ConstraintKinds
 - DataKinds
-- DeriveFunctor
+- DeepSubsumption
 - DeriveFoldable
-- DeriveTraversable
+- DeriveFunctor
 - DeriveGeneric
+- DeriveTraversable
 - DerivingVia
 - DisambiguateRecordFields
 - DuplicateRecordFields
@@ -121,7 +122,7 @@ dependencies:
 - pandoc
 - parsec
 - parsers
-- polysemy >= 1.4 && < 1.7
+- polysemy >= 1.4 && < 1.8
 - pretty-show
 - prettyprinter
 - regex-applicative

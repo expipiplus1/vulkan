@@ -5,7 +5,6 @@ module Khronos.SPIRVElements
   ) where
 
 import           CType                          ( CType(TypeName) )
-import           Data.Bits
 import           Data.Foldable
 import qualified Data.HashMap.Strict           as HM
 import           Data.List.Extra                ( nubOrd )
@@ -27,7 +26,7 @@ import           Marshal.Struct                 ( MarshaledStruct
                                                 , msMembers
                                                 , msmScheme
                                                 )
-import           Polysemy                       ( MemberWithError )
+import           Polysemy                       ( Member )
 import           Polysemy.Input
 import qualified Prelude
 import           Prettyprinter
@@ -41,6 +40,7 @@ import           Render.Type.Preserve           ( Preserve(DoNotPreserve) )
 import           Render.Names
 import           Spec.Types
 import           Text.InterpolatedString.Perl6.Unindented
+import Language.Haskell.TH.Syntax (mkNameG_v)
 
 renderSPIRVElements
   :: (HasErr r, HasRenderParams r, HasSpecInfo r, HasRenderedNames r)
@@ -57,7 +57,7 @@ renderSPIRVElements exts caps structs =
     renderCaps caps
 
 type HasMarshalledStructs r
-  = MemberWithError (Input (CName -> Maybe (MarshaledStruct AStruct))) r
+  = Member (Input (CName -> Maybe (MarshaledStruct AStruct))) r
 
 renderExts
   :: ( HasRenderElem r
@@ -330,9 +330,9 @@ parseVersion t = do
 
 bespokeStuff :: (HasRenderParams r, HasRenderElem r) => Sem r ()
 bespokeStuff = do
-  tellImport ''Bits
-  tellImport '(.&.)
-  tellImport 'zeroBits
+  tellImport (mkNameG_v "base" "Data.Bits" ".&.")
+  tellImport (mkName "Data.Bits.Bits")
+  tellImport (mkName "Data.Bits.zeroBits")
   tellDoc [qqi|
     -- | Check if the intersection of bits is non-zero
     (.&&.) :: Bits a => a -> a -> Bool

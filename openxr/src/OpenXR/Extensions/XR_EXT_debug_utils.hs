@@ -73,6 +73,8 @@ module OpenXR.Extensions.XR_EXT_debug_utils  ( setDebugUtilsObjectNameEXT
                                              , DebugUtilsMessengerEXT(..)
                                              ) where
 
+import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import OpenXR.Internal.Utils (enumReadPrec)
 import OpenXR.Internal.Utils (enumShowsPrec)
 import OpenXR.Internal.Utils (traceAroundEvent)
@@ -101,8 +103,6 @@ import OpenXR.CStruct (ToCStruct(..))
 import OpenXR.Zero (Zero)
 import OpenXR.Zero (Zero(..))
 import Control.Monad.IO.Class (MonadIO)
-import Data.Bits (Bits)
-import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)

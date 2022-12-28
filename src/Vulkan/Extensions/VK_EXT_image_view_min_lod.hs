@@ -249,11 +249,11 @@ instance Zero PhysicalDeviceImageViewMinLodFeaturesEXT where
 --
 -- -   #VUID-VkImageViewMinLodCreateInfoEXT-minLod-06455# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-minLod minLod>
---     feature is not enabled, @minLod@ /must/ be @0.0@.
+--     feature is not enabled, @minLod@ /must/ be @0.0@
 --
 -- -   #VUID-VkImageViewMinLodCreateInfoEXT-minLod-06456# @minLod@ /must/
 --     be less or equal to the index of the last mipmap level accessible to
---     the view.
+--     the view
 --
 -- == Valid Usage (Implicit)
 --

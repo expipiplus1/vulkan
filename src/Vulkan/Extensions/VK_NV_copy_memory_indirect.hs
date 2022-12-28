@@ -196,7 +196,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyMemoryIndirectNV-None-07653# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-indirectCopy indirect copies>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-indirectCopy indirectCopy>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdCopyMemoryIndirectNV-copyBufferAddress-07654#
@@ -311,7 +311,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-None-07660# The
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-indirectCopy indirect copies>
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-indirectCopy indirectCopy>
 --     feature /must/ be enabled
 --
 -- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-dstImage-07661# @dstImage@
@@ -376,7 +376,7 @@ foreign import ccall
 --     region, the @aspectMask@ member of @pImageSubresources@ /must/ not
 --     be 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT'
 --     or
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'.
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
 -- -   #VUID-vkCmdCopyMemoryToImageIndirectNV-imageOffset-07675# For each
 --     region in @copyBufferAddress@, @imageOffset.y@ and
@@ -772,7 +772,7 @@ instance Zero PhysicalDeviceCopyMemoryIndirectFeaturesNV where
 -- = Description
 --
 -- If the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-indirectCopy indirect copies>
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-indirectCopy indirectCopy>
 -- feature is supported, @supportedQueues@ /must/ return at least one
 -- supported queue.
 --

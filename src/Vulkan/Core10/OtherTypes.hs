@@ -719,7 +719,7 @@ instance Zero BufferMemoryBarrier where
 --     or 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT'
 --     usage bits, and the
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT'
---     usage bit.
+--     usage bit
 --
 -- -   #VUID-VkImageMemoryBarrier-attachmentFeedbackLoopLayout-07313# If
 --     the

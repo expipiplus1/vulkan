@@ -1589,6 +1589,12 @@ instance Zero DescriptorImageInfo where
 --     the @imageView@ member of each element of @pImageInfo@ /must/ have
 --     been created with the identity swizzle
 --
+-- -   #VUID-VkWriteDescriptorSet-descriptorType-07729# If @descriptorType@
+--     is
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
+--     the @imageView@ member of each element of @pImageInfo@ /must/ have
+--     been created with exactly one aspect
+--
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-00337# If @descriptorType@
 --     is
 --     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'
@@ -2447,7 +2453,7 @@ instance Zero DescriptorSetLayoutBinding where
 --     then a
 --     'Vulkan.Extensions.VK_EXT_mutable_descriptor_type.MutableDescriptorTypeCreateInfoEXT'
 --     /must/ be present in the @pNext@ chain, and
---     @mutableDescriptorTypeListCount@ /must/ be greater than i.
+--     @mutableDescriptorTypeListCount@ /must/ be greater than i
 --
 -- -   #VUID-VkDescriptorSetLayoutCreateInfo-descriptorType-04594# If a
 --     binding has a @descriptorType@ value of

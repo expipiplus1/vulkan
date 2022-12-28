@@ -121,6 +121,8 @@ module Vulkan.Extensions.VK_NV_device_diagnostics_config  ( PhysicalDeviceDiagno
                                                           , pattern NV_DEVICE_DIAGNOSTICS_CONFIG_EXTENSION_NAME
                                                           ) where
 
+import Data.Bits (Bits)
+import Data.Bits (FiniteBits)
 import Vulkan.Internal.Utils (enumReadPrec)
 import Vulkan.Internal.Utils (enumShowsPrec)
 import Foreign.Marshal.Alloc (allocaBytes)
@@ -134,8 +136,6 @@ import Vulkan.CStruct (ToCStruct)
 import Vulkan.CStruct (ToCStruct(..))
 import Vulkan.Zero (Zero)
 import Vulkan.Zero (Zero(..))
-import Data.Bits (Bits)
-import Data.Bits (FiniteBits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)

@@ -574,18 +574,6 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkAcquireFullScreenExclusiveModeEXT-swapchain-02674#
---     @swapchain@ /must/ not be in the retired state
---
--- -   #VUID-vkAcquireFullScreenExclusiveModeEXT-swapchain-02675#
---     @swapchain@ /must/ be a swapchain created with a
---     'SurfaceFullScreenExclusiveInfoEXT' structure, with
---     @fullScreenExclusive@ set to
---     'FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT'
---
--- -   #VUID-vkAcquireFullScreenExclusiveModeEXT-swapchain-02676#
---     @swapchain@ /must/ not currently have exclusive full-screen access
---
 -- A return value of 'Vulkan.Core10.Enums.Result.SUCCESS' indicates that
 -- the @swapchain@ successfully acquired exclusive full-screen access. The
 -- swapchain will retain this exclusivity until either the application
@@ -602,19 +590,6 @@ foreign import ccall
 -- for the same swapchain even if this command fails, or if
 -- 'Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT'
 -- has been returned by a swapchain command.
---
--- == Valid Usage (Implicit)
---
--- -   #VUID-vkAcquireFullScreenExclusiveModeEXT-device-parameter# @device@
---     /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
---
--- -   #VUID-vkAcquireFullScreenExclusiveModeEXT-swapchain-parameter#
---     @swapchain@ /must/ be a valid
---     'Vulkan.Extensions.Handles.SwapchainKHR' handle
---
--- -   #VUID-vkAcquireFullScreenExclusiveModeEXT-commonparent# Both of
---     @device@, and @swapchain@ /must/ have been created, allocated, or
---     retrieved from the same 'Vulkan.Core10.Handles.Instance'
 --
 -- == Return Codes
 --
@@ -639,9 +614,30 @@ foreign import ccall
 acquireFullScreenExclusiveModeEXT :: forall io
                                    . (MonadIO io)
                                   => -- | @device@ is the device associated with @swapchain@.
+                                     --
+                                     -- #VUID-vkAcquireFullScreenExclusiveModeEXT-device-parameter# @device@
+                                     -- /must/ be a valid 'Vulkan.Core10.Handles.Device' handle
                                      Device
                                   -> -- | @swapchain@ is the swapchain to acquire exclusive full-screen access
                                      -- for.
+                                     --
+                                     -- #VUID-vkAcquireFullScreenExclusiveModeEXT-swapchain-02674# @swapchain@
+                                     -- /must/ not be in the retired state
+                                     --
+                                     -- #VUID-vkAcquireFullScreenExclusiveModeEXT-swapchain-02675# @swapchain@
+                                     -- /must/ be a swapchain created with a 'SurfaceFullScreenExclusiveInfoEXT'
+                                     -- structure, with @fullScreenExclusive@ set to
+                                     -- 'FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT'
+                                     --
+                                     -- #VUID-vkAcquireFullScreenExclusiveModeEXT-swapchain-02676# @swapchain@
+                                     -- /must/ not currently have exclusive full-screen access
+                                     --
+                                     -- #VUID-vkAcquireFullScreenExclusiveModeEXT-swapchain-parameter#
+                                     -- @swapchain@ /must/ be a valid 'Vulkan.Extensions.Handles.SwapchainKHR'
+                                     -- handle
+                                     --
+                                     -- #VUID-vkAcquireFullScreenExclusiveModeEXT-swapchain-parent# @swapchain@
+                                     -- /must/ have been created, allocated, or retrieved from @device@
                                      SwapchainKHR
                                   -> io ()
 acquireFullScreenExclusiveModeEXT device swapchain = liftIO $ do

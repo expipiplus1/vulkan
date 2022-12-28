@@ -6,11 +6,11 @@ module Vulkan.SPIRVRequirements  ( spirvExtensionRequirements
                                  , spirvCapabilityRequirements
                                  ) where
 
+import Data.Bits (Bits)
+import Data.Bits (zeroBits)
 import Vulkan.Requirement (DeviceRequirement(..))
 import Vulkan.Requirement (InstanceRequirement(..))
 import Data.Bits ((.&.))
-import Data.Bits (zeroBits)
-import Data.Bits (Bits)
 import Data.ByteString (ByteString)
 import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (PhysicalDevice)

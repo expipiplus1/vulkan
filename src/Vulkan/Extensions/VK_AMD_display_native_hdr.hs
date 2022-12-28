@@ -198,9 +198,8 @@ foreign import ccall
 -- -   #VUID-vkSetLocalDimmingAMD-swapChain-parameter# @swapChain@ /must/
 --     be a valid 'Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
--- -   #VUID-vkSetLocalDimmingAMD-commonparent# Both of @device@, and
---     @swapChain@ /must/ have been created, allocated, or retrieved from
---     the same 'Vulkan.Core10.Handles.Instance'
+-- -   #VUID-vkSetLocalDimmingAMD-swapChain-parent# @swapChain@ /must/ have
+--     been created, allocated, or retrieved from @device@
 --
 -- == Valid Usage
 --
