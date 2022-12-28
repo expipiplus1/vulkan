@@ -34,6 +34,9 @@
 --
 --     -   Eric Werness
 --
+-- [__Extension Proposal__]
+--     <https://github.com/KhronosGroup/Vulkan-Docs/tree/main/proposals/VK_EXT_opacity_micromap.adoc VK_EXT_opacity_micromap>
+--
 -- == Other Extension Metadata
 --
 -- [__Last Modified Date__]

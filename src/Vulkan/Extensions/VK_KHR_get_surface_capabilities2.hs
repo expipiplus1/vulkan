@@ -228,6 +228,9 @@ import Vulkan.Extensions.VK_KHR_surface (SurfaceFormatKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_full_screen_exclusive (SurfaceFullScreenExclusiveInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_full_screen_exclusive (SurfaceFullScreenExclusiveWin32InfoEXT)
 import Vulkan.Extensions.Handles (SurfaceKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_surface_maintenance1 (SurfacePresentModeCompatibilityEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_surface_maintenance1 (SurfacePresentModeEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_surface_maintenance1 (SurfacePresentScalingCapabilitiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_surface_protected_capabilities (SurfaceProtectedCapabilitiesKHR)
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR))
@@ -262,13 +265,15 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-pSurfaceInfo-06520#
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-pSurfaceInfo-06521#
+--     If the @VK_GOOGLE_surfaceless_query@ extension is not enabled,
 --     @pSurfaceInfo->surface@ /must/ be a valid
 --     'Vulkan.Extensions.Handles.SurfaceKHR' handle
 --
--- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-pSurfaceInfo-06210#
---     @pSurfaceInfo->surface@ /must/ be supported by @physicalDevice@, as
---     reported by
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-pSurfaceInfo-06522#
+--     If @pSurfaceInfo->surface@ is not
+--     'Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ be supported by
+--     @physicalDevice@, as reported by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
 --     or an equivalent platform-specific mechanism
 --
@@ -278,6 +283,32 @@ foreign import ccall
 --     @pSurfaceCapabilities@, a
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveWin32InfoEXT'
 --     structure /must/ be included in the @pNext@ chain of @pSurfaceInfo@
+--
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-pNext-07776# If a
+--     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeCompatibilityEXT'
+--     structure is included in the @pNext@ chain of
+--     @pSurfaceCapabilities@, a
+--     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeEXT'
+--     structure /must/ be included in the @pNext@ chain of @pSurfaceInfo@
+--
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-pNext-07777# If a
+--     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentScalingCapabilitiesEXT'
+--     structure is included in the @pNext@ chain of
+--     @pSurfaceCapabilities@, a
+--     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeEXT'
+--     structure /must/ be included in the @pNext@ chain of @pSurfaceInfo@
+--
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-pNext-07778# If a
+--     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeCompatibilityEXT'
+--     structure is included in the @pNext@ chain of
+--     @pSurfaceCapabilities@, @pSurfaceInfo->surface@ /must/ be a valid
+--     'Vulkan.Extensions.Handles.SurfaceKHR' handle
+--
+-- -   #VUID-vkGetPhysicalDeviceSurfaceCapabilities2KHR-pNext-07779# If a
+--     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentScalingCapabilitiesEXT'
+--     structure is included in the @pNext@ chain of
+--     @pSurfaceCapabilities@, @pSurfaceInfo->surface@ /must/ be a valid
+--     'Vulkan.Extensions.Handles.SurfaceKHR' handle
 --
 -- == Valid Usage (Implicit)
 --
@@ -544,9 +575,10 @@ getPhysicalDeviceSurfaceFormats2KHR physicalDevice
 -- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-pNext-pNext# Each @pNext@
 --     member of any structure (including this one) in the @pNext@ chain
 --     /must/ be either @NULL@ or a pointer to a valid instance of
---     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveInfoEXT'
+--     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveInfoEXT',
+--     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveWin32InfoEXT',
 --     or
---     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveWin32InfoEXT'
+--     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeEXT'
 --
 -- -   #VUID-VkPhysicalDeviceSurfaceInfo2KHR-sType-unique# The @sType@
 --     value of each struct in the @pNext@ chain /must/ be unique
@@ -582,6 +614,7 @@ instance Extensible PhysicalDeviceSurfaceInfo2KHR where
   getNext PhysicalDeviceSurfaceInfo2KHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PhysicalDeviceSurfaceInfo2KHR e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @SurfacePresentModeEXT = Just f
     | Just Refl <- eqT @e @SurfaceFullScreenExclusiveWin32InfoEXT = Just f
     | Just Refl <- eqT @e @SurfaceFullScreenExclusiveInfoEXT = Just f
     | otherwise = Nothing
@@ -650,6 +683,8 @@ instance es ~ '[] => Zero (PhysicalDeviceSurfaceInfo2KHR es) where
 --     'Vulkan.Extensions.VK_KHR_shared_presentable_image.SharedPresentSurfaceCapabilitiesKHR',
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceCapabilitiesFullScreenExclusiveEXT',
 --     'Vulkan.Extensions.VK_NV_present_barrier.SurfaceCapabilitiesPresentBarrierNV',
+--     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeCompatibilityEXT',
+--     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentScalingCapabilitiesEXT',
 --     or
 --     'Vulkan.Extensions.VK_KHR_surface_protected_capabilities.SurfaceProtectedCapabilitiesKHR'
 --
@@ -682,6 +717,8 @@ instance Extensible SurfaceCapabilities2KHR where
   getNext SurfaceCapabilities2KHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SurfaceCapabilities2KHR e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @SurfacePresentModeCompatibilityEXT = Just f
+    | Just Refl <- eqT @e @SurfacePresentScalingCapabilitiesEXT = Just f
     | Just Refl <- eqT @e @SurfaceCapabilitiesPresentBarrierNV = Just f
     | Just Refl <- eqT @e @SurfaceCapabilitiesFullScreenExclusiveEXT = Just f
     | Just Refl <- eqT @e @SurfaceProtectedCapabilitiesKHR = Just f

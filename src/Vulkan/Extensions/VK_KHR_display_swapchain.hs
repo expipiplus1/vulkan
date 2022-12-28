@@ -322,11 +322,9 @@ foreign import ccall
 -- swapchain creation will fail with the result code
 -- 'Vulkan.Core10.Enums.Result.ERROR_INCOMPATIBLE_DISPLAY_KHR'. If any
 -- error occurs, no swapchains will be created. Images presented to
--- multiple swapchains /must/ be re-acquired from all of them before
--- transitioning away from
--- 'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PRESENT_SRC_KHR'. After
--- destroying one or more of the swapchains, the remaining swapchains and
--- the presentable images /can/ continue to be used.
+-- multiple swapchains /must/ be re-acquired from all of them before being
+-- modified. After destroying one or more of the swapchains, the remaining
+-- swapchains and the presentable images /can/ continue to be used.
 --
 -- == Valid Usage (Implicit)
 --

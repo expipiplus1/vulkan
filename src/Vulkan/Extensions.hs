@@ -126,7 +126,9 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_shader_viewport_index_layer
                           , module Vulkan.Extensions.VK_EXT_subgroup_size_control
                           , module Vulkan.Extensions.VK_EXT_subpass_merge_feedback
+                          , module Vulkan.Extensions.VK_EXT_surface_maintenance1
                           , module Vulkan.Extensions.VK_EXT_swapchain_colorspace
+                          , module Vulkan.Extensions.VK_EXT_swapchain_maintenance1
                           , module Vulkan.Extensions.VK_EXT_texel_buffer_alignment
                           , module Vulkan.Extensions.VK_EXT_texture_compression_astc_hdr
                           , module Vulkan.Extensions.VK_EXT_tooling_info
@@ -434,7 +436,9 @@ import Vulkan.Extensions.VK_EXT_shader_subgroup_vote
 import Vulkan.Extensions.VK_EXT_shader_viewport_index_layer
 import Vulkan.Extensions.VK_EXT_subgroup_size_control
 import Vulkan.Extensions.VK_EXT_subpass_merge_feedback
+import Vulkan.Extensions.VK_EXT_surface_maintenance1
 import Vulkan.Extensions.VK_EXT_swapchain_colorspace
+import Vulkan.Extensions.VK_EXT_swapchain_maintenance1
 import Vulkan.Extensions.VK_EXT_texel_buffer_alignment
 import Vulkan.Extensions.VK_EXT_texture_compression_astc_hdr
 import Vulkan.Extensions.VK_EXT_tooling_info

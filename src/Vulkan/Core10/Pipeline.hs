@@ -3591,7 +3591,8 @@ data PipelineDepthStencilStateCreateInfo = PipelineDepthStencilStateCreateInfo
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-stencil stencil testing>
     -- is enabled.
     stencilTestEnable :: Bool
-  , -- | @front@ and @back@ control the parameters of the
+  , -- | @front@ and @back@ are 'StencilOpState' values controlling the
+    -- corresponding parameters of the
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fragops-stencil stencil test>.
     front :: StencilOpState
   , -- No documentation found for Nested "VkPipelineDepthStencilStateCreateInfo" "back"

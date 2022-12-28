@@ -628,6 +628,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_subpass_merge_feedback (PhysicalD
 import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_subpass_shading (PhysicalDeviceSubpassShadingFeaturesHUAWEI)
 import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_subpass_shading (PhysicalDeviceSubpassShadingPropertiesHUAWEI)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_get_surface_capabilities2 (PhysicalDeviceSurfaceInfo2KHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_swapchain_maintenance1 (PhysicalDeviceSwapchainMaintenance1FeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_KHR_synchronization2 (PhysicalDeviceSynchronization2Features)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_texel_buffer_alignment (PhysicalDeviceTexelBufferAlignmentFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_texel_buffer_alignment (PhysicalDeviceTexelBufferAlignmentProperties)
@@ -732,6 +733,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_NV_ray_tracing (RayTracingShaderGroup
 import {-# SOURCE #-} Vulkan.Core10.FundamentalTypes (Rect2D)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_incremental_present (RectLayerKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_GOOGLE_display_timing (RefreshCycleDurationGOOGLE)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_swapchain_maintenance1 (ReleaseSwapchainImagesInfoEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer (RenderPassAttachmentBeginInfo)
 import {-# SOURCE #-} Vulkan.Core10.CommandBufferBuilding (RenderPassBeginInfo)
 import {-# SOURCE #-} Vulkan.Core10.Pass (RenderPassCreateInfo)
@@ -819,11 +821,18 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_get_surface_capabilities2 (Surfac
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_surface (SurfaceFormatKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_full_screen_exclusive (SurfaceFullScreenExclusiveInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_full_screen_exclusive (SurfaceFullScreenExclusiveWin32InfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_surface_maintenance1 (SurfacePresentModeCompatibilityEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_surface_maintenance1 (SurfacePresentModeEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_surface_maintenance1 (SurfacePresentScalingCapabilitiesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_surface_protected_capabilities (SurfaceProtectedCapabilitiesKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_display_control (SwapchainCounterCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_swapchain (SwapchainCreateInfoKHR)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_display_native_hdr (SwapchainDisplayNativeHdrCreateInfoAMD)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_present_barrier (SwapchainPresentBarrierCreateInfoNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_swapchain_maintenance1 (SwapchainPresentFenceInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_swapchain_maintenance1 (SwapchainPresentModeInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_swapchain_maintenance1 (SwapchainPresentModesCreateInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_swapchain_maintenance1 (SwapchainPresentScalingCreateInfoEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_FUCHSIA_buffer_collection (SysmemColorSpaceFUCHSIA)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_texture_gather_bias_lod (TextureLODGatherFormatPropertiesAMD)
 import {-# SOURCE #-} Vulkan.Extensions.VK_QCOM_tile_properties (TilePropertiesQCOM)
@@ -1155,6 +1164,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceOpticalFlowFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceFaultFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderCoreBuiltinsFeaturesARM = ()
+  Extends DeviceCreateInfo PhysicalDeviceSwapchainMaintenance1FeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceRayTracingInvocationReorderFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM = ()
   Extends DeviceQueueCreateInfo DeviceQueueGlobalPriorityCreateInfoKHR = ()
@@ -1387,6 +1397,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceOpticalFlowFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceFaultFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderCoreBuiltinsFeaturesARM = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceSwapchainMaintenance1FeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRayTracingInvocationReorderFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM = ()
   Extends PhysicalDeviceImageFormatInfo2 PhysicalDeviceExternalImageFormatInfo = ()
@@ -1468,6 +1479,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceProperties2 PhysicalDeviceRayTracingInvocationReorderPropertiesNV = ()
   Extends PhysicalDeviceSurfaceInfo2KHR SurfaceFullScreenExclusiveInfoEXT = ()
   Extends PhysicalDeviceSurfaceInfo2KHR SurfaceFullScreenExclusiveWin32InfoEXT = ()
+  Extends PhysicalDeviceSurfaceInfo2KHR SurfacePresentModeEXT = ()
   Extends PipelineColorBlendStateCreateInfo PipelineColorBlendAdvancedStateCreateInfoEXT = ()
   Extends PipelineColorBlendStateCreateInfo PipelineColorWriteCreateInfoEXT = ()
   Extends PipelineMultisampleStateCreateInfo PipelineCoverageToColorStateCreateInfoNV = ()
@@ -1500,6 +1512,8 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PresentInfoKHR PresentIdKHR = ()
   Extends PresentInfoKHR PresentTimesInfoGOOGLE = ()
   Extends PresentInfoKHR PresentFrameTokenGGP = ()
+  Extends PresentInfoKHR SwapchainPresentFenceInfoEXT = ()
+  Extends PresentInfoKHR SwapchainPresentModeInfoEXT = ()
   Extends QueryPoolCreateInfo QueryPoolPerformanceCreateInfoKHR = ()
   Extends QueryPoolCreateInfo QueryPoolPerformanceQueryCreateInfoINTEL = ()
   Extends QueueFamilyProperties2 QueueFamilyGlobalPriorityPropertiesKHR = ()
@@ -1559,6 +1573,8 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends SurfaceCapabilities2KHR SurfaceProtectedCapabilitiesKHR = ()
   Extends SurfaceCapabilities2KHR SurfaceCapabilitiesFullScreenExclusiveEXT = ()
   Extends SurfaceCapabilities2KHR SurfaceCapabilitiesPresentBarrierNV = ()
+  Extends SurfaceCapabilities2KHR SurfacePresentScalingCapabilitiesEXT = ()
+  Extends SurfaceCapabilities2KHR SurfacePresentModeCompatibilityEXT = ()
   Extends SurfaceFormat2KHR ImageCompressionPropertiesEXT = ()
   Extends SwapchainCreateInfoKHR SwapchainCounterCreateInfoEXT = ()
   Extends SwapchainCreateInfoKHR DeviceGroupSwapchainCreateInfoKHR = ()
@@ -1568,6 +1584,8 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends SwapchainCreateInfoKHR SurfaceFullScreenExclusiveWin32InfoEXT = ()
   Extends SwapchainCreateInfoKHR SwapchainPresentBarrierCreateInfoNV = ()
   Extends SwapchainCreateInfoKHR ImageCompressionControlEXT = ()
+  Extends SwapchainCreateInfoKHR SwapchainPresentModesCreateInfoEXT = ()
+  Extends SwapchainCreateInfoKHR SwapchainPresentScalingCreateInfoEXT = ()
   Extends WriteDescriptorSet WriteDescriptorSetInlineUniformBlock = ()
   Extends WriteDescriptorSet WriteDescriptorSetAccelerationStructureKHR = ()
   Extends WriteDescriptorSet WriteDescriptorSetAccelerationStructureNV = ()
@@ -2084,6 +2102,14 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_FEATURES_EXT -> go @PhysicalDeviceFaultFeaturesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_PROPERTIES_ARM -> go @PhysicalDeviceShaderCoreBuiltinsPropertiesARM
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_FEATURES_ARM -> go @PhysicalDeviceShaderCoreBuiltinsFeaturesARM
+  STRUCTURE_TYPE_SURFACE_PRESENT_MODE_EXT -> go @SurfacePresentModeEXT
+  STRUCTURE_TYPE_SURFACE_PRESENT_SCALING_CAPABILITIES_EXT -> go @SurfacePresentScalingCapabilitiesEXT
+  STRUCTURE_TYPE_SURFACE_PRESENT_MODE_COMPATIBILITY_EXT -> go @SurfacePresentModeCompatibilityEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_EXT -> go @PhysicalDeviceSwapchainMaintenance1FeaturesEXT
+  STRUCTURE_TYPE_SWAPCHAIN_PRESENT_FENCE_INFO_EXT -> go @SwapchainPresentFenceInfoEXT
+  STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODES_CREATE_INFO_EXT -> go @SwapchainPresentModesCreateInfoEXT
+  STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODE_INFO_EXT -> go @SwapchainPresentModeInfoEXT
+  STRUCTURE_TYPE_SWAPCHAIN_PRESENT_SCALING_CREATE_INFO_EXT -> go @SwapchainPresentScalingCreateInfoEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_NV -> go @PhysicalDeviceRayTracingInvocationReorderFeaturesNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_PROPERTIES_NV -> go @PhysicalDeviceRayTracingInvocationReorderPropertiesNV
   STRUCTURE_TYPE_DIRECT_DRIVER_LOADING_LIST_LUNARG -> go @DirectDriverLoadingListLUNARG
@@ -2552,6 +2578,14 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDeviceFaultFeaturesEXT #-}
 {-# complete (::&) :: PhysicalDeviceShaderCoreBuiltinsPropertiesARM #-}
 {-# complete (::&) :: PhysicalDeviceShaderCoreBuiltinsFeaturesARM #-}
+{-# complete (::&) :: SurfacePresentModeEXT #-}
+{-# complete (::&) :: SurfacePresentScalingCapabilitiesEXT #-}
+{-# complete (::&) :: SurfacePresentModeCompatibilityEXT #-}
+{-# complete (::&) :: PhysicalDeviceSwapchainMaintenance1FeaturesEXT #-}
+{-# complete (::&) :: SwapchainPresentFenceInfoEXT #-}
+{-# complete (::&) :: SwapchainPresentModesCreateInfoEXT #-}
+{-# complete (::&) :: SwapchainPresentModeInfoEXT #-}
+{-# complete (::&) :: SwapchainPresentScalingCreateInfoEXT #-}
 {-# complete (::&) :: PhysicalDeviceRayTracingInvocationReorderFeaturesNV #-}
 {-# complete (::&) :: PhysicalDeviceRayTracingInvocationReorderPropertiesNV #-}
 {-# complete (::&) :: DirectDriverLoadingListLUNARG #-}

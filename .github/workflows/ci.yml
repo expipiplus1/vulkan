@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        ghc: ['9.2', '9.0', '8.10', '8.8']
+        ghc: ['8.10', '9.0', '9.2']
         os: [ubuntu-20.04, macOS-latest, windows-latest]
       fail-fast: false
 
@@ -165,6 +165,7 @@ jobs:
 
     - name: Set up yq
       uses: frenck/action-setup-yq@v1
+      with: {version: v4.30.5} # frenck/action-setup-yq#35
 
     - name: Install system dependencies Linux
       if: matrix.os == 'ubuntu-20.04'
@@ -237,7 +238,7 @@ jobs:
 
     strategy:
       matrix:
-        ghc: ['null', '"ghc902"', '"ghc924"']
+        ghc: ['"ghc810"', '"ghc90"', '"ghc92"']
       fail-fast: false
 
     steps:

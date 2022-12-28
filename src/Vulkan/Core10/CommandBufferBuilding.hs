@@ -1208,10 +1208,11 @@ foreign import ccall
 -- 'Vulkan.Core10.Enums.DynamicState.DYNAMIC_STATE_STENCIL_WRITE_MASK' set
 -- in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
--- Otherwise, this state is specified by the
--- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@writeMask@
--- value used to create the currently active pipeline, for both front and
--- back faces.
+-- Otherwise, this state is specified by the @writeMask@ value used to
+-- create the currently active pipeline, for both
+-- 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@front@
+-- and 'Vulkan.Core10.Pipeline.PipelineDepthStencilStateCreateInfo'::@back@
+-- faces.
 --
 -- == Valid Usage (Implicit)
 --
@@ -2401,7 +2402,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDraw-None-06887# If the current render pass instance uses
 --     a depth\/stencil attachment with a read-only layout for the stencil
---     aspect and stencil test is enabled,
+--     aspect, both front and back @writeMask@ are not zero, and stencil
+--     test is enabled,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-stencil all stencil ops>
 --     /must/ be 'Vulkan.Core10.Enums.StencilOp.STENCIL_OP_KEEP'
 --
@@ -4213,7 +4215,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexed-None-06887# If the current render pass
 --     instance uses a depth\/stencil attachment with a read-only layout
---     for the stencil aspect and stencil test is enabled,
+--     for the stencil aspect, both front and back @writeMask@ are not
+--     zero, and stencil test is enabled,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-stencil all stencil ops>
 --     /must/ be 'Vulkan.Core10.Enums.StencilOp.STENCIL_OP_KEEP'
 --
@@ -6024,7 +6027,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndirect-None-06887# If the current render pass
 --     instance uses a depth\/stencil attachment with a read-only layout
---     for the stencil aspect and stencil test is enabled,
+--     for the stencil aspect, both front and back @writeMask@ are not
+--     zero, and stencil test is enabled,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-stencil all stencil ops>
 --     /must/ be 'Vulkan.Core10.Enums.StencilOp.STENCIL_OP_KEEP'
 --
@@ -7845,7 +7849,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-06887# If the current render
 --     pass instance uses a depth\/stencil attachment with a read-only
---     layout for the stencil aspect and stencil test is enabled,
+--     layout for the stencil aspect, both front and back @writeMask@ are
+--     not zero, and stencil test is enabled,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fragops-stencil all stencil ops>
 --     /must/ be 'Vulkan.Core10.Enums.StencilOp.STENCIL_OP_KEEP'
 --
@@ -11777,7 +11782,7 @@ foreign import ccall
 -- = Description
 --
 -- Each source region specified by @pRegions@ is copied from the source
--- buffer to the destination region of the destination image according to
+-- image to the destination region of the destination buffer according to
 -- the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#copies-buffers-images-addressing addressing calculations>
 -- for each resource. If any of the specified regions in @srcImage@

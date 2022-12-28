@@ -1102,7 +1102,8 @@ module Vulkan.Extensions.VK_KHR_swapchain  ( createSwapchainKHR
                                                                               , ..
                                                                               )
                                            , SwapchainCreateFlagsKHR
-                                           , SwapchainCreateFlagBitsKHR( SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR
+                                           , SwapchainCreateFlagBitsKHR( SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_EXT
+                                                                       , SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR
                                                                        , SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR
                                                                        , SWAPCHAIN_CREATE_PROTECTED_BIT_KHR
                                                                        , ..
@@ -1247,6 +1248,10 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_display_native_hdr (SwapchainDisp
 import Vulkan.Extensions.Handles (SwapchainKHR)
 import Vulkan.Extensions.Handles (SwapchainKHR(..))
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_present_barrier (SwapchainPresentBarrierCreateInfoNV)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_swapchain_maintenance1 (SwapchainPresentFenceInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_swapchain_maintenance1 (SwapchainPresentModeInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_swapchain_maintenance1 (SwapchainPresentModesCreateInfoEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_swapchain_maintenance1 (SwapchainPresentScalingCreateInfoEXT)
 import Vulkan.Exception (VulkanException(..))
 import Vulkan.Core10.APIConstants (pattern MAX_DEVICE_GROUP_SIZE)
 import Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR))
@@ -1756,6 +1761,15 @@ acquireNextImageKHRSafeOrUnsafe mkVkAcquireNextImageKHR device
 -- | vkAcquireNextImageKHR - Retrieve the index of the next available
 -- presentable image
 --
+-- = Description
+--
+-- If the @swapchain@ has been created with the
+-- 'SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_EXT' flag, the image
+-- whose index is returned in @pImageIndex@ will be fully backed by memory
+-- before this call returns to the application, as if it is bound
+-- completely and contiguously to a single
+-- 'Vulkan.Core10.Handles.DeviceMemory' object.
+--
 -- == Valid Usage
 --
 -- -   #VUID-vkAcquireNextImageKHR-swapchain-01285# @swapchain@ /must/ not
@@ -1776,14 +1790,11 @@ acquireNextImageKHRSafeOrUnsafe mkVkAcquireNextImageKHR device
 -- -   #VUID-vkAcquireNextImageKHR-semaphore-01780# @semaphore@ and @fence@
 --     /must/ not both be equal to 'Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   #VUID-vkAcquireNextImageKHR-swapchain-01802# If the number of
---     currently acquired images is greater than the difference between the
---     number of images in @swapchain@ and the value of
---     'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR'::@minImageCount@
---     as returned by a call to
---     'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceCapabilities2KHR'
---     with the @surface@ used to create @swapchain@, @timeout@ /must/ not
---     be @UINT64_MAX@
+-- -   #VUID-vkAcquireNextImageKHR-surface-07783# If
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#swapchain-acquire-forward-progress forward progress>
+--     cannot be guaranteed for the @surface@ used to create the
+--     @swapchain@ member of @pAcquireInfo@, the @timeout@ member of
+--     @pAcquireInfo@ /must/ not be @UINT64_MAX@
 --
 -- -   #VUID-vkAcquireNextImageKHR-semaphore-03265# @semaphore@ /must/ have
 --     a 'Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
@@ -2262,17 +2273,19 @@ acquireNextImage2KHRSafeOrUnsafe mkVkAcquireNextImage2KHR device
 -- | vkAcquireNextImage2KHR - Retrieve the index of the next available
 -- presentable image
 --
+-- = Description
+--
+-- If the @swapchain@ has been created with the
+-- 'SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_EXT' flag, the image
+-- whose index is returned in @pImageIndex@ will be fully backed by memory
+-- before this call returns to the application.
+--
 -- == Valid Usage
 --
--- -   #VUID-vkAcquireNextImage2KHR-swapchain-01803# If the number of
---     currently acquired images is greater than the difference between the
---     number of images in the @swapchain@ member of @pAcquireInfo@ and the
---     value of
---     'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR'::@minImageCount@
---     as returned by a call to
---     'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceCapabilities2KHR'
---     with the @surface@ used to create @swapchain@, the @timeout@ member
---     of @pAcquireInfo@ /must/ not be @UINT64_MAX@
+-- -   #VUID-vkAcquireNextImage2KHR-surface-07784# If
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#swapchain-acquire-forward-progress forward progress>
+--     cannot be guaranteed for the @surface@ used to create @swapchain@,
+--     the @timeout@ member of @pAcquireInfo@ /must/ not be @UINT64_MAX@
 --
 -- == Valid Usage (Implicit)
 --
@@ -2540,13 +2553,30 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceFormatsKHR'
 --     for the surface
 --
--- -   #VUID-VkSwapchainCreateInfoKHR-imageExtent-01274# @imageExtent@
---     /must/ be between @minImageExtent@ and @maxImageExtent@, inclusive,
---     where @minImageExtent@ and @maxImageExtent@ are members of the
+-- -   #VUID-VkSwapchainCreateInfoKHR-pNext-07781# If a
+--     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentScalingCreateInfoEXT'
+--     structure was not included in the @pNext@ chain, or it is included
+--     and
+--     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentScalingCreateInfoEXT'::@scalingBehavior@
+--     is zero then @imageExtent@ /must/ be between @minImageExtent@ and
+--     @maxImageExtent@, inclusive, where @minImageExtent@ and
+--     @maxImageExtent@ are members of the
 --     'Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR' structure
 --     returned by
 --     'Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceCapabilitiesKHR'
 --     for the surface
+--
+-- -   #VUID-VkSwapchainCreateInfoKHR-pNext-07782# If a
+--     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentScalingCreateInfoEXT'
+--     structure was included in the @pNext@ chain and
+--     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentScalingCreateInfoEXT'::@scalingBehavior@
+--     is not zero then @imageExtent@ /must/ be between
+--     @minScaledImageExtent@ and @maxScaledImageExtent@, inclusive, where
+--     @minScaledImageExtent@ and @maxScaledImageExtent@ are members of the
+--     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentScalingCapabilitiesEXT'
+--     structure returned by
+--     'Vulkan.Extensions.VK_KHR_get_surface_capabilities2.getPhysicalDeviceSurfaceCapabilities2KHR'
+--     for the surface and @presentMode@
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-imageExtent-01689# @imageExtent@
 --     members @width@ and @height@ /must/ both be non-zero
@@ -2705,8 +2735,10 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice
 --     'Vulkan.Extensions.VK_EXT_full_screen_exclusive.SurfaceFullScreenExclusiveWin32InfoEXT',
 --     'Vulkan.Extensions.VK_EXT_display_control.SwapchainCounterCreateInfoEXT',
 --     'Vulkan.Extensions.VK_AMD_display_native_hdr.SwapchainDisplayNativeHdrCreateInfoAMD',
+--     'Vulkan.Extensions.VK_NV_present_barrier.SwapchainPresentBarrierCreateInfoNV',
+--     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentModesCreateInfoEXT',
 --     or
---     'Vulkan.Extensions.VK_NV_present_barrier.SwapchainPresentBarrierCreateInfoNV'
+--     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentScalingCreateInfoEXT'
 --
 -- -   #VUID-VkSwapchainCreateInfoKHR-sType-unique# The @sType@ value of
 --     each struct in the @pNext@ chain /must/ be unique
@@ -2804,7 +2836,9 @@ data SwapchainCreateInfoKHR (es :: [Type]) = SwapchainCreateInfoKHR
     -- On some platforms, it is normal that @maxImageExtent@ /may/ become
     -- @(0, 0)@, for example when the window is minimized. In such a case, it
     -- is not possible to create a swapchain due to the Valid Usage
-    -- requirements.
+    -- requirements , unless scaling is selected through
+    -- 'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentScalingCreateInfoEXT',
+    -- if supported .
     imageExtent :: Extent2D
   , -- | @imageArrayLayers@ is the number of views in a multiview\/stereo
     -- surface. For non-stereoscopic-3D applications, this value is 1.
@@ -2885,6 +2919,8 @@ instance Extensible SwapchainCreateInfoKHR where
   getNext SwapchainCreateInfoKHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends SwapchainCreateInfoKHR e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @SwapchainPresentScalingCreateInfoEXT = Just f
+    | Just Refl <- eqT @e @SwapchainPresentModesCreateInfoEXT = Just f
     | Just Refl <- eqT @e @ImageCompressionControlEXT = Just f
     | Just Refl <- eqT @e @SwapchainPresentBarrierCreateInfoNV = Just f
     | Just Refl <- eqT @e @SurfaceFullScreenExclusiveWin32InfoEXT = Just f
@@ -3056,8 +3092,11 @@ instance es ~ '[] => Zero (SwapchainCreateInfoKHR es) where
 --     'Vulkan.Extensions.VK_KHR_display_swapchain.DisplayPresentInfoKHR',
 --     'Vulkan.Extensions.VK_GGP_frame_token.PresentFrameTokenGGP',
 --     'Vulkan.Extensions.VK_KHR_present_id.PresentIdKHR',
---     'Vulkan.Extensions.VK_KHR_incremental_present.PresentRegionsKHR', or
---     'Vulkan.Extensions.VK_GOOGLE_display_timing.PresentTimesInfoGOOGLE'
+--     'Vulkan.Extensions.VK_KHR_incremental_present.PresentRegionsKHR',
+--     'Vulkan.Extensions.VK_GOOGLE_display_timing.PresentTimesInfoGOOGLE',
+--     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentFenceInfoEXT',
+--     or
+--     'Vulkan.Extensions.VK_EXT_swapchain_maintenance1.SwapchainPresentModeInfoEXT'
 --
 -- -   #VUID-VkPresentInfoKHR-sType-unique# The @sType@ value of each
 --     struct in the @pNext@ chain /must/ be unique
@@ -3131,6 +3170,8 @@ instance Extensible PresentInfoKHR where
   getNext PresentInfoKHR{..} = next
   extends :: forall e b proxy. Typeable e => proxy e -> (Extends PresentInfoKHR e => b) -> Maybe b
   extends _ f
+    | Just Refl <- eqT @e @SwapchainPresentModeInfoEXT = Just f
+    | Just Refl <- eqT @e @SwapchainPresentFenceInfoEXT = Just f
     | Just Refl <- eqT @e @PresentFrameTokenGGP = Just f
     | Just Refl <- eqT @e @PresentTimesInfoGOOGLE = Just f
     | Just Refl <- eqT @e @PresentIdKHR = Just f
@@ -3361,6 +3402,12 @@ instance Zero ImageSwapchainCreateInfoKHR where
 --
 -- -   #VUID-VkBindImageMemorySwapchainInfoKHR-imageIndex-01644#
 --     @imageIndex@ /must/ be less than the number of images in @swapchain@
+--
+-- -   #VUID-VkBindImageMemorySwapchainInfoKHR-swapchain-07756# If the
+--     @swapchain@ has been created with
+--     'SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_EXT', @imageIndex@
+--     /must/ be one that has previously been returned by
+--     'acquireNextImageKHR' or 'acquireNextImage2KHR'
 --
 -- == Valid Usage (Implicit)
 --
@@ -3888,6 +3935,12 @@ type SwapchainCreateFlagsKHR = SwapchainCreateFlagBitsKHR
 newtype SwapchainCreateFlagBitsKHR = SwapchainCreateFlagBitsKHR Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits, FiniteBits)
 
+-- | 'SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_EXT' specifies that the
+-- implementation /may/ defer allocation of memory associated with each
+-- swapchain image until its index is to be returned from
+-- 'acquireNextImageKHR' or 'acquireNextImage2KHR' for the first time.
+pattern SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_EXT = SwapchainCreateFlagBitsKHR 0x00000008
+
 -- | 'SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR' specifies that the images of
 -- the swapchain /can/ be used to create a
 -- 'Vulkan.Core10.Handles.ImageView' with a different format than what the
@@ -3920,6 +3973,10 @@ enumPrefixSwapchainCreateFlagBitsKHR = "SWAPCHAIN_CREATE_"
 showTableSwapchainCreateFlagBitsKHR :: [(SwapchainCreateFlagBitsKHR, String)]
 showTableSwapchainCreateFlagBitsKHR =
   [
+    ( SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_EXT
+    , "DEFERRED_MEMORY_ALLOCATION_BIT_EXT"
+    )
+  ,
     ( SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR
     , "MUTABLE_FORMAT_BIT_KHR"
     )
