@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        ghc: ['9.2', '9.0', '8.10', '8.8']
+        ghc: ['8.10', '9.0', '9.2']
         os: [ubuntu-20.04, macOS-latest, windows-latest]
       fail-fast: false
 
