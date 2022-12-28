@@ -1934,6 +1934,41 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-mesh-shader Mesh Shader Queries>
 --     must not be active
 --
+-- -   #VUID-vkCmdDrawMeshTasksEXT-stage-06480# The bound graphics pipeline
+--     /must/ not have been created with the
+--     'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo'::@stage@
+--     member of an element of
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pStages@ set
+--     to
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
+--     or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-None-07074#
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-transform-feedback Transform Feedback Queries>
+--     /must/ not be active
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-None-07075#
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-primitives-generated Primitives Generated Queries>
+--     /must/ not be active
+--
+-- -   #VUID-vkCmdDrawMeshTasksEXT-pipelineStatistics-07076# The
+--     @pipelineStatistics@ member used to create any active
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-pipestats Pipeline Statistics Query>
+--     /must/ not contain
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT',
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT',
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT',
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT',
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT',
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT',
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT',
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT',
+--     or
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT'
+--
 -- -   #VUID-vkCmdDrawMeshTasksEXT-TaskEXT-07322# If the current pipeline
 --     bound to
 --     'Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
@@ -3696,6 +3731,41 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-mesh-shader Mesh Shader Queries>
 --     must not be active
 --
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-stage-06480# The bound graphics
+--     pipeline /must/ not have been created with the
+--     'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo'::@stage@
+--     member of an element of
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pStages@ set
+--     to
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
+--     or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-None-07074#
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-transform-feedback Transform Feedback Queries>
+--     /must/ not be active
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-None-07075#
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-primitives-generated Primitives Generated Queries>
+--     /must/ not be active
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-pipelineStatistics-07076# The
+--     @pipelineStatistics@ member used to create any active
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-pipestats Pipeline Statistics Query>
+--     /must/ not contain
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT',
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT',
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT',
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT',
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT',
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT',
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT',
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT',
+--     or
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT'
+--
 -- -   #VUID-vkCmdDrawMeshTasksIndirectEXT-buffer-02708# If @buffer@ is
 --     non-sparse then it /must/ be bound completely and contiguously to a
 --     single 'Vulkan.Core10.Handles.DeviceMemory' object
@@ -5447,6 +5517,41 @@ foreign import ccall
 --     then
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-mesh-shader Mesh Shader Queries>
 --     must not be active
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-stage-06480# The bound
+--     graphics pipeline /must/ not have been created with the
+--     'Vulkan.Core10.Pipeline.PipelineShaderStageCreateInfo'::@stage@
+--     member of an element of
+--     'Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@pStages@ set
+--     to
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_VERTEX_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_CONTROL_BIT',
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TESSELLATION_EVALUATION_BIT'
+--     or
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_GEOMETRY_BIT'
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-None-07074#
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-transform-feedback Transform Feedback Queries>
+--     /must/ not be active
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-None-07075#
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-primitives-generated Primitives Generated Queries>
+--     /must/ not be active
+--
+-- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-pipelineStatistics-07076#
+--     The @pipelineStatistics@ member used to create any active
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-pipestats Pipeline Statistics Query>
+--     /must/ not contain
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT',
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT',
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT',
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT',
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT',
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT',
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT',
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT',
+--     or
+--     'Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT'
 --
 -- -   #VUID-vkCmdDrawMeshTasksIndirectCountEXT-buffer-02708# If @buffer@
 --     is non-sparse then it /must/ be bound completely and contiguously to

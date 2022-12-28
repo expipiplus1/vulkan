@@ -443,16 +443,11 @@ foreign import ccall
 --
 -- -   #VUID-vkGetQueryPoolResults-queryType-04810# If the @queryType@ used
 --     to create @queryPool@ was @VK_QUERY_TYPE_RESULT_STATUS_ONLY_KHR@,
---     @flags@ /must/ include @VK_QUERY_RESULT_WITH_STATUS_BIT_KHR@
+--     then @flags@ /must/ include @VK_QUERY_RESULT_WITH_STATUS_BIT_KHR@
 --
 -- -   #VUID-vkGetQueryPoolResults-flags-04811# If @flags@ includes
---     @VK_QUERY_RESULT_WITH_STATUS_BIT_KHR@, it /must/ not include
+--     @VK_QUERY_RESULT_WITH_STATUS_BIT_KHR@, then it /must/ not include
 --     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT'
---
--- -   #VUID-vkGetQueryPoolResults-queryType-06900# If the @queryType@ used
---     to create @queryPool@ was
---     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
---     @flags@ /must/ not contain @VK_QUERY_RESULT_WITH_STATUS_BIT_KHR@
 --
 -- == Valid Usage (Implicit)
 --
@@ -591,6 +586,12 @@ getQueryPoolResults device
 -- -   #VUID-VkQueryPoolCreateInfo-queryCount-02763# @queryCount@ /must/ be
 --     greater than 0
 --
+-- -   #VUID-VkQueryPoolCreateInfo-queryType-07133# If @queryType@ is
+--     @VK_QUERY_TYPE_VIDEO_ENCODE_BITSTREAM_BUFFER_RANGE_KHR@, then the
+--     @pNext@ chain /must/ include a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>
+--     structure with @videoCodecOperation@ specifying an encode operation
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkQueryPoolCreateInfo-sType-sType# @sType@ /must/ be
@@ -601,8 +602,8 @@ getQueryPoolResults device
 --     @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR',
 --     'Vulkan.Extensions.VK_INTEL_performance_query.QueryPoolPerformanceQueryCreateInfoINTEL',
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264ProfileInfoEXT VkVideoDecodeH264ProfileInfoEXT>,
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH265ProfileInfoEXT VkVideoDecodeH265ProfileInfoEXT>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH264ProfileInfoKHR VkVideoDecodeH264ProfileInfoKHR>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeH265ProfileInfoKHR VkVideoDecodeH265ProfileInfoKHR>,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoDecodeUsageInfoKHR VkVideoDecodeUsageInfoKHR>,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH264ProfileInfoEXT VkVideoEncodeH264ProfileInfoEXT>,
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoEncodeH265ProfileInfoEXT VkVideoEncodeH265ProfileInfoEXT>,

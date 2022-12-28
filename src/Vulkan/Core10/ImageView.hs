@@ -622,40 +622,19 @@ instance Zero ImageSubresourceRange where
 --
 -- If the image has a
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
--- @format@ and @subresourceRange.aspectMask@ is
--- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT', and it
--- was created with @usage@ value containing flags other than
--- @VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR@,
--- @VK_IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR@ ,
--- @VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR@,
--- @VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR@, then the @format@ /must/ be
--- identical to the image @format@, and the sampler to be used with the
--- image view /must/ enable
+-- @format@, @subresourceRange.aspectMask@ is
+-- 'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT', and
+-- @usage@ includes
+-- 'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT', then
+-- the @format@ /must/ be identical to the image @format@ and the sampler
+-- to be used with the image view /must/ enable
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>.
 --
--- If the image has a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
--- @format@ and the @image@ has been created with a @usage@ value
--- containing any of the @VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR@,
--- @VK_IMAGE_USAGE_VIDEO_DECODE_SRC_BIT_KHR@, and
--- @VK_IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR@ flags, then all of the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-decode-operations video decode operations>
--- would ignore the
--- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
--- structure and\/or
+-- When such an image is used in a
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-coding video coding>
+-- operation, the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
--- object, associated with the image view. If the image has a
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
--- @format@ and the @image@ has been created with a @usage@ value
--- containing any of the @VK_IMAGE_USAGE_VIDEO_ENCODE_DST_BIT_KHR@,
--- @VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR@, and
--- @VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR@ flags, then all of the
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-encode-operations video encode operations>
--- would ignore the
--- 'Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
--- structure and\/or
--- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
--- object, associated with the image view.
+-- has no effect.
 --
 -- If @image@ was created with the
 -- 'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'
@@ -1193,21 +1172,17 @@ instance Zero ImageSubresourceRange where
 --
 -- -   #VUID-VkImageViewCreateInfo-image-04817# If @image@ was created with
 --     @usage@ containing @VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR@,
---     @VK_IMAGE_USAGE_VIDEO_DECODE_SRC_BIT_KHR@,
+--     @VK_IMAGE_USAGE_VIDEO_DECODE_SRC_BIT_KHR@, or
 --     @VK_IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR@, then the @viewType@
 --     /must/ be 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
---     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY' and all
---     members of @components@ /must/ have the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'
 --
 -- -   #VUID-VkImageViewCreateInfo-image-04818# If @image@ was created with
 --     @usage@ containing @VK_IMAGE_USAGE_VIDEO_ENCODE_DST_BIT_KHR@,
---     @VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR@,
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR@, or
 --     @VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR@, then the @viewType@
 --     /must/ be 'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
---     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY' and all
---     members of @components@ /must/ have the
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-image-views-identity-mappings identity swizzle>
+--     'Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'
 --
 -- -   #VUID-VkImageViewCreateInfo-flags-08106# If @flags@ includes
 --     'Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT',
