@@ -101,6 +101,8 @@ let
       } super.hs-speedscope));
       opentelemetry-extra = markUnbroken (dontCheck super.opentelemetry-extra);
 
+      binary-orphans = addBuildDepend self.OneTuple super.binary-orphans;
+
       #
       # Overrides for generate
       #
