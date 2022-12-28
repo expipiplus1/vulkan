@@ -1204,6 +1204,15 @@ foreign import ccall
 -- -   #VUID-vkCmdCopyAccelerationStructureNV-buffer-03719# The @buffer@
 --     used to create @dst@ /must/ be bound to device memory
 --
+-- -   #VUID-vkCmdCopyAccelerationStructureNV-dst-07791# The range of
+--     memory backing @dst@ that is accessed by this command /must/ not
+--     overlap the memory backing @src@ that is accessed by this command
+--
+-- -   #VUID-vkCmdCopyAccelerationStructureNV-dst-07792# @dst@ /must/ be
+--     bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object via
+--     'bindAccelerationStructureMemoryNV'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdCopyAccelerationStructureNV-commandBuffer-parameter#
@@ -1551,6 +1560,11 @@ foreign import ccall
 --     'Vulkan.Core10.FundamentalTypes.TRUE', the @src@ and @dst@ objects
 --     /must/ either be the same object or not have any
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#resources-memory-aliasing memory aliasing>
+--
+-- -   #VUID-vkCmdBuildAccelerationStructureNV-dst-07787# @dst@ /must/ be
+--     bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object via
+--     'bindAccelerationStructureMemoryNV'
 --
 -- == Valid Usage (Implicit)
 --

@@ -380,24 +380,26 @@ destroyBuffer device buffer allocator = liftIO . evalContT $ do
 --     feature /must/ be enabled
 --
 -- -   #VUID-VkBufferCreateInfo-usage-04813# If @usage@ includes
---     @VK_BUFFER_USAGE_VIDEO_DECODE_SRC_BIT_KHR@,
+--     @VK_BUFFER_USAGE_VIDEO_DECODE_SRC_BIT_KHR@ or
 --     @VK_BUFFER_USAGE_VIDEO_DECODE_DST_BIT_KHR@, then the @pNext@ chain
---     /must/ include a valid
+--     /must/ include a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
 --     structure with @profileCount@ greater than @0@ and @pProfiles@
 --     including at least one
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>::@videoCodecOperation@
---     specifying a decode operation
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>
+--     structure with a @videoCodecOperation@ member specifying a decode
+--     operation
 --
 -- -   #VUID-VkBufferCreateInfo-usage-04814# If @usage@ includes
---     @VK_BUFFER_USAGE_VIDEO_ENCODE_SRC_BIT_KHR@,
+--     @VK_BUFFER_USAGE_VIDEO_ENCODE_SRC_BIT_KHR@ or
 --     @VK_BUFFER_USAGE_VIDEO_ENCODE_DST_BIT_KHR@, then the @pNext@ chain
---     /must/ include a valid
+--     /must/ include a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
 --     structure with @profileCount@ greater than @0@ and @pProfiles@
 --     including at least one
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>::@videoCodecOperation@
---     specifying an encode operation
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>
+--     structure with a @videoCodecOperation@ member specifying an encode
+--     operation
 --
 -- -   #VUID-VkBufferCreateInfo-size-06409# @size@ /must/ be less than or
 --     equal to

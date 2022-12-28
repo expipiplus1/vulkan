@@ -772,7 +772,7 @@ instance Zero SwapchainPresentModeInfoEXT where
 --
 -- = Description
 --
--- If @presentScaling@ is @0@, the result of presenting a swapchain image
+-- If @scalingBehavior@ is @0@, the result of presenting a swapchain image
 -- with dimensions that do not match the surface dimensions is
 -- implementation and platform-dependent. If @presentGravityX@ or
 -- @presentGravityY@ are @0@, the presentation gravity /must/ match that
@@ -787,8 +787,8 @@ instance Zero SwapchainPresentModeInfoEXT where
 -- -   #VUID-VkSwapchainPresentScalingCreateInfoEXT-presentGravityX-07766#
 --     If @presentGravityX@ is not @0@, @presentGravityY@ /must/ not be @0@
 --
--- -   #VUID-VkSwapchainPresentScalingCreateInfoEXT-presentScaling-07767#
---     @presentScaling@ /must/ not have more than one bit set
+-- -   #VUID-VkSwapchainPresentScalingCreateInfoEXT-scalingBehavior-07767#
+--     @scalingBehavior@ /must/ not have more than one bit set
 --
 -- -   #VUID-VkSwapchainPresentScalingCreateInfoEXT-presentGravityX-07768#
 --     @presentGravityX@ /must/ not have more than one bit set
@@ -796,18 +796,18 @@ instance Zero SwapchainPresentModeInfoEXT where
 -- -   #VUID-VkSwapchainPresentScalingCreateInfoEXT-presentGravityY-07769#
 --     @presentGravityY@ /must/ not have more than one bit set
 --
--- -   #VUID-VkSwapchainPresentScalingCreateInfoEXT-presentScaling-07770#
---     @presentScaling@ /must/ be a valid scaling method for the surface as
---     returned in
+-- -   #VUID-VkSwapchainPresentScalingCreateInfoEXT-scalingBehavior-07770#
+--     @scalingBehavior@ /must/ be a valid scaling method for the surface
+--     as returned in
 --     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentScalingCapabilitiesEXT'::@supportedPresentScaling@,
 --     given
 --     'Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'::@presentMode@
 --     in
 --     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentModeEXT'
 --
--- -   #VUID-VkSwapchainPresentScalingCreateInfoEXT-presentScaling-07771#
+-- -   #VUID-VkSwapchainPresentScalingCreateInfoEXT-scalingBehavior-07771#
 --     If the swapchain is created with
---     'SwapchainPresentModesCreateInfoEXT', @presentScaling@ /must/ be a
+--     'SwapchainPresentModesCreateInfoEXT', @scalingBehavior@ /must/ be a
 --     valid scaling method for the surface as returned in
 --     'Vulkan.Extensions.VK_EXT_surface_maintenance1.SurfacePresentScalingCapabilitiesEXT'::@supportedPresentScaling@,
 --     given each present mode in
@@ -878,15 +878,16 @@ instance Zero SwapchainPresentModeInfoEXT where
 -- 'Vulkan.Extensions.VK_EXT_surface_maintenance1.PresentScalingFlagsEXT',
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data SwapchainPresentScalingCreateInfoEXT = SwapchainPresentScalingCreateInfoEXT
-  { -- No documentation found for Nested "VkSwapchainPresentScalingCreateInfoEXT" "scalingBehavior"
+  { -- | @scalingBehavior@ is @0@ or the scaling method to use when the
+    -- dimensions of the surface and swapchain images differ.
     scalingBehavior :: PresentScalingFlagsEXT
   , -- | @presentGravityX@ is @0@ or the x-axis direction in which swapchain
-    -- image pixels gravitate relative to the surface when @presentScaling@
+    -- image pixels gravitate relative to the surface when @scalingBehavior@
     -- does not result in a one-to-one pixel mapping between the scaled
     -- swapchain image and the surface.
     presentGravityX :: PresentGravityFlagsEXT
   , -- | @presentGravityY@ is @0@ or the y-axis direction in which swapchain
-    -- image pixels gravitate relative to the surface when @presentScaling@
+    -- image pixels gravitate relative to the surface when @scalingBehavior@
     -- does not result in a one-to-one pixel mapping between the scaled
     -- swapchain image and the surface.
     presentGravityY :: PresentGravityFlagsEXT

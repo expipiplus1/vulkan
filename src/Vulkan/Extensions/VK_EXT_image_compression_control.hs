@@ -283,12 +283,19 @@ foreign import ccall
 -- specify extended inputs via chained input structures, and to return
 -- extended information via chained output structures.
 --
--- == Valid Usage
+-- It is legal to call 'getImageSubresourceLayout2EXT' with a @image@
+-- created with @tiling@ equal to
+-- 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', but the members
+-- of 'ImageSubresource2EXT'::@imageSubresource@ will have undefined values
+-- in this case.
 --
--- -   #VUID-vkGetImageSubresourceLayout2EXT-image-02270# @image@ /must/
---     have been created with @tiling@ equal to
---     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' or
---     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
+-- Note
+--
+-- Structures chained from 'ImageSubresource2EXT'::@pNext@ will also be
+-- updated when @tiling@ is equal to
+-- 'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL'.
+--
+-- == Valid Usage
 --
 -- -   #VUID-vkGetImageSubresourceLayout2EXT-aspectMask-00997# The
 --     @aspectMask@ member of @pSubresource@ /must/ only have a single bit

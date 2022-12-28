@@ -1835,9 +1835,6 @@ instance Zero CopyBufferInfo2 where
 --     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'::@stencilUsage@
 --     used to create @dstImage@
 --
--- -   #VUID-VkCopyImageInfo2-srcImage-07745# @srcImage@ and @dstImage@
---     /must/ have the same sample count
---
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkCopyImageInfo2-sType-sType# @sType@ /must/ be

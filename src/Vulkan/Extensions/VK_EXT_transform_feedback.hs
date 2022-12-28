@@ -966,12 +966,61 @@ foreign import ccall
 --     in the current subpass’s view mask /must/ be less than or equal to
 --     the number of queries in @queryPool@
 --
+-- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-07126# If the @queryType@
+--     used to create @queryPool@ was
+--     @VK_QUERY_TYPE_RESULT_STATUS_ONLY_KHR@, then the
+--     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+--     allocated from /must/ have been created with a queue family index
+--     that supports
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-result-status-only result status queries>,
+--     as indicated by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFamilyQueryResultStatusPropertiesKHR VkQueueFamilyQueryResultStatusPropertiesKHR>::@queryResultStatusSupport@
+--
+-- -   #VUID-vkCmdBeginQueryIndexedEXT-None-07127# If there is a bound
+--     video session, then there /must/ be no
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-operation-active active>
+--     queries
+--
+-- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-07128# If the @queryType@
+--     used to create @queryPool@ was
+--     @VK_QUERY_TYPE_RESULT_STATUS_ONLY_KHR@ and there is a bound video
+--     session, then @queryPool@ /must/ have been created with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>
+--     structure included in the @pNext@ chain of
+--     'Vulkan.Core10.Query.QueryPoolCreateInfo' identical to the one
+--     specified in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoSessionCreateInfoKHR VkVideoSessionCreateInfoKHR>::@pVideoProfile@
+--     the bound video session was created with
+--
 -- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-04862# If the @queryType@
 --     used to create @queryPool@ was
---     @VK_QUERY_TYPE_VIDEO_ENCODE_BITSTREAM_BUFFER_RANGE_KHR@ the
+--     @VK_QUERY_TYPE_VIDEO_ENCODE_BITSTREAM_BUFFER_RANGE_KHR@, then the
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#video-encode-operations video encode operations>
+--
+-- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-07129# If the @queryType@
+--     used to create @queryPool@ was
+--     @VK_QUERY_TYPE_VIDEO_ENCODE_BITSTREAM_BUFFER_RANGE_KHR@, then there
+--     /must/ be a bound video session
+--
+-- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-07130# If the @queryType@
+--     used to create @queryPool@ was
+--     @VK_QUERY_TYPE_VIDEO_ENCODE_BITSTREAM_BUFFER_RANGE_KHR@ and there is
+--     a bound video session, then @queryPool@ /must/ have been created
+--     with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>
+--     structure included in the @pNext@ chain of
+--     'Vulkan.Core10.Query.QueryPoolCreateInfo' identical to the one
+--     specified in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoSessionCreateInfoKHR VkVideoSessionCreateInfoKHR>::@pVideoProfile@
+--     the bound video session was created with
+--
+-- -   #VUID-vkCmdBeginQueryIndexedEXT-queryType-07131# If the @queryType@
+--     used to create @queryPool@ was not
+--     @VK_QUERY_TYPE_RESULT_STATUS_ONLY_KHR@ or
+--     @VK_QUERY_TYPE_VIDEO_ENCODE_BITSTREAM_BUFFER_RANGE_KHR@, then there
+--     /must/ be no bound video session
 --
 -- -   #VUID-vkCmdBeginQueryIndexedEXT-queryPool-04753# If the @queryPool@
 --     was created with the same @queryType@ as that of another

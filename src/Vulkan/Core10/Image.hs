@@ -337,7 +337,7 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   #VUID-vkGetImageSubresourceLayout-image-02270# @image@ /must/ have
+-- -   #VUID-vkGetImageSubresourceLayout-image-07790# @image@ /must/ have
 --     been created with @tiling@ equal to
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' or
 --     'Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
@@ -1448,29 +1448,33 @@ getImageSubresourceLayout device image subresource = liftIO . evalContT $ do
 --     /must/ be @0@ or @1@
 --
 -- -   #VUID-VkImageCreateInfo-usage-04815# If @usage@ includes
---     @VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR@,
+--     @VK_IMAGE_USAGE_VIDEO_DECODE_SRC_BIT_KHR@,
+--     @VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR@, or
 --     @VK_IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR@, then the @pNext@ chain
---     /must/ include a valid
+--     /must/ include a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
 --     structure with @profileCount@ greater than @0@ and @pProfiles@
 --     including at least one
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>::@videoCodecOperation@
---     specifying a decode operation
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>
+--     structure with a @videoCodecOperation@ member specifying a decode
+--     operation
 --
 -- -   #VUID-VkImageCreateInfo-usage-04816# If @usage@ includes
---     @VK_IMAGE_USAGE_VIDEO_ENCODE_DST_BIT_KHR@,
 --     @VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR@,
+--     @VK_IMAGE_USAGE_VIDEO_ENCODE_DST_BIT_KHR@, or
 --     @VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR@, then the @pNext@ chain
---     /must/ include a valid
+--     /must/ include a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
 --     structure with @profileCount@ greater than @0@ and @pProfiles@
 --     including at least one
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>::@videoCodecOperation@
---     specifying an encode operation
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>
+--     structure with a @videoCodecOperation@ member specifying an encode
+--     operation
 --
 -- -   #VUID-VkImageCreateInfo-pNext-06811# If the @pNext@ chain includes a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
---     structure then @supportedVideoFormat@ /must/ be
+--     structure with @profileCount@ greater than @0@, then
+--     @supportedVideoFormat@ /must/ be
 --     'Vulkan.Core10.FundamentalTypes.TRUE'
 --
 -- -   #VUID-VkImageCreateInfo-pNext-06390# If the

@@ -515,18 +515,17 @@ foreign import ccall
 --
 -- If the @pNext@ chain of @pImageFormatInfo@ includes a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>
--- structure with a @profileCount@ member greater than @0@, then
--- 'getPhysicalDeviceImageFormatProperties2' returns format capabilities
--- specific to image types used in conjunction with the specified video
--- codec operations and corresponding video profiles. In this case
--- 'getPhysicalDeviceImageFormatProperties2' returns one of the
+-- structure with a @profileCount@ member greater than @0@, then this
+-- command returns format capabilities specific to image types used in
+-- conjunction with the specified
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-profiles video profiles>.
+-- In this case, this command will return one of the
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-profile-error-codes video-profile-specific error codes>
 -- if any of the profiles specified via
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileListInfoKHR VkVideoProfileListInfoKHR>::@pProfiles@
 -- are not supported. Furthermore, if
--- 'PhysicalDeviceImageFormatInfo2'::@usage@ includes any image usage flags
--- not supported by the specified video profiles then
--- 'getPhysicalDeviceImageFormatProperties2' returns
+-- 'PhysicalDeviceImageFormatInfo2'::@usage@ includes any image usage flag
+-- not supported by the specified video profiles, then this command returns
 -- @VK_ERROR_IMAGE_USAGE_NOT_SUPPORTED_KHR@.
 --
 -- == Valid Usage

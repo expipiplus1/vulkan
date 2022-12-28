@@ -3313,9 +3313,16 @@ instance Zero MemoryBarrier2 where
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --     set
 --
--- -   #VUID-VkImageMemoryBarrier2-synchronization2-06911# If the
+-- -   #VUID-VkImageMemoryBarrier2-synchronization2-07793# If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
---     feature is not enabled, @layout@ /must/ not be
+--     feature is not enabled, @oldLayout@ /must/ not be
+--     'Vulkan.Extensions.VK_KHR_synchronization2.IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR'
+--     or
+--     'Vulkan.Extensions.VK_KHR_synchronization2.IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR'
+--
+-- -   #VUID-VkImageMemoryBarrier2-synchronization2-07794# If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-synchronization2 synchronization2>
+--     feature is not enabled, @newLayout@ /must/ not be
 --     'Vulkan.Extensions.VK_KHR_synchronization2.IMAGE_LAYOUT_ATTACHMENT_OPTIMAL_KHR'
 --     or
 --     'Vulkan.Extensions.VK_KHR_synchronization2.IMAGE_LAYOUT_READ_ONLY_OPTIMAL_KHR'
@@ -3415,6 +3422,60 @@ instance Zero MemoryBarrier2 where
 --     queue families, or one of the special queue family values reserved
 --     for external memory transfers, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers ???>
+--
+-- -   #VUID-VkImageMemoryBarrier2-srcQueueFamilyIndex-07120# If
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define an
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     and @oldLayout@ or @newLayout@ is
+--     @VK_IMAGE_LAYOUT_VIDEO_DECODE_SRC_KHR@ then @image@ /must/ have been
+--     created with @VK_IMAGE_USAGE_VIDEO_DECODE_SRC_BIT_KHR@
+--
+-- -   #VUID-VkImageMemoryBarrier2-srcQueueFamilyIndex-07121# If
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define an
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     and @oldLayout@ or @newLayout@ is
+--     @VK_IMAGE_LAYOUT_VIDEO_DECODE_DST_KHR@ then @image@ /must/ have been
+--     created with @VK_IMAGE_USAGE_VIDEO_DECODE_DST_BIT_KHR@
+--
+-- -   #VUID-VkImageMemoryBarrier2-srcQueueFamilyIndex-07122# If
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define an
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     and @oldLayout@ or @newLayout@ is
+--     @VK_IMAGE_LAYOUT_VIDEO_DECODE_DPB_KHR@ then @image@ /must/ have been
+--     created with @VK_IMAGE_USAGE_VIDEO_DECODE_DPB_BIT_KHR@
+--
+-- -   #VUID-VkImageMemoryBarrier2-srcQueueFamilyIndex-07123# If
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define an
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     and @oldLayout@ or @newLayout@ is
+--     @VK_IMAGE_LAYOUT_VIDEO_ENCODE_SRC_KHR@ then @image@ /must/ have been
+--     created with @VK_IMAGE_USAGE_VIDEO_ENCODE_SRC_BIT_KHR@
+--
+-- -   #VUID-VkImageMemoryBarrier2-srcQueueFamilyIndex-07124# If
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define an
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     and @oldLayout@ or @newLayout@ is
+--     @VK_IMAGE_LAYOUT_VIDEO_ENCODE_DST_KHR@ then @image@ /must/ have been
+--     created with @VK_IMAGE_USAGE_VIDEO_ENCODE_DST_BIT_KHR@
+--
+-- -   #VUID-VkImageMemoryBarrier2-srcQueueFamilyIndex-07125# If
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
+--     or @oldLayout@ and @newLayout@ define an
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>,
+--     and @oldLayout@ or @newLayout@ is
+--     @VK_IMAGE_LAYOUT_VIDEO_ENCODE_DPB_KHR@ then @image@ /must/ have been
+--     created with @VK_IMAGE_USAGE_VIDEO_ENCODE_DPB_BIT_KHR@
 --
 -- -   #VUID-VkImageMemoryBarrier2-srcQueueFamilyIndex-07006# If
 --     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a

@@ -6667,6 +6667,15 @@ instance Zero AccelerationStructureVersionInfoKHR where
 -- -   #VUID-VkCopyAccelerationStructureInfoKHR-buffer-03719# The @buffer@
 --     used to create @dst@ /must/ be bound to device memory
 --
+-- -   #VUID-VkCopyAccelerationStructureInfoKHR-dst-07791# The range of
+--     memory backing @dst@ that is accessed by this command /must/ not
+--     overlap the memory backing @src@ that is accessed by this command
+--
+-- -   #VUID-VkCopyAccelerationStructureInfoKHR-dst-07792# @dst@ /must/ be
+--     bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object via
+--     'Vulkan.Extensions.VK_NV_ray_tracing.bindAccelerationStructureMemoryNV'
+--
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-VkCopyAccelerationStructureInfoKHR-sType-sType# @sType@ /must/

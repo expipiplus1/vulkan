@@ -5466,11 +5466,13 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexed-None-07312# An index buffer /must/ be bound
 --
--- -   #VUID-vkCmdDrawIndexed-firstIndex-04932# (@indexSize@ ×
---     (@firstIndex@ + @indexCount@) + @offset@) /must/ be less than or
---     equal to the size of the bound index buffer, with @indexSize@ being
---     based on the type specified by @indexType@, where the index buffer,
---     @indexType@, and @offset@ are specified via 'cmdBindIndexBuffer'
+-- -   #VUID-vkCmdDrawIndexed-robustBufferAccess2-07788# If
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+--     is not enabled, (@indexSize@ × (@firstIndex@ + @indexCount@) +
+--     @offset@) /must/ be less than or equal to the size of the bound
+--     index buffer, with @indexSize@ being based on the type specified by
+--     @indexType@, where the index buffer, @indexType@, and @offset@ are
+--     specified via 'cmdBindIndexBuffer'
 --
 -- == Valid Usage (Implicit)
 --
@@ -10822,9 +10824,6 @@ foreign import ccall
 --     'Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'::@stencilUsage@
 --     used to create @dstImage@
 --
--- -   #VUID-vkCmdCopyImage-srcImage-07745# @srcImage@ and @dstImage@
---     /must/ have the same sample count
---
 -- == Valid Usage (Implicit)
 --
 -- -   #VUID-vkCmdCopyImage-commandBuffer-parameter# @commandBuffer@ /must/
@@ -14636,6 +14635,29 @@ foreign import ccall
 -- active in a primary command buffer when secondary command buffers are
 -- executed are considered active for those secondary command buffers.
 --
+-- Furthermore, if the query is started within a video coding scope, the
+-- following command buffer states are initialized for the query type:
+--
+-- -   #queries-operation-active-query-index# The /active_query_index/ is
+--     set to the value specified by @query@.
+--
+-- -   #queries-operation-last-activatable-query-index# The /last
+--     activatable query index/ is also set to the value specified by
+--     @query@.
+--
+-- Each
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-coding video coding operation>
+-- stores a result to the query corresponding to the current active query
+-- index, followed by incrementing the active query index. If the active
+-- query index gets incremented past the last activatable query index,
+-- issuing any further video coding operations results in undefined
+-- behavior.
+--
+-- Note
+--
+-- In practice, this means that currently no more than a single video
+-- coding operation /must/ be issued between a begin and end query pair.
+--
 -- This command defines an execution dependency between other query
 -- commands that reference the same query.
 --
@@ -14718,12 +14740,59 @@ foreign import ccall
 --     current subpass’s view mask /must/ be less than or equal to the
 --     number of queries in @queryPool@
 --
+-- -   #VUID-vkCmdBeginQuery-queryType-07126# If the @queryType@ used to
+--     create @queryPool@ was @VK_QUERY_TYPE_RESULT_STATUS_ONLY_KHR@, then
+--     the 'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
+--     allocated from /must/ have been created with a queue family index
+--     that supports
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-result-status-only result status queries>,
+--     as indicated by
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFamilyQueryResultStatusPropertiesKHR VkQueueFamilyQueryResultStatusPropertiesKHR>::@queryResultStatusSupport@
+--
+-- -   #VUID-vkCmdBeginQuery-None-07127# If there is a bound video session,
+--     then there /must/ be no
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-operation-active active>
+--     queries
+--
+-- -   #VUID-vkCmdBeginQuery-queryType-07128# If the @queryType@ used to
+--     create @queryPool@ was @VK_QUERY_TYPE_RESULT_STATUS_ONLY_KHR@ and
+--     there is a bound video session, then @queryPool@ /must/ have been
+--     created with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>
+--     structure included in the @pNext@ chain of
+--     'Vulkan.Core10.Query.QueryPoolCreateInfo' identical to the one
+--     specified in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoSessionCreateInfoKHR VkVideoSessionCreateInfoKHR>::@pVideoProfile@
+--     the bound video session was created with
+--
 -- -   #VUID-vkCmdBeginQuery-queryType-04862# If the @queryType@ used to
 --     create @queryPool@ was
---     @VK_QUERY_TYPE_VIDEO_ENCODE_BITSTREAM_BUFFER_RANGE_KHR@ the
+--     @VK_QUERY_TYPE_VIDEO_ENCODE_BITSTREAM_BUFFER_RANGE_KHR@, then the
 --     'Vulkan.Core10.Handles.CommandPool' that @commandBuffer@ was
 --     allocated from /must/ support
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#video-encode-operations video encode operations>
+--
+-- -   #VUID-vkCmdBeginQuery-queryType-07129# If the @queryType@ used to
+--     create @queryPool@ was
+--     @VK_QUERY_TYPE_VIDEO_ENCODE_BITSTREAM_BUFFER_RANGE_KHR@, then there
+--     /must/ be a bound video session
+--
+-- -   #VUID-vkCmdBeginQuery-queryType-07130# If the @queryType@ used to
+--     create @queryPool@ was
+--     @VK_QUERY_TYPE_VIDEO_ENCODE_BITSTREAM_BUFFER_RANGE_KHR@ and there is
+--     a bound video session, then @queryPool@ /must/ have been created
+--     with a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoProfileInfoKHR VkVideoProfileInfoKHR>
+--     structure included in the @pNext@ chain of
+--     'Vulkan.Core10.Query.QueryPoolCreateInfo' identical to the one
+--     specified in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkVideoSessionCreateInfoKHR VkVideoSessionCreateInfoKHR>::@pVideoProfile@
+--     the bound video session was created with
+--
+-- -   #VUID-vkCmdBeginQuery-queryType-07131# If the @queryType@ used to
+--     create @queryPool@ was not @VK_QUERY_TYPE_RESULT_STATUS_ONLY_KHR@ or
+--     @VK_QUERY_TYPE_VIDEO_ENCODE_BITSTREAM_BUFFER_RANGE_KHR@, then there
+--     /must/ be no bound video session
 --
 -- -   #VUID-vkCmdBeginQuery-queryPool-01922# @queryPool@ /must/ have been
 --     created with a @queryType@ that differs from that of any queries
@@ -15585,17 +15654,12 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdCopyQueryPoolResults-queryType-06901# If the @queryType@
 --     used to create @queryPool@ was
---     @VK_QUERY_TYPE_RESULT_STATUS_ONLY_KHR@, @flags@ /must/ include
+--     @VK_QUERY_TYPE_RESULT_STATUS_ONLY_KHR@, then @flags@ /must/ include
 --     @VK_QUERY_RESULT_WITH_STATUS_BIT_KHR@
 --
 -- -   #VUID-vkCmdCopyQueryPoolResults-flags-06902# If @flags@ includes
---     @VK_QUERY_RESULT_WITH_STATUS_BIT_KHR@, it /must/ not include
+--     @VK_QUERY_RESULT_WITH_STATUS_BIT_KHR@, then it /must/ not include
 --     'Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT'
---
--- -   #VUID-vkCmdCopyQueryPoolResults-queryType-06903# If the @queryType@
---     used to create @queryPool@ was
---     'Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
---     @flags@ /must/ not contain @VK_QUERY_RESULT_WITH_STATUS_BIT_KHR@
 --
 -- -   #VUID-vkCmdCopyQueryPoolResults-None-07429# All queries used by the
 --     command /must/ not be active

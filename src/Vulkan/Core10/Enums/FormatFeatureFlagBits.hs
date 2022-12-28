@@ -228,30 +228,42 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --     numeric type other than @*UINT@, or set it as a buffer feature.
 --
 -- -   @VK_FORMAT_FEATURE_VIDEO_DECODE_OUTPUT_BIT_KHR@ specifies that an
---     image view with this format /can/ be used as an output for
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-decode-operations video decode operations>
+--     image view with this format /can/ be used as a
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#decode-output-picture decode output picture>
+--     in
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-decode-operations video decode operations>.
 --
 -- -   @VK_FORMAT_FEATURE_VIDEO_DECODE_DPB_BIT_KHR@ specifies that an image
---     view with this format /can/ be used as a DPB for
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-decode-operations video decode operations>
+--     view with this format /can/ be used as an output
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#reconstructed-picture reconstructed picture>
+--     or an input
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#reference-picture reference picture>
+--     in
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-decode-operations video decode operations>.
 --
 -- -   @VK_FORMAT_FEATURE_VIDEO_ENCODE_INPUT_BIT_KHR@ specifies that an
---     image view with this format /can/ be used as an input to
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-encode-operations video encode operations>
+--     image view with this format /can/ be used as an
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#encode-input-picture encode input picture>
+--     in
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-encode-operations video encode operations>.
 --
 -- -   @VK_FORMAT_FEATURE_VIDEO_ENCODE_DPB_BIT_KHR@ specifies that an image
---     view with this format /can/ be used as a DPB for
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-encode-operations video encode operations>
+--     view with this format /can/ be used as an output
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#reconstructed-picture reconstructed picture>
+--     or an input
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#reference-picture reference picture>
+--     in
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-encode-operations video encode operations>.
 --
 --     Note
 --
---     Specific video profiles /may/ have additional restrictions on the
---     format and other image creation parameters corresponding to image
---     views used by video coding operations that /can/ be enumerated using
---     the
+--     Specific
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#video-profiles video profiles>
+--     /may/ have additional restrictions on the format and other image
+--     creation parameters corresponding to image views used by video
+--     coding operations that /can/ be enumerated using the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkGetPhysicalDeviceVideoFormatPropertiesKHR vkGetPhysicalDeviceVideoFormatPropertiesKHR>
---     command, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#supported-video-input-output-dpb-formats-enumeration Enumeration of Supported Video Output, Input and DPB Formats>.
+--     command.
 --
 -- The following bits /may/ be set in @bufferFeatures@, specifying that the
 -- features are supported by <VkBuffer.html buffers> or
@@ -286,6 +298,13 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --     when doing
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#host-acceleration-structure host acceleration structure>
 --     builds.
+--
+-- Note
+--
+-- 'FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT' and
+-- 'FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT' are only intended to be
+-- advertised for single-component formats, since SPIR-V atomic operations
+-- require a scalar type.
 --
 -- = See Also
 --

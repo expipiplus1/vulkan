@@ -1432,7 +1432,7 @@ instance Read PresentModeKHR where
 --
 -- Note
 --
--- For a traditional \"Linear\" or non-gamma transfer function color space
+-- For a traditional “Linear” or non-gamma transfer function color space
 -- use 'COLOR_SPACE_PASS_THROUGH_EXT'.
 --
 -- The color components of non-linear color space swap chain images /must/
