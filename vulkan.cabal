@@ -1,11 +1,11 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.35.1.
+-- This file has been generated from package.yaml by hpack version 0.34.5.
 --
 -- see: https://github.com/sol/hpack
 
 name:           vulkan
-version:        3.24.3
+version:        3.24.4
 synopsis:       Bindings to the Vulkan graphics API.
 description:    Please see [the readme](https://github.com/expipiplus1/vulkan/#readme)
 category:       Graphics
@@ -645,7 +645,6 @@ library
     , bytestring
     , transformers
     , vector
-  default-language: Haskell2010
   if os(windows)
     extra-libraries:
         vulkan-1
@@ -661,6 +660,7 @@ library
     cpp-options: -DGENERIC_INSTANCES
   if flag(trace-calls)
     cpp-options: -DTRACE_CALLS
+  default-language: Haskell2010
 
 test-suite test
   type: exitcode-stdio-1.0
