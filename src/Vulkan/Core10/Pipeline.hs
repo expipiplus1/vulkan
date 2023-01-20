@@ -1050,6 +1050,12 @@ instance Zero SpecializationInfo where
 --     feature is not enabled, @stage@ /must/ not be
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_TASK_BIT_EXT'
 --
+-- -   #VUID-VkPipelineShaderStageCreateInfo-clustercullingShader-07813# If
+--     the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-clustercullingShader clustercullingShader>
+--     feature is not enabled, @stage@ /must/ not be
+--     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_CLUSTER_CULLING_BIT_HUAWEI'
+--
 -- -   #VUID-VkPipelineShaderStageCreateInfo-stage-00706# @stage@ /must/
 --     not be
 --     'Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_ALL_GRAPHICS',
@@ -6079,6 +6085,18 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Extensions.VK_NV_device_generated_commands.GraphicsPipelineShaderGroupsCreateInfoNV',
 --     'Vulkan.Extensions.VK_NV_device_generated_commands.GraphicsPipelineShaderGroupsCreateInfoNV'::@groupCount@
 --     /must/ be greater than @0@
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-flags-07814# If @flags@ includes
+--     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT',
+--     the pipeline includes a
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-complete complete set of state>
+--     specified entirely by libraries, and each library was created with a
+--     'Vulkan.Core10.Handles.PipelineLayout' created without
+--     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT',
+--     then @layout@ /must/ be a valid
+--     'Vulkan.Core10.Handles.PipelineLayout' that is
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-compatibility compatible>
+--     with the layouts in those libraries
 --
 -- -   #VUID-VkGraphicsPipelineCreateInfo-flags-06729# If @flags@ includes
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT',

@@ -427,34 +427,6 @@ instance Zero BufferMemoryBarrier where
 --
 -- == Valid Usage
 --
--- -   #VUID-VkImageMemoryBarrier-subresourceRange-01486#
---     @subresourceRange.baseMipLevel@ /must/ be less than the @mipLevels@
---     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was
---     created
---
--- -   #VUID-VkImageMemoryBarrier-subresourceRange-01724# If
---     @subresourceRange.levelCount@ is not
---     'Vulkan.Core10.APIConstants.REMAINING_MIP_LEVELS',
---     @subresourceRange.baseMipLevel@ + @subresourceRange.levelCount@
---     /must/ be less than or equal to the @mipLevels@ specified in
---     'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was created
---
--- -   #VUID-VkImageMemoryBarrier-subresourceRange-01488#
---     @subresourceRange.baseArrayLayer@ /must/ be less than the
---     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
---     when @image@ was created
---
--- -   #VUID-VkImageMemoryBarrier-subresourceRange-01725# If
---     @subresourceRange.layerCount@ is not
---     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS',
---     @subresourceRange.baseArrayLayer@ + @subresourceRange.layerCount@
---     /must/ be less than or equal to the @arrayLayers@ specified in
---     'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was created
---
--- -   #VUID-VkImageMemoryBarrier-image-01932# If @image@ is non-sparse
---     then it /must/ be bound completely and contiguously to a single
---     'Vulkan.Core10.Handles.DeviceMemory' object
---
 -- -   #VUID-VkImageMemoryBarrier-oldLayout-01208# If @srcQueueFamilyIndex@
 --     and @dstQueueFamilyIndex@ define a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>
@@ -649,43 +621,6 @@ instance Zero BufferMemoryBarrier where
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --     set
 --
--- -   #VUID-VkImageMemoryBarrier-image-01671# If @image@ has a
---     single-plane color format or is not /disjoint/, then the
---     @aspectMask@ member of @subresourceRange@ /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
---
--- -   #VUID-VkImageMemoryBarrier-image-01672# If @image@ has a
---     multi-planar format and the image is /disjoint/, then the
---     @aspectMask@ member of @subresourceRange@ /must/ include either at
---     least one of
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
---     and
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT';
---     or /must/ include
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
---
--- -   #VUID-VkImageMemoryBarrier-image-01673# If @image@ has a
---     multi-planar format with only two planes, then the @aspectMask@
---     member of @subresourceRange@ /must/ not include
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
---
--- -   #VUID-VkImageMemoryBarrier-image-03319# If @image@ has a
---     depth\/stencil format with both depth and stencil and the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
---     feature is enabled, then the @aspectMask@ member of
---     @subresourceRange@ /must/ include either or both
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' and
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
---
--- -   #VUID-VkImageMemoryBarrier-image-03320# If @image@ has a
---     depth\/stencil format with both depth and stencil and the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
---     feature is not enabled, then the @aspectMask@ member of
---     @subresourceRange@ /must/ include both
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' and
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
---
 -- -   #VUID-VkImageMemoryBarrier-srcQueueFamilyIndex-04070# If
 --     @srcQueueFamilyIndex@ is not equal to @dstQueueFamilyIndex@, at
 --     least one /must/ not be a special queue family reserved for external
@@ -787,6 +722,71 @@ instance Zero BufferMemoryBarrier where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFeedbackLoopLayout attachmentFeedbackLoopLayout>
 --     feature is not enabled, @newLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT'
+--
+-- -   #VUID-VkImageMemoryBarrier-subresourceRange-01486#
+--     @subresourceRange.baseMipLevel@ /must/ be less than the @mipLevels@
+--     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was
+--     created
+--
+-- -   #VUID-VkImageMemoryBarrier-subresourceRange-01724# If
+--     @subresourceRange.levelCount@ is not
+--     'Vulkan.Core10.APIConstants.REMAINING_MIP_LEVELS',
+--     @subresourceRange.baseMipLevel@ + @subresourceRange.levelCount@
+--     /must/ be less than or equal to the @mipLevels@ specified in
+--     'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was created
+--
+-- -   #VUID-VkImageMemoryBarrier-subresourceRange-01488#
+--     @subresourceRange.baseArrayLayer@ /must/ be less than the
+--     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
+--     when @image@ was created
+--
+-- -   #VUID-VkImageMemoryBarrier-subresourceRange-01725# If
+--     @subresourceRange.layerCount@ is not
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS',
+--     @subresourceRange.baseArrayLayer@ + @subresourceRange.layerCount@
+--     /must/ be less than or equal to the @arrayLayers@ specified in
+--     'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was created
+--
+-- -   #VUID-VkImageMemoryBarrier-image-01932# If @image@ is non-sparse
+--     then it /must/ be bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object
+--
+-- -   #VUID-VkImageMemoryBarrier-image-01671# If @image@ has a
+--     single-plane color format or is not /disjoint/, then the
+--     @aspectMask@ member of @subresourceRange@ /must/ be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
+--
+-- -   #VUID-VkImageMemoryBarrier-image-01672# If @image@ has a
+--     multi-planar format and the image is /disjoint/, then the
+--     @aspectMask@ member of @subresourceRange@ /must/ include either at
+--     least one of
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
+--     and
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT';
+--     or /must/ include
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
+--
+-- -   #VUID-VkImageMemoryBarrier-image-01673# If @image@ has a
+--     multi-planar format with only two planes, then the @aspectMask@
+--     member of @subresourceRange@ /must/ not include
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
+--
+-- -   #VUID-VkImageMemoryBarrier-image-03319# If @image@ has a
+--     depth\/stencil format with both depth and stencil and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
+--     feature is enabled, then the @aspectMask@ member of
+--     @subresourceRange@ /must/ include either or both
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' and
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
+--
+-- -   #VUID-VkImageMemoryBarrier-image-03320# If @image@ has a
+--     depth\/stencil format with both depth and stencil and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
+--     feature is not enabled, then the @aspectMask@ member of
+--     @subresourceRange@ /must/ include both
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' and
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
 -- -   #VUID-VkImageMemoryBarrier-synchronization2-03857# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-synchronization2 synchronization2>
@@ -1145,13 +1145,6 @@ instance Zero DrawIndirectCommand where
 --     contained within the corresponding vertex buffer binding, as
 --     described in
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#fxvertex-input>
---
--- -   #VUID-VkDrawIndexedIndirectCommand-indexSize-00553# (@indexSize@ ×
---     (@firstIndex@ + @indexCount@) + @offset@) /must/ be less than or
---     equal to the size of the bound index buffer, with @indexSize@ being
---     based on the type specified by @indexType@, where the index buffer,
---     @indexType@, and @offset@ are specified via
---     'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'
 --
 -- -   #VUID-VkDrawIndexedIndirectCommand-firstInstance-00554# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-drawIndirectFirstInstance drawIndirectFirstInstance>

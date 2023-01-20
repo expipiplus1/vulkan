@@ -1135,6 +1135,19 @@ instance Zero DescriptorBufferInfo where
 -- -   #VUID-VkDescriptorImageInfo-imageView-06712# @imageView@ /must/ not
 --     be a 2D array image view created from a 3D image
 --
+-- -   #VUID-VkDescriptorImageInfo-imageView-07795# If @imageView@ is a 2D
+--     view created from a 3D image, then @descriptorType@ /must/ be
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
+--     or
+--     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
+--
+-- -   #VUID-VkDescriptorImageInfo-imageView-07796# If @imageView@ is a 2D
+--     view created from a 3D image, then the image /must/ have been
+--     created with
+--     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT'
+--     set
+--
 -- -   #VUID-VkDescriptorImageInfo-descriptorType-06713# If the
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-image2DViewOf3D image2DViewOf3D>
 --     feature is not enabled and @descriptorType@ is
@@ -1646,18 +1659,6 @@ instance Zero DescriptorImageInfo where
 --     the @imageView@ member of each element of @pImageInfo@ /must/ have
 --     been created with
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT' set
---
--- -   #VUID-VkWriteDescriptorSet-descriptorType-06710# If @descriptorType@
---     is
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
---     or
---     'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
---     each @imageView@ member of each element of @pImageInfo@ that is a 2D
---     image view created from a 3D image /must/ have been created from an
---     image created with
---     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT'
---     set
 --
 -- -   #VUID-VkWriteDescriptorSet-descriptorType-02752# If @descriptorType@
 --     is 'Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',

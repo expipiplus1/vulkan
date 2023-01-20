@@ -2788,7 +2788,7 @@ foreign import ccall
 -- set in
 -- 'Vulkan.Core10.Pipeline.PipelineDynamicStateCreateInfo'::@pDynamicStates@.
 -- Otherwise, this state is specified by the
--- 'Vulkan.Extensions.VK_EXT_sample_locations.PipelineSampleLocationsStateCreateInfoEXT'::@coverageToColorLocation@
+-- 'Vulkan.Extensions.VK_NV_fragment_coverage_to_color.PipelineCoverageToColorStateCreateInfoNV'::@coverageToColorLocation@
 -- value used to create the currently active pipeline.
 --
 -- == Valid Usage

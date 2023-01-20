@@ -169,6 +169,7 @@ type DeviceAddress = Word64
 -- 'Vulkan.Extensions.VK_NV_ray_tracing.cmdBuildAccelerationStructureNV',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdCopyQueryPoolResults',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdDispatchIndirect',
+-- 'Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader.cmdDrawClusterIndirectHUAWEI',
 -- 'Vulkan.Core10.CommandBufferBuilding.cmdDrawIndexedIndirect',
 -- 'Vulkan.Core12.Promoted_From_VK_KHR_draw_indirect_count.cmdDrawIndexedIndirectCount',
 -- 'Vulkan.Extensions.VK_AMD_draw_indirect_count.cmdDrawIndexedIndirectCountAMD',

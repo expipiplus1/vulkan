@@ -3191,17 +3191,17 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     shaderStorageImageMultisample :: Bool
   , -- | #features-shaderStorageImageReadWithoutFormat#
     -- @shaderStorageImageReadWithoutFormat@ specifies whether storage images
-    -- require a format qualifier to be specified when reading.
-    -- @shaderStorageImageReadWithoutFormat@ applies only to formats listed in
-    -- the
+    -- and storage texel buffers require a format qualifier to be specified
+    -- when reading. @shaderStorageImageReadWithoutFormat@ applies only to
+    -- formats listed in the
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-without-shader-storage-format storage without format>
     -- list.
     shaderStorageImageReadWithoutFormat :: Bool
   , -- | #features-shaderStorageImageWriteWithoutFormat#
     -- @shaderStorageImageWriteWithoutFormat@ specifies whether storage images
-    -- require a format qualifier to be specified when writing.
-    -- @shaderStorageImageWriteWithoutFormat@ applies only to formats listed in
-    -- the
+    -- and storage texel buffers require a format qualifier to be specified
+    -- when writing. @shaderStorageImageWriteWithoutFormat@ applies only to
+    -- formats listed in the
     -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-without-shader-storage-format storage without format>
     -- list.
     shaderStorageImageWriteWithoutFormat :: Bool

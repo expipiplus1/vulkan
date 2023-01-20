@@ -435,6 +435,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_blend_operation_advanced (Physica
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_border_color_swizzle (PhysicalDeviceBorderColorSwizzleFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (PhysicalDeviceBufferDeviceAddressFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_buffer_device_address (PhysicalDeviceBufferDeviceAddressFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader (PhysicalDeviceClusterCullingShaderFeaturesHUAWEI)
+import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader (PhysicalDeviceClusterCullingShaderPropertiesHUAWEI)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_device_coherent_memory (PhysicalDeviceCoherentMemoryFeaturesAMD)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_color_write_enable (PhysicalDeviceColorWriteEnableFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_compute_shader_derivatives (PhysicalDeviceComputeShaderDerivativesFeaturesNV)
@@ -1117,6 +1119,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDevicePortabilitySubsetFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDevice4444FormatsFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceSubpassShadingFeaturesHUAWEI = ()
+  Extends DeviceCreateInfo PhysicalDeviceClusterCullingShaderFeaturesHUAWEI = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderImageAtomicInt64FeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceFragmentShadingRateFeaturesKHR = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderTerminateInvocationFeatures = ()
@@ -1350,6 +1353,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDevicePortabilitySubsetFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDevice4444FormatsFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceSubpassShadingFeaturesHUAWEI = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDeviceClusterCullingShaderFeaturesHUAWEI = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderImageAtomicInt64FeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceFragmentShadingRateFeaturesKHR = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderTerminateInvocationFeatures = ()
@@ -1453,6 +1457,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceProperties2 PhysicalDeviceTexelBufferAlignmentProperties = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceSubgroupSizeControlProperties = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceSubpassShadingPropertiesHUAWEI = ()
+  Extends PhysicalDeviceProperties2 PhysicalDeviceClusterCullingShaderPropertiesHUAWEI = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceLineRasterizationPropertiesEXT = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceVulkan11Properties = ()
   Extends PhysicalDeviceProperties2 PhysicalDeviceVulkan12Properties = ()
@@ -1948,6 +1953,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO -> go @PipelineShaderStageRequiredSubgroupSizeCreateInfo
   STRUCTURE_TYPE_SUBPASS_SHADING_PIPELINE_CREATE_INFO_HUAWEI -> go @SubpassShadingPipelineCreateInfoHUAWEI
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBPASS_SHADING_PROPERTIES_HUAWEI -> go @PhysicalDeviceSubpassShadingPropertiesHUAWEI
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_PROPERTIES_HUAWEI -> go @PhysicalDeviceClusterCullingShaderPropertiesHUAWEI
   STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO -> go @MemoryOpaqueCaptureAddressAllocateInfo
   STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES_EXT -> go @PhysicalDeviceLineRasterizationFeaturesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES_EXT -> go @PhysicalDeviceLineRasterizationPropertiesEXT
@@ -1986,6 +1992,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_PROPERTIES_KHR -> go @PhysicalDevicePortabilitySubsetPropertiesKHR
   STRUCTURE_TYPE_PHYSICAL_DEVICE_4444_FORMATS_FEATURES_EXT -> go @PhysicalDevice4444FormatsFeaturesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBPASS_SHADING_FEATURES_HUAWEI -> go @PhysicalDeviceSubpassShadingFeaturesHUAWEI
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_CLUSTER_CULLING_SHADER_FEATURES_HUAWEI -> go @PhysicalDeviceClusterCullingShaderFeaturesHUAWEI
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_ATOMIC_INT64_FEATURES_EXT -> go @PhysicalDeviceShaderImageAtomicInt64FeaturesEXT
   STRUCTURE_TYPE_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR -> go @FragmentShadingRateAttachmentInfoKHR
   STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_STATE_CREATE_INFO_KHR -> go @PipelineFragmentShadingRateStateCreateInfoKHR
@@ -2424,6 +2431,7 @@ infix 6 ::&
 {-# complete (::&) :: PipelineShaderStageRequiredSubgroupSizeCreateInfo #-}
 {-# complete (::&) :: SubpassShadingPipelineCreateInfoHUAWEI #-}
 {-# complete (::&) :: PhysicalDeviceSubpassShadingPropertiesHUAWEI #-}
+{-# complete (::&) :: PhysicalDeviceClusterCullingShaderPropertiesHUAWEI #-}
 {-# complete (::&) :: MemoryOpaqueCaptureAddressAllocateInfo #-}
 {-# complete (::&) :: PhysicalDeviceLineRasterizationFeaturesEXT #-}
 {-# complete (::&) :: PhysicalDeviceLineRasterizationPropertiesEXT #-}
@@ -2462,6 +2470,7 @@ infix 6 ::&
 {-# complete (::&) :: PhysicalDevicePortabilitySubsetPropertiesKHR #-}
 {-# complete (::&) :: PhysicalDevice4444FormatsFeaturesEXT #-}
 {-# complete (::&) :: PhysicalDeviceSubpassShadingFeaturesHUAWEI #-}
+{-# complete (::&) :: PhysicalDeviceClusterCullingShaderFeaturesHUAWEI #-}
 {-# complete (::&) :: PhysicalDeviceShaderImageAtomicInt64FeaturesEXT #-}
 {-# complete (::&) :: FragmentShadingRateAttachmentInfoKHR #-}
 {-# complete (::&) :: PipelineFragmentShadingRateStateCreateInfoKHR #-}

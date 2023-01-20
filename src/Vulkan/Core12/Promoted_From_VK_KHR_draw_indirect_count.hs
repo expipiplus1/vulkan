@@ -832,7 +832,8 @@ foreign import ccall
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEXT'
 --     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     drawing command for each discard rectangle in
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT'::@discardRectangleCount@
 --
 -- -   #VUID-vkCmdDrawIndirectCount-pDepthAttachment-06181# If the current
 --     render pass instance was begun with
@@ -2698,7 +2699,8 @@ foreign import ccall
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEXT'
 --     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     drawing command for each discard rectangle in
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT'::@discardRectangleCount@
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-pDepthAttachment-06181# If the
 --     current render pass instance was begun with
@@ -3640,6 +3642,15 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-None-07312# An index buffer
 --     /must/ be bound
+--
+-- -   #VUID-vkCmdDrawIndexedIndirectCount-robustBufferAccess2-07825# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+--     is not enabled, (@indexSize@ × (@firstIndex@ + @indexCount@) +
+--     @offset@) /must/ be less than or equal to the size of the bound
+--     index buffer, with @indexSize@ being based on the type specified by
+--     @indexType@, where the index buffer, @indexType@, and @offset@ are
+--     specified via
+--     'Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'
 --
 -- -   #VUID-vkCmdDrawIndexedIndirectCount-stride-03142# @stride@ /must/ be
 --     a multiple of @4@ and /must/ be greater than or equal to

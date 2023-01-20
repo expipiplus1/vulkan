@@ -2729,7 +2729,8 @@ foreign import ccall
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEXT'
 --     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     drawing command for each discard rectangle in
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT'::@discardRectangleCount@
 --
 -- -   #VUID-vkCmdDraw-pDepthAttachment-06181# If the current render pass
 --     instance was begun with
@@ -4542,7 +4543,8 @@ foreign import ccall
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEXT'
 --     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     drawing command for each discard rectangle in
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT'::@discardRectangleCount@
 --
 -- -   #VUID-vkCmdDrawIndexed-pDepthAttachment-06181# If the current render
 --     pass instance was begun with
@@ -5466,8 +5468,8 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexed-None-07312# An index buffer /must/ be bound
 --
--- -   #VUID-vkCmdDrawIndexed-robustBufferAccess2-07788# If
---     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+-- -   #VUID-vkCmdDrawIndexed-robustBufferAccess2-07825# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
 --     is not enabled, (@indexSize@ × (@firstIndex@ + @indexCount@) +
 --     @offset@) /must/ be less than or equal to the size of the bound
 --     index buffer, with @indexSize@ being based on the type specified by
@@ -6356,7 +6358,8 @@ foreign import ccall
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEXT'
 --     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     drawing command for each discard rectangle in
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT'::@discardRectangleCount@
 --
 -- -   #VUID-vkCmdDrawIndirect-pDepthAttachment-06181# If the current
 --     render pass instance was begun with
@@ -8178,7 +8181,8 @@ foreign import ccall
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEXT'
 --     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     drawing command for each discard rectangle in
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT'::@discardRectangleCount@
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-pDepthAttachment-06181# If the
 --     current render pass instance was begun with
@@ -9103,6 +9107,14 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-None-07312# An index buffer /must/ be
 --     bound
+--
+-- -   #VUID-vkCmdDrawIndexedIndirect-robustBufferAccess2-07825# If
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-robustBufferAccess2 robustBufferAccess2>
+--     is not enabled, (@indexSize@ × (@firstIndex@ + @indexCount@) +
+--     @offset@) /must/ be less than or equal to the size of the bound
+--     index buffer, with @indexSize@ being based on the type specified by
+--     @indexType@, where the index buffer, @indexType@, and @offset@ are
+--     specified via 'cmdBindIndexBuffer'
 --
 -- -   #VUID-vkCmdDrawIndexedIndirect-drawCount-00528# If @drawCount@ is
 --     greater than @1@, @stride@ /must/ be a multiple of @4@ and /must/ be
@@ -11466,19 +11478,6 @@ foreign import ccall
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' or
 --     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
--- -   #VUID-vkCmdCopyBufferToImage-bufferOffset-01558# If @dstImage@ does
---     not have either a depth\/stencil or a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     then for each element of @pRegions@, @bufferOffset@ /must/ be a
---     multiple of the format’s texel block size
---
--- -   #VUID-vkCmdCopyBufferToImage-bufferOffset-01559# If @dstImage@ has a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     then for each element of @pRegions@, @bufferOffset@ /must/ be a
---     multiple of the element size of the compatible format for the format
---     and the @aspectMask@ of the @imageSubresource@ as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes ???>
---
 -- -   #VUID-vkCmdCopyBufferToImage-srcImage-00199# If @dstImage@ is of
 --     type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each
 --     element of @pRegions@, @imageOffset.y@ /must/ be @0@ and
@@ -11505,11 +11504,6 @@ foreign import ccall
 --     element of @pRegions@, @bufferImageHeight@ /must/ be a multiple of
 --     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
---     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
---
--- -   #VUID-vkCmdCopyBufferToImage-pRegions-07273# For each element of
---     @pRegions@, @bufferOffset@ /must/ be a multiple of the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block size>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
 -- -   #VUID-vkCmdCopyBufferToImage-pRegions-07274# For each element of
@@ -11581,6 +11575,24 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
 --     and then multiplied by the texel block size of @dstImage@ /must/ be
 --     less than or equal to 231-1
+--
+-- -   #VUID-vkCmdCopyBufferToImage-bufferOffset-01558# If @dstImage@ does
+--     not have either a depth\/stencil or a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     then for each element of @pRegions@, @bufferOffset@ /must/ be a
+--     multiple of the format’s texel block size
+--
+-- -   #VUID-vkCmdCopyBufferToImage-bufferOffset-01559# If @dstImage@ has a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     then for each element of @pRegions@, @bufferOffset@ /must/ be a
+--     multiple of the element size of the compatible format for the format
+--     and the @aspectMask@ of the @imageSubresource@ as defined in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes ???>
+--
+-- -   #VUID-vkCmdCopyBufferToImage-pRegions-07273# For each element of
+--     @pRegions@, @bufferOffset@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block size>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
 -- -   #VUID-vkCmdCopyBufferToImage-srcImage-04053# If @dstImage@ has a
 --     depth\/stencil format, the @bufferOffset@ member of any element of
@@ -11823,19 +11835,6 @@ foreign import ccall
 --     @commandBuffer@’s command pool’s queue family, as described in
 --     'Vulkan.Core10.DeviceInitialization.QueueFamilyProperties'
 --
--- -   #VUID-vkCmdCopyImageToBuffer-bufferOffset-01558# If @srcImage@ does
---     not have either a depth\/stencil or a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     then for each element of @pRegions@, @bufferOffset@ /must/ be a
---     multiple of the format’s texel block size
---
--- -   #VUID-vkCmdCopyImageToBuffer-bufferOffset-01559# If @srcImage@ has a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     then for each element of @pRegions@, @bufferOffset@ /must/ be a
---     multiple of the element size of the compatible format for the format
---     and the @aspectMask@ of the @imageSubresource@ as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes ???>
---
 -- -   #VUID-vkCmdCopyImageToBuffer-srcImage-00199# If @srcImage@ is of
 --     type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each
 --     element of @pRegions@, @imageOffset.y@ /must/ be @0@ and
@@ -11862,11 +11861,6 @@ foreign import ccall
 --     element of @pRegions@, @bufferImageHeight@ /must/ be a multiple of
 --     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
---     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
---
--- -   #VUID-vkCmdCopyImageToBuffer-pRegions-07273# For each element of
---     @pRegions@, @bufferOffset@ /must/ be a multiple of the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block size>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
 -- -   #VUID-vkCmdCopyImageToBuffer-pRegions-07274# For each element of
@@ -11938,6 +11932,24 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
 --     and then multiplied by the texel block size of @srcImage@ /must/ be
 --     less than or equal to 231-1
+--
+-- -   #VUID-vkCmdCopyImageToBuffer-bufferOffset-01558# If @srcImage@ does
+--     not have either a depth\/stencil or a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     then for each element of @pRegions@, @bufferOffset@ /must/ be a
+--     multiple of the format’s texel block size
+--
+-- -   #VUID-vkCmdCopyImageToBuffer-bufferOffset-01559# If @srcImage@ has a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     then for each element of @pRegions@, @bufferOffset@ /must/ be a
+--     multiple of the element size of the compatible format for the format
+--     and the @aspectMask@ of the @imageSubresource@ as defined in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes ???>
+--
+-- -   #VUID-vkCmdCopyImageToBuffer-pRegions-07273# For each element of
+--     @pRegions@, @bufferOffset@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block size>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
 -- -   #VUID-vkCmdCopyImageToBuffer-srcImage-04053# If @srcImage@ has a
 --     depth\/stencil format, the @bufferOffset@ member of any element of

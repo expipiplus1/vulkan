@@ -12,6 +12,7 @@ module Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits  ( QueryPipelineStatis
                                                                                            , QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT
                                                                                            , QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT
                                                                                            , QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT
+                                                                                           , QUERY_PIPELINE_STATISTIC_CLUSTER_CULLING_SHADER_INVOCATIONS_BIT_HUAWEI
                                                                                            , QUERY_PIPELINE_STATISTIC_MESH_SHADER_INVOCATIONS_BIT_EXT
                                                                                            , QUERY_PIPELINE_STATISTIC_TASK_SHADER_INVOCATIONS_BIT_EXT
                                                                                            , ..
@@ -169,6 +170,9 @@ pattern QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT 
 -- of rendering otherwise remain unchanged.
 pattern QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT = QueryPipelineStatisticFlagBits 0x00000400
 
+-- No documentation found for Nested "VkQueryPipelineStatisticFlagBits" "VK_QUERY_PIPELINE_STATISTIC_CLUSTER_CULLING_SHADER_INVOCATIONS_BIT_HUAWEI"
+pattern QUERY_PIPELINE_STATISTIC_CLUSTER_CULLING_SHADER_INVOCATIONS_BIT_HUAWEI = QueryPipelineStatisticFlagBits 0x00002000
+
 -- | 'QUERY_PIPELINE_STATISTIC_MESH_SHADER_INVOCATIONS_BIT_EXT' specifies
 -- that queries managed by the pool will count the number of mesh shader
 -- invocations. The counter’s value is incremented every time the mesh
@@ -232,6 +236,10 @@ showTableQueryPipelineStatisticFlagBits =
   ,
     ( QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT
     , "COMPUTE_SHADER_INVOCATIONS_BIT"
+    )
+  ,
+    ( QUERY_PIPELINE_STATISTIC_CLUSTER_CULLING_SHADER_INVOCATIONS_BIT_HUAWEI
+    , "CLUSTER_CULLING_SHADER_INVOCATIONS_BIT_HUAWEI"
     )
   ,
     ( QUERY_PIPELINE_STATISTIC_MESH_SHADER_INVOCATIONS_BIT_EXT

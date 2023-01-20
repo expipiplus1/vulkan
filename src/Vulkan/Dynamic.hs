@@ -922,6 +922,8 @@ data DeviceCmds = DeviceCmds
   , pVkCmdDispatch :: FunPtr (Ptr CommandBuffer_T -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ())
   , pVkCmdDispatchIndirect :: FunPtr (Ptr CommandBuffer_T -> Buffer -> ("offset" ::: DeviceSize) -> IO ())
   , pVkCmdSubpassShadingHUAWEI :: FunPtr (Ptr CommandBuffer_T -> IO ())
+  , pVkCmdDrawClusterHUAWEI :: FunPtr (Ptr CommandBuffer_T -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ())
+  , pVkCmdDrawClusterIndirectHUAWEI :: FunPtr (Ptr CommandBuffer_T -> Buffer -> ("offset" ::: DeviceSize) -> IO ())
   , pVkCmdCopyBuffer :: FunPtr (Ptr CommandBuffer_T -> ("srcBuffer" ::: Buffer) -> ("dstBuffer" ::: Buffer) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr BufferCopy) -> IO ())
   , pVkCmdCopyImage :: FunPtr (Ptr CommandBuffer_T -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr ImageCopy) -> IO ())
   , pVkCmdBlitImage :: FunPtr (Ptr CommandBuffer_T -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr ImageBlit) -> Filter -> IO ())
@@ -1696,7 +1698,14 @@ instance Zero DeviceCmds where
     nullFunPtr
     nullFunPtr
     nullFunPtr
-    nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
+    nullFunPtr
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1819,6 +1828,8 @@ initDeviceCmds instanceCmds handle = do
   vkCmdDispatch <- getDeviceProcAddr' handle (Ptr "vkCmdDispatch"#)
   vkCmdDispatchIndirect <- getDeviceProcAddr' handle (Ptr "vkCmdDispatchIndirect"#)
   vkCmdSubpassShadingHUAWEI <- getDeviceProcAddr' handle (Ptr "vkCmdSubpassShadingHUAWEI"#)
+  vkCmdDrawClusterHUAWEI <- getDeviceProcAddr' handle (Ptr "vkCmdDrawClusterHUAWEI"#)
+  vkCmdDrawClusterIndirectHUAWEI <- getDeviceProcAddr' handle (Ptr "vkCmdDrawClusterIndirectHUAWEI"#)
   vkCmdCopyBuffer <- getDeviceProcAddr' handle (Ptr "vkCmdCopyBuffer"#)
   vkCmdCopyImage <- getDeviceProcAddr' handle (Ptr "vkCmdCopyImage"#)
   vkCmdBlitImage <- getDeviceProcAddr' handle (Ptr "vkCmdBlitImage"#)
@@ -2324,6 +2335,8 @@ initDeviceCmds instanceCmds handle = do
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ()) vkCmdDispatch)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> Buffer -> ("offset" ::: DeviceSize) -> IO ()) vkCmdDispatchIndirect)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> IO ()) vkCmdSubpassShadingHUAWEI)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ()) vkCmdDrawClusterHUAWEI)
+    (castFunPtr @_ @(Ptr CommandBuffer_T -> Buffer -> ("offset" ::: DeviceSize) -> IO ()) vkCmdDrawClusterIndirectHUAWEI)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("srcBuffer" ::: Buffer) -> ("dstBuffer" ::: Buffer) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr BufferCopy) -> IO ()) vkCmdCopyBuffer)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr ImageCopy) -> IO ()) vkCmdCopyImage)
     (castFunPtr @_ @(Ptr CommandBuffer_T -> ("srcImage" ::: Image) -> ("srcImageLayout" ::: ImageLayout) -> ("dstImage" ::: Image) -> ("dstImageLayout" ::: ImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr ImageBlit) -> Filter -> IO ()) vkCmdBlitImage)

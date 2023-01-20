@@ -103,6 +103,7 @@ pattern BUFFER_USAGE_VERTEX_BUFFER_BIT = BufferUsageFlagBits 0x00000080
 -- 'Vulkan.Extensions.VK_NV_mesh_shader.cmdDrawMeshTasksIndirectCountNV',
 -- 'Vulkan.Extensions.VK_EXT_mesh_shader.cmdDrawMeshTasksIndirectEXT',
 -- 'Vulkan.Extensions.VK_EXT_mesh_shader.cmdDrawMeshTasksIndirectCountEXT',
+-- 'Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader.cmdDrawClusterIndirectHUAWEI',
 -- or 'Vulkan.Core10.CommandBufferBuilding.cmdDispatchIndirect'. It is also
 -- suitable for passing as the @buffer@ member of
 -- 'Vulkan.Extensions.VK_NV_device_generated_commands.IndirectCommandsStreamNV',

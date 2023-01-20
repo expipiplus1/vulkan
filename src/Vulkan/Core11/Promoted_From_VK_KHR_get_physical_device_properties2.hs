@@ -109,6 +109,8 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_blend_operation_advanced (Physica
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_border_color_swizzle (PhysicalDeviceBorderColorSwizzleFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (PhysicalDeviceBufferDeviceAddressFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_buffer_device_address (PhysicalDeviceBufferDeviceAddressFeaturesEXT)
+import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader (PhysicalDeviceClusterCullingShaderFeaturesHUAWEI)
+import {-# SOURCE #-} Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader (PhysicalDeviceClusterCullingShaderPropertiesHUAWEI)
 import {-# SOURCE #-} Vulkan.Extensions.VK_AMD_device_coherent_memory (PhysicalDeviceCoherentMemoryFeaturesAMD)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_color_write_enable (PhysicalDeviceColorWriteEnableFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_NV_compute_shader_derivatives (PhysicalDeviceComputeShaderDerivativesFeaturesNV)
@@ -899,6 +901,7 @@ instance Extensible PhysicalDeviceFeatures2 where
     | Just Refl <- eqT @e @PhysicalDeviceShaderTerminateInvocationFeatures = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFragmentShadingRateFeaturesKHR = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderImageAtomicInt64FeaturesEXT = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceClusterCullingShaderFeaturesHUAWEI = Just f
     | Just Refl <- eqT @e @PhysicalDeviceSubpassShadingFeaturesHUAWEI = Just f
     | Just Refl <- eqT @e @PhysicalDevice4444FormatsFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDevicePortabilitySubsetFeaturesKHR = Just f
@@ -1046,6 +1049,7 @@ instance es ~ '[] => Zero (PhysicalDeviceFeatures2 es) where
 --     either @NULL@ or a pointer to a valid instance of
 --     'Vulkan.Extensions.VK_KHR_acceleration_structure.PhysicalDeviceAccelerationStructurePropertiesKHR',
 --     'Vulkan.Extensions.VK_EXT_blend_operation_advanced.PhysicalDeviceBlendOperationAdvancedPropertiesEXT',
+--     'Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader.PhysicalDeviceClusterCullingShaderPropertiesHUAWEI',
 --     'Vulkan.Extensions.VK_EXT_conservative_rasterization.PhysicalDeviceConservativeRasterizationPropertiesEXT',
 --     'Vulkan.Extensions.VK_NV_cooperative_matrix.PhysicalDeviceCooperativeMatrixPropertiesNV',
 --     'Vulkan.Extensions.VK_NV_copy_memory_indirect.PhysicalDeviceCopyMemoryIndirectPropertiesNV',
@@ -1170,6 +1174,7 @@ instance Extensible PhysicalDeviceProperties2 where
     | Just Refl <- eqT @e @PhysicalDeviceVulkan12Properties = Just f
     | Just Refl <- eqT @e @PhysicalDeviceVulkan11Properties = Just f
     | Just Refl <- eqT @e @PhysicalDeviceLineRasterizationPropertiesEXT = Just f
+    | Just Refl <- eqT @e @PhysicalDeviceClusterCullingShaderPropertiesHUAWEI = Just f
     | Just Refl <- eqT @e @PhysicalDeviceSubpassShadingPropertiesHUAWEI = Just f
     | Just Refl <- eqT @e @PhysicalDeviceSubgroupSizeControlProperties = Just f
     | Just Refl <- eqT @e @PhysicalDeviceTexelBufferAlignmentProperties = Just f

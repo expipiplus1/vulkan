@@ -16,6 +16,7 @@ import Vulkan.Core10.Handles (Instance)
 import Vulkan.Core10.Handles (PhysicalDevice)
 import Vulkan.Core11.Promoted_From_VK_KHR_16bit_storage (PhysicalDevice16BitStorageFeatures(..))
 import Vulkan.Extensions.VK_EXT_buffer_device_address (PhysicalDeviceBufferDeviceAddressFeaturesEXT(..))
+import Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader (PhysicalDeviceClusterCullingShaderFeaturesHUAWEI(..))
 import Vulkan.Extensions.VK_NV_compute_shader_derivatives (PhysicalDeviceComputeShaderDerivativesFeaturesNV(..))
 import Vulkan.Extensions.VK_NV_cooperative_matrix (PhysicalDeviceCooperativeMatrixFeaturesNV(..))
 import Vulkan.Core10.DeviceInitialization (PhysicalDeviceFeatures(..))
@@ -85,6 +86,7 @@ import Vulkan.Extensions.VK_EXT_transform_feedback (pattern EXT_TRANSFORM_FEEDBA
 import Vulkan.Extensions.VK_GOOGLE_decorate_string (pattern GOOGLE_DECORATE_STRING_EXTENSION_NAME)
 import Vulkan.Extensions.VK_GOOGLE_hlsl_functionality1 (pattern GOOGLE_HLSL_FUNCTIONALITY_1_EXTENSION_NAME)
 import Vulkan.Extensions.VK_GOOGLE_user_type (pattern GOOGLE_USER_TYPE_EXTENSION_NAME)
+import Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader (pattern HUAWEI_CLUSTER_CULLING_SHADER_EXTENSION_NAME)
 import Vulkan.Extensions.VK_INTEL_shader_integer_functions2 (pattern INTEL_SHADER_INTEGER_FUNCTIONS_2_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_16bit_storage (pattern KHR_16BIT_STORAGE_EXTENSION_NAME)
 import Vulkan.Extensions.VK_KHR_8bit_storage (pattern KHR_8BIT_STORAGE_EXTENSION_NAME)
@@ -3338,6 +3340,25 @@ spirvCapabilityRequirements = \case
       , RequireDeviceExtension
           { deviceExtensionLayerName = Nothing
           , deviceExtensionName = KHR_MAINTENANCE_3_EXTENSION_NAME
+          , deviceExtensionMinVersion = 0
+          }
+      ]
+  "ClusterCullingShadingHUAWEI" ->
+    (,)
+      [ RequireInstanceExtension
+          { instanceExtensionLayerName = Nothing
+          , instanceExtensionName = KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME
+          , instanceExtensionMinVersion = 0
+          }
+      ]
+      [ RequireDeviceFeature
+          { featureName = "clustercullingShader"
+          , checkFeature = \PhysicalDeviceClusterCullingShaderFeaturesHUAWEI{clustercullingShader} -> clustercullingShader
+          , enableFeature = \PhysicalDeviceClusterCullingShaderFeaturesHUAWEI{..} -> PhysicalDeviceClusterCullingShaderFeaturesHUAWEI{clustercullingShader = True, ..}
+          }
+      , RequireDeviceExtension
+          { deviceExtensionLayerName = Nothing
+          , deviceExtensionName = HUAWEI_CLUSTER_CULLING_SHADER_EXTENSION_NAME
           , deviceExtensionMinVersion = 0
           }
       ]

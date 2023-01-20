@@ -24,6 +24,7 @@ module Vulkan.Core12.Enums.DriverId  (DriverId( DRIVER_ID_AMD_PROPRIETARY
                                               , DRIVER_ID_MESA_VENUS
                                               , DRIVER_ID_MESA_DOZEN
                                               , DRIVER_ID_MESA_NVK
+                                              , DRIVER_ID_IMAGINATION_OPEN_SOURCE_MESA
                                               , ..
                                               )) where
 
@@ -136,6 +137,9 @@ pattern DRIVER_ID_MESA_DOZEN = DriverId 23
 -- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_MESA_NVK"
 pattern DRIVER_ID_MESA_NVK = DriverId 24
 
+-- No documentation found for Nested "VkDriverId" "VK_DRIVER_ID_IMAGINATION_OPEN_SOURCE_MESA"
+pattern DRIVER_ID_IMAGINATION_OPEN_SOURCE_MESA = DriverId 25
+
 {-# COMPLETE
   DRIVER_ID_AMD_PROPRIETARY
   , DRIVER_ID_AMD_OPEN_SOURCE
@@ -160,7 +164,8 @@ pattern DRIVER_ID_MESA_NVK = DriverId 24
   , DRIVER_ID_SAMSUNG_PROPRIETARY
   , DRIVER_ID_MESA_VENUS
   , DRIVER_ID_MESA_DOZEN
-  , DRIVER_ID_MESA_NVK ::
+  , DRIVER_ID_MESA_NVK
+  , DRIVER_ID_IMAGINATION_OPEN_SOURCE_MESA ::
     DriverId
   #-}
 
@@ -208,6 +213,10 @@ showTableDriverId =
   , (DRIVER_ID_MESA_VENUS, "MESA_VENUS")
   , (DRIVER_ID_MESA_DOZEN, "MESA_DOZEN")
   , (DRIVER_ID_MESA_NVK, "MESA_NVK")
+  ,
+    ( DRIVER_ID_IMAGINATION_OPEN_SOURCE_MESA
+    , "IMAGINATION_OPEN_SOURCE_MESA"
+    )
   ]
 
 instance Show DriverId where

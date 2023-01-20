@@ -100,7 +100,7 @@
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderStorageImageReadWithoutFormat shaderStorageImageReadWithoutFormat>
 -- and
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-shaderStorageImageWriteWithoutFormat shaderStorageImageWriteWithoutFormat>
--- implementations may not report
+-- features may not report
 -- 'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT_KHR'
 -- and
 -- 'Vulkan.Core13.Enums.FormatFeatureFlags2.FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT_KHR'

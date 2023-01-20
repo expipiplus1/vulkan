@@ -1614,6 +1614,7 @@ cmdWriteTimestamp2 commandBuffer stage queryPool query = liftIO $ do
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_RESOLVE_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_TRANSFER_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
 --
@@ -1627,6 +1628,7 @@ cmdWriteTimestamp2 commandBuffer stage queryPool query = liftIO $ do
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_CLEAR_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_TRANSFER_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
 --
@@ -1998,6 +2000,7 @@ cmdWriteTimestamp2 commandBuffer stage queryPool query = liftIO $ do
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_RESOLVE_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_TRANSFER_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
 --
@@ -2011,6 +2014,7 @@ cmdWriteTimestamp2 commandBuffer stage queryPool query = liftIO $ do
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_CLEAR_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_TRANSFER_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
 --
@@ -2562,6 +2566,7 @@ instance Zero MemoryBarrier2 where
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_RESOLVE_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_TRANSFER_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
 --
@@ -2575,6 +2580,7 @@ instance Zero MemoryBarrier2 where
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_CLEAR_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_TRANSFER_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
 --
@@ -2946,6 +2952,7 @@ instance Zero MemoryBarrier2 where
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_RESOLVE_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_TRANSFER_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
 --
@@ -2959,6 +2966,7 @@ instance Zero MemoryBarrier2 where
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_CLEAR_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_TRANSFER_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
 --
@@ -3139,34 +3147,6 @@ instance Zero MemoryBarrier2 where
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_GRAPHICS_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT',
 --     or one of @VK_PIPELINE_STAGE_*_SHADER_BIT@ stages
---
--- -   #VUID-VkImageMemoryBarrier2-subresourceRange-01486#
---     @subresourceRange.baseMipLevel@ /must/ be less than the @mipLevels@
---     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was
---     created
---
--- -   #VUID-VkImageMemoryBarrier2-subresourceRange-01724# If
---     @subresourceRange.levelCount@ is not
---     'Vulkan.Core10.APIConstants.REMAINING_MIP_LEVELS',
---     @subresourceRange.baseMipLevel@ + @subresourceRange.levelCount@
---     /must/ be less than or equal to the @mipLevels@ specified in
---     'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was created
---
--- -   #VUID-VkImageMemoryBarrier2-subresourceRange-01488#
---     @subresourceRange.baseArrayLayer@ /must/ be less than the
---     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
---     when @image@ was created
---
--- -   #VUID-VkImageMemoryBarrier2-subresourceRange-01725# If
---     @subresourceRange.layerCount@ is not
---     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS',
---     @subresourceRange.baseArrayLayer@ + @subresourceRange.layerCount@
---     /must/ be less than or equal to the @arrayLayers@ specified in
---     'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was created
---
--- -   #VUID-VkImageMemoryBarrier2-image-01932# If @image@ is non-sparse
---     then it /must/ be bound completely and contiguously to a single
---     'Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- -   #VUID-VkImageMemoryBarrier2-oldLayout-01208# If
 --     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ define a
@@ -3362,43 +3342,6 @@ instance Zero MemoryBarrier2 where
 --     'Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --     set
 --
--- -   #VUID-VkImageMemoryBarrier2-image-01671# If @image@ has a
---     single-plane color format or is not /disjoint/, then the
---     @aspectMask@ member of @subresourceRange@ /must/ be
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
---
--- -   #VUID-VkImageMemoryBarrier2-image-01672# If @image@ has a
---     multi-planar format and the image is /disjoint/, then the
---     @aspectMask@ member of @subresourceRange@ /must/ include either at
---     least one of
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
---     and
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT';
---     or /must/ include
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
---
--- -   #VUID-VkImageMemoryBarrier2-image-01673# If @image@ has a
---     multi-planar format with only two planes, then the @aspectMask@
---     member of @subresourceRange@ /must/ not include
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
---
--- -   #VUID-VkImageMemoryBarrier2-image-03319# If @image@ has a
---     depth\/stencil format with both depth and stencil and the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
---     feature is enabled, then the @aspectMask@ member of
---     @subresourceRange@ /must/ include either or both
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' and
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
---
--- -   #VUID-VkImageMemoryBarrier2-image-03320# If @image@ has a
---     depth\/stencil format with both depth and stencil and the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
---     feature is not enabled, then the @aspectMask@ member of
---     @subresourceRange@ /must/ include both
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' and
---     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
---
 -- -   #VUID-VkImageMemoryBarrier2-srcQueueFamilyIndex-04070# If
 --     @srcQueueFamilyIndex@ is not equal to @dstQueueFamilyIndex@, at
 --     least one /must/ not be a special queue family reserved for external
@@ -3500,6 +3443,71 @@ instance Zero MemoryBarrier2 where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-attachmentFeedbackLoopLayout attachmentFeedbackLoopLayout>
 --     feature is not enabled, @newLayout@ /must/ not be
 --     'Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_ATTACHMENT_FEEDBACK_LOOP_OPTIMAL_EXT'
+--
+-- -   #VUID-VkImageMemoryBarrier2-subresourceRange-01486#
+--     @subresourceRange.baseMipLevel@ /must/ be less than the @mipLevels@
+--     specified in 'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was
+--     created
+--
+-- -   #VUID-VkImageMemoryBarrier2-subresourceRange-01724# If
+--     @subresourceRange.levelCount@ is not
+--     'Vulkan.Core10.APIConstants.REMAINING_MIP_LEVELS',
+--     @subresourceRange.baseMipLevel@ + @subresourceRange.levelCount@
+--     /must/ be less than or equal to the @mipLevels@ specified in
+--     'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was created
+--
+-- -   #VUID-VkImageMemoryBarrier2-subresourceRange-01488#
+--     @subresourceRange.baseArrayLayer@ /must/ be less than the
+--     @arrayLayers@ specified in 'Vulkan.Core10.Image.ImageCreateInfo'
+--     when @image@ was created
+--
+-- -   #VUID-VkImageMemoryBarrier2-subresourceRange-01725# If
+--     @subresourceRange.layerCount@ is not
+--     'Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS',
+--     @subresourceRange.baseArrayLayer@ + @subresourceRange.layerCount@
+--     /must/ be less than or equal to the @arrayLayers@ specified in
+--     'Vulkan.Core10.Image.ImageCreateInfo' when @image@ was created
+--
+-- -   #VUID-VkImageMemoryBarrier2-image-01932# If @image@ is non-sparse
+--     then it /must/ be bound completely and contiguously to a single
+--     'Vulkan.Core10.Handles.DeviceMemory' object
+--
+-- -   #VUID-VkImageMemoryBarrier2-image-01671# If @image@ has a
+--     single-plane color format or is not /disjoint/, then the
+--     @aspectMask@ member of @subresourceRange@ /must/ be
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
+--
+-- -   #VUID-VkImageMemoryBarrier2-image-01672# If @image@ has a
+--     multi-planar format and the image is /disjoint/, then the
+--     @aspectMask@ member of @subresourceRange@ /must/ include either at
+--     least one of
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
+--     and
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT';
+--     or /must/ include
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
+--
+-- -   #VUID-VkImageMemoryBarrier2-image-01673# If @image@ has a
+--     multi-planar format with only two planes, then the @aspectMask@
+--     member of @subresourceRange@ /must/ not include
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
+--
+-- -   #VUID-VkImageMemoryBarrier2-image-03319# If @image@ has a
+--     depth\/stencil format with both depth and stencil and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
+--     feature is enabled, then the @aspectMask@ member of
+--     @subresourceRange@ /must/ include either or both
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' and
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
+--
+-- -   #VUID-VkImageMemoryBarrier2-image-03320# If @image@ has a
+--     depth\/stencil format with both depth and stencil and the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
+--     feature is not enabled, then the @aspectMask@ member of
+--     @subresourceRange@ /must/ include both
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT' and
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
 -- -   #VUID-VkImageMemoryBarrier2-srcStageMask-03854# If either
 --     @srcStageMask@ or @dstStageMask@ includes
@@ -3950,6 +3958,7 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2 es) where
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_RESOLVE_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_TRANSFER_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
 --
@@ -3963,6 +3972,7 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2 es) where
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_CLEAR_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_TRANSFER_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
 --
@@ -4334,6 +4344,7 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2 es) where
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_RESOLVE_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_TRANSFER_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
 --
@@ -4347,6 +4358,7 @@ instance es ~ '[] => Zero (ImageMemoryBarrier2 es) where
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_CLEAR_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_TRANSFER_BIT',
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR',
+--     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR',
 --     or
 --     'Vulkan.Core13.Enums.PipelineStageFlags2.PIPELINE_STAGE_2_ALL_COMMANDS_BIT'
 --
