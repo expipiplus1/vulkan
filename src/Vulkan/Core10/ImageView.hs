@@ -933,6 +933,14 @@ instance Zero ImageSubresourceRange where
 --     @format@ indicated by @subresourceRange.aspectMask@, as defined in
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#formats-compatible-planes>
 --
+-- -   #VUID-VkImageViewCreateInfo-subresourceRange-07818# If
+--     @subresourceRange.aspectMask@ contains any of
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
+--     or
+--     'Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT',
+--     then it /must/ only have a single bit set
+--
 -- -   #VUID-VkImageViewCreateInfo-image-01762# If @image@ was not created
 --     with the
 --     'Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'

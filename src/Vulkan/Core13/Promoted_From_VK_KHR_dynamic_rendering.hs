@@ -455,6 +455,22 @@ instance Zero PipelineRenderingCreateInfo where
 --     or its @deviceRenderAreaCount@ member is equal to 0,
 --     @renderArea.offset.y@ /must/ be greater than or equal to 0
 --
+-- -   #VUID-VkRenderingInfo-pNext-07815# If the @pNext@ chain does not
+--     contain
+--     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
+--     or its @deviceRenderAreaCount@ member is equal to 0, the sum of
+--     @renderArea.extent.width@ and @renderArea.offset.x@ /must/ be less
+--     than or equal to
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFramebufferWidth maxFramebufferWidth>
+--
+-- -   #VUID-VkRenderingInfo-pNext-07816# If the @pNext@ chain does not
+--     contain
+--     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
+--     or its @deviceRenderAreaCount@ member is equal to 0, the sum of
+--     @renderArea.extent.width@ and @renderArea.offset.y@ /must/ be less
+--     than or equal to
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFramebufferWidth maxFramebufferHeight>
+--
 -- -   #VUID-VkRenderingInfo-pNext-06079# If the @pNext@ chain does not
 --     contain
 --     'Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupRenderPassBeginInfo'
@@ -838,6 +854,10 @@ instance Zero PipelineRenderingCreateInfo where
 --     height greater than or equal to
 --     \(\left\lceil{\frac{pDeviceRenderAreas_{y}+pDeviceRenderAreas_{height}}{shadingRateAttachmentTexelSize_{height}}}\right\rceil\)
 --     for each element of @pDeviceRenderAreas@
+--
+-- -   #VUID-VkRenderingInfo-layerCount-07817# @layerCount@ /must/ be less
+--     than or equal to
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#limits-maxFramebufferLayers maxFramebufferLayers>
 --
 -- -   #VUID-VkRenderingInfo-imageView-06123# If the @imageView@ member of
 --     a

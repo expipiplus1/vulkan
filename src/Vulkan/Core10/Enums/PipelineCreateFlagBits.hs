@@ -166,11 +166,11 @@ type PipelineCreateFlags = PipelineCreateFlagBits
 --
 -- -   'PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR'
 --     specifies that the pipeline will be used with a fragment shading
---     rate attachment.
+--     rate attachment and dynamic rendering.
 --
 -- -   'PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT'
 --     specifies that the pipeline will be used with a fragment density map
---     attachment.
+--     attachment and dynamic rendering.
 --
 -- -   'PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT' specifies that
 --     pipeline libraries being linked into this library /should/ have link

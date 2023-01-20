@@ -2399,20 +2399,6 @@ instance Zero BlitImageInfo2 where
 --     less than or equal to the height of the specified @imageSubresource@
 --     of @dstImage@
 --
--- -   #VUID-VkCopyBufferToImageInfo2-bufferOffset-01558# If @dstImage@
---     does not have either a depth\/stencil or a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     then for each element of @pRegions@, @bufferOffset@ /must/ be a
---     multiple of the format’s texel block size
---
--- -   #VUID-VkCopyBufferToImageInfo2-bufferOffset-01559# If @dstImage@ has
---     a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     then for each element of @pRegions@, @bufferOffset@ /must/ be a
---     multiple of the element size of the compatible format for the format
---     and the @aspectMask@ of the @imageSubresource@ as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes ???>
---
 -- -   #VUID-VkCopyBufferToImageInfo2-srcImage-00199# If @dstImage@ is of
 --     type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each
 --     element of @pRegions@, @imageOffset.y@ /must/ be @0@ and
@@ -2439,11 +2425,6 @@ instance Zero BlitImageInfo2 where
 --     element of @pRegions@, @bufferImageHeight@ /must/ be a multiple of
 --     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
---     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
---
--- -   #VUID-VkCopyBufferToImageInfo2-pRegions-07273# For each element of
---     @pRegions@, @bufferOffset@ /must/ be a multiple of the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block size>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-pRegions-07274# For each element of
@@ -2515,6 +2496,25 @@ instance Zero BlitImageInfo2 where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
 --     and then multiplied by the texel block size of @dstImage@ /must/ be
 --     less than or equal to 231-1
+--
+-- -   #VUID-VkCopyBufferToImageInfo2-bufferOffset-01558# If @dstImage@
+--     does not have either a depth\/stencil or a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     then for each element of @pRegions@, @bufferOffset@ /must/ be a
+--     multiple of the format’s texel block size
+--
+-- -   #VUID-VkCopyBufferToImageInfo2-bufferOffset-01559# If @dstImage@ has
+--     a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     then for each element of @pRegions@, @bufferOffset@ /must/ be a
+--     multiple of the element size of the compatible format for the format
+--     and the @aspectMask@ of the @imageSubresource@ as defined in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes ???>
+--
+-- -   #VUID-VkCopyBufferToImageInfo2-pRegions-07273# For each element of
+--     @pRegions@, @bufferOffset@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block size>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @dstImage@
 --
 -- -   #VUID-VkCopyBufferToImageInfo2-srcImage-04053# If @dstImage@ has a
 --     depth\/stencil format, the @bufferOffset@ member of any element of
@@ -2733,20 +2733,6 @@ instance Zero CopyBufferToImageInfo2 where
 --     less than or equal to the height of the specified @imageSubresource@
 --     of @srcImage@
 --
--- -   #VUID-VkCopyImageToBufferInfo2-bufferOffset-01558# If @srcImage@
---     does not have either a depth\/stencil or a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     then for each element of @pRegions@, @bufferOffset@ /must/ be a
---     multiple of the format’s texel block size
---
--- -   #VUID-VkCopyImageToBufferInfo2-bufferOffset-01559# If @srcImage@ has
---     a
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     then for each element of @pRegions@, @bufferOffset@ /must/ be a
---     multiple of the element size of the compatible format for the format
---     and the @aspectMask@ of the @imageSubresource@ as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes ???>
---
 -- -   #VUID-VkCopyImageToBufferInfo2-srcImage-00199# If @srcImage@ is of
 --     type 'Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', then for each
 --     element of @pRegions@, @imageOffset.y@ /must/ be @0@ and
@@ -2773,11 +2759,6 @@ instance Zero CopyBufferToImageInfo2 where
 --     element of @pRegions@, @bufferImageHeight@ /must/ be a multiple of
 --     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent height>
---     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
---
--- -   #VUID-VkCopyImageToBufferInfo2-pRegions-07273# For each element of
---     @pRegions@, @bufferOffset@ /must/ be a multiple of the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block size>
 --     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-pRegions-07274# For each element of
@@ -2849,6 +2830,25 @@ instance Zero CopyBufferToImageInfo2 where
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block extent width>
 --     and then multiplied by the texel block size of @srcImage@ /must/ be
 --     less than or equal to 231-1
+--
+-- -   #VUID-VkCopyImageToBufferInfo2-bufferOffset-01558# If @srcImage@
+--     does not have either a depth\/stencil or a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     then for each element of @pRegions@, @bufferOffset@ /must/ be a
+--     multiple of the format’s texel block size
+--
+-- -   #VUID-VkCopyImageToBufferInfo2-bufferOffset-01559# If @srcImage@ has
+--     a
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     then for each element of @pRegions@, @bufferOffset@ /must/ be a
+--     multiple of the element size of the compatible format for the format
+--     and the @aspectMask@ of the @imageSubresource@ as defined in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatible-planes ???>
+--
+-- -   #VUID-VkCopyImageToBufferInfo2-pRegions-07273# For each element of
+--     @pRegions@, @bufferOffset@ /must/ be a multiple of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility-classes texel block size>
+--     of the 'Vulkan.Core10.Enums.Format.Format' of @srcImage@
 --
 -- -   #VUID-VkCopyImageToBufferInfo2-srcImage-04053# If @srcImage@ has a
 --     depth\/stencil format, the @bufferOffset@ member of any element of

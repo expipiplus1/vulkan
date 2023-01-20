@@ -2224,7 +2224,8 @@ foreign import ccall
 --     dynamic state enabled then
 --     'Vulkan.Extensions.VK_EXT_discard_rectangles.cmdSetDiscardRectangleEXT'
 --     /must/ have been called in the current command buffer prior to this
---     drawing command
+--     drawing command for each discard rectangle in
+--     'Vulkan.Extensions.VK_EXT_discard_rectangles.PipelineDiscardRectangleStateCreateInfoEXT'::@discardRectangleCount@
 --
 -- -   #VUID-vkCmdDrawIndirectByteCountEXT-pDepthAttachment-06181# If the
 --     current render pass instance was begun with

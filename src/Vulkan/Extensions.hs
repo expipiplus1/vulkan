@@ -151,6 +151,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_GOOGLE_hlsl_functionality1
                           , module Vulkan.Extensions.VK_GOOGLE_surfaceless_query
                           , module Vulkan.Extensions.VK_GOOGLE_user_type
+                          , module Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader
                           , module Vulkan.Extensions.VK_HUAWEI_invocation_mask
                           , module Vulkan.Extensions.VK_HUAWEI_subpass_shading
                           , module Vulkan.Extensions.VK_IMG_filter_cubic
@@ -461,6 +462,7 @@ import Vulkan.Extensions.VK_GOOGLE_display_timing
 import Vulkan.Extensions.VK_GOOGLE_hlsl_functionality1
 import Vulkan.Extensions.VK_GOOGLE_surfaceless_query
 import Vulkan.Extensions.VK_GOOGLE_user_type
+import Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader
 import Vulkan.Extensions.VK_HUAWEI_invocation_mask
 import Vulkan.Extensions.VK_HUAWEI_subpass_shading
 import Vulkan.Extensions.VK_IMG_filter_cubic

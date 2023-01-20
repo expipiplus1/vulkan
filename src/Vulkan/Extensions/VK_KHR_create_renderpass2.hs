@@ -85,8 +85,8 @@
 --     are directly specified in 'RenderPassCreateInfo2KHR'.
 --
 -- -   'Vulkan.Core11.Promoted_From_VK_KHR_maintenance2.InputAttachmentAspectReference'::@aspectMask@
---     is now specified in the relevant input attachment description in
---     'AttachmentDescription2KHR'::@aspectMask@
+--     is now specified in the relevant input attachment reference in
+--     'AttachmentReference2KHR'::@aspectMask@
 --
 -- The details of these mappings are explained fully in the new structures.
 --

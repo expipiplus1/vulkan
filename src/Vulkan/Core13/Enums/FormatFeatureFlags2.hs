@@ -404,13 +404,17 @@ type FormatFeatureFlags2 = FormatFeatureFlagBits2
 --     image views or buffer views created with this format /can/ be used
 --     as
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storageimage storage images>
---     for read operations without specifying a format.
+--     or
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer storage texel buffers>
+--     respectively for read operations without specifying a format.
 --
 -- -   'FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT' specifies that
 --     image views or buffer views created with this format /can/ be used
 --     as
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storageimage storage images>
---     for write operations without specifying a format.
+--     or
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer storage texel buffers>
+--     respectively for write operations without specifying a format.
 --
 -- -   'FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT' specifies that
 --     image views created with this format /can/ be used for depth
@@ -702,7 +706,9 @@ pattern FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT = FormatFeatureFlagBits2 0x0
 -- | 'FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT' specifies that image
 -- views or buffer views created with this format /can/ be used as
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storageimage storage images>
--- for read operations without specifying a format.
+-- or
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer storage texel buffers>
+-- respectively for read operations without specifying a format.
 --
 -- 'FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT' specifies that buffer
 -- views created with this format /can/ be used as
@@ -713,7 +719,9 @@ pattern FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT = FormatFeatureFlagBits
 -- | 'FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT' specifies that image
 -- views or buffer views created with this format /can/ be used as
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storageimage storage images>
--- for write operations without specifying a format.
+-- or
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer storage texel buffers>
+-- respectively for write operations without specifying a format.
 --
 -- 'FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT' specifies that
 -- buffer views created with this format /can/ be used as

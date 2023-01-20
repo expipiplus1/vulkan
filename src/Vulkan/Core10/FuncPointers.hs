@@ -56,13 +56,13 @@ type FN_vkReallocationFunction = ("pUserData" ::: Ptr ()) -> ("pOriginal" ::: Pt
 --
 -- = Description
 --
--- @pfnReallocation@ /must/ return an allocation with enough space for
--- @size@ bytes, and the contents of the original allocation from bytes
--- zero to min(original size, new size) - 1 /must/ be preserved in the
--- returned allocation. If @size@ is larger than the old size, the contents
--- of the additional space are undefined. If satisfying these requirements
--- involves creating a new allocation, then the old allocation /should/ be
--- freed.
+-- If the reallocation was successful, @pfnReallocation@ /must/ return an
+-- allocation with enough space for @size@ bytes, and the contents of the
+-- original allocation from bytes zero to min(original size, new size) - 1
+-- /must/ be preserved in the returned allocation. If @size@ is larger than
+-- the old size, the contents of the additional space are undefined. If
+-- satisfying these requirements involves creating a new allocation, then
+-- the old allocation /should/ be freed.
 --
 -- If @pOriginal@ is @NULL@, then @pfnReallocation@ /must/ behave
 -- equivalently to a call to 'PFN_vkAllocationFunction' with the same

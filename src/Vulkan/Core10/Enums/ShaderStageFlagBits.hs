@@ -9,6 +9,7 @@ module Vulkan.Core10.Enums.ShaderStageFlagBits  ( ShaderStageFlags
                                                                      , SHADER_STAGE_COMPUTE_BIT
                                                                      , SHADER_STAGE_ALL_GRAPHICS
                                                                      , SHADER_STAGE_ALL
+                                                                     , SHADER_STAGE_CLUSTER_CULLING_BIT_HUAWEI
                                                                      , SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI
                                                                      , SHADER_STAGE_MESH_BIT_EXT
                                                                      , SHADER_STAGE_TASK_BIT_EXT
@@ -84,6 +85,10 @@ pattern SHADER_STAGE_ALL_GRAPHICS = ShaderStageFlagBits 0x0000001f
 -- stages which are introduced by extensions.
 pattern SHADER_STAGE_ALL = ShaderStageFlagBits 0x7fffffff
 
+-- | 'SHADER_STAGE_CLUSTER_CULLING_BIT_HUAWEI' specifies the cluster culling
+-- stage.
+pattern SHADER_STAGE_CLUSTER_CULLING_BIT_HUAWEI = ShaderStageFlagBits 0x00080000
+
 -- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI"
 pattern SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI = ShaderStageFlagBits 0x00004000
 
@@ -133,6 +138,10 @@ showTableShaderStageFlagBits =
   , (SHADER_STAGE_COMPUTE_BIT, "COMPUTE_BIT")
   , (SHADER_STAGE_ALL_GRAPHICS, "ALL_GRAPHICS")
   , (SHADER_STAGE_ALL, "ALL")
+  ,
+    ( SHADER_STAGE_CLUSTER_CULLING_BIT_HUAWEI
+    , "CLUSTER_CULLING_BIT_HUAWEI"
+    )
   ,
     ( SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI
     , "SUBPASS_SHADING_BIT_HUAWEI"

@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.34.7.
+-- This file has been generated from package.yaml by hpack version 0.35.1.
 --
 -- see: https://github.com/sol/hpack
 
@@ -435,6 +435,7 @@ library
       Vulkan.Extensions.VK_GOOGLE_hlsl_functionality1
       Vulkan.Extensions.VK_GOOGLE_surfaceless_query
       Vulkan.Extensions.VK_GOOGLE_user_type
+      Vulkan.Extensions.VK_HUAWEI_cluster_culling_shader
       Vulkan.Extensions.VK_HUAWEI_invocation_mask
       Vulkan.Extensions.VK_HUAWEI_subpass_shading
       Vulkan.Extensions.VK_IMG_filter_cubic
@@ -644,6 +645,7 @@ library
     , bytestring
     , transformers
     , vector
+  default-language: Haskell2010
   if os(windows)
     extra-libraries:
         vulkan-1
@@ -659,7 +661,6 @@ library
     cpp-options: -DGENERIC_INSTANCES
   if flag(trace-calls)
     cpp-options: -DTRACE_CALLS
-  default-language: Haskell2010
 
 test-suite test
   type: exitcode-stdio-1.0

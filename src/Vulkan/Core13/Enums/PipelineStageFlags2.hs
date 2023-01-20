@@ -54,6 +54,7 @@ module Vulkan.Core13.Enums.PipelineStageFlags2  ( pattern PIPELINE_STAGE_2_NONE_
                                                                         , PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT
                                                                         , PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT
                                                                         , PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV
+                                                                        , PIPELINE_STAGE_2_CLUSTER_CULLING_SHADER_BIT_HUAWEI
                                                                         , PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT
                                                                         , PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR
                                                                         , PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI
@@ -348,6 +349,8 @@ pattern PIPELINE_STAGE_2_HOST_BIT = PipelineStageFlagBits2 0x0000000000004000
 -- -   'PIPELINE_STAGE_2_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
 --
 -- -   'PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI'
+--
+-- -   'PIPELINE_STAGE_2_CLUSTER_CULLING_SHADER_BIT_HUAWEI'
 pattern PIPELINE_STAGE_2_ALL_GRAPHICS_BIT = PipelineStageFlagBits2 0x0000000000008000
 
 -- | 'PIPELINE_STAGE_2_ALL_COMMANDS_BIT' specifies all operations performed
@@ -396,6 +399,8 @@ pattern PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT = PipelineStageFlagBits2 0x0
 -- -   'PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT'
 --
 -- -   'PIPELINE_STAGE_2_MESH_SHADER_BIT_EXT'
+--
+-- -   'PIPELINE_STAGE_2_CLUSTER_CULLING_SHADER_BIT_HUAWEI'
 pattern PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT = PipelineStageFlagBits2 0x0000004000000000
 
 -- | 'PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV' specifies the stage of the
@@ -403,6 +408,10 @@ pattern PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT = PipelineStageFlagBits2 
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#opticalflow-operations optical flow operation>
 -- are performed.
 pattern PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV = PipelineStageFlagBits2 0x0000000020000000
+
+-- | 'PIPELINE_STAGE_2_CLUSTER_CULLING_SHADER_BIT_HUAWEI' specifies the
+-- cluster culling shader stage.
+pattern PIPELINE_STAGE_2_CLUSTER_CULLING_SHADER_BIT_HUAWEI = PipelineStageFlagBits2 0x0000020000000000
 
 -- | 'PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT' specifies the execution of
 -- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#micromap micromap commands>.
@@ -562,6 +571,10 @@ showTablePipelineStageFlagBits2 =
   ,
     ( PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV
     , "OPTICAL_FLOW_BIT_NV"
+    )
+  ,
+    ( PIPELINE_STAGE_2_CLUSTER_CULLING_SHADER_BIT_HUAWEI
+    , "CLUSTER_CULLING_SHADER_BIT_HUAWEI"
     )
   ,
     ( PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT
