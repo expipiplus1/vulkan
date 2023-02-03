@@ -557,6 +557,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (PhysicalDevice
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (PhysicalDevicePerformanceQueryPropertiesKHR)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_cache_control (PhysicalDevicePipelineCreationCacheControlFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_executable_properties (PhysicalDevicePipelineExecutablePropertiesFeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pipeline_library_group_handles (PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pipeline_properties (PhysicalDevicePipelinePropertiesFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pipeline_protected_access (PhysicalDevicePipelineProtectedAccessFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pipeline_robustness (PhysicalDevicePipelineRobustnessFeaturesEXT)
@@ -1166,6 +1167,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends DeviceCreateInfo PhysicalDeviceAddressBindingReportFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceOpticalFlowFeaturesNV = ()
   Extends DeviceCreateInfo PhysicalDeviceFaultFeaturesEXT = ()
+  Extends DeviceCreateInfo PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceShaderCoreBuiltinsFeaturesARM = ()
   Extends DeviceCreateInfo PhysicalDeviceSwapchainMaintenance1FeaturesEXT = ()
   Extends DeviceCreateInfo PhysicalDeviceRayTracingInvocationReorderFeaturesNV = ()
@@ -1400,6 +1402,7 @@ type family Extends (a :: [Type] -> Type) (b :: Type) :: Constraint where
   Extends PhysicalDeviceFeatures2 PhysicalDeviceAddressBindingReportFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceOpticalFlowFeaturesNV = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceFaultFeaturesEXT = ()
+  Extends PhysicalDeviceFeatures2 PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceShaderCoreBuiltinsFeaturesARM = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceSwapchainMaintenance1FeaturesEXT = ()
   Extends PhysicalDeviceFeatures2 PhysicalDeviceRayTracingInvocationReorderFeaturesNV = ()
@@ -2107,6 +2110,7 @@ peekChainHead ty p c = case ty of
   STRUCTURE_TYPE_OPTICAL_FLOW_IMAGE_FORMAT_INFO_NV -> go @OpticalFlowImageFormatInfoNV
   STRUCTURE_TYPE_OPTICAL_FLOW_SESSION_CREATE_PRIVATE_DATA_INFO_NV -> go @OpticalFlowSessionCreatePrivateDataInfoNV
   STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_FEATURES_EXT -> go @PhysicalDeviceFaultFeaturesEXT
+  STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_EXT -> go @PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_PROPERTIES_ARM -> go @PhysicalDeviceShaderCoreBuiltinsPropertiesARM
   STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_FEATURES_ARM -> go @PhysicalDeviceShaderCoreBuiltinsFeaturesARM
   STRUCTURE_TYPE_SURFACE_PRESENT_MODE_EXT -> go @SurfacePresentModeEXT
@@ -2585,6 +2589,7 @@ infix 6 ::&
 {-# complete (::&) :: OpticalFlowImageFormatInfoNV #-}
 {-# complete (::&) :: OpticalFlowSessionCreatePrivateDataInfoNV #-}
 {-# complete (::&) :: PhysicalDeviceFaultFeaturesEXT #-}
+{-# complete (::&) :: PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT #-}
 {-# complete (::&) :: PhysicalDeviceShaderCoreBuiltinsPropertiesARM #-}
 {-# complete (::&) :: PhysicalDeviceShaderCoreBuiltinsFeaturesARM #-}
 {-# complete (::&) :: SurfacePresentModeEXT #-}

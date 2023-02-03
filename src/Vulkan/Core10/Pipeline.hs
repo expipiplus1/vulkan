@@ -6086,15 +6086,19 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     'Vulkan.Extensions.VK_NV_device_generated_commands.GraphicsPipelineShaderGroupsCreateInfoNV'::@groupCount@
 --     /must/ be greater than @0@
 --
--- -   #VUID-VkGraphicsPipelineCreateInfo-flags-07814# If @flags@ includes
---     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LINK_TIME_OPTIMIZATION_BIT_EXT',
---     the pipeline includes a
+-- -   #VUID-VkGraphicsPipelineCreateInfo-None-07826# If the pipeline
+--     includes a
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-complete complete set of state>,
+--     'Vulkan.Core10.Handles.PipelineLayout' /must/ be a valid pipeline
+--     layout
+--
+-- -   #VUID-VkGraphicsPipelineCreateInfo-layout-07827# If the pipeline
+--     includes a
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#pipelines-graphics-subsets-complete complete set of state>
 --     specified entirely by libraries, and each library was created with a
 --     'Vulkan.Core10.Handles.PipelineLayout' created without
 --     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT',
---     then @layout@ /must/ be a valid
---     'Vulkan.Core10.Handles.PipelineLayout' that is
+--     then @layout@ /must/ be
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-compatibility compatible>
 --     with the layouts in those libraries
 --
@@ -6105,8 +6109,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     specified entirely by libraries, and each library was created with a
 --     'Vulkan.Core10.Handles.PipelineLayout' created with
 --     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT',
---     then @layout@ /must/ be a valid
---     'Vulkan.Core10.Handles.PipelineLayout' that is
+--     then @layout@ /must/ be
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-compatibility compatible>
 --     with the union of the libraries\' pipeline layouts other than the
 --     inclusion\/exclusion of
@@ -6120,8 +6123,7 @@ instance Zero PipelineDepthStencilStateCreateInfo where
 --     specified entirely by libraries, and each library was created with a
 --     'Vulkan.Core10.Handles.PipelineLayout' created with
 --     'Vulkan.Core10.Enums.PipelineLayoutCreateFlagBits.PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT',
---     then @layout@ /must/ be a valid
---     'Vulkan.Core10.Handles.PipelineLayout' that is
+--     then @layout@ /must/ be
 --     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#descriptorsets-compatibility compatible>
 --     with the union of the libraries\' pipeline layouts
 --
