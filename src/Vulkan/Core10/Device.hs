@@ -170,6 +170,7 @@ import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pageable_device_local_memory (Phy
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_performance_query (PhysicalDevicePerformanceQueryFeaturesKHR)
 import {-# SOURCE #-} Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_cache_control (PhysicalDevicePipelineCreationCacheControlFeatures)
 import {-# SOURCE #-} Vulkan.Extensions.VK_KHR_pipeline_executable_properties (PhysicalDevicePipelineExecutablePropertiesFeaturesKHR)
+import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pipeline_library_group_handles (PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pipeline_properties (PhysicalDevicePipelinePropertiesFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pipeline_protected_access (PhysicalDevicePipelineProtectedAccessFeaturesEXT)
 import {-# SOURCE #-} Vulkan.Extensions.VK_EXT_pipeline_robustness (PhysicalDevicePipelineRobustnessFeaturesEXT)
@@ -916,6 +917,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 --     'Vulkan.Extensions.VK_KHR_performance_query.PhysicalDevicePerformanceQueryFeaturesKHR',
 --     'Vulkan.Core13.Promoted_From_VK_EXT_pipeline_creation_cache_control.PhysicalDevicePipelineCreationCacheControlFeatures',
 --     'Vulkan.Extensions.VK_KHR_pipeline_executable_properties.PhysicalDevicePipelineExecutablePropertiesFeaturesKHR',
+--     'Vulkan.Extensions.VK_EXT_pipeline_library_group_handles.PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_pipeline_properties.PhysicalDevicePipelinePropertiesFeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_pipeline_protected_access.PhysicalDevicePipelineProtectedAccessFeaturesEXT',
 --     'Vulkan.Extensions.VK_EXT_pipeline_robustness.PhysicalDevicePipelineRobustnessFeaturesEXT',
@@ -1066,6 +1068,7 @@ instance Extensible DeviceCreateInfo where
     | Just Refl <- eqT @e @PhysicalDeviceRayTracingInvocationReorderFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceSwapchainMaintenance1FeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceShaderCoreBuiltinsFeaturesARM = Just f
+    | Just Refl <- eqT @e @PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceFaultFeaturesEXT = Just f
     | Just Refl <- eqT @e @PhysicalDeviceOpticalFlowFeaturesNV = Just f
     | Just Refl <- eqT @e @PhysicalDeviceAddressBindingReportFeaturesEXT = Just f

@@ -86,8 +86,9 @@
 --
 -- Functionality in this extension is included in core Vulkan 1.3, with the
 -- EXT suffix omitted. However, only the properties structure is promoted.
--- The feature structure is not promoted. The original type name is still
--- available as an alias of the core functionality.
+-- The feature structure is not promoted and @texelBufferAlignment@ is
+-- enabled if when using a Vulkan 1.3 instance. The original type name is
+-- still available as an alias of the core functionality.
 --
 -- == Version History
 --

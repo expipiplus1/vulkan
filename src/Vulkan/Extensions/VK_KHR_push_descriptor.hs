@@ -573,7 +573,8 @@ cmdPushDescriptorSetWithTemplateKHR commandBuffer
 -- 'Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePushDescriptorPropertiesKHR = PhysicalDevicePushDescriptorPropertiesKHR
   { -- | #limits-maxPushDescriptors# @maxPushDescriptors@ is the maximum number
-    -- of descriptors that /can/ be used in a descriptor set created with
+    -- of descriptors that /can/ be used in a descriptor set layout created
+    -- with
     -- 'Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
     -- set.
     maxPushDescriptors :: Word32 }

@@ -99,6 +99,7 @@ module Vulkan.Extensions  ( module Vulkan.Extensions.Dependencies
                           , module Vulkan.Extensions.VK_EXT_physical_device_drm
                           , module Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
                           , module Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
+                          , module Vulkan.Extensions.VK_EXT_pipeline_library_group_handles
                           , module Vulkan.Extensions.VK_EXT_pipeline_properties
                           , module Vulkan.Extensions.VK_EXT_pipeline_protected_access
                           , module Vulkan.Extensions.VK_EXT_pipeline_robustness
@@ -410,6 +411,7 @@ import Vulkan.Extensions.VK_EXT_pci_bus_info
 import Vulkan.Extensions.VK_EXT_physical_device_drm
 import Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
 import Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
+import Vulkan.Extensions.VK_EXT_pipeline_library_group_handles
 import Vulkan.Extensions.VK_EXT_pipeline_properties
 import Vulkan.Extensions.VK_EXT_pipeline_protected_access
 import Vulkan.Extensions.VK_EXT_pipeline_robustness

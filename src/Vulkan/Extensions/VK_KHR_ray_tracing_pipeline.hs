@@ -1062,14 +1062,6 @@ foreign import ccall
 -- -   #VUID-vkCmdTraceRaysKHR-None-02700# A valid pipeline /must/ be bound
 --     to the pipeline bind point used by this command
 --
--- -   #VUID-vkCmdTraceRaysKHR-commandBuffer-02701# If the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command requires any dynamic state, that state
---     /must/ have been set or inherited (if the
---     @VK_NV_inherited_viewport_scissor@ extension is enabled) for
---     @commandBuffer@, and done so after any previously bound pipeline
---     with the corresponding state not specified as dynamic
---
 -- -   #VUID-vkCmdTraceRaysKHR-None-02859# There /must/ not have been any
 --     calls to dynamic state setting commands for any state not specified
 --     as dynamic in the 'Vulkan.Core10.Handles.Pipeline' object bound to
@@ -1610,9 +1602,21 @@ foreign import ccall
 --     'PhysicalDeviceRayTracingPipelinePropertiesKHR'::@shaderGroupHandleSize@
 --     × @groupCount@
 --
--- -   #VUID-vkGetRayTracingShaderGroupHandlesKHR-pipeline-03482#
---     @pipeline@ /must/ not have been created with
+-- -   #VUID-vkGetRayTracingShaderGroupHandlesKHR-pipeline-07828# If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineLibraryGroupHandles pipelineLibraryGroupHandles>
+--     feature is not enabled, @pipeline@ /must/ not have been created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'
+--
+-- If @pipeline@ was created with
+-- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'
+-- and the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineLibraryGroupHandles pipelineLibraryGroupHandles>
+-- feature is enabled applications /can/ query group handles from that
+-- pipeline, even if the pipeline is a library and is never bound to a
+-- command buffer. These group handles remain bitwise identical for any
+-- @pipeline@ which references the pipeline library. Group indices are
+-- assigned as-if the pipeline was created without
+-- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1732,9 +1736,21 @@ foreign import ccall
 --     @pipeline@ /must/ have been created with a @flags@ that included
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR'
 --
--- -   #VUID-vkGetRayTracingCaptureReplayShaderGroupHandlesKHR-pipeline-06720#
---     @pipeline@ /must/ not have been created with
+-- -   #VUID-vkGetRayTracingCaptureReplayShaderGroupHandlesKHR-pipeline-07829#
+--     If the
+--     <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineLibraryGroupHandles pipelineLibraryGroupHandles>
+--     feature is not enabled, @pipeline@ /must/ not have been created with
 --     'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'
+--
+-- If @pipeline@ was created with
+-- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'
+-- and the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineLibraryGroupHandles pipelineLibraryGroupHandles>
+-- feature is enabled applications /can/ query capture replay group handles
+-- from that pipeline. The capture replay handle remains bitwise identical
+-- for any @pipeline@ which references the pipeline library. Group indices
+-- are assigned as-if the pipeline was created without
+-- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -2200,14 +2216,6 @@ foreign import ccall
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02700# A valid pipeline /must/
 --     be bound to the pipeline bind point used by this command
---
--- -   #VUID-vkCmdTraceRaysIndirectKHR-commandBuffer-02701# If the
---     'Vulkan.Core10.Handles.Pipeline' object bound to the pipeline bind
---     point used by this command requires any dynamic state, that state
---     /must/ have been set or inherited (if the
---     @VK_NV_inherited_viewport_scissor@ extension is enabled) for
---     @commandBuffer@, and done so after any previously bound pipeline
---     with the corresponding state not specified as dynamic
 --
 -- -   #VUID-vkCmdTraceRaysIndirectKHR-None-02859# There /must/ not have
 --     been any calls to dynamic state setting commands for any state not
@@ -2898,6 +2906,16 @@ cmdSetRayTracingPipelineStackSizeKHR commandBuffer
 
 -- | VkRayTracingShaderGroupCreateInfoKHR - Structure specifying shaders in a
 -- shader group
+--
+-- = Description
+--
+-- If the pipeline is created with
+-- 'Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_LIBRARY_BIT_KHR'
+-- and the
+-- <https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#features-pipelineLibraryGroupHandles pipelineLibraryGroupHandles>
+-- feature is enabled, @pShaderGroupCaptureReplayHandle@ is inherited by
+-- all pipelines which link against this pipeline and remains bitwise
+-- identical for any pipeline which references this pipeline library.
 --
 -- == Valid Usage
 --

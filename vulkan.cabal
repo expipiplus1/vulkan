@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.34.5.
+-- This file has been generated from package.yaml by hpack version 0.35.1.
 --
 -- see: https://github.com/sol/hpack
 
@@ -383,6 +383,7 @@ library
       Vulkan.Extensions.VK_EXT_physical_device_drm
       Vulkan.Extensions.VK_EXT_pipeline_creation_cache_control
       Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
+      Vulkan.Extensions.VK_EXT_pipeline_library_group_handles
       Vulkan.Extensions.VK_EXT_pipeline_properties
       Vulkan.Extensions.VK_EXT_pipeline_protected_access
       Vulkan.Extensions.VK_EXT_pipeline_robustness
@@ -645,6 +646,7 @@ library
     , bytestring
     , transformers
     , vector
+  default-language: Haskell2010
   if os(windows)
     extra-libraries:
         vulkan-1
@@ -660,7 +662,6 @@ library
     cpp-options: -DGENERIC_INSTANCES
   if flag(trace-calls)
     cpp-options: -DTRACE_CALLS
-  default-language: Haskell2010
 
 test-suite test
   type: exitcode-stdio-1.0
