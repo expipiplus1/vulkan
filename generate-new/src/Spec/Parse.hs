@@ -551,7 +551,9 @@ parseRequires n = V.fromList <$> traverseV
       , getAttr "api" t /= Just "vulkansc"
       ]
     rEnumValueNames <- (<> extraEnums) . V.fromList <$> sequenceV
-      [ nameAttr "require enum" t | Element t <- contents r, "enum" == name t ]
+      [ nameAttr "require enum" t | Element t <- contents r, "enum" == name t
+      , getAttr "api" t /= Just "vulkansc"
+      ]
     pure Require { .. }
 
 ----------------------------------------------------------------
@@ -603,6 +605,7 @@ someConstants r =
   , isNothing (getAttr "extends" ee)
   , Just n <- pure (getAttr "name" ee)
   , Just v <- pure (getAttr "value" ee)
+  , getAttr "api" ee /= Just "vulkansc"
   ]
 
 definedConstant :: Node -> Maybe (ByteString, ByteString)
@@ -645,6 +648,7 @@ parseEnumAliases rs =
       , Element ee <- contents r
       , "enum" == name ee
       , Just alias <- pure $ getAttr "alias" ee
+      , getAttr "api" ee /= Just "vulkansc"
       ]
 
 parseCommandAliases :: [Content] -> P (Vector Alias)
@@ -677,6 +681,7 @@ parseConstantAliases es =
       , "enum" == name ee
       , Just alias <- pure $ getAttr "alias" ee
       , aType      <- [TypeAlias, PatternAlias]
+      , getAttr "api" ee /= Just "vulkansc"
       ]
 
 stripForbiddenAliases :: Vector Alias -> Vector Alias
@@ -867,7 +872,9 @@ parseEnums types es = do
       else Just <$> do
         eValues <- fromList <$> traverseV
           (context (unCName eName) . parseValue)
-          [ e | Element e <- contents n, name e == "enum", not (isAlias e) ]
+          [ e | Element e <- contents n, name e == "enum", not (isAlias e)
+          , getAttr "api" e /= Just "vulkansc"
+          ]
         eType <- if isBitmask
           -- If we can't find the flags name, use the bits name
           then do
@@ -899,6 +906,7 @@ parseEnumExtensions rs =
       , "enum" == name ee
       , not (isAlias ee)
       , Just extends <- pure (getAttr "extends" ee)
+      , getAttr "api" ee /= Just "vulkansc"
       ]
  where
 
